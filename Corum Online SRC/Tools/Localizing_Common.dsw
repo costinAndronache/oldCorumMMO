@@ -1,0 +1,149 @@
+Microsoft Developer Studio Workspace File, Format Version 6.00
+# WARNING: DO NOT EDIT OR DELETE THIS WORKSPACE FILE!
+
+###############################################################################
+
+Project: "CDBMaker"=.\CDBMaker\CDBMaker.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+    begin source code control
+    "$/Localizing/CDBMaker", AHSAAAAA
+    .\cdbmaker
+    end source code control
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
+Project: "CorumAutopatch"=.\CorumAutopatch\CorumAutopatch.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+    begin source code control
+    "$/Localizing/CorumAutopatch", XDSAAAAA
+    .\corumautopatch
+    end source code control
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
+Project: "CorumLauncher"=.\CorumLauncher\CorumLauncher.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+    begin source code control
+    "$/Localizing/CorumLauncher", PRRAAAAA
+    .\corumlauncher
+    end source code control
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
+Project: "INIEncrypt"=.\INIEncrypt\INIEncrypt.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+    begin source code control
+    "$/Localizing/INIEncrypt", QRRAAAAA
+    .\iniencrypt
+    end source code control
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
+Project: "MonsterSkillTool"=.\MonsterSkillTool\MonsterSkillTool.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+    begin source code control
+    "$/Localizing/MonsterSkillTool", HPDBAAAA
+    .\monsterskilltool
+    end source code control
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
+Project: "PatchMaker"=.\PatchMaker\PatchMaker.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+    begin source code control
+    "$/Localizing/PatchMaker", EISAAAAA
+    .\patchmaker
+    end source code control
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
+Project: "RegionSelect"=.\RegionSelect\RegionSelect.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+    begin source code control
+    "$/Localizing/RegionSelect", KSRAAAAA
+    .\regionselect
+    end source code control
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
+Project: "SelfUpdate"=.\SelfUpdate\SelfUpdate.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+    begin source code control
+    "$/Localizing/SelfUpdate", QWSAAAAA
+    .\selfupdate
+    end source code control
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
+Global:
+
+Package=<5>
+{{{
+    begin source code control
+    "$/Localizing", JRRAAAAA
+    .
+    end source code control
+}}}
+
+Package=<3>
+{{{
+}}}
+
+###############################################################################
+

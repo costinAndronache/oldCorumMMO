@@ -1,0 +1,301 @@
+//Microsoft Developer Studio generated resource script.
+//
+#include "resource.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#include "afxres.h"
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// Korean resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_KOR)
+#ifdef _WIN32
+LANGUAGE LANG_KOREAN, SUBLANG_DEFAULT
+#pragma code_page(949)
+#endif //_WIN32
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "resource.h\0"
+END
+
+2 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "#include ""afxres.h""\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "#define _AFX_NO_SPLITTER_RESOURCES\r\n"
+    "#define _AFX_NO_OLE_RESOURCES\r\n"
+    "#define _AFX_NO_TRACKER_RESOURCES\r\n"
+    "#define _AFX_NO_PROPERTY_RESOURCES\r\n"
+    "\r\n"
+    "#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_KOR)\r\n"
+    "#ifdef _WIN32\r\n"
+    "LANGUAGE 18, 1\r\n"
+    "#pragma code_page(949)\r\n"
+    "#endif //_WIN32\r\n"
+    "#include ""res\\pc_status.rc2""  // non-Microsoft Visual C++ edited resources\r\n"
+    "#include ""l.kor\\afxres.rc""          // Standard components\r\n"
+    "#endif\r\n"
+    "\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+IDR_MAINFRAME           ICON    DISCARDABLE     "res\\pc_status.ico"
+IDI_ICON_DANGEROUS      ICON    DISCARDABLE     "res\\icon_dan.ico"
+IDI_ICON_FIT            ICON    DISCARDABLE     "res\\fit.ico"
+IDI_ICON_HARDCORE       ICON    DISCARDABLE     "res\\icon_har.ico"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_ABOUTBOX DIALOG DISCARDABLE  0, 0, 247, 111
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "CorumOnlineAnalyze"
+FONT 9, "굴림"
+BEGIN
+    ICON            IDR_MAINFRAME,IDC_STATIC,11,11,20,21
+    LTEXT           "CorumOnlineSystemAnalysis 버전 1.2",IDC_STATIC,40,10,
+                    137,8,SS_NOPREFIX
+    LTEXT           "Copyright (C) 2003",IDC_STATIC,40,25,119,8
+    DEFPUSHBUTTON   "확인",IDOK,190,7,50,14,WS_GROUP
+    LTEXT           "코룸온라인을 플레이하기에 적합한 시스템 사양인지\n체크해주는 툴입니다.\n툴에 문제가 있을시에 고객감동팀에게 \n버그리포트 부탁드립니다. ^_^",
+                    IDC_STATIC,40,41,175,36
+    LTEXT           "By 코룸온라인 개발팀",IDC_STATIC,162,89,77,11
+END
+
+IDD_PC_STATUS_DIALOG DIALOGEX 0, 0, 371, 265
+STYLE WS_MINIMIZEBOX | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
+EXSTYLE WS_EX_APPWINDOW
+CAPTION "코룸온라인 시스템 진단도구_040205"
+FONT 9, "굴림"
+BEGIN
+    PUSHBUTTON      "화일로 저장",IDC_BUTTON_PRINT_FILE,65,241,91,19
+    LTEXT           "",IDC_STATIC_LOGO,2,8,153,95,WS_BORDER
+    GROUPBOX        "부가 정보 [ 확인필수 ]",IDC_STATIC,161,3,207,100
+    LTEXT           "고객상담 페이지 바로가기 ... ",IDC_STATIC_CLINETPAGE_GO,
+                    167,90,113,8
+    EDITTEXT        IDC_EDIT_INFO,161,14,207,71,ES_MULTILINE | 
+                    ES_AUTOVSCROLL | ES_AUTOHSCROLL | ES_READONLY | 
+                    WS_VSCROLL | NOT WS_TABSTOP
+    PUSHBUTTON      "종  료",IDC_BUTTON_EXIT,217,241,91,19
+    CONTROL         "List1",IDC_SPEC_LIST,"SysListView32",LVS_REPORT | 
+                    LVS_SHOWSELALWAYS | LVS_SHAREIMAGELISTS | WS_BORDER,2,
+                    111,366,122
+END
+
+
+#ifndef _MAC
+/////////////////////////////////////////////////////////////////////////////
+//
+// Version
+//
+
+VS_VERSION_INFO VERSIONINFO
+ FILEVERSION 4,2,5,1
+ PRODUCTVERSION 4,2,5,1
+ FILEFLAGSMASK 0x3fL
+#ifdef _DEBUG
+ FILEFLAGS 0x1L
+#else
+ FILEFLAGS 0x0L
+#endif
+ FILEOS 0x4L
+ FILETYPE 0x1L
+ FILESUBTYPE 0x0L
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "041204b0"
+        BEGIN
+            VALUE "Comments", "777777777777777\0"
+            VALUE "CompanyName", "이소프넷\0"
+            VALUE "FileDescription", "사양체크 프로그램\0"
+            VALUE "FileVersion", "4, 2, 5, 1\0"
+            VALUE "InternalName", "pc_status\0"
+            VALUE "LegalCopyright", "Copyright (C) 2003\0"
+            VALUE "LegalTrademarks", "\0"
+            VALUE "OriginalFilename", "CorumOnlineAnalyze.EXE\0"
+            VALUE "PrivateBuild", "\0"
+            VALUE "ProductName", "사양체크\0"
+            VALUE "ProductVersion", "4, 2, 5, 1\0"
+            VALUE "SpecialBuild", "\0"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x412, 1200
+    END
+END
+
+#endif    // !_MAC
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO DISCARDABLE 
+BEGIN
+    IDD_ABOUTBOX, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 240
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 104
+    END
+
+    IDD_PC_STATUS_DIALOG, DIALOG
+    BEGIN
+        LEFTMARGIN, 2
+        VERTGUIDE, 2
+        VERTGUIDE, 11
+        VERTGUIDE, 98
+        VERTGUIDE, 161
+        VERTGUIDE, 188
+        VERTGUIDE, 199
+        VERTGUIDE, 368
+        BOTTOMMARGIN, 260
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Bitmap
+//
+
+IDB_BITMAP_LOGO         BITMAP  DISCARDABLE     "Corum_logo.bmp"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Cursor
+//
+
+IDC_HAND_POINT          CURSOR  DISCARDABLE     "res\\cursor1.cur"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// String Table
+//
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDS_ABOUTBOX            "pc_status 정보(&A)..."
+    IDS_OS_ALERT            "OS(운영체제)가 코룸온라인을 하기 위한 \r\n최소사양을 만족하지 않습니다.  \r\nWin98이상의 운영체제를 권장합니다.    \r\n자세한 사항은 홈페이지 FAQ를 참고하시고 \r\n원하시는 답변이나 좀더 궁금한 사항이 있으시면 \r\n홈페이지 고객상담게시판을 통해 문의하여 주시기 바랍니다.\r\n\r\n"
+    IDS_RAM_ALERT           "RAM(메모리)가 최소사양을 만족하지 않습니다. \r\n코룸온라인은 128램 이상의 메모리에서\r\n실행이 가능합니다.  최소사양과 권장사항은 \r\n홈페이지 FAQ를 참고 하시기 바랍니다.\r\n\r\n"
+    IDS_HARDDISK_ALERT      "하드 디스크에 여유 공간이 없어 코룸온라인을 \r\n설치할수 없습니다.   불필요한 프로그램을\r\n제거후 코룸온라인을 이용해 주시기 바랍니다. \r\n설치대상 공간을 1GB이상 확보바랍니다. \r\n제어판에 있는 (프로그램 추가/제거) 바로가기 아이콘\r\n\r\n"
+    IDS_GRAPHIC_CARD_ALERT  "그래픽 카드로 인하여 코룸온라인을 이용하실때 \r\n불편할수도 있습니다. 최적의 환경에서 코룸\r\n온라인을 이용하시기 위해서는 그래픽카드 교체를 \r\n권장합니다. 관련문의는 홈페이지 FAQ를 참고하시고 \r\n원하시는 답변이나 좀더 궁금한 사항이 있으시면 \r\n홈페이지 고객상담 게시판을 통해 문의하여 \r\n주시기 바랍니다.\r\n\r\n"
+    IDS_GRAPHIC_CARD_DRIVER_ALERT 
+                            "그래픽 카드의 드라이버 버전이 낮아 코룸온라인을 \r\n이용하실수 없습니다. 그래픽 카드 드라이버\r\n의 버전을 업그레이드하시기 바랍니다. \r\n자세한 사항은 홈페이지 FAQ를 참고하시고 원하시는 \r\n답변 이나 좀더 궁금한 사항이 있으시면 홈페이지 \r\n고객상담 게시판을 통해 문의 하여 주시기 바랍니다.\r\n\r\n"
+    IDS_GRAPHIC_CARD_MEM_ALERT 
+                            "비디오 메모리가 최소 사양을 만족하지 않습니다. \r\n코룸온라인을 이용하기 위해서는 비디오 메모리\r\n의 업그레이드를 권장합니다. 자세한 사항은 홈페이지 FAQ를 참고 하시고 원하시는 답변이나\r\n좀더 궁금한 사항이 있으시면 홈페이지 고객상담게시판을 통해 문의하여 주시기 바랍니다.\r\n\r\n"
+    IDS_DIRECTX_VER_ALERT   "DirectX의 버전이 낮아 코룸 온라인을 실행할수 없습니다. DirectX의 버전을 업그레이드 하신후\r\n코룸온라인을 실행해 주시기 바랍니다.\r\n\r\n"
+    IDS_DISPLAY_MODE_ALERT  "디스플레이 모드가 코룸온라인을 하기 위한 조건에 \r\n만족하지 않습니다. 디스플레이 모드를 변경\r\n하신후 코룸온라인을 실행해 주시기 바랍니다. \r\n관련사항에 대해 좀더 궁금한 사항이 있으시면\r\n홈페이지 고객상담 게시판을 통해 문의하여 \r\n주시기 바랍니다.\r\n\r\n"
+    IDS_SOUND_ALERT         "사운드 카드로 인하여 코룸온라인을 이용하실때 \r\n불편하실수도 있습니다. 최적의 환경에서 \r\n코룸온라인을 이용하시기 위해서는 사운드 카드 \r\n교체를 권장합니다. 자세한 사항은 홈페이지 FAQ를 \r\n참고 하시고 좀더 궁금한 사항이 있으시면 \r\n홈페이지 고객상담 게시판을 통해 문의하여 \r\n주시기 바랍니다.\r\n\r\n"
+    IDS_CPU_ALERT           "CPU의 사양이 코룸온라인을 하기위한 최소사양을 \r\n만족하지 않습니다. CPU의 업그레이드가 필요합니다.\r\n관련 문의는 홈페이지 FAQ를 참고하시고 원하시는 \r\n답변이나 좀더 궁금한 사항이 있으시면 홈페이지 \r\n고객상담게시판을 통해 문의하여 주시기 바랍니다\r\n\r\n"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDS_GRAPHIC_CARD_AGP_ALERT 
+                            "보드 패치를 권장합니다. \r\n 게임 실행시 AGP메모리 문제가 발생 할 수 있습니다.\r\n\r\n"
+    IDS_HEADER1             "구  성"
+    IDS_HEADER2             "권장사항"
+    IDS_HEADER3             "내 컴퓨터 사양"
+    IDS_HEADER4             "검  사"
+    IDS_MSG1                "비디오 메모리를 구하지 못하였습니다."
+    IDS_MSG2                "Display Mode 정보 습득 오류"
+    IDS_MSG3                "CPU|Pentium® 3 600 Mhz 이상|"
+    IDS_MSG4                "OS|Windows® 98/ME/2000/XP|"
+    IDS_MSG5                "RAM|128 MB|"
+    IDS_MSG6                "설치대상 남은 하드용량|1 GB 이상|"
+    IDS_MSG7                "그래픽카드|NVIDIA®,ATI®|"
+    IDS_MSG8                "드라이버(버전)|Geforce®계열 또는 Radeon® 7500 이상|"
+    IDS_MSG9                "비디오 메모리|32 MB 이상 (전체 / 사용가능)|"
+    IDS_MSG10               "AGP 메모리|128 MB 이상|"
+    IDS_MSG11               "압축텍스쳐|지원(옵션)|"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDS_MSG12               "DirectX® 버전|DirectX® 8.1 이상|"
+    IDS_MSG13               "Sound Card|Sound Blaster® 호환 기종|"
+    IDS_MSG14               "nVidia Geforce 이상계열 그래픽카드 권장\r\n게임 진행이 느려질 수 있습니다.\r\n\r\n"
+    IDS_MSG15               "그래픽 카드 드라이버 버전이 \r\n구버전 입니다. 신버전으로 업데이트 해주세요.\r\n게임성능에 영향을 줄수있습니다. \r\n\r\n"
+    IDS_MSG16               "그래픽 카드가 라데온 7500 이하 계열에서는 라이팅과 \r\n그림자 옵션을 꺼야 한다.  그밖에 월드맵 배경이 \r\n잘 안나오니 양해바랍니다.  게임 플레이하는데에는 \r\n큰 무리는 없습니다.\r\n\r\n"
+    IDS_MSG17               "월드맵 화면이 깨져 보일수도 있습니다.\r\n 게임진행엔 큰문제가 되지는 않습니다.\r\n\r\n"
+    IDS_MSG18               "부두칩셋에서는 코룸온라인을 실행할수 없습니다!\r\n\r\n"
+    IDS_MSG19               "그래픽 카드를 식별하지 못하였습니다.!\r\n\r\n"
+    IDS_MSG20               "지원"
+    IDS_MSG21               "지원하지않음"
+    IDS_MSG22               "압축텍스쳐를 지원하지 않으면 게임속도가 저하됩니다.!\r\n\r\n"
+    IDS_MSG23               "사운드 카드가 없거나 드라이버를 인식하지 못하였습니다!\r\n\r\n"
+    IDS_MSG24               "당신은 코룸온라인을 100% 즐기실 준비가 되어있군요~~ ^^"
+    IDS_MSG25               "======================================================\r\n위의 항목을 확인하고 필요하다면\r\n고객센터 바로가기를 클릭 하시기 바랍니다."
+    IDS_MSG26               "\\코룸온라인 시스템 진단 리포트.txt"
+    IDS_MSG27               "http://www.corumonline.co.kr"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDS_MSG28               "http://www.corumonline.co.kr/Support_Zone"
+END
+
+#endif    // Korean resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+#define _AFX_NO_SPLITTER_RESOURCES
+#define _AFX_NO_OLE_RESOURCES
+#define _AFX_NO_TRACKER_RESOURCES
+#define _AFX_NO_PROPERTY_RESOURCES
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_KOR)
+#ifdef _WIN32
+LANGUAGE 18, 1
+#pragma code_page(949)
+#endif //_WIN32
+#include "res\pc_status.rc2"  // non-Microsoft Visual C++ edited resources
+#include "l.kor\afxres.rc"          // Standard components
+#endif
+
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+

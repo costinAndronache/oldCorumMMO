@@ -1,0 +1,78 @@
+<html>
+<body>
+<pre>
+<h1>Build Log</h1>
+<h3>
+--------------------Configuration: ModelView - Win32 Debug--------------------
+</h3>
+<h3>Command Lines</h3>
+Creating temporary file "C:\DOCUME~1\yuchi\LOCALS~1\Temp\RSPF.tmp" with contents
+[
+/nologo /MDd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_AFXDLL" /D "_MBCS" /FR"Debug/" /Fp"Debug/ModelView.pch" /Yu"stdafx.h" /Fo"Debug/" /Fd"Debug/" /FD /GZ /c 
+"D:\4dyuchigx\ModelView\EngineRelation.cpp"
+]
+Creating command line "cl.exe @C:\DOCUME~1\yuchi\LOCALS~1\Temp\RSPF.tmp" 
+Creating temporary file "C:\DOCUME~1\yuchi\LOCALS~1\Temp\RSP10.tmp" with contents
+[
+/nologo /subsystem:windows /incremental:yes /pdb:"Debug/ModelView.pdb" /debug /machine:I386 /out:"../../4DyuchiGX/4DyuchiGXTools/ModelView.exe" /pdbtype:sept 
+.\Debug\BackgroundColorDlg.obj
+.\Debug\Camera.obj
+.\Debug\DialogBar.obj
+.\Debug\DlgCreateEffect.obj
+.\Debug\DlgEffectPalette.obj
+.\Debug\EngineRelation.obj
+.\Debug\FrontOfCameraDlg.obj
+.\Debug\IllusionAttachDlg.obj
+.\Debug\IllusionSetupDlg.obj
+.\Debug\LightDlg.obj
+.\Debug\ListBoxContainer.obj
+.\Debug\MainFrm.obj
+.\Debug\ModelView.obj
+.\Debug\ModelViewDoc.obj
+.\Debug\ModelViewView.obj
+.\Debug\SetFrameDlg.obj
+.\Debug\SpecularDlg.obj
+.\Debug\StdAfx.obj
+.\Debug\ToolBar.obj
+.\Debug\ToolInfo.obj
+.\Debug\ModelView.res
+]
+Creating command line "link.exe @C:\DOCUME~1\yuchi\LOCALS~1\Temp\RSP10.tmp"
+<h3>Output Window</h3>
+Compiling...
+EngineRelation.cpp
+Linking...
+Creating temporary file "C:\DOCUME~1\yuchi\LOCALS~1\Temp\RSP12.tmp" with contents
+[
+/nologo /o"Debug/ModelView.bsc" 
+.\Debug\StdAfx.sbr
+.\Debug\BackgroundColorDlg.sbr
+.\Debug\Camera.sbr
+.\Debug\DialogBar.sbr
+.\Debug\DlgCreateEffect.sbr
+.\Debug\DlgEffectPalette.sbr
+.\Debug\EngineRelation.sbr
+.\Debug\FrontOfCameraDlg.sbr
+.\Debug\IllusionAttachDlg.sbr
+.\Debug\IllusionSetupDlg.sbr
+.\Debug\LightDlg.sbr
+.\Debug\ListBoxContainer.sbr
+.\Debug\MainFrm.sbr
+.\Debug\ModelView.sbr
+.\Debug\ModelViewDoc.sbr
+.\Debug\ModelViewView.sbr
+.\Debug\SetFrameDlg.sbr
+.\Debug\SpecularDlg.sbr
+.\Debug\ToolBar.sbr
+.\Debug\ToolInfo.sbr]
+Creating command line "bscmake.exe @C:\DOCUME~1\yuchi\LOCALS~1\Temp\RSP12.tmp"
+Creating browse info file...
+<h3>Output Window</h3>
+
+
+
+<h3>Results</h3>
+ModelView.exe - 0 error(s), 0 warning(s)
+</pre>
+</body>
+</html>

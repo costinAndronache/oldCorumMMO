@@ -1,0 +1,251 @@
+<html>
+<body>
+<pre>
+<h1>Build Log</h1>
+<h3>
+--------------------Configuration: 4DyuchiGXMapEditor - Win32 Debug--------------------
+</h3>
+<h3>Command Lines</h3>
+Creating command line "rc.exe /l 0x412 /fo"Debug/4DyuchiGXMapEditor.res" /d "_DEBUG" /d "_AFXDLL" "D:\4dyuchigx\4DyuchiGXMapEditor\4DyuchiGXMapEditor.rc"" 
+Creating temporary file "C:\DOCUME~1\yuchi\LOCALS~1\Temp\RSP80.tmp" with contents
+[
+/nologo /MDd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_AFXDLL" /D "_MBCS" /FR"Debug/" /Fp"Debug/4DyuchiGXMapEditor.pch" /YX /Fo"Debug/" /Fd"Debug/" /FD /GZ /c 
+"D:\4dyuchigx\4DyuchiGXMapEditor\4DyuchiGXMapEditor.cpp"
+"D:\4dyuchigx\4DyuchiGXMapEditor\4DyuchiGXMapEditorDoc.cpp"
+"D:\4dyuchigx\4DyuchiGXMapEditor\4DyuchiGXMapEditorView.cpp"
+"D:\4dyuchigx\4DyuchiGXMapEditor\BottomPane.cpp"
+"D:\4dyuchigx\4DyuchiGXMapEditor\brush.cpp"
+"D:\4dyuchigx\4DyuchiGXMapEditor\ColorPalette.cpp"
+"D:\4dyuchigx\4DyuchiGXMapEditor\DialogConsole.cpp"
+"D:\4dyuchigx\4DyuchiGXMapEditor\DialogDirectionalLightProperty.cpp"
+"D:\4dyuchigx\4DyuchiGXMapEditor\DialogHFieldProperty.cpp"
+"D:\4dyuchigx\4DyuchiGXMapEditor\DialogTileBrushProperty.cpp"
+"D:\4dyuchigx\4DyuchiGXMapEditor\DialogTilePalette.cpp"
+"D:\4dyuchigx\4DyuchiGXMapEditor\DlgBarHField.cpp"
+"D:\4dyuchigx\4DyuchiGXMapEditor\DlgBarTool.cpp"
+"D:\4dyuchigx\4DyuchiGXMapEditor\helper.cpp"
+"D:\4dyuchigx\4DyuchiGXMapEditor\ItemCount.cpp"
+"D:\4dyuchigx\4DyuchiGXMapEditor\LightPosDlg.cpp"
+"D:\4dyuchigx\4DyuchiGXMapEditor\LightProperty.cpp"
+"D:\4dyuchigx\4DyuchiGXMapEditor\ListBoxContainer.cpp"
+"D:\4dyuchigx\4DyuchiGXMapEditor\MainFrm.cpp"
+"D:\4dyuchigx\4DyuchiGX_UTIL\MouseLib.cpp"
+"D:\4dyuchigx\4DyuchiGX_UTIL\MToolMouseStatus.cpp"
+"D:\4dyuchigx\4DyuchiGXMapEditor\MyListCtrl.cpp"
+"D:\4dyuchigx\4DyuchiGXMapEditor\MySplitter.cpp"
+"D:\4dyuchigx\4DyuchiGXMapEditor\NpcInfoDlg.cpp"
+"D:\4dyuchigx\4DyuchiGXMapEditor\ObjectProperty.cpp"
+"D:\4dyuchigx\4DyuchiGXMapEditor\parser.cpp"
+"D:\4dyuchigx\4DyuchiGXMapEditor\RightView.cpp"
+"D:\4dyuchigx\4DyuchiGXMapEditor\SectionInfoDlg.cpp"
+"D:\4dyuchigx\4DyuchiGXMapEditor\TileBrush.cpp"
+"D:\4dyuchigx\4DyuchiGXMapEditor\TileView.cpp"
+"D:\4dyuchigx\4DyuchiGXMapEditor\Tool.cpp"
+"D:\4dyuchigx\4DyuchiGXMapEditor\TriggerProperty.cpp"
+"D:\4dyuchigx\4DyuchiGXMapEditor\Voidlist.cpp"
+"D:\4dyuchigx\4DyuchiGXMapEditor\DialogEditEntry.cpp"
+"D:\4dyuchigx\4DyuchiGXMapEditor\DialogEditTileSet.cpp"
+"D:\4dyuchigx\4DyuchiGXMapEditor\DialogTileSet.cpp"
+"D:\4dyuchigx\4DyuchiGXMapEditor\TileSet.cpp"
+"D:\4dyuchigx\4DyuchiGXMapEditor\TileSetApplyer.cpp"
+"D:\4dyuchigx\4DyuchiGXMapEditor\TileSetEntry.cpp"
+"D:\4dyuchigx\4DyuchiGXMapEditor\TileSetPiece.cpp"
+]
+Creating command line "cl.exe @C:\DOCUME~1\yuchi\LOCALS~1\Temp\RSP80.tmp" 
+Creating temporary file "C:\DOCUME~1\yuchi\LOCALS~1\Temp\RSP81.tmp" with contents
+[
+/nologo /MDd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_AFXDLL" /D "_MBCS" /FR"Debug/" /Fp"Debug/4DyuchiGXMapEditor.pch" /Yc"stdafx.h" /Fo"Debug/" /Fd"Debug/" /FD /GZ /c 
+"D:\4dyuchigx\4DyuchiGXMapEditor\StdAfx.cpp"
+]
+Creating command line "cl.exe @C:\DOCUME~1\yuchi\LOCALS~1\Temp\RSP81.tmp" 
+Creating temporary file "C:\DOCUME~1\yuchi\LOCALS~1\Temp\RSP82.tmp" with contents
+[
+/nologo /subsystem:windows /incremental:no /pdb:"Debug/4DyuchiGXMapEditor.pdb" /debug /debugtype:both /machine:I386 /out:"../../4DyuchiGX/4DyuchiGXTools/4DyuchiGXMapEditor.exe" /pdbtype:sept 
+.\Debug\4DyuchiGXMapEditor.obj
+.\Debug\4DyuchiGXMapEditorDoc.obj
+.\Debug\4DyuchiGXMapEditorView.obj
+.\Debug\BottomPane.obj
+.\Debug\brush.obj
+.\Debug\ColorPalette.obj
+.\Debug\DialogConsole.obj
+.\Debug\DialogDirectionalLightProperty.obj
+.\Debug\DialogHFieldProperty.obj
+.\Debug\DialogTileBrushProperty.obj
+.\Debug\DialogTilePalette.obj
+.\Debug\DlgBarHField.obj
+.\Debug\DlgBarTool.obj
+.\Debug\helper.obj
+.\Debug\ItemCount.obj
+.\Debug\LightPosDlg.obj
+.\Debug\LightProperty.obj
+.\Debug\ListBoxContainer.obj
+.\Debug\MainFrm.obj
+.\Debug\MouseLib.obj
+.\Debug\MToolMouseStatus.obj
+.\Debug\MyListCtrl.obj
+.\Debug\MySplitter.obj
+.\Debug\NpcInfoDlg.obj
+.\Debug\ObjectProperty.obj
+.\Debug\parser.obj
+.\Debug\RightView.obj
+.\Debug\SectionInfoDlg.obj
+.\Debug\StdAfx.obj
+.\Debug\TileBrush.obj
+.\Debug\TileView.obj
+.\Debug\Tool.obj
+.\Debug\TriggerProperty.obj
+.\Debug\Voidlist.obj
+.\Debug\DialogEditEntry.obj
+.\Debug\DialogEditTileSet.obj
+.\Debug\DialogTileSet.obj
+.\Debug\TileSet.obj
+.\Debug\TileSetApplyer.obj
+.\Debug\TileSetEntry.obj
+.\Debug\TileSetPiece.obj
+.\Debug\4DyuchiGXMapEditor.res
+]
+Creating command line "link.exe @C:\DOCUME~1\yuchi\LOCALS~1\Temp\RSP82.tmp"
+<h3>Output Window</h3>
+Compiling resources...
+Compiling...
+StdAfx.cpp
+Compiling...
+4DyuchiGXMapEditor.cpp
+4DyuchiGXMapEditorDoc.cpp
+4DyuchiGXMapEditorView.cpp
+BottomPane.cpp
+brush.cpp
+ColorPalette.cpp
+DialogConsole.cpp
+DialogDirectionalLightProperty.cpp
+d:\4dyuchigx\4dyuchigxmapeditor\dialogdirectionallightproperty.cpp(104) : warning C4244: '=' : conversion from 'unsigned long' to 'unsigned char', possible loss of data
+d:\4dyuchigx\4dyuchigxmapeditor\dialogdirectionallightproperty.cpp(105) : warning C4244: '=' : conversion from 'unsigned long' to 'unsigned char', possible loss of data
+d:\4dyuchigx\4dyuchigxmapeditor\dialogdirectionallightproperty.cpp(106) : warning C4244: '=' : conversion from 'unsigned long' to 'unsigned char', possible loss of data
+d:\4dyuchigx\4dyuchigxmapeditor\dialogdirectionallightproperty.cpp(108) : warning C4244: '=' : conversion from 'unsigned long' to 'unsigned char', possible loss of data
+d:\4dyuchigx\4dyuchigxmapeditor\dialogdirectionallightproperty.cpp(109) : warning C4244: '=' : conversion from 'unsigned long' to 'unsigned char', possible loss of data
+d:\4dyuchigx\4dyuchigxmapeditor\dialogdirectionallightproperty.cpp(110) : warning C4244: '=' : conversion from 'unsigned long' to 'unsigned char', possible loss of data
+d:\4dyuchigx\4dyuchigxmapeditor\dialogdirectionallightproperty.cpp(112) : warning C4244: '=' : conversion from 'unsigned long' to 'unsigned char', possible loss of data
+d:\4dyuchigx\4dyuchigxmapeditor\dialogdirectionallightproperty.cpp(113) : warning C4244: '=' : conversion from 'unsigned long' to 'unsigned char', possible loss of data
+d:\4dyuchigx\4dyuchigxmapeditor\dialogdirectionallightproperty.cpp(114) : warning C4244: '=' : conversion from 'unsigned long' to 'unsigned char', possible loss of data
+DialogHFieldProperty.cpp
+DialogTileBrushProperty.cpp
+DialogTilePalette.cpp
+d:\4dyuchigx\4dyuchigxmapeditor\dialogtilepalette.cpp(461) : warning C4244: '=' : conversion from 'unsigned long' to 'unsigned short', possible loss of data
+DlgBarHField.cpp
+d:\4dyuchigx\4dyuchigxmapeditor\dlgbarhfield.cpp(279) : warning C4244: '=' : conversion from 'unsigned long' to 'unsigned char', possible loss of data
+d:\4dyuchigx\4dyuchigxmapeditor\dlgbarhfield.cpp(280) : warning C4244: '=' : conversion from 'unsigned long' to 'unsigned char', possible loss of data
+d:\4dyuchigx\4dyuchigxmapeditor\dlgbarhfield.cpp(281) : warning C4244: '=' : conversion from 'unsigned long' to 'unsigned char', possible loss of data
+DlgBarTool.cpp
+helper.cpp
+ItemCount.cpp
+LightPosDlg.cpp
+LightProperty.cpp
+ListBoxContainer.cpp
+MainFrm.cpp
+MouseLib.cpp
+MToolMouseStatus.cpp
+MyListCtrl.cpp
+MySplitter.cpp
+NpcInfoDlg.cpp
+ObjectProperty.cpp
+parser.cpp
+RightView.cpp
+D:\4dyuchigx\4DyuchiGXMapEditor\RightView.cpp(369) : warning C4018: '<' : signed/unsigned mismatch
+SectionInfoDlg.cpp
+TileBrush.cpp
+TileView.cpp
+Tool.cpp
+D:\4dyuchigx\4DyuchiGXMapEditor\Tool.cpp(207) : warning C4102: 'lb_skip' : unreferenced label
+D:\4dyuchigx\4DyuchiGXMapEditor\Tool.cpp(1054) : warning C4244: '=' : conversion from 'long' to 'float', possible loss of data
+D:\4dyuchigx\4DyuchiGXMapEditor\Tool.cpp(1055) : warning C4244: '=' : conversion from 'long' to 'float', possible loss of data
+D:\4dyuchigx\4DyuchiGXMapEditor\Tool.cpp(1057) : warning C4244: '=' : conversion from 'long' to 'float', possible loss of data
+D:\4dyuchigx\4DyuchiGXMapEditor\Tool.cpp(1058) : warning C4244: '=' : conversion from 'long' to 'float', possible loss of data
+D:\4dyuchigx\4DyuchiGXMapEditor\Tool.cpp(1060) : warning C4244: '=' : conversion from 'long' to 'float', possible loss of data
+D:\4dyuchigx\4DyuchiGXMapEditor\Tool.cpp(1061) : warning C4244: '=' : conversion from 'long' to 'float', possible loss of data
+D:\4dyuchigx\4DyuchiGXMapEditor\Tool.cpp(1063) : warning C4244: '=' : conversion from 'long' to 'float', possible loss of data
+D:\4dyuchigx\4DyuchiGXMapEditor\Tool.cpp(1064) : warning C4244: '=' : conversion from 'long' to 'float', possible loss of data
+D:\4dyuchigx\4DyuchiGXMapEditor\Tool.cpp(1351) : warning C4018: '==' : signed/unsigned mismatch
+D:\4dyuchigx\4DyuchiGXMapEditor\Tool.cpp(1722) : warning C4101: 'fDist' : unreferenced local variable
+D:\4dyuchigx\4DyuchiGXMapEditor\Tool.cpp(1721) : warning C4101: 'v3Pos' : unreferenced local variable
+D:\4dyuchigx\4DyuchiGXMapEditor\Tool.cpp(1740) : warning C4101: 'fDist' : unreferenced local variable
+D:\4dyuchigx\4DyuchiGXMapEditor\Tool.cpp(1739) : warning C4101: 'v3Pos' : unreferenced local variable
+D:\4dyuchigx\4DyuchiGXMapEditor\Tool.cpp(1895) : warning C4101: 'pickDesc' : unreferenced local variable
+D:\4dyuchigx\4DyuchiGXMapEditor\Tool.cpp(2226) : warning C4101: 'ptCursor' : unreferenced local variable
+D:\4dyuchigx\4DyuchiGXMapEditor\Tool.cpp(4574) : warning C4018: '<' : signed/unsigned mismatch
+D:\4dyuchigx\4DyuchiGXMapEditor\Tool.cpp(4576) : warning C4018: '<' : signed/unsigned mismatch
+D:\4dyuchigx\4DyuchiGXMapEditor\Tool.cpp(5042) : warning C4244: '=' : conversion from 'float' to 'unsigned long', possible loss of data
+D:\4dyuchigx\4DyuchiGXMapEditor\Tool.cpp(5061) : warning C4244: '=' : conversion from 'long' to 'unsigned short', possible loss of data
+D:\4dyuchigx\4DyuchiGXMapEditor\Tool.cpp(5062) : warning C4244: '=' : conversion from 'long' to 'unsigned short', possible loss of data
+D:\4dyuchigx\4DyuchiGXMapEditor\Tool.cpp(5063) : warning C4244: '=' : conversion from 'long' to 'unsigned short', possible loss of data
+D:\4dyuchigx\4DyuchiGXMapEditor\Tool.cpp(5064) : warning C4244: '=' : conversion from 'long' to 'unsigned short', possible loss of data
+TriggerProperty.cpp
+D:\4dyuchigx\4DyuchiGXMapEditor\TriggerProperty.cpp(69) : warning C4244: '=' : conversion from 'unsigned long' to 'unsigned char', possible loss of data
+D:\4dyuchigx\4DyuchiGXMapEditor\TriggerProperty.cpp(70) : warning C4244: '=' : conversion from 'unsigned long' to 'unsigned char', possible loss of data
+D:\4dyuchigx\4DyuchiGXMapEditor\TriggerProperty.cpp(71) : warning C4244: '=' : conversion from 'unsigned long' to 'unsigned char', possible loss of data
+Voidlist.cpp
+DialogEditEntry.cpp
+DialogEditTileSet.cpp
+DialogTileSet.cpp
+D:\4dyuchigx\4DyuchiGXMapEditor\DialogTileSet.cpp(96) : warning C4101: 'filename' : unreferenced local variable
+D:\4dyuchigx\4DyuchiGXMapEditor\DialogTileSet.cpp(126) : warning C4101: 'filename' : unreferenced local variable
+TileSet.cpp
+TileSetApplyer.cpp
+TileSetEntry.cpp
+TileSetPiece.cpp
+Linking...
+LINK : warning LNK4075: ignoring /EDITANDCONTINUE due to /INCREMENTAL:NO specification
+Creating temporary file "C:\DOCUME~1\yuchi\LOCALS~1\Temp\RSP84.tmp" with contents
+[
+/nologo /o"Debug/4DyuchiGXMapEditor.bsc" 
+.\Debug\StdAfx.sbr
+.\Debug\4DyuchiGXMapEditor.sbr
+.\Debug\4DyuchiGXMapEditorDoc.sbr
+.\Debug\4DyuchiGXMapEditorView.sbr
+.\Debug\BottomPane.sbr
+.\Debug\brush.sbr
+.\Debug\ColorPalette.sbr
+.\Debug\DialogConsole.sbr
+.\Debug\DialogDirectionalLightProperty.sbr
+.\Debug\DialogHFieldProperty.sbr
+.\Debug\DialogTileBrushProperty.sbr
+.\Debug\DialogTilePalette.sbr
+.\Debug\DlgBarHField.sbr
+.\Debug\DlgBarTool.sbr
+.\Debug\helper.sbr
+.\Debug\ItemCount.sbr
+.\Debug\LightPosDlg.sbr
+.\Debug\LightProperty.sbr
+.\Debug\ListBoxContainer.sbr
+.\Debug\MainFrm.sbr
+.\Debug\MouseLib.sbr
+.\Debug\MToolMouseStatus.sbr
+.\Debug\MyListCtrl.sbr
+.\Debug\MySplitter.sbr
+.\Debug\NpcInfoDlg.sbr
+.\Debug\ObjectProperty.sbr
+.\Debug\parser.sbr
+.\Debug\RightView.sbr
+.\Debug\SectionInfoDlg.sbr
+.\Debug\TileBrush.sbr
+.\Debug\TileView.sbr
+.\Debug\Tool.sbr
+.\Debug\TriggerProperty.sbr
+.\Debug\Voidlist.sbr
+.\Debug\DialogEditEntry.sbr
+.\Debug\DialogEditTileSet.sbr
+.\Debug\DialogTileSet.sbr
+.\Debug\TileSet.sbr
+.\Debug\TileSetApplyer.sbr
+.\Debug\TileSetEntry.sbr
+.\Debug\TileSetPiece.sbr]
+Creating command line "bscmake.exe @C:\DOCUME~1\yuchi\LOCALS~1\Temp\RSP84.tmp"
+Creating browse info file...
+<h3>Output Window</h3>
+
+
+
+<h3>Results</h3>
+4DyuchiGXMapEditor.exe - 0 error(s), 43 warning(s)
+</pre>
+</body>
+</html>

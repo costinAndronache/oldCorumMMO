@@ -1,0 +1,292 @@
+<html>
+<body>
+<pre>
+<h1>Build Log</h1>
+<h3>
+--------------------Configuration: 4DyuchiGXExecutive - Win32 Release--------------------
+</h3>
+<h3>Command Lines</h3>
+Creating command line "rc.exe /l 0x412 /fo"Release/Script1.res" /d "NDEBUG" "D:\4dyuchigx\4DYUCHIGXEXECUTIVE\Script1.rc"" 
+Creating temporary file "C:\DOCUME~1\yuchi\LOCALS~1\Temp\RSP54.tmp" with contents
+[
+/nologo /MT /W3 /GX /Zi /O2 /Ob2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "MY4DYUCHIGXEXECUTIVE_EXPORTS" /FR"Release/" /Fp"Release/4DyuchiGXExecutive.pch" /YX /Fo"Release/" /Fd"Release/" /FD /c 
+"D:\4dyuchigx\4DYUCHIGXEXECUTIVE\dllmain.cpp"
+"D:\4dyuchigx\4DYUCHIGXEXECUTIVE\factory.cpp"
+"D:\4dyuchigx\4DYUCHIGXEXECUTIVE\GXDefault.cpp"
+"D:\4dyuchigx\4DYUCHIGRX_MYSELF97\CollisionTest\AAEllipsoidCollisionTest.cpp"
+"D:\4dyuchigx\4DYUCHIGRX_MYSELF97\CollisionTest\CollisionTestMovingEllipsoidMeetTriangle.cpp"
+"D:\4dyuchigx\4DYUCHIGRX_MYSELF97\CollisionTest\CollisionTestMovingSphereMeetTriangle.cpp"
+"D:\4dyuchigx\4DyuchiGRX_myself97\CollisionTest\DummyCollisionTest.cpp"
+"D:\4dyuchigx\4DyuchiGRX_myself97\CollisionTest\SphereCollisionTest.cpp"
+"D:\4dyuchigx\4DyuchiGRX_myself97\MStaticObjectTree.cpp"
+"D:\4dyuchigx\4DyuchiGRX_myself97\CheckClock.cpp"
+"D:\4dyuchigx\4DyuchiGRX_myself97\Logger.cpp"
+"D:\4dyuchigx\4DyuchiGRX_myself97\MClipper.cpp"
+"D:\4dyuchigx\4DyuchiGRX_myself97\Myself97Common.cpp"
+"D:\4dyuchigx\4DyuchiGRX_myself97\TriangleLib.cpp"
+"D:\4dyuchigx\4DYUCHIGXEXECUTIVE\map.cpp"
+"D:\4dyuchigx\4DYUCHIGXEXECUTIVE\executive.cpp"
+"D:\4dyuchigx\4DYUCHIGXEXECUTIVE\GXDecal.cpp"
+"D:\4dyuchigx\4DYUCHIGXEXECUTIVE\GXEventTriggerObject.cpp"
+"D:\4dyuchigx\4DYUCHIGXEXECUTIVE\GXHFieldMapObject.cpp"
+"D:\4dyuchigx\4DYUCHIGXEXECUTIVE\GXLight.cpp"
+"D:\4dyuchigx\4DYUCHIGXEXECUTIVE\GXMapObject.cpp"
+"D:\4dyuchigx\4DYUCHIGXEXECUTIVE\GXObject.cpp"
+"D:\4dyuchigx\4DYUCHIGXEXECUTIVE\GXStaticMapObject.cpp"
+"D:\4dyuchigx\4DYUCHIGXEXECUTIVE\ShadeManager.cpp"
+]
+Creating command line "cl.exe @C:\DOCUME~1\yuchi\LOCALS~1\Temp\RSP54.tmp" 
+Creating temporary file "C:\DOCUME~1\yuchi\LOCALS~1\Temp\RSP55.tmp" with contents
+[
+kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /base:"0x65000000" /dll /incremental:no /pdb:"../../4DyuchiDLL/4DyuchiGX_Release/4DyuchiGXExecutive.pdb" /map:"../../4DyuchiDLL/4DyuchiGX_Release/4DyuchiGXExecutive.map" /debug /machine:I386 /def:".\4DyuchiGXEXECUTIVE.def" /out:"../../4DyuchiDLL/4DyuchiGX_Release/4DyuchiGXExecutive.dll" /implib:"Release/4DyuchiGXExecutive.lib" 
+.\Release\dllmain.obj
+.\Release\factory.obj
+.\Release\GXDefault.obj
+.\Release\AAEllipsoidCollisionTest.obj
+.\Release\CollisionTestMovingEllipsoidMeetTriangle.obj
+.\Release\CollisionTestMovingSphereMeetTriangle.obj
+.\Release\DummyCollisionTest.obj
+.\Release\SphereCollisionTest.obj
+.\Release\MStaticObjectTree.obj
+.\Release\CheckClock.obj
+.\Release\Logger.obj
+.\Release\MClipper.obj
+.\Release\Myself97Common.obj
+.\Release\TriangleLib.obj
+.\Release\map.obj
+.\Release\executive.obj
+.\Release\GXDecal.obj
+.\Release\GXEventTriggerObject.obj
+.\Release\GXHFieldMapObject.obj
+.\Release\GXLight.obj
+.\Release\GXMapObject.obj
+.\Release\GXObject.obj
+.\Release\GXStaticMapObject.obj
+.\Release\ShadeManager.obj
+.\Release\Script1.res
+]
+Creating command line "link.exe @C:\DOCUME~1\yuchi\LOCALS~1\Temp\RSP55.tmp"
+<h3>Output Window</h3>
+Compiling resources...
+Compiling...
+dllmain.cpp
+factory.cpp
+GXDefault.cpp
+AAEllipsoidCollisionTest.cpp
+CollisionTestMovingEllipsoidMeetTriangle.cpp
+CollisionTestMovingSphereMeetTriangle.cpp
+DummyCollisionTest.cpp
+SphereCollisionTest.cpp
+D:\4dyuchigx\4DyuchiGRX_myself97\CollisionTest\SphereCollisionTest.cpp(603) : warning C4102: 'lbReturn' : unreferenced label
+D:\4dyuchigx\4DyuchiGRX_myself97\CollisionTest\SphereCollisionTest.cpp(885) : warning C4101: 'v2Meet' : unreferenced local variable
+MStaticObjectTree.cpp
+D:\4dyuchigx\4DyuchiGRX_myself97\MStaticObjectTree.cpp(276) : warning C4018: '>=' : signed/unsigned mismatch
+D:\4dyuchigx\4DyuchiGRX_myself97\MStaticObjectTree.cpp(290) : warning C4018: '>=' : signed/unsigned mismatch
+D:\4dyuchigx\4DyuchiGRX_myself97\MStaticObjectTree.cpp(304) : warning C4018: '>=' : signed/unsigned mismatch
+D:\4dyuchigx\4DyuchiGRX_myself97\MStaticObjectTree.cpp(327) : warning C4018: '<' : signed/unsigned mismatch
+D:\4dyuchigx\4DyuchiGRX_myself97\MStaticObjectTree.cpp(434) : warning C4018: '>=' : signed/unsigned mismatch
+D:\4dyuchigx\4DyuchiGRX_myself97\MStaticObjectTree.cpp(448) : warning C4018: '>=' : signed/unsigned mismatch
+D:\4dyuchigx\4DyuchiGRX_myself97\MStaticObjectTree.cpp(462) : warning C4018: '>=' : signed/unsigned mismatch
+D:\4dyuchigx\4DyuchiGRX_myself97\MStaticObjectTree.cpp(485) : warning C4018: '<' : signed/unsigned mismatch
+CheckClock.cpp
+Logger.cpp
+MClipper.cpp
+Myself97Common.cpp
+TriangleLib.cpp
+map.cpp
+D:\4dyuchigx\4DYUCHIGXEXECUTIVE\map.cpp(523) : warning C4102: 'lb_return' : unreferenced label
+executive.cpp
+D:\4dyuchigx\4DYUCHIGXEXECUTIVE\executive.cpp(3772) : warning C4018: '<' : signed/unsigned mismatch
+GXDecal.cpp
+GXEventTriggerObject.cpp
+GXHFieldMapObject.cpp
+GXLight.cpp
+GXMapObject.cpp
+D:\4dyuchigx\4DYUCHIGXEXECUTIVE\GXMapObject.cpp(70) : warning C4102: 'lb_return' : unreferenced label
+GXObject.cpp
+GXStaticMapObject.cpp
+D:\4dyuchigx\4DYUCHIGXEXECUTIVE\GXStaticMapObject.cpp(168) : warning C4102: 'lbReturn' : unreferenced label
+ShadeManager.cpp
+Linking...
+   Creating library Release/4DyuchiGXExecutive.lib and object Release/4DyuchiGXExecutive.exp
+Creating temporary file "C:\DOCUME~1\yuchi\LOCALS~1\Temp\RSP67.tmp" with contents
+[
+/nologo /o"Release/4DyuchiGXExecutive.bsc" 
+.\Release\dllmain.sbr
+.\Release\factory.sbr
+.\Release\GXDefault.sbr
+.\Release\AAEllipsoidCollisionTest.sbr
+.\Release\CollisionTestMovingEllipsoidMeetTriangle.sbr
+.\Release\CollisionTestMovingSphereMeetTriangle.sbr
+.\Release\DummyCollisionTest.sbr
+.\Release\SphereCollisionTest.sbr
+.\Release\MStaticObjectTree.sbr
+.\Release\CheckClock.sbr
+.\Release\Logger.sbr
+.\Release\MClipper.sbr
+.\Release\Myself97Common.sbr
+.\Release\TriangleLib.sbr
+.\Release\map.sbr
+.\Release\executive.sbr
+.\Release\GXDecal.sbr
+.\Release\GXEventTriggerObject.sbr
+.\Release\GXHFieldMapObject.sbr
+.\Release\GXLight.sbr
+.\Release\GXMapObject.sbr
+.\Release\GXObject.sbr
+.\Release\GXStaticMapObject.sbr
+.\Release\ShadeManager.sbr]
+Creating command line "bscmake.exe @C:\DOCUME~1\yuchi\LOCALS~1\Temp\RSP67.tmp"
+Creating browse info file...
+<h3>Output Window</h3>
+
+
+
+<h3>Results</h3>
+4DyuchiGXExecutive.dll - 0 error(s), 14 warning(s)
+<h3>
+--------------------Configuration: 4DyuchiGXExecutive - Win32 Debug--------------------
+</h3>
+<h3>Command Lines</h3>
+Creating command line "rc.exe /l 0x412 /fo"Debug/Script1.res" /d "_DEBUG" "D:\4dyuchigx\4DYUCHIGXEXECUTIVE\Script1.rc"" 
+Creating temporary file "C:\DOCUME~1\yuchi\LOCALS~1\Temp\RSP6D.tmp" with contents
+[
+/nologo /MTd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "MY4DYUCHIGXEXECUTIVE_EXPORTS" /FR"Debug/" /Fp"Debug/4DyuchiGXExecutive.pch" /YX /Fo"Debug/" /Fd"Debug/" /FD /GZ /c 
+"D:\4dyuchigx\4DYUCHIGXEXECUTIVE\dllmain.cpp"
+"D:\4dyuchigx\4DYUCHIGXEXECUTIVE\factory.cpp"
+"D:\4dyuchigx\4DYUCHIGXEXECUTIVE\GXDefault.cpp"
+"D:\4dyuchigx\4DYUCHIGRX_MYSELF97\CollisionTest\AAEllipsoidCollisionTest.cpp"
+"D:\4dyuchigx\4DYUCHIGRX_MYSELF97\CollisionTest\CollisionTestMovingEllipsoidMeetTriangle.cpp"
+"D:\4dyuchigx\4DYUCHIGRX_MYSELF97\CollisionTest\CollisionTestMovingSphereMeetTriangle.cpp"
+"D:\4dyuchigx\4DyuchiGRX_myself97\CollisionTest\DummyCollisionTest.cpp"
+"D:\4dyuchigx\4DyuchiGRX_myself97\CollisionTest\SphereCollisionTest.cpp"
+"D:\4dyuchigx\4DyuchiGRX_myself97\MStaticObjectTree.cpp"
+"D:\4dyuchigx\4DyuchiGRX_myself97\CheckClock.cpp"
+"D:\4dyuchigx\4DyuchiGRX_myself97\Logger.cpp"
+"D:\4dyuchigx\4DyuchiGRX_myself97\MClipper.cpp"
+"D:\4dyuchigx\4DyuchiGRX_myself97\Myself97Common.cpp"
+"D:\4dyuchigx\4DyuchiGRX_myself97\TriangleLib.cpp"
+"D:\4dyuchigx\4DYUCHIGXEXECUTIVE\map.cpp"
+"D:\4dyuchigx\4DYUCHIGXEXECUTIVE\executive.cpp"
+"D:\4dyuchigx\4DYUCHIGXEXECUTIVE\GXDecal.cpp"
+"D:\4dyuchigx\4DYUCHIGXEXECUTIVE\GXEventTriggerObject.cpp"
+"D:\4dyuchigx\4DYUCHIGXEXECUTIVE\GXHFieldMapObject.cpp"
+"D:\4dyuchigx\4DYUCHIGXEXECUTIVE\GXLight.cpp"
+"D:\4dyuchigx\4DYUCHIGXEXECUTIVE\GXMapObject.cpp"
+"D:\4dyuchigx\4DYUCHIGXEXECUTIVE\GXObject.cpp"
+"D:\4dyuchigx\4DYUCHIGXEXECUTIVE\GXStaticMapObject.cpp"
+"D:\4dyuchigx\4DYUCHIGXEXECUTIVE\ShadeManager.cpp"
+]
+Creating command line "cl.exe @C:\DOCUME~1\yuchi\LOCALS~1\Temp\RSP6D.tmp" 
+Creating temporary file "C:\DOCUME~1\yuchi\LOCALS~1\Temp\RSP6E.tmp" with contents
+[
+kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /base:"0x65000000" /dll /incremental:yes /pdb:"../../4DyuchiDLL/4DyuchiGX_Debug/4DyuchiGXExecutive.pdb" /map:"../../4DyuchiDLL/4DyuchiGX_Debug/4DyuchiGXExecutive.map" /debug /debugtype:both /machine:I386 /def:".\4DyuchiGXEXECUTIVE.def" /out:"../../4DyuchiDLL/4DyuchiGX_Debug/4DyuchiGXExecutive.dll" /implib:"Debug/4DyuchiGXExecutive.lib" /pdbtype:sept 
+.\Debug\dllmain.obj
+.\Debug\factory.obj
+.\Debug\GXDefault.obj
+.\Debug\AAEllipsoidCollisionTest.obj
+.\Debug\CollisionTestMovingEllipsoidMeetTriangle.obj
+.\Debug\CollisionTestMovingSphereMeetTriangle.obj
+.\Debug\DummyCollisionTest.obj
+.\Debug\SphereCollisionTest.obj
+.\Debug\MStaticObjectTree.obj
+.\Debug\CheckClock.obj
+.\Debug\Logger.obj
+.\Debug\MClipper.obj
+.\Debug\Myself97Common.obj
+.\Debug\TriangleLib.obj
+.\Debug\map.obj
+.\Debug\executive.obj
+.\Debug\GXDecal.obj
+.\Debug\GXEventTriggerObject.obj
+.\Debug\GXHFieldMapObject.obj
+.\Debug\GXLight.obj
+.\Debug\GXMapObject.obj
+.\Debug\GXObject.obj
+.\Debug\GXStaticMapObject.obj
+.\Debug\ShadeManager.obj
+.\Debug\Script1.res
+]
+Creating command line "link.exe @C:\DOCUME~1\yuchi\LOCALS~1\Temp\RSP6E.tmp"
+<h3>Output Window</h3>
+Compiling resources...
+Compiling...
+dllmain.cpp
+factory.cpp
+GXDefault.cpp
+AAEllipsoidCollisionTest.cpp
+CollisionTestMovingEllipsoidMeetTriangle.cpp
+CollisionTestMovingSphereMeetTriangle.cpp
+DummyCollisionTest.cpp
+SphereCollisionTest.cpp
+d:\4dyuchigx\4dyuchigrx_myself97\collisiontest\spherecollisiontest.cpp(603) : warning C4102: 'lbReturn' : unreferenced label
+d:\4dyuchigx\4dyuchigrx_myself97\collisiontest\spherecollisiontest.cpp(885) : warning C4101: 'v2Meet' : unreferenced local variable
+MStaticObjectTree.cpp
+d:\4dyuchigx\4dyuchigrx_myself97\mstaticobjecttree.cpp(276) : warning C4018: '>=' : signed/unsigned mismatch
+d:\4dyuchigx\4dyuchigrx_myself97\mstaticobjecttree.cpp(290) : warning C4018: '>=' : signed/unsigned mismatch
+d:\4dyuchigx\4dyuchigrx_myself97\mstaticobjecttree.cpp(304) : warning C4018: '>=' : signed/unsigned mismatch
+d:\4dyuchigx\4dyuchigrx_myself97\mstaticobjecttree.cpp(327) : warning C4018: '<' : signed/unsigned mismatch
+d:\4dyuchigx\4dyuchigrx_myself97\mstaticobjecttree.cpp(434) : warning C4018: '>=' : signed/unsigned mismatch
+d:\4dyuchigx\4dyuchigrx_myself97\mstaticobjecttree.cpp(448) : warning C4018: '>=' : signed/unsigned mismatch
+d:\4dyuchigx\4dyuchigrx_myself97\mstaticobjecttree.cpp(462) : warning C4018: '>=' : signed/unsigned mismatch
+d:\4dyuchigx\4dyuchigrx_myself97\mstaticobjecttree.cpp(485) : warning C4018: '<' : signed/unsigned mismatch
+CheckClock.cpp
+Logger.cpp
+MClipper.cpp
+Myself97Common.cpp
+TriangleLib.cpp
+map.cpp
+d:\4dyuchigx\4dyuchigxexecutive\map.cpp(523) : warning C4102: 'lb_return' : unreferenced label
+executive.cpp
+d:\4dyuchigx\4dyuchigxexecutive\executive.cpp(3772) : warning C4018: '<' : signed/unsigned mismatch
+GXDecal.cpp
+GXEventTriggerObject.cpp
+GXHFieldMapObject.cpp
+GXLight.cpp
+GXMapObject.cpp
+d:\4dyuchigx\4dyuchigxexecutive\gxmapobject.cpp(70) : warning C4102: 'lb_return' : unreferenced label
+GXObject.cpp
+GXStaticMapObject.cpp
+d:\4dyuchigx\4dyuchigxexecutive\gxstaticmapobject.cpp(168) : warning C4102: 'lbReturn' : unreferenced label
+ShadeManager.cpp
+Linking...
+LINK : warning LNK4075: ignoring /INCREMENTAL due to /DEBUGTYPE specification
+   Creating library Debug/4DyuchiGXExecutive.lib and object Debug/4DyuchiGXExecutive.exp
+Creating temporary file "C:\DOCUME~1\yuchi\LOCALS~1\Temp\RSP72.tmp" with contents
+[
+/nologo /o"Debug/4DyuchiGXExecutive.bsc" 
+.\Debug\dllmain.sbr
+.\Debug\factory.sbr
+.\Debug\GXDefault.sbr
+.\Debug\AAEllipsoidCollisionTest.sbr
+.\Debug\CollisionTestMovingEllipsoidMeetTriangle.sbr
+.\Debug\CollisionTestMovingSphereMeetTriangle.sbr
+.\Debug\DummyCollisionTest.sbr
+.\Debug\SphereCollisionTest.sbr
+.\Debug\MStaticObjectTree.sbr
+.\Debug\CheckClock.sbr
+.\Debug\Logger.sbr
+.\Debug\MClipper.sbr
+.\Debug\Myself97Common.sbr
+.\Debug\TriangleLib.sbr
+.\Debug\map.sbr
+.\Debug\executive.sbr
+.\Debug\GXDecal.sbr
+.\Debug\GXEventTriggerObject.sbr
+.\Debug\GXHFieldMapObject.sbr
+.\Debug\GXLight.sbr
+.\Debug\GXMapObject.sbr
+.\Debug\GXObject.sbr
+.\Debug\GXStaticMapObject.sbr
+.\Debug\ShadeManager.sbr]
+Creating command line "bscmake.exe @C:\DOCUME~1\yuchi\LOCALS~1\Temp\RSP72.tmp"
+Creating browse info file...
+<h3>Output Window</h3>
+
+
+
+<h3>Results</h3>
+4DyuchiGXExecutive.dll - 0 error(s), 15 warning(s)
+</pre>
+</body>
+</html>

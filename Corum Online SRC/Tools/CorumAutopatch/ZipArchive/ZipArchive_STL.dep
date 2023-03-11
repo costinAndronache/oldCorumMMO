@@ -1,0 +1,322 @@
+# Microsoft Developer Studio Generated Dependency File, included by ZipArchive_STL.mak
+
+.\zlib\adler32.c : \
+	".\zlib\zconf.h"\
+	".\zlib\zlib.h"\
+	"c:\program files\microsoft visual studio\vc98\include\basetsd.h"\
+	
+
+.\zlib\compress.c : \
+	".\zlib\zconf.h"\
+	".\zlib\zlib.h"\
+	"c:\program files\microsoft visual studio\vc98\include\basetsd.h"\
+	
+
+.\zlib\crc32.c : \
+	".\zlib\zconf.h"\
+	".\zlib\zlib.h"\
+	"c:\program files\microsoft visual studio\vc98\include\basetsd.h"\
+	
+
+.\zlib\deflate.c : \
+	".\zlib\deflate.h"\
+	".\zlib\zconf.h"\
+	".\zlib\zlib.h"\
+	".\zlib\zutil.h"\
+	"c:\program files\microsoft visual studio\vc98\include\basetsd.h"\
+	
+
+.\zlib\gvmat32c.c : \
+	".\zlib\deflate.h"\
+	".\zlib\zconf.h"\
+	".\zlib\zlib.h"\
+	".\zlib\zutil.h"\
+	"c:\program files\microsoft visual studio\vc98\include\basetsd.h"\
+	
+
+.\zlib\infblock.c : \
+	".\zlib\infblock.h"\
+	".\zlib\infcodes.h"\
+	".\zlib\inftrees.h"\
+	".\zlib\infutil.h"\
+	".\zlib\zconf.h"\
+	".\zlib\zlib.h"\
+	".\zlib\zutil.h"\
+	"c:\program files\microsoft visual studio\vc98\include\basetsd.h"\
+	
+
+.\zlib\infcodes.c : \
+	".\zlib\infblock.h"\
+	".\zlib\infcodes.h"\
+	".\zlib\inffast.h"\
+	".\zlib\inftrees.h"\
+	".\zlib\infutil.h"\
+	".\zlib\zconf.h"\
+	".\zlib\zlib.h"\
+	".\zlib\zutil.h"\
+	"c:\program files\microsoft visual studio\vc98\include\basetsd.h"\
+	
+
+.\zlib\inffast.c : \
+	".\zlib\infblock.h"\
+	".\zlib\infcodes.h"\
+	".\zlib\inffast.h"\
+	".\zlib\inftrees.h"\
+	".\zlib\infutil.h"\
+	".\zlib\zconf.h"\
+	".\zlib\zlib.h"\
+	".\zlib\zutil.h"\
+	"c:\program files\microsoft visual studio\vc98\include\basetsd.h"\
+	
+
+.\zlib\inflate.c : \
+	".\zlib\infblock.h"\
+	".\zlib\zconf.h"\
+	".\zlib\zlib.h"\
+	".\zlib\zutil.h"\
+	"c:\program files\microsoft visual studio\vc98\include\basetsd.h"\
+	
+
+.\zlib\inftrees.c : \
+	".\zlib\inffixed.h"\
+	".\zlib\inftrees.h"\
+	".\zlib\zconf.h"\
+	".\zlib\zlib.h"\
+	".\zlib\zutil.h"\
+	"c:\program files\microsoft visual studio\vc98\include\basetsd.h"\
+	
+
+.\zlib\infutil.c : \
+	".\zlib\infblock.h"\
+	".\zlib\infcodes.h"\
+	".\zlib\inftrees.h"\
+	".\zlib\infutil.h"\
+	".\zlib\zconf.h"\
+	".\zlib\zlib.h"\
+	".\zlib\zutil.h"\
+	"c:\program files\microsoft visual studio\vc98\include\basetsd.h"\
+	
+
+.\zlib\maketree.c : \
+	".\zlib\inftrees.h"\
+	".\zlib\zconf.h"\
+	".\zlib\zlib.h"\
+	".\zlib\zutil.h"\
+	"c:\program files\microsoft visual studio\vc98\include\basetsd.h"\
+	
+
+.\zlib\trees.c : \
+	".\zlib\deflate.h"\
+	".\zlib\trees.h"\
+	".\zlib\zconf.h"\
+	".\zlib\zlib.h"\
+	".\zlib\zutil.h"\
+	"c:\program files\microsoft visual studio\vc98\include\basetsd.h"\
+	
+
+.\zlib\uncompr.c : \
+	".\zlib\zconf.h"\
+	".\zlib\zlib.h"\
+	"c:\program files\microsoft visual studio\vc98\include\basetsd.h"\
+	
+
+.\zlib\zutil.c : \
+	".\zlib\zconf.h"\
+	".\zlib\zlib.h"\
+	".\zlib\zutil.h"\
+	"c:\program files\microsoft visual studio\vc98\include\basetsd.h"\
+	
+
+.\stdafx.cpp : \
+	".\stdafx.h"\
+	"c:\program files\microsoft visual studio\vc98\include\basetsd.h"\
+	
+
+.\ZipArchive.cpp : \
+	".\stdafx.h"\
+	".\ZipAbstractFile.h"\
+	".\ZipArchive.h"\
+	".\ZipAutoBuffer.h"\
+	".\ZipBaseException.h"\
+	".\ZipCentralDir.h"\
+	".\ZipCollections.h"\
+	".\ZipCompatibility.h"\
+	".\ZipException.h"\
+	".\ZipExport.h"\
+	".\ZipFile.h"\
+	".\ZipFileHeader.h"\
+	".\ZipMemFile.h"\
+	".\ZipPathComponent.h"\
+	".\ZipPlatform.h"\
+	".\ZipStorage.h"\
+	".\ZipString.h"\
+	".\zlib\zconf.h"\
+	".\zlib\zlib.h"\
+	"c:\program files\microsoft visual studio\vc98\include\basetsd.h"\
+	
+
+.\ZipAutoBuffer.cpp : \
+	".\stdafx.h"\
+	".\ZipAutoBuffer.h"\
+	".\ZipExport.h"\
+	"c:\program files\microsoft visual studio\vc98\include\basetsd.h"\
+	
+
+.\ZipCentralDir.cpp : \
+	".\stdafx.h"\
+	".\ZipAbstractFile.h"\
+	".\ZipArchive.h"\
+	".\ZipAutoBuffer.h"\
+	".\ZipBaseException.h"\
+	".\ZipCentralDir.h"\
+	".\ZipCollections.h"\
+	".\ZipCompatibility.h"\
+	".\ZipException.h"\
+	".\ZipExport.h"\
+	".\ZipFile.h"\
+	".\ZipFileHeader.h"\
+	".\ZipFileMapping.h"\
+	".\ZipMemFile.h"\
+	".\ZipPathComponent.h"\
+	".\ZipPlatform.h"\
+	".\ZipStorage.h"\
+	".\ZipString.h"\
+	".\zlib\zconf.h"\
+	".\zlib\zlib.h"\
+	"c:\program files\microsoft visual studio\vc98\include\basetsd.h"\
+	
+
+.\ZipCompatibility.cpp : \
+	".\stdafx.h"\
+	".\ZipAbstractFile.h"\
+	".\ZipAutoBuffer.h"\
+	".\ZipBaseException.h"\
+	".\ZipCompatibility.h"\
+	".\ZipException.h"\
+	".\ZipExport.h"\
+	".\ZipFile.h"\
+	".\ZipFileHeader.h"\
+	".\ZipMemFile.h"\
+	".\ZipPathComponent.h"\
+	".\ZipPlatform.h"\
+	".\ZipStorage.h"\
+	".\ZipString.h"\
+	"c:\program files\microsoft visual studio\vc98\include\basetsd.h"\
+	
+
+.\ZipException.cpp : \
+	".\stdafx.h"\
+	".\ZipBaseException.h"\
+	".\ZipException.h"\
+	".\ZipExport.h"\
+	".\ZipString.h"\
+	"c:\program files\microsoft visual studio\vc98\include\basetsd.h"\
+	
+
+.\ZipFile.cpp : \
+	".\stdafx.h"\
+	".\ZipAbstractFile.h"\
+	".\ZipExport.h"\
+	".\ZipFile.h"\
+	".\ZipString.h"\
+	"c:\program files\microsoft visual studio\vc98\include\basetsd.h"\
+	
+
+.\ZipFileHeader.cpp : \
+	".\stdafx.h"\
+	".\ZipAbstractFile.h"\
+	".\ZipArchive.h"\
+	".\ZipAutoBuffer.h"\
+	".\ZipBaseException.h"\
+	".\ZipCentralDir.h"\
+	".\ZipCollections.h"\
+	".\ZipCompatibility.h"\
+	".\ZipException.h"\
+	".\ZipExport.h"\
+	".\ZipFile.h"\
+	".\ZipFileHeader.h"\
+	".\ZipMemFile.h"\
+	".\ZipPathComponent.h"\
+	".\ZipPlatform.h"\
+	".\ZipStorage.h"\
+	".\ZipString.h"\
+	".\zlib\zconf.h"\
+	".\zlib\zlib.h"\
+	"c:\program files\microsoft visual studio\vc98\include\basetsd.h"\
+	
+
+.\ZipMemFile.cpp : \
+	".\stdafx.h"\
+	".\ZipAbstractFile.h"\
+	".\ZipBaseException.h"\
+	".\ZipException.h"\
+	".\ZipExport.h"\
+	".\ZipMemFile.h"\
+	".\ZipString.h"\
+	"c:\program files\microsoft visual studio\vc98\include\basetsd.h"\
+	
+
+.\ZipPathComponent.cpp : \
+	".\stdafx.h"\
+	".\ZipExport.h"\
+	".\ZipPathComponent.h"\
+	".\ZipString.h"\
+	"c:\program files\microsoft visual studio\vc98\include\basetsd.h"\
+	
+
+.\ZipPlatform.cpp : \
+	".\stdafx.h"\
+	".\ZipAbstractFile.h"\
+	".\ZipAutoBuffer.h"\
+	".\ZipBaseException.h"\
+	".\ZipCompatibility.h"\
+	".\ZipException.h"\
+	".\ZipExport.h"\
+	".\ZipFile.h"\
+	".\ZipFileHeader.h"\
+	".\ZipMemFile.h"\
+	".\ZipPathComponent.h"\
+	".\ZipPlatform.h"\
+	".\ZipStorage.h"\
+	".\ZipString.h"\
+	"c:\program files\microsoft visual studio\vc98\include\basetsd.h"\
+	
+
+.\ZipPlatformComm.cpp : \
+	".\stdafx.h"\
+	".\ZipExport.h"\
+	".\ZipPathComponent.h"\
+	".\ZipPlatform.h"\
+	".\ZipString.h"\
+	"c:\program files\microsoft visual studio\vc98\include\basetsd.h"\
+	
+
+.\ZipStorage.cpp : \
+	".\stdafx.h"\
+	".\ZipAbstractFile.h"\
+	".\ZipArchive.h"\
+	".\ZipAutoBuffer.h"\
+	".\ZipBaseException.h"\
+	".\ZipCentralDir.h"\
+	".\ZipCollections.h"\
+	".\ZipCompatibility.h"\
+	".\ZipException.h"\
+	".\ZipExport.h"\
+	".\ZipFile.h"\
+	".\ZipFileHeader.h"\
+	".\ZipMemFile.h"\
+	".\ZipPathComponent.h"\
+	".\ZipPlatform.h"\
+	".\ZipStorage.h"\
+	".\ZipString.h"\
+	".\zlib\zconf.h"\
+	".\zlib\zlib.h"\
+	"c:\program files\microsoft visual studio\vc98\include\basetsd.h"\
+	
+
+.\ZipString.cpp : \
+	".\stdafx.h"\
+	".\ZipExport.h"\
+	".\ZipString.h"\
+	"c:\program files\microsoft visual studio\vc98\include\basetsd.h"\
+	

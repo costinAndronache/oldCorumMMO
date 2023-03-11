@@ -1,0 +1,629 @@
+//Microsoft Developer Studio generated resource script.
+//
+#include "resource.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#include "afxres.h"
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// Korean resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_KOR)
+#ifdef _WIN32
+LANGUAGE LANG_KOREAN, SUBLANG_DEFAULT
+#pragma code_page(949)
+#endif //_WIN32
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "resource.h\0"
+END
+
+2 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "#include ""afxres.h""\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "#define _AFX_NO_SPLITTER_RESOURCES\r\n"
+    "#define _AFX_NO_OLE_RESOURCES\r\n"
+    "#define _AFX_NO_TRACKER_RESOURCES\r\n"
+    "#define _AFX_NO_PROPERTY_RESOURCES\r\n"
+    "\r\n"
+    "#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_KOR)\r\n"
+    "#ifdef _WIN32\r\n"
+    "LANGUAGE 18, 1\r\n"
+    "#pragma code_page(949)\r\n"
+    "#endif //_WIN32\r\n"
+    "#include ""res\\MonsterSkillTool.rc2""  // non-Microsoft Visual C++ edited resources\r\n"
+    "#include ""l.kor\\afxres.rc""          // Standard components\r\n"
+    "#endif\r\n"
+    "\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+IDR_MAINFRAME           ICON    DISCARDABLE     "res\\MonsterSkillTool.ico"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_ABOUTBOX DIALOG DISCARDABLE  0, 0, 235, 55
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "MonsterSkillTool 정보"
+FONT 9, "굴림"
+BEGIN
+    ICON            IDR_MAINFRAME,IDC_STATIC,11,17,20,20
+    LTEXT           "MonsterSkillTool 버전 1.0",IDC_STATIC,40,10,119,8,
+                    SS_NOPREFIX
+    LTEXT           "Copyright (C) 2004",IDC_STATIC,40,25,119,8
+    DEFPUSHBUTTON   "확인",IDOK,178,7,50,14,WS_GROUP
+END
+
+IDD_MONSTERSKILLTOOL_DIALOG DIALOGEX 0, 0, 647, 391
+STYLE DS_MODALFRAME | WS_MINIMIZEBOX | WS_POPUP | WS_VISIBLE | WS_CAPTION | 
+    WS_SYSMENU
+EXSTYLE WS_EX_APPWINDOW
+CAPTION "MonsterSkillTool"
+FONT 9, "굴림"
+BEGIN
+    DEFPUSHBUTTON   "Update It!",IDOK,491,371,95,14
+    PUSHBUTTON      "Exit",IDCANCEL,590,371,50,14
+    CONTROL         "List1",IDC_LIST_MONSTER,"SysListView32",LVS_REPORT | 
+                    LVS_SINGLESEL | WS_BORDER | WS_TABSTOP,7,7,633,357
+    COMBOBOX        IDC_COMBO_CURRENT_DB,69,371,124,150,CBS_DROPDOWN | 
+                    CBS_SORT | WS_VSCROLL | WS_TABSTOP
+    LTEXT           "Current Database :",IDC_STATIC,7,373,63,12,
+                    SS_CENTERIMAGE
+    PUSHBUTTON      "ChageDB",IDC_BUTTON_CHANGE_DB,196,371,48,14
+END
+
+IDD_DIALOG_CONNET DIALOG DISCARDABLE  0, 0, 160, 114
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Database Connection "
+FONT 10, "굴림"
+BEGIN
+    EDITTEXT        IDC_EDIT_DATASOURCE,63,7,90,13,ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT_DATABASE,63,24,90,13,ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT_ACCOUNT,63,41,90,13,ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT_PASSWORD,63,58,90,13,ES_PASSWORD | 
+                    ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT_TIMEOUT,63,75,90,13,ES_AUTOHSCROLL | ES_NUMBER
+    DEFPUSHBUTTON   "Connect!",IDOK,7,92,110,14
+    PUSHBUTTON      "Cancel",IDCANCEL,119,92,33,14
+    RTEXT           "DataSource(IP)",IDC_STATIC,7,9,51,11
+    RTEXT           "Account",IDC_STATIC,7,43,51,11
+    RTEXT           "Database",IDC_STATIC,7,25,51,11
+    RTEXT           "Password",IDC_STATIC,7,60,51,11
+    RTEXT           "Timeout",IDC_STATIC,7,77,51,11
+END
+
+IDD_DIALOG_SKILL_DESC DIALOG DISCARDABLE  0, 0, 142, 325
+STYLE DS_MODALFRAME | WS_MINIMIZEBOX | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Skill Information"
+FONT 10, "굴림"
+BEGIN
+    DEFPUSHBUTTON   "Select!",IDOK,7,304,75,14
+    PUSHBUTTON      "Cancel",IDCANCEL,85,304,50,14
+    CONTROL         "List1",IDC_LIST_SKILL_DESC,"SysListView32",LVS_REPORT | 
+                    LVS_SINGLESEL | WS_BORDER | WS_TABSTOP,7,7,128,294
+END
+
+IDD_DIALOG_MONSTER_SKILL_SET DIALOG DISCARDABLE  0, 0, 506, 269
+STYLE DS_MODALFRAME | WS_MINIMIZEBOX | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Set MonsterSkill"
+FONT 10, "굴림"
+BEGIN
+    DEFPUSHBUTTON   "Apply",IDOK,343,246,102,14
+    PUSHBUTTON      "Cancel",IDCANCEL,449,246,50,14
+    RTEXT           "MonsterID",IDC_STATIC,7,13,45,15,SS_CENTERIMAGE
+    RTEXT           "Name",IDC_STATIC,7,29,45,15,SS_CENTERIMAGE
+    RTEXT           "NoneSkillRate",IDC_STATIC,175,15,45,15,SS_CENTERIMAGE
+    RTEXT           "UseSkillRate",IDC_STATIC,175,33,45,15,SS_CENTERIMAGE
+    RTEXT           "Skill1",IDC_STATIC,10,62,32,15,SS_CENTERIMAGE
+    RTEXT           "Skill1_Lev",IDC_STATIC,10,78,32,15,SS_CENTERIMAGE
+    EDITTEXT        IDC_EDIT_ID,61,14,39,12,ES_AUTOHSCROLL | ES_READONLY | 
+                    ES_NUMBER
+    EDITTEXT        IDC_EDIT_NAME,61,31,101,12,ES_AUTOHSCROLL | ES_READONLY
+    EDITTEXT        IDC_EDIT_NONSKILLRATE,229,17,47,12,ES_AUTOHSCROLL | 
+                    ES_NUMBER
+    EDITTEXT        IDC_EDIT_USESKILLRATE,229,34,47,12,ES_AUTOHSCROLL | 
+                    ES_NUMBER
+    GROUPBOX        "Skill",IDC_STATIC,7,50,492,192
+    EDITTEXT        IDC_EDIT_SKILL1,48,63,98,12,ES_AUTOHSCROLL | ES_READONLY
+    EDITTEXT        IDC_EDIT_SKILL1_LEV,48,79,41,12,ES_AUTOHSCROLL | 
+                    ES_NUMBER
+    PUSHBUTTON      "!",IDC_BUTTON_SKILL1,149,63,15,14
+    RTEXT           "Skill2",IDC_STATIC,10,98,32,15,SS_CENTERIMAGE
+    RTEXT           "Skill2_Lev",IDC_STATIC,10,114,32,15,SS_CENTERIMAGE
+    EDITTEXT        IDC_EDIT_SKILL2,48,99,98,12,ES_AUTOHSCROLL | ES_READONLY
+    EDITTEXT        IDC_EDIT_SKILL2_LEV,48,115,41,12,ES_AUTOHSCROLL | 
+                    ES_NUMBER
+    PUSHBUTTON      "!",IDC_BUTTON_SKILL2,149,99,15,14
+    RTEXT           "Skill3",IDC_STATIC,10,133,32,15,SS_CENTERIMAGE
+    RTEXT           "Skill3_Lev",IDC_STATIC,10,149,32,15,SS_CENTERIMAGE
+    EDITTEXT        IDC_EDIT_SKILL3,48,134,98,12,ES_AUTOHSCROLL | 
+                    ES_READONLY
+    EDITTEXT        IDC_EDIT_SKILL3_LEV,48,150,41,12,ES_AUTOHSCROLL | 
+                    ES_NUMBER
+    PUSHBUTTON      "!",IDC_BUTTON_SKILL3,149,134,15,14
+    RTEXT           "Skill4",IDC_STATIC,10,168,32,15,SS_CENTERIMAGE
+    RTEXT           "Skill4_Lev",IDC_STATIC,10,184,32,15,SS_CENTERIMAGE
+    EDITTEXT        IDC_EDIT_SKILL4,48,170,98,12,ES_AUTOHSCROLL | 
+                    ES_READONLY
+    EDITTEXT        IDC_EDIT_SKILL4_LEV,48,186,41,12,ES_AUTOHSCROLL | 
+                    ES_NUMBER
+    PUSHBUTTON      "!",IDC_BUTTON_SKILL4,149,170,15,14
+    RTEXT           "Skill5",IDC_STATIC,10,203,32,15,SS_CENTERIMAGE
+    RTEXT           "Skill5_Lev",IDC_STATIC,10,219,32,15,SS_CENTERIMAGE
+    EDITTEXT        IDC_EDIT_SKILL5,48,204,98,12,ES_AUTOHSCROLL | 
+                    ES_READONLY
+    EDITTEXT        IDC_EDIT_SKILL5_LEV,48,220,41,12,ES_AUTOHSCROLL | 
+                    ES_NUMBER
+    PUSHBUTTON      "!",IDC_BUTTON_SKILL5,149,204,15,14
+    RTEXT           "Skill6",IDC_STATIC,174,62,32,15,SS_CENTERIMAGE
+    RTEXT           "Skill6_Lev",IDC_STATIC,174,78,32,15,SS_CENTERIMAGE
+    EDITTEXT        IDC_EDIT_SKILL6,212,63,98,12,ES_AUTOHSCROLL | 
+                    ES_READONLY
+    EDITTEXT        IDC_EDIT_SKILL6_LEV,212,79,41,12,ES_AUTOHSCROLL | 
+                    ES_NUMBER
+    PUSHBUTTON      "!",IDC_BUTTON_SKILL6,313,63,15,14
+    RTEXT           "Skill7",IDC_STATIC,174,98,32,15,SS_CENTERIMAGE
+    RTEXT           "Skill7_Lev",IDC_STATIC,174,114,32,15,SS_CENTERIMAGE
+    EDITTEXT        IDC_EDIT_SKILL7,212,99,98,12,ES_AUTOHSCROLL | 
+                    ES_READONLY
+    EDITTEXT        IDC_EDIT_SKILL7_LEV,212,115,41,12,ES_AUTOHSCROLL | 
+                    ES_NUMBER
+    PUSHBUTTON      "!",IDC_BUTTON_SKILL7,313,99,15,14
+    RTEXT           "Skill8",IDC_STATIC,174,133,32,15,SS_CENTERIMAGE
+    RTEXT           "Skill8_Lev",IDC_STATIC,174,149,32,15,SS_CENTERIMAGE
+    EDITTEXT        IDC_EDIT_SKILL8,212,134,98,12,ES_AUTOHSCROLL | 
+                    ES_READONLY
+    EDITTEXT        IDC_EDIT_SKILL8_LEV,212,150,41,12,ES_AUTOHSCROLL | 
+                    ES_NUMBER
+    PUSHBUTTON      "!",IDC_BUTTON_SKILL8,313,134,15,14
+    RTEXT           "Skill9",IDC_STATIC,174,168,32,15,SS_CENTERIMAGE
+    RTEXT           "Skill9_Lev",IDC_STATIC,174,184,32,15,SS_CENTERIMAGE
+    EDITTEXT        IDC_EDIT_SKILL9,212,170,98,12,ES_AUTOHSCROLL | 
+                    ES_READONLY
+    EDITTEXT        IDC_EDIT_SKILL9_LEV,212,186,41,12,ES_AUTOHSCROLL | 
+                    ES_NUMBER
+    PUSHBUTTON      "!",IDC_BUTTON_SKILL9,313,170,15,14
+    RTEXT           "Skill10",IDC_STATIC,174,203,32,15,SS_CENTERIMAGE
+    RTEXT           "Skill10_Lev",IDC_STATIC,170,219,36,15,SS_CENTERIMAGE
+    EDITTEXT        IDC_EDIT_SKILL10,212,204,98,12,ES_AUTOHSCROLL | 
+                    ES_READONLY
+    EDITTEXT        IDC_EDIT_SKILL10_LEV,212,220,41,12,ES_AUTOHSCROLL | 
+                    ES_NUMBER
+    PUSHBUTTON      "!",IDC_BUTTON_SKILL10,313,204,15,14
+    RTEXT           "Skill11",IDC_STATIC,339,62,32,15,SS_CENTERIMAGE
+    RTEXT           "Skill11_Lev",IDC_STATIC,336,78,35,15,SS_CENTERIMAGE
+    EDITTEXT        IDC_EDIT_SKILL11,377,63,98,12,ES_AUTOHSCROLL | 
+                    ES_READONLY
+    EDITTEXT        IDC_EDIT_SKILL11_LEV,377,79,41,12,ES_AUTOHSCROLL | 
+                    ES_NUMBER
+    PUSHBUTTON      "!",IDC_BUTTON_SKILL11,478,63,15,14
+    RTEXT           "Skill12",IDC_STATIC,339,98,32,15,SS_CENTERIMAGE
+    RTEXT           "Skill12_Lev",IDC_STATIC,336,114,35,15,SS_CENTERIMAGE
+    EDITTEXT        IDC_EDIT_SKILL12,377,99,98,12,ES_AUTOHSCROLL | 
+                    ES_READONLY
+    EDITTEXT        IDC_EDIT_SKILL12_LEV,377,115,41,12,ES_AUTOHSCROLL | 
+                    ES_NUMBER
+    PUSHBUTTON      "!",IDC_BUTTON_SKILL12,478,99,15,14
+    RTEXT           "Skill13",IDC_STATIC,339,133,32,15,SS_CENTERIMAGE
+    RTEXT           "Skill13_Lev",IDC_STATIC,336,149,35,15,SS_CENTERIMAGE
+    EDITTEXT        IDC_EDIT_SKILL13,377,134,98,12,ES_AUTOHSCROLL | 
+                    ES_READONLY
+    EDITTEXT        IDC_EDIT_SKILL13_LEV,377,150,41,12,ES_AUTOHSCROLL | 
+                    ES_NUMBER
+    PUSHBUTTON      "!",IDC_BUTTON_SKILL13,478,134,15,14
+    RTEXT           "Skill14",IDC_STATIC,339,168,32,15,SS_CENTERIMAGE
+    RTEXT           "Skill14_Lev",IDC_STATIC,336,184,35,15,SS_CENTERIMAGE
+    EDITTEXT        IDC_EDIT_SKILL14,377,170,98,12,ES_AUTOHSCROLL | 
+                    ES_READONLY
+    EDITTEXT        IDC_EDIT_SKILL14_LEV,377,186,41,12,ES_AUTOHSCROLL | 
+                    ES_NUMBER
+    PUSHBUTTON      "!",IDC_BUTTON_SKILL14,478,170,15,14
+    RTEXT           "Skill15",IDC_STATIC,339,203,32,15,SS_CENTERIMAGE
+    RTEXT           "Skill15_Lev",IDC_STATIC,336,219,35,15,SS_CENTERIMAGE
+    EDITTEXT        IDC_EDIT_SKILL15,377,204,98,12,ES_AUTOHSCROLL | 
+                    ES_READONLY
+    EDITTEXT        IDC_EDIT_SKILL15_LEV,377,220,41,12,ES_AUTOHSCROLL | 
+                    ES_NUMBER
+    PUSHBUTTON      "!",IDC_BUTTON_SKILL15,478,204,15,14
+END
+
+
+#ifndef _MAC
+/////////////////////////////////////////////////////////////////////////////
+//
+// Version
+//
+
+VS_VERSION_INFO VERSIONINFO
+ FILEVERSION 1,0,0,1
+ PRODUCTVERSION 1,0,0,1
+ FILEFLAGSMASK 0x3fL
+#ifdef _DEBUG
+ FILEFLAGS 0x1L
+#else
+ FILEFLAGS 0x0L
+#endif
+ FILEOS 0x4L
+ FILETYPE 0x1L
+ FILESUBTYPE 0x0L
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "041204b0"
+        BEGIN
+            VALUE "Comments", "\0"
+            VALUE "CompanyName", "\0"
+            VALUE "FileDescription", "MonsterSkillTool MFC 응용 프로그램\0"
+            VALUE "FileVersion", "1, 0, 0, 1\0"
+            VALUE "InternalName", "MonsterSkillTool\0"
+            VALUE "LegalCopyright", "Copyright (C) 2004\0"
+            VALUE "LegalTrademarks", "\0"
+            VALUE "OriginalFilename", "MonsterSkillTool.EXE\0"
+            VALUE "PrivateBuild", "\0"
+            VALUE "ProductName", "MonsterSkillTool 응용 프로그램\0"
+            VALUE "ProductVersion", "1, 0, 0, 1\0"
+            VALUE "SpecialBuild", "\0"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x412, 1200
+    END
+END
+
+#endif    // !_MAC
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO DISCARDABLE 
+BEGIN
+    IDD_ABOUTBOX, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 228
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 48
+    END
+
+    IDD_MONSTERSKILLTOOL_DIALOG, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 640
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 384
+    END
+
+    IDD_DIALOG_CONNET, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 153
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 107
+    END
+
+    IDD_DIALOG_SKILL_DESC, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 135
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 318
+    END
+
+    IDD_DIALOG_MONSTER_SKILL_SET, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 499
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 262
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// String Table
+//
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDS_ABOUTBOX            "MonsterSkillTool 정보(&A)..."
+END
+
+#endif    // Korean resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+/////////////////////////////////////////////////////////////////////////////
+// Chinese (Taiwan) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_CHT)
+#ifdef _WIN32
+LANGUAGE LANG_CHINESE, SUBLANG_CHINESE_TRADITIONAL
+#pragma code_page(950)
+#endif //_WIN32
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_MONSTERSKILLTOOL_DIALOG DIALOGEX 0, 0, 647, 391
+STYLE DS_MODALFRAME | WS_MINIMIZEBOX | WS_POPUP | WS_VISIBLE | WS_CAPTION | 
+    WS_SYSMENU
+EXSTYLE WS_EX_APPWINDOW
+CAPTION "MonsterSkillTool"
+FONT 9, "MingLiU"
+BEGIN
+    DEFPUSHBUTTON   "Update It!",IDOK,491,371,95,14
+    PUSHBUTTON      "Exit",IDCANCEL,590,371,50,14
+    CONTROL         "List1",IDC_LIST_MONSTER,"SysListView32",LVS_REPORT | 
+                    LVS_SINGLESEL | WS_BORDER | WS_TABSTOP,7,7,633,357
+    COMBOBOX        IDC_COMBO_CURRENT_DB,69,371,124,150,CBS_DROPDOWN | 
+                    CBS_SORT | WS_VSCROLL | WS_TABSTOP
+    LTEXT           "Current Database :",IDC_STATIC,7,373,63,12,
+                    SS_CENTERIMAGE
+    PUSHBUTTON      "ChageDB",IDC_BUTTON_CHANGE_DB,196,371,48,14
+END
+
+IDD_DIALOG_SKILL_DESC DIALOG DISCARDABLE  0, 0, 142, 325
+STYLE DS_MODALFRAME | WS_MINIMIZEBOX | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Skill Information"
+FONT 10, "MingLiU"
+BEGIN
+    DEFPUSHBUTTON   "Select!",IDOK,7,304,75,14
+    PUSHBUTTON      "Cancel",IDCANCEL,85,304,50,14
+    CONTROL         "List1",IDC_LIST_SKILL_DESC,"SysListView32",LVS_REPORT | 
+                    LVS_SINGLESEL | WS_BORDER | WS_TABSTOP,7,7,128,294
+END
+
+IDD_DIALOG_MONSTER_SKILL_SET DIALOG DISCARDABLE  0, 0, 506, 269
+STYLE DS_MODALFRAME | WS_MINIMIZEBOX | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Set MonsterSkill"
+FONT 10, "MingLiU"
+BEGIN
+    DEFPUSHBUTTON   "Apply",IDOK,343,246,102,14
+    PUSHBUTTON      "Cancel",IDCANCEL,449,246,50,14
+    RTEXT           "MonsterID",IDC_STATIC,7,13,45,15,SS_CENTERIMAGE
+    RTEXT           "Name",IDC_STATIC,7,29,45,15,SS_CENTERIMAGE
+    RTEXT           "NoneSkillRate",IDC_STATIC,175,15,45,15,SS_CENTERIMAGE
+    RTEXT           "UseSkillRate",IDC_STATIC,175,33,45,15,SS_CENTERIMAGE
+    RTEXT           "Skill1",IDC_STATIC,10,62,32,15,SS_CENTERIMAGE
+    RTEXT           "Skill1_Lev",IDC_STATIC,10,78,32,15,SS_CENTERIMAGE
+    EDITTEXT        IDC_EDIT_ID,61,14,39,12,ES_AUTOHSCROLL | ES_READONLY | 
+                    ES_NUMBER
+    EDITTEXT        IDC_EDIT_NAME,61,31,101,12,ES_AUTOHSCROLL | ES_READONLY
+    EDITTEXT        IDC_EDIT_NONSKILLRATE,229,17,47,12,ES_AUTOHSCROLL | 
+                    ES_NUMBER
+    EDITTEXT        IDC_EDIT_USESKILLRATE,229,34,47,12,ES_AUTOHSCROLL | 
+                    ES_NUMBER
+    GROUPBOX        "Skill",IDC_STATIC,7,50,492,192
+    EDITTEXT        IDC_EDIT_SKILL1,48,63,98,12,ES_AUTOHSCROLL | ES_READONLY
+    EDITTEXT        IDC_EDIT_SKILL1_LEV,48,79,41,12,ES_AUTOHSCROLL | 
+                    ES_NUMBER
+    PUSHBUTTON      "!",IDC_BUTTON_SKILL1,149,63,15,14
+    RTEXT           "Skill2",IDC_STATIC,10,98,32,15,SS_CENTERIMAGE
+    RTEXT           "Skill2_Lev",IDC_STATIC,10,114,32,15,SS_CENTERIMAGE
+    EDITTEXT        IDC_EDIT_SKILL2,48,99,98,12,ES_AUTOHSCROLL | ES_READONLY
+    EDITTEXT        IDC_EDIT_SKILL2_LEV,48,115,41,12,ES_AUTOHSCROLL | 
+                    ES_NUMBER
+    PUSHBUTTON      "!",IDC_BUTTON_SKILL2,149,99,15,14
+    RTEXT           "Skill3",IDC_STATIC,10,133,32,15,SS_CENTERIMAGE
+    RTEXT           "Skill3_Lev",IDC_STATIC,10,149,32,15,SS_CENTERIMAGE
+    EDITTEXT        IDC_EDIT_SKILL3,48,134,98,12,ES_AUTOHSCROLL | 
+                    ES_READONLY
+    EDITTEXT        IDC_EDIT_SKILL3_LEV,48,150,41,12,ES_AUTOHSCROLL | 
+                    ES_NUMBER
+    PUSHBUTTON      "!",IDC_BUTTON_SKILL3,149,134,15,14
+    RTEXT           "Skill4",IDC_STATIC,10,168,32,15,SS_CENTERIMAGE
+    RTEXT           "Skill4_Lev",IDC_STATIC,10,184,32,15,SS_CENTERIMAGE
+    EDITTEXT        IDC_EDIT_SKILL4,48,170,98,12,ES_AUTOHSCROLL | 
+                    ES_READONLY
+    EDITTEXT        IDC_EDIT_SKILL4_LEV,48,186,41,12,ES_AUTOHSCROLL | 
+                    ES_NUMBER
+    PUSHBUTTON      "!",IDC_BUTTON_SKILL4,149,170,15,14
+    RTEXT           "Skill5",IDC_STATIC,10,203,32,15,SS_CENTERIMAGE
+    RTEXT           "Skill5_Lev",IDC_STATIC,10,219,32,15,SS_CENTERIMAGE
+    EDITTEXT        IDC_EDIT_SKILL5,48,204,98,12,ES_AUTOHSCROLL | 
+                    ES_READONLY
+    EDITTEXT        IDC_EDIT_SKILL5_LEV,48,220,41,12,ES_AUTOHSCROLL | 
+                    ES_NUMBER
+    PUSHBUTTON      "!",IDC_BUTTON_SKILL5,149,204,15,14
+    RTEXT           "Skill6",IDC_STATIC,174,62,32,15,SS_CENTERIMAGE
+    RTEXT           "Skill6_Lev",IDC_STATIC,174,78,32,15,SS_CENTERIMAGE
+    EDITTEXT        IDC_EDIT_SKILL6,212,63,98,12,ES_AUTOHSCROLL | 
+                    ES_READONLY
+    EDITTEXT        IDC_EDIT_SKILL6_LEV,212,79,41,12,ES_AUTOHSCROLL | 
+                    ES_NUMBER
+    PUSHBUTTON      "!",IDC_BUTTON_SKILL6,313,63,15,14
+    RTEXT           "Skill7",IDC_STATIC,174,98,32,15,SS_CENTERIMAGE
+    RTEXT           "Skill7_Lev",IDC_STATIC,174,114,32,15,SS_CENTERIMAGE
+    EDITTEXT        IDC_EDIT_SKILL7,212,99,98,12,ES_AUTOHSCROLL | 
+                    ES_READONLY
+    EDITTEXT        IDC_EDIT_SKILL7_LEV,212,115,41,12,ES_AUTOHSCROLL | 
+                    ES_NUMBER
+    PUSHBUTTON      "!",IDC_BUTTON_SKILL7,313,99,15,14
+    RTEXT           "Skill8",IDC_STATIC,174,133,32,15,SS_CENTERIMAGE
+    RTEXT           "Skill8_Lev",IDC_STATIC,174,149,32,15,SS_CENTERIMAGE
+    EDITTEXT        IDC_EDIT_SKILL8,212,134,98,12,ES_AUTOHSCROLL | 
+                    ES_READONLY
+    EDITTEXT        IDC_EDIT_SKILL8_LEV,212,150,41,12,ES_AUTOHSCROLL | 
+                    ES_NUMBER
+    PUSHBUTTON      "!",IDC_BUTTON_SKILL8,313,134,15,14
+    RTEXT           "Skill9",IDC_STATIC,174,168,32,15,SS_CENTERIMAGE
+    RTEXT           "Skill9_Lev",IDC_STATIC,174,184,32,15,SS_CENTERIMAGE
+    EDITTEXT        IDC_EDIT_SKILL9,212,170,98,12,ES_AUTOHSCROLL | 
+                    ES_READONLY
+    EDITTEXT        IDC_EDIT_SKILL9_LEV,212,186,41,12,ES_AUTOHSCROLL | 
+                    ES_NUMBER
+    PUSHBUTTON      "!",IDC_BUTTON_SKILL9,313,170,15,14
+    RTEXT           "Skill10",IDC_STATIC,174,203,32,15,SS_CENTERIMAGE
+    RTEXT           "Skill10_Lev",IDC_STATIC,170,219,36,15,SS_CENTERIMAGE
+    EDITTEXT        IDC_EDIT_SKILL10,212,204,98,12,ES_AUTOHSCROLL | 
+                    ES_READONLY
+    EDITTEXT        IDC_EDIT_SKILL10_LEV,212,220,41,12,ES_AUTOHSCROLL | 
+                    ES_NUMBER
+    PUSHBUTTON      "!",IDC_BUTTON_SKILL10,313,204,15,14
+    RTEXT           "Skill11",IDC_STATIC,339,62,32,15,SS_CENTERIMAGE
+    RTEXT           "Skill11_Lev",IDC_STATIC,336,78,35,15,SS_CENTERIMAGE
+    EDITTEXT        IDC_EDIT_SKILL11,377,63,98,12,ES_AUTOHSCROLL | 
+                    ES_READONLY
+    EDITTEXT        IDC_EDIT_SKILL11_LEV,377,79,41,12,ES_AUTOHSCROLL | 
+                    ES_NUMBER
+    PUSHBUTTON      "!",IDC_BUTTON_SKILL11,478,63,15,14
+    RTEXT           "Skill12",IDC_STATIC,339,98,32,15,SS_CENTERIMAGE
+    RTEXT           "Skill12_Lev",IDC_STATIC,336,114,35,15,SS_CENTERIMAGE
+    EDITTEXT        IDC_EDIT_SKILL12,377,99,98,12,ES_AUTOHSCROLL | 
+                    ES_READONLY
+    EDITTEXT        IDC_EDIT_SKILL12_LEV,377,115,41,12,ES_AUTOHSCROLL | 
+                    ES_NUMBER
+    PUSHBUTTON      "!",IDC_BUTTON_SKILL12,478,99,15,14
+    RTEXT           "Skill13",IDC_STATIC,339,133,32,15,SS_CENTERIMAGE
+    RTEXT           "Skill13_Lev",IDC_STATIC,336,149,35,15,SS_CENTERIMAGE
+    EDITTEXT        IDC_EDIT_SKILL13,377,134,98,12,ES_AUTOHSCROLL | 
+                    ES_READONLY
+    EDITTEXT        IDC_EDIT_SKILL13_LEV,377,150,41,12,ES_AUTOHSCROLL | 
+                    ES_NUMBER
+    PUSHBUTTON      "!",IDC_BUTTON_SKILL13,478,134,15,14
+    RTEXT           "Skill14",IDC_STATIC,339,168,32,15,SS_CENTERIMAGE
+    RTEXT           "Skill14_Lev",IDC_STATIC,336,184,35,15,SS_CENTERIMAGE
+    EDITTEXT        IDC_EDIT_SKILL14,377,170,98,12,ES_AUTOHSCROLL | 
+                    ES_READONLY
+    EDITTEXT        IDC_EDIT_SKILL14_LEV,377,186,41,12,ES_AUTOHSCROLL | 
+                    ES_NUMBER
+    PUSHBUTTON      "!",IDC_BUTTON_SKILL14,478,170,15,14
+    RTEXT           "Skill15",IDC_STATIC,339,203,32,15,SS_CENTERIMAGE
+    RTEXT           "Skill15_Lev",IDC_STATIC,336,219,35,15,SS_CENTERIMAGE
+    EDITTEXT        IDC_EDIT_SKILL15,377,204,98,12,ES_AUTOHSCROLL | 
+                    ES_READONLY
+    EDITTEXT        IDC_EDIT_SKILL15_LEV,377,220,41,12,ES_AUTOHSCROLL | 
+                    ES_NUMBER
+    PUSHBUTTON      "!",IDC_BUTTON_SKILL15,478,204,15,14
+END
+
+IDD_DIALOG_CONNET DIALOG DISCARDABLE  0, 0, 160, 114
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Database Connection "
+FONT 10, "MingLiU"
+BEGIN
+    EDITTEXT        IDC_EDIT_DATASOURCE,63,7,90,13,ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT_DATABASE,63,24,90,13,ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT_ACCOUNT,63,41,90,13,ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT_PASSWORD,63,58,90,13,ES_PASSWORD | 
+                    ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT_TIMEOUT,63,75,90,13,ES_AUTOHSCROLL | ES_NUMBER
+    DEFPUSHBUTTON   "Connect!",IDOK,7,92,110,14
+    PUSHBUTTON      "Cancel",IDCANCEL,119,92,33,14
+    RTEXT           "DataSource(IP)",IDC_STATIC,9,9,53,11
+    RTEXT           "Account",IDC_STATIC,7,43,51,11
+    RTEXT           "Database",IDC_STATIC,7,25,51,11
+    RTEXT           "Password",IDC_STATIC,7,60,51,11
+    RTEXT           "Timeout",IDC_STATIC,7,77,51,11
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO DISCARDABLE 
+BEGIN
+    IDD_MONSTERSKILLTOOL_DIALOG, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 640
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 384
+    END
+
+    IDD_DIALOG_SKILL_DESC, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 135
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 318
+    END
+
+    IDD_DIALOG_MONSTER_SKILL_SET, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 499
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 262
+    END
+
+    IDD_DIALOG_CONNET, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 153
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 107
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+#endif    // Chinese (Taiwan) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+#define _AFX_NO_SPLITTER_RESOURCES
+#define _AFX_NO_OLE_RESOURCES
+#define _AFX_NO_TRACKER_RESOURCES
+#define _AFX_NO_PROPERTY_RESOURCES
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_KOR)
+#ifdef _WIN32
+LANGUAGE 18, 1
+#pragma code_page(949)
+#endif //_WIN32
+#include "res\MonsterSkillTool.rc2"  // non-Microsoft Visual C++ edited resources
+#include "l.kor\afxres.rc"          // Standard components
+#endif
+
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+

@@ -1,0 +1,181 @@
+<html>
+<body>
+<pre>
+<h1>Build Log</h1>
+<h3>
+--------------------Configuration: ZipArchive - Win32 Debug--------------------
+</h3>
+<h3>Command Lines</h3>
+Creating command line "rc.exe /l 0x409 /fo"Debug/ZipArchive.res" /d "_DEBUG" "F:\MyWork\UsingZipLib\ZipArchive\ZipArchive.rc"" 
+Creating temporary file "C:\DOCUME~1\ADMINI~1\LOCALS~1\Temp\RSP518.tmp" with contents
+[
+/nologo /MTd /W3 /Gm /GX /ZI /Od /I "./zlib" /D "_USRDLL" /D "ZLIB_DLL" /D "ZIP_BUILD_DLL" /D "WIN32" /D "_WINDOWS" /D "_MBCS" /D "ZIP_HAS_DLL" /D "ZIP_ARCHIVE_MFC_PROJ" /D "_WINDLL" /Fp"Debug/ZipArchive.pch" /YX /Fo"Debug/" /Fd"Debug/" /FD /D /out:"Debug\ZipArchive.lib" /GZ "_DEBUG" /c 
+"F:\MyWork\UsingZipLib\ZipArchive\stdafx.cpp"
+"F:\MyWork\UsingZipLib\ZipArchive\ZipArchive.cpp"
+"F:\MyWork\UsingZipLib\ZipArchive\ZipAutoBuffer.cpp"
+"F:\MyWork\UsingZipLib\ZipArchive\ZipCentralDir.cpp"
+"F:\MyWork\UsingZipLib\ZipArchive\ZipCompatibility.cpp"
+"F:\MyWork\UsingZipLib\ZipArchive\ZipException.cpp"
+"F:\MyWork\UsingZipLib\ZipArchive\ZipFile.cpp"
+"F:\MyWork\UsingZipLib\ZipArchive\ZipFileHeader.cpp"
+"F:\MyWork\UsingZipLib\ZipArchive\ZipMemFile.cpp"
+"F:\MyWork\UsingZipLib\ZipArchive\ZipPathComponent.cpp"
+"F:\MyWork\UsingZipLib\ZipArchive\ZipPlatform.cpp"
+"F:\MyWork\UsingZipLib\ZipArchive\ZipPlatformComm.cpp"
+"F:\MyWork\UsingZipLib\ZipArchive\ZipStorage.cpp"
+"F:\MyWork\UsingZipLib\ZipArchive\ZipString.cpp"
+"F:\MyWork\UsingZipLib\ZipArchive\zlib\zutil.c"
+"F:\MyWork\UsingZipLib\ZipArchive\zlib\compress.c"
+"F:\MyWork\UsingZipLib\ZipArchive\zlib\crc32.c"
+"F:\MyWork\UsingZipLib\ZipArchive\zlib\deflate.c"
+"F:\MyWork\UsingZipLib\ZipArchive\zlib\gvmat32c.c"
+"F:\MyWork\UsingZipLib\ZipArchive\zlib\gzio.c"
+"F:\MyWork\UsingZipLib\ZipArchive\zlib\infblock.c"
+"F:\MyWork\UsingZipLib\ZipArchive\zlib\infcodes.c"
+"F:\MyWork\UsingZipLib\ZipArchive\zlib\inffast.c"
+"F:\MyWork\UsingZipLib\ZipArchive\zlib\inflate.c"
+"F:\MyWork\UsingZipLib\ZipArchive\zlib\inftrees.c"
+"F:\MyWork\UsingZipLib\ZipArchive\zlib\infutil.c"
+"F:\MyWork\UsingZipLib\ZipArchive\zlib\maketree.c"
+"F:\MyWork\UsingZipLib\ZipArchive\zlib\trees.c"
+"F:\MyWork\UsingZipLib\ZipArchive\zlib\uncompr.c"
+"F:\MyWork\UsingZipLib\ZipArchive\zlib\adler32.c"
+]
+Creating command line "cl.exe @C:\DOCUME~1\ADMINI~1\LOCALS~1\Temp\RSP518.tmp" 
+<h3>Output Window</h3>
+Compiling resources...
+Compiling...
+Command line warning D4024 : unrecognized source file type '_DEBUG', object file assumed
+Command line warning D4027 : source file '_DEBUG' ignored
+stdafx.cpp
+ZipArchive.cpp
+ZipAutoBuffer.cpp
+ZipCentralDir.cpp
+f:\mywork\usingziplib\ziparchive\zipexception.h(46) : warning C4275: non dll-interface class 'CException' used as base for dll-interface class 'CZipException'
+        c:\program files\microsoft visual studio\vc98\mfc\include\afx.h(863) : see declaration of 'CException'
+f:\mywork\usingziplib\ziparchive\zipfile.h(27) : warning C4275: non dll-interface class 'CFile' used as base for dll-interface class 'CZipFile'
+        c:\program files\microsoft visual studio\vc98\mfc\include\afx.h(1202) : see declaration of 'CFile'
+ZipCompatibility.cpp
+f:\mywork\usingziplib\ziparchive\zippathcomponent.h(197) : warning C4251: 'm_szDirectory' : class 'CString' needs to have dll-interface to be used by clients of class 'CZipPathComponent'
+        c:\program files\microsoft visual studio\vc98\mfc\include\afx.h(368) : see declaration of 'CString'
+f:\mywork\usingziplib\ziparchive\zippathcomponent.h(198) : warning C4251: 'm_szFileTitle' : class 'CString' needs to have dll-interface to be used by clients of class 'CZipPathComponent'
+        c:\program files\microsoft visual studio\vc98\mfc\include\afx.h(368) : see declaration of 'CString'
+f:\mywork\usingziplib\ziparchive\zippathcomponent.h(199) : warning C4251: 'm_szFileExt' : class 'CString' needs to have dll-interface to be used by clients of class 'CZipPathComponent'
+        c:\program files\microsoft visual studio\vc98\mfc\include\afx.h(368) : see declaration of 'CString'
+f:\mywork\usingziplib\ziparchive\zippathcomponent.h(200) : warning C4251: 'm_szDrive' : class 'CString' needs to have dll-interface to be used by clients of class 'CZipPathComponent'
+        c:\program files\microsoft visual studio\vc98\mfc\include\afx.h(368) : see declaration of 'CString'
+f:\mywork\usingziplib\ziparchive\zippathcomponent.h(201) : warning C4251: 'm_szPrefix' : class 'CString' needs to have dll-interface to be used by clients of class 'CZipPathComponent'
+        c:\program files\microsoft visual studio\vc98\mfc\include\afx.h(368) : see declaration of 'CString'
+f:\mywork\usingziplib\ziparchive\zipexception.h(46) : warning C4275: non dll-interface class 'CException' used as base for dll-interface class 'CZipException'
+        c:\program files\microsoft visual studio\vc98\mfc\include\afx.h(863) : see declaration of 'CException'
+f:\mywork\usingziplib\ziparchive\zipexception.h(142) : warning C4251: 'm_szFileName' : class 'CString' needs to have dll-interface to be used by clients of class 'CZipException'
+        c:\program files\microsoft visual studio\vc98\mfc\include\afx.h(368) : see declaration of 'CString'
+f:\mywork\usingziplib\ziparchive\zipfile.h(27) : warning C4275: non dll-interface class 'CFile' used as base for dll-interface class 'CZipFile'
+        c:\program files\microsoft visual studio\vc98\mfc\include\afx.h(1202) : see declaration of 'CFile'
+f:\mywork\usingziplib\ziparchive\zipstorage.h(65) : warning C4251: 'm_szExternalFile' : class 'CString' needs to have dll-interface to be used by clients of struct 'CZipCallback'
+        c:\program files\microsoft visual studio\vc98\mfc\include\afx.h(368) : see declaration of 'CString'
+f:\mywork\usingziplib\ziparchive\zipstorage.h(153) : warning C4251: 'm_szFileInZip' : class 'CString' needs to have dll-interface to be used by clients of struct 'CZipActionCallback'
+        c:\program files\microsoft visual studio\vc98\mfc\include\afx.h(368) : see declaration of 'CString'
+f:\mywork\usingziplib\ziparchive\zipstorage.h(527) : warning C4251: 'm_szSpanExtension' : class 'CString' needs to have dll-interface to be used by clients of class 'CZipStorage'
+        c:\program files\microsoft visual studio\vc98\mfc\include\afx.h(368) : see declaration of 'CString'
+ZipException.cpp
+f:\mywork\usingziplib\ziparchive\zipexception.h(46) : warning C4275: non dll-interface class 'CException' used as base for dll-interface class 'CZipException'
+        c:\program files\microsoft visual studio\vc98\mfc\include\afx.h(863) : see declaration of 'CException'
+f:\mywork\usingziplib\ziparchive\zipexception.h(142) : warning C4251: 'm_szFileName' : class 'CString' needs to have dll-interface to be used by clients of class 'CZipException'
+        c:\program files\microsoft visual studio\vc98\mfc\include\afx.h(368) : see declaration of 'CString'
+ZipFile.cpp
+f:\mywork\usingziplib\ziparchive\zipfile.h(27) : warning C4275: non dll-interface class 'CFile' used as base for dll-interface class 'CZipFile'
+        c:\program files\microsoft visual studio\vc98\mfc\include\afx.h(1202) : see declaration of 'CFile'
+ZipFileHeader.cpp
+f:\mywork\usingziplib\ziparchive\zipfile.h(27) : warning C4275: non dll-interface class 'CFile' used as base for dll-interface class 'CZipFile'
+        c:\program files\microsoft visual studio\vc98\mfc\include\afx.h(1202) : see declaration of 'CFile'
+f:\mywork\usingziplib\ziparchive\zipstorage.h(65) : warning C4251: 'm_szExternalFile' : class 'CString' needs to have dll-interface to be used by clients of struct 'CZipCallback'
+        c:\program files\microsoft visual studio\vc98\mfc\include\afx.h(368) : see declaration of 'CString'
+f:\mywork\usingziplib\ziparchive\zipstorage.h(153) : warning C4251: 'm_szFileInZip' : class 'CString' needs to have dll-interface to be used by clients of struct 'CZipActionCallback'
+        c:\program files\microsoft visual studio\vc98\mfc\include\afx.h(368) : see declaration of 'CString'
+f:\mywork\usingziplib\ziparchive\zipstorage.h(527) : warning C4251: 'm_szSpanExtension' : class 'CString' needs to have dll-interface to be used by clients of class 'CZipStorage'
+        c:\program files\microsoft visual studio\vc98\mfc\include\afx.h(368) : see declaration of 'CString'
+ZipMemFile.cpp
+f:\mywork\usingziplib\ziparchive\zipexception.h(46) : warning C4275: non dll-interface class 'CException' used as base for dll-interface class 'CZipException'
+        c:\program files\microsoft visual studio\vc98\mfc\include\afx.h(863) : see declaration of 'CException'
+f:\mywork\usingziplib\ziparchive\zipexception.h(142) : warning C4251: 'm_szFileName' : class 'CString' needs to have dll-interface to be used by clients of class 'CZipException'
+        c:\program files\microsoft visual studio\vc98\mfc\include\afx.h(368) : see declaration of 'CString'
+ZipPathComponent.cpp
+f:\mywork\usingziplib\ziparchive\zippathcomponent.h(197) : warning C4251: 'm_szDirectory' : class 'CString' needs to have dll-interface to be used by clients of class 'CZipPathComponent'
+        c:\program files\microsoft visual studio\vc98\mfc\include\afx.h(368) : see declaration of 'CString'
+f:\mywork\usingziplib\ziparchive\zippathcomponent.h(198) : warning C4251: 'm_szFileTitle' : class 'CString' needs to have dll-interface to be used by clients of class 'CZipPathComponent'
+        c:\program files\microsoft visual studio\vc98\mfc\include\afx.h(368) : see declaration of 'CString'
+f:\mywork\usingziplib\ziparchive\zippathcomponent.h(199) : warning C4251: 'm_szFileExt' : class 'CString' needs to have dll-interface to be used by clients of class 'CZipPathComponent'
+        c:\program files\microsoft visual studio\vc98\mfc\include\afx.h(368) : see declaration of 'CString'
+f:\mywork\usingziplib\ziparchive\zippathcomponent.h(200) : warning C4251: 'm_szDrive' : class 'CString' needs to have dll-interface to be used by clients of class 'CZipPathComponent'
+        c:\program files\microsoft visual studio\vc98\mfc\include\afx.h(368) : see declaration of 'CString'
+f:\mywork\usingziplib\ziparchive\zippathcomponent.h(201) : warning C4251: 'm_szPrefix' : class 'CString' needs to have dll-interface to be used by clients of class 'CZipPathComponent'
+        c:\program files\microsoft visual studio\vc98\mfc\include\afx.h(368) : see declaration of 'CString'
+ZipPlatform.cpp
+f:\mywork\usingziplib\ziparchive\zippathcomponent.h(197) : warning C4251: 'm_szDirectory' : class 'CString' needs to have dll-interface to be used by clients of class 'CZipPathComponent'
+        c:\program files\microsoft visual studio\vc98\mfc\include\afx.h(368) : see declaration of 'CString'
+f:\mywork\usingziplib\ziparchive\zippathcomponent.h(198) : warning C4251: 'm_szFileTitle' : class 'CString' needs to have dll-interface to be used by clients of class 'CZipPathComponent'
+        c:\program files\microsoft visual studio\vc98\mfc\include\afx.h(368) : see declaration of 'CString'
+f:\mywork\usingziplib\ziparchive\zippathcomponent.h(199) : warning C4251: 'm_szFileExt' : class 'CString' needs to have dll-interface to be used by clients of class 'CZipPathComponent'
+        c:\program files\microsoft visual studio\vc98\mfc\include\afx.h(368) : see declaration of 'CString'
+f:\mywork\usingziplib\ziparchive\zippathcomponent.h(200) : warning C4251: 'm_szDrive' : class 'CString' needs to have dll-interface to be used by clients of class 'CZipPathComponent'
+        c:\program files\microsoft visual studio\vc98\mfc\include\afx.h(368) : see declaration of 'CString'
+f:\mywork\usingziplib\ziparchive\zippathcomponent.h(201) : warning C4251: 'm_szPrefix' : class 'CString' needs to have dll-interface to be used by clients of class 'CZipPathComponent'
+        c:\program files\microsoft visual studio\vc98\mfc\include\afx.h(368) : see declaration of 'CString'
+f:\mywork\usingziplib\ziparchive\zipfile.h(27) : warning C4275: non dll-interface class 'CFile' used as base for dll-interface class 'CZipFile'
+        c:\program files\microsoft visual studio\vc98\mfc\include\afx.h(1202) : see declaration of 'CFile'
+f:\mywork\usingziplib\ziparchive\zipstorage.h(65) : warning C4251: 'm_szExternalFile' : class 'CString' needs to have dll-interface to be used by clients of struct 'CZipCallback'
+        c:\program files\microsoft visual studio\vc98\mfc\include\afx.h(368) : see declaration of 'CString'
+f:\mywork\usingziplib\ziparchive\zipstorage.h(153) : warning C4251: 'm_szFileInZip' : class 'CString' needs to have dll-interface to be used by clients of struct 'CZipActionCallback'
+        c:\program files\microsoft visual studio\vc98\mfc\include\afx.h(368) : see declaration of 'CString'
+f:\mywork\usingziplib\ziparchive\zipstorage.h(527) : warning C4251: 'm_szSpanExtension' : class 'CString' needs to have dll-interface to be used by clients of class 'CZipStorage'
+        c:\program files\microsoft visual studio\vc98\mfc\include\afx.h(368) : see declaration of 'CString'
+f:\mywork\usingziplib\ziparchive\zipexception.h(46) : warning C4275: non dll-interface class 'CException' used as base for dll-interface class 'CZipException'
+        c:\program files\microsoft visual studio\vc98\mfc\include\afx.h(863) : see declaration of 'CException'
+f:\mywork\usingziplib\ziparchive\zipexception.h(142) : warning C4251: 'm_szFileName' : class 'CString' needs to have dll-interface to be used by clients of class 'CZipException'
+        c:\program files\microsoft visual studio\vc98\mfc\include\afx.h(368) : see declaration of 'CString'
+ZipPlatformComm.cpp
+f:\mywork\usingziplib\ziparchive\zippathcomponent.h(197) : warning C4251: 'm_szDirectory' : class 'CString' needs to have dll-interface to be used by clients of class 'CZipPathComponent'
+        c:\program files\microsoft visual studio\vc98\mfc\include\afx.h(368) : see declaration of 'CString'
+f:\mywork\usingziplib\ziparchive\zippathcomponent.h(198) : warning C4251: 'm_szFileTitle' : class 'CString' needs to have dll-interface to be used by clients of class 'CZipPathComponent'
+        c:\program files\microsoft visual studio\vc98\mfc\include\afx.h(368) : see declaration of 'CString'
+f:\mywork\usingziplib\ziparchive\zippathcomponent.h(199) : warning C4251: 'm_szFileExt' : class 'CString' needs to have dll-interface to be used by clients of class 'CZipPathComponent'
+        c:\program files\microsoft visual studio\vc98\mfc\include\afx.h(368) : see declaration of 'CString'
+f:\mywork\usingziplib\ziparchive\zippathcomponent.h(200) : warning C4251: 'm_szDrive' : class 'CString' needs to have dll-interface to be used by clients of class 'CZipPathComponent'
+        c:\program files\microsoft visual studio\vc98\mfc\include\afx.h(368) : see declaration of 'CString'
+f:\mywork\usingziplib\ziparchive\zippathcomponent.h(201) : warning C4251: 'm_szPrefix' : class 'CString' needs to have dll-interface to be used by clients of class 'CZipPathComponent'
+        c:\program files\microsoft visual studio\vc98\mfc\include\afx.h(368) : see declaration of 'CString'
+ZipStorage.cpp
+f:\mywork\usingziplib\ziparchive\zipfile.h(27) : warning C4275: non dll-interface class 'CFile' used as base for dll-interface class 'CZipFile'
+        c:\program files\microsoft visual studio\vc98\mfc\include\afx.h(1202) : see declaration of 'CFile'
+f:\mywork\usingziplib\ziparchive\zipstorage.h(65) : warning C4251: 'm_szExternalFile' : class 'CString' needs to have dll-interface to be used by clients of struct 'CZipCallback'
+        c:\program files\microsoft visual studio\vc98\mfc\include\afx.h(368) : see declaration of 'CString'
+f:\mywork\usingziplib\ziparchive\zipstorage.h(153) : warning C4251: 'm_szFileInZip' : class 'CString' needs to have dll-interface to be used by clients of struct 'CZipActionCallback'
+        c:\program files\microsoft visual studio\vc98\mfc\include\afx.h(368) : see declaration of 'CString'
+f:\mywork\usingziplib\ziparchive\zipstorage.h(527) : warning C4251: 'm_szSpanExtension' : class 'CString' needs to have dll-interface to be used by clients of class 'CZipStorage'
+        c:\program files\microsoft visual studio\vc98\mfc\include\afx.h(368) : see declaration of 'CString'
+ZipString.cpp
+zutil.c
+compress.c
+crc32.c
+deflate.c
+gvmat32c.c
+gzio.c
+infblock.c
+infcodes.c
+inffast.c
+inflate.c
+inftrees.c
+infutil.c
+maketree.c
+trees.c
+uncompr.c
+adler32.c
+
+
+
+<h3>Results</h3>
+ZipArchive.lib - 0 error(s), 49 warning(s)
+</pre>
+</body>
+</html>

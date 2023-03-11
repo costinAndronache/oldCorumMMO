@@ -1,0 +1,64 @@
+<html>
+<body>
+<pre>
+<h1>Build Log</h1>
+<h3>
+--------------------Configuration: CorumAutopatch - Win32 Debug--------------------
+</h3>
+<h3>Command Lines</h3>
+Creating temporary file "C:\DOCUME~1\È­¶û»ó¿ì\LOCALS~1\Temp\RSP2D3.tmp" with contents
+[
+/nologo /MDd /W3 /GX /Zi /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_MBCS" /D _WIN32_WINNT=0X0500 /D "_AFXDLL" /FR"Debug/" /Fp"Debug/CorumAutopatch.pch" /YX /Fo"Debug/" /Fd"Debug/" /FD /GZ /c 
+"D:\Corum\DEVELOP_V1\Tools\CorumAutopatch\CorumAutopatch.cpp"
+"D:\Corum\DEVELOP_V1\Tools\CorumAutopatch\Main.cpp"
+"D:\Corum\DEVELOP_V1\Tools\CorumAutopatch\CorumPatch.cpp"
+"D:\Corum\DEVELOP_V1\Tools\CorumAutopatch\ServerList.cpp"
+]
+Creating command line "cl.exe @"C:\DOCUME~1\È­¶û»ó¿ì\LOCALS~1\Temp\RSP2D3.tmp"" 
+Creating temporary file "C:\DOCUME~1\È­¶û»ó¿ì\LOCALS~1\Temp\RSP2D5.tmp" with contents
+[
+comctl32.lib /nologo /incremental:yes /pdb:"Debug/CorumAutopatch.pdb" /debug /machine:I386 /out:"D:\Corum\CorumOnline\CorumAutopatch.exe" /pdbtype:sept 
+.\Debug\CorumAutopatch.obj
+.\Debug\Interface_RainFTP.obj
+.\Debug\Main.obj
+.\Debug\CorumPatch.obj
+.\Debug\Button.obj
+.\Debug\ProgressView.obj
+.\Debug\StaticView.obj
+.\Debug\TextView.obj
+.\Debug\ServerList.obj
+.\Debug\CorumAutoPatch.res
+.\ZipArchive.lib
+.\ZipArchive\Release\ZipArchive.lib
+]
+Creating command line "link.exe @"C:\DOCUME~1\È­¶û»ó¿ì\LOCALS~1\Temp\RSP2D5.tmp""
+<h3>Output Window</h3>
+Compiling...
+CorumAutopatch.cpp
+Main.cpp
+CorumPatch.cpp
+ServerList.cpp
+Linking...
+Creating temporary file "C:\DOCUME~1\È­¶û»ó¿ì\LOCALS~1\Temp\RSP2D7.tmp" with contents
+[
+/nologo /o"Debug/CorumAutopatch.bsc" 
+.\Debug\CorumAutopatch.sbr
+.\Debug\Interface_RainFTP.sbr
+.\Debug\Main.sbr
+.\Debug\CorumPatch.sbr
+.\Debug\Button.sbr
+.\Debug\ProgressView.sbr
+.\Debug\StaticView.sbr
+.\Debug\TextView.sbr
+.\Debug\ServerList.sbr]
+Creating command line "bscmake.exe @"C:\DOCUME~1\È­¶û»ó¿ì\LOCALS~1\Temp\RSP2D7.tmp""
+Creating browse info file...
+<h3>Output Window</h3>
+
+
+
+<h3>Results</h3>
+CorumAutopatch.exe - 0 error(s), 0 warning(s)
+</pre>
+</body>
+</html>

@@ -1,0 +1,16 @@
+*MOD_FILE_NAME	fighter.mod
+	*MOTION_NUM		10
+		girl_walk.anm
+		sword_walk_001.ANM
+		sword_stand_001.ANM
+		sword_run_001.ANM
+		sword_motion_003.ANM
+		sword_motion_001.ANM
+		sword_fight_001.ANM
+		sword_charge_002.ANM
+		sword_charge_001.ANM
+		sword_attack_001.ANM
+	*MATERIAL_NUM		2
+		fighter.mtl
+		fighter2.mtl
+

@@ -1,0 +1,45 @@
+<html>
+<body>
+<pre>
+<h1>Build Log</h1>
+<h3>
+--------------------Configuration: ZipArchive - Win32 Unicode Static Release--------------------
+</h3>
+<h3>Command Lines</h3>
+Creating temporary file "C:\DOCUME~1\chan78\LOCALS~1\Temp\RSP1898.tmp" with contents
+[
+/nologo /MT /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /D "ZLIB_DLL" /D "_UNICODE" /Fp"Unicode_Static_Release/ZipArchive.pch" /Yu"stdafx.h" /Fo"Unicode_Static_Release/" /Fd"Unicode_Static_Release/" /FD /c 
+"C:\ManagerWorks\ZipArchive\MyZipArchive.cpp"
+"C:\ManagerWorks\ZipArchive\ZipArchive.cpp"
+]
+Creating command line "cl.exe @C:\DOCUME~1\chan78\LOCALS~1\Temp\RSP1898.tmp" 
+Creating temporary file "C:\DOCUME~1\chan78\LOCALS~1\Temp\RSP1899.tmp" with contents
+[
+/nologo /out:"Unicode_Static_Release\ZipArchive.lib" 
+.\Unicode_Static_Release\MyZipArchive.obj
+.\Unicode_Static_Release\StdAfx.obj
+.\Unicode_Static_Release\ZipArchive.obj
+.\Unicode_Static_Release\ZipAutoBuffer.obj
+.\Unicode_Static_Release\ZipBigFile.obj
+.\Unicode_Static_Release\ZipCentralDir.obj
+.\Unicode_Static_Release\ZipException.obj
+.\Unicode_Static_Release\ZipFileHeader.obj
+.\Unicode_Static_Release\ZipInternalInfo.obj
+.\Unicode_Static_Release\ZipStorage.obj
+.\zlib.lib
+]
+Creating command line "link.exe -lib @C:\DOCUME~1\chan78\LOCALS~1\Temp\RSP1899.tmp"
+<h3>Output Window</h3>
+Compiling...
+MyZipArchive.cpp
+ZipArchive.cpp
+Generating Code...
+Creating library...
+
+
+
+<h3>Results</h3>
+ZipArchive.lib - 0 error(s), 0 warning(s)
+</pre>
+</body>
+</html>

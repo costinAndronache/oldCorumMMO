@@ -1,0 +1,432 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{99ed2534-ab68-47e4-89ca-4f5b290d7585}</UniqueIdentifier>
+      <Extensions>cpp;c;cxx;rc;def;r;odl;idl;hpj;bat</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{f4c96b0a-ea0c-4b11-aa29-6da69c8b6970}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{2f50a4c5-7a57-4b4e-9aef-9be1085def3d}</UniqueIdentifier>
+      <Extensions>ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe</Extensions>
+    </Filter>
+    <Filter Include="PathFinding">
+      <UniqueIdentifier>{672d9108-2a70-4e89-a67e-9d1741182971}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Effect">
+      <UniqueIdentifier>{d6150d13-d387-4f67-b0f9-883cc6a89b06}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Accessary">
+      <UniqueIdentifier>{b4c18ea3-eb41-4114-a81c-b546aa48dff7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Container">
+      <UniqueIdentifier>{d53d6a2b-b1a0-45d0-986d-cd8f709e38b3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MsgProc">
+      <UniqueIdentifier>{2b668509-3da1-48e1-93bc-5c0c830c7e4c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ItemNative">
+      <UniqueIdentifier>{c09c8816-5cbc-4da8-80ba-c8a95ee5c5a6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="EventDungeon">
+      <UniqueIdentifier>{42ee1022-aa72-4a31-932a-51655bdb0c78}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="CommonServer">
+      <UniqueIdentifier>{0fdebf92-a732-41b7-95fe-8252413c1b71}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Unit">
+      <UniqueIdentifier>{d999d540-0a3a-43c6-8dcb-7f64b5673324}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Dungeon">
+      <UniqueIdentifier>{ae7fb141-22e5-4330-a27d-08833a8314ae}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MsgProcForServer">
+      <UniqueIdentifier>{cab5c374-7ae0-44f4-aeed-84f0778849d8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="TeamMatch">
+      <UniqueIdentifier>{81a92536-8260-444b-ab62-f96de3ba5701}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="AcceptTable.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="cGDI.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DBProc.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GameSystem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GameSystem_for_yak.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="OwnServer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="recvmsg.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ServerFunction.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="StdAfx.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="PathFinding\BlockLineManager.cpp">
+      <Filter>PathFinding</Filter>
+    </ClCompile>
+    <ClCompile Include="PathFinding\BlockManager.cpp">
+      <Filter>PathFinding</Filter>
+    </ClCompile>
+    <ClCompile Include="PathFinding\ControlStruct.cpp">
+      <Filter>PathFinding</Filter>
+    </ClCompile>
+    <ClCompile Include="PathFinding\DirectionManager.cpp">
+      <Filter>PathFinding</Filter>
+    </ClCompile>
+    <ClCompile Include="PathFinding\MemoryBlock.cpp">
+      <Filter>PathFinding</Filter>
+    </ClCompile>
+    <ClCompile Include="PathFinding\PriorityQue.cpp">
+      <Filter>PathFinding</Filter>
+    </ClCompile>
+    <ClCompile Include="PathFinding\SearchModule_Astar.cpp">
+      <Filter>PathFinding</Filter>
+    </ClCompile>
+    <ClCompile Include="PathFinding\VirtualBlockManager.cpp">
+      <Filter>PathFinding</Filter>
+    </ClCompile>
+    <ClCompile Include="Effect.cpp">
+      <Filter>Effect</Filter>
+    </ClCompile>
+    <ClCompile Include="TrafficLog.cpp">
+      <Filter>Accessary</Filter>
+    </ClCompile>
+    <ClCompile Include="LinkedList.cpp">
+      <Filter>Container</Filter>
+    </ClCompile>
+    <ClCompile Include="Voidlist.cpp">
+      <Filter>Container</Filter>
+    </ClCompile>
+    <ClCompile Include="MsgProc.cpp">
+      <Filter>MsgProc</Filter>
+    </ClCompile>
+    <ClCompile Include="MsgProc_for_jjw6263.cpp">
+      <Filter>MsgProc</Filter>
+    </ClCompile>
+    <ClCompile Include="MsgProc_for_minbobo.cpp">
+      <Filter>MsgProc</Filter>
+    </ClCompile>
+    <ClCompile Include="MsgProc_for_y2jin.cpp">
+      <Filter>MsgProc</Filter>
+    </ClCompile>
+    <ClCompile Include="MsgProc_for_yak.cpp">
+      <Filter>MsgProc</Filter>
+    </ClCompile>
+    <ClCompile Include="GameSystemNative.cpp">
+      <Filter>ItemNative</Filter>
+    </ClCompile>
+    <ClCompile Include="ItemAttrLayer.cpp">
+      <Filter>ItemNative</Filter>
+    </ClCompile>
+    <ClCompile Include="ItemMove.cpp">
+      <Filter>ItemNative</Filter>
+    </ClCompile>
+    <ClCompile Include="ItemMoveManager.cpp">
+      <Filter>ItemNative</Filter>
+    </ClCompile>
+    <ClCompile Include="ItemNative.cpp">
+      <Filter>ItemNative</Filter>
+    </ClCompile>
+    <ClCompile Include="ItemNativeManager.cpp">
+      <Filter>ItemNative</Filter>
+    </ClCompile>
+    <ClCompile Include="ItemUsedManager.cpp">
+      <Filter>ItemNative</Filter>
+    </ClCompile>
+    <ClCompile Include="EventDungeonManager.cpp">
+      <Filter>EventDungeon</Filter>
+    </ClCompile>
+    <ClCompile Include="ClassMemoryPool.cpp">
+      <Filter>Unit</Filter>
+    </ClCompile>
+    <ClCompile Include="Monster.cpp">
+      <Filter>Unit</Filter>
+    </ClCompile>
+    <ClCompile Include="MonsterManager.cpp">
+      <Filter>Unit</Filter>
+    </ClCompile>
+    <ClCompile Include="MonsterTable.cpp">
+      <Filter>Unit</Filter>
+    </ClCompile>
+    <ClCompile Include="TraderMonster.cpp">
+      <Filter>Unit</Filter>
+    </ClCompile>
+    <ClCompile Include="Unit.cpp">
+      <Filter>Unit</Filter>
+    </ClCompile>
+    <ClCompile Include="User.cpp">
+      <Filter>Unit</Filter>
+    </ClCompile>
+    <ClCompile Include="UserItemSystem.cpp">
+      <Filter>Unit</Filter>
+    </ClCompile>
+    <ClCompile Include="DunGeon.cpp">
+      <Filter>Dungeon</Filter>
+    </ClCompile>
+    <ClCompile Include="DUNGEON_DATA_EX.cpp">
+      <Filter>Dungeon</Filter>
+    </ClCompile>
+    <ClCompile Include="DungeonLayer.cpp">
+      <Filter>Dungeon</Filter>
+    </ClCompile>
+    <ClCompile Include="DungeonTable.cpp">
+      <Filter>Dungeon</Filter>
+    </ClCompile>
+    <ClCompile Include="Map.cpp">
+      <Filter>Dungeon</Filter>
+    </ClCompile>
+    <ClCompile Include="Section.cpp">
+      <Filter>Dungeon</Filter>
+    </ClCompile>
+    <ClCompile Include="MsgProcForServer.cpp">
+      <Filter>MsgProcForServer</Filter>
+    </ClCompile>
+    <ClCompile Include="MsgProcForServerEvent.cpp">
+      <Filter>MsgProcForServer</Filter>
+    </ClCompile>
+    <ClCompile Include="MsgProcForServerGuild.cpp">
+      <Filter>MsgProcForServer</Filter>
+    </ClCompile>
+    <ClCompile Include="MsgProcForServerParty.cpp">
+      <Filter>MsgProcForServer</Filter>
+    </ClCompile>
+    <ClCompile Include="MsgProcForServerPortal.cpp">
+      <Filter>MsgProcForServer</Filter>
+    </ClCompile>
+    <ClCompile Include="BaseTeamMatch.cpp">
+      <Filter>TeamMatch</Filter>
+    </ClCompile>
+    <ClCompile Include="RivalGuildWar.cpp">
+      <Filter>TeamMatch</Filter>
+    </ClCompile>
+    <ClCompile Include="TM_KillingField.cpp">
+      <Filter>TeamMatch</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="DungeonServer.rc">
+      <Filter>Source Files</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="IndexCreator.lib">
+      <Filter>Source Files</Filter>
+    </Library>
+    <Library Include="CommonServer.lib">
+      <Filter>CommonServer</Filter>
+    </Library>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="AcceptTable.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="cGDI.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DBProc.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GameSystem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GameSystem_for_yak.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GlobalDefine.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="OwnServer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="RecordSet.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="recvmsg.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ServerFunction.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="StdAfx.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PathFinding\BlockLineManager.h">
+      <Filter>PathFinding</Filter>
+    </ClInclude>
+    <ClInclude Include="PathFinding\BlockManager.h">
+      <Filter>PathFinding</Filter>
+    </ClInclude>
+    <ClInclude Include="PathFinding\ControlStruct.h">
+      <Filter>PathFinding</Filter>
+    </ClInclude>
+    <ClInclude Include="PathFinding\DirectionManager.h">
+      <Filter>PathFinding</Filter>
+    </ClInclude>
+    <ClInclude Include="PathFinding\MemoryBlock.h">
+      <Filter>PathFinding</Filter>
+    </ClInclude>
+    <ClInclude Include="PathFinding\PriorityQue.h">
+      <Filter>PathFinding</Filter>
+    </ClInclude>
+    <ClInclude Include="PathFinding\SearchModule_Astar.h">
+      <Filter>PathFinding</Filter>
+    </ClInclude>
+    <ClInclude Include="PathFinding\VirtualBlockManager.h">
+      <Filter>PathFinding</Filter>
+    </ClInclude>
+    <ClInclude Include="Effect.h">
+      <Filter>Effect</Filter>
+    </ClInclude>
+    <ClInclude Include="TrafficLog.h">
+      <Filter>Accessary</Filter>
+    </ClInclude>
+    <ClInclude Include="Linkedlist.h">
+      <Filter>Container</Filter>
+    </ClInclude>
+    <ClInclude Include="Voidlist.h">
+      <Filter>Container</Filter>
+    </ClInclude>
+    <ClInclude Include="MsgProc.h">
+      <Filter>MsgProc</Filter>
+    </ClInclude>
+    <ClInclude Include="MsgProc_for_jjw6263.h">
+      <Filter>MsgProc</Filter>
+    </ClInclude>
+    <ClInclude Include="MsgProc_for_minbobo.h">
+      <Filter>MsgProc</Filter>
+    </ClInclude>
+    <ClInclude Include="MsgProc_for_y2jin.h">
+      <Filter>MsgProc</Filter>
+    </ClInclude>
+    <ClInclude Include="MsgProc_for_yak.h">
+      <Filter>MsgProc</Filter>
+    </ClInclude>
+    <ClInclude Include="GameSystemNative.h">
+      <Filter>ItemNative</Filter>
+    </ClInclude>
+    <ClInclude Include="ItemAttrLayer.h">
+      <Filter>ItemNative</Filter>
+    </ClInclude>
+    <ClInclude Include="ItemMove.h">
+      <Filter>ItemNative</Filter>
+    </ClInclude>
+    <ClInclude Include="ItemMoveManager.h">
+      <Filter>ItemNative</Filter>
+    </ClInclude>
+    <ClInclude Include="ItemNative.h">
+      <Filter>ItemNative</Filter>
+    </ClInclude>
+    <ClInclude Include="ItemNativeManager.h">
+      <Filter>ItemNative</Filter>
+    </ClInclude>
+    <ClInclude Include="ItemUsedManager.h">
+      <Filter>ItemNative</Filter>
+    </ClInclude>
+    <ClInclude Include="EventDungeonManager.h">
+      <Filter>EventDungeon</Filter>
+    </ClInclude>
+    <ClInclude Include="ClassMemoryPool.h">
+      <Filter>Unit</Filter>
+    </ClInclude>
+    <ClInclude Include="Monster.h">
+      <Filter>Unit</Filter>
+    </ClInclude>
+    <ClInclude Include="MonsterManager.h">
+      <Filter>Unit</Filter>
+    </ClInclude>
+    <ClInclude Include="MonsterTable.h">
+      <Filter>Unit</Filter>
+    </ClInclude>
+    <ClInclude Include="TraderMonster.h">
+      <Filter>Unit</Filter>
+    </ClInclude>
+    <ClInclude Include="Unit.h">
+      <Filter>Unit</Filter>
+    </ClInclude>
+    <ClInclude Include="User.h">
+      <Filter>Unit</Filter>
+    </ClInclude>
+    <ClInclude Include="Dungeon.h">
+      <Filter>Dungeon</Filter>
+    </ClInclude>
+    <ClInclude Include="DUNGEON_DATA.h">
+      <Filter>Dungeon</Filter>
+    </ClInclude>
+    <ClInclude Include="DUNGEON_DATA_EX.h">
+      <Filter>Dungeon</Filter>
+    </ClInclude>
+    <ClInclude Include="DungeonLayer.h">
+      <Filter>Dungeon</Filter>
+    </ClInclude>
+    <ClInclude Include="DungeonTable.h">
+      <Filter>Dungeon</Filter>
+    </ClInclude>
+    <ClInclude Include="LayerFormation.h">
+      <Filter>Dungeon</Filter>
+    </ClInclude>
+    <ClInclude Include="Map.h">
+      <Filter>Dungeon</Filter>
+    </ClInclude>
+    <ClInclude Include="Section.h">
+      <Filter>Dungeon</Filter>
+    </ClInclude>
+    <ClInclude Include="MsgProcForServer.h">
+      <Filter>MsgProcForServer</Filter>
+    </ClInclude>
+    <ClInclude Include="MsgProcForServerEvent.h">
+      <Filter>MsgProcForServer</Filter>
+    </ClInclude>
+    <ClInclude Include="MsgProcForServerGuild.h">
+      <Filter>MsgProcForServer</Filter>
+    </ClInclude>
+    <ClInclude Include="MsgProcForServerParty.h">
+      <Filter>MsgProcForServer</Filter>
+    </ClInclude>
+    <ClInclude Include="MsgProcForServerPortal.h">
+      <Filter>MsgProcForServer</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseTeamMatch.h">
+      <Filter>TeamMatch</Filter>
+    </ClInclude>
+    <ClInclude Include="RivalGuildWar.h">
+      <Filter>TeamMatch</Filter>
+    </ClInclude>
+    <ClInclude Include="TM_KillingField.h">
+      <Filter>TeamMatch</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="cursor1.cur">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="CommonServer.dll">
+      <Filter>CommonServer</Filter>
+    </None>
+    <None Include="DungeonConfig.ini" />
+    <None Include="DungeonServer.dsp" />
+    <None Include="ReadMe.txt" />
+  </ItemGroup>
+</Project>

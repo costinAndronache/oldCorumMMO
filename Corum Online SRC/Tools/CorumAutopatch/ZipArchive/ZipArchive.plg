@@ -1,0 +1,122 @@
+<html>
+<body>
+<pre>
+<h1>Build Log</h1>
+<h3>
+--------------------Configuration: ZipArchive - Win32 Static Release--------------------
+</h3>
+<h3>Command Lines</h3>
+Creating temporary file "C:\DOCUME~1\ADMINI~1\LOCALS~1\Temp\RSP5E9.tmp" with contents
+[
+/nologo /MT /W3 /GX /O2 /D "NDEBUG" /D "_MBCS" /D "WIN32" /D "_WINDOWS" /D "ZIP_ARCHIVE_MFC_PROJ" /D "PKZIP_BUG_WORKAROUND" /Fp"Static_Release/ZipArchive.pch" /YX"stdafx.h" /Fo"Static_Release/" /Fd"Static_Release/" /FD /c 
+"F:\MyWork\CorumAutopatch\ZipArchive\zlib\adler32.c"
+"F:\MyWork\CorumAutopatch\ZipArchive\zlib\compress.c"
+"F:\MyWork\CorumAutopatch\ZipArchive\zlib\crc32.c"
+"F:\MyWork\CorumAutopatch\ZipArchive\zlib\deflate.c"
+"F:\MyWork\CorumAutopatch\ZipArchive\zlib\gvmat32c.c"
+"F:\MyWork\CorumAutopatch\ZipArchive\zlib\infblock.c"
+"F:\MyWork\CorumAutopatch\ZipArchive\zlib\infcodes.c"
+"F:\MyWork\CorumAutopatch\ZipArchive\zlib\inffast.c"
+"F:\MyWork\CorumAutopatch\ZipArchive\zlib\inflate.c"
+"F:\MyWork\CorumAutopatch\ZipArchive\zlib\inftrees.c"
+"F:\MyWork\CorumAutopatch\ZipArchive\zlib\infutil.c"
+"F:\MyWork\CorumAutopatch\ZipArchive\zlib\maketree.c"
+"F:\MyWork\CorumAutopatch\ZipArchive\zlib\trees.c"
+"F:\MyWork\CorumAutopatch\ZipArchive\zlib\uncompr.c"
+"F:\MyWork\CorumAutopatch\ZipArchive\zlib\zutil.c"
+"F:\MyWork\CorumAutopatch\ZipArchive\ZipArchive.cpp"
+"F:\MyWork\CorumAutopatch\ZipArchive\ZipAutoBuffer.cpp"
+"F:\MyWork\CorumAutopatch\ZipArchive\ZipCentralDir.cpp"
+"F:\MyWork\CorumAutopatch\ZipArchive\ZipCompatibility.cpp"
+"F:\MyWork\CorumAutopatch\ZipArchive\ZipException.cpp"
+"F:\MyWork\CorumAutopatch\ZipArchive\ZipFile.cpp"
+"F:\MyWork\CorumAutopatch\ZipArchive\ZipFileHeader.cpp"
+"F:\MyWork\CorumAutopatch\ZipArchive\ZipMemFile.cpp"
+"F:\MyWork\CorumAutopatch\ZipArchive\ZipPathComponent.cpp"
+"F:\MyWork\CorumAutopatch\ZipArchive\ZipPlatform.cpp"
+"F:\MyWork\CorumAutopatch\ZipArchive\ZipPlatformComm.cpp"
+"F:\MyWork\CorumAutopatch\ZipArchive\ZipStorage.cpp"
+"F:\MyWork\CorumAutopatch\ZipArchive\ZipString.cpp"
+]
+Creating command line "cl.exe @C:\DOCUME~1\ADMINI~1\LOCALS~1\Temp\RSP5E9.tmp" 
+Creating temporary file "C:\DOCUME~1\ADMINI~1\LOCALS~1\Temp\RSP5EA.tmp" with contents
+[
+/nologo /MT /W3 /GX /O2 /D "NDEBUG" /D "_MBCS" /D "WIN32" /D "_WINDOWS" /D "ZIP_ARCHIVE_MFC_PROJ" /D "PKZIP_BUG_WORKAROUND" /Fp"Static_Release/ZipArchive.pch" /Yc"stdafx.h" /Fo"Static_Release/" /Fd"Static_Release/" /FD /c 
+"F:\MyWork\CorumAutopatch\ZipArchive\stdafx.cpp"
+]
+Creating command line "cl.exe @C:\DOCUME~1\ADMINI~1\LOCALS~1\Temp\RSP5EA.tmp" 
+Creating temporary file "C:\DOCUME~1\ADMINI~1\LOCALS~1\Temp\RSP5EB.tmp" with contents
+[
+/nologo /out:"Static_Release\ZipArchive.lib" 
+.\Static_Release\adler32.obj
+.\Static_Release\compress.obj
+.\Static_Release\crc32.obj
+.\Static_Release\deflate.obj
+.\Static_Release\gvmat32c.obj
+.\Static_Release\infblock.obj
+.\Static_Release\infcodes.obj
+.\Static_Release\inffast.obj
+.\Static_Release\inflate.obj
+.\Static_Release\inftrees.obj
+.\Static_Release\infutil.obj
+.\Static_Release\maketree.obj
+.\Static_Release\trees.obj
+.\Static_Release\uncompr.obj
+.\Static_Release\zutil.obj
+.\Static_Release\stdafx.obj
+.\Static_Release\ZipArchive.obj
+.\Static_Release\ZipAutoBuffer.obj
+.\Static_Release\ZipCentralDir.obj
+.\Static_Release\ZipCompatibility.obj
+.\Static_Release\ZipException.obj
+.\Static_Release\ZipFile.obj
+.\Static_Release\ZipFileHeader.obj
+.\Static_Release\ZipMemFile.obj
+.\Static_Release\ZipPathComponent.obj
+.\Static_Release\ZipPlatform.obj
+.\Static_Release\ZipPlatformComm.obj
+.\Static_Release\ZipStorage.obj
+.\Static_Release\ZipString.obj
+]
+Creating command line "link.exe -lib @C:\DOCUME~1\ADMINI~1\LOCALS~1\Temp\RSP5EB.tmp"
+<h3>Output Window</h3>
+Compiling...
+stdafx.cpp
+Compiling...
+adler32.c
+compress.c
+crc32.c
+deflate.c
+gvmat32c.c
+infblock.c
+infcodes.c
+inffast.c
+inflate.c
+inftrees.c
+infutil.c
+maketree.c
+trees.c
+uncompr.c
+zutil.c
+ZipArchive.cpp
+ZipAutoBuffer.cpp
+ZipCentralDir.cpp
+ZipCompatibility.cpp
+ZipException.cpp
+ZipFile.cpp
+ZipFileHeader.cpp
+ZipMemFile.cpp
+ZipPathComponent.cpp
+ZipPlatform.cpp
+ZipPlatformComm.cpp
+ZipStorage.cpp
+ZipString.cpp
+Creating library...
+
+
+
+<h3>Results</h3>
+ZipArchive.lib - 0 error(s), 0 warning(s)
+</pre>
+</body>
+</html>

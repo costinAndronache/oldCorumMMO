@@ -1,0 +1,274 @@
+//Microsoft Developer Studio generated resource script.
+//
+#include "resource.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#include "afxres.h"
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// Korean resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_KOR)
+#ifdef _WIN32
+LANGUAGE LANG_KOREAN, SUBLANG_DEFAULT
+#pragma code_page(949)
+#endif //_WIN32
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "resource.h\0"
+END
+
+2 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "#include ""afxres.h""\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "#define _AFX_NO_SPLITTER_RESOURCES\r\n"
+    "#define _AFX_NO_OLE_RESOURCES\r\n"
+    "#define _AFX_NO_TRACKER_RESOURCES\r\n"
+    "#define _AFX_NO_PROPERTY_RESOURCES\r\n"
+    "\r\n"
+    "#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_KOR)\r\n"
+    "#ifdef _WIN32\r\n"
+    "LANGUAGE 18, 1\r\n"
+    "#pragma code_page(949)\r\n"
+    "#endif //_WIN32\r\n"
+    "#include ""res\\PatchMaker.rc2""  // non-Microsoft Visual C++ edited resources\r\n"
+    "#include ""l.kor\\afxres.rc""          // Standard components\r\n"
+    "#endif\r\n"
+    "\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+IDR_MAINFRAME           ICON    DISCARDABLE     "res\\PatchMaker.ico"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_ABOUTBOX DIALOG DISCARDABLE  0, 0, 171, 51
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "PatchMaker Info"
+FONT 9, "Arial"
+BEGIN
+    ICON            IDR_MAINFRAME,IDC_STATIC,11,17,20,20
+    LTEXT           "PatchMaker V 0.92",IDC_STATIC,40,10,66,8,SS_NOPREFIX
+    LTEXT           "Copyright (C) 2004",IDC_STATIC,40,25,119,8
+    DEFPUSHBUTTON   "OK",IDOK,114,7,50,14,WS_GROUP
+END
+
+IDD_PATCHMAKER_DIALOG DIALOGEX 0, 0, 463, 217
+STYLE DS_MODALFRAME | DS_3DLOOK | WS_MINIMIZEBOX | WS_POPUP | WS_VISIBLE | 
+    WS_CAPTION | WS_SYSMENU
+EXSTYLE WS_EX_APPWINDOW
+CAPTION "PatchMaker"
+FONT 9, "Arial", 0, 0, 0x1
+BEGIN
+    PUSHBUTTON      "Reload All Patch Version",IDC_BUTTON_LOAD_ALL_VERSION,
+                    344,20,103,12
+    PUSHBUTTON      "Add New Patch Version",IDC_BUTTON_ADD_VERSION,344,35,
+                    103,12
+    PUSHBUTTON      "Remove Latest Patch Version",
+                    IDC_BUTTON_DELETE_LAST_VERSION,344,50,103,12
+    PUSHBUTTON      "Lock Latest Patch Version",IDC_BUTTON_LOCK_LAST_VERSION,
+                    344,65,103,12
+    PUSHBUTTON      "Unlock Latest Patch Version",
+                    IDC_BUTTON_UNLOCK_LAST_VERSION,344,80,103,12
+    PUSHBUTTON      "Export Latest Patch Files",IDC_BUTTON_BUILD_LAST_PATCH,
+                    344,95,103,12
+    PUSHBUTTON      "Export Latest Full Files",IDC_BUTTON_BUILD_LAST_FULL,
+                    344,110,103,12
+    DEFPUSHBUTTON   "Exit",IDOK,344,145,103,12
+    GROUPBOX        " Vesion List",IDC_STATIC,7,7,447,158
+    CONTROL         "List1",IDC_LIST_VERSION,"SysListView32",LVS_REPORT | 
+                    WS_BORDER | WS_TABSTOP,15,20,323,137
+    PUSHBUTTON      "Export Latest Patch File(Break)",
+                    IDC_BUTTON_BUILD_PATCH_FILES_WITH_BREAKING,344,130,103,
+                    12
+    CONTROL         "Progress1",IDC_PROGRESS,"msctls_progress32",PBS_SMOOTH | 
+                    WS_BORDER,7,176,447,10
+    LTEXT           "Total",IDC_STATIC,7,166,20,8
+    CONTROL         "Progress1",IDC_PROGRESS2,"msctls_progress32",PBS_SMOOTH | 
+                    WS_BORDER,7,196,447,10
+    LTEXT           "Zip",IDC_STATIC,7,187,12,8
+END
+
+IDD_DIALOG_LOGIN DIALOG DISCARDABLE  0, 0, 155, 42
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Login"
+FONT 9, "Arial"
+BEGIN
+    EDITTEXT        IDC_EDIT_PASSWORD,7,21,109,13,ES_PASSWORD | 
+                    ES_AUTOHSCROLL
+    DEFPUSHBUTTON   "OK",IDOK,119,21,30,13
+    LTEXT           "Enter Administrator Password",IDC_STATIC,10,9,96,9
+END
+
+IDD_DIALOG_ADD_VERSION DIALOG DISCARDABLE  0, 0, 227, 130
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Add New Version"
+FONT 9, "Arial"
+BEGIN
+    EDITTEXT        IDC_EDIT_VERSION_NAME,7,20,111,12,ES_AUTOHSCROLL | 
+                    ES_NUMBER
+    EDITTEXT        IDC_EDIT_DESCRIPTION,7,49,213,56,ES_MULTILINE
+    DEFPUSHBUTTON   "OK",IDOK,114,109,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,170,109,50,14
+    LTEXT           "Version Name",IDC_STATIC,10,9,57,8
+    LTEXT           "Description",IDC_STATIC,10,38,57,8
+END
+
+
+#ifndef _MAC
+/////////////////////////////////////////////////////////////////////////////
+//
+// Version
+//
+
+VS_VERSION_INFO VERSIONINFO
+ FILEVERSION 0,0,9,2
+ PRODUCTVERSION 0,0,9,2
+ FILEFLAGSMASK 0x3fL
+#ifdef _DEBUG
+ FILEFLAGS 0x21L
+#else
+ FILEFLAGS 0x20L
+#endif
+ FILEOS 0x4L
+ FILETYPE 0x1L
+ FILESUBTYPE 0x0L
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "041204b0"
+        BEGIN
+            VALUE "Comments", "Written By DeepDark(deepdark@esofnet.com)\0"
+            VALUE "CompanyName", "eSofNet Corp.\0"
+            VALUE "FileDescription", "PatchMaker for CorumOnline Part 2\0"
+            VALUE "FileVersion", "0, 0, 9, 2\0"
+            VALUE "InternalName", "PatchMaker\0"
+            VALUE "LegalCopyright", "Copyright (C) 2004 eSofNet Corp.\0"
+            VALUE "LegalTrademarks", "\0"
+            VALUE "OriginalFilename", "PatchMaker.EXE\0"
+            VALUE "PrivateBuild", "\0"
+            VALUE "ProductName", "PatchMaker\0"
+            VALUE "ProductVersion", "0, 0, 9, 2\0"
+            VALUE "SpecialBuild", "for CorumOnline Part 2, New PAK System\0"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x412, 1200
+    END
+END
+
+#endif    // !_MAC
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO DISCARDABLE 
+BEGIN
+    IDD_ABOUTBOX, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 164
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 44
+    END
+
+    IDD_PATCHMAKER_DIALOG, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 456
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 210
+    END
+
+    IDD_DIALOG_LOGIN, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 148
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 35
+    END
+
+    IDD_DIALOG_ADD_VERSION, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 220
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 123
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// String Table
+//
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDS_ABOUTBOX            "PatchMaker Á¤º¸(&A)..."
+END
+
+#endif    // Korean resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+#define _AFX_NO_SPLITTER_RESOURCES
+#define _AFX_NO_OLE_RESOURCES
+#define _AFX_NO_TRACKER_RESOURCES
+#define _AFX_NO_PROPERTY_RESOURCES
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_KOR)
+#ifdef _WIN32
+LANGUAGE 18, 1
+#pragma code_page(949)
+#endif //_WIN32
+#include "res\PatchMaker.rc2"  // non-Microsoft Visual C++ edited resources
+#include "l.kor\afxres.rc"          // Standard components
+#endif
+
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+

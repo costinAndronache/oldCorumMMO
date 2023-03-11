@@ -1,0 +1,10 @@
+
+*.pdb
+*.obj
+*.tlog
+*.log
+*.DMP
+*.TXT
+Corum Online SRC/Corum/UpgradeLog.XML
+Corum Online SRC/CorumOnlineProject/.vs/*
+Corum Online SRC/CorumOnlineProject/Release/*

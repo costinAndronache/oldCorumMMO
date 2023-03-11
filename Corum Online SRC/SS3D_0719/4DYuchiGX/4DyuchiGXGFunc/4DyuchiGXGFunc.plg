@@ -1,0 +1,341 @@
+<html>
+<body>
+<pre>
+<h1>Build Log</h1>
+<h3>
+--------------------Configuration: 4DyuchiGXGFunc - Win32 Release--------------------
+</h3>
+<h3>Command Lines</h3>
+Creating command line "rc.exe /l 0x412 /fo"Release/resouce.res" /d "NDEBUG" "D:\4dyuchigx\4DyuchiGXGFunc\resouce.rc"" 
+Creating temporary file "C:\DOCUME~1\yuchi\LOCALS~1\Temp\RSP3E.tmp" with contents
+[
+/nologo /MT /W3 /GX /O2 /Ob2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /FR"Release/" /Fp"Release/4DyuchiGXGFunc.pch" /YX /Fo"Release/" /Fd"Release/" /FD /c 
+"D:\4dyuchigx\4DyuchiGXGFunc\BinSearchAE.cpp"
+"D:\4dyuchigx\4DyuchiGXGFunc\create_index.cpp"
+"D:\4dyuchigx\4DyuchiGXGFunc\DPCQ.cpp"
+"D:\4dyuchigx\4DyuchiGXGFunc\global.cpp"
+"D:\4dyuchigx\4DyuchiGXGFunc\Heap.cpp"
+"D:\4dyuchigx\4DyuchiGXGFunc\ItemIndexTable.cpp"
+"D:\4dyuchigx\4DyuchiGXGFunc\ItemQueue.cpp"
+"D:\4dyuchigx\4DyuchiGXGFunc\look_aside_list.cpp"
+"D:\4dyuchigx\4DyuchiGXGFunc\performance.cpp"
+"D:\4dyuchigx\4DyuchiGXGFunc\quad_bytes_hash.cpp"
+"D:\4dyuchigx\4DyuchiGXGFunc\sort.cpp"
+"D:\4dyuchigx\4DyuchiGXGFunc\SortLink.cpp"
+"D:\4dyuchigx\4DyuchiGXGFunc\StaticResourcePool.cpp"
+"D:\4dyuchigx\4DyuchiGXGFunc\various_bytes_hash.cpp"
+]
+Creating command line "cl.exe @C:\DOCUME~1\yuchi\LOCALS~1\Temp\RSP3E.tmp" 
+Creating temporary file "C:\DOCUME~1\yuchi\LOCALS~1\Temp\RSP3F.tmp" with contents
+[
+kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /base:"0x68000000" /subsystem:windows /dll /incremental:no /pdb:"\4DyuchiDLL/SS3DGFuncN.pdb" /map:"\4DyuchiDLL/SS3DGFuncN.map" /machine:I386 /out:"\4DyuchiDLL\SS3DGFuncN.dll" /implib:"d:\4dyuchidll/SS3DGFuncN.lib" 
+.\Release\BinSearchAE.obj
+.\Release\create_index.obj
+.\Release\DPCQ.obj
+.\Release\global.obj
+.\Release\Heap.obj
+.\Release\ItemIndexTable.obj
+.\Release\ItemQueue.obj
+.\Release\look_aside_list.obj
+.\Release\performance.obj
+.\Release\quad_bytes_hash.obj
+.\Release\sort.obj
+.\Release\SortLink.obj
+.\Release\StaticResourcePool.obj
+.\Release\various_bytes_hash.obj
+.\Release\resouce.res
+]
+Creating command line "link.exe @C:\DOCUME~1\yuchi\LOCALS~1\Temp\RSP3F.tmp"
+<h3>Output Window</h3>
+Compiling resources...
+Compiling...
+BinSearchAE.cpp
+D:\4dyuchigx\4DyuchiGXGFunc\BinSearchAE.cpp(185) : warning C4102: 'lb_check_right' : unreferenced label
+D:\4dyuchigx\4DyuchiGXGFunc\BinSearchAE.cpp(360) : warning C4102: 'lb_return' : unreferenced label
+D:\4dyuchigx\4DyuchiGXGFunc\BinSearchAE.cpp(328) : warning C4102: 'lb_find' : unreferenced label
+create_index.cpp
+DPCQ.cpp
+D:\4dyuchigx\4DyuchiGXGFunc\DPCQ.cpp(222) : warning C4102: 'lb_return' : unreferenced label
+global.cpp
+D:\4dyuchigx\4DyuchiGXGFunc\global.cpp(3264) : warning C4244: '=' : conversion from 'unsigned long' to 'unsigned short', possible loss of data
+D:\4dyuchigx\4DyuchiGXGFunc\global.cpp(3778) : warning C4102: 'lb_exit' : unreferenced label
+D:\4dyuchigx\4DyuchiGXGFunc\global.cpp(4291) : warning C4018: '<' : signed/unsigned mismatch
+D:\4dyuchigx\4DyuchiGXGFunc\global.cpp(4316) : warning C4018: '<' : signed/unsigned mismatch
+D:\4dyuchigx\4DyuchiGXGFunc\global.cpp(4331) : warning C4018: '<' : signed/unsigned mismatch
+D:\4dyuchigx\4DyuchiGXGFunc\global.cpp(4852) : warning C4244: '=' : conversion from 'unsigned long' to 'unsigned short', possible loss of data
+D:\4dyuchigx\4DyuchiGXGFunc\global.cpp(4859) : warning C4244: '=' : conversion from 'unsigned long' to 'unsigned short', possible loss of data
+D:\4dyuchigx\4DyuchiGXGFunc\global.cpp(4866) : warning C4244: '=' : conversion from 'unsigned long' to 'unsigned short', possible loss of data
+D:\4dyuchigx\4DyuchiGXGFunc\global.cpp(4873) : warning C4244: '=' : conversion from 'unsigned long' to 'unsigned short', possible loss of data
+Heap.cpp
+D:\4dyuchigx\4DyuchiGXGFunc\Heap.cpp(214) : warning C4102: 'lb_return' : unreferenced label
+D:\4dyuchigx\4DyuchiGXGFunc\Heap.cpp(491) : warning C4102: 'lb_end' : unreferenced label
+ItemIndexTable.cpp
+ItemQueue.cpp
+look_aside_list.cpp
+performance.cpp
+quad_bytes_hash.cpp
+sort.cpp
+D:\4dyuchigx\4DyuchiGXGFunc\sort.cpp(107) : warning C4102: 'lb_return' : unreferenced label
+D:\4dyuchigx\4DyuchiGXGFunc\sort.cpp(81) : warning C4102: 'lb_exit' : unreferenced label
+D:\4dyuchigx\4DyuchiGXGFunc\sort.cpp(68) : warning C4102: 'lb_switch' : unreferenced label
+D:\4dyuchigx\4DyuchiGXGFunc\sort.cpp(60) : warning C4102: 'lb_check_j' : unreferenced label
+D:\4dyuchigx\4DyuchiGXGFunc\sort.cpp(212) : warning C4102: 'lb_return' : unreferenced label
+D:\4dyuchigx\4DyuchiGXGFunc\sort.cpp(186) : warning C4102: 'lb_exit' : unreferenced label
+D:\4dyuchigx\4DyuchiGXGFunc\sort.cpp(173) : warning C4102: 'lb_switch' : unreferenced label
+D:\4dyuchigx\4DyuchiGXGFunc\sort.cpp(165) : warning C4102: 'lb_check_j' : unreferenced label
+D:\4dyuchigx\4DyuchiGXGFunc\sort.cpp(318) : warning C4102: 'lb_return' : unreferenced label
+D:\4dyuchigx\4DyuchiGXGFunc\sort.cpp(292) : warning C4102: 'lb_exit' : unreferenced label
+D:\4dyuchigx\4DyuchiGXGFunc\sort.cpp(279) : warning C4102: 'lb_switch' : unreferenced label
+D:\4dyuchigx\4DyuchiGXGFunc\sort.cpp(271) : warning C4102: 'lb_check_j' : unreferenced label
+D:\4dyuchigx\4DyuchiGXGFunc\sort.cpp(423) : warning C4102: 'lb_return' : unreferenced label
+D:\4dyuchigx\4DyuchiGXGFunc\sort.cpp(397) : warning C4102: 'lb_exit' : unreferenced label
+D:\4dyuchigx\4DyuchiGXGFunc\sort.cpp(384) : warning C4102: 'lb_switch' : unreferenced label
+D:\4dyuchigx\4DyuchiGXGFunc\sort.cpp(376) : warning C4102: 'lb_check_j' : unreferenced label
+SortLink.cpp
+StaticResourcePool.cpp
+D:\4dyuchigx\4DyuchiGXGFunc\StaticResourcePool.cpp(79) : warning C4102: 'lb_return' : unreferenced label
+various_bytes_hash.cpp
+D:\4dyuchigx\4DyuchiGXGFunc\various_bytes_hash.cpp(129) : warning C4102: 'lb_cmp_1' : unreferenced label
+D:\4dyuchigx\4DyuchiGXGFunc\various_bytes_hash.cpp(226) : warning C4102: 'lb_cpy_1' : unreferenced label
+D:\4dyuchigx\4DyuchiGXGFunc\various_bytes_hash.cpp(243) : warning C4101: 'dwItem' : unreferenced local variable
+D:\4dyuchigx\4DyuchiGXGFunc\various_bytes_hash.cpp(338) : warning C4102: 'lb_cmp_1' : unreferenced label
+D:\4dyuchigx\4DyuchiGXGFunc\various_bytes_hash.cpp(472) : warning C4102: 'lb_1' : unreferenced label
+Linking...
+   Creating library d:\4dyuchidll/SS3DGFuncN.lib and object d:\4dyuchidll/SS3DGFuncN.exp
+
+
+
+<h3>Results</h3>
+SS3DGFuncN.dll - 0 error(s), 37 warning(s)
+<h3>
+--------------------Configuration: 4DyuchiGXGFunc - Win32 for SSE Debug--------------------
+</h3>
+<h3>Command Lines</h3>
+Creating command line "rc.exe /l 0x412 /fo"4DyuchiGXGFunc___Win32_for_SSE_Debug/resouce.res" /d "_DEBUG" "D:\4dyuchigx\4DyuchiGXGFunc\resouce.rc"" 
+Creating temporary file "C:\DOCUME~1\yuchi\LOCALS~1\Temp\RSP45.tmp" with contents
+[
+/nologo /MTd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_USE_SSE" /FR"4DyuchiGXGFunc___Win32_for_SSE_Debug/" /Fp"4DyuchiGXGFunc___Win32_for_SSE_Debug/4DyuchiGXGFunc.pch" /YX /Fo"4DyuchiGXGFunc___Win32_for_SSE_Debug/" /Fd"4DyuchiGXGFunc___Win32_for_SSE_Debug/" /FD /GZ /c 
+"D:\4dyuchigx\4DyuchiGXGFunc\BinSearchAE.cpp"
+"D:\4dyuchigx\4DyuchiGXGFunc\create_index.cpp"
+"D:\4dyuchigx\4DyuchiGXGFunc\DPCQ.cpp"
+"D:\4dyuchigx\4DyuchiGXGFunc\global.cpp"
+"D:\4dyuchigx\4DyuchiGXGFunc\Heap.cpp"
+"D:\4dyuchigx\4DyuchiGXGFunc\ItemIndexTable.cpp"
+"D:\4dyuchigx\4DyuchiGXGFunc\ItemQueue.cpp"
+"D:\4dyuchigx\4DyuchiGXGFunc\look_aside_list.cpp"
+"D:\4dyuchigx\4DyuchiGXGFunc\performance.cpp"
+"D:\4dyuchigx\4DyuchiGXGFunc\quad_bytes_hash.cpp"
+"D:\4dyuchigx\4DyuchiGXGFunc\sort.cpp"
+"D:\4dyuchigx\4DyuchiGXGFunc\SortLink.cpp"
+"D:\4dyuchigx\4DyuchiGXGFunc\StaticResourcePool.cpp"
+"D:\4dyuchigx\4DyuchiGXGFunc\various_bytes_hash.cpp"
+]
+Creating command line "cl.exe @C:\DOCUME~1\yuchi\LOCALS~1\Temp\RSP45.tmp" 
+Creating temporary file "C:\DOCUME~1\yuchi\LOCALS~1\Temp\RSP46.tmp" with contents
+[
+kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /base:"0x68000000" /subsystem:windows /dll /incremental:yes /pdb:"d:\4dyuchidll/SS3DGFunc.pdb" /map:"4DyuchiGXGFunc___Win32_for_SSE_Debug/SS3DGFunc.map" /debug /debugtype:both /machine:I386 /out:"c:\windows\system32\SS3DGFunc.dll" /implib:"d:\4dyuchidll/SS3DGFunc.lib" /pdbtype:sept 
+.\4DyuchiGXGFunc___Win32_for_SSE_Debug\BinSearchAE.obj
+.\4DyuchiGXGFunc___Win32_for_SSE_Debug\create_index.obj
+.\4DyuchiGXGFunc___Win32_for_SSE_Debug\DPCQ.obj
+.\4DyuchiGXGFunc___Win32_for_SSE_Debug\global.obj
+.\4DyuchiGXGFunc___Win32_for_SSE_Debug\Heap.obj
+.\4DyuchiGXGFunc___Win32_for_SSE_Debug\ItemIndexTable.obj
+.\4DyuchiGXGFunc___Win32_for_SSE_Debug\ItemQueue.obj
+.\4DyuchiGXGFunc___Win32_for_SSE_Debug\look_aside_list.obj
+.\4DyuchiGXGFunc___Win32_for_SSE_Debug\performance.obj
+.\4DyuchiGXGFunc___Win32_for_SSE_Debug\quad_bytes_hash.obj
+.\4DyuchiGXGFunc___Win32_for_SSE_Debug\sort.obj
+.\4DyuchiGXGFunc___Win32_for_SSE_Debug\SortLink.obj
+.\4DyuchiGXGFunc___Win32_for_SSE_Debug\StaticResourcePool.obj
+.\4DyuchiGXGFunc___Win32_for_SSE_Debug\various_bytes_hash.obj
+.\4DyuchiGXGFunc___Win32_for_SSE_Debug\resouce.res
+]
+Creating command line "link.exe @C:\DOCUME~1\yuchi\LOCALS~1\Temp\RSP46.tmp"
+<h3>Output Window</h3>
+Compiling resources...
+Compiling...
+BinSearchAE.cpp
+d:\4dyuchigx\4dyuchigxgfunc\binsearchae.cpp(185) : warning C4102: 'lb_check_right' : unreferenced label
+d:\4dyuchigx\4dyuchigxgfunc\binsearchae.cpp(360) : warning C4102: 'lb_return' : unreferenced label
+d:\4dyuchigx\4dyuchigxgfunc\binsearchae.cpp(328) : warning C4102: 'lb_find' : unreferenced label
+create_index.cpp
+DPCQ.cpp
+d:\4dyuchigx\4dyuchigxgfunc\dpcq.cpp(222) : warning C4102: 'lb_return' : unreferenced label
+global.cpp
+d:\4dyuchigx\4dyuchigxgfunc\global.cpp(3778) : warning C4102: 'lb_exit' : unreferenced label
+d:\4dyuchigx\4dyuchigxgfunc\global.cpp(4291) : warning C4018: '<' : signed/unsigned mismatch
+d:\4dyuchigx\4dyuchigxgfunc\global.cpp(4316) : warning C4018: '<' : signed/unsigned mismatch
+d:\4dyuchigx\4dyuchigxgfunc\global.cpp(4331) : warning C4018: '<' : signed/unsigned mismatch
+d:\4dyuchigx\4dyuchigxgfunc\global.cpp(4852) : warning C4244: '=' : conversion from 'unsigned long' to 'unsigned short', possible loss of data
+d:\4dyuchigx\4dyuchigxgfunc\global.cpp(4859) : warning C4244: '=' : conversion from 'unsigned long' to 'unsigned short', possible loss of data
+d:\4dyuchigx\4dyuchigxgfunc\global.cpp(4866) : warning C4244: '=' : conversion from 'unsigned long' to 'unsigned short', possible loss of data
+d:\4dyuchigx\4dyuchigxgfunc\global.cpp(4873) : warning C4244: '=' : conversion from 'unsigned long' to 'unsigned short', possible loss of data
+Heap.cpp
+d:\4dyuchigx\4dyuchigxgfunc\heap.cpp(214) : warning C4102: 'lb_return' : unreferenced label
+d:\4dyuchigx\4dyuchigxgfunc\heap.cpp(491) : warning C4102: 'lb_end' : unreferenced label
+ItemIndexTable.cpp
+ItemQueue.cpp
+look_aside_list.cpp
+performance.cpp
+quad_bytes_hash.cpp
+sort.cpp
+D:\4dyuchigx\4DyuchiGXGFunc\sort.cpp(107) : warning C4102: 'lb_return' : unreferenced label
+D:\4dyuchigx\4DyuchiGXGFunc\sort.cpp(81) : warning C4102: 'lb_exit' : unreferenced label
+D:\4dyuchigx\4DyuchiGXGFunc\sort.cpp(68) : warning C4102: 'lb_switch' : unreferenced label
+D:\4dyuchigx\4DyuchiGXGFunc\sort.cpp(60) : warning C4102: 'lb_check_j' : unreferenced label
+D:\4dyuchigx\4DyuchiGXGFunc\sort.cpp(212) : warning C4102: 'lb_return' : unreferenced label
+D:\4dyuchigx\4DyuchiGXGFunc\sort.cpp(186) : warning C4102: 'lb_exit' : unreferenced label
+D:\4dyuchigx\4DyuchiGXGFunc\sort.cpp(173) : warning C4102: 'lb_switch' : unreferenced label
+D:\4dyuchigx\4DyuchiGXGFunc\sort.cpp(165) : warning C4102: 'lb_check_j' : unreferenced label
+D:\4dyuchigx\4DyuchiGXGFunc\sort.cpp(318) : warning C4102: 'lb_return' : unreferenced label
+D:\4dyuchigx\4DyuchiGXGFunc\sort.cpp(292) : warning C4102: 'lb_exit' : unreferenced label
+D:\4dyuchigx\4DyuchiGXGFunc\sort.cpp(279) : warning C4102: 'lb_switch' : unreferenced label
+D:\4dyuchigx\4DyuchiGXGFunc\sort.cpp(271) : warning C4102: 'lb_check_j' : unreferenced label
+D:\4dyuchigx\4DyuchiGXGFunc\sort.cpp(423) : warning C4102: 'lb_return' : unreferenced label
+D:\4dyuchigx\4DyuchiGXGFunc\sort.cpp(397) : warning C4102: 'lb_exit' : unreferenced label
+D:\4dyuchigx\4DyuchiGXGFunc\sort.cpp(384) : warning C4102: 'lb_switch' : unreferenced label
+D:\4dyuchigx\4DyuchiGXGFunc\sort.cpp(376) : warning C4102: 'lb_check_j' : unreferenced label
+SortLink.cpp
+StaticResourcePool.cpp
+d:\4dyuchigx\4dyuchigxgfunc\staticresourcepool.cpp(79) : warning C4102: 'lb_return' : unreferenced label
+various_bytes_hash.cpp
+d:\4dyuchigx\4dyuchigxgfunc\various_bytes_hash.cpp(129) : warning C4102: 'lb_cmp_1' : unreferenced label
+d:\4dyuchigx\4dyuchigxgfunc\various_bytes_hash.cpp(226) : warning C4102: 'lb_cpy_1' : unreferenced label
+d:\4dyuchigx\4dyuchigxgfunc\various_bytes_hash.cpp(243) : warning C4101: 'dwItem' : unreferenced local variable
+d:\4dyuchigx\4dyuchigxgfunc\various_bytes_hash.cpp(338) : warning C4102: 'lb_cmp_1' : unreferenced label
+d:\4dyuchigx\4dyuchigxgfunc\various_bytes_hash.cpp(472) : warning C4102: 'lb_1' : unreferenced label
+Linking...
+LINK : warning LNK4075: ignoring /INCREMENTAL due to /DEBUGTYPE specification
+   Creating library d:\4dyuchidll/SS3DGFunc.lib and object d:\4dyuchidll/SS3DGFunc.exp
+
+
+
+<h3>Results</h3>
+SS3DGFunc.dll - 0 error(s), 37 warning(s)
+<h3>
+--------------------Configuration: 4DyuchiGXGFunc - Win32 for SSE Release--------------------
+</h3>
+<h3>Command Lines</h3>
+Creating command line "rc.exe /l 0x412 /fo"4DyuchiGXGFunc___Win32_for_SSE_Release/resouce.res" /d "NDEBUG" "D:\4dyuchigx\4DyuchiGXGFunc\resouce.rc"" 
+Creating temporary file "C:\DOCUME~1\yuchi\LOCALS~1\Temp\RSP4A.tmp" with contents
+[
+/nologo /MT /W3 /GX /O2 /Ob2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_USE_SSE" /FR"4DyuchiGXGFunc___Win32_for_SSE_Release/" /Fp"4DyuchiGXGFunc___Win32_for_SSE_Release/4DyuchiGXGFunc.pch" /YX /Fo"4DyuchiGXGFunc___Win32_for_SSE_Release/" /Fd"4DyuchiGXGFunc___Win32_for_SSE_Release/" /FD /c 
+"D:\4dyuchigx\4DyuchiGXGFunc\BinSearchAE.cpp"
+"D:\4dyuchigx\4DyuchiGXGFunc\create_index.cpp"
+"D:\4dyuchigx\4DyuchiGXGFunc\DPCQ.cpp"
+"D:\4dyuchigx\4DyuchiGXGFunc\global.cpp"
+"D:\4dyuchigx\4DyuchiGXGFunc\Heap.cpp"
+"D:\4dyuchigx\4DyuchiGXGFunc\ItemIndexTable.cpp"
+"D:\4dyuchigx\4DyuchiGXGFunc\ItemQueue.cpp"
+"D:\4dyuchigx\4DyuchiGXGFunc\look_aside_list.cpp"
+"D:\4dyuchigx\4DyuchiGXGFunc\performance.cpp"
+"D:\4dyuchigx\4DyuchiGXGFunc\quad_bytes_hash.cpp"
+"D:\4dyuchigx\4DyuchiGXGFunc\sort.cpp"
+"D:\4dyuchigx\4DyuchiGXGFunc\SortLink.cpp"
+"D:\4dyuchigx\4DyuchiGXGFunc\StaticResourcePool.cpp"
+"D:\4dyuchigx\4DyuchiGXGFunc\various_bytes_hash.cpp"
+]
+Creating command line "cl.exe @C:\DOCUME~1\yuchi\LOCALS~1\Temp\RSP4A.tmp" 
+Creating temporary file "C:\DOCUME~1\yuchi\LOCALS~1\Temp\RSP4B.tmp" with contents
+[
+kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /base:"0x68000000" /subsystem:windows /dll /incremental:no /pdb:"\4DyuchiDLL/SS3DGFuncSSE.pdb" /map:"\4DyuchiDLL/SS3DGFuncSSE.map" /machine:I386 /out:"\4DyuchiDLL\SS3DGFuncSSE.dll" /implib:"d:\4dyuchidll/SS3DGFuncSSE.lib" 
+.\4DyuchiGXGFunc___Win32_for_SSE_Release\BinSearchAE.obj
+.\4DyuchiGXGFunc___Win32_for_SSE_Release\create_index.obj
+.\4DyuchiGXGFunc___Win32_for_SSE_Release\DPCQ.obj
+.\4DyuchiGXGFunc___Win32_for_SSE_Release\global.obj
+.\4DyuchiGXGFunc___Win32_for_SSE_Release\Heap.obj
+.\4DyuchiGXGFunc___Win32_for_SSE_Release\ItemIndexTable.obj
+.\4DyuchiGXGFunc___Win32_for_SSE_Release\ItemQueue.obj
+.\4DyuchiGXGFunc___Win32_for_SSE_Release\look_aside_list.obj
+.\4DyuchiGXGFunc___Win32_for_SSE_Release\performance.obj
+.\4DyuchiGXGFunc___Win32_for_SSE_Release\quad_bytes_hash.obj
+.\4DyuchiGXGFunc___Win32_for_SSE_Release\sort.obj
+.\4DyuchiGXGFunc___Win32_for_SSE_Release\SortLink.obj
+.\4DyuchiGXGFunc___Win32_for_SSE_Release\StaticResourcePool.obj
+.\4DyuchiGXGFunc___Win32_for_SSE_Release\various_bytes_hash.obj
+.\4DyuchiGXGFunc___Win32_for_SSE_Release\resouce.res
+]
+Creating command line "link.exe @C:\DOCUME~1\yuchi\LOCALS~1\Temp\RSP4B.tmp"
+<h3>Output Window</h3>
+Compiling resources...
+Compiling...
+BinSearchAE.cpp
+D:\4dyuchigx\4DyuchiGXGFunc\BinSearchAE.cpp(185) : warning C4102: 'lb_check_right' : unreferenced label
+D:\4dyuchigx\4DyuchiGXGFunc\BinSearchAE.cpp(360) : warning C4102: 'lb_return' : unreferenced label
+D:\4dyuchigx\4DyuchiGXGFunc\BinSearchAE.cpp(328) : warning C4102: 'lb_find' : unreferenced label
+create_index.cpp
+DPCQ.cpp
+D:\4dyuchigx\4DyuchiGXGFunc\DPCQ.cpp(222) : warning C4102: 'lb_return' : unreferenced label
+global.cpp
+D:\4dyuchigx\4DyuchiGXGFunc\global.cpp(3778) : warning C4102: 'lb_exit' : unreferenced label
+D:\4dyuchigx\4DyuchiGXGFunc\global.cpp(4291) : warning C4018: '<' : signed/unsigned mismatch
+D:\4dyuchigx\4DyuchiGXGFunc\global.cpp(4316) : warning C4018: '<' : signed/unsigned mismatch
+D:\4dyuchigx\4DyuchiGXGFunc\global.cpp(4331) : warning C4018: '<' : signed/unsigned mismatch
+D:\4dyuchigx\4DyuchiGXGFunc\global.cpp(4852) : warning C4244: '=' : conversion from 'unsigned long' to 'unsigned short', possible loss of data
+D:\4dyuchigx\4DyuchiGXGFunc\global.cpp(4859) : warning C4244: '=' : conversion from 'unsigned long' to 'unsigned short', possible loss of data
+D:\4dyuchigx\4DyuchiGXGFunc\global.cpp(4866) : warning C4244: '=' : conversion from 'unsigned long' to 'unsigned short', possible loss of data
+D:\4dyuchigx\4DyuchiGXGFunc\global.cpp(4873) : warning C4244: '=' : conversion from 'unsigned long' to 'unsigned short', possible loss of data
+Heap.cpp
+D:\4dyuchigx\4DyuchiGXGFunc\Heap.cpp(214) : warning C4102: 'lb_return' : unreferenced label
+D:\4dyuchigx\4DyuchiGXGFunc\Heap.cpp(491) : warning C4102: 'lb_end' : unreferenced label
+ItemIndexTable.cpp
+ItemQueue.cpp
+look_aside_list.cpp
+performance.cpp
+quad_bytes_hash.cpp
+sort.cpp
+D:\4dyuchigx\4DyuchiGXGFunc\sort.cpp(107) : warning C4102: 'lb_return' : unreferenced label
+D:\4dyuchigx\4DyuchiGXGFunc\sort.cpp(81) : warning C4102: 'lb_exit' : unreferenced label
+D:\4dyuchigx\4DyuchiGXGFunc\sort.cpp(68) : warning C4102: 'lb_switch' : unreferenced label
+D:\4dyuchigx\4DyuchiGXGFunc\sort.cpp(60) : warning C4102: 'lb_check_j' : unreferenced label
+D:\4dyuchigx\4DyuchiGXGFunc\sort.cpp(212) : warning C4102: 'lb_return' : unreferenced label
+D:\4dyuchigx\4DyuchiGXGFunc\sort.cpp(186) : warning C4102: 'lb_exit' : unreferenced label
+D:\4dyuchigx\4DyuchiGXGFunc\sort.cpp(173) : warning C4102: 'lb_switch' : unreferenced label
+D:\4dyuchigx\4DyuchiGXGFunc\sort.cpp(165) : warning C4102: 'lb_check_j' : unreferenced label
+D:\4dyuchigx\4DyuchiGXGFunc\sort.cpp(318) : warning C4102: 'lb_return' : unreferenced label
+D:\4dyuchigx\4DyuchiGXGFunc\sort.cpp(292) : warning C4102: 'lb_exit' : unreferenced label
+D:\4dyuchigx\4DyuchiGXGFunc\sort.cpp(279) : warning C4102: 'lb_switch' : unreferenced label
+D:\4dyuchigx\4DyuchiGXGFunc\sort.cpp(271) : warning C4102: 'lb_check_j' : unreferenced label
+D:\4dyuchigx\4DyuchiGXGFunc\sort.cpp(423) : warning C4102: 'lb_return' : unreferenced label
+D:\4dyuchigx\4DyuchiGXGFunc\sort.cpp(397) : warning C4102: 'lb_exit' : unreferenced label
+D:\4dyuchigx\4DyuchiGXGFunc\sort.cpp(384) : warning C4102: 'lb_switch' : unreferenced label
+D:\4dyuchigx\4DyuchiGXGFunc\sort.cpp(376) : warning C4102: 'lb_check_j' : unreferenced label
+SortLink.cpp
+StaticResourcePool.cpp
+D:\4dyuchigx\4DyuchiGXGFunc\StaticResourcePool.cpp(79) : warning C4102: 'lb_return' : unreferenced label
+various_bytes_hash.cpp
+D:\4dyuchigx\4DyuchiGXGFunc\various_bytes_hash.cpp(129) : warning C4102: 'lb_cmp_1' : unreferenced label
+D:\4dyuchigx\4DyuchiGXGFunc\various_bytes_hash.cpp(226) : warning C4102: 'lb_cpy_1' : unreferenced label
+D:\4dyuchigx\4DyuchiGXGFunc\various_bytes_hash.cpp(243) : warning C4101: 'dwItem' : unreferenced local variable
+D:\4dyuchigx\4DyuchiGXGFunc\various_bytes_hash.cpp(338) : warning C4102: 'lb_cmp_1' : unreferenced label
+D:\4dyuchigx\4DyuchiGXGFunc\various_bytes_hash.cpp(472) : warning C4102: 'lb_1' : unreferenced label
+Linking...
+   Creating library d:\4dyuchidll/SS3DGFuncSSE.lib and object d:\4dyuchidll/SS3DGFuncSSE.exp
+Creating temporary file "C:\DOCUME~1\yuchi\LOCALS~1\Temp\RSP4F.tmp" with contents
+[
+/nologo /o"d:\4dyuchidll/4DyuchiGXGFunc.bsc" 
+.\4DyuchiGXGFunc___Win32_for_SSE_Release\BinSearchAE.sbr
+.\4DyuchiGXGFunc___Win32_for_SSE_Release\create_index.sbr
+.\4DyuchiGXGFunc___Win32_for_SSE_Release\DPCQ.sbr
+.\4DyuchiGXGFunc___Win32_for_SSE_Release\global.sbr
+.\4DyuchiGXGFunc___Win32_for_SSE_Release\Heap.sbr
+.\4DyuchiGXGFunc___Win32_for_SSE_Release\ItemIndexTable.sbr
+.\4DyuchiGXGFunc___Win32_for_SSE_Release\ItemQueue.sbr
+.\4DyuchiGXGFunc___Win32_for_SSE_Release\look_aside_list.sbr
+.\4DyuchiGXGFunc___Win32_for_SSE_Release\performance.sbr
+.\4DyuchiGXGFunc___Win32_for_SSE_Release\quad_bytes_hash.sbr
+.\4DyuchiGXGFunc___Win32_for_SSE_Release\sort.sbr
+.\4DyuchiGXGFunc___Win32_for_SSE_Release\SortLink.sbr
+.\4DyuchiGXGFunc___Win32_for_SSE_Release\StaticResourcePool.sbr
+.\4DyuchiGXGFunc___Win32_for_SSE_Release\various_bytes_hash.sbr]
+Creating command line "bscmake.exe @C:\DOCUME~1\yuchi\LOCALS~1\Temp\RSP4F.tmp"
+Creating browse info file...
+<h3>Output Window</h3>
+
+
+
+<h3>Results</h3>
+SS3DGFuncSSE.dll - 0 error(s), 36 warning(s)
+</pre>
+</body>
+</html>

@@ -1,0 +1,61 @@
+<html>
+<body>
+<pre>
+<h1>Build Log</h1>
+<h3>
+--------------------Configuration: 4DyuchiFileStorage - Win32 Debug--------------------
+</h3>
+<h3>Command Lines</h3>
+Creating command line "rc.exe /l 0x412 /fo"Debug/Script1.res" /d "_DEBUG" "D:\4dyuchigx\4DyuchiFileStorage\Script1.rc"" 
+Creating temporary file "C:\DOCUME~1\yuchi\LOCALS~1\Temp\RSP5C.tmp" with contents
+[
+/nologo /MTd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "MY4DYUCHIFILESTORAGE_EXPORTS" /FR"Debug/" /Fp"Debug/4DyuchiFileStorage.pch" /YX /Fo"Debug/" /Fd"Debug/" /FD /GZ /c 
+"D:\4dyuchigx\4DyuchiFileStorage\CoStorage.cpp"
+"D:\4dyuchigx\4DyuchiFileStorage\dllmain.cpp"
+"D:\4dyuchigx\4DyuchiFileStorage\factory.cpp"
+"D:\4dyuchigx\4DyuchiFileStorage\PackFile.cpp"
+]
+Creating command line "cl.exe @C:\DOCUME~1\yuchi\LOCALS~1\Temp\RSP5C.tmp" 
+Creating temporary file "C:\DOCUME~1\yuchi\LOCALS~1\Temp\RSP5D.tmp" with contents
+[
+kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /base:"0x67000000" /dll /incremental:yes /pdb:"D:\4dyuchiDLL/4DyuchiGX_debug/4DyuchiFileStorage.pdb" /map:"D:\4dyuchiDLL/4DyuchiGX_debug/4DyuchiFileStorage.map" /debug /debugtype:both /machine:I386 /def:".\4DyuchiFileStorage.def" /out:"D:\4dyuchiDLL\4DyuchiGX_debug\4DyuchiFileStorage.dll" /implib:"Debug/4DyuchiFileStorage.lib" /pdbtype:sept 
+.\Debug\CoStorage.obj
+.\Debug\dllmain.obj
+.\Debug\factory.obj
+.\Debug\PackFile.obj
+.\Debug\Script1.res
+]
+Creating command line "link.exe @C:\DOCUME~1\yuchi\LOCALS~1\Temp\RSP5D.tmp"
+<h3>Output Window</h3>
+Compiling resources...
+Compiling...
+CoStorage.cpp
+d:\4dyuchigx\4dyuchifilestorage\costorage.cpp(251) : warning C4102: 'lb_return' : unreferenced label
+d:\4dyuchigx\4dyuchifilestorage\costorage.cpp(263) : warning C4102: 'lb_return' : unreferenced label
+d:\4dyuchigx\4dyuchifilestorage\costorage.cpp(290) : warning C4102: 'lb_return' : unreferenced label
+d:\4dyuchigx\4dyuchifilestorage\costorage.cpp(301) : warning C4102: 'lb_return' : unreferenced label
+d:\4dyuchigx\4dyuchifilestorage\costorage.cpp(469) : warning C4102: 'lb_return' : unreferenced label
+d:\4dyuchigx\4dyuchifilestorage\costorage.cpp(747) : warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+d:\4dyuchigx\4dyuchifilestorage\costorage.cpp(1069) : warning C4102: 'lb_skip_call' : unreferenced label
+d:\4dyuchigx\4dyuchifilestorage\costorage.cpp(1069) : warning C4102: 'lb_check_string' : unreferenced label
+d:\4dyuchigx\4dyuchifilestorage\costorage.cpp(1190) : warning C4102: 'lb_call' : unreferenced label
+dllmain.cpp
+factory.cpp
+PackFile.cpp
+d:\4dyuchigx\4dyuchifilestorage\packfile.cpp(222) : warning C4102: 'lb_return' : unreferenced label
+d:\4dyuchigx\4dyuchifilestorage\packfile.cpp(261) : warning C4102: 'lb_fail_create_file' : unreferenced label
+d:\4dyuchigx\4dyuchifilestorage\packfile.cpp(258) : warning C4102: 'lb_return' : unreferenced label
+Linking...
+LINK : warning LNK4075: ignoring /INCREMENTAL due to /DEBUGTYPE specification
+   Creating library Debug/4DyuchiFileStorage.lib and object Debug/4DyuchiFileStorage.exp
+Creating command line "bscmake.exe /nologo /o"Debug/4DyuchiFileStorage.bsc"  .\Debug\CoStorage.sbr .\Debug\dllmain.sbr .\Debug\factory.sbr .\Debug\PackFile.sbr"
+Creating browse info file...
+<h3>Output Window</h3>
+
+
+
+<h3>Results</h3>
+4DyuchiFileStorage.dll - 0 error(s), 13 warning(s)
+</pre>
+</body>
+</html>

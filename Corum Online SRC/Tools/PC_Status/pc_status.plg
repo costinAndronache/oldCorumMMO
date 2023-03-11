@@ -1,0 +1,93 @@
+<html>
+<body>
+<pre>
+<h1>Build Log</h1>
+<h3>
+--------------------Configuration: pc_status - Win32 Debug--------------------
+</h3>
+<h3>Command Lines</h3>
+Creating command line "rc.exe /l 0x412 /fo"Debug/pc_status.res" /d "_DEBUG" "D:\work\pc_status\pc_status.rc"" 
+Creating temporary file "C:\DOCUME~1\y2jinc\LOCALS~1\Temp\RSP5AE.tmp" with contents
+[
+/nologo /MTd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_MBCS" /FR"Debug/" /Fp"Debug/pc_status.pch" /YX /Fo"Debug/" /Fd"Debug/" /FD /GZ /c 
+"D:\work\pc_status\ControlToolTip.cpp"
+"D:\work\pc_status\cpu_info.cpp"
+"D:\work\pc_status\Debug.cpp"
+"D:\work\pc_status\GetDxVer.cpp"
+"D:\work\pc_status\graphic_card_info.cpp"
+"D:\work\pc_status\IconButton.cpp"
+"D:\work\pc_status\NewLabel.cpp"
+"D:\work\pc_status\pc_status.cpp"
+"D:\work\pc_status\pc_statusDlg.cpp"
+"D:\work\pc_status\spec_info.cpp"
+"D:\work\pc_status\SpecList.cpp"
+]
+Creating command line "cl.exe @C:\DOCUME~1\y2jinc\LOCALS~1\Temp\RSP5AE.tmp" 
+Creating temporary file "C:\DOCUME~1\y2jinc\LOCALS~1\Temp\RSP5AF.tmp" with contents
+[
+/nologo /MTd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_MBCS" /FR"Debug/" /Fp"Debug/pc_status.pch" /Yc"stdafx.h" /Fo"Debug/" /Fd"Debug/" /FD /GZ /c 
+"D:\work\pc_status\StdAfx.cpp"
+]
+Creating command line "cl.exe @C:\DOCUME~1\y2jinc\LOCALS~1\Temp\RSP5AF.tmp" 
+Creating temporary file "C:\DOCUME~1\y2jinc\LOCALS~1\Temp\RSP5B0.tmp" with contents
+[
+d3dx8dt.lib d3d8.lib dxerr8.lib d3dxof.lib dxguid.lib dsound.lib ddraw.lib winmm.lib version.lib /nologo /subsystem:windows /incremental:yes /pdb:"Debug/pc_status.pdb" /debug /machine:I386 /out:"Debug/pc_status.exe" /pdbtype:sept 
+.\Debug\ControlToolTip.obj
+.\Debug\cpu_info.obj
+.\Debug\Debug.obj
+.\Debug\GetDxVer.obj
+.\Debug\graphic_card_info.obj
+.\Debug\IconButton.obj
+.\Debug\NewLabel.obj
+.\Debug\pc_status.obj
+.\Debug\pc_statusDlg.obj
+.\Debug\spec_info.obj
+.\Debug\SpecList.obj
+.\Debug\StdAfx.obj
+.\Debug\pc_status.res
+]
+Creating command line "link.exe @C:\DOCUME~1\y2jinc\LOCALS~1\Temp\RSP5B0.tmp"
+<h3>Output Window</h3>
+Compiling resources...
+Compiling...
+StdAfx.cpp
+Compiling...
+ControlToolTip.cpp
+cpu_info.cpp
+Debug.cpp
+GetDxVer.cpp
+graphic_card_info.cpp
+IconButton.cpp
+NewLabel.cpp
+pc_status.cpp
+pc_statusDlg.cpp
+d:\work\pc_status\pc_statusdlg.cpp(297) : warning C4101: 'str' : unreferenced local variable
+spec_info.cpp
+SpecList.cpp
+Linking...
+Creating temporary file "C:\DOCUME~1\y2jinc\LOCALS~1\Temp\RSP5B6.tmp" with contents
+[
+/nologo /o"Debug/pc_status.bsc" 
+.\Debug\StdAfx.sbr
+.\Debug\ControlToolTip.sbr
+.\Debug\cpu_info.sbr
+.\Debug\Debug.sbr
+.\Debug\GetDxVer.sbr
+.\Debug\graphic_card_info.sbr
+.\Debug\IconButton.sbr
+.\Debug\NewLabel.sbr
+.\Debug\pc_status.sbr
+.\Debug\pc_statusDlg.sbr
+.\Debug\spec_info.sbr
+.\Debug\SpecList.sbr]
+Creating command line "bscmake.exe @C:\DOCUME~1\y2jinc\LOCALS~1\Temp\RSP5B6.tmp"
+Creating browse info file...
+<h3>Output Window</h3>
+
+
+
+<h3>Results</h3>
+pc_status.exe - 0 error(s), 1 warning(s)
+</pre>
+</body>
+</html>
