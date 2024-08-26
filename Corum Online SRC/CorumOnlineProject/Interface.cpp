@@ -391,7 +391,7 @@ BOOL CInterface::InitInterface(BYTE byServer)
 	// sung-han 2005-01-18 파티창이 오류로 투명하게 나타나는 부분 수정
 	// .cdb 파일 여러번 불러서 초기화가 제대로 안되는 부분이 문제
 	//---------------------------------------------
-	for( i=0; i<CUR_INTERFACE ; i++ )
+	for( int i=0; i<CUR_INTERFACE ; i++ )
 	{
 		m_pMenu[i]->RemoveAllData();
 	}
@@ -401,7 +401,7 @@ BOOL CInterface::InitInterface(BYTE byServer)
 
 	// Ini 파일 로드 //	
 	g_bInitSoundEnalbe = FALSE;// 사운드 효과음 죽이기
-	for(i = 0; i < CUR_INTERFACE; i++ )
+	for(int i = 0; i < CUR_INTERFACE; i++ )
 	{
 		if(m_pMenu[i]->m_byType!=__MENU_TYPE_NONE__)
 		{
@@ -422,7 +422,7 @@ BOOL CInterface::InitInterface(BYTE byServer)
 	
 	m_byIndex = CUR_INTERFACE;
 
-	for(i = 0; i < m_byIndex; i++)
+	for(int i = 0; i < m_byIndex; i++)
 		m_pMenu[i]->SetOrderIndex(i);	
 	
 	OptionConfig(FALSE);	
@@ -457,7 +457,7 @@ void CInterface::SetWnd(BYTE bWnd)
 		
 		m_pMenu[pUserInterface->GetChkOrderIndex()]->SetOrderIndex(m_byIndex-1);
 
-		for(i = 0; i < CUR_INTERFACE; i++)
+		for(int i = 0; i < CUR_INTERFACE; i++)
 		{
 			if(m_pMenu[i]->m_bInit==TRUE)
 			{
@@ -505,7 +505,7 @@ int CInterface::InterfaceCheck()
 
 				m_pMenu[j]->SetOrderIndex(m_byIndex-1);
 
-				for(k = 0; k < m_byIndex; k++)
+				for(int k = 0; k < m_byIndex; k++)
 				{
 					if(m_pMenu[k]->GetActive()==TRUE)
 					{
@@ -529,7 +529,7 @@ int CInterface::InterfaceCheck()
 
 				m_pMenu[pUserInterface->GetChkOrderIndex()]->SetOrderIndex(m_byIndex-1);
 				
-				for(k = 0; k < m_byIndex; k++)
+				for(int k = 0; k < m_byIndex; k++)
 				{
 					if(m_pMenu[k]->GetActive()==TRUE)
 					{
@@ -2057,7 +2057,7 @@ void CInterface::ItemInfoRender_SetItemBonusOption(char szItemInfo[100][255], in
 			iLoop = dwSetNum - 1;
 			if( dwSetNum > 5 ) iLoop = 5;
 
-			for( i = 0; i < iLoop; i++ )
+			for( int i = 0; i < iLoop; i++ )
 			{
 				if( pSetItemInfo->pBonusOption[i][0].wKind != 0 && pSetItemInfo->pBonusOption[i][0].wValue != 0)
 				{
@@ -2093,7 +2093,7 @@ void CInterface::ItemInfoRender_SetItemBonusOption(char szItemInfo[100][255], in
 			// Full Set Bonus 옵션.
 			if( dwSetNum == pSetItemInfo->bFullSet )
 			{
-				for(i = 0; i < MAX_ITEM_ATTR; i++)
+				for(int i = 0; i < MAX_ITEM_ATTR; i++)
 				{
 					if( pSetItemInfo->pFullOption[i].wKind != 0 && pSetItemInfo->pFullOption[i].wValue != 0)
 					{
@@ -2162,7 +2162,7 @@ void CInterface::ItemInfoRender(CItem* pItem, BOOL isEquip, BOOL bPrice, DWORD d
 			BOOL isChk = FALSE;
 			memset( dwSetID, 0, sizeof( DWORD ) * 10 );
 		
-			for(i = 0; i < MAX_EQUIP_POOL; i++ )
+			for(int i = 0; i < MAX_EQUIP_POOL; i++ )
 			{
 				if(g_pMainPlayer->m_bCurrnetHand == 1)
 				{
@@ -2211,7 +2211,7 @@ void CInterface::ItemInfoRender(CItem* pItem, BOOL isEquip, BOOL bPrice, DWORD d
 		}
 	}
 
-	i = 0;
+	int i = 0;
 
 	while(i < MAX_ITEM_ATTR)
 	{

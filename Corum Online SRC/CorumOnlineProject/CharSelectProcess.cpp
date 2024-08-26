@@ -221,7 +221,7 @@ BOOL InitGameCharSelect()
 		GXSetPosition(g_pGVLogin->ChrSelectInfo[i].hSpotLightHandle, &v3, FALSE);
 		HideObject(g_pGVLogin->ChrSelectInfo[i].hSpotLightHandle);
 	}
-	
+	int i = 0;
 	for(i = 0; i < MAX_CHAR_SELECT_NUM; i++)
 	{	
 		if(IsEmptyString(g_pGVLogin->ChrSelectInfo[i].ReceivedChrInfo.szName))
@@ -463,7 +463,7 @@ void ReleaseGameCharSelect()
 	//캐릭터 생성할때 보여줄 모든 몸통 모델 Release
 	for(int i=0; i<MAX_KIND_OF_HEAD_MALE; i++)
 		DeleteObj(&g_pGVLogin->EnumCharHeadForCreate[1][i]);
-		 	
+	int i = 0;
 	for(i=0; i<MAX_KIND_OF_HEAD_FEMALE; i++)
 		DeleteObj(&g_pGVLogin->EnumCharHeadForCreate[0][i]);
 
@@ -913,7 +913,7 @@ void CharSelectMouseProcess(WPARAM wParam, LPARAM lParam, BYTE byType)
 			}
 		}		
 	}
-
+	int i = 0;
 	for(i = 0; i < 5; i++)
 	{
 		dwBtnID		= BUTTON_CLASS_WARRIOR + i;
@@ -1861,7 +1861,7 @@ BOOL CreateMainPlayer(WSTC_WORLD_USER_INFO* pInfo)
 	}
 	
 	dwRand = GetRandom(16);
-
+	int i = 0;
 	for(i = 0; i < 16; i++)
 	{
 		if(i == dwRand)

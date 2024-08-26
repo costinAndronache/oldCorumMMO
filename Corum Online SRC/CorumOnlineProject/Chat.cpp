@@ -37,6 +37,7 @@ void InitDungeonMessage()
 		g_sDgChatMsg[i].snSize			= 0;
 	}
 	
+	int i = 0;
 	for(i = 0; i < __MAX_CHAT_LIST_QUEUE__; i++)
 	{
 		memset(g_sDgChatListMsg[i].szMessage, 0, sizeof(g_sDgChatListMsg[i].szMessage));
@@ -161,6 +162,8 @@ int MessageAdd(char* pszMessage, DWORD dwCol, BOOL bChkSystemMsg, int nSize)
 				return 1;
 			}		
 		}
+
+		int i = 0;
 		for(i = 0; i < g_nDgIndex; i++)
 		{
 			if(g_sDgChatMsg[i].sbActive==FALSE)

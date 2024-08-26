@@ -30,6 +30,7 @@ CDungeonTable::CDungeonTable(DWORD dwNum)
 	m_pEventList = new COnlyList(MAX_EVENT_DUNGEON_NUMBER);		
 
 	// 그룹 리스트 셋팅.
+	int i = 0;
 	for(i = 0; i < MAX_BYGROUP; ++i)
 	{
 		m_pGroupList[i] = new COnlyList(MAX_GROUPLIST);
@@ -220,7 +221,7 @@ CDungeonTable::~CDungeonTable()
 		delete m_pEventList;
 		m_pEventList = NULL;
 	}
-
+	int i = 0;
 	for(i = 0; i < MAX_BYGROUP; ++i)
 	{
 		if (m_pGroupList[i])

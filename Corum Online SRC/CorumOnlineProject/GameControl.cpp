@@ -939,7 +939,7 @@ void LoadWorldMap( DWORD dwMapResourceUID )
 	// Read Section Information
 	bResult = ReadFile(hFile, &pMap->m_wTotalSectionMany, sizeof(WORD), &dwRead, NULL);
 	if(!bResult || dwRead != sizeof(WORD))	asm_int3();
-	
+	int i = 0;
 	for(i=0; i<pMap->m_wTotalSectionMany; i++)
 	{
 		dwTotalReadByte = 0;
@@ -963,7 +963,7 @@ DWORD __stdcall LoadingDungeonProc(DWORD dwCurCount, DWORD dwTotalCount, void* p
 	for(int i=0; i<10; i++)
 		SPR(SPR_LOADING_BLOCK_11 + i)->ShowSprite(FALSE);
 
-	for(i=0; i<x; i++)
+	for(int i=0; i<x; i++)
 		SPR(SPR_LOADING_BLOCK_11 + i)->ShowSprite(TRUE);
 
 	SPR(SPR_LOADING_BLOCK_HEAD)->vPos.x = (float)(484 + (9*x));
@@ -1094,7 +1094,7 @@ void InitMap( DWORD dwLayerID )
 	bResult = ReadFile(hFile, &pMap->m_wTotalSectionMany, sizeof(WORD), &dwRead, NULL);
 	if(!bResult || dwRead != sizeof(WORD))	asm_int3();
 	
-	for(i = 0; i < pMap->m_wTotalSectionMany; i++)
+	for(int i = 0; i < pMap->m_wTotalSectionMany; i++)
 	{
 		dwTotalReadByte = 0;
 								
@@ -1144,7 +1144,7 @@ void InitMap( DWORD dwLayerID )
 	bResult = ReadFile(hFile, &wSpotNum, sizeof(WORD), &dwRead, NULL);
 	if(!bResult || dwRead > sizeof(WORD)*MAX_MOVE_SPOT_NUM)	asm_int3();
 	
-	for(i=0; i<wSpotNum; i++)
+	for(int i=0; i<wSpotNum; i++)
 	{
 		bResult = ReadFile(hFile, &wID, sizeof(WORD), &dwRead, NULL);
 		
@@ -1195,7 +1195,7 @@ void InitMap( DWORD dwLayerID )
 	
 	GXOBJECT_HANDLE gxo[200];
 	DWORD dwCount = g_pExecutive->GXOGetAllObjectsWitLoadMapScript(gxo, 200);
-	for( i = 0; i < dwCount; ++i)
+	for( int i = 0; i < dwCount; ++i)
 	{
 		g_pExecutive->DisablePick(gxo[i]);
 		g_pExecutive->DisableSendShadow(gxo[i]);
@@ -1209,7 +1209,7 @@ void SetProgressBar(DWORD dwTotalProcess, DWORD dwCurProcess)
 	for(int i=0; i<20; i++)
 		SPR(SPR_LOADING_BLOCK_1 + i)->ShowSprite(FALSE);
 
-	for(i=0; i<x; i++)
+	for(int i=0; i<x; i++)
 		SPR(SPR_LOADING_BLOCK_1 + i)->ShowSprite(TRUE);
 
 	SPR(SPR_LOADING_BLOCK_HEAD)->vPos.x = (float)(394 + (9*x));
@@ -2612,7 +2612,8 @@ void PreLoadCurLayerMonster(DWORD* pdwMonsterKind)
 	{
 		if( pdwMonsterKind[i] == 0 ) break;
 		bLoad = TRUE;
-		for( int j=0; pdwMod[j] != 0; j++ )
+		int j = 0;
+		for(j=0; pdwMod[j] != 0; j++ )
 		{
 			if( pdwMod[j] == pdwMonsterKind[i] )
 			{
@@ -2627,7 +2628,7 @@ void PreLoadCurLayerMonster(DWORD* pdwMonsterKind)
 		}
 	}
 	
-	for( i=0; pdwMod[i]!=0; i++ )
+	for( int i=0; pdwMod[i]!=0; i++ )
 	{
 		wsprintf( szBuf, "m%05d.chr", pdwMod[i] ); 
 		g_pExecutive->PreLoadGXObject( GetFile( szBuf, DATA_TYPE_MONSTER ) );
@@ -2738,7 +2739,8 @@ void PreLoadItem()
 		g_pExecutive->PreLoadGXObject(GetFile(szInfo, DATA_TYPE_CHARACTER));
 	}
 	
-	// Shadow //	
+	// Shadow //
+	int i = 0;
 	for(i = 1; i <= 4; i++)
 	{
 		wsprintf(szInfo, "df_shadow%02d.MOD", i);		

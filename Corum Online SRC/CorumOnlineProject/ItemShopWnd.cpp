@@ -52,7 +52,7 @@ BOOL CItemShopWnd::Init()
 		SPR_OBJ_BANK_BTN1, SPR_OBJ_BANK_BTN2, SPR_OBJ_BANK_BTN3, SPR_OBJ_ITEMSHOPWND, SPR_OBJ_ITEMSHOPWND_CLOSE1, SPR_OBJ_ITEMSHOPWND_CLOSE2, 
 	};
 
-	for(i = 0; i < 18; i++)
+	for(int i = 0; i < 18; i++)
 		m_dwId[i] = dwId[i];
 
 /*

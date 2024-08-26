@@ -8,3 +8,11 @@
 Corum Online SRC/Corum/UpgradeLog.XML
 Corum Online SRC/CorumOnlineProject/.vs/*
 Corum Online SRC/CorumOnlineProject/Release/*
+*.sbr
+*.sarif
+directx8-msdx8/*
+Corum Online SRC/CorumOnlineProject/Debug/*
+Corum Online SRC/CorumOnlineProject/_*/*
+Corum Online SRC/CorumOnlineProject/ipch/*
+Corum Online SRC/CorumOnlineProject/CorumOnlineProject___Win32_dev/*
+*.sbr

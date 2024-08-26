@@ -288,7 +288,7 @@ int CGuildRankWnd::CheckInterface()
 				
 				__lstrcpyn(pPacket.szGuildName, g_pGuildInfo.szGuildName, MAX_GUILD_NAME_REAL_LENGTH);								
 
-				for(i = 8; i < 12; i++)
+				for(int i = 8; i < 12; i++)
 				{
 					__lstrcpyn(szTemp, g_pInputManager->GetInputBuffer(i), MAX_RANK_REAL_NAME);
 
@@ -304,7 +304,7 @@ int CGuildRankWnd::CheckInterface()
 							case 11:	
 								__lstrcpyn(pPacket.szRankName[i-8], g_Message[ETC_MESSAGE60+i-8].szMessage, MAX_RANK_REAL_NAME); break;		// MSG_ID : 63
 								break;
-
+							default: break;
 						}
 					}
 					else
@@ -658,7 +658,7 @@ void CGuildRankWnd::GuildMsg()
 	memset(pPacket.szGuildName, 0, sizeof(pPacket.szGuildName));				
 	__lstrcpyn(pPacket.szGuildName, g_pGuildInfo.szGuildName, MAX_GUILD_NAME_REAL_LENGTH);
 
-	for(i = 8; i < 12; i++)
+	for(int i = 8; i < 12; i++)
 	{
 		__lstrcpyn(szText, g_pInputManager->GetInputBuffer(i), MAX_RANK_REAL_NAME);
 

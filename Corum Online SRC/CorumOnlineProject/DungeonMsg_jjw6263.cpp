@@ -583,7 +583,7 @@ void CmdMakingItemCancel( char* pMsg, DWORD dwLen )
 				pPacket->pItem[i].SetQuantity(byCnt);
 		}
 	}
-
+	int i = 0;
 	for(i = 1; i < 4; i++)
 	{
 		if(pPacket->pItem[i].GetID()!=0)
@@ -754,7 +754,7 @@ void CmdUpgradeCancel( char* pMsg, DWORD dwLen )
 				pPacket->pItem[i].SetQuantity(byCnt);
 		}
 	}
-
+	int i = 0;
 	for(i = 1; i < 4; i++)
 	{
 		if(pPacket->pItem[i].GetID()!=0)

@@ -127,7 +127,7 @@ void CmdTradeData( char* pMsg, DWORD dwLen )
 		}
 
 		// 소비 아이템 //
-		for(i = 0; i < pPacket->btItemCount; i++)
+		for(int i = 0; i < pPacket->btItemCount; i++)
 		{
 			int nValue = pPacket->Nodes[i].cItem.GetID()/ITEM_DISTRIBUTE;
 

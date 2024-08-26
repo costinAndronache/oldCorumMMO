@@ -56,17 +56,17 @@ CItemMoveManager::~CItemMoveManager()
 
 void CItemMoveManager::InitItemMoveProc()
 {
-	ItemMoveProc[ITEM_NATIVE_INV_LARGE][ITEM_NATIVE_TILE]		= DropAndPickupItemProcess;
-	ItemMoveProc[ITEM_NATIVE_INV_SMALL][ITEM_NATIVE_TILE]		= DropAndPickupItemProcess;
+	ItemMoveProc[ITEM_NATIVE_INV_LARGE][ITEM_NATIVE_TILE]		= &CItemMoveManager::DropAndPickupItemProcess;
+	ItemMoveProc[ITEM_NATIVE_INV_SMALL][ITEM_NATIVE_TILE]		= &CItemMoveManager::DropAndPickupItemProcess;
 
-	ItemMoveProc[ITEM_NATIVE_TILE][ITEM_NATIVE_INV_LARGE]		= DropAndPickupItemProcess;
-	ItemMoveProc[ITEM_NATIVE_TILE][ITEM_NATIVE_INV_SMALL]		= DropAndPickupItemProcess;
-	ItemMoveProc[ITEM_NATIVE_TILE][ITEM_NATIVE_BELT]			= DropAndPickupItemProcess;
+	ItemMoveProc[ITEM_NATIVE_TILE][ITEM_NATIVE_INV_LARGE]		= &CItemMoveManager::DropAndPickupItemProcess;
+	ItemMoveProc[ITEM_NATIVE_TILE][ITEM_NATIVE_INV_SMALL]		= &CItemMoveManager::DropAndPickupItemProcess;
+	ItemMoveProc[ITEM_NATIVE_TILE][ITEM_NATIVE_BELT]			= &CItemMoveManager::DropAndPickupItemProcess;
 
-	ItemMoveProc[ITEM_NATIVE_INV_KARZ][ITEM_NATIVE_TILE]		= DropAndPickupItemProcess;
+	ItemMoveProc[ITEM_NATIVE_INV_KARZ][ITEM_NATIVE_TILE]		= &CItemMoveManager::DropAndPickupItemProcess;
 	
-	ItemMoveProc[ITEM_NATIVE_INV_KARZ][ITEM_NATIVE_BANK_KARZ]	= KarzMoveProcess;
-	ItemMoveProc[ITEM_NATIVE_BANK_KARZ][ITEM_NATIVE_INV_KARZ]	= KarzMoveProcess;
+	ItemMoveProc[ITEM_NATIVE_INV_KARZ][ITEM_NATIVE_BANK_KARZ]	= &CItemMoveManager::KarzMoveProcess;
+	ItemMoveProc[ITEM_NATIVE_BANK_KARZ][ITEM_NATIVE_INV_KARZ]	= &CItemMoveManager::KarzMoveProcess;
 }
 
 

@@ -1138,7 +1138,7 @@ DWORD __stdcall AfterRenderGameWorld()
 						
 						nIdx++;					
 					}
-					for(k = 0; k <= g_nWordEnd; k++)
+					for(int k = 0; k <= g_nWordEnd; k++)
 					{
 						if(g_sWordChatMsg[k].snSize!=0)
 							RenderFont(g_sWordChatMsg[k].szDungeon, g_rt[nIdx].left, g_rt[nIdx].right, g_rt[nIdx].top, g_rt[nIdx].bottom, 5+nIdx, g_sWordChatMsg[k].sdwChatColor);		
@@ -1169,7 +1169,7 @@ DWORD __stdcall AfterRenderGameWorld()
 						nIdx++;
 					}
 					
-					for(k = 0; k < 5-nIdx; k++)
+					for(int k = 0; k < 5-nIdx; k++)
 					{
 						if(g_sWordChatMsg[k].snSize!=0)
 							RenderFont(g_sWordChatMsg[k].szDungeon, g_rt[(k-g_nCurScrollPos-g_nWordStart)].left, g_rt[(k-g_nCurScrollPos-g_nWordStart)].right, g_rt[(k-g_nCurScrollPos-g_nWordStart)].top, g_rt[(k-g_nCurScrollPos-g_nWordStart)].bottom, 5+nIdx, g_sWordChatMsg[k].sdwChatColor);

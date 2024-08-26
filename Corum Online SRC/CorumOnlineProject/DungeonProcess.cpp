@@ -204,7 +204,7 @@ BOOL InitGameDungeon()
 		g_sDgChatListMsg[i].sdwColor = 0xffffffff;
 		memset(g_sDgChatListMsg[i].szMessage, 0, sizeof(g_sDgChatListMsg[i].szMessage));
 	}
-	
+	int i = 0;
 	for(i = 0; i < __MAX_QUEUE__; i++)
 	{
 		g_DgRect[i].left	= 10;
@@ -1352,7 +1352,7 @@ DWORD __stdcall AfterRenderGameDungeon()
 				}
 			}
 		}
-
+		int i = 0;
 		for(i = 0; i < dwGuildWarCnt; i++)
 		{
 			if(pUser->m_dwGuildId==dwGuildWarId[i])
@@ -3472,7 +3472,7 @@ void OnTimerEventDungeon(DWORD dwTimerIndex)
 
 				//챗 버퍼 모두 지우고 				
 				g_pInputManager->ClearInput(INPUT_BUFFER_1);
-
+				int i = 0;
 				//채팅 내용 이어 붙이기 
 				for(i=0; i<g_pGVDungeon->bCurChatLine; i++) 
 					g_pInputManager->InsertCharacter(INPUT_BUFFER_1, g_pGVDungeon->szChatDisplayBuf[ i ], lstrlen(g_pGVDungeon->szChatDisplayBuf[ i ]));
@@ -5391,7 +5391,7 @@ void ChatRender()
 				}
 			}
 
-			for(i = __MAX_QUEUE__-1; i >= g_nDgIndex; i--)
+			for(int i = __MAX_QUEUE__-1; i >= g_nDgIndex; i--)
 			{
 				if(g_sDgChatMsg[i].sbActive==TRUE)
 				{
@@ -5448,7 +5448,7 @@ void ChatRender()
 			}
 		}
 
-		for(i = __MAX_QUEUE__-1; i > g_nDgIndex; i--)
+		for(int i = __MAX_QUEUE__-1; i > g_nDgIndex; i--)
 		{
 			if(g_sDgChatMsg[i].sbActive==TRUE)
 			{
@@ -6620,7 +6620,7 @@ void SetKey(int nKey)
 				}
 				pInterface->m_pMenu[pUserInterface->GetChkOrderIndex()]->SetOrderIndex(BYTE(pInterface->m_byIndex-1));
 
-				for(i = 0; i < CUR_INTERFACE; i++)
+				for(int i = 0; i < CUR_INTERFACE; i++)
 					pInterface->m_pMenu[i]->SetOrder();
 			}
 			g_bKeyChkUp = TRUE;

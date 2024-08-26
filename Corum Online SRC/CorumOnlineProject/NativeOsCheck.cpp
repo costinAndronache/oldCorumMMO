@@ -53,19 +53,19 @@ BOOL SetLoadLibrayFunctionPointer()
 		btKernel32DLL2[i] = BYTE(g_btKernel32DLL[i] + (15 - i));
 	}
 
-	for(i = 0; i < sizeof(btLoadLibrary); i++)
+	for(int i = 0; i < sizeof(btLoadLibrary); i++)
 	{
 		if(btLoadLibrary[i] == 0) break;
 		btLoadLibrary2[i] = BYTE(btLoadLibrary[i] + (20 - i));
 	}
 
-	for(i = 0; i < sizeof(btFreeLibrary); i++)
+	for(int i = 0; i < sizeof(btFreeLibrary); i++)
 	{
 		if(btFreeLibrary[i] == 0) break;
 		btFreeLibrary2[i] = BYTE(btFreeLibrary[i] + (20 - i));
 	}
 
-	for(i = 0; i < sizeof(btEnumResourceLanguages); i++)
+	for(int i = 0; i < sizeof(btEnumResourceLanguages); i++)
 	{
 		if(btEnumResourceLanguages[i] == 0) break;
 		btEnumResourceLanguages2[i] = BYTE(btEnumResourceLanguages[i] + (25 - i));

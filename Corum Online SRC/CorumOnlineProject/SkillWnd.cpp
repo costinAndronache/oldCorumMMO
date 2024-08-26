@@ -61,7 +61,7 @@ BOOL CSkillWnd::Init()
 	InsertData(SPR_OBJ_SKILL_CHAKRA2, SPR_INTERFACE_SKILL_CHAKRA2, 7, 0, 1.0f, 1.0f, 1);
 	InsertData(SPR_OBJ_SKILL_CHAKRA3, SPR_INTERFACE_SKILL_CHAKRA3, 7, 0, 1.0f, 1.0f, 1);	
 
-	m_byBitClassType = (BYTE)pow( 2, ( g_pMainPlayer->m_wClass - 1 ) );	// modified by minjin. for more simple sentense
+	m_byBitClassType = (BYTE)pow( (float)2, (float)( g_pMainPlayer->m_wClass - 1 ) );	// modified by minjin. for more simple sentense
 /*	switch(g_pMainPlayer->m_wClass)
 	{
 	case CLASS_TYPE_WARRIOR:
@@ -93,7 +93,7 @@ BOOL CSkillWnd::Init()
 	//	int nOrder = GetStartOrder();	Disabled by minjin. for Removing Unrefferneced Variable
 
 	// Skill Icon Loading
-	for(i = 0; i < 5; i++)
+	for(int i = 0; i < 5; i++)
 	{
 		CreateSkillResourceSpr( g_sSkillListManager.pSkillList[i].pActiveList );		// Active Skill
 		CreateSkillResourceSpr( g_sSkillListManager.pSkillList[i].pMasteryList );		// Mastery Skill
@@ -176,11 +176,11 @@ BOOL CSkillWnd::Init()
 	InsertCheckInterface(7, 191, 70, 208, 8, CHECK_BTN);
 	InsertCheckInterface(61, 44, 93, 60, 9, CHECK_BTN);
 	
-	for(i = 0; i < 14; i++)
+	for(int i = 0; i < 14; i++)
 		InsertCheckInterface(112+(i/7)*82, 124+(i%7)*42, 144+(i/7)*82, 140+(i%7)*42, 10+i, CHECK_BTN);
-	for(i = 0; i < 7; i++)
+	for(int i = 0; i < 7; i++)
 		InsertCheckInterface(276, 124+i*42, 308, 140+i*42, 24+i, CHECK_BTN);
-	for(i = 0; i < 3; i++)
+	for(int i = 0; i < 3; i++)
 		InsertCheckInterface(112+i*82, 460, 144+i*82, 476, 31+i, CHECK_BTN);
 				
 	// 테두리 //
@@ -723,7 +723,7 @@ void CSkillWnd::RenderSkillInfo()
 		}
 	}
 
-	for(i = 0; i < 7; i++)
+	for(int i = 0; i < 7; i++)
 	{
 		if(g_Mouse.MousePos.x>=m_fPosX+241 && g_Mouse.MousePos.x<=m_fPosX+273 && g_Mouse.MousePos.y>=m_fPosZ+108+i*42 && g_Mouse.MousePos.y<=m_fPosZ+140+i*42)
 		{
@@ -745,7 +745,7 @@ void CSkillWnd::RenderSkillInfo()
 		}
 	}
 
-	for(i = 0; i < 3; i++)
+	for(int i = 0; i < 3; i++)
 	{				
 		if(g_Mouse.MousePos.x>=m_fPosX+77+i*82 && g_Mouse.MousePos.x<=m_fPosX+109+i*82 && g_Mouse.MousePos.y>=m_fPosZ+444 && g_Mouse.MousePos.y<=m_fPosZ+476)
 		{
@@ -1214,13 +1214,13 @@ void CSkillWnd::SetSkillUpPos()
 		SetPosObj(SPR_OBJ_SKILL_UP1+3+i*2, 112+(i/7)*82, 124+(i%7)*42);		
 	}
 	// 패시브 //
-	for(i = 0; i < 7; i++)
+	for(int i = 0; i < 7; i++)
 	{
 		SetPosObj(SPR_OBJ_SKILL_UP1+30+i*2, 278, 124+i*42);
 		SetPosObj(SPR_OBJ_SKILL_UP1+31+i*2, 278, 124+i*42);		
 	}
 	// 오버드라이브 //
-	for(i = 0; i < 3; i++)
+	for(int i = 0; i < 3; i++)
 	{
 		SetPosObj(SPR_OBJ_SKILL_UP1+44+i*2, 112+i*82, 460);
 		SetPosObj(SPR_OBJ_SKILL_UP1+45+i*2, 112+i*82, 460);

@@ -168,7 +168,7 @@ void CCharMoveEditWnd::SetCharacter(char* szName, BYTE byNum, BYTE byResult)
 			}
 		}		
 	}
-
+	int i = 0;
 	for(i = 0; i < 4; i++)
 	{
 		if(m_sCharMoveInfoEdit[i].sCharMoveInfo.byNum==0xff)
@@ -267,6 +267,7 @@ void CCharMoveEditWnd::SetActive(BOOL bActive)
 			
 			g_byCharMoveFail -= byCnt;
 
+			int i = 0;
 			for(i = 0; i < 4; i++)
 			{
 				memset(&m_sCharMoveInfoEdit[i], 0, sizeof(m_sCharMoveInfoEdit[i]));

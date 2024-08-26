@@ -204,7 +204,7 @@ void CCharMoveRtWnd::SetCharacter(char* szName, BYTE byNum, BYTE byResult)
 			}
 		}		
 	}
-
+	int i = 0;
 	for(i = 0; i < 4; i++)
 	{
 		if(m_sCharMoveInfo[i].byNum==0xff)

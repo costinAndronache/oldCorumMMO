@@ -263,10 +263,10 @@ void CRankNpcWnd::SetText()
 
 	m_byLine = 0;
 	
-	for(i = 0; i < 20; i++)
+	for(int i = 0; i < 20; i++)
 		memset(m_szRenderText[i], 0, sizeof(m_szRenderText[i]));
 
-	for(i = 0; i < byIndex; i++)
+	for(int i = 0; i < byIndex; i++)
 	{
 		char* szTemp = NULL;
 

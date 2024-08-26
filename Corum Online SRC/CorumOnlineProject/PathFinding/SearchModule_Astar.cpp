@@ -17,30 +17,30 @@ void Sw::Initialize_Default()
 	DWORD		dwi;
 
 	PFN_CASE_DIRECTION pfnCaseDirection_Temp[]	= 	{	
-													Sw::Direction_00_Func,
-													Sw::Direction_02_Func,
-													Sw::Direction_04_Func,
-													Sw::Direction_06_Func,
-													Sw::Direction_08_Func,
-													Sw::Direction_10_Func,
-													Sw::Direction_12_Func,
-													Sw::Direction_14_Func,
-													Sw::Direction_16_Func,
-													Sw::Direction_18_Func,
-													Sw::Direction_20_Func,
-													Sw::Direction_22_Func,
-													Sw::Direction_24_Func,
-													Sw::Direction_26_Func,
-													Sw::Direction_28_Func,
-													Sw::Direction_30_Func,
+													&Sw::Direction_00_Func,
+													&Sw::Direction_02_Func,
+													&Sw::Direction_04_Func,
+													&Sw::Direction_06_Func,
+													&Sw::Direction_08_Func,
+													&Sw::Direction_10_Func,
+													&Sw::Direction_12_Func,
+													&Sw::Direction_14_Func,
+													&Sw::Direction_16_Func,
+													&Sw::Direction_18_Func,
+													&Sw::Direction_20_Func,
+													&Sw::Direction_22_Func,
+													&Sw::Direction_24_Func,
+													&Sw::Direction_26_Func,
+													&Sw::Direction_28_Func,
+													&Sw::Direction_30_Func,
 													};
 	//		m_pfnCaseDirection
 	for( dwi = 0; dwi < MAX_32_DIRECTION_NUM; dwi += CASE_4 )
 	{
 		m_pfnCaseDirection[ dwi]		= pfnCaseDirection_Temp[ dwi / 2];
-		m_pfnCaseDirection[ dwi + 1]	= Sw::Direction_01_Func;
+		m_pfnCaseDirection[ dwi + 1]	= &Sw::Direction_01_Func;
 		m_pfnCaseDirection[ dwi + 2]	= pfnCaseDirection_Temp[ dwi / 2 + 1];
-		m_pfnCaseDirection[ dwi + 3]	= Sw::Direction_03_Func;
+		m_pfnCaseDirection[ dwi + 3]	= &Sw::Direction_03_Func;
 	}
 }
 

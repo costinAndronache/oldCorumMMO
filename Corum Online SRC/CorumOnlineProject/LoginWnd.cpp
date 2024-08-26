@@ -26,7 +26,7 @@ CLoginWnd::~CLoginWnd()
 
 }
 
-CLoginWnd::Init()
+BOOL CLoginWnd::Init()
 {
 	/*
 	g_pSprManager->CreateSprite(SPR_LOGIN_BACKGROUND, 0.0f, 0.0f, TRUE, 254); // resourceid 344

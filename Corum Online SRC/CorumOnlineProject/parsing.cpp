@@ -219,7 +219,8 @@ char * GetToken(char * IN pszSrc, char * OUT pszGetToken, char cToken /* = ' ' *
 	// 최소 문자열의 길이가 2 이상이다.
 
 	int		iTokenCount = 0;
-	for (char *	pszTempPos = pszSrc; NULL != *pszTempPos; 
+	char* pszTempPos = pszSrc;
+	for (pszTempPos = pszSrc; NULL != *pszTempPos; 
 		 pszTempPos = CharNextExA(0, pszTempPos, 0))
 	{
 		if (*pszTempPos == cToken)

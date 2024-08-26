@@ -36,7 +36,7 @@ CStoreWnd::CStoreWnd()
 
 	for(int i = 0; i < 2; i++)
 		m_bBtnChk[i] = FALSE;	
-	for(i = 0; i < 200; i++)
+	for(int i = 0; i < 200; i++)
 		m_wItemId[i] = 0;	
 }
 

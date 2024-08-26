@@ -256,7 +256,7 @@ BOOL	CGuildWarStatusWnd::Init()
 	ptLsit2[3].x = 128;
 	ptLsit2[3].y = 33;
 
-	for( dwIter = 0 ; dwIter < 4 ; ++dwIter )
+	for( DWORD dwIter = 0 ; dwIter < 4 ; ++dwIter )
 	{
 		crImage&	rImgGuild = m_imgGuild[dwIter];
 

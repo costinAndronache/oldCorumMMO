@@ -138,7 +138,7 @@ void CItemTradeShopWnd::RenderText()
 		}
 	}
 
-	for(i = 0; i < MAX_TRADE; i++)
+	for(int i = 0; i < MAX_TRADE; i++)
 	{
 		int nValue = m_pTradeItem[i].GetID()/ITEM_DISTRIBUTE;
 

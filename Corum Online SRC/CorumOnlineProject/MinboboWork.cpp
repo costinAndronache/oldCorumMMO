@@ -286,7 +286,7 @@ void ChangeLayerForPortal(DSTC_PORTAL_JOIN_USER* pPacket)
 	// 서버에서 이동한 던전에 나타나라고 메시지 날라올때까지 백화면이 보여라.
 	SPR(SPR_LOADING_BACK)->ShowSprite(TRUE);
 
-	for(i=0; i<20; i++)
+	for(int i=0; i<20; i++)
 	{
 		SPR(SPR_LOADING_BLOCK_1 + i)->ShowSprite(TRUE);
 	}

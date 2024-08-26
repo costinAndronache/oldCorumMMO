@@ -2496,7 +2496,7 @@ void CmdJoinDungeon( char* pMsg, DWORD dwLen )
 		g_pMainPlayer->m_pwAttackDamage_R[i]	= pJoin->pwAttackDamage_R[i];
 		g_pMainPlayer->m_pwAttackDamage_L[i]	= pJoin->pwAttackDamage_L[i];
 	}			
-	
+	int i = 0;
 	for(i = 0; i < MAX_PLAYER_SHOP_INV; i++)
 	{
 		memset(&g_pMainPlayer->m_sPlayerShop.cItem[i], 0, sizeof(CItem));

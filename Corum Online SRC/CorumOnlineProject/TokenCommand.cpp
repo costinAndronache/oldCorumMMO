@@ -131,8 +131,8 @@ void CTokenCommand::InputString(char * pszString)
 COMMAND_TOKEN_ENTRY CTokenCommand::WhatKindOfGMMessage(char * pszString)
 {
 	int iLen = lstrlen(pszString);
-	
-	for (int i = 0; 0 != _TokenCommandEntries[i].iMsgType; i++)
+	int i = 0;
+	for (i = 0; 0 != _TokenCommandEntries[i].iMsgType; i++)
 	{
 		if (iLen < lstrlen(_TokenCommandEntries[i].pszToken))
 			continue;

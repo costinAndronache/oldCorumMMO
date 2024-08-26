@@ -876,12 +876,12 @@ void EffectSkillCameraQuake(EffectDesc* pEffectDesc, DWORD dwCurFrame)
 				float fPower = 1000/max(1.0, (fDist/100.));
 				if (dwCurFrame % 2 == 0)
 				{
-					vecQuake.x = fPower/(pow(static_cast<int>(pEffectDesc->dwTemp[SKILL_TEMP_CAMERA_FRAMECOUNT]), 2)*0.5);
+					vecQuake.x = fPower/(pow((float)(pEffectDesc->dwTemp[SKILL_TEMP_CAMERA_FRAMECOUNT]), (float)2.0)*0.5);
 					vecQuake.x = min(vecQuake.x, 5);
 				}
 				else
 				{
-					vecQuake.x = -fPower/(pow(static_cast<int>(pEffectDesc->dwTemp[SKILL_TEMP_CAMERA_FRAMECOUNT]), 2)*0.5);
+					vecQuake.x = -fPower/(pow((float)(pEffectDesc->dwTemp[SKILL_TEMP_CAMERA_FRAMECOUNT]), (float)2)*0.5);
 					vecQuake.x = max(vecQuake.x, -5);
 				}				
 			}
@@ -898,12 +898,12 @@ void EffectSkillCameraQuake(EffectDesc* pEffectDesc, DWORD dwCurFrame)
 					float fPower = 1000/max(1.0, (fDist/100.));
 					if (dwCurFrame % 2 == 0)
 					{
-						vecQuake.x = fPower/(pow(static_cast<int>(pEffectDesc->dwTemp[SKILL_TEMP_CAMERA_FRAMECOUNT]), 2)*0.5);
+						vecQuake.x = fPower/(pow((float)(pEffectDesc->dwTemp[SKILL_TEMP_CAMERA_FRAMECOUNT]), (float)2)*0.5);
 						vecQuake.x = min(vecQuake.x, 10);
 					}
 					else
 					{
-						vecQuake.x = -fPower/(pow(static_cast<int>(pEffectDesc->dwTemp[SKILL_TEMP_CAMERA_FRAMECOUNT]), 2)*0.5);
+						vecQuake.x = -fPower/(pow((float)(pEffectDesc->dwTemp[SKILL_TEMP_CAMERA_FRAMECOUNT]), (float)2)*0.5);
 						vecQuake.x = max(vecQuake.x, -10);
 					}					
 				}

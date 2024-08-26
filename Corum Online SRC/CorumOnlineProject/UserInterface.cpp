@@ -76,7 +76,7 @@ CUserInterface::CUserInterface()
 		m_bMana[i]		= FALSE;
 	}	
 
-	for(i = 0; i < 4; i++)
+	for(int i = 0; i < 4; i++)
 		m_bUIChk[i] = FALSE;
 
 	m_dwMagicArray		= 0;
@@ -138,7 +138,7 @@ CUserInterface::CUserInterface()
 		2, 3, 2, 3, 2, 3, 10, 2, 10, 2, 15, 8, 15, 8, 15, 8, 1, 1, 1, 1, 1, 1, 7, 19, 7, 19, 10, 10, 10, 10, 10, 10, 16, 16, 16, 16
 	};
 	
-	for(i = 0; i < __MAX_MOUSE_POINTER__*2; i++)
+	for(int i = 0; i < __MAX_MOUSE_POINTER__*2; i++)
 		m_nMousePos[i]	= nMousePos[i];	
 	
 	// Mouse Move Effect //

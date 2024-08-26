@@ -90,27 +90,27 @@ void CItemUsedManager::Process(char* pMsg,DWORD dwLen)
 
 void CItemUsedManager::InitItemUsedProc()
 {
-	ItemUsedProc[ITEM_USED_NATIVE_TYPE_ZODIAC][ITEM_USED_NATIVE_VALUE_COORDINATE_SAVE]			= Value_ItemUsedNative_CoordinateSave;
-	ItemUsedProc[ITEM_USED_NATIVE_TYPE_ZODIAC][ITEM_USED_NATIVE_VALUE_GOTO_COORDINATE]			= Value_ItemUsedNative_Goto_Coordinate;
-	ItemUsedProc[ITEM_USED_NATIVE_TYPE_ZODIAC][ITEM_USED_NATIVE_VALUE_TOWNPORTALSCROLL]			= Value_ItemUsedNative_TownPortalScroll;
-	ItemUsedProc[ITEM_USED_NATIVE_TYPE_ZODIAC][ITEM_USED_NATIVE_VALUE_INSURANCE]				= Value_ItemUsedNative_Insurance;
+	ItemUsedProc[ITEM_USED_NATIVE_TYPE_ZODIAC][ITEM_USED_NATIVE_VALUE_COORDINATE_SAVE]			= &CItemUsedManager::Value_ItemUsedNative_CoordinateSave;
+	ItemUsedProc[ITEM_USED_NATIVE_TYPE_ZODIAC][ITEM_USED_NATIVE_VALUE_GOTO_COORDINATE]		= &CItemUsedManager::Value_ItemUsedNative_Goto_Coordinate;
+	ItemUsedProc[ITEM_USED_NATIVE_TYPE_ZODIAC][ITEM_USED_NATIVE_VALUE_TOWNPORTALSCROLL]			= &CItemUsedManager::Value_ItemUsedNative_TownPortalScroll;
+	ItemUsedProc[ITEM_USED_NATIVE_TYPE_ZODIAC][ITEM_USED_NATIVE_VALUE_INSURANCE]				= &CItemUsedManager::Value_ItemUsedNative_Insurance;
 
-	ItemUsedProc[ITEM_USED_NATIVE_TYPE_SUPPLIES][ITEM_USED_NATIVE_VALUE_HP]						= Value_ItemUsedNative_HP;
-	ItemUsedProc[ITEM_USED_NATIVE_TYPE_SUPPLIES][ITEM_USED_NATIVE_VALUE_MP]						= Value_ItemUsedNative_MP;
-	ItemUsedProc[ITEM_USED_NATIVE_TYPE_SUPPLIES][ITEM_USED_NATIVE_VALUE_HP_POINT]				= Value_ItemUsedNative_HP_Point;
-	ItemUsedProc[ITEM_USED_NATIVE_TYPE_SUPPLIES][ITEM_USED_NATIVE_VALUE_SP_HP_POINT]			= Value_ItemUsedNative_SP_HP_Point;
-	ItemUsedProc[ITEM_USED_NATIVE_TYPE_SUPPLIES][ITEM_USED_NATIVE_VALUE_HATCH_TIME_SHORTENING]	= Value_ItemUsedNative_HatchTimeShortening; 
+	ItemUsedProc[ITEM_USED_NATIVE_TYPE_SUPPLIES][ITEM_USED_NATIVE_VALUE_HP]						= &CItemUsedManager::Value_ItemUsedNative_HP;
+	ItemUsedProc[ITEM_USED_NATIVE_TYPE_SUPPLIES][ITEM_USED_NATIVE_VALUE_MP]						= &CItemUsedManager::Value_ItemUsedNative_MP;
+	ItemUsedProc[ITEM_USED_NATIVE_TYPE_SUPPLIES][ITEM_USED_NATIVE_VALUE_HP_POINT]				= &CItemUsedManager::Value_ItemUsedNative_HP_Point;
+	ItemUsedProc[ITEM_USED_NATIVE_TYPE_SUPPLIES][ITEM_USED_NATIVE_VALUE_SP_HP_POINT]			= &CItemUsedManager::Value_ItemUsedNative_SP_HP_Point;
+	ItemUsedProc[ITEM_USED_NATIVE_TYPE_SUPPLIES][ITEM_USED_NATIVE_VALUE_HATCH_TIME_SHORTENING]	= &CItemUsedManager::Value_ItemUsedNative_HatchTimeShortening;
 	
-	ItemUsedProc[ITEM_USED_NATIVE_TYPE_SPECIAL][ITEM_USED_NATIVE_VALUE_GUILD_CLEN_MAKE]			= Value_ItemUsedNative_Guild_Clen_Make;
-	ItemUsedProc[ITEM_USED_NATIVE_TYPE_SPECIAL][ITEM_USED_NATIVE_VALUE_STATUS_SKILL_INIT]		= Value_ItemUsedNative_Status_Skill_Init;
-	ItemUsedProc[ITEM_USED_NATIVE_TYPE_SPECIAL][ITEM_USED_NATIVE_VALUE_VOUCHER_OF_HERO]			= Value_ItemUsedNative_Voucher_Of_Hero;
+	ItemUsedProc[ITEM_USED_NATIVE_TYPE_SPECIAL][ITEM_USED_NATIVE_VALUE_GUILD_CLEN_MAKE]			= &CItemUsedManager::Value_ItemUsedNative_Guild_Clen_Make;
+	ItemUsedProc[ITEM_USED_NATIVE_TYPE_SPECIAL][ITEM_USED_NATIVE_VALUE_STATUS_SKILL_INIT]		= &CItemUsedManager::Value_ItemUsedNative_Status_Skill_Init;
+	ItemUsedProc[ITEM_USED_NATIVE_TYPE_SPECIAL][ITEM_USED_NATIVE_VALUE_VOUCHER_OF_HERO]			= &CItemUsedManager::Value_ItemUsedNative_Voucher_Of_Hero;
 	
-	ItemUsedProc[ITEM_USED_NATIVE_TYPE_SPECIAL][ITEM_USED_NATIVE_VALUE_PERSONAL_RECALL]			= Value_ItemUsedNative_PersonalRecall;
-	ItemUsedProc[ITEM_USED_NATIVE_TYPE_SPECIAL][ITEM_USED_NATIVE_VALUE_ALL_PARTY_RECALL]		= Value_ItemUsedNative_AllPartyRecall;	
-	ItemUsedProc[ITEM_USED_NATIVE_TYPE_SPECIAL][ITEM_USED_NATIVE_VALUE_GUILD_RECALL]			= Value_ItemUsedNative_MagicArrayToParty;
-	ItemUsedProc[ITEM_USED_NATIVE_TYPE_SPECIAL][ITEM_USED_NATIVE_VALUE_MAGICARRAY_TO_PARTY]		= Value_ItemUsedNative_MagicArrayToParty;
+	ItemUsedProc[ITEM_USED_NATIVE_TYPE_SPECIAL][ITEM_USED_NATIVE_VALUE_PERSONAL_RECALL]			= &CItemUsedManager::Value_ItemUsedNative_PersonalRecall;
+	ItemUsedProc[ITEM_USED_NATIVE_TYPE_SPECIAL][ITEM_USED_NATIVE_VALUE_ALL_PARTY_RECALL]		= &CItemUsedManager::Value_ItemUsedNative_AllPartyRecall;
+	ItemUsedProc[ITEM_USED_NATIVE_TYPE_SPECIAL][ITEM_USED_NATIVE_VALUE_GUILD_RECALL]			= &CItemUsedManager::Value_ItemUsedNative_MagicArrayToParty;
+	ItemUsedProc[ITEM_USED_NATIVE_TYPE_SPECIAL][ITEM_USED_NATIVE_VALUE_MAGICARRAY_TO_PARTY]		= &CItemUsedManager::Value_ItemUsedNative_MagicArrayToParty;
 
-	ItemUsedProc[ITEM_USED_NATIVE_TYPE_CONSUMABLE][ITEM_USED_NATIVE_VALUE_CONSUMABLE_START]		= Value_ItemUsedNative_Consumable;
+	ItemUsedProc[ITEM_USED_NATIVE_TYPE_CONSUMABLE][ITEM_USED_NATIVE_VALUE_CONSUMABLE_START]		= &CItemUsedManager::Value_ItemUsedNative_Consumable;
 }
 
 

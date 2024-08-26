@@ -66,72 +66,72 @@ void CInterfaceManager::InitInterfacePositionChecker()
 	m_InterfaceChecker[UI_BTN_ITEM].lTop						= 684;
 	m_InterfaceChecker[UI_BTN_ITEM].lRight						= m_InterfaceChecker[UI_BTN_ITEM].lLeft + _UI_WIDTH_;
 	m_InterfaceChecker[UI_BTN_ITEM].lBottom						= m_InterfaceChecker[UI_BTN_ITEM].lTop + _UI_HEIGHT_;
-	m_InterfaceChecker[UI_BTN_ITEM].pOvrProc					= OnItemBtnOvrProc;
-	m_InterfaceChecker[UI_BTN_ITEM].pLDnProc					= OnItemBtnLDnProc;
+	m_InterfaceChecker[UI_BTN_ITEM].pOvrProc					= &CInterfaceManager::OnItemBtnOvrProc;
+	m_InterfaceChecker[UI_BTN_ITEM].pLDnProc					= &CInterfaceManager::OnItemBtnLDnProc;
 
 	// Character Information Window Button
 	m_InterfaceChecker[UI_BTN_CHARACTER].lLeft					= 164;
 	m_InterfaceChecker[UI_BTN_CHARACTER].lTop					= 684;
 	m_InterfaceChecker[UI_BTN_CHARACTER].lRight					= m_InterfaceChecker[UI_BTN_CHARACTER].lLeft + _UI_WIDTH_;
 	m_InterfaceChecker[UI_BTN_CHARACTER].lBottom				= m_InterfaceChecker[UI_BTN_CHARACTER].lTop + _UI_HEIGHT_;
-	m_InterfaceChecker[UI_BTN_CHARACTER].pOvrProc				= OnCharacterBtnOvrProc;
-	m_InterfaceChecker[UI_BTN_CHARACTER].pLDnProc				= OnCharacterBtnLDnProc;
+	m_InterfaceChecker[UI_BTN_CHARACTER].pOvrProc				= &CInterfaceManager::OnCharacterBtnOvrProc;
+	m_InterfaceChecker[UI_BTN_CHARACTER].pLDnProc				= &CInterfaceManager::OnCharacterBtnLDnProc;
 
 	// Skill Information Window Button
 	m_InterfaceChecker[UI_BTN_SKILL].lLeft						= 243;
 	m_InterfaceChecker[UI_BTN_SKILL].lTop						= 684;
 	m_InterfaceChecker[UI_BTN_SKILL].lRight						= m_InterfaceChecker[UI_BTN_SKILL].lLeft + _UI_WIDTH_;
 	m_InterfaceChecker[UI_BTN_SKILL].lBottom					= m_InterfaceChecker[UI_BTN_SKILL].lTop + _UI_HEIGHT_;
-	m_InterfaceChecker[UI_BTN_SKILL].pOvrProc					= OnSkillBtnOvrProc;
-	m_InterfaceChecker[UI_BTN_SKILL].pLDnProc					= OnSkillBtnLDnProc;
+	m_InterfaceChecker[UI_BTN_SKILL].pOvrProc					= &CInterfaceManager::OnSkillBtnOvrProc;
+	m_InterfaceChecker[UI_BTN_SKILL].pLDnProc					= &CInterfaceManager::OnSkillBtnLDnProc;
 
 	// Group Window Button
 	m_InterfaceChecker[UI_BTN_GROUP].lLeft						= 747;
 	m_InterfaceChecker[UI_BTN_GROUP].lTop						= 684;
 	m_InterfaceChecker[UI_BTN_GROUP].lRight						= m_InterfaceChecker[UI_BTN_GROUP].lLeft + _UI_WIDTH_;
 	m_InterfaceChecker[UI_BTN_GROUP].lBottom					= m_InterfaceChecker[UI_BTN_GROUP].lTop + _UI_HEIGHT_;
-	m_InterfaceChecker[UI_BTN_GROUP].pOvrProc					= OnGroupBtnOvrProc;
-	m_InterfaceChecker[UI_BTN_GROUP].pLDnProc					= OnGroupBtnLDnProc;
+	m_InterfaceChecker[UI_BTN_GROUP].pOvrProc					= &CInterfaceManager::OnGroupBtnOvrProc;
+	m_InterfaceChecker[UI_BTN_GROUP].pLDnProc					= &CInterfaceManager::OnGroupBtnLDnProc;
 
 	// Dungeon Info (Lair Dungeon) Window Button
 	m_InterfaceChecker[UI_BTN_LAIR].lLeft						= 827;
 	m_InterfaceChecker[UI_BTN_LAIR].lTop						= 684;
 	m_InterfaceChecker[UI_BTN_LAIR].lRight						= m_InterfaceChecker[UI_BTN_LAIR].lLeft + _UI_WIDTH_;
 	m_InterfaceChecker[UI_BTN_LAIR].lBottom						= m_InterfaceChecker[UI_BTN_LAIR].lTop + _UI_HEIGHT_;
-	m_InterfaceChecker[UI_BTN_LAIR].pOvrProc					= OnLairBtnOvrProc;
-	m_InterfaceChecker[UI_BTN_LAIR].pLDnProc					= OnLairBtnLDnProc;
+	m_InterfaceChecker[UI_BTN_LAIR].pOvrProc					= &CInterfaceManager::OnLairBtnOvrProc;
+	m_InterfaceChecker[UI_BTN_LAIR].pLDnProc					= &CInterfaceManager::OnLairBtnLDnProc;
 
 	// Chatting Window ( Screen Bottom ) Button
 	m_InterfaceChecker[UI_BTN_CHAT].lLeft						= 907;
 	m_InterfaceChecker[UI_BTN_CHAT].lTop						= 684;
 	m_InterfaceChecker[UI_BTN_CHAT].lRight						= m_InterfaceChecker[UI_BTN_CHAT].lLeft + _UI_WIDTH_;
 	m_InterfaceChecker[UI_BTN_CHAT].lBottom						= m_InterfaceChecker[UI_BTN_CHAT].lTop + _UI_HEIGHT_;
-	m_InterfaceChecker[UI_BTN_CHAT].pOvrProc					= OnChatBtnOvrProc;
-	m_InterfaceChecker[UI_BTN_CHAT].pLDnProc					= OnChatBtnLDnProc;
+	m_InterfaceChecker[UI_BTN_CHAT].pOvrProc					= &CInterfaceManager::OnChatBtnOvrProc;
+	m_InterfaceChecker[UI_BTN_CHAT].pLDnProc					= &CInterfaceManager::OnChatBtnLDnProc;
 
 	// Game Option Window Button
 	m_InterfaceChecker[UI_BTN_OPTION].lLeft						= 659;
 	m_InterfaceChecker[UI_BTN_OPTION].lTop						= 731;
 	m_InterfaceChecker[UI_BTN_OPTION].lRight					= m_InterfaceChecker[UI_BTN_OPTION].lLeft + _UI_WIDTH_;
 	m_InterfaceChecker[UI_BTN_OPTION].lBottom					= m_InterfaceChecker[UI_BTN_OPTION].lTop + 32;
-	m_InterfaceChecker[UI_BTN_OPTION].pOvrProc					= OnOptionBtnOvrProc;
-	m_InterfaceChecker[UI_BTN_OPTION].pLDnProc					= OnOptionBtnLDnProc;
+	m_InterfaceChecker[UI_BTN_OPTION].pOvrProc					= &CInterfaceManager::OnOptionBtnOvrProc;
+	m_InterfaceChecker[UI_BTN_OPTION].pLDnProc					= &CInterfaceManager::OnOptionBtnLDnProc;
 
 	// L Hand Selected ( Left Bottom )
 	m_InterfaceChecker[UI_L_HAND].lLeft							= 132;
 	m_InterfaceChecker[UI_L_HAND].lTop							= 733;
 	m_InterfaceChecker[UI_L_HAND].lRight						= m_InterfaceChecker[UI_L_HAND].lLeft + _UI_WIDTH_;
 	m_InterfaceChecker[UI_L_HAND].lBottom						= m_InterfaceChecker[UI_L_HAND].lTop + 32;
-	m_InterfaceChecker[UI_L_HAND].pOvrProc						= OnLHandAttackOvrProc;
-	m_InterfaceChecker[UI_L_HAND].pLDnProc						= OnLHandAttackLDnProc;
+	m_InterfaceChecker[UI_L_HAND].pOvrProc						= &CInterfaceManager::OnLHandAttackOvrProc;
+	m_InterfaceChecker[UI_L_HAND].pLDnProc						= &CInterfaceManager::OnLHandAttackLDnProc;
 
 	// R Hand Selected ( Left Bottom )
 	m_InterfaceChecker[UI_R_HAND].lLeft							= 245;
 	m_InterfaceChecker[UI_R_HAND].lTop							= 733;
 	m_InterfaceChecker[UI_R_HAND].lRight						= m_InterfaceChecker[UI_R_HAND].lLeft + _UI_WIDTH_;
 	m_InterfaceChecker[UI_R_HAND].lBottom						= m_InterfaceChecker[UI_R_HAND].lTop + 32;
-	m_InterfaceChecker[UI_R_HAND].pOvrProc						= OnRHandAttackOvrProc;
-	m_InterfaceChecker[UI_R_HAND].pLDnProc						= OnRHandAttackLDnProc;
+	m_InterfaceChecker[UI_R_HAND].pOvrProc						= &CInterfaceManager::OnRHandAttackOvrProc;
+	m_InterfaceChecker[UI_R_HAND].pLDnProc						= &CInterfaceManager::OnRHandAttackLDnProc;
 
 
 	
@@ -146,64 +146,64 @@ void CInterfaceManager::InitInterfacePositionChecker()
 	m_InterfaceChecker[UI_BTN_PK_MODE].lTop						= 731;
 	m_InterfaceChecker[UI_BTN_PK_MODE].lRight					= m_InterfaceChecker[UI_BTN_PK_MODE].lLeft + _UI_WIDTH_;
 	m_InterfaceChecker[UI_BTN_PK_MODE].lBottom					= m_InterfaceChecker[UI_BTN_PK_MODE].lTop + 32;
-	m_InterfaceChecker[UI_BTN_PK_MODE].pOvrProc					= OnPKBtnOvrProc;
-	m_InterfaceChecker[UI_BTN_PK_MODE].pLDnProc					= OnPKBtnLDnProc;
+	m_InterfaceChecker[UI_BTN_PK_MODE].pOvrProc					= &CInterfaceManager::OnPKBtnOvrProc;
+	m_InterfaceChecker[UI_BTN_PK_MODE].pLDnProc					= &CInterfaceManager::OnPKBtnLDnProc;
 
 	// Belt ( Right Bottom )
 	m_InterfaceChecker[UI_BELT].lLeft							= 727;
 	m_InterfaceChecker[UI_BELT].lTop							= 733;
 	m_InterfaceChecker[UI_BELT].lRight							= 1024;
 	m_InterfaceChecker[UI_BELT].lBottom							= 768;
-	m_InterfaceChecker[UI_BELT].pOvrProc						= OnBeltInvOvrProc;
-	m_InterfaceChecker[UI_BELT].pLDnProc						= OnBeltInvLDnProc;
+	m_InterfaceChecker[UI_BELT].pOvrProc						= &CInterfaceManager::OnBeltInvOvrProc;
+	m_InterfaceChecker[UI_BELT].pLDnProc						= &CInterfaceManager::OnBeltInvLDnProc;
 
 	// Guardian Inventory Window ( Left Top )
 	m_InterfaceChecker[UI_GUARDIAN].lLeft						= 93;
 	m_InterfaceChecker[UI_GUARDIAN].lTop						= 56;
 	m_InterfaceChecker[UI_GUARDIAN].lRight						= m_InterfaceChecker[UI_GUARDIAN].lLeft + _UI_WIDTH_;
 	m_InterfaceChecker[UI_GUARDIAN].lBottom						= 88;
-	m_InterfaceChecker[UI_GUARDIAN].pOvrProc					= OnGuardianInvOvrProc;
-	m_InterfaceChecker[UI_GUARDIAN].pLDnProc					= OnGuardianInvLDnProc;
+	m_InterfaceChecker[UI_GUARDIAN].pOvrProc					= &CInterfaceManager::OnGuardianInvOvrProc;
+	m_InterfaceChecker[UI_GUARDIAN].pLDnProc					= &CInterfaceManager::OnGuardianInvLDnProc;
 
 	// Trade Button
 	m_InterfaceChecker[UI_BTN_TRADE].lLeft						= 0;
 	m_InterfaceChecker[UI_BTN_TRADE].lTop						= 661;
 	m_InterfaceChecker[UI_BTN_TRADE].lRight						= 46;
 	m_InterfaceChecker[UI_BTN_TRADE].lBottom					= 677;
-	m_InterfaceChecker[UI_BTN_TRADE].pOvrProc					= OnTradeBtnOvrProc;
-	m_InterfaceChecker[UI_BTN_TRADE].pLDnProc					= OnTradeBtnLDnProc;
+	m_InterfaceChecker[UI_BTN_TRADE].pOvrProc					= &CInterfaceManager::OnTradeBtnOvrProc;
+	m_InterfaceChecker[UI_BTN_TRADE].pLDnProc					= &CInterfaceManager::OnTradeBtnLDnProc;
 
 	// Rest Button
 	m_InterfaceChecker[UI_BTN_REST].lLeft						= 0;
 	m_InterfaceChecker[UI_BTN_REST].lTop						= 679;
 	m_InterfaceChecker[UI_BTN_REST].lRight						= 64;
 	m_InterfaceChecker[UI_BTN_REST].lBottom						= 695;
-	m_InterfaceChecker[UI_BTN_REST].pOvrProc					= OnRestBtnOvrProc;
-	m_InterfaceChecker[UI_BTN_REST].pLDnProc					= OnRestBtnLDnProc;
+	m_InterfaceChecker[UI_BTN_REST].pOvrProc					= &CInterfaceManager::OnRestBtnOvrProc;
+	m_InterfaceChecker[UI_BTN_REST].pLDnProc					= &CInterfaceManager::OnRestBtnLDnProc;
 
 	// Player Shop Button
 	m_InterfaceChecker[UI_BTN_SHOP].lLeft						= 977;
 	m_InterfaceChecker[UI_BTN_SHOP].lTop						= 661;
 	m_InterfaceChecker[UI_BTN_SHOP].lRight						= 1024;
 	m_InterfaceChecker[UI_BTN_SHOP].lBottom						= 677;
-	m_InterfaceChecker[UI_BTN_SHOP].pOvrProc					= OnShopBtnOvrProc;
-	m_InterfaceChecker[UI_BTN_SHOP].pLDnProc					= OnShopBtnLDnProc;
+	m_InterfaceChecker[UI_BTN_SHOP].pOvrProc					= &CInterfaceManager::OnShopBtnOvrProc;
+	m_InterfaceChecker[UI_BTN_SHOP].pLDnProc					= &CInterfaceManager::OnShopBtnLDnProc;
 
 	// Match Button
 	m_InterfaceChecker[UI_BTN_MATCH].lLeft						= 977;
 	m_InterfaceChecker[UI_BTN_MATCH].lTop						= 679;
 	m_InterfaceChecker[UI_BTN_MATCH].lRight						= 1024;
 	m_InterfaceChecker[UI_BTN_MATCH].lBottom					= 695;
-	m_InterfaceChecker[UI_BTN_MATCH].pOvrProc					= OnMatchBtnOvrProc;
-	m_InterfaceChecker[UI_BTN_MATCH].pLDnProc					= OnMatchBtnLDnProc;
+	m_InterfaceChecker[UI_BTN_MATCH].pOvrProc					= &CInterfaceManager::OnMatchBtnOvrProc;
+	m_InterfaceChecker[UI_BTN_MATCH].pLDnProc					= &CInterfaceManager::OnMatchBtnLDnProc;
 
 	// RIVAL GUILD WAR Button
 	m_InterfaceChecker[UI_BTN_RIVAL_GUILD_WAR].lLeft			= 977;
 	m_InterfaceChecker[UI_BTN_RIVAL_GUILD_WAR].lTop				= 634;
 	m_InterfaceChecker[UI_BTN_RIVAL_GUILD_WAR].lRight			= 1024;
 	m_InterfaceChecker[UI_BTN_RIVAL_GUILD_WAR].lBottom			= 659;
-	m_InterfaceChecker[UI_BTN_RIVAL_GUILD_WAR].pOvrProc			= OnRivalGuildWarBtnOvrProc;
-	m_InterfaceChecker[UI_BTN_RIVAL_GUILD_WAR].pLDnProc			= OnRivalGuildWarBtnLDnProc;
+	m_InterfaceChecker[UI_BTN_RIVAL_GUILD_WAR].pOvrProc			= &CInterfaceManager::OnRivalGuildWarBtnOvrProc;
+	m_InterfaceChecker[UI_BTN_RIVAL_GUILD_WAR].pLDnProc			= &CInterfaceManager::OnRivalGuildWarBtnLDnProc;
 
 }
 

@@ -1506,7 +1506,8 @@ BOOL CIMEEdit::GetCandidateList(LONG lParam)
 		if(m_pCandidateLists) delete [] m_pCandidateLists;
 
 		// 몇번째의 캔디데이트인지 확인한다.
-		for(DWORD dwIndex = 0; dwIndex < MAX_CANDIDATE_LIST; dwIndex++) 
+		DWORD dwIndex = 0;
+		for( dwIndex = 0; dwIndex < MAX_CANDIDATE_LIST; dwIndex++) 
 		{
 			if(lParam & (1 << dwIndex)) break;
 		}
