@@ -2333,7 +2333,7 @@ void LoadItemTable()
 	memset(sSetItemInfo, 0, sizeof(sSetItemInfo));
 	memset(sItemMakingInfo, 0, sizeof(sItemMakingInfo));
 
-	g_pExecutive->PreLoadGXObject(GetFile("GuildFlag.chr", DATA_TYPE_ITEM));
+	//g_pExecutive->PreLoadGXObject(GetFile("GuildFlag.chr", DATA_TYPE_ITEM));
 	// sung-han 2005-02-14 ±æµåÀü ÇýÅÃÁß ±æµå ±ê¹ß
 	/*
 	g_pExecutive->PreLoadGXObject(GetFile("GuildFlag2.chr", DATA_TYPE_ITEM));
