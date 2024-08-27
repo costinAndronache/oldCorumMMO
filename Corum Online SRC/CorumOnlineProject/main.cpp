@@ -137,19 +137,22 @@ lb_Process:
 		g_bIsRunning = FALSE;
 	}
 
-	MSG msg;
+	
 
 	while(g_bIsRunning)
 	{
-		if(	PeekMessage(&msg, NULL, 0, 0, PM_REMOVE) )
+		MSG* msg = new MSG;
+		if(	PeekMessage(msg, NULL, 0, 0, PM_REMOVE) )
 		{
-			TranslateMessage(&msg);
-			DispatchMessage(&msg);
+			TranslateMessage(msg);
+			DispatchMessage(msg);
 		}
 		else
 		{
 			(*Render[ g_bRenderMode ])();
 		}
+
+		delete msg;
 
 #ifdef __USE_CLIENT_SPEEDHACK_CHECKER
 		if(IsSpeedHackClient()) 
@@ -182,6 +185,11 @@ lb_Process:
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
+	InitFunctionPointer();
+
+	char msg[1024] = { 0 };
+	_snprintf(msg, 1024, "\nWndProc message: %u", message);
+	OutputDebugString(msg);
 #ifdef _USE_IME
 	// no need for other languages, if(GET_IMEEDIT()->ProcessIMEMessage(message, wParam, lParam)) return 0;
 #endif 
@@ -351,8 +359,10 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 	case WM_LBUTTONDOWN:	
 		{
+			OutputDebugString("\nOn mousebuttonw down, gettime");
 			g_dwStatusTime = timeGetTime();
 			
+			OutputDebugString("\nOn mousebuttonw down, preparing to call");
 			if(g_byStatusMessenger==1)
 				g_byChkMessenger = 1;
 			
@@ -363,6 +373,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			if(OnLButtonDown[ GetGameStatus() ])
 			{
 				(*OnLButtonDown[ GetGameStatus() ])(wParam, lParam);	
+				OutputDebugString("HERE");
 			}
 		}
 		break;

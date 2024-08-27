@@ -555,7 +555,7 @@ void LoginProcess()
 		
 		if(!g_dwConnectIndex[SERVER_INDEX_AGENT])		//접속을 아직 안한경우 
 		{
-			if( !g_pNet->ConnectServer( g_pGVLogin->ServerSetInfo.pServerInfo[ g_pGVLogin->bConnectServerIndex ].szIp, LOGIN_AGENT_CONNECT_PORT, SERVER_INDEX_AGENT ) )	
+			if( !g_pNet->ConnectServer( g_pGVLogin->ServerSetInfo.pServerInfo[ g_pGVLogin->bConnectServerIndex ].szIp, g_pGVLogin->ServerSetInfo.pServerInfo[g_pGVLogin->bConnectServerIndex].port, SERVER_INDEX_AGENT ) )
 			{
 				pGameDefaultWnd->OpenWnd(g_Message[ETC_MESSAGE248].szMessage, g_Message[ETC_MESSAGE319].szMessage, "", "", 402, 459, 1);	// MSG_ID : 319 ; Fail to connect World Server!
 				_PlaySound(0, SOUND_TYPE_SYSTEM, SOUND_SYSTEM_ERRORMSG, g_v3InterfaceSoundPos, FALSE);				
@@ -792,6 +792,8 @@ lb_continue:
 
 	if(g_pGVLogin->bIsLoginInputMode)	
 		return;
+
+	OutputDebugString("HERE");
 
 	// 서버 선택하는 중이라면, 클릭한 현재 서버셋을 저장한다.
 	// 그리고, 인터페이스를 변경한다.

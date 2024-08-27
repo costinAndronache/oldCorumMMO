@@ -102,6 +102,8 @@ BOOL GlobalVariableLogin::LoadConnectionInfo()
 		wsprintf(szTemp, "set_%02d_address", i+1 );
 		GetPrivateProfileString("SERVER_SET_INFO",  szTemp, "211.174.52.109", 
 			g_pGVLogin->ServerSetInfo.pServerInfo[i].szIp, MAX_IP_LENGTH, szFile);
+		wsprintf(szTemp, "set_%02d_port", i + 1);
+		g_pGVLogin->ServerSetInfo.pServerInfo[i].port = GetPrivateProfileInt("SERVER_SET_INFO", szTemp, 0, szFile);
 	}
 	
 	g_pGVLogin->ServerSetInfo.dwCurMouseOverSet = 0xffffffff;

@@ -25,6 +25,7 @@ struct SERVER_SET_INFO
 {
 	char	szSetName[ MAX_SERVER_SET_NAME_LENGTH ];
 	char	szIp[ MAX_IP_LENGTH ];
+	int		port;
 };
 
 struct WORLD_CONNECT_INFO
