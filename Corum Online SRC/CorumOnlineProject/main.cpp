@@ -183,7 +183,7 @@ lb_Process:
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
 #ifdef _USE_IME
-	if(GET_IMEEDIT()->ProcessIMEMessage(message, wParam, lParam)) return 0;
+	// no need for other languages, if(GET_IMEEDIT()->ProcessIMEMessage(message, wParam, lParam)) return 0;
 #endif 
 
 	switch (message) 

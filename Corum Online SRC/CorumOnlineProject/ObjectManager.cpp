@@ -220,7 +220,13 @@ void CObjectManager::RemoveAllObject()
 
 char* CObjectManager::GetFile(DWORD dwObjID)
 {
-	return g_Res.GetResFileNameOnly(dwObjID);
+	char *result = g_Res.GetResFileNameOnly(dwObjID);
+	if (result != NULL) {
+		return result;
+	}
+	else {
+		return "";
+	}
 }
 
 CObjectManager::~CObjectManager()

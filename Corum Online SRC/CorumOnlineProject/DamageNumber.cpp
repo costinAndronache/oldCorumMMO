@@ -14,6 +14,7 @@ void	InitDamageNumber()
 	char	szBuf[1024] = {0,};
 
 	memset( g_pDamageNumberPool, 0, sizeof( DAMAGE_NUMBER_OBJECT_POOL ) * 2 );
+	return;
 	
 //	for( i=0; i<2; i++ )		// Monster And User
 //	{
@@ -25,10 +26,13 @@ void	InitDamageNumber()
 			{
 				wsprintf( szBuf, "dfy%d.chr", l );
 				g_pDamageNumberPool[0].pDamageNumberPool[j].m_hDamageNumber[k][l].pDesc = AllocObjDesc();
+
 				g_pDamageNumberPool[0].pDamageNumberPool[j].m_hDamageNumber[k][l].pHandle = 
-					CreateHandleObject( GetFile( szBuf, DATA_TYPE_DAMAGENUMBER ), GXPlayerPROC, g_pDamageNumberPool[0].pDamageNumberPool[j].m_hDamageNumber[k][l].pDesc, GXOBJECT_CREATE_TYPE_EFFECT );						
-				
-				if( !g_pDamageNumberPool[0].pDamageNumberPool[j].m_hDamageNumber[k][l].pHandle ) asm_int3();
+					CreateHandleObject( GetFile( szBuf, DATA_TYPE_DAMAGENUMBER ), GXPlayerPROC, g_pDamageNumberPool[0].pDamageNumberPool[j].m_hDamageNumber[k][l].pDesc, 0);						
+
+				if (!g_pDamageNumberPool[0].pDamageNumberPool[j].m_hDamageNumber[k][l].pHandle) {
+					asm_int3();
+				}
 				HideObject( g_pDamageNumberPool[0].pDamageNumberPool[j].m_hDamageNumber[k][l].pHandle );
 			}
 		}
@@ -37,11 +41,11 @@ void	InitDamageNumber()
 		g_pDamageNumberPool[0].pDamageNumberPool[j].m_hDamageChar[1].pDesc = AllocObjDesc();
 	
 		g_pDamageNumberPool[0].pDamageNumberPool[j].m_hDamageChar[0].pHandle = 
-			CreateHandleObject( GetFile( "dfyblock.chr", DATA_TYPE_DAMAGENUMBER ), GXPlayerPROC, g_pDamageNumberPool[0].pDamageNumberPool[j].m_hDamageChar[0].pDesc, GXOBJECT_CREATE_TYPE_EFFECT );
+			CreateHandleObject( GetFile( "dfyblock.chr", DATA_TYPE_DAMAGENUMBER ), GXPlayerPROC, g_pDamageNumberPool[0].pDamageNumberPool[j].m_hDamageChar[0].pDesc, 0);
 		HideObject( g_pDamageNumberPool[0].pDamageNumberPool[j].m_hDamageChar[0].pHandle );
 
 		g_pDamageNumberPool[0].pDamageNumberPool[j].m_hDamageChar[1].pHandle = 
-			CreateHandleObject( GetFile( "dfymiss.chr", DATA_TYPE_DAMAGENUMBER ), GXPlayerPROC, g_pDamageNumberPool[0].pDamageNumberPool[j].m_hDamageChar[1].pDesc, GXOBJECT_CREATE_TYPE_EFFECT );
+			CreateHandleObject( GetFile( "dfymiss.chr", DATA_TYPE_DAMAGENUMBER ), GXPlayerPROC, g_pDamageNumberPool[0].pDamageNumberPool[j].m_hDamageChar[1].pDesc, 0);
 		HideObject( g_pDamageNumberPool[0].pDamageNumberPool[j].m_hDamageChar[1].pHandle );
 
 		// 포인터 연결.

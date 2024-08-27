@@ -2337,10 +2337,14 @@ GXOBJECT_HANDLE	CreateHandleObject( char* szFileName, GXSchedulePROC pProc, void
 	
 	hHandle = g_pExecutive->CreateGXObject( szFileName, pProc, pData, dwFlag );
 	
-#ifdef _DEBUG
-	if(_CrtCheckMemory()==NULL)
-		asm_int3()
-#endif
+//#ifdef _DEBUG
+//	if (_CrtCheckMemory() == NULL) {
+//#pragma warning ---
+	//	printf
+		//asm_int3()
+	//}
+		
+//#endif
 
 	return hHandle;
 }
@@ -2399,6 +2403,7 @@ DWORD DecodeCDBData(char* szLoadFile,  void* pReturnValue, char* szDecodeKey, in
 		dwCur += nRemain;
 	}
 	
+
 	memcpy(pReturnValue, szBuffer, dwTotalLen);
 	delete [] szBuffer;
 	fclose(fp);

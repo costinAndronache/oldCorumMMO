@@ -95,8 +95,9 @@ BOOL InitGameLogin()
 		pGameMenuWnd->m_dwBGMId = BGM_TITLE;
 	}
 	g_pGVLogin->bIntroFlag = INTRO_FLAG_WINDOW_FADE_IN;//INTRO_FLAG_DEMO_SHOWING;	//타이틀 데모 모드  
-	CInterface*	pInterface	= CInterface::GetInstance();
-	pInterface->InitInterface(0);	
+
+//	CInterface*	pInterface	= CInterface::GetInstance();
+//	pInterface->InitInterface(0);	
 
 	g_pSprManager->CreateSprite(SPR_LOGIN_BACKGROUND, 0.0f, 0.0f, TRUE, 254); // resourceid 344
 #if IS_JAPAN_LOCALIZING() || IS_KOREA_LOCALIZING()//일단 일본하구 한국, 나중에 통합....
@@ -222,6 +223,8 @@ BOOL InitGameLogin()
 	pBlockWnd->Init();	
 	pBlockWnd->SetPos(384, 320);
 
+	return TRUE;
+
 	if(g_pAllChatList)
 		g_pAllChatList->RemoveAllData();
 	if(g_pPartyChatList)
@@ -271,7 +274,7 @@ static void UpdateServerSetInfoToUI()
 	}
 	
 	SPR(SPR_LOGIN_SERVERSELECT_WINDOW)->ShowSprite(true);
-	SPR(SPR_CS_BLACK_LINE)->SetAlpha(0);
+	SPR(SPR_CS_BLACK_LINE)->SetAlpha(1.0);
 }
 
 static void ServerSelectFunc()
@@ -345,7 +348,7 @@ void UpdateGameLogin()
 
 			if(bAlpha >= 3)
 			{
-				bAlpha -= 2;
+				bAlpha -= 15;
 				SPR(SPR_CS_BLACK_LINE)->SetAlpha(bAlpha);
 				return;
 			}

@@ -1132,11 +1132,11 @@ BOOL CIMEEdit::ProcessIMEMessage(UINT msg, WPARAM wparam, LPARAM lparam)
 	
 	//--------------
 	// test code
-//	{ 
-//		char szText[0xff]={0,};
-//		wsprintf(szText, "message : %04X, wParam : %04X, lParam : %04X\n", msg, wparam, lparam);
-//		OutputDebugString(szText);
-//	} 
+		{ 
+		char szText[0xff]={0,};
+		wsprintf(szText, "message : %04X, wParam : %04X, lParam : %04X\n", msg, wparam, lparam);
+		OutputDebugString(szText);
+	} 
 	//--------------
 
 	switch(msg) 

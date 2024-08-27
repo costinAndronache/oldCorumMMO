@@ -393,19 +393,19 @@ void PreLoadResource()
 void InitializePool()
 {
 	g_pObjDescPool = CreateStaticMemoryPool();
-	InitializeStaticMemoryPool(g_pObjDescPool, sizeof(OBJECT_DESC), 20000, 40000);
+	InitializeStaticMemoryPool(g_pObjDescPool, sizeof(OBJECT_DESC), 20000, 90000);
 
 	g_pUserPool = CreateStaticMemoryPool();
 	InitializeStaticMemoryPool(g_pUserPool, sizeof(CUser), MAX_DATA_FOR_USER_POOL, MAX_DATA_FOR_USER_POOL);
 
 	g_pMonsterPool = CreateStaticMemoryPool();
-	InitializeStaticMemoryPool( g_pMonsterPool, sizeof( CMonster ), 110, 110 );
+	InitializeStaticMemoryPool( g_pMonsterPool, sizeof( CMonster ), 1100, 1100 );
 
 	g_pEffectPool = CreateStaticMemoryPool();
-	InitializeStaticMemoryPool( g_pEffectPool, sizeof( EffectDesc ), 1000, 1000 );
+	InitializeStaticMemoryPool( g_pEffectPool, sizeof( EffectDesc ), 10000, 10000 );
 	
 	g_pItemPool = CreateStaticMemoryPool();
-	InitializeStaticMemoryPool( g_pItemPool, sizeof( ITEM ), 2000, 2000);
+	InitializeStaticMemoryPool( g_pItemPool, sizeof( ITEM ), 20000, 20000);
 
 	g_pGuildPool = CreateStaticMemoryPool();
 	InitializeStaticMemoryPool( g_pGuildPool, sizeof(GUILD_USER), 200, 200);	
@@ -417,10 +417,10 @@ void InitializePool()
 	InitializeStaticMemoryPool( g_pGuildWarPool, sizeof(SGUILD_WAR), 10, 10);		
 
 	g_pPartyBoardPool = CreateStaticMemoryPool();
-	InitializeStaticMemoryPool(g_pPartyBoardPool, sizeof(SPARTY_BOARD), 100, 1000);		
+	InitializeStaticMemoryPool(g_pPartyBoardPool, sizeof(SPARTY_BOARD), 1000, 10000);		
 
 	g_pItemResourcePool = CreateStaticMemoryPool();
-	InitializeStaticMemoryPool( g_pItemResourcePool, sizeof(SITEM_RESOURCE_EX), 2000, 2000);	
+	InitializeStaticMemoryPool( g_pItemResourcePool, sizeof(SITEM_RESOURCE_EX), 20000, 20000);	
 	
 	g_pPartyPool		= CreateStaticMemoryPool();
 	InitializeStaticMemoryPool( g_pPartyPool, sizeof( PARTY_USER ), 100, 100 );
@@ -429,19 +429,19 @@ void InitializePool()
 	InitializeStaticMemoryPool( g_pChatPool, sizeof( CHAT_MSG), 2048, 2048 );
 	
 	g_pItemStorePool	= CreateStaticMemoryPool();
-	InitializeStaticMemoryPool( g_pItemStorePool, sizeof( ITEM_STORE ), 2000, 2000 );
+	InitializeStaticMemoryPool( g_pItemStorePool, sizeof( ITEM_STORE ), 20000, 20000 );
 
 	g_pItemOptionPool	= CreateStaticMemoryPool();
-	InitializeStaticMemoryPool( g_pItemOptionPool, sizeof( ITEM_OPTION ), 700, 700 );
+	InitializeStaticMemoryPool( g_pItemOptionPool, sizeof( ITEM_OPTION ), 7000, 7000 );
 		
 	g_pSkillReosurcePool	= CreateStaticMemoryPool();
-	InitializeStaticMemoryPool(g_pSkillReosurcePool, sizeof(SSKILL_RESOURCE_EX), 200, 200);
+	InitializeStaticMemoryPool(g_pSkillReosurcePool, sizeof(SSKILL_RESOURCE_EX), 2000, 2000);
 	
 	g_pHelpInfoPool			= CreateStaticMemoryPool();
 	InitializeStaticMemoryPool(g_pHelpInfoPool, sizeof(SHELP_INFO), __MAX_INTERFACE_MESSAGE, __MAX_INTERFACE_MESSAGE);
 
 	g_pGroupInfoPool		= CreateStaticMemoryPool();
-	InitializeStaticMemoryPool(g_pGroupInfoPool, sizeof(SGROUPINFO_TABLE), 12, 12);
+	InitializeStaticMemoryPool(g_pGroupInfoPool, sizeof(SGROUPINFO_TABLE), 100, 100);
 
 	g_pGuildOfflinePool	= CreateStaticMemoryPool();
 	InitializeStaticMemoryPool(g_pGuildOfflinePool, sizeof(GUILD_OFFLINE_USER), 110, 110);
@@ -450,7 +450,7 @@ void InitializePool()
 	InitializeStaticMemoryPool(g_pGuildDataPool, sizeof(GUILD_DATA), 500, 500);
 
 	g_pInterfaceSprPool = CreateStaticMemoryPool();
-	InitializeStaticMemoryPool(g_pInterfaceSprPool, sizeof(SSPRITE_DATA), 1000, 1000);
+	InitializeStaticMemoryPool(g_pInterfaceSprPool, sizeof(SSPRITE_DATA), 10000, 10000);
 }
 
 
@@ -714,7 +714,12 @@ BOOL InitGame()
 		
 	LoadHelpInfo();
 	LoadGroupInfo();
+
+	//DEACTIVATED
 	InitDamageNumber();
+	//
+
+
 	InterfaceSprLoad(0);
 
 	return TRUE;
@@ -1765,7 +1770,7 @@ int KeyCheck(int nKey)
 
 void LoadSkillresourceTable()
 {
-	for(int i = 0; i < 5; i++)
+	for(int i = 0; i < SSKILL_LIST_MANAGER::pSkillListCount; i++)
 	{
 		g_sSkillListManager.pSkillList[i].pActiveList		= new COnlyList(MAX_SKILL_NODE);
 		g_sSkillListManager.pSkillList[i].pPassiveList		= new COnlyList(MAX_SKILL_NODE);
@@ -1833,6 +1838,7 @@ void LoadSkillresourceTable()
 		case SKILL_TYPE_PASSIVE:	// ÆÐ½Ãºê.
 			g_sSkillListManager.pSkillList[lpSkillResourceEx->bySkillType].pPassiveList->AddTail(lpSkillResourceEx);
 			break;
+		default: break;
 		}
 	}
 	g_sSkillListManager.byLeftSkillCnt	= (BYTE)nLeftIndex;
@@ -1841,9 +1847,9 @@ void LoadSkillresourceTable()
 
 void LoadItemResourceTable()
 {
-	SITEM_RESOURCE		sItemResource[2000];
-	ITEM_STORE			sItemStore[2000];
-	ITEM_OPTION			sItemOption[2000];	
+	SITEM_RESOURCE		*sItemResource = new SITEM_RESOURCE[20000];
+	ITEM_STORE			*sItemStore = new ITEM_STORE[20000];
+	ITEM_OPTION			*sItemOption = new ITEM_OPTION[20000];	
 	LP_ITEM_RESOURCE_EX	lpItemResource=0;	
 	LP_ITEM_STORE		lpItemStore=0;
 	LP_ITEM_OPTION		lpItemOption=0;
@@ -1942,6 +1948,10 @@ void LoadItemResourceTable()
 		
 		g_pItemOptionHash->Insert(lpItemOption, sItemOption[i].wId);		
 	}
+
+	delete[] sItemResource;
+	delete[] sItemStore;
+	delete[] sItemOption;
 }
 
 void LoadHelpInfo()
@@ -1982,7 +1992,7 @@ void LoadGroupInfo()
 	for(int i = 0; i < nMaxNode; i++)
 	{	
 		lpGroupInfo = g_pGroupInfoHash->GetData(sInfo[i].byLevel);
-
+		printf("TYPE:: %d", sInfo[i].byType);
 		if(lpGroupInfo)
 		{
 			lpGroupInfo->sGroupInfo[sInfo[i].byType-1].byAura		= sInfo[i].byAura;
@@ -1998,8 +2008,8 @@ void LoadGroupInfo()
 		}
 		else
 		{
-			lpGroupInfoTable = (LP_GROUPINFO_TABLE)LALAlloc(g_pGroupInfoPool);
-			memset(lpGroupInfoTable, 0, sizeof(lpGroupInfoTable));						
+			lpGroupInfoTable = new SGROUPINFO_TABLE;
+			memset(lpGroupInfoTable, 0, sizeof(SGROUPINFO_TABLE));
 			lpGroupInfoTable->sGroupInfo[sInfo[i].byType-1].byAura		= sInfo[i].byAura;
 			lpGroupInfoTable->sGroupInfo[sInfo[i].byType-1].byLevel		= sInfo[i].byLevel;
 			lpGroupInfoTable->sGroupInfo[sInfo[i].byType-1].byMake_Size	= sInfo[i].byMake_Size;
@@ -2013,6 +2023,8 @@ void LoadGroupInfo()
 			g_pGroupInfoHash->Insert(lpGroupInfoTable, sInfo[i].byLevel);
 		}
 	}
+
+	printf("Finished");
 }
 
 void LoadKeyInfo()
@@ -2091,39 +2103,22 @@ void LoadPreLoadInfo()
 void LoadBaseItemTable()
 {
 	CBaseItem*					pBaseItem = NULL;
-	BASEITEM_WEAPONEX			sWeaponItem[700];
-	BASEITEM_ARMOREX			sArmorItem[900];	
-	BASEITEM_SUPPLIESEX			sSuppliesItem[500];
-	BASEITEM_ZODIACEX			sZodiacItem[500];
-	BASEITEM_RIDEEX				sRideItem[10];
-	BASEITEM_SPECIALEX			sSpecialItem[500];
-	BASEITEM_GUARDIANEX			sGuardianItem[500];
-	BASEITEM_MAGICARRAYEX		sMagicArrayItem[500];
-	BASEITEM_MATERIALSEX		sMaterials[500];
-	BASEITEM_MIX_UPGRADEEX		sMixUpgrade[500];
-	BASEITEM_MAGICFIELD_ARRAYEX sMagicFieldArray[500];
-	BASEITEM_CONSUMABLEEX		sCunsumableItem[1000];	
-	BASEITEM_UPGRADEEX			sUpGradeItem[50];
-	BASEITEM_LIQUIDEX			sLiQuidItem[50];
-	BASEITEM_EDITIONEX			sEditionItem[50];
-	BASEITEM_BAGEX				sBagItem[50];
-
-	memset(sWeaponItem,			0, sizeof(sWeaponItem));
-	memset(sArmorItem,			0, sizeof(sArmorItem));
-	memset(sSuppliesItem,		0, sizeof(sSuppliesItem));
-	memset(sRideItem,			0, sizeof(sRideItem));
-	memset(sSpecialItem,		0, sizeof(sSpecialItem));
-	memset(sZodiacItem,			0, sizeof(sZodiacItem));
-	memset(sGuardianItem,		0, sizeof(sGuardianItem));	
-	memset(sMagicArrayItem,		0, sizeof(sMagicArrayItem));				
-	memset(sMaterials,			0, sizeof(sMaterials));				
-	memset(sMixUpgrade,			0, sizeof(sMixUpgrade));
-	memset(sMagicFieldArray,	0, sizeof(sMagicFieldArray));
-	memset(sCunsumableItem,		0, sizeof(sCunsumableItem));
-	memset(sUpGradeItem,		0, sizeof(sUpGradeItem));
-	memset(sLiQuidItem,			0, sizeof(sLiQuidItem));
-	memset(sEditionItem,		0, sizeof(sEditionItem));	
-	memset(sBagItem,			0, sizeof(sBagItem));	
+	BASEITEM_WEAPONEX			*sWeaponItem = new BASEITEM_WEAPONEX[7000];
+	BASEITEM_ARMOREX			*sArmorItem = new BASEITEM_ARMOREX[900];
+	BASEITEM_SUPPLIESEX			*sSuppliesItem = new BASEITEM_SUPPLIESEX[500];
+	BASEITEM_ZODIACEX			*sZodiacItem = new BASEITEM_ZODIACEX[500];
+	BASEITEM_RIDEEX				*sRideItem = new BASEITEM_RIDEEX[100];
+	BASEITEM_SPECIALEX			*sSpecialItem = new BASEITEM_SPECIALEX[500];
+	BASEITEM_GUARDIANEX			*sGuardianItem = new BASEITEM_GUARDIANEX[500];
+	BASEITEM_MAGICARRAYEX		*sMagicArrayItem = new BASEITEM_MAGICARRAYEX[500];
+	BASEITEM_MATERIALSEX		*sMaterials = new BASEITEM_MATERIALSEX[500];
+	BASEITEM_MIX_UPGRADEEX		*sMixUpgrade = new BASEITEM_MIX_UPGRADEEX[500];
+	BASEITEM_MAGICFIELD_ARRAYEX *sMagicFieldArray = new BASEITEM_MAGICFIELD_ARRAYEX[500];
+	BASEITEM_CONSUMABLEEX		*sCunsumableItem = new BASEITEM_CONSUMABLEEX[1000];
+	BASEITEM_UPGRADEEX			*sUpGradeItem = new BASEITEM_UPGRADEEX[50];
+	BASEITEM_LIQUIDEX			*sLiQuidItem = new BASEITEM_LIQUIDEX[50];
+	BASEITEM_EDITIONEX			*sEditionItem = new BASEITEM_EDITIONEX[50];
+	BASEITEM_BAGEX				*sBagItem = new BASEITEM_BAGEX[50];
 
 	DWORD dwDefaultSize = sizeof(COMMONBASEITEM);
 	
@@ -2320,13 +2315,33 @@ void LoadBaseItemTable()
 		g_pItemTableHash->Insert(pBaseItem, pBaseItem->wID);				
 	}	
 
-	SetCommonServerBaseItemHash(g_pItemTableHash);	
+#pragma warning 
+	SetCommonServerBaseItemHash(g_pItemTableHash);
+
+	return;
+
+	delete[] sWeaponItem;
+	delete[] sArmorItem;
+	delete[] sSuppliesItem;
+	delete[] sZodiacItem;
+	delete[] sRideItem;
+	delete[] sSpecialItem;
+	delete[] sGuardianItem;
+	delete[] sMagicArrayItem;
+	delete[] sMaterials;
+	delete[] sMixUpgrade;
+	delete[] sMagicFieldArray;
+	delete[] sCunsumableItem;
+	delete[] sUpGradeItem;
+	delete[] sLiQuidItem;
+	delete[] sEditionItem;
+	delete[] sBagItem;
 }
 
 void LoadItemTable()
 {
-	SET_ITEM_INFO		sSetItemInfo[200];
-	ITEM_MAKING_INFO	sItemMakingInfo[200];	
+	SET_ITEM_INFO		sSetItemInfo[2000];
+	ITEM_MAKING_INFO	sItemMakingInfo[2000];	
 	LPSET_ITEM_INFO		pSetItemInfo	= NULL;
 	LPITEM_MAKING_INFO	pItemMakingInfo = NULL;
 

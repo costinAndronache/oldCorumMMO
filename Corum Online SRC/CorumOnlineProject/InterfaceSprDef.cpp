@@ -40,7 +40,7 @@ void InterfaceSprLoad(BYTE /*byType*/)
 	INTERFACE_RESOURCE_INFO* pInterfaceResourceInfo;
 	for( i = 0; i < nMaxNode; i++ )
 	{		
-		lpSpriteData		= (LP_SPRITE_DATA)LALAlloc(g_pInterfaceSprPool);	
+		lpSpriteData = new SSPRITE_DATA;
 		lpSpriteData->dwId	= sInterfaceSprite[i].wID;
 		pInterfaceResourceInfo = &sInterfaceResourceInfo[sInterfaceSprite[i].wResourceID];
 
