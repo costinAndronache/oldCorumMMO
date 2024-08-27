@@ -1519,11 +1519,6 @@
     </Image>
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="Resource.rc">
-      <Filter>Resource Files</Filter>
-    </ResourceCompile>
-  </ItemGroup>
-  <ItemGroup>
     <Library Include="SoundLib.lib">
       <Filter>sound</Filter>
     </Library>
