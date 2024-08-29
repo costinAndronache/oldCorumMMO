@@ -540,6 +540,8 @@ BOOL InitGame()
 
 	g_dwVersion = GetEncryptedVersion(CURRENT_VERSION_STRING);
 
+	//
+	//
 	g_Res.Init("CorumResource.erd", g_szBasePath);	
 	g_ResDefined.Init("DefResource.erd", g_szBasePath);		
 	SetRect( &g_rcScreenRect, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT );
@@ -2316,7 +2318,7 @@ void LoadBaseItemTable()
 	}	
 
 #pragma warning 
-	SetCommonServerBaseItemHash(g_pItemTableHash);
+	//SetCommonServerBaseItemHash(g_pItemTableHash);
 
 	return;
 

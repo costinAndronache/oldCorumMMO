@@ -157,7 +157,7 @@ void SetDBInfo()
 		g_DBInfo.Set(DT_TOTAL_DB, DBIT_ID, "potato");
 		g_DBInfo.Set(DT_TOTAL_DB, DBIT_PW, "ahffk");
 
-		g_DBInfo.Set(DT_MEMBER_DB, DBIT_CATALOG, "member");
+		g_DBInfo.Set(DT_MEMBER_DB, DBIT_CATALOG, "Member");
 		g_DBInfo.Set(DT_MEMBER_DB, DBIT_ID, "potato");
 		g_DBInfo.Set(DT_MEMBER_DB, DBIT_PW, "ahffk");
 
@@ -378,6 +378,7 @@ int main(int argc, char* argv[])
 
 	g_pThis->ToggleUserAccept();
 	ListenForServerside();
+	ListenForUserside();
 
 	if( IS_ABLE_SERVICE_TYPE(ST_CHINA_BILLING) )//Áß±¹ºô¸µ Test : 050104 hwoarang
 	{

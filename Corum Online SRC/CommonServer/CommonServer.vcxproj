@@ -804,9 +804,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="CommonServer.rc" />
-  </ItemGroup>
-  <ItemGroup>
     <ClInclude Include="ClassSupport.h" />
     <ClInclude Include="ComInterface.h" />
     <ClInclude Include="CommonAccessory.h" />

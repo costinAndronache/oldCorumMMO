@@ -55,6 +55,7 @@ void InitPacketProcCharSelect()
 
 BOOL InitGameCharSelect()
 {
+
 	g_pExecutive->DeleteAllGXLights();
 	g_byChkMessenger	= 0;
 	g_byStatusMessenger	= 0;
@@ -66,6 +67,7 @@ BOOL InitGameCharSelect()
 	g_pExecutive->GXOSetScale(g_pGVLogin->pCharacterSelectBackGround->pHandle, &v3Scale);
 	
 	g_bCharMoveChk		= FALSE;
+	
 	
 #ifdef _USE_IME
 

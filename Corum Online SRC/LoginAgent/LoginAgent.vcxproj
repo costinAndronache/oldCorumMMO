@@ -41,6 +41,7 @@
     <SccAuxPath />
     <SccLocalPath>.</SccLocalPath>
     <SccProvider>MSSCCI:Microsoft Visual SourceSafe</SccProvider>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='TAIWAN|Win32'" Label="Configuration">
@@ -75,8 +76,10 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
-    <UseOfMfc>false</UseOfMfc>
+    <UseOfMfc>Static</UseOfMfc>
     <CharacterSet>MultiByte</CharacterSet>
+    <UseOfAtl>Static</UseOfAtl>
+    <PlatformToolset>v142</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='JAPAN|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
@@ -116,9 +119,7 @@
     <OutDir Condition="'$(Configuration)|$(Platform)'=='JAPAN|Win32'">.\LoginAgent___Win32_JAPAN\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='JAPAN|Win32'">.\LoginAgent___Win32_JAPAN\</IntDir>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='JAPAN|Win32'">false</LinkIncremental>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">D:\[Source]\DEVELOP_V1\INNER\1_LoginAgent Configurations\</OutDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.\Debug\</IntDir>
-    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</LinkIncremental>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</LinkIncremental>
     <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\Release\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\Release\</IntDir>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</LinkIncremental>
@@ -161,6 +162,13 @@
     <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='TAIWAN|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
     <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='TAIWAN|Win32'" />
     <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='TAIWAN|Win32'" />
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <GenerateManifest>false</GenerateManifest>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
+    <OutDir>E:\Git\oldCorumMMO\Corum Online SRC\LoginAgent\</OutDir>
+    <TargetName>LoginAgentResult</TargetName>
+    <IntDir>.</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='JAPAN|Win32'">
     <ClCompile>
@@ -219,10 +227,10 @@
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <DisableSpecificWarnings>4201;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <AdditionalDependencies>WS2_32.lib;odbc32.lib;odbccp32.lib;cpssolib.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <OutputFile>D:\[Source]\DEVELOP_V1\INNER\1_LoginAgent Configurations/LoginAgent.exe</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <ProgramDatabaseFile>$(OutDir)LoginAgent.pdb</ProgramDatabaseFile>
@@ -231,6 +239,9 @@
       <MapExports>true</MapExports>
       <SubSystem>Console</SubSystem>
       <TargetMachine>MachineX86</TargetMachine>
+      <IgnoreSpecificDefaultLibraries>LIBC.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
+      <OutputFile>E:\Git\oldCorumMMO\Corum Online SRC\LoginAgent\LoginAgentResult.exe</OutputFile>
     </Link>
     <Midl>
       <TypeLibraryName>.\Debug/LoginAgent.tlb</TypeLibraryName>
@@ -966,6 +977,7 @@
     <ClInclude Include="ItemManager.h" />
     <ClInclude Include="MsgProc.h" />
     <ClInclude Include="MsgProcForServer.h" />
+    <ClInclude Include="no_sal2.h" />
     <ClInclude Include="OwnServer.h" />
     <ClInclude Include="recvmsg.h" />
     <ClInclude Include="ServerFunction.h" />

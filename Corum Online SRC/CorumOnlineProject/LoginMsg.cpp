@@ -542,6 +542,7 @@ void CmdLoginFail( char* pMsg, DWORD dwLen )
 
 void CmdLoginSuccess( char* pMsg, DWORD dwLen )
 {	
+
 	WSTC_LOGIN_SUCCESS* pPacket			= (WSTC_LOGIN_SUCCESS*)pMsg;
 	CGameDefaultWnd*	pGameDefaultWnd = CGameDefaultWnd::GetInstance();	
 	

@@ -733,7 +733,7 @@ void QueryTypeChrSelectInfo(DBRECEIVEDATA* pResult)
 	}
 
 	SendToUser(pUser, (char*)&packet, packet.GetPacketSize(), FLAG_SEND_NOT_ENCRYPTION);
-
+	Log(LOG_IMPORTANT, "Sent to user login success packet: %d", pUser->m_dwPropID);
 	//Item 몰 처리가 있는 유저의 경우 
 	if(pUser->m_bItemMallCount > 0)
 	{
@@ -749,7 +749,7 @@ void QueryTypeChrSelectInfo(DBRECEIVEDATA* pResult)
 		if(byCharNum==4)
 			pUser->m_byItemMallType = 0xff;
 
-		Log(LOG_NORMAL, "Client ItemMall : %u, %u", pUser->m_byItemMallType, pUser->m_bItemMallCount);
+		Log(LOG_IMPORTANT, "Client ItemMall : %u, %u", pUser->m_byItemMallType, pUser->m_bItemMallCount);
 	
 		if(pUser->m_byItemMallType==0xff)
 		{
@@ -773,6 +773,7 @@ void QueryTypeChrSelectInfo(DBRECEIVEDATA* pResult)
 		}
 		
 		SendToUser(pUser, (char*)&MallPacket, MallPacket.GetPacketSize(), FLAG_SEND_NOT_ENCRYPTION);
+		Log(LOG_IMPORTANT, "Sent mall packet to: %d", pUser->m_dwPropID);
 	}
 }
 

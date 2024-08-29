@@ -68,11 +68,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="CommonServer.rc">
-      <Filter>Source Files</Filter>
-    </ResourceCompile>
-  </ItemGroup>
-  <ItemGroup>
     <ClInclude Include="ClassSupport.h">
       <Filter>Header Files</Filter>
     </ClInclude>

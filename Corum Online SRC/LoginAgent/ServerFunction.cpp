@@ -47,25 +47,25 @@ void	__stdcall	GetLogDBResult( DWORD dwEventIndex )
 
 void DisplayDBMessage(char* szMsg)
 {
-	char szDBMsg[ 0xff ]={0,};
-	wsprintf(szDBMsg, "[Msg for DB] %s", szMsg);
-	Log(LOG_IMPORTANT, szDBMsg);
+	Log(LOG_IMPORTANT, "[DB]::");
+	Log(LOG_IMPORTANT, szMsg);
 }
 
 void DisplayBillDBMessage(char* szMsg)
 {
-	char szDBMsg[ 0xff ]={0,};
-	wsprintf(szDBMsg, "[Msg for BillDB] %s", szMsg);
-	Log(LOG_IMPORTANT, szDBMsg);
+	Log(LOG_IMPORTANT, "[BillDB]::");
+	Log(LOG_IMPORTANT, szMsg);
 }
 
 void DisplayDBReport(char* szMsg)
 {
+	Log(LOG_IMPORTANT, "[DBReport]::");
 	Log(LOG_IMPORTANT, szMsg);
 }
 
 void DisplayDBBillReport(char* szMsg)
 {
+	Log(LOG_IMPORTANT, "[DBBillReport]::");
 	Log(LOG_IMPORTANT, szMsg);
 }
 
@@ -351,7 +351,7 @@ void ListenForServerside()
 		}
 
 		g_pThis->m_bServerListening = TRUE;
-		Log(LOG_JUST_DISPLAY, "@ Now Listening... (For Serverside(%d))", g_pThis->GetPortForServer());
+		Log(LOG_IMPORTANT, "@ Now Listening... (For Serverside(%d))", g_pThis->GetPortForServer());
 
 		ReportToCMListener(1, &g_MachineName);
 	}		
@@ -367,12 +367,17 @@ bool ConnectToDBServer()
 	
 	Log(LOG_IMPORTANT, "@ Connecting SQL Server(Game DB)...");
 	
-	if(g_pDb->Connect(g_pThis->GetIPForGameDB(), szDbName, 
-		g_DBInfo.Get(DT_GAME_DB,DBIT_ID), 
-		g_DBInfo.Get(DT_GAME_DB,DBIT_PW), 20, /*10, FALSE,*/ (BYTE)GAME_DB) < 0)
 	{
-		Log(LOG_IMPORTANT, "@ Can not connect SQL Server(Game DB)! IP=\"%s\"", g_pThis->GetIPForGameDB());
-		return false;
+		const char* ip = g_pThis->GetIPForGameDB();
+		const char* username = g_DBInfo.Get(DT_GAME_DB, DBIT_ID);
+		const char* pw = g_DBInfo.Get(DT_GAME_DB, DBIT_PW);
+		if (g_pDb->Connect(ip, szDbName,
+			username,
+			pw, 20, /*10, FALSE,*/ (BYTE)GAME_DB) < 0)
+		{
+			Log(LOG_IMPORTANT, "@ Can not connect SQL Server(Game DB)! IP=\"%s\"", g_pThis->GetIPForGameDB());
+			return false;
+		}
 	}
 	
 	Log(LOG_IMPORTANT, "@ SQL Server(Game DB) Connected!(%s)", g_pThis->GetIPForGameDB());
@@ -381,46 +386,64 @@ bool ConnectToDBServer()
 
 	//Syste DB
 	TOTAL_DB = g_pDb->CreateDBConnection();
-	Log(LOG_JUST_DISPLAY, "@ Connecting SQL Server(Total DB)...");
-	if(g_pDb->Connect(g_pThis->GetIPForTotalDB(), 
-		g_DBInfo.Get(DT_TOTAL_DB, DBIT_CATALOG),
-		g_DBInfo.Get(DT_TOTAL_DB, DBIT_ID), 
-		g_DBInfo.Get(DT_TOTAL_DB, DBIT_PW), 
-		20, /*10, FALSE,*/ (BYTE)TOTAL_DB) < 0)
 	{
-		Log(LOG_IMPORTANT, "@ Can not connect SQL Server(TOTAL_DB)! IP=\"%s\"",g_pThis->GetIPForTotalDB());
-		return false;
+		Log(LOG_JUST_DISPLAY, "@ Connecting SQL Server(Total DB)...");
+		const char* ip = g_pThis->GetIPForTotalDB();
+		const char* id = g_DBInfo.Get(DT_TOTAL_DB, DBIT_ID);
+		const char* db = g_DBInfo.Get(DT_TOTAL_DB, DBIT_CATALOG);
+		const char* pw = g_DBInfo.Get(DT_TOTAL_DB, DBIT_PW);
+		if (g_pDb->Connect(ip,
+			db,
+			id,
+			pw,
+			20, /*10, FALSE,*/ (BYTE)TOTAL_DB) < 0)
+		{
+			Log(LOG_IMPORTANT, "@ Can not connect SQL Server(TOTAL_DB)! IP=\"%s\"", g_pThis->GetIPForTotalDB());
+			return false;
+		}
 	}
 
 	Log(LOG_IMPORTANT, "@ SQL Server(Total DB) Connected!(%s)", g_pThis->GetIPForTotalDB());
 		
 	//Member DB
 	MEMBER_DB = g_pDb->CreateDBConnection();
-	Log(LOG_JUST_DISPLAY, "@ Connecting SQL Server(Member DB)...");
-	if(g_pDb->Connect(g_pThis->GetIPForMemberDB(), 
-		g_DBInfo.Get(DT_MEMBER_DB, DBIT_CATALOG),
-		g_DBInfo.Get(DT_MEMBER_DB, DBIT_ID),
-		g_DBInfo.Get(DT_MEMBER_DB, DBIT_PW),
-		20, /*10, FALSE,*/ (BYTE)MEMBER_DB) < 0)
 	{
-		Log(LOG_IMPORTANT, "@ Can not connect SQL Server(MEMBER_DB)! IP=\"%s\"",g_pThis->GetIPForMemberDB());
-		return false;
+		Log(LOG_JUST_DISPLAY, "@ Connecting SQL Server(Member DB)...");
+		const char* ip = g_pThis->GetIPForMemberDB();
+		const char* db = g_DBInfo.Get(DT_MEMBER_DB, DBIT_CATALOG);
+		const char* id = g_DBInfo.Get(DT_MEMBER_DB, DBIT_ID);
+		const char* pw = g_DBInfo.Get(DT_MEMBER_DB, DBIT_PW);
+		if (g_pDb->Connect(ip,
+			db,
+			id,
+			pw,
+			20, /*10, FALSE,*/ (BYTE)MEMBER_DB) < 0)
+		{
+			Log(LOG_IMPORTANT, "@ Can not connect SQL Server(MEMBER_DB)! IP=\"%s\"", g_pThis->GetIPForMemberDB());
+			return false;
+		}
 	}
+
 
 	Log(LOG_IMPORTANT, "@ SQL Server(Member DB) Connected!(%s)", g_pThis->GetIPForMemberDB());
 
 	// Bill DB Connection
 	BILL_DB = g_pBillDb->CreateDBConnection();
 	
-	Log(LOG_IMPORTANT, "@ Connecting SQL Server(Billing DB)...");
-
-	if(g_pBillDb->Connect(g_pThis->GetIPForMemberDB(), 
-		g_DBInfo.Get(DT_MEMBER_DB, DBIT_CATALOG),
-		g_DBInfo.Get(DT_MEMBER_DB, DBIT_ID),
-		g_DBInfo.Get(DT_MEMBER_DB, DBIT_PW), 20, /*10, FALSE,*/ (BYTE)BILL_DB) < 0)
 	{
-		Log(LOG_IMPORTANT, "@ Can not connect SQL Server(BILL_DB)! IP=\"%s\"",g_pThis->GetIPForMemberDB());
-		return false;
+		Log(LOG_IMPORTANT, "@ Connecting SQL Server(Billing DB)...");
+		const char* ip = g_pThis->GetIPForMemberDB();
+		const char* db = g_DBInfo.Get(DT_MEMBER_DB, DBIT_CATALOG);
+		const char* id = g_DBInfo.Get(DT_MEMBER_DB, DBIT_ID);
+		const char* pw = g_DBInfo.Get(DT_MEMBER_DB, DBIT_PW);
+		if (g_pBillDb->Connect(ip,
+			db,
+			id,
+			pw, 20, /*10, FALSE,*/ (BYTE)BILL_DB) < 0)
+		{
+			Log(LOG_IMPORTANT, "@ Can not connect SQL Server(BILL_DB)! IP=\"%s\"", g_pThis->GetIPForMemberDB());
+			return false;
+		}
 	}
 
 	Log(LOG_IMPORTANT, "@ SQL Server(Member DB) Connected!(%s)", g_pThis->GetIPForMemberDB());
@@ -429,24 +452,29 @@ bool ConnectToDBServer()
 	// Log DB Connection
 	LOG_DB = g_pLogDb->CreateDBConnection();
 	Log(LOG_IMPORTANT, "@ Connecting SQL Server(Log DB)...");
-
-	char szLogDBName[ 0xff ]={0,};
-
-	if(! IS_ABLE_SERVICE_TYPE(ST_NO_LOG) )// : hwoarang 050201 
 	{
-		::wsprintf(szLogDBName, "%s%d",g_DBInfo.Get(DT_LOG_DB, DBIT_CATALOG), g_pThis->GetServerSetNum() );
+		char szLogDBName[0xff] = { 0, };
 
-		if(g_pLogDb->Connect(g_pThis->GetIPForLogDB(), 
-			szLogDBName,
-			g_DBInfo.Get(DT_LOG_DB, DBIT_ID),
-			g_DBInfo.Get(DT_LOG_DB, DBIT_PW),
-			20, /*10, FALSE,*/ (BYTE)LOG_DB) < 0)
+		if (!IS_ABLE_SERVICE_TYPE(ST_NO_LOG))// : hwoarang 050201 
 		{
-			Log(LOG_NORMAL, "@ Can not connect SQL Server(Log DB)! IP=\"%s\"",g_pThis->GetIPForLogDB());
-			return false;
+			::wsprintf(szLogDBName, "%s%d", g_DBInfo.Get(DT_LOG_DB, DBIT_CATALOG), g_pThis->GetServerSetNum());
+
+			const char* ip = g_pThis->GetIPForLogDB();
+			const char* id = g_DBInfo.Get(DT_LOG_DB, DBIT_ID);
+			const char* pw = g_DBInfo.Get(DT_LOG_DB, DBIT_PW);
+			if (g_pLogDb->Connect(g_pThis->GetIPForLogDB(),
+				szLogDBName,
+				id,
+				pw,
+				20, /*10, FALSE,*/ (BYTE)LOG_DB) < 0)
+			{
+				Log(LOG_NORMAL, "@ Can not connect SQL Server(Log DB)! IP=\"%s\"", g_pThis->GetIPForLogDB());
+				return false;
+			}
+			Log(LOG_IMPORTANT, "@ SQL Server(Log DB) Connected!(%s)", g_pThis->GetIPForLogDB());
 		}
-		Log(LOG_IMPORTANT, "@ SQL Server(Log DB) Connected!(%s)", g_pThis->GetIPForLogDB());
 	}
+	
 	
 	//Logintable »èÁ¦ 
 	ThrowLogoutAllQuery(FALSE);
@@ -1177,8 +1205,16 @@ void __stdcall DecreaseUserLimit(DWORD dwEventIndex)
 
 void InitNetwork()
 {
+	/*
+* 				F1 -- key[1]--event2, (idx+1)
+		   F3 -- key[0] --event1
+		   F5 -- [2]
+		   F7 -- [4] -- logout all user
+		   F11 -- [5]
+		   F12 -- [6]
+*/
 	DWORD dwEventCount = 0;
-	CUSTOM_EVENT ev[32];
+	CUSTOM_EVENT *ev = new CUSTOM_EVENT[32];
 
 	memset(ev, 0, sizeof(CUSTOM_EVENT)*32);
 
@@ -1261,7 +1297,7 @@ void InitNetwork()
 	desc.OnDisconnectServer					= OnDisconnectServer;
 	desc.OnDisconnectUser					= OnDisconnectUser;
 
-	if( IS_ABLE_SERVICE_TYPE(ST_DEVELOP) )//DEV_MODE : 050104 Hwoarang
+	if( IS_ABLE_SERVICE_TYPE(ST_DEVELOP))//DEV_MODE : 050104 Hwoarang
 	{
 		desc.dwMainMsgQueMaxBufferSize			= 51200;
 		desc.dwMaxServerNum						= 10;
@@ -1298,14 +1334,15 @@ void InitNetwork()
 	//HRESULT hr;
 	g_pNet = new CNTNetWork();
 	hr = g_pNet->CreateInstance();
-/*    
-	hr = CoCreateInstance(
+    
+/*	hr = CoCreateInstance(
            CLSID_4DyuchiNET,
            NULL,
            CLSCTX_INPROC_SERVER,
            IID_4DyuchiNET,
            (void**)&g_pNet);
-*/	
+*/
+	
 	
 	if (FAILED(hr))
 	{
@@ -1316,6 +1353,7 @@ void InitNetwork()
 	{
 		Log(LOG_NORMAL, "Fail to CreateNetwork!");
 	}
+
 
 	g_pThis->m_hKeyEvent[0] = g_pNet->GetCustomEventHandle(1);
 	g_pThis->m_hKeyEvent[1] = g_pNet->GetCustomEventHandle(2);

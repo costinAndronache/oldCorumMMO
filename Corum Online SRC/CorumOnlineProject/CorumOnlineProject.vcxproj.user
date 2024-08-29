@@ -4,4 +4,7 @@
     <LocalDebuggerWorkingDirectory>E:\Git\oldCorumMMO\Corum Online SRC\Installed Client</LocalDebuggerWorkingDirectory>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
   </PropertyGroup>
+  <PropertyGroup>
+    <ShowAllFiles>false</ShowAllFiles>
+  </PropertyGroup>
 </Project>

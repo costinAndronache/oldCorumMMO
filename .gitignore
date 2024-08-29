@@ -20,3 +20,12 @@ Corum Online SRC/Installed Client/Data/*
 Corum Online SRC/CorumOnlineProject/CorumOnlineProject___Win32_dev/*
 *.sbr
 *.cdb
+/Corum Online SRC/CommonServer/Debug
+*.bsc
+*.ilk
+*.recipe
+*.lastbuildstate
+*.map
+*.unsuccessfulbuild
+*.idb
+*.ilk
