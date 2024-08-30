@@ -94,8 +94,8 @@ void CDungeonManagerWnd::RenderText()
 //				int nPosY = (LONG)m_fPosZ+98;				
 				int nPosY = (int)m_fPosZ+63;
 
-//				LP_ITEM_TABLE	pItem = g_pItemTableHash->GetData( wItemID );
-				CBaseItem*	pItem = g_pItemTableHash->GetData( wItemID );
+//				LP_ITEM_TABLE	pItem = g_pItemTableHash_get()->GetData( wItemID );
+				CBaseItem*	pItem = g_pItemTableHash_get()->GetData( wItemID );
 
 				if (pItem)
 				{

@@ -1327,8 +1327,8 @@ int CItemWnd::CheckInterface()
 					{					
 						if(g_pMainPlayer->GetStatus()!=UNIT_STATUS_DEAD)
 						{
-//							LP_ITEM_TABLE pItemInfo = g_pItemTableHash->GetData(g_pMainPlayer->m_pInv_Guardian[0].GetID());
-							CBaseItem* pItemInfo = g_pItemTableHash->GetData(g_pMainPlayer->m_pInv_Guardian[0].GetID());
+//							LP_ITEM_TABLE pItemInfo = g_pItemTableHash_get()->GetData(g_pMainPlayer->m_pInv_Guardian[0].GetID());
+							CBaseItem* pItemInfo = g_pItemTableHash_get()->GetData(g_pMainPlayer->m_pInv_Guardian[0].GetID());
 
 							if (GUARDIAN_ITEM_TYPE_ADULT == pItemInfo->BaseItem_Guardian.bType)
 							{

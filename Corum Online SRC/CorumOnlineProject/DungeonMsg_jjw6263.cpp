@@ -672,8 +672,8 @@ void CmdGuardianSupplies_ReturnInv( char* pMsg, DWORD dwLen )
 		}
 		else if(pItemNativeDest[i].GetID() == pItemNativeSrc->GetID())
 		{
-//			LP_ITEM_TABLE pBaseItemDest = g_pItemTableHash->GetData(pItemNativeDest[i].GetID());
-			CBaseItem* pBaseItemDest = g_pItemTableHash->GetData(pItemNativeDest[i].GetID());
+//			LP_ITEM_TABLE pBaseItemDest = g_pItemTableHash_get()->GetData(pItemNativeDest[i].GetID());
+			CBaseItem* pBaseItemDest = g_pItemTableHash_get()->GetData(pItemNativeDest[i].GetID());
 
 			BYTE byMaxQuantity	= pBaseItemDest->GetMaxQuantity();
 			BYTE byPutInCnt		= BYTE(byMaxQuantity - pItemNativeDest[i].GetQuantity());

@@ -127,7 +127,7 @@ void CmdPickupItem( char* pMsg, DWORD dwLen )
 				{
 					memcpy(&g_pMainPlayer->m_pInv_Large[pPacket->bZipCode], &pPacket->Item, sizeof(CItem));
 
-					lpItemTable = g_pItemTableHash->GetData(pPacket->Item.GetID());
+					lpItemTable = g_pItemTableHash_get()->GetData(pPacket->Item.GetID());
 
 					if(lpItemTable)
 					{
@@ -158,7 +158,7 @@ void CmdPickupItem( char* pMsg, DWORD dwLen )
 			{
 				Insert_SmallInvItem(&pPacket->Item, pPacket->bZipCode, pPacket->Item.GetQuantity());
 
-				lpItemTable = g_pItemTableHash->GetData(pPacket->Item.GetID());
+				lpItemTable = g_pItemTableHash_get()->GetData(pPacket->Item.GetID());
 
 				if(lpItemTable)
 				{
@@ -547,8 +547,8 @@ void CmdPickupItem( char* pMsg, DWORD dwLen )
 						
 						memset(&g_pMainPlayer->m_MouseItem, 0, sizeof(CItem));
 
-//						LP_ITEM_TABLE lpItem = g_pItemTableHash->GetData(pPacket->dwId);
-						CBaseItem* lpItem = g_pItemTableHash->GetData(pPacket->dwId);
+//						LP_ITEM_TABLE lpItem = g_pItemTableHash_get()->GetData(pPacket->dwId);
+						CBaseItem* lpItem = g_pItemTableHash_get()->GetData(pPacket->dwId);
 
 						if(lpItem)
 						{
@@ -584,8 +584,8 @@ void CmdPickupItem( char* pMsg, DWORD dwLen )
 				
 					g_pMainPlayer->m_dwMoney = pPacket->dwMoney;
 					
-//					LP_ITEM_TABLE lpItem = g_pItemTableHash->GetData(pPacket->dwId);
-					CBaseItem* lpItem = g_pItemTableHash->GetData(pPacket->dwId);
+//					LP_ITEM_TABLE lpItem = g_pItemTableHash_get()->GetData(pPacket->dwId);
+					CBaseItem* lpItem = g_pItemTableHash_get()->GetData(pPacket->dwId);
 
 					if(lpItem)
 					{					
@@ -600,8 +600,8 @@ void CmdPickupItem( char* pMsg, DWORD dwLen )
 			}
 			else
 			{
-//				LP_ITEM_TABLE lpItem = g_pItemTableHash->GetData(pPacket->dwId);
-				CBaseItem* lpItem = g_pItemTableHash->GetData(pPacket->dwId);
+//				LP_ITEM_TABLE lpItem = g_pItemTableHash_get()->GetData(pPacket->dwId);
+				CBaseItem* lpItem = g_pItemTableHash_get()->GetData(pPacket->dwId);
 
 				if(lpItem)
 				{
@@ -777,8 +777,8 @@ void CmdPickupItem( char* pMsg, DWORD dwLen )
 
 					if(nVal==50)
 					{
-//						LP_ITEM_TABLE lpItemTable = g_pItemTableHash->GetData(g_pMainPlayer->m_MouseItem.m_wItemID);
-						CBaseItem* lpItemTable = g_pItemTableHash->GetData(g_pMainPlayer->m_MouseItem.m_wItemID);;
+//						LP_ITEM_TABLE lpItemTable = g_pItemTableHash_get()->GetData(g_pMainPlayer->m_MouseItem.m_wItemID);
+						CBaseItem* lpItemTable = g_pItemTableHash_get()->GetData(g_pMainPlayer->m_MouseItem.m_wItemID);;
 
 						BYTE byMaxCnt = 0;
 
@@ -828,8 +828,8 @@ void CmdPickupItem( char* pMsg, DWORD dwLen )
 
 					if(nVal==50)
 					{
-//						LP_ITEM_TABLE lpItemTable = g_pItemTableHash->GetData(g_pMainPlayer->m_MouseItem.m_wItemID);
-						CBaseItem* lpItemTable = g_pItemTableHash->GetData(g_pMainPlayer->m_MouseItem.m_wItemID);
+//						LP_ITEM_TABLE lpItemTable = g_pItemTableHash_get()->GetData(g_pMainPlayer->m_MouseItem.m_wItemID);
+						CBaseItem* lpItemTable = g_pItemTableHash_get()->GetData(g_pMainPlayer->m_MouseItem.m_wItemID);
 
 						BYTE byMaxCnt = 0;
 
@@ -879,8 +879,8 @@ void CmdPickupItem( char* pMsg, DWORD dwLen )
 
 					if(nVal==50)
 					{
-//						LP_ITEM_TABLE lpItemTable = g_pItemTableHash->GetData(g_pMainPlayer->m_MouseItem.m_wItemID);
-						CBaseItem* lpItemTable = g_pItemTableHash->GetData(g_pMainPlayer->m_MouseItem.m_wItemID);
+//						LP_ITEM_TABLE lpItemTable = g_pItemTableHash_get()->GetData(g_pMainPlayer->m_MouseItem.m_wItemID);
+						CBaseItem* lpItemTable = g_pItemTableHash_get()->GetData(g_pMainPlayer->m_MouseItem.m_wItemID);
 
 						BYTE byMaxCnt = 0;
 
@@ -1031,8 +1031,8 @@ void CmdPickupItem( char* pMsg, DWORD dwLen )
 				memcpy(&g_pMainPlayer->m_pInv_Large[pPacket->bZipCode], &pPacket->Item, sizeof(CItem));
 				g_pMainPlayer->m_dwMoney = pPacket->dwMoney;
 
-//				LP_ITEM_TABLE lpItem = g_pItemTableHash->GetData(pPacket->dwId);
-				CBaseItem* lpItem = g_pItemTableHash->GetData(pPacket->dwId);
+//				LP_ITEM_TABLE lpItem = g_pItemTableHash_get()->GetData(pPacket->dwId);
+				CBaseItem* lpItem = g_pItemTableHash_get()->GetData(pPacket->dwId);
 
 				if(lpItem)
 				{
@@ -1054,8 +1054,8 @@ void CmdPickupItem( char* pMsg, DWORD dwLen )
 				}
 				else
 				{
-//					LP_ITEM_TABLE lpItem = g_pItemTableHash->GetData(pPacket->dwId);
-					CBaseItem* lpItem = g_pItemTableHash->GetData(pPacket->dwId);
+//					LP_ITEM_TABLE lpItem = g_pItemTableHash_get()->GetData(pPacket->dwId);
+					CBaseItem* lpItem = g_pItemTableHash_get()->GetData(pPacket->dwId);
 
 					if(lpItem)
 					{						
@@ -1118,8 +1118,8 @@ void CmdPickupItem( char* pMsg, DWORD dwLen )
 				memcpy(&g_pMainPlayer->m_pInv_Large[pPacket->bZipCode], &pPacket->Item, sizeof(CItem));
 				g_pMainPlayer->m_dwMoney = pPacket->dwMoney;
 
-//				LP_ITEM_TABLE lpItem = g_pItemTableHash->GetData(pPacket->dwId);
-				CBaseItem* lpItem = g_pItemTableHash->GetData(pPacket->dwId);
+//				LP_ITEM_TABLE lpItem = g_pItemTableHash_get()->GetData(pPacket->dwId);
+				CBaseItem* lpItem = g_pItemTableHash_get()->GetData(pPacket->dwId);
 
 				if(lpItem)
 				{
@@ -1138,8 +1138,8 @@ void CmdPickupItem( char* pMsg, DWORD dwLen )
 				}
 				else
 				{
-//					LP_ITEM_TABLE lpItem = g_pItemTableHash->GetData(pPacket->dwId);
-					CBaseItem* lpItem = g_pItemTableHash->GetData(pPacket->dwId);
+//					LP_ITEM_TABLE lpItem = g_pItemTableHash_get()->GetData(pPacket->dwId);
+					CBaseItem* lpItem = g_pItemTableHash_get()->GetData(pPacket->dwId);
 
 					if(lpItem)
 					{						
@@ -1224,7 +1224,7 @@ void CmdPickupItem( char* pMsg, DWORD dwLen )
 						if(pPacket->Item.m_wItemID==g_pMainPlayer->m_GuardianItem.m_wItemID)
 						{
 							CBaseItem* lpItemTable = 
-								g_pItemTableHash->GetData(g_pMainPlayer->m_GuardianItem.m_wItemID);
+								g_pItemTableHash_get()->GetData(g_pMainPlayer->m_GuardianItem.m_wItemID);
 
 							if(!lpItemTable)
 								return;
@@ -1255,7 +1255,7 @@ void CmdPickupItem( char* pMsg, DWORD dwLen )
 									}
 									else if(g_pMainPlayer->m_pInv_Small[i].m_wItemID==pPacket->Item.m_wItemID)
 									{
-										CBaseItem* lpItemTable = g_pItemTableHash->GetData(g_pMainPlayer->m_pInv_Small[i].m_wItemID);
+										CBaseItem* lpItemTable = g_pItemTableHash_get()->GetData(g_pMainPlayer->m_pInv_Small[i].m_wItemID);
 
 										if(!lpItemTable)
 											return;
@@ -2049,7 +2049,7 @@ void CmdPickupItem( char* pMsg, DWORD dwLen )
 				if(pPacket->Item.GetType()!=ITEM_SMALL)			
 					return;
 
-				lpItemTable = g_pItemTableHash->GetData(pPacket->Item.GetID());
+				lpItemTable = g_pItemTableHash_get()->GetData(pPacket->Item.GetID());
 
 				if(lpItemTable)
 				{
@@ -2157,8 +2157,8 @@ void CmdPickupItem( char* pMsg, DWORD dwLen )
 					memcpy(&g_pMainPlayer->m_pInv_Large[pPacket->bZipCode], &pPacket->Item, sizeof(CItem));
 				
 
-//				LP_ITEM_TABLE lpItem = g_pItemTableHash->GetData(pPacket->dwId);
-				CBaseItem* lpItem = g_pItemTableHash->GetData(pPacket->dwId);
+//				LP_ITEM_TABLE lpItem = g_pItemTableHash_get()->GetData(pPacket->dwId);
+				CBaseItem* lpItem = g_pItemTableHash_get()->GetData(pPacket->dwId);
 
 				if(lpItem)
 				{	
@@ -2269,7 +2269,7 @@ void CmdPickupItem( char* pMsg, DWORD dwLen )
 				CItem* pItem = &g_pMainPlayer->m_pInv_Guardian[pPacket->bZipCode];
 				memcpy(pItem, &pPacket->Item, sizeof(CItem));
 				
-				CBaseItem* lpItemTable = g_pItemTableHash->GetData(pItem->m_wItemID);
+				CBaseItem* lpItemTable = g_pItemTableHash_get()->GetData(pItem->m_wItemID);
 
 				CUserInterface* pUserInterface = CUserInterface::GetInstance();
 
@@ -3079,7 +3079,7 @@ void CmdAppearItem( char* pMsg, DWORD dwLen )
 
 	default:
 		{
-			CBaseItem* lpItemTalbe = g_pItemTableHash->GetData(pItem->Item.GetID());		
+			CBaseItem* lpItemTalbe = g_pItemTableHash_get()->GetData(pItem->Item.GetID());		
 			
 			if( NULL == lpItemTalbe )
 				return;

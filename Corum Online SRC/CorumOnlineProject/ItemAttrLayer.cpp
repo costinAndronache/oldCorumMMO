@@ -53,8 +53,8 @@ short	CItemAttrLayer::GetVirtualValue(WORD wRealOptionCode,WORD wRealOptionValue
 
 char*	CItemAttrLayer::GetItemDescription(WORD wItemID, WORD wDescNum)
 {
-//	LP_ITEM_TABLE pItemInfo = g_pItemTableHash->GetData(wItemID);
-	CBaseItem* pItemInfo = g_pItemTableHash->GetData(wItemID);
+//	LP_ITEM_TABLE pItemInfo = g_pItemTableHash_get()->GetData(wItemID);
+	CBaseItem* pItemInfo = g_pItemTableHash_get()->GetData(wItemID);
 	
 //	switch(pItemInfo->nItemType)
 	switch(pItemInfo->dwCode_ID)

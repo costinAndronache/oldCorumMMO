@@ -105,7 +105,7 @@ void PickupItem(DSTC_ITEM_MOVE* const pItemMove
 		CBaseItem*		lpItemTable;
 		memcpy(&cItemTile, &pItemMove->Item, sizeof(CItem));
 		
-		lpItemTable = g_pItemTableHash->GetData(cItemTile.GetID());
+		lpItemTable = g_pItemTableHash_get()->GetData(cItemTile.GetID());
 		
 		ITEM_TYPE eItemType = GetItemType(cItemTile.GetID());
 
@@ -429,8 +429,8 @@ BOOL ExchangeItemNative(const ITEM_NATIVE_INFO* pItemNativeInfo_Src
 
 	if(cItem_Src.GetID() == cItem_Dest.GetID())
 	{
-//		LP_ITEM_TABLE pBaseItemDest = g_pItemTableHash->GetData(cItem_Dest.GetID());
-		CBaseItem* pBaseItemDest = g_pItemTableHash->GetData(cItem_Dest.GetID());
+//		LP_ITEM_TABLE pBaseItemDest = g_pItemTableHash_get()->GetData(cItem_Dest.GetID());
+		CBaseItem* pBaseItemDest = g_pItemTableHash_get()->GetData(cItem_Dest.GetID());
 		assert(pBaseItemDest);
 
 		BYTE byMaxQuantity = pBaseItemDest->GetMaxQuantity();
@@ -526,8 +526,8 @@ BOOL MoveItemNative(DSTC_ITEM_MOVE* const pItemMove
 {
 	CItem cItem_Src;
 	memcpy(&cItem_Src, GetItemNative(pItemNativeInfo_Src), sizeof(CItem));
-//	LP_ITEM_TABLE pBaseItemSrc = g_pItemTableHash->GetData(cItem_Src.GetID());
-	CBaseItem* pBaseItemSrc = g_pItemTableHash->GetData(cItem_Src.GetID());
+//	LP_ITEM_TABLE pBaseItemSrc = g_pItemTableHash_get()->GetData(cItem_Src.GetID());
+	CBaseItem* pBaseItemSrc = g_pItemTableHash_get()->GetData(cItem_Src.GetID());
 	
 	CItem cItem_Dest;
 	memcpy(&cItem_Dest, GetItemNative(pItemNativeInfo_Dest), sizeof(CItem));
@@ -601,13 +601,13 @@ BOOL OverlapItemNative(DSTC_ITEM_MOVE* const pItemMove
 {
 	CItem cItem_Src;
 	memcpy(&cItem_Src, GetItemNative(pItemNativeInfo_Src), sizeof(CItem));
-//	LP_ITEM_TABLE pBaseItem_Src = g_pItemTableHash->GetData(cItem_Src.GetID());
-	CBaseItem* pBaseItem_Src = g_pItemTableHash->GetData(cItem_Src.GetID());
+//	LP_ITEM_TABLE pBaseItem_Src = g_pItemTableHash_get()->GetData(cItem_Src.GetID());
+	CBaseItem* pBaseItem_Src = g_pItemTableHash_get()->GetData(cItem_Src.GetID());
 		
 	CItem cItem_Dest;
 	memcpy(&cItem_Dest, GetItemNative(pItemNativeInfo_Dest), sizeof(CItem));
-//	LP_ITEM_TABLE pBaseItem_Dest = g_pItemTableHash->GetData(cItem_Src.GetID());
-	CBaseItem* pBaseItem_Dest = g_pItemTableHash->GetData(cItem_Src.GetID());
+//	LP_ITEM_TABLE pBaseItem_Dest = g_pItemTableHash_get()->GetData(cItem_Src.GetID());
+	CBaseItem* pBaseItem_Dest = g_pItemTableHash_get()->GetData(cItem_Src.GetID());
 
 	assert(pBaseItem_Src);
 	assert(pBaseItem_Dest);

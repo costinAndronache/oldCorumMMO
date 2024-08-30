@@ -162,14 +162,7 @@ BOOL	crImageList::SetSprite( DWORD dwIndex, IDISpriteObject* pSpr, DWORD dwWidth
 {
 	if( m_vecSpr.size() < dwIndex + 1 )
 	{
-		vector< pair< IDISpriteObject*, SSpriteInfo > >	tmp;
-		
-		tmp.reserve( dwIndex + 1 );
-		tmp.resize( dwIndex + 1 );
-		
-		::memcpy( &tmp[0], &m_vecSpr[0], sizeof(pair< IDISpriteObject*, SSpriteInfo >)*m_vecSpr.size() );
-		
-		tmp.swap( m_vecSpr );
+		m_vecSpr.resize(dwIndex + 1);
 	}
 	
 	pair< IDISpriteObject*, SSpriteInfo >&	rPair = m_vecSpr[dwIndex];

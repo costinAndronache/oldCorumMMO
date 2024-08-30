@@ -599,8 +599,8 @@ BOOL IsSamePropertyConsumableItem(CItem* pSrc, CItem* pDst)
 	|| !(d>=ITEM_CONSUMABLEST_INDEX && d<=ITEM_CONSUMABLEEND_INDEX))
 		return FALSE;
 
-	CBaseItem *pSrcBase = g_pItemTableHash->GetData(pSrc->GetID());
-	CBaseItem *pDstBase = g_pItemTableHash->GetData(pDst->GetID());
+	CBaseItem *pSrcBase = g_pItemTableHash_get()->GetData(pSrc->GetID());
+	CBaseItem *pDstBase = g_pItemTableHash_get()->GetData(pDst->GetID());
 
 	if((pSrcBase->wID >= 20201 && pSrcBase->wID <= 20219)
 	&& (pDstBase->wID >= 20201 && pDstBase->wID <= 20219))

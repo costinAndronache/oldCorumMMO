@@ -374,7 +374,7 @@ void CmdWeaponHand(char* pMsg, DWORD dwLen)
 	}
 	else
 	{
-		CBaseItem* pItemTable = g_pItemTableHash->GetData(pPacket->dwHand);	
+		CBaseItem* pItemTable = g_pItemTableHash_get()->GetData(pPacket->dwHand);	
 
 		if(pItemTable)
 		{		
@@ -643,7 +643,7 @@ void CmdCopyItemInserted( char* pMsg, DWORD dwLen )
 {
 	DSTC_COPY_ITEM_INSERTED *pPacket = (DSTC_COPY_ITEM_INSERTED*)pMsg;
 	
-	CBaseItem* lpItem = g_pItemTableHash->GetData(pPacket->dwCopyItemID);
+	CBaseItem* lpItem = g_pItemTableHash_get()->GetData(pPacket->dwCopyItemID);
 
 	if(lpItem)
 	{	

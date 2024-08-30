@@ -541,8 +541,8 @@ int CQuantityWnd::CheckInterface()
 						
 						if(nVal==50)
 						{
-//							LP_ITEM_TABLE lpItemTable = g_pItemTableHash->GetData(g_pMainPlayer->m_MouseItem.m_wItemID);
-							CBaseItem* lpItemTable = g_pItemTableHash->GetData(g_pMainPlayer->m_MouseItem.m_wItemID);
+//							LP_ITEM_TABLE lpItemTable = g_pItemTableHash_get()->GetData(g_pMainPlayer->m_MouseItem.m_wItemID);
+							CBaseItem* lpItemTable = g_pItemTableHash_get()->GetData(g_pMainPlayer->m_MouseItem.m_wItemID);
 
 							BYTE byMaxCnt = 0;
 
@@ -588,8 +588,8 @@ int CQuantityWnd::CheckInterface()
 
 //						if(nVal==50)
 						{
-//							LP_ITEM_TABLE lpItemTable = g_pItemTableHash->GetData(g_pMainPlayer->m_MouseItem.m_wItemID);
-							CBaseItem* lpItemTable = g_pItemTableHash->GetData(g_pMainPlayer->m_MouseItem.m_wItemID);
+//							LP_ITEM_TABLE lpItemTable = g_pItemTableHash_get()->GetData(g_pMainPlayer->m_MouseItem.m_wItemID);
+							CBaseItem* lpItemTable = g_pItemTableHash_get()->GetData(g_pMainPlayer->m_MouseItem.m_wItemID);
 
 							BYTE byMaxCnt = 0;
 
@@ -635,8 +635,8 @@ int CQuantityWnd::CheckInterface()
 
 						if(nVal==50)
 						{
-//							LP_ITEM_TABLE lpItemTable = g_pItemTableHash->GetData(g_pMainPlayer->m_MouseItem.m_wItemID);
-							CBaseItem* lpItemTable = g_pItemTableHash->GetData(g_pMainPlayer->m_MouseItem.m_wItemID);
+//							LP_ITEM_TABLE lpItemTable = g_pItemTableHash_get()->GetData(g_pMainPlayer->m_MouseItem.m_wItemID);
+							CBaseItem* lpItemTable = g_pItemTableHash_get()->GetData(g_pMainPlayer->m_MouseItem.m_wItemID);
 
 							BYTE byMaxCnt = 0;
 
@@ -686,8 +686,8 @@ int CQuantityWnd::CheckInterface()
 
 //						if(nVal==50)
 						{
-//							LP_ITEM_TABLE lpItemTable = g_pItemTableHash->GetData(g_pMainPlayer->m_MouseItem.m_wItemID);
-							CBaseItem* lpItemTable = g_pItemTableHash->GetData(g_pMainPlayer->m_MouseItem.m_wItemID);
+//							LP_ITEM_TABLE lpItemTable = g_pItemTableHash_get()->GetData(g_pMainPlayer->m_MouseItem.m_wItemID);
+							CBaseItem* lpItemTable = g_pItemTableHash_get()->GetData(g_pMainPlayer->m_MouseItem.m_wItemID);
 
 							BYTE byMaxCnt = 0;
 
@@ -944,8 +944,8 @@ int CQuantityWnd::CheckInterface()
 					{
 						if(nMoney==0)
 						{
-//							LP_ITEM_TABLE lpItemTable = g_pItemTableHash->GetData(g_pMainPlayer->m_MouseItem.m_wItemID);
-							CBaseItem* lpItemTable = g_pItemTableHash->GetData(g_pMainPlayer->m_MouseItem.m_wItemID);
+//							LP_ITEM_TABLE lpItemTable = g_pItemTableHash_get()->GetData(g_pMainPlayer->m_MouseItem.m_wItemID);
+							CBaseItem* lpItemTable = g_pItemTableHash_get()->GetData(g_pMainPlayer->m_MouseItem.m_wItemID);
 
 							BYTE byMaxCnt = 0;
 
@@ -1010,8 +1010,8 @@ int CQuantityWnd::CheckInterface()
 					{
 						if(nMoney==0)
 						{
-//							LP_ITEM_TABLE lpItemTable = g_pItemTableHash->GetData(g_pMainPlayer->m_MouseItem.m_wItemID);
-							CBaseItem* lpItemTable = g_pItemTableHash->GetData(g_pMainPlayer->m_MouseItem.m_wItemID);
+//							LP_ITEM_TABLE lpItemTable = g_pItemTableHash_get()->GetData(g_pMainPlayer->m_MouseItem.m_wItemID);
+							CBaseItem* lpItemTable = g_pItemTableHash_get()->GetData(g_pMainPlayer->m_MouseItem.m_wItemID);
 
 							BYTE byMaxCnt = 0;
 
@@ -1085,8 +1085,8 @@ int CQuantityWnd::CheckInterface()
 					{
 						if(nMoney==0)
 						{
-//							LP_ITEM_TABLE lpItemTable = g_pItemTableHash->GetData(g_pMainPlayer->m_MouseItem.m_wItemID);
-							CBaseItem* lpItemTable = g_pItemTableHash->GetData(g_pMainPlayer->m_MouseItem.m_wItemID);
+//							LP_ITEM_TABLE lpItemTable = g_pItemTableHash_get()->GetData(g_pMainPlayer->m_MouseItem.m_wItemID);
+							CBaseItem* lpItemTable = g_pItemTableHash_get()->GetData(g_pMainPlayer->m_MouseItem.m_wItemID);
 
 							BYTE byMaxCnt = 0;
 
@@ -1143,8 +1143,8 @@ int CQuantityWnd::CheckInterface()
 				{
 					if(nMoney==0)
 					{
-//						LP_ITEM_TABLE lpItemTable = g_pItemTableHash->GetData(g_pMainPlayer->m_MouseItem.m_wItemID);
-						CBaseItem* lpItemTable = g_pItemTableHash->GetData(g_pMainPlayer->m_MouseItem.m_wItemID);
+//						LP_ITEM_TABLE lpItemTable = g_pItemTableHash_get()->GetData(g_pMainPlayer->m_MouseItem.m_wItemID);
+						CBaseItem* lpItemTable = g_pItemTableHash_get()->GetData(g_pMainPlayer->m_MouseItem.m_wItemID);
 
 						BYTE byMaxCnt = 0;
 
@@ -1199,8 +1199,8 @@ int CQuantityWnd::CheckInterface()
 					{
 						if(nMoney==0)
 						{
-//							LP_ITEM_TABLE lpItemTable = g_pItemTableHash->GetData(g_pMainPlayer->m_MouseItem.m_wItemID);
-							CBaseItem* lpItemTable = g_pItemTableHash->GetData(g_pMainPlayer->m_MouseItem.m_wItemID);
+//							LP_ITEM_TABLE lpItemTable = g_pItemTableHash_get()->GetData(g_pMainPlayer->m_MouseItem.m_wItemID);
+							CBaseItem* lpItemTable = g_pItemTableHash_get()->GetData(g_pMainPlayer->m_MouseItem.m_wItemID);
 
 							BYTE byMaxCnt = 0;
 
@@ -1328,8 +1328,8 @@ int CQuantityWnd::CheckInterface()
 						{								
 							if(GetType((WORD)nVal)==ITEM_SMALL)
 							{
-//								LP_ITEM_TABLE lpItemTable = g_pItemTableHash->GetData(g_pMainPlayer->m_MouseItem.m_wItemID);
-								CBaseItem* lpItemTable = g_pItemTableHash->GetData(g_pMainPlayer->m_MouseItem.m_wItemID);
+//								LP_ITEM_TABLE lpItemTable = g_pItemTableHash_get()->GetData(g_pMainPlayer->m_MouseItem.m_wItemID);
+								CBaseItem* lpItemTable = g_pItemTableHash_get()->GetData(g_pMainPlayer->m_MouseItem.m_wItemID);
 
 								BYTE byMaxCnt = 0;
 
@@ -1372,8 +1372,8 @@ int CQuantityWnd::CheckInterface()
 						{
 							if(GetType((WORD)nVal)==ITEM_SMALL)
 							{
-//								LP_ITEM_TABLE lpItemTable = g_pItemTableHash->GetData(g_pMainPlayer->m_MouseItem.m_wItemID);
-								CBaseItem* lpItemTable = g_pItemTableHash->GetData(g_pMainPlayer->m_MouseItem.m_wItemID);
+//								LP_ITEM_TABLE lpItemTable = g_pItemTableHash_get()->GetData(g_pMainPlayer->m_MouseItem.m_wItemID);
+								CBaseItem* lpItemTable = g_pItemTableHash_get()->GetData(g_pMainPlayer->m_MouseItem.m_wItemID);
 
 								BYTE byMaxCnt = 0;
 
@@ -1416,8 +1416,8 @@ int CQuantityWnd::CheckInterface()
 						{
 							if(GetType((WORD)nVal)==ITEM_SMALL)
 							{
-//								LP_ITEM_TABLE lpItemTable = g_pItemTableHash->GetData(g_pMainPlayer->m_MouseItem.m_wItemID);
-								CBaseItem* lpItemTable = g_pItemTableHash->GetData(g_pMainPlayer->m_MouseItem.m_wItemID);
+//								LP_ITEM_TABLE lpItemTable = g_pItemTableHash_get()->GetData(g_pMainPlayer->m_MouseItem.m_wItemID);
+								CBaseItem* lpItemTable = g_pItemTableHash_get()->GetData(g_pMainPlayer->m_MouseItem.m_wItemID);
 
 								BYTE byMaxCnt = 0;
 
@@ -1464,8 +1464,8 @@ int CQuantityWnd::CheckInterface()
 						{
 							if(nVal==ITEM_DIVIDE_ID_ZODIAC)
 							{
-//								LP_ITEM_TABLE lpItemTable = g_pItemTableHash->GetData(g_pMainPlayer->m_MouseItem.m_wItemID);
-								CBaseItem* lpItemTable = g_pItemTableHash->GetData(g_pMainPlayer->m_MouseItem.m_wItemID);
+//								LP_ITEM_TABLE lpItemTable = g_pItemTableHash_get()->GetData(g_pMainPlayer->m_MouseItem.m_wItemID);
+								CBaseItem* lpItemTable = g_pItemTableHash_get()->GetData(g_pMainPlayer->m_MouseItem.m_wItemID);
 
 								BYTE byMaxCnt = 0;
 
@@ -1597,8 +1597,8 @@ void CQuantityWnd::QuantityMsg()
 			{
 				for(int i = 0; i < MAX_INV_SMALL_POOL; i++)
 				{
-//					LP_ITEM_TABLE lpItemTable = g_pItemTableHash->GetData(g_pMainPlayer->m_MouseItem.m_wItemID);
-					CBaseItem* lpItemTable = g_pItemTableHash->GetData(g_pMainPlayer->m_MouseItem.m_wItemID);
+//					LP_ITEM_TABLE lpItemTable = g_pItemTableHash_get()->GetData(g_pMainPlayer->m_MouseItem.m_wItemID);
+					CBaseItem* lpItemTable = g_pItemTableHash_get()->GetData(g_pMainPlayer->m_MouseItem.m_wItemID);
 
 					BYTE byMaxCnt = 0;
 
@@ -1838,8 +1838,8 @@ void CQuantityWnd::QuantityMsg()
 			{			
 				if(nMoney==0)
 				{
-//					LP_ITEM_TABLE lpItemTable = g_pItemTableHash->GetData(g_pMainPlayer->m_MouseItem.m_wItemID);
-					CBaseItem* lpItemTable = g_pItemTableHash->GetData(g_pMainPlayer->m_MouseItem.m_wItemID);
+//					LP_ITEM_TABLE lpItemTable = g_pItemTableHash_get()->GetData(g_pMainPlayer->m_MouseItem.m_wItemID);
+					CBaseItem* lpItemTable = g_pItemTableHash_get()->GetData(g_pMainPlayer->m_MouseItem.m_wItemID);
 
 					BYTE byMaxCnt = 0;
 
@@ -1920,8 +1920,8 @@ void CQuantityWnd::QuantityMsg()
 			{			
 				if(nMoney==0)
 				{
-//					LP_ITEM_TABLE lpItemTable = g_pItemTableHash->GetData(g_pMainPlayer->m_MouseItem.m_wItemID);
-					CBaseItem* lpItemTable = g_pItemTableHash->GetData(g_pMainPlayer->m_MouseItem.m_wItemID);
+//					LP_ITEM_TABLE lpItemTable = g_pItemTableHash_get()->GetData(g_pMainPlayer->m_MouseItem.m_wItemID);
+					CBaseItem* lpItemTable = g_pItemTableHash_get()->GetData(g_pMainPlayer->m_MouseItem.m_wItemID);
 
 					BYTE byMaxCnt = 0;
 
@@ -1978,8 +1978,8 @@ void CQuantityWnd::QuantityMsg()
 			{
 				if(nMoney==0)
 				{
-//					LP_ITEM_TABLE lpItemTable = g_pItemTableHash->GetData(g_pMainPlayer->m_MouseItem.m_wItemID);
-					CBaseItem* lpItemTable = g_pItemTableHash->GetData(g_pMainPlayer->m_MouseItem.m_wItemID);
+//					LP_ITEM_TABLE lpItemTable = g_pItemTableHash_get()->GetData(g_pMainPlayer->m_MouseItem.m_wItemID);
+					CBaseItem* lpItemTable = g_pItemTableHash_get()->GetData(g_pMainPlayer->m_MouseItem.m_wItemID);
 
 					BYTE byMaxCnt = 0;
 
@@ -2043,8 +2043,8 @@ void CQuantityWnd::QuantityMsg()
 			{			
 				if(nMoney==0)
 				{
-//					LP_ITEM_TABLE lpItemTable = g_pItemTableHash->GetData(g_pMainPlayer->m_MouseItem.m_wItemID);
-					CBaseItem* lpItemTable = g_pItemTableHash->GetData(g_pMainPlayer->m_MouseItem.m_wItemID);
+//					LP_ITEM_TABLE lpItemTable = g_pItemTableHash_get()->GetData(g_pMainPlayer->m_MouseItem.m_wItemID);
+					CBaseItem* lpItemTable = g_pItemTableHash_get()->GetData(g_pMainPlayer->m_MouseItem.m_wItemID);
 
 					BYTE byMaxCnt = 0;
 

@@ -2930,7 +2930,7 @@ BOOL InitWorldPlayer( WORLD_PARTY_APPEAR_INFO* pAppear, LP_PARTY_USER pPlayer )
 			}
 		}
 		 
-		pItemTable = g_pItemTableHash->GetData(pAppear->wHandR);
+		pItemTable = g_pItemTableHash_get()->GetData(pAppear->wHandR);
 
 		if(pItemTable)
 		{
@@ -3416,8 +3416,8 @@ void DisplayDungeonInfoOnWorldMap(DUNGEON_DATA_EX* pDungeon)
 		g_pInputManager->ClearInput(INPUT_BUFFER_7);
 		g_pInputManager->InsertCharacter(INPUT_BUFFER_7, szTemp, lstrlen(szTemp));		
 		
-//		LP_ITEM_TABLE pItem = g_pItemTableHash->GetData( pDungeon->m_wProduction );
-		CBaseItem* pItem = g_pItemTableHash->GetData( pDungeon->m_wProduction );
+//		LP_ITEM_TABLE pItem = g_pItemTableHash_get()->GetData( pDungeon->m_wProduction );
+		CBaseItem* pItem = g_pItemTableHash_get()->GetData( pDungeon->m_wProduction );
 
 		char szItemName[MAX_PATH]={0,};
 

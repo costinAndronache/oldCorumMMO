@@ -237,7 +237,7 @@ void ItemNativeOnLButtonUpProcess()
 								int nPosY		= (g_Mouse.MousePos.y-(int)pItemWnd->m_fPosZ-278)/34;
 								int nItemIndex	= nPosY*7+nPosX;
 
-								CBaseItem* lpItemTable = g_pItemTableHash->GetData(pStoreWnd->m_wSuppliesId);
+								CBaseItem* lpItemTable = g_pItemTableHash_get()->GetData(pStoreWnd->m_wSuppliesId);
 				
 								if(lpItemTable)
 								{
@@ -602,8 +602,8 @@ void ItemChk()
 								// 아이템에서 있는 칸을 찾는다 //
 								if(g_pMainPlayer->m_pInv_Small[i].m_wItemID==g_pMainPlayer->m_MouseItem.m_wItemID)
 								{
-//									LP_ITEM_TABLE lpItemTable = g_pItemTableHash->GetData(g_pMainPlayer->m_MouseItem.m_wItemID);
-									CBaseItem* lpItemTable = g_pItemTableHash->GetData(g_pMainPlayer->m_MouseItem.m_wItemID);
+//									LP_ITEM_TABLE lpItemTable = g_pItemTableHash_get()->GetData(g_pMainPlayer->m_MouseItem.m_wItemID);
+									CBaseItem* lpItemTable = g_pItemTableHash_get()->GetData(g_pMainPlayer->m_MouseItem.m_wItemID);
 
 									if(lpItemTable)
 									{
@@ -904,7 +904,7 @@ void ItemChk()
 							// Process //
 
 //							sung-han 2005-03-15 거래, 드롭, 노점않되는 아이템 처리, 여기는 거래...
-							CBaseItem* lpItemTalbe = g_pItemTableHash->GetData(g_pMainPlayer->m_MouseItem.GetID());
+							CBaseItem* lpItemTalbe = g_pItemTableHash_get()->GetData(g_pMainPlayer->m_MouseItem.GetID());
 							if(lpItemTalbe && lpItemTalbe->GetMovable() == 0)
 							{
 								SetItemPacket(&ItemPickup, 46, nIndex, 0, 0, 0);
@@ -927,7 +927,7 @@ void ItemChk()
 									// Process //
 
 //									sung-han 2005-03-15 거래, 드롭, 노점않되는 아이템 처리, 여기는 거래...
-									CBaseItem* lpItemTalbe = g_pItemTableHash->GetData(g_pMainPlayer->m_MouseItem.GetID());
+									CBaseItem* lpItemTalbe = g_pItemTableHash_get()->GetData(g_pMainPlayer->m_MouseItem.GetID());
 									if(lpItemTalbe && lpItemTalbe->GetMovable() == 0)
 									{
 										SetItemPacket(&ItemPickup, 46, i, 0, 0, 0);
@@ -1001,7 +1001,7 @@ void ItemChk()
 							if(g_pMainPlayer->m_MouseItem.GetQuantity() > 1)
 							{
 //								sung-han 2005-03-15 거래, 드롭, 노점않되는 아이템 처리, 여기는 거래...
-								CBaseItem* lpItemTalbe = g_pItemTableHash->GetData(g_pMainPlayer->m_MouseItem.GetID());
+								CBaseItem* lpItemTalbe = g_pItemTableHash_get()->GetData(g_pMainPlayer->m_MouseItem.GetID());
 								if(lpItemTalbe && lpItemTalbe->GetMovable() == 0)
 								{
 									pQuantityWnd->OpenWnd(__QUANTITY_TRADE__);
@@ -1016,7 +1016,7 @@ void ItemChk()
 							else
 							{
 //								sung-han 2005-03-15 거래, 드롭, 노점않되는 아이템 처리, 여기는 거래...
-								CBaseItem* lpItemTalbe = g_pItemTableHash->GetData(g_pMainPlayer->m_MouseItem.GetID());
+								CBaseItem* lpItemTalbe = g_pItemTableHash_get()->GetData(g_pMainPlayer->m_MouseItem.GetID());
 								if(lpItemTalbe && lpItemTalbe->GetMovable() == 0)
 								{
 									CTDS_ITEM_PICKUP ItemPickup;	
@@ -1155,7 +1155,7 @@ void ItemChk()
 					{
 						if(g_ItemMoveManager.GetNativeSrc() == ITEM_NATIVE_INV_SMALL)
 						{						
-							CBaseItem* lpItemTable = g_pItemTableHash->GetData(g_ItemMoveManager.GetMouseItemID());
+							CBaseItem* lpItemTable = g_pItemTableHash_get()->GetData(g_ItemMoveManager.GetMouseItemID());
 
 							if(!lpItemTable)
 								return;
@@ -1199,7 +1199,7 @@ void ItemChk()
 					}
 					else
 					{
-						CBaseItem* lpItemTable = g_pItemTableHash->GetData(g_pMainPlayer->m_MouseItem.GetID());
+						CBaseItem* lpItemTable = g_pItemTableHash_get()->GetData(g_pMainPlayer->m_MouseItem.GetID());
 
 						if(!lpItemTable)
 							return;
@@ -1422,7 +1422,7 @@ void ItemChk()
 								if(g_pMainPlayer->m_MouseItem.GetQuantity()>1)
 								{
 //									sung-han 2005-03-15 거래, 드롭, 노점않되는 아이템 처리, 여기는 창고...
-									CBaseItem* lpItemTalbe = g_pItemTableHash->GetData(g_pMainPlayer->m_MouseItem.GetID());
+									CBaseItem* lpItemTalbe = g_pItemTableHash_get()->GetData(g_pMainPlayer->m_MouseItem.GetID());
 									if(lpItemTalbe && lpItemTalbe->GetMovable() != 2)
 									{
 										if(g_bSmallBankChk)
@@ -1452,7 +1452,7 @@ void ItemChk()
 									//sif(g_pMainPlayer->m_pBank_Small[nItemIndex].m_wItemID==0)
 
 //									sung-han 2005-03-15 거래, 드롭, 노점않되는 아이템 처리, 여기는 창고...
-									CBaseItem* lpItemTalbe = g_pItemTableHash->GetData(g_pMainPlayer->m_MouseItem.GetID());
+									CBaseItem* lpItemTalbe = g_pItemTableHash_get()->GetData(g_pMainPlayer->m_MouseItem.GetID());
 									if(lpItemTalbe && lpItemTalbe->GetMovable() != 2)
 									{
 										CTDS_ITEM_PICKUP ItemPickup;	
@@ -1526,7 +1526,7 @@ void ItemChk()
 							}
 
 //							sung-han 2005-03-15 거래, 드롭, 노점않되는 아이템 처리, 여기는 창고...
-							CBaseItem* lpItemTalbe = g_pItemTableHash->GetData(g_pMainPlayer->m_MouseItem.GetID());
+							CBaseItem* lpItemTalbe = g_pItemTableHash_get()->GetData(g_pMainPlayer->m_MouseItem.GetID());
 							BOOL bItemMovealbe = FALSE;
 							if(lpItemTalbe && lpItemTalbe->GetMovable() != 2)
 								bItemMovealbe = TRUE;
@@ -1979,7 +1979,7 @@ void ItemChk()
 				{
 					if(g_ItemMoveManager.GetNativeSrc() == ITEM_NATIVE_INV_SMALL)
 					{
-						CBaseItem* lpItemTable = g_pItemTableHash->GetData(g_ItemMoveManager.GetMouseItemID());
+						CBaseItem* lpItemTable = g_pItemTableHash_get()->GetData(g_ItemMoveManager.GetMouseItemID());
 
 						if(!lpItemTable)
 							return;
@@ -2008,7 +2008,7 @@ void ItemChk()
 				}
 				else
 				{					
-					CBaseItem* lpItemTable = g_pItemTableHash->GetData(g_pMainPlayer->m_MouseItem.GetID());
+					CBaseItem* lpItemTable = g_pItemTableHash_get()->GetData(g_pMainPlayer->m_MouseItem.GetID());
 
 					if(!lpItemTable)
 						return;
@@ -2032,7 +2032,7 @@ void ItemChk()
 					else
 					{
 //						sung-han 2005-03-15 거래, 드롭, 노점않되는 아이템 처리, 여기는 드롭...
-						CBaseItem* lpItemTalbe = g_pItemTableHash->GetData(g_pMainPlayer->m_MouseItem.GetID());
+						CBaseItem* lpItemTalbe = g_pItemTableHash_get()->GetData(g_pMainPlayer->m_MouseItem.GetID());
 						if(lpItemTalbe && lpItemTalbe->GetMovable() == 0)
 						{
 							if(nMaxQuantity==1 || g_pMainPlayer->m_MouseItem.GetQuantity()==1)
@@ -2085,7 +2085,7 @@ void ItemChk()
 				else
 				{
 //					sung-han 2005-03-15 거래, 드롭, 노점않되는 아이템 처리, 여기는 드롭...
-					CBaseItem* lpItemTalbe = g_pItemTableHash->GetData(g_pMainPlayer->m_MouseItem.GetID());
+					CBaseItem* lpItemTalbe = g_pItemTableHash_get()->GetData(g_pMainPlayer->m_MouseItem.GetID());
 					if(lpItemTalbe && lpItemTalbe->GetMovable() == 0)
 					{
 						SetItemPacket(&ItemPickup, 10, 0, 0, 0, 0);
@@ -2115,6 +2115,63 @@ void ItemInfoRender()
 { 					
 	if(g_pMainPlayer->m_dwItemInfoType==2)
 	{
+		/*pseudo-code for all dropped items tooltips here*/
+		/*
+	         for each (item: CBaseItem, coords: (x,y)) in _listOfDroppedItemsInDungeon {
+				int		iOption = g_pMainPlayer->m_InfoItem.GetOptionCount();
+				DWORD	dwColor = 0xffffffff;
+
+
+				// 스몰포션 아이템 노란색 표시 수정 김영대 2005.02.06
+				WORD wKind = GetItemKind(lpItemTalbe->GetID());
+				//switch( lpItemTalbe->bCode_Type )
+				switch( wKind )
+				{
+				case ITEM_KIND_WEAPON:
+					{
+						switch(lpItemTalbe->BaseItem_Weapon.byDropBox)
+						{
+						case 1:
+							if( iOption > 0 )
+								dwColor = TEXT_COLOR_BLUE;
+							break;
+						case 2:
+							dwColor = TEXT_COLOR_GREEN;
+							break;
+						case 3:
+							dwColor = TEXT_COLOR_YELLOW;
+							break;
+						}
+					}
+					break;
+				case ITEM_KIND_AROMR:
+					{
+						switch(lpItemTalbe->BaseItem_Armor.byDropBox)
+						{
+						case 1:
+							if( iOption > 0 )
+								dwColor = TEXT_COLOR_BLUE;
+							break;
+						case 2:
+							dwColor = TEXT_COLOR_GREEN;
+							break;
+						case 3:
+							dwColor = TEXT_COLOR_YELLOW;
+							break;
+						}
+					}
+					break;
+				}
+		
+				// Item이 있을 경우만 //
+				int nSize = lstrlen(lpItemTalbe->szItemName_Kor);
+				RenderFont(lpItemTalbe->szItemName_Kor, coords.x + 18, coords.x + 18+ nSize*7, coords.y + 5, coords.y + 19, __ORDER_ITEM_DESC__+1, dwColor);
+				CInterface::GetInstance()->RenderInfoBox(coords.x + 10, coords.y, nSize*8+5, 19, __ORDER_ITEM_DESC__);
+
+			 }
+		*/
+		/**/
+
 		if(g_pMainPlayer->m_MouseItem.GetID()==0)
 		{
 			CUserInterface* pUserInterface = CUserInterface::GetInstance();
@@ -2122,7 +2179,7 @@ void ItemInfoRender()
 			if(pUserInterface->PosCollision(g_Mouse.MousePos.x-5, g_Mouse.MousePos.x+5, g_Mouse.MousePos.y-5, g_Mouse.MousePos.y+5)==FALSE)				
 				return;
 
-			CBaseItem* lpItemTalbe = g_pItemTableHash->GetData(g_pMainPlayer->m_InfoItem.GetID());
+			CBaseItem* lpItemTalbe = g_pItemTableHash_get()->GetData(g_pMainPlayer->m_InfoItem.GetID());
 
 			if(lpItemTalbe)
 			{				
@@ -2331,7 +2388,7 @@ void InputQuantity()
 		else
 		{
 			CStoreWnd* pStoreWnd = CStoreWnd::GetInstance();			
-			CBaseItem* lpItemTable = g_pItemTableHash->GetData(pStoreWnd->m_wSuppliesId);
+			CBaseItem* lpItemTable = g_pItemTableHash_get()->GetData(pStoreWnd->m_wSuppliesId);
 
 			int nMaxQuantity	= 1;
 
@@ -2808,8 +2865,8 @@ void SendPickupItem(ITEM* pItem, BOOL bActive, BOOL bType)
 			{
 				BOOL bChk = FALSE;
 
-//				LP_ITEM_TABLE lpItemTable = g_pItemTableHash->GetData(pItem->Item.m_wItemID);
-				CBaseItem* lpItemTable = g_pItemTableHash->GetData(pItem->Item.m_wItemID);
+//				LP_ITEM_TABLE lpItemTable = g_pItemTableHash_get()->GetData(pItem->Item.m_wItemID);
+				CBaseItem* lpItemTable = g_pItemTableHash_get()->GetData(pItem->Item.m_wItemID);
 				
 				if(!lpItemTable)
 					return;
@@ -2850,7 +2907,7 @@ void SendPickupItem(ITEM* pItem, BOOL bActive, BOOL bType)
 				// 칸에서 아이템이 있는지 찾는다 //
 				if(g_pMainPlayer->m_pInv_Small[i].m_wItemID==pItem->Item.m_wItemID)
 				{					
-					CBaseItem* lpItemTable = g_pItemTableHash->GetData(g_pMainPlayer->m_pInv_Small[i].m_wItemID);
+					CBaseItem* lpItemTable = g_pItemTableHash_get()->GetData(g_pMainPlayer->m_pInv_Small[i].m_wItemID);
 
 					int nMaxQuantity	= 1;
 
@@ -2998,7 +3055,7 @@ void Insert_MagicFieldArrayItem(CItem* pItem, BYTE byPackCnt)
 	{
 		if(pDungeonManagerWnd->m_pDungeon->m_cMagicFieldArrayItem.GetID()==pItem->GetID())
 		{
-			CBaseItem* lpItemTable = g_pItemTableHash->GetData(pDungeonManagerWnd->m_pDungeon->m_cMagicFieldArrayItem.GetID());			
+			CBaseItem* lpItemTable = g_pItemTableHash_get()->GetData(pDungeonManagerWnd->m_pDungeon->m_cMagicFieldArrayItem.GetID());			
 
 			if(lpItemTable)
 			{			
@@ -3051,7 +3108,7 @@ void Insert_TradeItem(CItem* pItem, BYTE bZipCode, BYTE byPackCnt)
 
 			if(g_pMainPlayer->m_pItemTrade[bZipCode].GetID()==pItem->GetID())			
 			{
-				CBaseItem* lpItemTable = g_pItemTableHash->GetData(g_pMainPlayer->m_pItemTrade[bZipCode].m_wItemID);
+				CBaseItem* lpItemTable = g_pItemTableHash_get()->GetData(g_pMainPlayer->m_pItemTrade[bZipCode].m_wItemID);
 
 				if(!lpItemTable)
 					return;
@@ -3089,7 +3146,7 @@ void Insert_TradeItem(CItem* pItem, BYTE bZipCode, BYTE byPackCnt)
 					}
 					else if(g_pMainPlayer->m_pItemTrade[i].GetID()==pItem->GetID())
 					{
-						CBaseItem* lpItemTable = g_pItemTableHash->GetData(g_pMainPlayer->m_pItemTrade[i].m_wItemID);
+						CBaseItem* lpItemTable = g_pItemTableHash_get()->GetData(g_pMainPlayer->m_pItemTrade[i].m_wItemID);
 
 						if(!lpItemTable)
 							return;
@@ -3139,7 +3196,7 @@ void Insert_PlayerShopItem(CItem* pItem, BYTE bZipCode, BYTE byPackCnt)
 
 		if(g_pMainPlayer->m_sPlayerShop.cItem[bZipCode].GetID()==pItem->GetID())			
 		{
-			CBaseItem* lpItemTable = g_pItemTableHash->GetData(g_pMainPlayer->m_sPlayerShop.cItem[bZipCode].m_wItemID);
+			CBaseItem* lpItemTable = g_pItemTableHash_get()->GetData(g_pMainPlayer->m_sPlayerShop.cItem[bZipCode].m_wItemID);
 
 			int nMaxQuantity	= 1;
 
@@ -3174,7 +3231,7 @@ void Insert_PlayerShopItem(CItem* pItem, BYTE bZipCode, BYTE byPackCnt)
 				}
 				else if(g_pMainPlayer->m_sPlayerShop.cItem[i].GetID()==pItem->GetID())
 				{
-					CBaseItem* lpItemTable = g_pItemTableHash->GetData(g_pMainPlayer->m_sPlayerShop.cItem[i].m_wItemID);
+					CBaseItem* lpItemTable = g_pItemTableHash_get()->GetData(g_pMainPlayer->m_sPlayerShop.cItem[i].m_wItemID);
 
 					if(!lpItemTable)
 						return;
@@ -3226,7 +3283,7 @@ BYTE Insert_SmallBankItem(CItem* pItem, BYTE bZipCode, BYTE byPackCnt)
 
 		if(g_pMainPlayer->m_pBank_Small[bZipCode].GetID()==pItem->GetID())			
 		{
-			CBaseItem* lpItemTable = g_pItemTableHash->GetData(g_pMainPlayer->m_pBank_Small[bZipCode].m_wItemID);
+			CBaseItem* lpItemTable = g_pItemTableHash_get()->GetData(g_pMainPlayer->m_pBank_Small[bZipCode].m_wItemID);
 
 			if(!lpItemTable)
 				return 0;
@@ -3266,7 +3323,7 @@ BYTE Insert_SmallBankItem(CItem* pItem, BYTE bZipCode, BYTE byPackCnt)
 				}
 				else if(g_pMainPlayer->m_pBank_Small[i].GetID()==pItem->GetID())
 				{
-					CBaseItem* lpItemTable = g_pItemTableHash->GetData(g_pMainPlayer->m_pBank_Small[i].m_wItemID);
+					CBaseItem* lpItemTable = g_pItemTableHash_get()->GetData(g_pMainPlayer->m_pBank_Small[i].m_wItemID);
 
 					if(!lpItemTable)
 						return 0;
@@ -3318,7 +3375,7 @@ void Insert_SmallBeltItem(CItem* pItem, BYTE bZipCode, BYTE byPackCnt, BOOL bChk
 
 			if(g_pMainPlayer->m_pBelt[bZipCode].GetID()==pItem->GetID())			
 			{
-				CBaseItem* lpItemTable = g_pItemTableHash->GetData(g_pMainPlayer->m_pBelt[bZipCode].m_wItemID);
+				CBaseItem* lpItemTable = g_pItemTableHash_get()->GetData(g_pMainPlayer->m_pBelt[bZipCode].m_wItemID);
 
 				if(!lpItemTable)
 					return;
@@ -3358,7 +3415,7 @@ void Insert_SmallBeltItem(CItem* pItem, BYTE bZipCode, BYTE byPackCnt, BOOL bChk
 					}
 					else if(g_pMainPlayer->m_pBelt[i].GetID()==pItem->GetID())
 					{
-						CBaseItem* lpItemTable = g_pItemTableHash->GetData(g_pMainPlayer->m_pBelt[i].m_wItemID);
+						CBaseItem* lpItemTable = g_pItemTableHash_get()->GetData(g_pMainPlayer->m_pBelt[i].m_wItemID);
 
 						if(!lpItemTable)
 							return;
@@ -3419,7 +3476,7 @@ BYTE Insert_SmallInvItem(CItem* pItem, BYTE bZipCode, BYTE byPackCnt)
 		{ 
 			if(g_pMainPlayer->m_pInv_Small[bZipCode].GetID()==pItem->GetID())			
 			{
-				CBaseItem* lpItemTable = g_pItemTableHash->GetData(g_pMainPlayer->m_pInv_Small[bZipCode].m_wItemID);
+				CBaseItem* lpItemTable = g_pItemTableHash_get()->GetData(g_pMainPlayer->m_pInv_Small[bZipCode].m_wItemID);
 
 				if(!lpItemTable)
 					return 0;
@@ -3459,7 +3516,7 @@ BYTE Insert_SmallInvItem(CItem* pItem, BYTE bZipCode, BYTE byPackCnt)
 					}
 					else if(g_pMainPlayer->m_pInv_Small[i].GetID()==pItem->GetID())
 					{
-						CBaseItem* lpItemTable = g_pItemTableHash->GetData(g_pMainPlayer->m_pInv_Small[i].m_wItemID);
+						CBaseItem* lpItemTable = g_pItemTableHash_get()->GetData(g_pMainPlayer->m_pInv_Small[i].m_wItemID);
 
 						if(!lpItemTable)
 							return 0;
@@ -4713,11 +4770,11 @@ BOOL ItemChkMaking(CTDS_ITEM_PICKUP* pPacket)
 
 		if(g_ItemMoveManager.GetNewItemMoveMode())
 		{
-			pBaseItemMouse = g_pItemTableHash->GetData(g_ItemMoveManager.GetMouseItemID()); 
+			pBaseItemMouse = g_pItemTableHash_get()->GetData(g_ItemMoveManager.GetMouseItemID()); 
 		}
 		else
 		{
-			pBaseItemMouse = g_pItemTableHash->GetData(g_pMainPlayer->m_MouseItem.GetID()); 
+			pBaseItemMouse = g_pItemTableHash_get()->GetData(g_pMainPlayer->m_MouseItem.GetID()); 
 		}
 
 		// 버릴때 수량창 나오기.
@@ -4785,8 +4842,8 @@ BOOL ItemChkMaking(CTDS_ITEM_PICKUP* pPacket)
 								// 현재 아이템 제조창 스몰 아이템 칸에 메터리얼이 있으면
 								if(nValue>=ITEM_MATERIALST_INDEX && nValue<=ITEM_MATERIALEND_INDEX)
 								{
-//									LP_ITEM_TABLE pBaseItem	= g_pItemTableHash->GetData(pItemMakingWnd->m_pMakingItem[i].GetID()); 
-									CBaseItem* pBaseItem	= g_pItemTableHash->GetData(pItemMakingWnd->m_pMakingItem[i].GetID()); 
+//									LP_ITEM_TABLE pBaseItem	= g_pItemTableHash_get()->GetData(pItemMakingWnd->m_pMakingItem[i].GetID()); 
+									CBaseItem* pBaseItem	= g_pItemTableHash_get()->GetData(pItemMakingWnd->m_pMakingItem[i].GetID()); 
 									ITEM_MAKING_INFO* pItemMakingInfo	= g_pItemMakingInfoHash->GetData(pBaseItem->BaseItem_Materials.byOrder);
 									
 									if(pBaseItemMouse->wID == pBaseItem->wID)
@@ -4916,12 +4973,12 @@ BOOL ItemChkUpgrade(CTDS_ITEM_PICKUP* pPacket)
 			memcpy(&cItem, GetItemNative(&ItemNativeInfo), sizeof(CItem));
 
 			nValue = cItem.GetID() / ITEM_DISTRIBUTE;
-			pBaseItemWA = g_pItemTableHash->GetData(cItem.GetID()); 
+			pBaseItemWA = g_pItemTableHash_get()->GetData(cItem.GetID()); 
 		}
 		else
 		{
 			nValue	= g_pMainPlayer->m_MouseItem.GetID() / ITEM_DISTRIBUTE;
-			pBaseItemWA = g_pItemTableHash->GetData(g_pMainPlayer->m_MouseItem.GetID()); 
+			pBaseItemWA = g_pItemTableHash_get()->GetData(g_pMainPlayer->m_MouseItem.GetID()); 
 		}
 
 		if(!pBaseItemWA)		
@@ -5000,7 +5057,7 @@ BOOL ItemChkUpgrade(CTDS_ITEM_PICKUP* pPacket)
 					for(int i = 1; i < 4; i++)
 					{
 						int nValueUG	= pItemUpgradeWnd->m_pUpgradeItem[i].GetID() / ITEM_DISTRIBUTE;
-						pBaseItemUG		= g_pItemTableHash->GetData(pItemUpgradeWnd->m_pUpgradeItem[i].GetID());
+						pBaseItemUG		= g_pItemTableHash_get()->GetData(pItemUpgradeWnd->m_pUpgradeItem[i].GetID());
 
 						if( pBaseItemUG && nValueUG == ITEM_UPGRADE_INDEX )
 						{
@@ -5112,7 +5169,7 @@ BOOL ItemChkUpgrade(CTDS_ITEM_PICKUP* pPacket)
 						if( g_pMainPlayer->m_pUpgradeItem[0].GetID() != 0 )
 						{
 							int nValueWA	= g_pMainPlayer->m_pUpgradeItem[0].GetID() / ITEM_DISTRIBUTE;
-							pBaseItemUG		= g_pItemTableHash->GetData(g_pMainPlayer->m_pUpgradeItem[0].GetID());
+							pBaseItemUG		= g_pItemTableHash_get()->GetData(g_pMainPlayer->m_pUpgradeItem[0].GetID());
 
 							if(!pBaseItemUG)
 							{
@@ -5214,7 +5271,7 @@ BOOL ItemChkUpgrade(CTDS_ITEM_PICKUP* pPacket)
 								if( g_pMainPlayer->m_pUpgradeItem[i].GetID() != 0 )
 								{
 									int nValueUG	= g_pMainPlayer->m_pUpgradeItem[i].GetID() / ITEM_DISTRIBUTE;
-									pBaseItemUG		= g_pItemTableHash->GetData(g_pMainPlayer->m_pUpgradeItem[i].GetID());
+									pBaseItemUG		= g_pItemTableHash_get()->GetData(g_pMainPlayer->m_pUpgradeItem[i].GetID());
 									
 									if(!pBaseItemUG)
 									{
@@ -5257,7 +5314,7 @@ BOOL ItemChkUpgrade(CTDS_ITEM_PICKUP* pPacket)
 						if( pItemUpgradeWnd->m_pUpgradeItem[0].GetID() != 0 )
 						{
 							int nValueWA	= pItemUpgradeWnd->m_pUpgradeItem[0].GetID() / ITEM_DISTRIBUTE;
-							pBaseItemUG		= g_pItemTableHash->GetData(pItemUpgradeWnd->m_pUpgradeItem[0].GetID());
+							pBaseItemUG		= g_pItemTableHash_get()->GetData(pItemUpgradeWnd->m_pUpgradeItem[0].GetID());
 
 							if(!pBaseItemUG)
 							{
@@ -5356,7 +5413,7 @@ BOOL ItemChkUpgrade(CTDS_ITEM_PICKUP* pPacket)
 								if( pItemUpgradeWnd->m_pUpgradeItem[i].GetID() != 0 )
 								{
 									int nValueUG	= pItemUpgradeWnd->m_pUpgradeItem[i].GetID() / ITEM_DISTRIBUTE;
-									pBaseItemUG		= g_pItemTableHash->GetData(pItemUpgradeWnd->m_pUpgradeItem[i].GetID());
+									pBaseItemUG		= g_pItemTableHash_get()->GetData(pItemUpgradeWnd->m_pUpgradeItem[i].GetID());
 									
 									if(!pBaseItemUG)
 									{
@@ -5382,7 +5439,7 @@ BOOL ItemChkUpgrade(CTDS_ITEM_PICKUP* pPacket)
 								if( pItemUpgradeWnd->m_pUpgradeItem[i].GetID() != 0 )
 								{
 									int nValueUG	= pItemUpgradeWnd->m_pUpgradeItem[i].GetID() / ITEM_DISTRIBUTE;
-									pBaseItemUG		= g_pItemTableHash->GetData(pItemUpgradeWnd->m_pUpgradeItem[i].GetID());
+									pBaseItemUG		= g_pItemTableHash_get()->GetData(pItemUpgradeWnd->m_pUpgradeItem[i].GetID());
 									
 									if(!pBaseItemUG)
 									{
@@ -5640,7 +5697,7 @@ BOOL ItemChkPlayerShop(CTDS_ITEM_PICKUP* pPacket)
 								}
 
 //								sung-han 2005-03-15 거래, 드롭, 노점않되는 아이템 처리, 여기는 노점...
-								CBaseItem* lpItemTalbe = g_pItemTableHash->GetData(g_pMainPlayer->m_MouseItem.GetID());
+								CBaseItem* lpItemTalbe = g_pItemTableHash_get()->GetData(g_pMainPlayer->m_MouseItem.GetID());
 								if(lpItemTalbe && lpItemTalbe->GetMovable() == 0)
 								{
 									CQuantityWnd* pQuantityWnd = CQuantityWnd::GetInstance();
@@ -5688,7 +5745,7 @@ BOOL ItemChkPlayerShop(CTDS_ITEM_PICKUP* pPacket)
 
 										// Process //
 //										sung-han 2005-03-15 거래, 드롭, 노점않되는 아이템 처리, 여기는 노점...
-										CBaseItem* lpItemTalbe = g_pItemTableHash->GetData(g_pMainPlayer->m_MouseItem.GetID());
+										CBaseItem* lpItemTalbe = g_pItemTableHash_get()->GetData(g_pMainPlayer->m_MouseItem.GetID());
 										if(lpItemTalbe && lpItemTalbe->GetMovable() == 0)
 										{
 											CQuantityWnd* pQuantityWnd = CQuantityWnd::GetInstance();
@@ -5735,7 +5792,7 @@ BOOL ItemChkPlayerShop(CTDS_ITEM_PICKUP* pPacket)
 									return TRUE;
 								}
 //								sung-han 2005-03-15 거래, 드롭, 노점않되는 아이템 처리, 여기는 노점...
-								CBaseItem* lpItemTalbe = g_pItemTableHash->GetData(g_pMainPlayer->m_MouseItem.GetID());
+								CBaseItem* lpItemTalbe = g_pItemTableHash_get()->GetData(g_pMainPlayer->m_MouseItem.GetID());
 								if(lpItemTalbe && lpItemTalbe->GetMovable() == 0)
 								{
 									CQuantityWnd* pQuantityWnd = CQuantityWnd::GetInstance();
@@ -5792,7 +5849,7 @@ BOOL ItemChkPlayerShop(CTDS_ITEM_PICKUP* pPacket)
 										
 										// Process //
 //										sung-han 2005-03-15 거래, 드롭, 노점않되는 아이템 처리, 여기는 노점...
-										CBaseItem* lpItemTalbe = g_pItemTableHash->GetData(g_pMainPlayer->m_MouseItem.GetID());
+										CBaseItem* lpItemTalbe = g_pItemTableHash_get()->GetData(g_pMainPlayer->m_MouseItem.GetID());
 										if(lpItemTalbe && lpItemTalbe->GetMovable() == 0)
 										{
 											CQuantityWnd* pQuantityWnd = CQuantityWnd::GetInstance();

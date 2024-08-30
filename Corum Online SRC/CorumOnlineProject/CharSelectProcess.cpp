@@ -264,8 +264,10 @@ BOOL InitGameCharSelect()
 			{
 				if(lpItemResource->wModCount>0)
 				{	
-//					LP_ITEM_TABLE pItemTable = g_pItemTableHash->GetData(wItemId[1]);
-					CBaseItem* pItemTable = g_pItemTableHash->GetData(wItemId[1]);
+//					LP_ITEM_TABLE pItemTable = g_pItemTableHash_get()->GetData(wItemId[1]);
+					LPBASEITEM_HASH itemTable = g_pItemTableHash_get();
+
+					CBaseItem* pItemTable = NULL; // g_pItemTableHash_get()->GetData(wItemId[1]);
 				
 					if(pItemTable)
 					{
@@ -1967,8 +1969,8 @@ BOOL CreateMainPlayer(WSTC_WORLD_USER_INFO* pInfo)
 	}
 	else
 	{
-//		LP_ITEM_TABLE pItemTable = g_pItemTableHash->GetData(g_pMainPlayer->m_pEquip[byRHand].m_wItemID);		
-		CBaseItem* pItemTable = g_pItemTableHash->GetData(g_pMainPlayer->m_pEquip[byRHand].m_wItemID);		
+//		LP_ITEM_TABLE pItemTable = g_pItemTableHash_get()->GetData(g_pMainPlayer->m_pEquip[byRHand].m_wItemID);		
+		CBaseItem* pItemTable = g_pItemTableHash_get()->GetData(g_pMainPlayer->m_pEquip[byRHand].m_wItemID);		
 
 		if(pItemTable)
 		{

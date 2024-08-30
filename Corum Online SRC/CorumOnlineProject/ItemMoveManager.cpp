@@ -204,8 +204,8 @@ BYTE CItemMoveManager::GetNativeSrcIndex()
 
 WORD CItemMoveManager::GetMouseItemID()
 {
-//	LP_ITEM_TABLE pBaseItem = g_pItemTableHash->GetData(m_wMouseItemID);
-	CBaseItem* pBaseItem = g_pItemTableHash->GetData(m_wMouseItemID);
+//	LP_ITEM_TABLE pBaseItem = g_pItemTableHash_get()->GetData(m_wMouseItemID);
+	CBaseItem* pBaseItem = g_pItemTableHash_get()->GetData(m_wMouseItemID);
 
 	if(pBaseItem)
 		return m_wMouseItemID;
@@ -463,8 +463,8 @@ BOOL CItemMoveManager::IsSrcToDestCorrect(ITEM_NATIVE eItemNativeSrc,ITEM_NATIVE
 BOOL CItemMoveManager::IsDestNativeToCorrectType(ITEM_NATIVE eItemNativeDest,BYTE bySlotIndex,
 												 const CItem* const pItemNativeSrc)
 {
-//	LP_ITEM_TABLE pItem = g_pItemTableHash->GetData(pItemNativeSrc->GetID());
-	CBaseItem* pItem = g_pItemTableHash->GetData(pItemNativeSrc->GetID());
+//	LP_ITEM_TABLE pItem = g_pItemTableHash_get()->GetData(pItemNativeSrc->GetID());
+	CBaseItem* pItem = g_pItemTableHash_get()->GetData(pItemNativeSrc->GetID());
 
 	if(NULL == pItem)
 	{
@@ -747,7 +747,7 @@ BOOL CItemMoveManager::TypeLargeMoveItemNative(DSTC_ITEM_MOVE* const pItemMove
 		ItemNativeInfo_Dest->eSlotID == ITEM_NATIVE_INV_LARGE )
 	{
 		SetSlotItemNative(pItemSrc,ItemNativeInfo_Dest);
-		CBaseItem* lpItemTable = g_pItemTableHash->GetData(pItemSrc->GetID());
+		CBaseItem* lpItemTable = g_pItemTableHash_get()->GetData(pItemSrc->GetID());
 		g_pMainPlayer->m_dwMoney -= lpItemTable->GetPrice();
 
 		char szInfo[0xff] = {0,};
@@ -760,7 +760,7 @@ BOOL CItemMoveManager::TypeLargeMoveItemNative(DSTC_ITEM_MOVE* const pItemMove
 	else if(ItemNativeInfo_Src->eSlotID ==  ITEM_NATIVE_INV_LARGE &&
 			ItemNativeInfo_Dest->eSlotID == ITEM_NATIVE_TRADERMONSTER_INV_LARGE)
 	{
-		CBaseItem* lpItemTable = g_pItemTableHash->GetData(pItemSrc->GetID());		
+		CBaseItem* lpItemTable = g_pItemTableHash_get()->GetData(pItemSrc->GetID());		
 		g_pMainPlayer->m_dwMoney += lpItemTable->GetSellPrice();
 		RemoveItemNative(ItemNativeInfo_Src);
 
@@ -825,7 +825,7 @@ BOOL CItemMoveManager::TypeSmallMoveItemNative(DSTC_ITEM_MOVE* const pItemMove,
 	if( ItemNativeInfo_Src->eSlotID == ITEM_NATIVE_TRADERMONSTER_INV_SMALL &&
 		ItemNativeInfo_Dest->eSlotID == ITEM_NATIVE_INV_SMALL )
 	{
-		CBaseItem* lpItemTable = g_pItemTableHash->GetData(pItemSrc->GetID());
+		CBaseItem* lpItemTable = g_pItemTableHash_get()->GetData(pItemSrc->GetID());
 
 		// 들어갈 자리에 아이템이 없으면
 		if(pItemDest->GetID() == 0)
@@ -848,7 +848,7 @@ BOOL CItemMoveManager::TypeSmallMoveItemNative(DSTC_ITEM_MOVE* const pItemMove,
 		else
 		{
 			// 들어갈 자리에 아이템이 있으면 		
-			CBaseItem* pBaseItemDest = g_pItemTableHash->GetData(pItemDest->GetID());
+			CBaseItem* pBaseItemDest = g_pItemTableHash_get()->GetData(pItemDest->GetID());
 			
 			if(NULL == pBaseItemDest)
 			{
@@ -916,7 +916,7 @@ BOOL CItemMoveManager::TypeSmallMoveItemNative(DSTC_ITEM_MOVE* const pItemMove,
 				}
 				else
 				{
-					pBaseItemDest = g_pItemTableHash->GetData(pItemDest[i].GetID());
+					pBaseItemDest = g_pItemTableHash_get()->GetData(pItemDest[i].GetID());
 					if(NULL == pBaseItemDest)
 						continue;
 
@@ -965,7 +965,7 @@ BOOL CItemMoveManager::TypeSmallMoveItemNative(DSTC_ITEM_MOVE* const pItemMove,
 	else if(ItemNativeInfo_Src->eSlotID ==  ITEM_NATIVE_INV_SMALL &&
 			ItemNativeInfo_Dest->eSlotID == ITEM_NATIVE_TRADERMONSTER_INV_SMALL)
 	{
-		CBaseItem* lpItemTable = g_pItemTableHash->GetData(pItemSrc->GetID());
+		CBaseItem* lpItemTable = g_pItemTableHash_get()->GetData(pItemSrc->GetID());
 
 		CItem cItemSrc;
 		memcpy(&cItemSrc, pItemSrc, sizeof(CItem));
@@ -1001,7 +1001,7 @@ BOOL CItemMoveManager::TypeSmallMoveItemNative(DSTC_ITEM_MOVE* const pItemMove,
 	else
 	{
 		// 들어갈 자리에 아이템이 있으면 		
-		CBaseItem* pBaseItemDest = g_pItemTableHash->GetData(pItemDest->GetID());
+		CBaseItem* pBaseItemDest = g_pItemTableHash_get()->GetData(pItemDest->GetID());
 		
 		if(NULL == pBaseItemDest)
 		{
@@ -1039,7 +1039,7 @@ BOOL CItemMoveManager::TypeSmallMoveItemNative(DSTC_ITEM_MOVE* const pItemMove,
 			}
 			else
 			{
-				pBaseItemDest = g_pItemTableHash->GetData(pItemDest[i].GetID());
+				pBaseItemDest = g_pItemTableHash_get()->GetData(pItemDest[i].GetID());
 				if(NULL == pBaseItemDest)
 					continue;
 				
@@ -1091,7 +1091,7 @@ void CItemMoveManager::AnotherPlayerShopUserBuyItemOverlapItem(DSTC_ITEM_MOVE* p
 	else
 	{
 		// 들어갈 자리에 아이템이 있으면 		
-		CBaseItem* pBaseItemDest = g_pItemTableHash->GetData(pItemDest->GetID());
+		CBaseItem* pBaseItemDest = g_pItemTableHash_get()->GetData(pItemDest->GetID());
 		
 		if(NULL == pBaseItemDest)
 		{
@@ -1144,7 +1144,7 @@ void CItemMoveManager::AnotherPlayerShopUserBuyItemOverlapItem(DSTC_ITEM_MOVE* p
 			}
 			else
 			{
-				pBaseItemDest = g_pItemTableHash->GetData(pItemDest[i].GetID());
+				pBaseItemDest = g_pItemTableHash_get()->GetData(pItemDest[i].GetID());
 				if(NULL == pBaseItemDest)
 					continue;
 
@@ -1249,7 +1249,7 @@ void CItemMoveManager::DefaultSlotChangeProcess(DSTC_ITEM_MOVE* pItemMove)
 	if(NULL == pItemSrc || NULL == pItemDest)
 		return;
 
-	CBaseItem* pItem = g_pItemTableHash->GetData(pItemSrc->GetID());
+	CBaseItem* pItem = g_pItemTableHash_get()->GetData(pItemSrc->GetID());
 
 	if(NULL == pItem)
 		return;
@@ -1364,7 +1364,7 @@ void CItemMoveManager::DropAndPickupItemProcess(DSTC_ITEM_MOVE* pItemMove)
 		
 	}
 
-	CBaseItem* pItem = g_pItemTableHash->GetData(pItemSrc->GetID());
+	CBaseItem* pItem = g_pItemTableHash_get()->GetData(pItemSrc->GetID());
 	if(NULL == pItem)
 	{
 		

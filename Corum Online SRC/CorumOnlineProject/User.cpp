@@ -144,7 +144,7 @@ WORD CMainUser::GetEquipItemSumWeight()
 	{
 		if(m_pEquip[i].GetID())
 		{
-			CBaseItem* lpItem = g_pItemTableHash->GetData(m_pEquip[i].GetID());
+			CBaseItem* lpItem = g_pItemTableHash_get()->GetData(m_pEquip[i].GetID());
 
 			if(lpItem)
 				dwWeight += lpItem->GetWeight();
@@ -163,7 +163,7 @@ WORD CMainUser::GetInvLargeItemSumWeight()
 	{
 		if(m_pInv_Large[i].GetID())
 		{
-			CBaseItem* lpItem = g_pItemTableHash->GetData(m_pInv_Large[i].GetID());
+			CBaseItem* lpItem = g_pItemTableHash_get()->GetData(m_pInv_Large[i].GetID());
 
 			if(lpItem)
 				dwWeight += lpItem->GetWeight();
@@ -212,7 +212,7 @@ WORD CMainUser::GetSmallItemSumWeight()
 	{
 		if(m_pInv_Small[i].GetID())
 		{
-			CBaseItem* lpItem = g_pItemTableHash->GetData(m_pInv_Small[i].GetID());
+			CBaseItem* lpItem = g_pItemTableHash_get()->GetData(m_pInv_Small[i].GetID());
 
 			if(lpItem)
 			{
@@ -227,7 +227,7 @@ WORD CMainUser::GetSmallItemSumWeight()
 	{
 		if(m_pBelt[i].GetID())
 		{
-			CBaseItem* lpItem = g_pItemTableHash->GetData(m_pBelt[i].GetID());
+			CBaseItem* lpItem = g_pItemTableHash_get()->GetData(m_pBelt[i].GetID());
 
 			if(lpItem)
 			{
@@ -869,7 +869,7 @@ BOOL CMainUser::CheckItem(CItem* pItem)
 	return TRUE;
 #else
 	// 체크 클래스 //
-	CBaseItem* lpItemTable = g_pItemTableHash->GetData(pItem->GetID());
+	CBaseItem* lpItemTable = g_pItemTableHash_get()->GetData(pItem->GetID());
 	
 	if(!lpItemTable)
 		return FALSE;

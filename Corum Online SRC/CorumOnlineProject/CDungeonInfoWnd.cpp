@@ -164,7 +164,7 @@ void CDungeonInfoWnd::RenderText()
 				RenderFont(pDungeon->m_szOwner
 					, m_fPosX+116, m_fPosX+216, m_fPosZ+52+nLine*17, m_fPosZ+64+nLine*17, GetStartOrder()+2);
 
-				CBaseItem* pItem = g_pItemTableHash->GetData( pDungeon->m_wProduction );
+				CBaseItem* pItem = g_pItemTableHash_get()->GetData( pDungeon->m_wProduction );
 
 				memset(szInfo, 0, sizeof(szInfo));
 
@@ -301,8 +301,8 @@ void CDungeonInfoWnd::RenderText()
 				RenderFont(szInfo
 					, m_fPosX+145, m_fPosX+245, m_fPosZ+52+nLine*17, m_fPosZ+64+nLine*17, GetStartOrder()+2);
 			
-//				LP_ITEM_TABLE pItem = g_pItemTableHash->GetData( pDungeon->m_cMagicFieldArrayItem.GetID() );
-				CBaseItem* pItem = g_pItemTableHash->GetData( pDungeon->m_cMagicFieldArrayItem.GetID() );
+//				LP_ITEM_TABLE pItem = g_pItemTableHash_get()->GetData( pDungeon->m_cMagicFieldArrayItem.GetID() );
+				CBaseItem* pItem = g_pItemTableHash_get()->GetData( pDungeon->m_cMagicFieldArrayItem.GetID() );
 
 				memset(szInfo, 0, sizeof(szInfo));
 
@@ -310,8 +310,8 @@ void CDungeonInfoWnd::RenderText()
 					m_fPosX+229, m_fPosX+329, m_fPosZ+52+nLine*17, m_fPosZ+64+nLine*17, GetStartOrder()+2);
 
 				// 가디언! by deepdark.
-//				LP_ITEM_TABLE pGuardianItem = g_pItemTableHash->GetData( pDungeon->m_cGuardianItem.GetID() );
-				CBaseItem* pGuardianItem = g_pItemTableHash->GetData( pDungeon->m_cGuardianItem.GetID() );
+//				LP_ITEM_TABLE pGuardianItem = g_pItemTableHash_get()->GetData( pDungeon->m_cGuardianItem.GetID() );
+				CBaseItem* pGuardianItem = g_pItemTableHash_get()->GetData( pDungeon->m_cGuardianItem.GetID() );
 				
 				// // "수호가디언"
 				RenderFont((!pGuardianItem) ? g_Message[ETC_MESSAGE475].szMessage : pGuardianItem->szItemName_Kor, 
@@ -361,8 +361,8 @@ void CDungeonInfoWnd::RenderText()
 								
 				RenderFont(pDungeon->m_szDungeonName, m_fPosX+7, m_fPosX+107, m_fPosZ+52+nLine*17, m_fPosZ+64+nLine*17, GetStartOrder()+2);
 							
-//				LP_ITEM_TABLE pItem = g_pItemTableHash->GetData( pDungeon->m_wProduction );
-				CBaseItem* pItem = g_pItemTableHash->GetData( pDungeon->m_wProduction );
+//				LP_ITEM_TABLE pItem = g_pItemTableHash_get()->GetData( pDungeon->m_wProduction );
+				CBaseItem* pItem = g_pItemTableHash_get()->GetData( pDungeon->m_wProduction );
 
 				memset(szInfo, 0, sizeof(szInfo));
 

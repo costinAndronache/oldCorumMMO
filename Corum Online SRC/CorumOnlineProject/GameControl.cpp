@@ -2651,7 +2651,8 @@ void PreLoadItem()
 	ListNode<CBaseItem>*	lpItemTableNode	= NULL;
 	CBaseItem*				lpItemTable		= NULL;
 	
-	lpItemTableNode = g_pItemTableHash->GetHead();
+	lpItemTableNode = g_pItemTableHash_get()->GetHead();
+	LPBASEITEM_HASH debug1 = g_pItemTableHash_get();
 
 	while(lpItemTableNode)
 	{	
@@ -2764,6 +2765,8 @@ void PreLoadItem()
 	g_pExecutive->PreLoadGXObject(GetFile("e0121000.chr", DATA_TYPE_EFFECT));
 	g_pExecutive->PreLoadGXObject(GetFile("e0125000.chr", DATA_TYPE_EFFECT));
 	g_pExecutive->PreLoadGXObject(GetFile("e0128000.chr", DATA_TYPE_EFFECT));
+
+	LPBASEITEM_HASH debug2 = g_pItemTableHash_get();
 }
 
 void PreLoadDamageNumber()

@@ -216,7 +216,7 @@ extern CItemStoreHash*				g_pItemStoreHash;
 extern CUserHash*					g_pUserHash;
 extern CMonsterHash*				g_pMonsterHash;
 extern CEffectHash*					g_pEffectHash;
-extern LPBASEITEM_HASH				g_pItemTableHash;
+extern LPBASEITEM_HASH				g_pItemTableHash_get();
 extern CItemResourceHash*			g_pItemResourceHash;
 extern CSetItemInfoHash*			g_pSetItemInfoHash;
 extern CItemMakingInfoHash*			g_pItemMakingInfoHash;

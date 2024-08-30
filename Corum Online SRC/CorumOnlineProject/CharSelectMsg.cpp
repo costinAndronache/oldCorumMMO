@@ -306,7 +306,7 @@ void CmdMoveCharacterSuccess(char* pMsg, DWORD dwLen)
 		{
 			if(lpItemResource->wModCount>0)
 			{	
-				CBaseItem* pItemTable = g_pItemTableHash->GetData(wItemId[1]);
+				CBaseItem* pItemTable = g_pItemTableHash_get()->GetData(wItemId[1]);
 			
 				if(pItemTable)
 				{
@@ -511,8 +511,8 @@ void CmdCreateCharacterSuccess( char* pMsg, DWORD dwLen )
 	{
 		if(lpItemResource->wModCount>0)
 		{	
-//			LP_ITEM_TABLE pItemTable = g_pItemTableHash->GetData(1);
-			CBaseItem* pItemTable = g_pItemTableHash->GetData(1);
+//			LP_ITEM_TABLE pItemTable = g_pItemTableHash_get()->GetData(1);
+			CBaseItem* pItemTable = g_pItemTableHash_get()->GetData(1);
 			
 //			char szInfo[0xff] = {0,};
 

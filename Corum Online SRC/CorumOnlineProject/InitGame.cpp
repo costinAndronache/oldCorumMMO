@@ -163,7 +163,36 @@ STMPOOL_HANDLE				g_pPartyPool			= NULL;
 STMPOOL_HANDLE				g_pChatPool				= NULL;
 STMPOOL_HANDLE				g_pEffectPool			= NULL;
 
-LPBASEITEM_HASH				g_pItemTableHash		= NULL;
+
+
+LPBASEITEM_HASH				g_pItemTableHash_get() {
+	//static int clean[80000] = { 0, };
+	//static LPBASEITEM_HASH copy = NULL;
+	//static long int count = 0;
+
+	static LPBASEITEM_HASH g_pItemTableHash_intern = NULL;
+	
+	if (g_pItemTableHash_intern == NULL) {
+		g_pItemTableHash_intern = new BASEITEM_HASH;
+		g_pItemTableHash_intern->InitializeHashTable(10000, 10000);
+		//copy = g_pItemTableHash_intern;
+	}
+
+	//if (copy != g_pItemTableHash_intern) {
+		//OutputDebugString("We have a problem");
+	//}
+
+	//count += 1;
+	//DFOutputDebugString("\n\nRequested %p, (copy) %p, count: %d\n\n", g_pItemTableHash_intern, copy, count);
+
+	//if (count == 2916) {
+		//DFOutputDebugString("culprit here");
+	//}
+
+	return g_pItemTableHash_intern;
+}
+
+
 CUserHash*					g_pUserHash				= NULL;
 CMonsterHash*				g_pMonsterHash			= NULL;
 CEffectHash*				g_pEffectHash			= NULL;
@@ -464,7 +493,7 @@ void InitializeHash()
 	g_pMonsterHash			= new CMonsterHash;			g_pMonsterHash->InitializeHashTable( 500, 500 );
 	g_pEffectHash			= new CEffectHash;			g_pEffectHash->InitializeHashTable( 1000, 1000 );
 	g_pItemHash				= new ITEM_HASH;			g_pItemHash->InitializeHashTable( 10000, 10000);	
-	g_pItemTableHash		= new BASEITEM_HASH;		g_pItemTableHash->InitializeHashTable(10000, 10000);
+	
 	g_pSetItemInfoHash		= new CSetItemInfoHash;		g_pSetItemInfoHash->InitializeHashTable( 200, 200 );
 	g_pItemMakingInfoHash	= new CItemMakingInfoHash;	g_pItemMakingInfoHash->InitializeHashTable( 200, 200 ); 
 	g_pItemResourceHash		= new CItemResourceHash;	g_pItemResourceHash->InitializeHashTable(10000, 10000);
@@ -1026,11 +1055,11 @@ void ReleaseGame()
 		g_pItemStorePool = NULL;
 	}
 	
-	if(g_pItemTableHash)
+	if(g_pItemTableHash_get())
 	{
-		g_pItemTableHash->Destroy(TRUE);
-		delete g_pItemTableHash;
-		g_pItemTableHash = NULL;
+		g_pItemTableHash_get()->Destroy(TRUE);
+		//delete g_pItemTableHash;
+		//g_pItemTableHash = NULL;
 	}
 	
 	if(g_pSetItemInfoHash)
@@ -2134,7 +2163,7 @@ void LoadBaseItemTable()
 		pBaseItem = new CBaseItem;
 		memset(pBaseItem, 0, sizeof(CBaseItem));		
 		memcpy(pBaseItem, &sWeaponItem[i], nSize);
-		g_pItemTableHash->Insert(pBaseItem, pBaseItem->wID);			
+		g_pItemTableHash_get()->Insert(pBaseItem, pBaseItem->wID);			
 	}
 	
 	// Armor 
@@ -2146,7 +2175,7 @@ void LoadBaseItemTable()
 		pBaseItem = new CBaseItem;
 		memset(pBaseItem, 0, sizeof(CBaseItem));		
 		memcpy(pBaseItem, &sArmorItem[i], nSize);
-		g_pItemTableHash->Insert(pBaseItem, pBaseItem->wID);				
+		g_pItemTableHash_get()->Insert(pBaseItem, pBaseItem->wID);				
 	}
 
 	// Supplies
@@ -2158,7 +2187,7 @@ void LoadBaseItemTable()
 		pBaseItem = new CBaseItem;
 		memset(pBaseItem, 0, sizeof(CBaseItem));		
 		memcpy(pBaseItem, &sSuppliesItem[i], nSize);
-		g_pItemTableHash->Insert(pBaseItem, pBaseItem->wID);				
+		g_pItemTableHash_get()->Insert(pBaseItem, pBaseItem->wID);				
 	}	
 
 	// Ride
@@ -2170,7 +2199,7 @@ void LoadBaseItemTable()
 		pBaseItem = new CBaseItem;
 		memset(pBaseItem, 0, sizeof(CBaseItem));		
 		memcpy(pBaseItem, &sRideItem[i], sizeof(CBaseItem));
-		g_pItemTableHash->Insert(pBaseItem, pBaseItem->wID);				
+		g_pItemTableHash_get()->Insert(pBaseItem, pBaseItem->wID);				
 	}	
 
 	// Special	
@@ -2182,7 +2211,7 @@ void LoadBaseItemTable()
 		pBaseItem = new CBaseItem;
 		memset(pBaseItem, 0, sizeof(CBaseItem));		
 		memcpy(pBaseItem, &sSpecialItem[i], nSize);
-		g_pItemTableHash->Insert(pBaseItem, pBaseItem->wID);				
+		g_pItemTableHash_get()->Insert(pBaseItem, pBaseItem->wID);				
 	}	
 
 	// Zodiac 
@@ -2194,7 +2223,7 @@ void LoadBaseItemTable()
 		pBaseItem = new CBaseItem;
 		memset(pBaseItem, 0, sizeof(CBaseItem));		
 		memcpy(pBaseItem, &sZodiacItem[i], nSize);
-		g_pItemTableHash->Insert(pBaseItem, pBaseItem->wID);				
+		g_pItemTableHash_get()->Insert(pBaseItem, pBaseItem->wID);				
 	}	
 
 	// Guardian	
@@ -2206,7 +2235,7 @@ void LoadBaseItemTable()
 		pBaseItem = new CBaseItem;
 		memset(pBaseItem, 0, sizeof(CBaseItem));		
 		memcpy(pBaseItem, &sGuardianItem[i], nSize);
-		g_pItemTableHash->Insert(pBaseItem, pBaseItem->wID);				
+		g_pItemTableHash_get()->Insert(pBaseItem, pBaseItem->wID);				
 	}	
 
 	// MagicArray
@@ -2218,7 +2247,7 @@ void LoadBaseItemTable()
 		pBaseItem = new CBaseItem;
 		memset(pBaseItem, 0, sizeof(CBaseItem));		
 		memcpy(pBaseItem, &sMagicArrayItem[i], nSize);
-		g_pItemTableHash->Insert(pBaseItem, pBaseItem->wID);				
+		g_pItemTableHash_get()->Insert(pBaseItem, pBaseItem->wID);				
 	}	
 
 	// Material
@@ -2230,7 +2259,7 @@ void LoadBaseItemTable()
 		pBaseItem = new CBaseItem;
 		memset(pBaseItem, 0, sizeof(CBaseItem));		
 		memcpy(pBaseItem, &sMaterials[i], nSize);
-		g_pItemTableHash->Insert(pBaseItem, pBaseItem->wID);				
+		g_pItemTableHash_get()->Insert(pBaseItem, pBaseItem->wID);				
 	}	
 
 	// MixUpgrade 
@@ -2242,7 +2271,7 @@ void LoadBaseItemTable()
 		pBaseItem = new CBaseItem;
 		memset(pBaseItem, 0, sizeof(CBaseItem));		
 		memcpy(pBaseItem, &sMixUpgrade[i], sizeof(CBaseItem));
-		g_pItemTableHash->Insert(pBaseItem, pBaseItem->wID);				
+		g_pItemTableHash_get()->Insert(pBaseItem, pBaseItem->wID);				
 	}	
 
 	// MagicFieldArray
@@ -2254,7 +2283,7 @@ void LoadBaseItemTable()
 		pBaseItem = new CBaseItem;
 		memset(pBaseItem, 0, sizeof(CBaseItem));		
 		memcpy(pBaseItem, &sMagicFieldArray[i], nSize);
-		g_pItemTableHash->Insert(pBaseItem, pBaseItem->wID);				
+		g_pItemTableHash_get()->Insert(pBaseItem, pBaseItem->wID);				
 	}	
 
 	// Consumable
@@ -2266,7 +2295,7 @@ void LoadBaseItemTable()
 		pBaseItem = new CBaseItem;
 		memset(pBaseItem, 0, sizeof(CBaseItem));		
 		memcpy(pBaseItem, &sCunsumableItem[i], nSize);
-		g_pItemTableHash->Insert(pBaseItem, pBaseItem->wID);				
+		g_pItemTableHash_get()->Insert(pBaseItem, pBaseItem->wID);				
 	}	
 
 	// Upgrade 
@@ -2278,7 +2307,7 @@ void LoadBaseItemTable()
 		pBaseItem = new CBaseItem;
 		memset(pBaseItem, 0, sizeof(CBaseItem));		
 		memcpy(pBaseItem, &sUpGradeItem[i], nSize);
-		g_pItemTableHash->Insert(pBaseItem, pBaseItem->wID);				
+		g_pItemTableHash_get()->Insert(pBaseItem, pBaseItem->wID);				
 	}	
 
 	// liquid 
@@ -2290,7 +2319,7 @@ void LoadBaseItemTable()
 		pBaseItem = new CBaseItem;
 		memset(pBaseItem, 0, sizeof(CBaseItem));		
 		memcpy(pBaseItem, &sLiQuidItem[i], sizeof(CBaseItem));
-		g_pItemTableHash->Insert(pBaseItem, pBaseItem->wID);				
+		g_pItemTableHash_get()->Insert(pBaseItem, pBaseItem->wID);				
 	}	
 
 	// Edition //
@@ -2302,7 +2331,7 @@ void LoadBaseItemTable()
 		pBaseItem = new CBaseItem;
 		memset(pBaseItem, 0, sizeof(CBaseItem));		
 		memcpy(pBaseItem, &sEditionItem[i], nSize);
-		g_pItemTableHash->Insert(pBaseItem, pBaseItem->wID);				
+		g_pItemTableHash_get()->Insert(pBaseItem, pBaseItem->wID);				
 	}
 
 	// Bag
@@ -2314,11 +2343,11 @@ void LoadBaseItemTable()
 		pBaseItem = new CBaseItem;
 		memset(pBaseItem, 0, sizeof(CBaseItem));		
 		memcpy(pBaseItem, &sBagItem[i], nSize);		
-		g_pItemTableHash->Insert(pBaseItem, pBaseItem->wID);				
+		g_pItemTableHash_get()->Insert(pBaseItem, pBaseItem->wID);				
 	}	
 
 #pragma warning 
-	//SetCommonServerBaseItemHash(g_pItemTableHash);
+//	SetCommonServerBaseItemHash(g_pItemTableHash_get());
 
 	return;
 

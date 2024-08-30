@@ -171,8 +171,8 @@ void Trade_SmallItem(CItem* pItem)
 		}
 		else if(g_pMainPlayer->m_pInv_Small[i].GetID()==pItem->GetID())
 		{
-//			LP_ITEM_TABLE lpItemTable = g_pItemTableHash->GetData(g_pMainPlayer->m_pInv_Small[i].m_wItemID);
-			CBaseItem* lpItemTable = g_pItemTableHash->GetData(g_pMainPlayer->m_pInv_Small[i].m_wItemID);
+//			LP_ITEM_TABLE lpItemTable = g_pItemTableHash_get()->GetData(g_pMainPlayer->m_pInv_Small[i].m_wItemID);
+			CBaseItem* lpItemTable = g_pItemTableHash_get()->GetData(g_pMainPlayer->m_pInv_Small[i].m_wItemID);
 
 //			int nValue			= g_pMainPlayer->m_pInv_Small[i].m_wItemID/ITEM_DISTRIBUTE;
 			int nMaxQuantity	= 1;

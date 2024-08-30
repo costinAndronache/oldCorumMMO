@@ -188,8 +188,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	InitFunctionPointer();
 
 	char msg[1024] = { 0 };
-	_snprintf(msg, 1024, "\nWndProc message: %u", message);
-	OutputDebugString(msg);
+	//_snprintf(msg, 1024, "\nWndProc message: %u", message);
+	//OutputDebugString(msg);
 #ifdef _USE_IME
 	// no need for other languages, if(GET_IMEEDIT()->ProcessIMEMessage(message, wParam, lParam)) return 0;
 #endif 

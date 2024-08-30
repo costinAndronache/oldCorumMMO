@@ -120,7 +120,7 @@ void CmdUpdateGuardianItem( char* pMsg, DWORD dwLen )
 	if( !memcmp(cItem.GetSerial(), pUpdate->cItem.GetSerial(), sizeof(ITEM_SERIAL)) )
 	{
 		memcpy(&cItem, &pUpdate->cItem, sizeof(CItem));		
-		CBaseItem* lpItemTable = g_pItemTableHash->GetData(cItem.m_wItemID);
+		CBaseItem* lpItemTable = g_pItemTableHash_get()->GetData(cItem.m_wItemID);
 		CUserInterface* pUserInterface = CUserInterface::GetInstance();
 		pUserInterface->SetGauge(cItem.m_Item_Guardian.dwCompleteTime, lpItemTable->BaseItem_Guardian.wCompleteTime);				
 	}
@@ -652,7 +652,7 @@ void CmdGuardianEggSummonStatus( char* pMsg, DWORD dwLen )
 	{
 		CItem* pItem = &g_pMainPlayer->m_pInv_Guardian[pPacket->byZipCode];
 
-		CBaseItem* pItemInfo = g_pItemTableHash->GetData(pItem->GetID());
+		CBaseItem* pItemInfo = g_pItemTableHash_get()->GetData(pItem->GetID());
 
 		CUserInterface::GetInstance()->OpenGuardianDescriptionWnd(
 			pItem->GetSerial()->i64Serial

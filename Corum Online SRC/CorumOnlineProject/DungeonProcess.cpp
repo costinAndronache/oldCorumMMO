@@ -4052,7 +4052,7 @@ CUser* InitPlayer( DSTC_APPEAR* pAppear )
 		if(!pPlayer->m_hPlayerRHand.pHandle)
 			ItemAttach(pAppear->wHandR, &pPlayer->m_hPlayerRHand.pHandle, pPlayer->m_hPlayerRHand.pDesc, &pPlayer->m_hPlayer.pHandle, ITEM_ATTACH_TYPE_RHAND);
 		
-		pItemTable = g_pItemTableHash->GetData(pAppear->wHandR);
+		pItemTable = g_pItemTableHash_get()->GetData(pAppear->wHandR);
 
 		if(pItemTable)
 		{

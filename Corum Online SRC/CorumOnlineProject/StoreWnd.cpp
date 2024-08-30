@@ -246,7 +246,7 @@ void CStoreWnd::RenderText()
 
 					DWORD dwColor = 0xffff0000;
 
-					CBaseItem* lpItemTable = g_pItemTableHash->GetData(m_sStoreInfo[m_byRenderIndex].wItemId);
+					CBaseItem* lpItemTable = g_pItemTableHash_get()->GetData(m_sStoreInfo[m_byRenderIndex].wItemId);
 
 					if(lpItemTable)
 					{
@@ -280,7 +280,7 @@ void CStoreWnd::RenderText()
 					if(nMaxLen<nLen)
 						nMaxLen = nLen;
 					
-					CBaseItem* lpItemTable = g_pItemTableHash->GetData(m_sStoreInfo[m_byRenderIndex].wItemId);
+					CBaseItem* lpItemTable = g_pItemTableHash_get()->GetData(m_sStoreInfo[m_byRenderIndex].wItemId);
 
 					DWORD dwColor = 0xffff0000;
 
@@ -516,7 +516,7 @@ int CStoreWnd::CheckInterface()
 									{
 										if(g_ItemMoveManager.GetNativeSrc() == 0xff)
 										{										
-											CBaseItem* pItemTable = g_pItemTableHash->GetData(m_sStoreInfo[nIndex].wItemId);
+											CBaseItem* pItemTable = g_pItemTableHash_get()->GetData(m_sStoreInfo[nIndex].wItemId);
 											
 											if(pItemTable)
 											{
@@ -537,7 +537,7 @@ int CStoreWnd::CheckInterface()
 									{									
 										if(g_pMainPlayer->m_MouseItem.m_wItemID==0)
 										{
-											CBaseItem* pItemTable = g_pItemTableHash->GetData(m_sStoreInfo[nIndex].wItemId);							
+											CBaseItem* pItemTable = g_pItemTableHash_get()->GetData(m_sStoreInfo[nIndex].wItemId);							
 
 											if(pItemTable)
 											{
@@ -750,7 +750,7 @@ int CStoreWnd::CheckInterface()
 
 BOOL CStoreWnd::SetItemInfo(BYTE byType, WORD wItemId, BYTE byIndex)
 {
-	CBaseItem* lpItemTable = g_pItemTableHash->GetData(wItemId);
+	CBaseItem* lpItemTable = g_pItemTableHash_get()->GetData(wItemId);
 
 	char		szInfo[0xff] = {0,};
 	char		szPrice[0xff] = {0,};
@@ -1212,7 +1212,7 @@ void CStoreWnd::OpenStoreItem(BYTE byType)
 			{
 				if(lpItemStore->wMapId == 0 || lpItemStore->wMapId == m_dwMapId)
 				{
-					CBaseItem* lpItemTable = g_pItemTableHash->GetData(lpItemStore->wItemId);
+					CBaseItem* lpItemTable = g_pItemTableHash_get()->GetData(lpItemStore->wItemId);
 
 					if(lpItemTable)
 					{
@@ -1254,7 +1254,7 @@ void CStoreWnd::OpenStoreItem(BYTE byType)
 
 			if(lpItemStore->wMapId == 0 || lpItemStore->wMapId == m_dwMapId)
 			{
-				CBaseItem* lpItemTable = g_pItemTableHash->GetData(lpItemStore->wItemId);
+				CBaseItem* lpItemTable = g_pItemTableHash_get()->GetData(lpItemStore->wItemId);
 
 				if(lpItemTable->dwCode_ID == ITEM_KIND_BAG)
 				{
@@ -1302,7 +1302,7 @@ void CStoreWnd::OpenStoreItem(BYTE byType)
 			{
 				if(lpItemStore->wMapId==0 || lpItemStore->wMapId==m_dwMapId)
 				{
-					CBaseItem* lpItemTable = g_pItemTableHash->GetData(lpItemStore->wItemId);
+					CBaseItem* lpItemTable = g_pItemTableHash_get()->GetData(lpItemStore->wItemId);
 
 					if(lpItemTable)
 					{
@@ -1354,7 +1354,7 @@ void CStoreWnd::SetPrevNext(BYTE bPNType)
 
 		for(int i = 0; i < nIndex; i++)
 		{
-			CBaseItem* lpItemTable = g_pItemTableHash->GetData(m_wItemId[i]);
+			CBaseItem* lpItemTable = g_pItemTableHash_get()->GetData(m_wItemId[i]);
 
 			if(lpItemTable->dwCode_ID==ITEM_KIND_WEAPON)
 			{
@@ -1383,7 +1383,7 @@ void CStoreWnd::SetPrevNext(BYTE bPNType)
 
 		for(int i = 0; i < nIndex; i++)
 		{
-			CBaseItem* lpItemTable = g_pItemTableHash->GetData(m_wItemId[i]);
+			CBaseItem* lpItemTable = g_pItemTableHash_get()->GetData(m_wItemId[i]);
 
 			if(lpItemTable)
 			{
@@ -1427,7 +1427,7 @@ void CStoreWnd::SetPrevNext(BYTE bPNType)
 
 		for(int i = 0; i < nIndex; i++)
 		{
-			CBaseItem* lpItemTable = g_pItemTableHash->GetData(m_wItemId[i]);
+			CBaseItem* lpItemTable = g_pItemTableHash_get()->GetData(m_wItemId[i]);
 
 			if(lpItemTable)
 			{

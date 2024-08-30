@@ -29,3 +29,5 @@ Corum Online SRC/CorumOnlineProject/CorumOnlineProject___Win32_dev/*
 *.unsuccessfulbuild
 *.idb
 *.ilk
+*.ilk
+*.bsc
