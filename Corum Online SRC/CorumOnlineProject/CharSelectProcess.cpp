@@ -53,9 +53,14 @@ void InitPacketProcCharSelect()
 	PacketProc[ UPDATE_GAME_CHAR_SELECT ][ Protocol_CharSelect::CMD_MOVE_CHARACTER_FAIL]		= CmdMoveCharacterFail;
 }
 
+extern void PointerIntegrityCheck(const char*);
+
 BOOL InitGameCharSelect()
 {
-
+	PointerIntegrityCheck("InitGameCharSelect");
+	if (g_pEffectHash) {
+		g_pEffectHash->GetHead();
+	}
 	g_pExecutive->DeleteAllGXLights();
 	g_byChkMessenger	= 0;
 	g_byStatusMessenger	= 0;
@@ -67,17 +72,10 @@ BOOL InitGameCharSelect()
 	g_pExecutive->GXOSetScale(g_pGVLogin->pCharacterSelectBackGround->pHandle, &v3Scale);
 	
 	g_bCharMoveChk		= FALSE;
-	
-	
-#ifdef _USE_IME
-
-	GET_IMEEDIT()->EnableSpaceKey(FALSE);
-
-#endif
 
 	char szInfo[0xff] = {0,};
 	
-//	g_pExecutive->SetFramePerSec(40);
+	//g_pExecutive->SetFramePerSec(30);
 	g_pGeometry->DisableFog(0);
 	
 
@@ -267,7 +265,7 @@ BOOL InitGameCharSelect()
 //					LP_ITEM_TABLE pItemTable = g_pItemTableHash_get()->GetData(wItemId[1]);
 					LPBASEITEM_HASH itemTable = g_pItemTableHash_get();
 
-					CBaseItem* pItemTable = NULL; // g_pItemTableHash_get()->GetData(wItemId[1]);
+					CBaseItem* pItemTable = g_pItemTableHash_get()->GetData(wItemId[1]);
 				
 					if(pItemTable)
 					{
@@ -358,6 +356,7 @@ BOOL InitGameCharSelect()
 			g_pGVLogin->ChrSelectInfo[ i ].pDesc->ObjectFunc = CharSelectHighlightMotion;
 			g_pGVLogin->ChrSelectInfo[ i ].pDesc->dwTempBuf[10] = 1;
 		}
+
 	} 
 
 	//캐릭터 생성할때 보여줄 모든 머리 모델 Load

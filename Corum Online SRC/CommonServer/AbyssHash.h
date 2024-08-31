@@ -36,9 +36,7 @@ protected:
 	DWORD			m_dwCount;
 	Node<Td>**		m_pBucket;
 	ListNode<Td>*	m_pHead;			
-	ListNode<Td>*	m_pTail;			
-	STMPOOL_HANDLE	m_pNodePool;		
-	STMPOOL_HANDLE	m_pListNodePool;	
+	ListNode<Td>*	m_pTail;
 	BOOL			m_bSameKeyCheck;	
 public:
 	DWORD		GetMaxBucketNum()				{ return m_dwMaxBucketNum; }
@@ -78,8 +76,6 @@ CAbyssHash<Td>::CAbyssHash()
 	m_pBucket			= NULL;
 	m_pHead				= NULL;
 	m_pTail				= NULL;
-	m_pNodePool			= NULL;	
-	m_pListNodePool		= NULL;
 }
 
 template<class Td>
@@ -89,18 +85,6 @@ CAbyssHash<Td>::~CAbyssHash()
 	{
 		delete[] m_pBucket;
 		m_pBucket = NULL;
-	}
-
-	if( m_pNodePool )
-	{
-		ReleaseStaticMemoryPool(m_pNodePool);
-		m_pNodePool = NULL;
-	}
-
-	if( m_pListNodePool )
-	{
-		ReleaseStaticMemoryPool(m_pListNodePool);
-		m_pListNodePool = NULL;
 	}
 }
 
@@ -112,11 +96,6 @@ void CAbyssHash<Td>::InitializeHashTable( DWORD dwMaxBucket, DWORD dwMaxNode, BO
 	m_pBucket = new Node<Td>*[m_dwMaxBucketNum];
 	memset( m_pBucket, 0, sizeof(Td*) * m_dwMaxBucketNum );
 
-	m_pNodePool		= CreateStaticMemoryPool();
-	InitializeStaticMemoryPool(m_pNodePool, sizeof( Node<Td> ), dwMaxNode, dwMaxNode);
-
-	m_pListNodePool = CreateStaticMemoryPool();
-	InitializeStaticMemoryPool(m_pListNodePool, sizeof( ListNode<Td> ), dwMaxNode, dwMaxNode);
 }
 
 template<class Td>
@@ -129,7 +108,9 @@ void CAbyssHash<Td>::DeleteData( void* pData )
 template<class Td>
 ListNode<Td>*	CAbyssHash<Td>::AddList(Td* pData)
 {
-	ListNode<Td>* pListNode = (ListNode<Td>*)LALAlloc(m_pListNodePool);
+	//return NULL;
+
+	ListNode<Td>* pListNode = new ListNode<Td>;
 	pListNode->pData	= pData;
 
 	if( !m_pHead )
@@ -153,6 +134,8 @@ ListNode<Td>*	CAbyssHash<Td>::AddList(Td* pData)
 template<class Td>
 void CAbyssHash<Td>::RemoveAtList( ListNode<Td>* pListNode )
 {
+	//return;
+
 	if(m_pHead == pListNode)
 		m_pHead = pListNode->pNext;
 	else
@@ -164,13 +147,15 @@ void CAbyssHash<Td>::RemoveAtList( ListNode<Td>* pListNode )
 		pListNode->pNext->pPrev = pListNode->pPrev;
 
 
-	LALFree( m_pListNodePool, (void*)pListNode);
+	delete pListNode;
 }
 
 
 template<class Td>
 void	CAbyssHash<Td>::Destroy( BOOL bDeleteData )
 {
+	//return;
+
 	Node<Td>*	pDel;
 	Node<Td>*	pnode;
 
@@ -188,7 +173,7 @@ void	CAbyssHash<Td>::Destroy( BOOL bDeleteData )
 				{
 					DeleteData(pDel->pData);	
 				}
-				LALFree( m_pNodePool, (void*)pDel );
+				delete pDel;
 			}
 			m_pBucket[i] = NULL;
 		}
@@ -198,8 +183,9 @@ void	CAbyssHash<Td>::Destroy( BOOL bDeleteData )
 	pListNode = m_pHead;
 	while(pListNode)
 	{
-		LALFree( m_pListNodePool, pListNode );
+		ListNode<Td>* pDel = pListNode;
 		pListNode = pListNode->pNext;
+		delete pDel;
 	}
 	
 	m_pHead = NULL;
@@ -211,6 +197,8 @@ void	CAbyssHash<Td>::Destroy( BOOL bDeleteData )
 template<class Td>
 Td*	CAbyssHash<Td>::GetData( DWORD dwKey )
 {
+	//return NULL;
+
 	DWORD dwIndex = dwKey%m_dwMaxBucketNum;
 	Node<Td>* pnode = m_pBucket[dwIndex];
 
@@ -229,6 +217,8 @@ Td*	CAbyssHash<Td>::GetData( DWORD dwKey )
 template<class Td>
 DWORD CAbyssHash<Td>::GetBuckeCount(DWORD dwKey)
 {
+	//return 0;
+
 	DWORD dwIndex = dwKey%m_dwMaxBucketNum;
 	Node<Td>* pnode = m_pBucket[dwIndex];
 	DWORD dwCount = 0;
@@ -245,7 +235,9 @@ DWORD CAbyssHash<Td>::GetBuckeCount(DWORD dwKey)
 
 template<class Td>	
 BOOL CAbyssHash<Td>::bSameKey( DWORD dwKey )		
-{									
+{				
+	//return FALSE;
+
 	DWORD dwIndex = dwKey%m_dwMaxBucketNum;
 	Node<Td>*	pCurNode	= m_pBucket[dwIndex];
 	
@@ -262,9 +254,11 @@ BOOL CAbyssHash<Td>::bSameKey( DWORD dwKey )
 template<class Td>
 DWORD CAbyssHash<Td>::Insert( Td* pdata, DWORD dwKey )
 {
+	//return -1;
+
 	DWORD dwIndex = dwKey%m_dwMaxBucketNum;
 
-	Node<Td>* pnode = (Node<Td>*)LALAlloc(m_pNodePool);
+	Node<Td>* pnode = new Node<Td>;
 	
 	if( !pnode )
 	{
@@ -291,7 +285,7 @@ DWORD CAbyssHash<Td>::Insert( Td* pdata, DWORD dwKey )
 			{
 				if( pCurNode->dwKey == dwKey )	
 				{
-					LALFree( m_pNodePool, (void*)pnode );
+					delete pnode;
 					pnode = NULL;
 					return DWORD(-1);
 				}
@@ -316,6 +310,8 @@ DWORD CAbyssHash<Td>::Insert( Td* pdata, DWORD dwKey )
 template<class Td>	
 void CAbyssHash<Td>::Delete( Td* pdata, DWORD dwKey, BOOL bDeleteData)
 {
+	//return;
+
 	DWORD dwIndex = dwKey%m_dwMaxBucketNum;
 	
 	Node<Td>*	pDel;
@@ -339,7 +335,7 @@ void CAbyssHash<Td>::Delete( Td* pdata, DWORD dwKey, BOOL bDeleteData)
 				
 			RemoveAtList( pDel->pListPos );	
 			
-			LALFree( m_pNodePool, (void*)pDel );
+			delete pDel;
 			m_dwCount--;
 			break;
 		}

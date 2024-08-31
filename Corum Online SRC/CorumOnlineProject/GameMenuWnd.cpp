@@ -888,6 +888,7 @@ void CGameMenuWnd::SetEffect()
 {
 	// ÀÌÆåÆ® ¸ðµÎ ²û
 	ListNode<EffectDesc> *pNode;
+
 	pNode = g_pEffectHash->GetHead();
 	while( pNode )
 	{

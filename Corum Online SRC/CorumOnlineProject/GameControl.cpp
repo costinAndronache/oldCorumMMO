@@ -458,14 +458,30 @@ UPDATE_GAME_STATUS GetGameStatus()
 {
 	return g_bGameStatus;
 }
+
+extern void PointerIntegrityCheck(const char*);
+
 BOOL SetGameStatus( UPDATE_GAME_STATUS bStatus )
 {
 	if( bStatus >= MAX_UPDATE_GAME ) 
 		return false;
 
+	PointerIntegrityCheck("::before releasing previous status");
 	(*ReleaseGameProcess[GetGameStatus()])();
+
+	if (g_pEffectHash) {
+		g_pEffectHash->GetHead();
+	}
+
+	PointerIntegrityCheck("::before initializing new status::");
 	BOOL bRes = (*InitGameProcess[ bStatus ])();
 
+	if (g_pEffectHash) {
+		g_pEffectHash->GetHead();
+	}
+
+	PointerIntegrityCheck("::after initializing new status::");
+	
 	if( bRes ) 
 	{
 		g_bGameStatus = bStatus;
@@ -2594,6 +2610,8 @@ GXLIGHT_HANDLE CreateLight(LIGHT_DESC* pLightDesc, VECTOR3* pVecPostion, BYTE bL
 
 void InitializeEffect(BOOL bChk)
 {
+	void* s = g_pEffectHash->GetHead();
+
 	if (g_pEffectLayer)
 	{
 		// 있던넘 다시 지우고 다시 로드하기 위해서.
@@ -2602,7 +2620,8 @@ void InitializeEffect(BOOL bChk)
 	}
 
 	g_pEffectLayer = new EffectLayer;
-	g_pEffectLayer->Init(bChk);		
+	g_pEffectLayer->Init(bChk);	
+	s = g_pEffectHash->GetHead();
 }
 
 

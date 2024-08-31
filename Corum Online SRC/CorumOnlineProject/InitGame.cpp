@@ -166,30 +166,12 @@ STMPOOL_HANDLE				g_pEffectPool			= NULL;
 
 
 LPBASEITEM_HASH				g_pItemTableHash_get() {
-	//static int clean[80000] = { 0, };
-	//static LPBASEITEM_HASH copy = NULL;
-	//static long int count = 0;
 
-	static LPBASEITEM_HASH g_pItemTableHash_intern = NULL;
-	
-	if (g_pItemTableHash_intern == NULL) {
-		g_pItemTableHash_intern = new BASEITEM_HASH;
-		g_pItemTableHash_intern->InitializeHashTable(10000, 10000);
-		//copy = g_pItemTableHash_intern;
+	static LPBASEITEM_HASH hash = new BASEITEM_HASH;
+	if (hash->GetMaxBucketNum() == 0) {
+		hash->InitializeHashTable(10000, 10000);
 	}
-
-	//if (copy != g_pItemTableHash_intern) {
-		//OutputDebugString("We have a problem");
-	//}
-
-	//count += 1;
-	//DFOutputDebugString("\n\nRequested %p, (copy) %p, count: %d\n\n", g_pItemTableHash_intern, copy, count);
-
-	//if (count == 2916) {
-		//DFOutputDebugString("culprit here");
-	//}
-
-	return g_pItemTableHash_intern;
+	return hash;
 }
 
 
@@ -227,6 +209,96 @@ EffectLayer*				g_pEffectLayer			= NULL;
 CMonsterManager*			g_pMonsterManager		= NULL;
 CInputManager*				g_pInputManager			= NULL;
 CItemAttrLayer*				g_pItemAttrLayer		= NULL;
+
+#define pcheck(x) DFOutputDebugString(#x" = %p\n", x);
+
+void PointerIntegrityCheck(const char* msg) {
+	DFOutputDebugString("%s\n\n", msg);
+	DFOutputDebugString("GXOBJECT_HANDLE  g_hHandle = %p", g_hHandle);
+	DFOutputDebugString("g_hEffectHandle = %p", g_hEffectHandle);
+	DFOutputDebugString("g_pExecutive = %p", g_pExecutive);
+	DFOutputDebugString("g_pGeometry = %p", g_pGeometry);
+	DFOutputDebugString("g_pRenderer = %p", g_pRenderer);
+	DFOutputDebugString("g_pNet = %p", g_pNet);
+	pcheck(g_pNet);
+	pcheck(g_pFont);
+	pcheck(g_pObjManager);
+	pcheck(g_pSprManager);
+	pcheck(g_pDungeonTable);
+
+
+	/*
+	CMessagePool				g_Message;
+	CMessagePool				g_CmdMessage;
+	CMessagePool				g_ConvMessage;
+	CMessagePool				g_NotConvMessage;
+	CMessagePool				g_Emoticon;
+
+	CResNameResolver			g_Res;
+	CResNameResolver			g_ResDefined;
+	CItemMoveManager			g_ItemMoveManager;
+	CItemUsedManager			g_ItemUsedManager;
+	*/
+
+	pcheck(g_pObjDescPool);
+	pcheck(g_pUserPool);
+	pcheck(g_pMonsterPool);
+	pcheck(g_pItemPool);
+	pcheck(g_pItemStorePool);
+	pcheck(g_pItemOptionPool);
+	pcheck(g_pItemResourcePool);
+	pcheck(g_pGroupInfoPool);
+	pcheck(g_pMessengerUserPool);
+	pcheck(g_pGuildWarPool);
+	pcheck(g_pPartyBoardPool);
+	pcheck(g_pGuildOfflinePool);
+	pcheck(g_pGuildDataPool);
+	pcheck(g_pHelpInfoPool);
+	pcheck(g_pSkillReosurcePool);
+	pcheck(g_pSoundEffectPool);
+	pcheck(g_pInterfaceSprPool);
+	pcheck(g_pGuildPool);
+	pcheck(g_pPartyPool);
+	pcheck(g_pChatPool);
+	pcheck(g_pEffectPool);
+	
+	pcheck(g_pUserHash);
+	pcheck(g_pMonsterHash);
+	pcheck(g_pEffectHash);
+	pcheck(g_pItemHash);
+	pcheck(g_pPartyBoardHash);
+	pcheck(g_pGuildWarHash);
+	pcheck(g_pGuildInfoHash);
+	pcheck(g_pGuildOfflineHash);
+	pcheck(g_pItemOptionHash);
+	pcheck(g_pItemStoreHash);
+	pcheck(g_pItemResourceHash);
+	pcheck(g_pHelpInfoHash);
+	pcheck(g_pSetItemInfoHash);
+	pcheck(g_pItemMakingInfoHash);
+	pcheck(g_pPartyUserHash);
+	pcheck(g_pGroupInfoHash);
+	pcheck(g_pMessengerOnLineHash);
+	pcheck(g_pMessengerOffLineHash);
+	pcheck(g_pInterfaceSprHash);
+	pcheck(g_pGuildUserHash);
+	
+	/*
+	COnlyList* g_pAllChatList = NULL;
+	COnlyList* g_pPartyChatList = NULL;
+	COnlyList* g_pGuildChatList = NULL;
+	COnlyList* g_pWhisperChatList = NULL;
+	COnlyList* g_pFriendChatList = NULL;
+
+	ChrInfoLayer* g_pChrInfoUser = NULL;
+	ChrInfoLayer* g_pChrInfoMonster = NULL;
+	ChrInfoLayer* g_pChrInfoEffect = NULL;
+	EffectLayer* g_pEffectLayer = NULL;
+	CMonsterManager* g_pMonsterManager = NULL;
+	CInputManager* g_pInputManager = NULL;
+	CItemAttrLayer* g_pItemAttrLayer = NULL;
+	*/
+}
 
 char* g_pszKeyArray[0xff] = 
 {
@@ -545,6 +617,7 @@ void LoadCursorDoIt()
 
 BOOL InitGame()
 {
+	
 	g_enGraphicCardOption = SpecGraphicCard();
 
 	if(g_enGraphicCardOption == VOODOO)
@@ -582,19 +655,6 @@ BOOL InitGame()
 	
 	g_pRenderer->InitializeRenderTarget(256, 1);
 	
-#ifdef _USE_IME
-		GET_IMEEDIT()->InitializeIME(g_pExecutive, g_hMainWnd);	
-		GET_IMEEDIT()->SetStatusWndPos(800, 600);			
-#if IS_JAPAN_LOCALIZING()
-		GET_IMEEDIT()->SetEditFonts(-12, SHIFTJIS_CHARSET);	
-#elif IS_CHINA_LOCALIZING()
-		GET_IMEEDIT()->SetEditFonts(-12, GB2312_CHARSET);
-#elif IS_TAIWAN_LOCALIZING()
-		GET_IMEEDIT()->SetEditFonts(-12, CHINESEBIG5_CHARSET);
-#else
-		GET_IMEEDIT()->SetEditFonts(-12, DEFAULT_CHARSET);
-#endif
-#endif	
 	g_hImc	= ImmGetContext( g_hMainWnd );	
 	
 	BOOL	bCreated = CreateSoundLib( &g_pSoundLib );
@@ -627,6 +687,9 @@ BOOL InitGame()
 	LoadCursorDoIt();
 	InitializePool();
 	InitializeHash();	
+
+	//
+
 	LoadSkillresourceTable();	
 	LoadItemResourceTable();
 	LoadBaseItemTable();
@@ -638,11 +701,14 @@ BOOL InitGame()
 	LoadLevelExp();
 	PreLoadResource();
 
+	//
+
 	g_pSprManager = new CSpriteManager(10000);
 	g_pObjManager = new CObjectManager(100);
 	
 	InitializeEffect(TRUE);
-		
+	
+
 	g_pDungeonTable		= new CDungeonTable(1000);		
 	g_pMonsterManager	= new CMonsterManager;
 
@@ -674,15 +740,7 @@ BOOL InitGame()
 		"ITEM", "GUARDIAN OPEN"
 	};
 
-#if IS_TAIWAN_LOCALIZING()
-	char* szDefault[MAX_KEY] =
-	{
-		"S", "P", "W", "A", "T", "L", "O", "F", "G", 
-		"F1", "F2", "F3", "F4", "F5", "F6", "F7", "F8", "F9", 
-		"F10", "F11", "F12", "", "", "", "", "", "", "", "", "",
-		"Z", "X", "C", "V", "SPACE", "G"
-	};
-#else
+
 	char* szDefault[MAX_KEY] =
 	{
 		"S", "P", "W", "A", "T", 
@@ -696,7 +754,7 @@ BOOL InitGame()
 
 		"SPACE", "G"
 	};	
-#endif	
+	
 	wsprintf(szFile, "%s\\%s", g_szBasePath, "KeyConfig.ini");
 	
 	for(int i = 0; i < MAX_KEY; i++)
@@ -752,6 +810,9 @@ BOOL InitGame()
 
 
 	InterfaceSprLoad(0);
+
+	PointerIntegrityCheck("In beginning end");
+	
 
 	return TRUE;
 }
@@ -1809,7 +1870,7 @@ void LoadSkillresourceTable()
 		g_sSkillListManager.pSkillList[i].pMasteryList		= new COnlyList(MAX_SKILL_NODE);
 	}
 	
-	SSKILL_RESOURCE			sSkillResource[1000];
+	SSKILL_RESOURCE			*sSkillResource = new SSKILL_RESOURCE[5000];
 	LP_SKILL_RESOURCE_EX	lpSkillResourceEx;
 
 	int	nLeftIndex	= 1;
@@ -1874,6 +1935,7 @@ void LoadSkillresourceTable()
 	}
 	g_sSkillListManager.byLeftSkillCnt	= (BYTE)nLeftIndex;
 	g_sSkillListManager.byRightSkillCnt	= (BYTE)nRightIndex;
+	delete sSkillResource;
 }
 
 void LoadItemResourceTable()

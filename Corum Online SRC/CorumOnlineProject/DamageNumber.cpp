@@ -14,7 +14,6 @@ void	InitDamageNumber()
 	char	szBuf[1024] = {0,};
 
 	memset( g_pDamageNumberPool, 0, sizeof( DAMAGE_NUMBER_OBJECT_POOL ) * 2 );
-	return;
 	
 //	for( i=0; i<2; i++ )		// Monster And User
 //	{
