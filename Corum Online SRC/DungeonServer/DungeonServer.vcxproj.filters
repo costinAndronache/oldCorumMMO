@@ -224,11 +224,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="DungeonServer.rc">
-      <Filter>Source Files</Filter>
-    </ResourceCompile>
-  </ItemGroup>
-  <ItemGroup>
     <Library Include="IndexCreator.lib">
       <Filter>Source Files</Filter>
     </Library>

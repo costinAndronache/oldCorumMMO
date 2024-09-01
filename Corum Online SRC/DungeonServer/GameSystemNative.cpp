@@ -930,7 +930,8 @@ int ItemUpgrade(CUser* pUser,CItem* pItem[4],BYTE* pbZipCode)
 
 				// 이제 아이템을 검사하여 같은 옵션이 붙어 있는지를 검사한다.
 				// 그리고 만약 같은 옵션이 있다면 한번더 올려준다.
-				for( int j = 0; pItem[ITEM_UPGRADE_WEAPON]->wAttr[j].uCode != 0 && j < MAX_ITEM_ATTR; j++ )
+				int j = 0;
+				for(j = 0; pItem[ITEM_UPGRADE_WEAPON]->wAttr[j].uCode != 0 && j < MAX_ITEM_ATTR; j++ )
 				{
 					wRealOptionCodeWA = pItem[ITEM_UPGRADE_WEAPON]->wAttr[j].uCode;
 					if( wRealOptionCode == wRealOptionCodeWA )
@@ -1438,7 +1439,8 @@ int ItemUpgrade_Localizing(CUser* pUser,CItem* pItem[4],BYTE* pbZipCode)
 
 				// 이제 아이템을 검사하여 같은 옵션이 붙어 있는지를 검사한다.
 				// 그리고 만약 같은 옵션이 있다면 한번더 올려준다.
-				for( int j = 0; pItem[ITEM_UPGRADE_WEAPON]->wAttr[j].uCode != 0 && j < MAX_ITEM_ATTR; j++ )
+				int j = 0;
+				for(j = 0; pItem[ITEM_UPGRADE_WEAPON]->wAttr[j].uCode != 0 && j < MAX_ITEM_ATTR; j++ )
 				{
 					wRealOptionCodeWA = pItem[ITEM_UPGRADE_WEAPON]->wAttr[j].uCode;
 					if( wRealOptionCode == wRealOptionCodeWA )

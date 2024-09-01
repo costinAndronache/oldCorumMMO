@@ -126,7 +126,7 @@ BOOL CorumCMap::ReadMap(DWORD dwID)
 	}	
 
 	CloseHandle(hFile);
-
+	Log(LOG_IMPORTANT, "Opened TTB File!(%d.ttb)", dwID);
 	return TRUE;
 }
 

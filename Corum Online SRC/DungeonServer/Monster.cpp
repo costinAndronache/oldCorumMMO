@@ -81,39 +81,39 @@ BOOL CMonster::SetMonsterAI( DWORD dwAI )
 	switch( dwAI )
 	{
 	case 0:
-		AI		= AI0;
+		AI		= &CMonster::AI0;
 		break;
 	case 1:
-		AI		= AI1;
+		AI		= &CMonster::AI1;
 		break;
 
 	case 2:
 		//AI		= ( void (CMonster::*)() )&CMonster::AI2;
-		AI		= AI_New;
+		AI		= &CMonster::AI_New;
 		break;
 
 	case 3:
-		AI		= AI3;
+		AI		= &CMonster::AI3;
 		break;
 
 	case 4:
-		AI		= AI4;
+		AI		= &CMonster::AI4;
 		break;
 	
 	case 5:
-		AI		= AI5;
+		AI		= &CMonster::AI5;
 		break;
 
 	case 6:
-		AI		= AI6;
+		AI		= &CMonster::AI6;
 		break;
 	
 	case 8:
-		AI		= AI8;
+		AI		= &CMonster::AI8;
 		break;
 
 	case 9:
-		AI		= AI9;
+		AI		= &CMonster::AI9;
 		break;
 
 	default:
@@ -2301,7 +2301,8 @@ void CMonster::AI4()
 			else
 			{
 				// 선택된 스킬의 Index를 구한다
-				for(int i=0;i<MAX_GUARDIAN_USE_SKILL;i++)
+				int i = 0;
+				for(i=0;i<MAX_GUARDIAN_USE_SKILL;i++)
 				{
 					if(m_MonsterSkill[i].bySkillKind == bSkill)
 					{
@@ -2311,7 +2312,7 @@ void CMonster::AI4()
 				}
 
 				// 선택된 스킬이 배우지 않은 것이면
-				if(i == MAX_GUARDIAN_USE_SKILL)
+				if( i == MAX_GUARDIAN_USE_SKILL)
 				{
 					// 렌덤하게 쓴다
 					bSkill = rand()%m_dwTemp[NPC_TEMP_SKILLMANY];
@@ -3050,7 +3051,7 @@ void CMonster::SendAllStatus()
 	// 스킬 동기화
 	// 아이텀 정보에 여유 공간이 없어서 지저분하게 사용
 	WORD wSkillLevel = 0;
-	for(i = 0;i < MAX_GUARDIAN_USE_SKILL; ++i)
+	for(int i = 0;i < MAX_GUARDIAN_USE_SKILL; ++i)
 	{
 		wSkillLevel |= (WORD)(m_MonsterSkill[i].bSkillLevel/5) << 3 * i;
 		pGuardianItem->Guardian.bSkill[i] = m_MonsterSkill[i].bySkillKind;
@@ -4804,13 +4805,13 @@ void CMonster::CreateResource()
 	NewUsingStatusEffectList();
 	m_pUnitForAI = NULL;
 
-	AI_FindObject[0] = AI_FindObjectNear;
-	AI_FindObject[1] = AI_FindObjectLeastHP;
-	AI_FindObject[2] = AI_FindObjectNearAndFewHP;
-	AI_FindObject[3] = AI_FindObjectAttachDetectAndNearAndFewHP;
-	AI_DefenseType[0] = AI_DefenseNormal;
-	AI_DefenseType[1] = AI_DefenseRecovery;
-	AI_DefenseType[2] = AI_Defense_ChangeTargetToFierceObject;
+	AI_FindObject[0] = &CMonster::AI_FindObjectNear;
+	AI_FindObject[1] = &CMonster::AI_FindObjectLeastHP;
+	AI_FindObject[2] = &CMonster::AI_FindObjectNearAndFewHP;
+	AI_FindObject[3] = &CMonster::AI_FindObjectAttachDetectAndNearAndFewHP;
+	AI_DefenseType[0] = &CMonster::AI_DefenseNormal;
+	AI_DefenseType[1] = &CMonster::AI_DefenseRecovery;
+	AI_DefenseType[2] = &CMonster::AI_Defense_ChangeTargetToFierceObject;
 }
 
 void CMonster::RemoveResource()
@@ -5189,7 +5190,7 @@ void CMonster::SetSkillLevel(BYTE bySkillKind, BYTE bySkillLevel)
 	m_MonsterSkill[nIndex].bSkillLevel = bySkillLevel;
 
 	m_dwTemp[NPC_TEMP_SKILLMANY] = 0;
-	for(i = 0; i < (IsGuardian()? MAX_GUARDIAN_USE_SKILL: MAX_MONSTER_USE_SKILL); ++i)
+	for(int i = 0; i < (IsGuardian()? MAX_GUARDIAN_USE_SKILL: MAX_MONSTER_USE_SKILL); ++i)
 	{
 		if (m_MonsterSkill[i].bSkillLevel != 0)
 			m_dwTemp[NPC_TEMP_SKILLMANY]++;

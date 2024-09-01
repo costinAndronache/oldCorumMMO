@@ -32,7 +32,7 @@ void CItemAttrLayer::QueryItemAttr()
 	pData = g_pDb->OpenRecordEx("Select id, type, min, max, pbt from item_attr_value_list"
 		, MAX_ATTR_VALUE_LIST, DEFAULT_ROWS_PER_READ, (BYTE)GAME_DB);
 	
-	for( i = 0; i < pData->Query.select.dwRowCount; i++ )
+	for(int i = 0; i < pData->Query.select.dwRowCount; i++ )
 	{
 		pItemAttrValueList = 
 			(ITEM_ATTR_VALUE_LIST*)(pData->Query.select.pResult + ( i * pData->Query.select.dwRowSize ));

@@ -87,7 +87,7 @@ void GuardianSupplies_Cancel(CUser* pUser)
 
 		pItemNativeDest = GetItemNative(pUser->GetCurDungeonLayer(), &ItemNativeInfoSmall);
 
-		for(i = 0; i < MAX_BELT_POOL; i++)
+		for(int i = 0; i < MAX_BELT_POOL; i++)
 		{
 			ItemNativeInfoSmall.bySlotIndex = i;
 
@@ -127,7 +127,7 @@ void GuardianSupplies_Cancel(CUser* pUser)
 
 		pItemNativeDest = GetItemNative(pUser->GetCurDungeonLayer(), &ItemNativeInfoSmall);
 
-		for(i = 0; i < MAX_BELT_POOL; i++)
+		for(int i = 0; i < MAX_BELT_POOL; i++)
 		{
 			ItemNativeInfoSmall.bySlotIndex = i;
 
@@ -384,7 +384,7 @@ void Trade_Cancel(CUser* pUser)
 		}
 
 		// Item Move //
-		for(i = 0; i < MAX_TRADE_POOL; i++)
+		for(int i = 0; i < MAX_TRADE_POOL; i++)
 		{
 			int nValue = pUser->m_pTradeItem[i].GetID();
 
@@ -412,7 +412,7 @@ void Trade_Cancel(CUser* pUser)
 
 					if(!bChk)
 					{
-						for(j = 0; j < MAX_BANK_LARGE_POOL; j++)
+						for(int j = 0; j < MAX_BANK_LARGE_POOL; j++)
 						{
 							if(pUser->m_pBank_Large[j].GetID()==0)
 							{
@@ -1901,7 +1901,7 @@ void CheckItemSlot(CUser* pUser)
 	{
 		BOOL bChk = FALSE;
 
-		for(i = 0; i < MAX_INV_LARGE_POOL; i++)
+		for(int i = 0; i < MAX_INV_LARGE_POOL; i++)
 		{
 			if(pUser->m_pInv_Large[i].GetID()==0 
 				&& bChk==FALSE 
@@ -1913,12 +1913,12 @@ void CheckItemSlot(CUser* pUser)
 		}
 	}		
 		
-	for(i = 0; i < 4; i++)
+	for(int i = 0; i < 4; i++)
 	{
 		memset(&pUser->m_pUpgradeItem[i], 0, sizeof(pUser->m_pUpgradeItem[i]));
 	}
 	
-	for( i = 0; i < MAX_PLAYER_SHOP_INV; i++)
+	for(int i = 0; i < MAX_PLAYER_SHOP_INV; i++)
 	{
 		if(pUser->m_sPlayerShop.cItem[i].GetID()!=0)
 		{
@@ -1960,7 +1960,7 @@ void CheckItemSlot(CUser* pUser)
 		pUser->m_sPlayerShop.dwCustomSellPrice[i] = 0;
 	}
 
-	for(i = 0; i < MAX_PLAYER_SHOP_INV; i++)
+	for(int i = 0; i < MAX_PLAYER_SHOP_INV; i++)
 	{
 		if(pUser->m_sPlayerShop.cItem[i].GetID()!=0)
 		{

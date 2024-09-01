@@ -2223,7 +2223,7 @@ void CUser::SetDamageOver(const CUnit* pUnit, DWORD dwDamage)
 			}
 		}
 
-		for( i=0; i<MAX_USER_GUARDIAN; i++ )
+		for( int i=0; i<MAX_USER_GUARDIAN; i++ )
 		{
 			if( m_pMonster[i] )
 			{

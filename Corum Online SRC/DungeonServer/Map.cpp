@@ -150,7 +150,7 @@ BOOL CMap::ReadMap(DWORD dwID)
 	Section_Link_Info sSectionLinkInfo;
 	
 	//Read Section Information
-	for(i=0; i<wTotalSectionNum; i++)
+	for(int i=0; i<wTotalSectionNum; i++)
 	{
 		dwTotalReadByte = 0;
 
@@ -229,7 +229,7 @@ BOOL CMap::ReadMap(DWORD dwID)
 	int nRet = g_pDb->OpenRecord(szQuery, &SpotInfo, 1, GAME_DB);
 	if(nRet < 0)	__asm int 3
 
-	for(i=0; i<wSpotNum; i++)
+	for(int i=0; i<wSpotNum; i++)
 	{
 		bResult = ReadFile(hFile, &wID, sizeof(WORD), &dwRead, NULL);	
 
@@ -254,7 +254,7 @@ BOOL CMap::ReadMap(DWORD dwID)
 		m_pParentLayer->m_pStartSpot = new RECT[ wStartSpotNum ];	memset(m_pParentLayer->m_pStartSpot, 0, sizeof(RECT));
 		m_pParentLayer->m_wStartSpotNum = wStartSpotNum;
 
-		for(i=0; i<wStartSpotNum; i++)
+		for(int i=0; i<wStartSpotNum; i++)
 		{
 			bResult = ReadFile(hFile, &wID, sizeof(WORD), &dwRead, NULL);	
 			if(!bResult || wID > MAX_START_SPOT_NUM || wID == 0)	__asm int 3

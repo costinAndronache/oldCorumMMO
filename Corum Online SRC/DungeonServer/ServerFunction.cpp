@@ -653,7 +653,7 @@ void TerminateServer()
 		g_pBaseItemHash	= NULL;
 	}
 
-	for( i = 0; i < MAX_ITEM_UPGRADE_LEVEL + 1; ++i)
+	for( int i = 0; i < MAX_ITEM_UPGRADE_LEVEL + 1; ++i)
 	{
 		if (g_pItemUpgradeTable[i])
 		{
@@ -1217,7 +1217,7 @@ void LoadItemTable()
 	CHECK_MEMORY();
 
 	pData = g_pDb->OpenRecordEx("Select * from Item_Armor", 1000, DEFAULT_ROWS_PER_READ, GAME_DB );
-	for( i = 0; i < pData->Query.select.dwRowCount; i++ )
+	for( int i = 0; i < pData->Query.select.dwRowCount; i++ )
 	{
 		pBaseItem = new CBaseItem;
 		memset( pBaseItem, 0, sizeof(CBaseItem) );
@@ -1229,7 +1229,7 @@ void LoadItemTable()
 	CHECK_MEMORY();
 	
 	pData = g_pDb->OpenRecordEx("Select * from Item_Bag", 500, DEFAULT_ROWS_PER_READ, GAME_DB );
-	for( i = 0; i < pData->Query.select.dwRowCount; i++)
+	for(int i = 0; i < pData->Query.select.dwRowCount; i++)
 	{
 		pBaseItem = new CBaseItem;
 		memset( pBaseItem, 0, sizeof(CBaseItem) );
@@ -1241,7 +1241,7 @@ void LoadItemTable()
 	CHECK_MEMORY();
 
 	pData = g_pDb->OpenRecordEx("Select * from Item_Consumable", 500, DEFAULT_ROWS_PER_READ, GAME_DB );
-	for( i = 0; i < pData->Query.select.dwRowCount; i++ )
+	for(int i = 0; i < pData->Query.select.dwRowCount; i++ )
 	{
 		pBaseItem = new CBaseItem;
 		memset( pBaseItem, 0, sizeof(CBaseItem) );
@@ -1253,7 +1253,7 @@ void LoadItemTable()
 	CHECK_MEMORY();
 
 	pData = g_pDb->OpenRecordEx("Select * from Item_Supplies", 500, DEFAULT_ROWS_PER_READ, GAME_DB );
-	for( i = 0; i < pData->Query.select.dwRowCount; i++ )
+	for( int i = 0; i < pData->Query.select.dwRowCount; i++ )
 	{
 		pBaseItem = new CBaseItem;
 		memset( pBaseItem, 0, sizeof(CBaseItem) );
@@ -1265,7 +1265,7 @@ void LoadItemTable()
 	CHECK_MEMORY();
 
 	pData = g_pDb->OpenRecordEx("Select * from Item_Zodiac", 500, DEFAULT_ROWS_PER_READ, GAME_DB );
-	for( i = 0; i < pData->Query.select.dwRowCount; i++ )
+	for(int i = 0; i < pData->Query.select.dwRowCount; i++ )
 	{
 		pBaseItem = new CBaseItem;
 		memset( pBaseItem, 0, sizeof(CBaseItem) );
@@ -1277,7 +1277,7 @@ void LoadItemTable()
 	CHECK_MEMORY();
 
 	pData = g_pDb->OpenRecordEx("Select * from Item_Ride", 500, DEFAULT_ROWS_PER_READ, GAME_DB );
-	for( i = 0; i < pData->Query.select.dwRowCount; i++ )
+	for(int i = 0; i < pData->Query.select.dwRowCount; i++ )
 	{
 		pBaseItem = new CBaseItem;
 		memset( pBaseItem, 0, sizeof(CBaseItem) );
@@ -1289,7 +1289,7 @@ void LoadItemTable()
 	CHECK_MEMORY();
 
 	pData = g_pDb->OpenRecordEx("Select * from Item_Special", 500, DEFAULT_ROWS_PER_READ, GAME_DB );
-	for( i = 0; i < pData->Query.select.dwRowCount; i++ )
+	for( int i = 0; i < pData->Query.select.dwRowCount; i++ )
 	{
 		pBaseItem = new CBaseItem;
 		memset( pBaseItem, 0, sizeof(CBaseItem) );
@@ -1301,7 +1301,7 @@ void LoadItemTable()
 	CHECK_MEMORY();
 
 	pData = g_pDb->OpenRecordEx("Select * from Item_Guardian", 500, DEFAULT_ROWS_PER_READ, GAME_DB );
-	for( i = 0; i < pData->Query.select.dwRowCount; i++ )
+	for(int i = 0; i < pData->Query.select.dwRowCount; i++ )
 	{
 		pBaseItem = new CBaseItem;
 		memset( pBaseItem, 0, sizeof(CBaseItem) );
@@ -1313,7 +1313,7 @@ void LoadItemTable()
 	CHECK_MEMORY();
 
 	pData = g_pDb->OpenRecordEx("Select * from Item_Magic_Array", 500, DEFAULT_ROWS_PER_READ, GAME_DB );
-	for( i = 0; i < pData->Query.select.dwRowCount; i++ )
+	for(int i = 0; i < pData->Query.select.dwRowCount; i++ )
 	{
 		pBaseItem = new CBaseItem;
 		memset( pBaseItem, 0, sizeof(CBaseItem) );
@@ -1325,7 +1325,7 @@ void LoadItemTable()
 	CHECK_MEMORY();
 
 	pData = g_pDb->OpenRecordEx("Select * from Item_Materials", 500, DEFAULT_ROWS_PER_READ, GAME_DB );
-	for( i = 0; i < pData->Query.select.dwRowCount; i++ )
+	for( int i = 0; i < pData->Query.select.dwRowCount; i++ )
 	{
 		pBaseItem = new CBaseItem;
 		memset( pBaseItem, 0, sizeof(CBaseItem) );
@@ -1337,7 +1337,7 @@ void LoadItemTable()
 	CHECK_MEMORY();
 
 	pData = g_pDb->OpenRecordEx("Select * from Item_Mix_Upgrade", 500, DEFAULT_ROWS_PER_READ, GAME_DB );
-	for( i = 0; i < pData->Query.select.dwRowCount; i++ )
+	for( int i = 0; i < pData->Query.select.dwRowCount; i++ )
 	{
 		pBaseItem = new CBaseItem;
 		memset( pBaseItem, 0, sizeof(CBaseItem) );
@@ -1349,7 +1349,7 @@ void LoadItemTable()
 	CHECK_MEMORY();
 
 	pData = g_pDb->OpenRecordEx("Select * from Item_MagicField_Array", 500, DEFAULT_ROWS_PER_READ, GAME_DB );
-	for( i = 0; i < pData->Query.select.dwRowCount; i++ )
+	for( int i = 0; i < pData->Query.select.dwRowCount; i++ )
 	{
 		pBaseItem = new CBaseItem;
 		memset( pBaseItem, 0, sizeof(CBaseItem) );
@@ -1361,7 +1361,7 @@ void LoadItemTable()
 	CHECK_MEMORY();
 
 	pData = g_pDb->OpenRecordEx("Select * from Item_Upgrade",500,DEFAULT_ROWS_PER_READ,(BYTE)GAME_DB);
-	for( i = 0; i < pData->Query.select.dwRowCount; i++)
+	for( int i = 0; i < pData->Query.select.dwRowCount; i++)
 	{
 		pBaseItem = new CBaseItem;
 		memset( pBaseItem, 0, sizeof(CBaseItem) );
@@ -1373,7 +1373,7 @@ void LoadItemTable()
 	CHECK_MEMORY();
 
 	pData = g_pDb->OpenRecordEx("Select * from Item_liquid",500,DEFAULT_ROWS_PER_READ,(BYTE)GAME_DB);
-	for( i = 0; i < pData->Query.select.dwRowCount; i++)
+	for(int i = 0; i < pData->Query.select.dwRowCount; i++)
 	{
 		pBaseItem = new CBaseItem;
 		memset( pBaseItem, 0, sizeof(CBaseItem) );
@@ -1385,7 +1385,7 @@ void LoadItemTable()
 	CHECK_MEMORY();
 
 	pData = g_pDb->OpenRecordEx("Select * from Item_Edition",500,DEFAULT_ROWS_PER_READ,(BYTE)GAME_DB);
-	for( i = 0; i < pData->Query.select.dwRowCount; i++)
+	for(int i = 0; i < pData->Query.select.dwRowCount; i++)
 	{
 		pBaseItem = new CBaseItem;
 		memset( pBaseItem, 0, sizeof(CBaseItem) );
@@ -1452,7 +1452,7 @@ BOOL LoadDungeonServerData()
 
 	g_pSetItemInfoHash->Destroy( TRUE );
 	pData = g_pDb->OpenRecordEx( "Select * from Item_SET_INFO", 500, DEFAULT_ROWS_PER_READ, GAME_DB );		
-	for( i = 0; i < pData->Query.select.dwRowCount; i++ )
+	for( int i = 0; i < pData->Query.select.dwRowCount; i++ )
 	{
 		pSetItemInfo = new SET_ITEM_INFO;
 		memset( pSetItemInfo, 0, sizeof( SET_ITEM_INFO ) );
@@ -1465,7 +1465,7 @@ BOOL LoadDungeonServerData()
 
 	g_pItemMakingInfoHash->Destroy( TRUE );
 	pData = g_pDb->OpenRecordEx( "Select * from Item_making", 500, DEFAULT_ROWS_PER_READ, GAME_DB );
-	for( i = 0; i < pData->Query.select.dwRowCount; i++ )
+	for(int i = 0; i < pData->Query.select.dwRowCount; i++ )
 	{
 		pItemMakingInfo = new ITEM_MAKING_INFO;
 		memset( pItemMakingInfo, 0, sizeof( ITEM_MAKING_INFO ) );
@@ -1477,7 +1477,7 @@ BOOL LoadDungeonServerData()
 	CHECK_MEMORY();	
 
 	pData = g_pDb->OpenRecordEx("select [id], itemid, [type], mapid from Item_Store order by ItemId", 2000 , DEFAULT_ROWS_PER_READ, (BYTE)GAME_DB );
-	for( i = 0; i < pData->Query.select.dwRowCount; i++)
+	for(int i = 0; i < pData->Query.select.dwRowCount; i++)
 	{
 		pItemStoreNative = new ITEM_STORENATIVE;
 		memset( pItemStoreNative, 0, sizeof(ITEM_STORENATIVE) );
@@ -1489,7 +1489,7 @@ BOOL LoadDungeonServerData()
 	CHECK_MEMORY();
 
 	pData = g_pDb->OpenRecordEx("Select * From Item_Event_MaxCount Order by id", 500, DEFAULT_ROWS_PER_READ, (BYTE)GAME_DB );
-	for( i = 0; i < pData->Query.select.dwRowCount; i++)
+	for(int i = 0; i < pData->Query.select.dwRowCount; i++)
 	{
 		pItemEvent = new ITEM_EVENT;
 		memset( pItemEvent, 0, sizeof(ITEM_EVENT) );
@@ -1502,7 +1502,7 @@ BOOL LoadDungeonServerData()
 
 	g_pBaseMonsterHash->Destroy(TRUE);
 	pData = g_pDb->OpenRecordEx("Select * from BaseMonsterInfo", 2000, DEFAULT_ROWS_PER_READ, GAME_DB );
-	for( i = 0; i < pData->Query.select.dwRowCount; i++ )
+	for( int i = 0; i < pData->Query.select.dwRowCount; i++ )
 	{
 		pBaseMonster = new BASEMONSTER;
 		memset( pBaseMonster, 0, sizeof(BASEMONSTER) );
@@ -1517,7 +1517,7 @@ BOOL LoadDungeonServerData()
 	{
 		g_pInvalidLogItemHash->Destroy( TRUE );
 		pData = g_pLogDb->OpenRecordEx("Select * from InvalidLogItem", 200, DEFAULT_ROWS_PER_READ, LOG_DB );
-		for( i = 0; i < pData->Query.select.dwRowCount; i++ )
+		for(int i = 0; i < pData->Query.select.dwRowCount; i++ )
 		{
 			pInvalidLogItem = new INVALID_LOG_ITEM;
 			memcpy( pInvalidLogItem, pData->Query.select.pResult + ( i * pData->Query.select.dwRowSize ), pData->Query.select.dwRowSize );
@@ -1529,7 +1529,7 @@ BOOL LoadDungeonServerData()
 	}
 	g_pItemStoreHash->Destroy(TRUE);
 	pData = g_pDb->OpenRecordEx("Select ItemId From Item_Store Group by ItemId", 1500, DEFAULT_ROWS_PER_READ, GAME_DB);	
-	for( i = 0; i < pData->Query.select.dwRowCount; i++ )
+	for(int i = 0; i < pData->Query.select.dwRowCount; i++ )
 	{
 		pItemStore = (ITEM_STORE*)LALAlloc(g_pItemStorePool);
 		memcpy(pItemStore, pData->Query.select.pResult + ( i * pData->Query.select.dwRowSize ), pData->Query.select.dwRowSize );	
@@ -1541,7 +1541,7 @@ BOOL LoadDungeonServerData()
 
 	memset(g_pBaseBotary, 0, sizeof(BASEITEM_BOTARY) * MAX_ITEMBOTARY);
 	pData = g_pDb->OpenRecordEx("Select * from basebotaryitem", MAX_ITEMBOTARY, DEFAULT_ROWS_PER_READ, GAME_DB);
-	for( i = 0; i < pData->Query.select.dwRowCount; i++ )
+	for( int i = 0; i < pData->Query.select.dwRowCount; i++ )
 	{
 		pBaseBotary = (BASEITEM_BOTARY*)(pData->Query.select.pResult + ( i * pData->Query.select.dwRowSize ));
 		memcpy(&g_pBaseBotary[pBaseBotary->dwID-BASE_ITEMBOTARY_INDEX], pBaseBotary, pData->Query.select.dwRowSize );
@@ -1552,7 +1552,7 @@ BOOL LoadDungeonServerData()
 
 	memset(g_pBasePresentBox, 0, sizeof(BASEITEM_PRESENT_BOX) * (MAX_ITEMPRESENT+1));
 	pData = g_pDb->OpenRecordEx("Select [Item_Id],[Rate],[Quantity] from BasePresentBox", MAX_ITEMPRESENT, DEFAULT_ROWS_PER_READ, GAME_DB);
-	for( i = 0; i < pData->Query.select.dwRowCount; i++ )
+	for(int  i = 0; i < pData->Query.select.dwRowCount; i++ )
 	{
 		pBasePresent = (BASEITEM_PRESENT_BOX*)(pData->Query.select.pResult + ( i * pData->Query.select.dwRowSize ));
 		memcpy(&g_pBasePresentBox[1].ItemRate[i], pBasePresent, pData->Query.select.dwRowSize );
@@ -1563,7 +1563,7 @@ BOOL LoadDungeonServerData()
 
 	memset(g_pCharacter_Propensity, 0, sizeof(Character_Propensity) * MAX_CHARACTER_PROPENSITY);
 	pData = g_pDb->OpenRecordEx("Select * from Character_Propensity", MAX_CHARACTER_PROPENSITY, DEFAULT_ROWS_PER_READ, GAME_DB);
-	for( i = 0; i < pData->Query.select.dwRowCount; i++ )
+	for(int i = 0; i < pData->Query.select.dwRowCount; i++ )
 	{
 		pCharacter_Propensity = (Character_Propensity*)(pData->Query.select.pResult + ( i * pData->Query.select.dwRowSize ));
 		memcpy(&g_pCharacter_Propensity[pCharacter_Propensity->dwID], pCharacter_Propensity, pData->Query.select.dwRowSize );		

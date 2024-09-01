@@ -198,7 +198,7 @@ void CmdItemMakingCancel( DWORD dwConnectionIndex, char* pMsg, DWORD dwLength )
 					}
 
 					// Item Making //
-					for(j = 1; j < 4; j++)
+					for(int j = 1; j < 4; j++)
 					{
 						if(pUser->m_pMakingItem[j].GetID()!=0)
 						{
@@ -218,7 +218,7 @@ void CmdItemMakingCancel( DWORD dwConnectionIndex, char* pMsg, DWORD dwLength )
 						}
 					}
 
-					for(j = 1; j < 4; j++)
+					for(int j = 1; j < 4; j++)
 					{
 						if(pUser->m_pMakingItem[j].GetID()!=0)
 						{
@@ -242,7 +242,7 @@ void CmdItemMakingCancel( DWORD dwConnectionIndex, char* pMsg, DWORD dwLength )
 					{
 						BOOL bChk = FALSE;
 
-						for(j = 0; j < MAX_INV_LARGE_POOL; j++)
+						for(int j = 0; j < MAX_INV_LARGE_POOL; j++)
 						{
 							if(pUser->m_pInv_Large[j].GetID()==0 && bChk==FALSE)
 							{
@@ -257,7 +257,7 @@ void CmdItemMakingCancel( DWORD dwConnectionIndex, char* pMsg, DWORD dwLength )
 
 						if(pUser->m_pMakingItem[0].GetID()!=0)
 						{
-							for(j = 0; j < MAX_BANK_LARGE_POOL; j++)
+							for(int j = 0; j < MAX_BANK_LARGE_POOL; j++)
 							{
 								if(pUser->m_pBank_Large[j].GetID()==0 && bChk==FALSE)
 								{
@@ -313,7 +313,7 @@ void CmdItemUpgradeFail( DWORD dwConnectionIndex, char* pMsg, DWORD dwLength )
 					}
 
 					// Item Upgrade //
-					for(j = 1; j < 4; j++)
+					for(int j = 1; j < 4; j++)
 					{
 						if(pUser->m_pUpgradeItem[j].GetID()!=0)
 						{
@@ -333,7 +333,7 @@ void CmdItemUpgradeFail( DWORD dwConnectionIndex, char* pMsg, DWORD dwLength )
 						}
 					}
 
-					for(j = 1; j < 4; j++)
+					for(int j = 1; j < 4; j++)
 					{
 						if(pUser->m_pUpgradeItem[j].GetID()!=0)
 						{
@@ -357,7 +357,7 @@ void CmdItemUpgradeFail( DWORD dwConnectionIndex, char* pMsg, DWORD dwLength )
 					{
 						BOOL bChk = FALSE;
 
-						for(j = 0; j < MAX_INV_LARGE_POOL; j++)
+						for(int j = 0; j < MAX_INV_LARGE_POOL; j++)
 						{
 							if(pUser->m_pInv_Large[j].GetID()==0 && bChk==FALSE)
 							{
@@ -372,7 +372,7 @@ void CmdItemUpgradeFail( DWORD dwConnectionIndex, char* pMsg, DWORD dwLength )
 
 						if(pUser->m_pUpgradeItem[0].GetID()!=0)
 						{
-							for(j = 0; j < MAX_BANK_LARGE_POOL; j++)
+							for(int j = 0; j < MAX_BANK_LARGE_POOL; j++)
 							{
 								if(pUser->m_pBank_Large[j].GetID()==0 && bChk==FALSE)
 								{
@@ -479,7 +479,7 @@ void CmdItemMaking( DWORD dwConnectionIndex, char* pMsg, DWORD dwLength )
 
 		BOOL bIsEmpty = FALSE;
 
-		for(i = 0; i < MAX_INV_LARGE_POOL; i++)
+		for(int i = 0; i < MAX_INV_LARGE_POOL; i++)
 		{
 			if(pItemNative[i].GetID() == 0)
 			{
@@ -532,7 +532,7 @@ void CmdItemMaking( DWORD dwConnectionIndex, char* pMsg, DWORD dwLength )
 		ItemNativeInfo.eSlotID		= ITEM_NATIVE_MAKING;
 		ItemNativeInfo.dwOwnerID	= pUser->GetID();
 
-		for(i = 1; i < MAX_MAKING_POOL; i++)
+		for(int i = 1; i < MAX_MAKING_POOL; i++)
 		{
 			ItemNativeInfo.bySlotIndex	= i;
 			pItemNativeInfoLink = GetItemNativeLink(&ItemNativeInfo);

@@ -46,39 +46,39 @@ CItemMoveManager::~CItemMoveManager()
 
 void CItemMoveManager::InitItemMoveProc()
 {
-	ItemMoveProc[ITEM_NATIVE_INV_LARGE][ITEM_NATIVE_TRADE]		= LinkSlotChangeInvToLinkProcess;
-	ItemMoveProc[ITEM_NATIVE_INV_LARGE][ITEM_NATIVE_UPGRADE]	= LinkSlotChangeInvToLinkProcess;
-	ItemMoveProc[ITEM_NATIVE_INV_LARGE][ITEM_NATIVE_MAKING]		= LinkSlotChangeInvToLinkProcess;
-	ItemMoveProc[ITEM_NATIVE_INV_LARGE][ITEM_NATIVE_PLAYERSHOP] = LinkSlotChangeInvToLinkProcess;
+	ItemMoveProc[ITEM_NATIVE_INV_LARGE][ITEM_NATIVE_TRADE]		= &CItemMoveManager::LinkSlotChangeInvToLinkProcess;
+	ItemMoveProc[ITEM_NATIVE_INV_LARGE][ITEM_NATIVE_UPGRADE]	= &CItemMoveManager::LinkSlotChangeInvToLinkProcess;
+	ItemMoveProc[ITEM_NATIVE_INV_LARGE][ITEM_NATIVE_MAKING]		= &CItemMoveManager::LinkSlotChangeInvToLinkProcess;
+	ItemMoveProc[ITEM_NATIVE_INV_LARGE][ITEM_NATIVE_PLAYERSHOP] = &CItemMoveManager::LinkSlotChangeInvToLinkProcess;
 	
-	ItemMoveProc[ITEM_NATIVE_INV_SMALL][ITEM_NATIVE_TRADE]		= LinkSlotChangeInvToLinkProcess;
-	ItemMoveProc[ITEM_NATIVE_INV_SMALL][ITEM_NATIVE_UPGRADE]	= LinkSlotChangeInvToLinkProcess;
-	ItemMoveProc[ITEM_NATIVE_INV_SMALL][ITEM_NATIVE_MAKING]		= LinkSlotChangeInvToLinkProcess;
-	ItemMoveProc[ITEM_NATIVE_INV_SMALL][ITEM_NATIVE_PLAYERSHOP] = LinkSlotChangeInvToLinkProcess;
+	ItemMoveProc[ITEM_NATIVE_INV_SMALL][ITEM_NATIVE_TRADE]		= &CItemMoveManager::LinkSlotChangeInvToLinkProcess;
+	ItemMoveProc[ITEM_NATIVE_INV_SMALL][ITEM_NATIVE_UPGRADE]	= &CItemMoveManager::LinkSlotChangeInvToLinkProcess;
+	ItemMoveProc[ITEM_NATIVE_INV_SMALL][ITEM_NATIVE_MAKING]		= &CItemMoveManager::LinkSlotChangeInvToLinkProcess;
+	ItemMoveProc[ITEM_NATIVE_INV_SMALL][ITEM_NATIVE_PLAYERSHOP] = &CItemMoveManager::LinkSlotChangeInvToLinkProcess;
 	
-	ItemMoveProc[ITEM_NATIVE_INV_LARGE][ITEM_NATIVE_TILE]		= DropAndPickupItemProcess;
-	ItemMoveProc[ITEM_NATIVE_INV_SMALL][ITEM_NATIVE_TILE]		= DropAndPickupItemProcess;
-	ItemMoveProc[ITEM_NATIVE_TILE][ITEM_NATIVE_INV_LARGE]		= DropAndPickupItemProcess;
-	ItemMoveProc[ITEM_NATIVE_TILE][ITEM_NATIVE_INV_SMALL]		= DropAndPickupItemProcess;
-	ItemMoveProc[ITEM_NATIVE_TILE][ITEM_NATIVE_BELT]			= DropAndPickupItemProcess;
-	ItemMoveProc[ITEM_NATIVE_INV_KARZ][ITEM_NATIVE_TILE]		= DropAndPickupItemProcess;
+	ItemMoveProc[ITEM_NATIVE_INV_LARGE][ITEM_NATIVE_TILE]		= &CItemMoveManager::DropAndPickupItemProcess;
+	ItemMoveProc[ITEM_NATIVE_INV_SMALL][ITEM_NATIVE_TILE]		= &CItemMoveManager::DropAndPickupItemProcess;
+	ItemMoveProc[ITEM_NATIVE_TILE][ITEM_NATIVE_INV_LARGE]		= &CItemMoveManager::DropAndPickupItemProcess;
+	ItemMoveProc[ITEM_NATIVE_TILE][ITEM_NATIVE_INV_SMALL]		= &CItemMoveManager::DropAndPickupItemProcess;
+	ItemMoveProc[ITEM_NATIVE_TILE][ITEM_NATIVE_BELT]			= &CItemMoveManager::DropAndPickupItemProcess;
+	ItemMoveProc[ITEM_NATIVE_INV_KARZ][ITEM_NATIVE_TILE]		= &CItemMoveManager::DropAndPickupItemProcess;
 
-	ItemMoveProc[ITEM_NATIVE_INV_KARZ][ITEM_NATIVE_BANK_KARZ]	= KarzMoveProcess;
-	ItemMoveProc[ITEM_NATIVE_BANK_KARZ][ITEM_NATIVE_INV_KARZ]	= KarzMoveProcess;
+	ItemMoveProc[ITEM_NATIVE_INV_KARZ][ITEM_NATIVE_BANK_KARZ]	= &CItemMoveManager::KarzMoveProcess;
+	ItemMoveProc[ITEM_NATIVE_BANK_KARZ][ITEM_NATIVE_INV_KARZ]	= &CItemMoveManager::KarzMoveProcess;
 
-	ItemMoveProc[ITEM_NATIVE_UPGRADE][ITEM_NATIVE_UPGRADE]		= LinkSlotChangeLinkToLinkProcess;
-	ItemMoveProc[ITEM_NATIVE_MAKING][ITEM_NATIVE_MAKING]		= LinkSlotChangeLinkToLinkProcess;
-	ItemMoveProc[ITEM_NATIVE_PLAYERSHOP][ITEM_NATIVE_PLAYERSHOP]= LinkSlotChangeLinkToLinkProcess;
-	ItemMoveProc[ITEM_NATIVE_TRADE][ITEM_NATIVE_TRADE]			= LinkSlotChangeLinkToLinkProcess;
+	ItemMoveProc[ITEM_NATIVE_UPGRADE][ITEM_NATIVE_UPGRADE]		= &CItemMoveManager::LinkSlotChangeLinkToLinkProcess;
+	ItemMoveProc[ITEM_NATIVE_MAKING][ITEM_NATIVE_MAKING]		= &CItemMoveManager::LinkSlotChangeLinkToLinkProcess;
+	ItemMoveProc[ITEM_NATIVE_PLAYERSHOP][ITEM_NATIVE_PLAYERSHOP]= &CItemMoveManager::LinkSlotChangeLinkToLinkProcess;
+	ItemMoveProc[ITEM_NATIVE_TRADE][ITEM_NATIVE_TRADE]			= &CItemMoveManager::LinkSlotChangeLinkToLinkProcess;
 
-	ItemMoveProc[ITEM_NATIVE_UPGRADE][ITEM_NATIVE_INV_LARGE]	= LinkSlotChangeLinkToInvProcess;
-	ItemMoveProc[ITEM_NATIVE_UPGRADE][ITEM_NATIVE_INV_SMALL]	= LinkSlotChangeLinkToInvProcess;	
-	ItemMoveProc[ITEM_NATIVE_PLAYERSHOP][ITEM_NATIVE_INV_LARGE] = LinkSlotChangeLinkToInvProcess;
-	ItemMoveProc[ITEM_NATIVE_PLAYERSHOP][ITEM_NATIVE_INV_SMALL] = LinkSlotChangeLinkToInvProcess;
-	ItemMoveProc[ITEM_NATIVE_TRADE][ITEM_NATIVE_INV_LARGE]		= LinkSlotChangeLinkToInvProcess;
-	ItemMoveProc[ITEM_NATIVE_TRADE][ITEM_NATIVE_INV_SMALL]		= LinkSlotChangeLinkToInvProcess;
-	ItemMoveProc[ITEM_NATIVE_MAKING][ITEM_NATIVE_INV_LARGE]		= LinkSlotChangeLinkToInvProcess;
-	ItemMoveProc[ITEM_NATIVE_MAKING][ITEM_NATIVE_INV_SMALL]		= LinkSlotChangeLinkToInvProcess;	
+	ItemMoveProc[ITEM_NATIVE_UPGRADE][ITEM_NATIVE_INV_LARGE]	= &CItemMoveManager::LinkSlotChangeLinkToInvProcess;
+	ItemMoveProc[ITEM_NATIVE_UPGRADE][ITEM_NATIVE_INV_SMALL]	= &CItemMoveManager::LinkSlotChangeLinkToInvProcess;
+	ItemMoveProc[ITEM_NATIVE_PLAYERSHOP][ITEM_NATIVE_INV_LARGE] = &CItemMoveManager::LinkSlotChangeLinkToInvProcess;
+	ItemMoveProc[ITEM_NATIVE_PLAYERSHOP][ITEM_NATIVE_INV_SMALL] = &CItemMoveManager::LinkSlotChangeLinkToInvProcess;
+	ItemMoveProc[ITEM_NATIVE_TRADE][ITEM_NATIVE_INV_LARGE]		= &CItemMoveManager::LinkSlotChangeLinkToInvProcess;
+	ItemMoveProc[ITEM_NATIVE_TRADE][ITEM_NATIVE_INV_SMALL]		= &CItemMoveManager::LinkSlotChangeLinkToInvProcess;
+	ItemMoveProc[ITEM_NATIVE_MAKING][ITEM_NATIVE_INV_LARGE]		= &CItemMoveManager::LinkSlotChangeLinkToInvProcess;
+	ItemMoveProc[ITEM_NATIVE_MAKING][ITEM_NATIVE_INV_SMALL]		= &CItemMoveManager::LinkSlotChangeLinkToInvProcess;
 }
 
 

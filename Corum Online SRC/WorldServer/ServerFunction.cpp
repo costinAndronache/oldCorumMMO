@@ -2175,7 +2175,7 @@ void CreatePoolAndHash()
 
 BOOL InitDungeonList()
 {	
-#ifdef WORLD_MOVE_CHK
+	return TRUE;
 	SDUNGEON_NODE sDungeonList[1000];
 
 	int nCount	= g_pDb->OpenRecord("Select * From DungeonList", sDungeonList, MAX_DUNGEON_NUM_PER_SERVERSET, (BYTE)GAME_DB);
@@ -2204,10 +2204,6 @@ lb_fail:
 
 lb_success:
 	return TRUE;
-
-#else
-	return TRUE;
-#endif
 }
 
 BOOL InitGroupInformation()

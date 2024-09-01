@@ -195,7 +195,7 @@ void QueryTypeBankUserInfo(DBRECEIVEDATA* pResult)
 				}							
 			}
 
-			for(i = 0; i < MAX_BANK_LARGE_POOL; i++)
+			for(int i = 0; i < MAX_BANK_LARGE_POOL; i++)
 			{
 				if(pBankUser->sBankItemLarge[i].GetID() != 0)
 				{
@@ -254,7 +254,7 @@ void QueryTypeUserPlayerShop(DBRECEIVEDATA* pResult)
 					}
 				}
 				
-				for(j = 0; j < MAX_INV_SMALL_POOL; j++)
+				for(int j = 0; j < MAX_INV_SMALL_POOL; j++)
 				{								
 					if(pUser->m_sPlayerShop.cItem[i].GetSerial()->i64Serial == 
 						pUser->m_pInv_Small[j].GetSerial()->i64Serial)
@@ -265,7 +265,7 @@ void QueryTypeUserPlayerShop(DBRECEIVEDATA* pResult)
 					}
 				}
 				
-				for(j = 0; j < MAX_EQUIP_POOL; j++)
+				for(int j = 0; j < MAX_EQUIP_POOL; j++)
 				{								
 					if(pUser->m_sPlayerShop.cItem[i].GetSerial()->i64Serial ==
 						pUser->m_pEquip[j].GetSerial()->i64Serial)
@@ -295,7 +295,7 @@ void QueryTypeUserPlayerShop(DBRECEIVEDATA* pResult)
 						}
 					}
 					
-					for(j = 0; j < MAX_BANK_SMALL_POOL; j++)
+					for(int j = 0; j < MAX_BANK_SMALL_POOL; j++)
 					{								
 						if(pUser->m_sPlayerShop.cItem[i].GetSerial()->i64Serial ==
 							pUser->m_pBank_Small[j].GetSerial()->i64Serial)
@@ -314,7 +314,7 @@ void QueryTypeUserPlayerShop(DBRECEIVEDATA* pResult)
 			PlayerShopLogAll(pUser);
 		}
 
-		for(i = 0; i < MAX_PLAYER_SHOP_INV; i++)
+		for(int i = 0; i < MAX_PLAYER_SHOP_INV; i++)
 		{
 			if(pUser->m_sPlayerShop.cItem[i].GetID() != 0)
 			{
@@ -817,7 +817,7 @@ void QueryTypeUserPlayershop(DBRECEIVEDATA* pResult)
 
 				if(Insert_SmallInvItem2(cItem, &cInsertItem, 0, cInsertItem.GetQuantity(), TRUE)==0)
 				{
-					for(i = 0; i < MAX_INV_SMALL_POOL; i++)
+					for(int i = 0; i < MAX_INV_SMALL_POOL; i++)
 					{
 						memcpy(&pPriceUser->m_pInv_Small[i], &cItem[i], sizeof(CItem));
 					}
@@ -1059,7 +1059,7 @@ void QueryTypeTrade(DBRECEIVEDATA* pResult)
 		DSTC_TRADE_DATA pTradeDataPacket2;
 		pTradeDataPacket2.dwMoeny = pSendUser->m_dwMoney;
 
-		for( i = 0; i < MAX_TRADE_POOL; i++)
+		for(int i = 0; i < MAX_TRADE_POOL; i++)
 		{
 			if(pUser->m_pTradeItem[i].GetID() != 0)
 			{

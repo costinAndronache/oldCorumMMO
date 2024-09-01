@@ -546,7 +546,7 @@ void __DisconnectUserItemReturnToInv(CUser* pUser)
 			}
 		}
 
-		for(i = 1; i < 4; i++)
+		for(int i = 1; i < 4; i++)
 		{
 			if(pUser->m_pMakingItem[i].GetID()!=0)
 			{
@@ -562,7 +562,7 @@ void __DisconnectUserItemReturnToInv(CUser* pUser)
 			}
 		}
 		
-		for(i = 1; i < 4; i++)
+		for(int i = 1; i < 4; i++)
 		{
 			if(pUser->m_pUpgradeItem[i].GetID()!=0)
 			{
@@ -571,7 +571,7 @@ void __DisconnectUserItemReturnToInv(CUser* pUser)
 			}
 		}
 
-		for(i = 1; i < 4; i++)
+		for(int i = 1; i < 4; i++)
 		{
 			if(pUser->m_pMakingItem[i].GetID()!=0)
 			{
@@ -582,7 +582,7 @@ void __DisconnectUserItemReturnToInv(CUser* pUser)
 
 		if(pUser->m_pUpgradeItem[0].GetID() != 0 && GetItemType(pUser->m_pUpgradeItem[0].GetID())==ITEM_TYPE_LARGE)
 		{			
-			for(i = 0; i < MAX_INV_LARGE_POOL; i++)
+			for(int i = 0; i < MAX_INV_LARGE_POOL; i++)
 			{
 				if(pUser->m_pInv_Large[i].GetID()==0)
 				{
@@ -594,7 +594,7 @@ void __DisconnectUserItemReturnToInv(CUser* pUser)
 
 			if(pUser->m_pUpgradeItem[0].GetID()!=0)
 			{
-				for(i = 0; i < MAX_BANK_LARGE_POOL; i++)
+				for(int i = 0; i < MAX_BANK_LARGE_POOL; i++)
 				{
 					if(pUser->m_pBank_Large[i].GetID()==0)
 					{
@@ -609,7 +609,7 @@ void __DisconnectUserItemReturnToInv(CUser* pUser)
 		//pUser->m_pMakingItem[0].GetID() != 0 && 
 		if(GetItemType(pUser->m_pMakingItem[0].GetID())==ITEM_TYPE_LARGE)
 		{			
-			for(i = 0; i < MAX_INV_LARGE_POOL; i++)
+			for(int i = 0; i < MAX_INV_LARGE_POOL; i++)
 			{
 				if(pUser->m_pInv_Large[i].GetID()==0)
 				{
@@ -621,7 +621,7 @@ void __DisconnectUserItemReturnToInv(CUser* pUser)
 
 			if(pUser->m_pMakingItem[0].GetID()!=0)
 			{
-				for(i = 0; i < MAX_BANK_LARGE_POOL; i++)
+				for(int i = 0; i < MAX_BANK_LARGE_POOL; i++)
 				{
 					if(pUser->m_pBank_Large[i].GetID()==0)
 					{
@@ -633,10 +633,10 @@ void __DisconnectUserItemReturnToInv(CUser* pUser)
 			}
 		}
 		
-		for(i = 0; i < 4; i++)
+		for(int i = 0; i < 4; i++)
 			memset(&pUser->m_pUpgradeItem[i], 0, sizeof(pUser->m_pUpgradeItem[i]));
 
-		for(i = 0; i < 4; i++)
+		for(int i = 0; i < 4; i++)
 			memset(&pUser->m_pMakingItem[i], 0, sizeof(pUser->m_pMakingItem[i]));
 
 		// User Trade //

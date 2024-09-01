@@ -138,6 +138,10 @@ void QueryTypeUserInfo(DBRECEIVEDATA* pResult)
 	packet.dwRecentOutMap = pDungeon->m_wWorldMapID;
 	
 	VECTOR3 vDungeonPos = { (float)pDungeon->m_dWorldPos_X, 0.0f, (float)pDungeon->m_dWorldPos_Z };
+	// for some reason all dungeons have invalid (x=0, z=0) coordinates in the database
+	vDungeonPos.x = 6800;
+	vDungeonPos.z = 8800;
+
 	VECTOR3 vStartPos	= { 0.f, 0.f, 0.f };
 	
 	BOOL bRet;
@@ -153,13 +157,13 @@ void QueryTypeUserInfo(DBRECEIVEDATA* pResult)
 	
 	if(!bRet)
 	{
-		//시작 위치를 찾을 수 없음 
+		 // 시작 위치를 찾을 수 없음
 		WSTC_WORLD_LOGIN_FAIL	FailPacket;
 		FailPacket.bErrorCode = 4;
 		g_pNet->SendToUser(pUser->m_dwConnectionIndex, (char*)&packet, packet.GetPacketSize() , FLAG_SEND_NOT_ENCRYPTION);
 		Log(LOG_IMPORTANT, "Empty position is not found! (Name:%s, DungeonID:%d)"
 			, pUser->m_szCharacterName, packet.dwRecentOutPos);
-		return;	
+		return;
 	}
 
 	packet.fStartPos_X = vStartPos.x;

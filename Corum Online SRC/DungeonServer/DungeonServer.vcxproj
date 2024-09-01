@@ -39,6 +39,7 @@
     <SccAuxPath />
     <SccLocalPath>.</SccLocalPath>
     <SccProvider>MSSCCI:Microsoft Visual SourceSafe</SccProvider>
+    <ProjectGuid>{84A559AD-ECE8-4F59-A323-93E0B6080C36}</ProjectGuid>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DEBUG_TAIWAN_INTERNAL_DEVELOP_VERSION|Win32'" Label="Configuration">
@@ -117,7 +118,7 @@
     <OutDir Condition="'$(Configuration)|$(Platform)'=='CHINA_LOCALIZING|Win32'">.\DungeonServer___Win32_CHINA_LOCALIZING\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='CHINA_LOCALIZING|Win32'">.\DungeonServer___Win32_CHINA_LOCALIZING\</IntDir>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='CHINA_LOCALIZING|Win32'">false</LinkIncremental>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">D:\[Source]\DEVELOP_V1\INNER\3_DungeonServer Configurations_루디\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.\..\INNER\3_DungeonServer Configurations\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.\Debug\</IntDir>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</LinkIncremental>
     <OutDir Condition="'$(Configuration)|$(Platform)'=='Dev|Win32'">.\DungeonServer___Win32_Dev\</OutDir>
@@ -159,6 +160,9 @@
     <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='TAIWAN_LOCALIZING|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
     <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='TAIWAN_LOCALIZING|Win32'" />
     <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='TAIWAN_LOCALIZING|Win32'" />
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <TargetName>DungeonServerResult</TargetName>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug_with_New_Command|Win32'">
     <ClCompile>
@@ -259,7 +263,7 @@
     </ClCompile>
     <Link>
       <AdditionalDependencies>CommonServer.lib;odbc32.lib;odbccp32.lib;WS2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <OutputFile>D:\[Source]\DEVELOP_V1\INNER\3_DungeonServer Configurations_루디\DungeonServer.exe</OutputFile>
+      <OutputFile>.\..\INNER\3_DungeonServer Configurations\DungeonServerResult.exe</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <IgnoreSpecificDefaultLibraries>libc.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
@@ -1279,9 +1283,6 @@
       <BrowseInformation Condition="'$(Configuration)|$(Platform)'=='Dev|Win32'">true</BrowseInformation>
     </ClCompile>
     <ClCompile Include="TM_KillingField.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ResourceCompile Include="DungeonServer.rc" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="IndexCreator.lib" />

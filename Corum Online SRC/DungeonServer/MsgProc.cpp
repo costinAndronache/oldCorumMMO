@@ -534,7 +534,8 @@ void CmdPickupItem( DWORD dwConnectionIndex, char* pMsg, DWORD dwLength )
                     pUser = pMember[ rand() % wMemberCount ];
 
 					// 큰 인벤토리 칸에 대해
-					for(int zip=0;zip<MAX_INV_LARGE_POOL;zip++)
+					int zip = 0;
+					for(zip=0;zip<MAX_INV_LARGE_POOL;zip++)
 					{
 						// 비었으면
 						if(pUser->m_pInv_Large[zip].m_wItemID==0)
@@ -630,7 +631,8 @@ void CmdPickupItem( DWORD dwConnectionIndex, char* pMsg, DWORD dwLength )
 				int nMaxQuantity = pBaseItem->GetMaxQuantity();
 
 				// 작은 인벤토리 칸에 대해
-				for(int zip=0;zip<MAX_INV_SMALL_POOL;zip++)
+				int zip = 0;
+				for(zip=0;zip<MAX_INV_SMALL_POOL;zip++)
 				{
 					// 넣을 수 있으면
 					if(pUser->m_pInv_Small[zip].m_wItemID==0
@@ -4625,7 +4627,8 @@ void CmdPickupItem( DWORD dwConnectionIndex, char* pMsg, DWORD dwLength )
 					int nMaxQuantity = pBaseItem->GetMaxQuantity();
 
 					// 벨트의 모든 칸에 대해
-					for(int zip = 0;zip < MAX_BELT_POOL; zip++)
+					int zip = 0;
+					for(zip = 0;zip < MAX_BELT_POOL; zip++)
 					{
 						// 넣을 수 있는 칸이면
 						if(	(pUser->m_pBelt[zip].m_wItemID == 0)

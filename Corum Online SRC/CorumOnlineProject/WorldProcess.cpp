@@ -45,6 +45,7 @@
 #include "IMEEdit.h"
 #include "CodeFun.h"
 #include "ChinaBillingRemainTime.h"
+#include <d3d8.h>
 #include "RivalGuildWar.h"			//	Rival Guild War Operation.. KJK, LMJ is Working 
 //	deathrain
 #include "NetworkTimeObserver.h"
@@ -503,7 +504,7 @@ BOOL InitGameWorld()
 	ShowChinaBillingRemainTime();
 #endif
 
-	GXOBJECT_HANDLE h = CreateHandleObject(g_pObjManager->GetFile((DWORD)DUNGEON_SIEGING), NULL, NULL, GXOBJECT_CREATE_TYPE_EFFECT | GXOBJECT_CREATE_TYPE_DEFAULT_PROC);
+	/*GXOBJECT_HANDLE h = CreateHandleObject(g_pObjManager->GetFile((DWORD)DUNGEON_SIEGING), NULL, NULL, GXOBJECT_CREATE_TYPE_EFFECT | GXOBJECT_CREATE_TYPE_DEFAULT_PROC);
 	ShowObject(h);
 	v3Pos.x = 6300;
 	v3Pos.y = 0;
@@ -512,8 +513,9 @@ BOOL InitGameWorld()
 	GXSetPosition(g_pMainPlayer->m_hPlayer.pHandle, &v3Pos, TRUE);
 	SetCameraTarget(g_pMainPlayer->m_hPlayer.pHandle);
 	g_pMainPlayer->m_pCurTile = g_pMap->GetTile(g_pMainPlayer->m_v3CurPos.x, g_pMainPlayer->m_v3CurPos.z);
-	printf("FRAMES: %d", g_pExecutive->GetFramePerSec());
+	//DFOutputDebugString("FRAMES: %d", g_pExecutive->GetFramePerSec());
 	g_pExecutive->SetFramePerSec(40);
+	*/
 
 
 	return TRUE;

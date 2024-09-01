@@ -608,7 +608,7 @@ void CmdPlayerShopOpen( DWORD dwConnectionIndex, char* pMsg, DWORD dwLength )
 
 		BYTE byInvLarge = 0;
 
-		for(i = 0; i < MAX_INV_LARGE_POOL; i++)
+		for(int i = 0; i < MAX_INV_LARGE_POOL; i++)
 		{
 //			int nValue = pUser->m_pInv_Large[i].GetID()/ITEM_DISTRIBUTE;
 
@@ -629,10 +629,10 @@ void CmdPlayerShopOpen( DWORD dwConnectionIndex, char* pMsg, DWORD dwLength )
 
 		BOOL bChk = TRUE;
 		
-		for(i = 0; i < MAX_INV_SMALL_POOL; i++)
+		for(int i = 0; i < MAX_INV_SMALL_POOL; i++)
 			memcpy(&cItem[i], &pUser->m_pInv_Small[i], sizeof(CItem));
 
-		for(i = 0; i < MAX_PLAYER_SHOP_INV; i++)
+		for(int i = 0; i < MAX_PLAYER_SHOP_INV; i++)
 		{
 //			int nValue = pUser->m_sPlayerShop.cItem[i].GetID()/ITEM_DISTRIBUTE;
 
@@ -763,7 +763,7 @@ void CmdPlayerShopClose( DWORD dwConnectionIndex, char* pMsg, DWORD dwLength )
 		NetSendToUser(pUser->m_dwConnectionIndex, (char*)&pSendPacket, pSendPacket.GetPacketSize(), FLAG_SEND_NOT_ENCRYPTION);
 		
 		// 서버 처리 
-		for(i = 0; i < MAX_PLAYER_SHOP_INV; i++)
+		for(int i = 0; i < MAX_PLAYER_SHOP_INV; i++)
 		{
 //			int nValue = pUser->m_sPlayerShop.cItem[i].GetID()/ITEM_DISTRIBUTE;				
 
@@ -1298,7 +1298,7 @@ BOOL IsTradeTradeItemNativeLinkToItemNativeInv_DoWork(CUser* pUser, CUser* pSend
 	
 	pItemNative = GetItemNative(NULL, &ItemNativeInfoLarge);
 	
-	for(i = 0; i < MAX_INV_LARGE_POOL; i++)
+	for(int i = 0; i < MAX_INV_LARGE_POOL; i++)
 	{
 		if(pItemNative[i].GetID() == 0)
 		{
@@ -1323,7 +1323,7 @@ BOOL IsTradeTradeItemNativeLinkToItemNativeInv_DoWork(CUser* pUser, CUser* pSend
 	
 	pItemNative = GetItemNative(NULL, &ItemNativeInfoSmall);
 
-	for(i = 0; i < MAX_INV_SMALL_POOL; i++)
+	for(int i = 0; i < MAX_INV_SMALL_POOL; i++)
 	{
 		if(pItemNative[i].GetID() == 0)
 		{
@@ -1350,7 +1350,7 @@ BOOL IsTradeTradeItemNativeLinkToItemNativeInv_DoWork(CUser* pUser, CUser* pSend
 	ItemNativeInfo_Link.eSlotID		= ITEM_NATIVE_TRADE;
 	ItemNativeInfo_Link.dwOwnerID	= pUser->GetID();						
 
-	for(i = 0; i < MAX_TRADE_POOL; i++)
+	for(int i = 0; i < MAX_TRADE_POOL; i++)
 	{
 		ItemNativeInfo_Link.bySlotIndex	= i;
 		pItemNativeInfoLink = GetItemNativeLink(&ItemNativeInfo_Link);
@@ -1377,7 +1377,7 @@ BOOL IsTradeTradeItemNativeLinkToItemNativeInv_DoWork(CUser* pUser, CUser* pSend
 	
 	pItemNative = GetItemNative(NULL, &ItemNativeInfoLarge);
 	
-	for(i = 0; i < MAX_INV_LARGE_POOL; i++)
+	for(int i = 0; i < MAX_INV_LARGE_POOL; i++)
 	{
 		if(pItemNative[i].GetID() == 0)
 		{
@@ -1402,7 +1402,7 @@ BOOL IsTradeTradeItemNativeLinkToItemNativeInv_DoWork(CUser* pUser, CUser* pSend
 	
 	pItemNative = GetItemNative(NULL, &ItemNativeInfoSmall);
 
-	for(i = 0; i < MAX_INV_SMALL_POOL; i++)
+	for(int i = 0; i < MAX_INV_SMALL_POOL; i++)
 	{
 		if(pItemNative[i].GetID() == 0)
 		{
@@ -1493,7 +1493,7 @@ void TradeItemNative(CUser* pSrcUser, CUser* pDestUser, ITEM_TRADE* pItemTrade)
 
 	pSrcUser->RemoveAllVirtualItemNativeLink();
 
-	for(i = 0; i < TradeDataPacket.btItemCount; i++)
+	for(int i = 0; i < TradeDataPacket.btItemCount; i++)
 	{
 		eType = GetItemType(TradeDataPacket.Nodes[i].cItem.GetID());
 
@@ -1861,7 +1861,7 @@ void CmdTradeTrade(DWORD dwConnectionIndex, char* pMsg, DWORD dwLength)
 					}
 					
 					// 소비 아이템 //
-					for(i = 0; i < MAX_TRADE_POOL; i++)
+					for(int i = 0; i < MAX_TRADE_POOL; i++)
 					{
 						if(pSendUser->m_pTradeItem[i].GetID()!=0)
 						{
@@ -1901,7 +1901,7 @@ void CmdTradeTrade(DWORD dwConnectionIndex, char* pMsg, DWORD dwLength)
 					memcpy(pItemTrade->pTradeSmallItem2, pSendUser->m_pInv_Small, sizeof(CItem)*MAX_INV_SMALL_POOL);
 
 					// 장비아이템 //
-					for(i = 0; i < MAX_TRADE_POOL; i++)
+					for(int i = 0; i < MAX_TRADE_POOL; i++)
 					{
 						if(pUser->m_pTradeItem[i].GetID()!=0)
 						{
@@ -1951,7 +1951,7 @@ void CmdTradeTrade(DWORD dwConnectionIndex, char* pMsg, DWORD dwLength)
 					}
 					
 					// 소비 아이템 //
-					for(i = 0; i < MAX_TRADE_POOL; i++)
+					for(int i = 0; i < MAX_TRADE_POOL; i++)
 					{
 						if(pUser->m_pTradeItem[i].GetID()!=0)
 						{
@@ -1990,7 +1990,7 @@ void CmdTradeTrade(DWORD dwConnectionIndex, char* pMsg, DWORD dwLength)
 					// 검사 //
 					BOOL bItemChk = FALSE;
 
-					for( i=0; i<MAX_TRADE_POOL; i++ )
+					for(int i=0; i<MAX_TRADE_POOL; i++ )
 					{
 						if(pUser->m_pTradeItem[i].m_wItemID!=0)
 						{
@@ -2117,7 +2117,7 @@ void CmdTradeTrade(DWORD dwConnectionIndex, char* pMsg, DWORD dwLength)
 						return;
 					}
 
-					for( i=0; i<MAX_TRADE_POOL; i++ )
+					for( int i=0; i<MAX_TRADE_POOL; i++ )
 					{
 						if( pUser->m_pTradeItem[i].m_wItemID != 0 )
 							SetItemLog( &pUser->m_pTradeItem[i], ITEM_LOG_EXCHANGE,
@@ -2337,7 +2337,7 @@ void CmdTradeOk(DWORD dwConnectionIndex, char* pMsg, DWORD dwLength)
 				}
 
 				// Item Move //
-				for(i = 0; i < MAX_TRADE_POOL; i++)
+				for(int i = 0; i < MAX_TRADE_POOL; i++)
 				{
 //					int nValue = pUser->m_pTradeItem[i].GetID();
 
@@ -2369,7 +2369,7 @@ void CmdTradeOk(DWORD dwConnectionIndex, char* pMsg, DWORD dwLength)
 
 							if(!bChk)
 							{
-								for(j = 0; j < MAX_BANK_LARGE_POOL; j++)
+								for(int j = 0; j < MAX_BANK_LARGE_POOL; j++)
 								{
 									if(pUser->m_pBank_Large[j].GetID()==0)
 									{
@@ -2649,7 +2649,7 @@ void CmdTradeCancel(DWORD dwConnectionIndex, char* pMsg, DWORD dwLength)
 				}
 
 				// Item Move //
-				for(i = 0; i < MAX_TRADE_POOL; i++)
+				for(int i = 0; i < MAX_TRADE_POOL; i++)
 				{
 //					int nValue = pUser->m_pTradeItem[i].GetID()/ITEM_DISTRIBUTE;
 
@@ -2681,7 +2681,7 @@ void CmdTradeCancel(DWORD dwConnectionIndex, char* pMsg, DWORD dwLength)
 							
 							if(!bChk)
 							{
-								for(j = 0; j < MAX_BANK_LARGE_POOL; j++)
+								for(int j = 0; j < MAX_BANK_LARGE_POOL; j++)
 								{
 									if(pUser->m_pBank_Large[j].GetID()==0)
 									{

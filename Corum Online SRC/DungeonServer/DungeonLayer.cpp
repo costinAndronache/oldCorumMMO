@@ -755,7 +755,7 @@ BOOL CDungeonLayer::MoveSection(CUser* pUser , int nFrom, int nTo)
 
 	AddActiveSection( pSection );
 	
-	for(k=0; k<MAX_SECTION_LINK_NUM; k++)	//링크된 맵도 모두 Activate
+	for(int k=0; k<MAX_SECTION_LINK_NUM; k++)	//링크된 맵도 모두 Activate
 	{
 		if(pSection->m_wLink[ k ])
 			AddActiveSection( pSection->m_wLink[k] );
@@ -793,7 +793,7 @@ BOOL CDungeonLayer::MoveSection(CMonster* pMonster , int nFrom, int nTo)
 	pSection = GetSection( nTo );
 	AddActiveSection( nTo );
 
-	for(k=0; k<MAX_SECTION_LINK_NUM; k++)	//링크된 맵도 모두 Activate
+	for(int k=0; k<MAX_SECTION_LINK_NUM; k++)	//링크된 맵도 모두 Activate
 	{
 		if(pSection->m_wLink[ k ])
 			AddActiveSection(pSection->m_wLink[k]);

@@ -1182,7 +1182,9 @@ BOOL CUser::CheckItem(CItem* pItem) const
 	
 	BYTE byClassId = pBaseItem->GetClass();
 	
-	if(byClassId&(BYTE)pow(2, GetClass()-1))
+	BYTE result = 1 << (GetClass() - 1);
+	// (BYTE)pow(2, GetClass()-1)
+	if( byClassId & result)
 	{
 		bClass = TRUE;
 	}
@@ -2175,7 +2177,7 @@ WORD CUser::GetSmallItemSumWeight()
 		}
 	}
 
-	for(i = 0; i < MAX_BELT_POOL; i++)
+	for(int i = 0; i < MAX_BELT_POOL; i++)
 	{
 		if(m_pBelt[i].GetID())
 		{

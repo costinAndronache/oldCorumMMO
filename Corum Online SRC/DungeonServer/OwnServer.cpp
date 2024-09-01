@@ -242,7 +242,7 @@ BOOL COwnServer::RequestDungeonInfo()
 	WORD wOldID = 0;
 	WORD wNewID = 0;
 
-	for(i = 0; i < nRet; ++i)
+	for(int i = 0; i < nRet; ++i)
 	{
 		wOldID = m_pDungeonInfo[i].m_cMagicFieldArrayItem.GetID();
 		if(wOldID != 0)

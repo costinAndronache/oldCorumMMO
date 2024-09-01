@@ -377,7 +377,7 @@ DUNGEON_JOIN_FAIL CDungeon::JoinUser(CUser* pUser, BYTE bLayerIndex, VECTOR2 *pv
 	}
 	
 	// 스탯 검사 //
-	for( i = 0; i < MAX_SKILL; i++ )
+	for( int i = 0; i < MAX_SKILL; i++ )
 	{
 		dungeonJoin.pwSkillLevel[i] = pUser->GetSkillLevel( i );
 	}
@@ -885,7 +885,7 @@ void CDungeon::ChangeLayerUser( CUser* pUser, BYTE byCurLayerIndex, int nDestLay
 	
 	memcpy(pUser->m_pMonster, pElementMonster, sizeof(pElementMonster));
 
-	for(i = 0; i < MAX_USER_GUARDIAN; ++i)
+	for(int i = 0; i < MAX_USER_GUARDIAN; ++i)
 	{
 		if (pUser->m_pMonster[i] && pUser->m_pMonster[i]->IsElemental()	&& pUser->m_pMonster[i]->GetHP())
 		{
@@ -906,7 +906,7 @@ void CDungeon::ChangeLayerUser( CUser* pUser, BYTE byCurLayerIndex, int nDestLay
 	// 그 Layer에서 나타나는 몬스터종류들을 클라이언트가 PreLoad 하기위해 보냄 
 	LPBASEMONSTER pMonster = NULL;
 
-	for( i = 0; i < MAX_MONSTER_KIND; i++ )
+	for(int i = 0; i < MAX_MONSTER_KIND; i++ )
 	{
 		pMonster = g_pBaseMonsterHash->GetData( m_pDungeonLayer[nDestLayerIndex]->m_pLayerFormation->pdwMonsterKind[i] );
 

@@ -203,7 +203,7 @@ CXlSSTRecord::CXlSSTRecord(LPCXlRecord pRecord, ContinueRecordVector& RecordVect
 	nPos += pRecord->m_wLength;
 
 	// now copy in everything else.
-	for ( i=0; i < RecordVector.size(); i++ ) {
+	for ( int i=0; i < RecordVector.size(); i++ ) {
 		LPCXlRecord	pRecordInVector	= RecordVector[i];
 		::memcpy(pData + nPos, pRecordInVector->m_pData, pRecordInVector->m_wLength);
 		m_ContinueBreaks.push_back(nPos);
