@@ -4,9 +4,9 @@
 #include "Dungeon_Data_ex.h"
 #include "InitGame.h"
 
-CMap::CMap( DWORD dwWidth, DWORD dwHeight, float fTileSize )
+CorumCMap::CorumCMap( DWORD dwWidth, DWORD dwHeight, float fTileSize )
 {
-	memset(this, 0, sizeof(CMap));
+	memset(this, 0, sizeof(CorumCMap));
 	m_pTile = new MAP_TILE[ dwWidth * dwHeight ];	
 
 	//memset( m_pTile, 0xff, sizeof(MAP_TILE) * (dwWidth * dwHeight) );
@@ -25,7 +25,7 @@ CMap::CMap( DWORD dwWidth, DWORD dwHeight, float fTileSize )
 		m_fMiniMapSize = m_fMapZLength;
 }
 
-CMap::~CMap()
+CorumCMap::~CorumCMap()
 {
 	if( m_pTile )
 	{
@@ -54,7 +54,7 @@ CMap::~CMap()
 	m_pCPList = NULL;
 }
 
-MAP_TILE* CMap::GetMap(DWORD dwX, DWORD dwZ)
+MAP_TILE* CorumCMap::GetMap(DWORD dwX, DWORD dwZ)
 {
 	if( dwX >= m_dwMapXTileMany || dwZ >= m_dwMapZTileMany )	
 		return NULL;
@@ -62,7 +62,7 @@ MAP_TILE* CMap::GetMap(DWORD dwX, DWORD dwZ)
 	return ( m_pTile + (m_dwMapXTileMany * dwZ + dwX) );
 }
 
-BOOL CMap::SetMap(DWORD dwX, DWORD dwZ, MAP_TILE* pTile)
+BOOL CorumCMap::SetMap(DWORD dwX, DWORD dwZ, MAP_TILE* pTile)
 {
 	if (NULL == pTile)
 	{
@@ -76,7 +76,7 @@ BOOL CMap::SetMap(DWORD dwX, DWORD dwZ, MAP_TILE* pTile)
 	return TRUE;
 }
 
-BOOL CMap::SetTileOccupied( DWORD dwX, DWORD dwZ, BYTE attr, LPVOID pType )
+BOOL CorumCMap::SetTileOccupied( DWORD dwX, DWORD dwZ, BYTE attr, LPVOID pType )
 {
 	if (NULL == g_pThisDungeon)
 	{
@@ -117,7 +117,7 @@ lb_set:
 	return TRUE;
 }
 
-MAP_TILE* CMap::GetTile(float fx, float fz)
+MAP_TILE* CorumCMap::GetTile(float fx, float fz)
 {
 	if(fx < 0 || fz < 0)	return NULL;
 

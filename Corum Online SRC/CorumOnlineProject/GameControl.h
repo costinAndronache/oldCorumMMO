@@ -42,7 +42,7 @@ enum CAMERA_MOVE_OPTION
 class	CMonster;
 class	CUser;
 class	CMainUser;
-class	CMap;
+class	CorumCMap;
 struct	ITEM;
 class	EffectDesc;
 struct	BlockLocation;
@@ -251,7 +251,7 @@ void			SetBoundingVolume(GXOBJECT_HANDLE handle, float fRadius);
 void			ReleaseBoundingVolume(GXOBJECT_HANDLE handle);
 BOOL			EpsilonVector(VECTOR3*	v3Vec1, VECTOR3* v3Vec2, float fEpsilon );
 BOOL			ChangeAddressType(DWORD dwIP, char* OUT szAddress);
-BOOL			InitSearchModule(CMap* pMap);	
+BOOL			InitSearchModule(CorumCMap* pMap);	
 char*			GetFile( char* szFileName, BYTE bDataType );
 char*			GetFile(BYTE bResType, DWORD dwResUID);
 char*			FILEDEF(BYTE bResType, DWORD dwResUID);	

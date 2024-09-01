@@ -39,6 +39,8 @@
     <SccAuxPath />
     <SccLocalPath>.</SccLocalPath>
     <SccProvider>MSSCCI:Microsoft Visual SourceSafe</SccProvider>
+    <ProjectGuid>{A8DD27AC-70EA-4466-835C-56B4D057D23B}</ProjectGuid>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='CHINA_TEST_BILLING|Win32'" Label="Configuration">
@@ -63,8 +65,10 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
-    <UseOfMfc>false</UseOfMfc>
+    <UseOfMfc>Static</UseOfMfc>
     <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v142</PlatformToolset>
+    <UseOfAtl>Static</UseOfAtl>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='TAIWAN_LOCALIZING|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
@@ -120,7 +124,7 @@
     <OutDir Condition="'$(Configuration)|$(Platform)'=='TAIWAN_LOCALIZING|Win32'">.\WorldServer___Win32_TAIWAN_LOCALIZING\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='TAIWAN_LOCALIZING|Win32'">.\WorldServer___Win32_TAIWAN_LOCALIZING\</IntDir>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='TAIWAN_LOCALIZING|Win32'">true</LinkIncremental>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">D:\[Source]\DEVELOP_V1\INNER\2_WorldServer Configurations\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.\..\INNER\2_WorldServer Configurations\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.\Debug\</IntDir>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</LinkIncremental>
     <OutDir Condition="'$(Configuration)|$(Platform)'=='CHINA_BILLING|Win32'">.\WorldServer___Win32_CHINA_BILLING\</OutDir>
@@ -159,6 +163,11 @@
     <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='TAIWAN_LOCALIZING|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
     <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='TAIWAN_LOCALIZING|Win32'" />
     <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='TAIWAN_LOCALIZING|Win32'" />
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <GenerateManifest>false</GenerateManifest>
+    <IncludePath>C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.27.29110\atlmfc\include;$(IncludePath)</IncludePath>
+    <TargetName>WorldServerResult</TargetName>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='JAPAN_LOCALIZING|Win32'">
     <ClCompile>
@@ -298,10 +307,10 @@
     </ClCompile>
     <Link>
       <AdditionalDependencies>odbc32.lib;odbccp32.lib;WS2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <OutputFile>D:\[Source]\DEVELOP_V1\INNER\2_WorldServer Configurations/WorldServer.exe</OutputFile>
+      <OutputFile>.\..\INNER\2_WorldServer Configurations\/WorldServerResult.exe</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <ProgramDatabaseFile>$(OutDir)WorldServer.pdb</ProgramDatabaseFile>
+      <ProgramDatabaseFile>.\..INNER\2_WorldServer Configurations\WorldServer.pdb</ProgramDatabaseFile>
       <GenerateMapFile>true</GenerateMapFile>
       <MapFileName>$(OutDir)WorldServer.map</MapFileName>
       <MapExports>true</MapExports>

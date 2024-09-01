@@ -355,7 +355,9 @@ void SetLocalData()
 
 int main(int argc, char* argv[])
 {
-	if(!g_Local.LoadFromINI("./Local.ini"))// Local Info 実特 : 050102 hwoarang
+	char dir[255];
+	GetCurrentDirectory(255, dir);
+	if(!g_Local.LoadFromINI(".\\Local.ini"))// Local Info 実特 : 050102 hwoarang
 	{
 		assert(NULL && "local.ini not exist");
 		return 0;
@@ -483,7 +485,9 @@ int main(int argc, char* argv[])
 	LoadNoticeMessage();
 	LoadServerMessage();
 
-	g_pThis->ToggleUserAccept();	
+	g_pThis->ToggleUserAccept();
+	ListenForServerside();
+	ListenForUserside();
 
 	GetComputerName(g_MachineName.szBuffer,&g_MachineName.dwSize);
 	g_MachineName.wPort			= g_pThis->GetPortForUser();

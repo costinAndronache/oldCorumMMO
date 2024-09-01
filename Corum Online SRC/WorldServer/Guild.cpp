@@ -2212,7 +2212,7 @@ void CmdGuildWarCreate(CWorldUser* pUser, char* pMsg,DWORD dwLength)
 	Log(LOG_JUST_FILEWRITE, "LogTest 4, GuildId1 : %u, GuildId2 : %u", pPacket->dwGuildId, pPacket->dwDstGuildId);
 #endif
 		
-		for(i = 0; i < MAX_GUILD_WAR; i++)
+		for(int i = 0; i < MAX_GUILD_WAR; i++)
 		{
 			if(lpGuildList->sGuildNode[i].dwGuildId==0)
 			{
@@ -2266,7 +2266,7 @@ void CmdGuildWarCreate(CWorldUser* pUser, char* pMsg,DWORD dwLength)
 #ifdef GUILD_WARTEST
 	Log(LOG_JUST_FILEWRITE, "LogTest 9, GuildId1 : %u, GuildId2 : %u", pPacket->dwGuildId, pPacket->dwDstGuildId);
 #endif
-				for(i = 0; i < MAX_GUILD_WAR; i++)
+				for(int i = 0; i < MAX_GUILD_WAR; i++)
 				{					
 					if(lpGuildListDst->sGuildNode[i].dwGuildId==0)
 					{
@@ -2320,7 +2320,7 @@ void CmdGuildWarCreate(CWorldUser* pUser, char* pMsg,DWORD dwLength)
 	Log(LOG_JUST_FILEWRITE, "LogTest 13, GuildId1 : %u, GuildId2 : %u", pPacket->dwGuildId, pPacket->dwDstGuildId);
 #endif
 							// 길드리스트 추가 //							
-							for(i = 0; i < MAX_GUILD_WAR; i++)
+							for(int i = 0; i < MAX_GUILD_WAR; i++)
 							{
 								if(lpGuildList->sGuildNode[i].dwGuildId==0)
 								{
@@ -2335,7 +2335,7 @@ void CmdGuildWarCreate(CWorldUser* pUser, char* pMsg,DWORD dwLength)
 								}
 							}
 
-							for(i = 0; i < MAX_GUILD_WAR; i++)
+							for(int i = 0; i < MAX_GUILD_WAR; i++)
 							{
 								if(lpGuildListDst->sGuildNode[i].dwGuildId==0)
 								{

@@ -49,7 +49,7 @@ void CmdServerAttach(DWORD dwConnectionIndex, char* pMsg, DWORD dwLength)
 	g_pNet->GetServerAddress(dwConnectionIndex, szIP, &wPort);
 
 	// DB에 등록된 서버 IP와 다른 경우 
-	if(__strcmp(pServer->szIPForServer, szIP))		
+	if(/* disable __strcmp(pServer->szIPForServer, szIP)*/ false )
 	{
 		Log(LOG_IMPORTANT, "Invalid WorldServer IP Address Connected! Check WorldServerTable!(%s)", szIP);
 
@@ -84,7 +84,7 @@ void CmdServerAttach(DWORD dwConnectionIndex, char* pMsg, DWORD dwLength)
 	SuccessPacket.bAdultMode = 0;
 #endif
 	g_pNet->SendToServer(dwConnectionIndex, (char*)&SuccessPacket, SuccessPacket.GetPacketSize(), FLAG_SEND_NOT_ENCRYPTION);
-	Log(LOG_JUST_DISPLAY, "@ WorldServer Attached! (WorldMapID=%d, IP=%s)", pServer->dwWorldMapID, szIP);
+	Log(LOG_IMPORTANT, "@ WorldServer Attached! (WorldMapID=%d, IP=%s)", pServer->dwWorldMapID, szIP);
 }
 
 

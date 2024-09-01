@@ -5,17 +5,17 @@
 #include <crtdbg.h>
 
 
-CMap*	g_pMap[ MAX_WORLD_NUM_PER_SERVER ] = {0,};
+CorumCMap*	g_pMap[ MAX_WORLD_NUM_PER_SERVER ] = {0,};
 DWORD	g_dwCurLandNum = 0; 
 
 
-CMap::CMap()
+CorumCMap::CorumCMap()
 {
-	memset(this, 0, sizeof(CMap));
+	memset(this, 0, sizeof(CorumCMap));
 	
 }
 
-CMap::~CMap()
+CorumCMap::~CorumCMap()
 {
 
 	Destroy();
@@ -25,7 +25,7 @@ CMap::~CMap()
 //-----------------------------------------------------------------------------
 // 맵 파일로 부터 맵(타일)을 생성한다. ※ 주의 : 일반 던전서버일 경우에만 실행되어야 한다. 초보자 던전서버일 경우 미리 Load해놓은 Data를 Copy하여 초기화 한다. 
 //-----------------------------------------------------------------------------
-void CMap::Create(  DWORD dwID )
+void CorumCMap::Create(  DWORD dwID )
 {
 	if(ReadMap(dwID))
 	{
@@ -41,7 +41,7 @@ void CMap::Create(  DWORD dwID )
 //-----------------------------------------------------------------------------
 // 맵을 해제 한다. ※ 주의 : 일반 던전서버일 경우에만 실행되어야 한다. 초보자 던전서버일 경우 메모리풀로 부터 메모리를 해제한다. 
 //-----------------------------------------------------------------------------
-void CMap::Destroy()
+void CorumCMap::Destroy()
 {
 	if(m_pTile)
 	{
@@ -54,7 +54,7 @@ void CMap::Destroy()
 //-----------------------------------------------------------------------------
 // 속성 파일을 읽어드린다. 
 //-----------------------------------------------------------------------------
-BOOL CMap::ReadMap(DWORD dwID)
+BOOL CorumCMap::ReadMap(DWORD dwID)
 {
 	// 여기서 파일 및 섹션 읽어 들이는 작업 ...
 	HANDLE	hFile = NULL;
@@ -114,7 +114,7 @@ BOOL CMap::ReadMap(DWORD dwID)
 	if(!bResult || dwRead != sizeof(wTotalSectionNum))	__asm int 3
 	
 	//Read Section Information
-	for(i=0; i<wTotalSectionNum; i++)
+	for(int i=0; i<wTotalSectionNum; i++)
 	{
 		dwTotalReadByte = 0;
 
@@ -133,7 +133,7 @@ BOOL CMap::ReadMap(DWORD dwID)
 //-----------------------------------------------------------------------------
 // 지정해준 인덱스의 타일을 셋팅함. 
 //-----------------------------------------------------------------------------
-BOOL CMap::SetMap(DWORD dwX, DWORD dwZ, MAP_TILE* pTile)
+BOOL CorumCMap::SetMap(DWORD dwX, DWORD dwZ, MAP_TILE* pTile)
 {
 	if(dwX >= m_dwTileNumWidth || dwZ >= m_dwTileNumHeight)	
 		return FALSE;
@@ -143,7 +143,7 @@ BOOL CMap::SetMap(DWORD dwX, DWORD dwZ, MAP_TILE* pTile)
 }
 
 
-BOOL CMap::SetTileOccupied( DWORD dwX, DWORD dwZ, BYTE attr, LPVOID pType )
+BOOL CorumCMap::SetTileOccupied( DWORD dwX, DWORD dwZ, BYTE attr, LPVOID pType )
 {
 	if(dwX >= m_dwTileNumWidth || dwZ >= m_dwTileNumHeight)
 	{	
@@ -179,7 +179,7 @@ lb_set:
 //-----------------------------------------------------------------------------
 // 타일 인덱스 좌표로 타일 포인터를 구함 
 //-----------------------------------------------------------------------------
-MAP_TILE* CMap::GetMap(DWORD dwX, DWORD dwZ)
+MAP_TILE* CorumCMap::GetMap(DWORD dwX, DWORD dwZ)
 {
 	if( dwX >= m_dwTileNumWidth || dwZ >= m_dwTileNumHeight )	
 		return NULL;
@@ -190,7 +190,7 @@ MAP_TILE* CMap::GetMap(DWORD dwX, DWORD dwZ)
 //-----------------------------------------------------------------------------
 // 좌표로 타일 포인터를 구함. 
 //-----------------------------------------------------------------------------
-MAP_TILE* CMap::GetTile(float fx, float fz)
+MAP_TILE* CorumCMap::GetTile(float fx, float fz)
 {
 	if(fx < 0 || fz < 0)	return NULL;
 

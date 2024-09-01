@@ -11,7 +11,7 @@
 #include "EventDungeonManager.h"
 #include "Map.h"
 #include "ConnectionDistributionTable.h"
-#include <afxdisp.h>
+//#include <afxdisp.h>
 #include "GuildHash.h"
 #include "Guild.h"
 #include "GlobalDefine.h"

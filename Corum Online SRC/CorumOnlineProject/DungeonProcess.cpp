@@ -5145,7 +5145,7 @@ void DamageNumberFunc( GXOBJECT_HANDLE handle, LPObjectDesc pData, DWORD dwCurFr
 
 void UpdateMainPlayer( WORD wSectionNum )
 {
-	CMap*		pMap		= g_pMap;
+	CorumCMap*		pMap		= g_pMap;
 	CMainUser*	pMainUser	= g_pMainPlayer;
 //	MAP_TILE*	pTile		= pMap->GetTile( g_pMainPlayer->m_v3CurPos.x, g_pMainPlayer->m_v3CurPos.z );
 	//MAP_TILE*	pTileTemp;
@@ -5199,7 +5199,7 @@ void UpdatePlayer()
 	// 만약 이동한후의 좌표의 섹션이 이전의 섹션과 들린곳이라면..
 	CUser*		pUser;
 	MAP_TILE*	pTile;
-	CMap*		pMap	= g_pMap;
+	CorumCMap*		pMap	= g_pMap;
 	Section_Link_Info*	pSection	= &pMap->m_Section[g_pMainPlayer->m_wCurSectionNum-1];
 	ListNode<CUser>*	pUserNode	= g_pUserHash->GetHead();
 	BOOL		bRemove;
@@ -5254,7 +5254,7 @@ void UpdateMonster()
 {
 	CMonster*			pMonster;
 	MAP_TILE*			pTile;
-	CMap*				pMap			= g_pMap;
+	CorumCMap*				pMap			= g_pMap;
 	Section_Link_Info*	pSection		= &pMap->m_Section[g_pMainPlayer->m_wCurSectionNum-1];
 	ListNode<CMonster>*	pMonsterNode	= g_pMonsterHash->GetHead();
 	BOOL				bRemove;

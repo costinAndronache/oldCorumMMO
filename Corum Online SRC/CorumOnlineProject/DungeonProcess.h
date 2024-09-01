@@ -57,7 +57,7 @@ enum DUNGEON_LAYER_PROPERTY
 */
 class CMonster;
 class CUser;
-class CMap;
+class CorumCMap;
 class COnlyList;
 class CItem;
 struct ITEM;
@@ -67,11 +67,11 @@ struct DSTC_APPEAR_MON;
 struct DSTC_CHANGE_LAYER;
 struct CTDS_ITEM_PICKUP;
 struct DSTC_ITEM_PICKUP;
-extern CMap*		g_pMap;
+extern CorumCMap*		g_pMap;
 
 typedef struct GlobalVariableDungeon
 {
-	CMap*					pMap;
+	CorumCMap*					pMap;
 
 	// 인터페이스 공사할떄 이안으로 들어갈 변수들.
 	//--------------------------------//

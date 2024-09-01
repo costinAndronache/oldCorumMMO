@@ -413,7 +413,7 @@ void TerminateServer()
 	if(g_pThis)
 		delete g_pThis;
 
-	for(i=0;i<23;i++)
+	for(int i=0;i<23;i++)
 		g_pNet->PauseTimer(i);
 
 	g_bIsServerRunning = FALSE;
@@ -861,8 +861,8 @@ bool ConnectToDBServer()
 	wsprintf( szDbName, "%s%s", DEFAULT_GAME_DB, g_pThis->GetServerSetCode() );	
 
 	if(g_pDb->Connect(	g_pThis->GetIPForGameDB(), szDbName, 
-						g_DBInfo.Get(DT_GAME_DB,DBIT_ID), 
-						g_DBInfo.Get(DT_GAME_DB,DBIT_PW), 20, /*10, FALSE,*/ (BYTE)GAME_DB) < 0)
+						"potato", 
+						"ahffk", 20, /*10, FALSE,*/ (BYTE)GAME_DB) < 0)
 	{
 		Log(LOG_IMPORTANT, "@ Can not connect SQL Server(Game DB)! IP=\"%s\"", g_pThis->GetIPForGameDB());
 		return false;
@@ -878,9 +878,9 @@ bool ConnectToDBServer()
 	Log(LOG_JUST_DISPLAY, "@ Connecting SQL Server(System DB)...");
 	
 	if(g_pDb->Connect(	g_pThis->GetIPForTotalDB(), 
-						g_DBInfo.Get(DT_TOTAL_DB, DBIT_CATALOG),
-						g_DBInfo.Get(DT_TOTAL_DB, DBIT_ID), 
-						g_DBInfo.Get(DT_TOTAL_DB, DBIT_PW), 
+						"Corum_Total_DB",
+						"potato", 
+						"ahffk", 
 						20, /*10, FALSE,*/ (BYTE)TOTAL_DB) < 0)
 	{
 		Log(LOG_IMPORTANT, "@ Can not connect SQL Server(TOTAL_DB)! IP=\"%s\"",g_pThis->GetIPForTotalDB());
@@ -895,9 +895,9 @@ bool ConnectToDBServer()
 	Log(LOG_JUST_DISPLAY, "@ Connecting SQL Server(Member DB)...");
 	
 	if(g_pDb->Connect(g_pThis->GetIPForMemberDB(), 
-		g_DBInfo.Get(DT_MEMBER_DB, DBIT_CATALOG),
-		g_DBInfo.Get(DT_MEMBER_DB, DBIT_ID),
-		g_DBInfo.Get(DT_MEMBER_DB, DBIT_PW),
+		"Member",
+		"potato",
+		"ahffk",
 		20, /*10, FALSE,*/ (BYTE)MEMBER_DB) < 0)
 	{
 		Log(LOG_IMPORTANT, "@ Can not connect SQL Server(MEMBER_DB)! IP=\"%s\"",g_pThis->GetIPForMemberDB());
@@ -917,9 +917,10 @@ bool ConnectToDBServer()
 			//Log DB
 			LOG_DB = (BYTE)g_pLogDb->CreateDBConnection();
 			Log(LOG_JUST_DISPLAY, "@ Connecting SQL Server(Member DB)...");
-			if(g_pLogDb->Connect(g_pThis->GetIPForLogDB(), szDBName, 
-				g_DBInfo.Get(DT_LOG_DB, DBIT_ID),
-				g_DBInfo.Get(DT_LOG_DB, DBIT_PW),
+			if(g_pLogDb->Connect(g_pThis->GetIPForLogDB(), 
+				"Log_Corum_0",
+				"potato",
+				"ahffk",
 				20, 10, FALSE, LOG_DB) < 0)
 			{
 				Log(LOG_NORMAL, "@ Can not connect SQL Server(LOG_DB)! IP=\"%s\"",g_pThis->GetIPForLogDB());
@@ -1912,7 +1913,7 @@ void QueryAllServer()
 	// 분단위로 계산
 	DWORD dwSubLocalTime = 0;
 
-	for(i = 0; i < nRet; i++)
+	for(int i = 0; i < nRet; i++)
 	{
 		DUNGEON_DATA_EX* pDungeon = g_pDungeonTable->AllocNewDungeon( (WORD)rs[i].m_dwID );
 		memcpy((DUNGEON_DATA*)pDungeon, &rs[i], sizeof(DUNGEON_DATA));
@@ -2034,7 +2035,7 @@ BOOL QueryWorldmapFormation()
 	{
 		if(bFormedID[i])
 		{
-			g_pMap[ bFormedID[i] ] = new CMap;
+			g_pMap[ bFormedID[i] ] = new CorumCMap;
 			g_pMap[ bFormedID[i] ]->Create( bFormedID[i] + 10000 );
 		
 			g_dwCurLandNum++;

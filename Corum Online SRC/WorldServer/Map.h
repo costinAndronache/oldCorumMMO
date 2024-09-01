@@ -53,7 +53,7 @@ struct SPOT_VALUE
 
 #pragma pack (pop)
 
-class CMap
+class CorumCMap
 {	
 protected:
 	
@@ -75,12 +75,12 @@ public:
 
 	BOOL				ReadMap(DWORD dwID);
 
-	CMap();
-	~CMap();
+	CorumCMap();
+	~CorumCMap();
 };
 
 
-extern CMap*	g_pMap[ MAX_WORLD_NUM_PER_SERVER ];
+extern CorumCMap*	g_pMap[ MAX_WORLD_NUM_PER_SERVER ];
 extern DWORD	g_dwCurLandNum;
 
 #endif // __MAP_H__

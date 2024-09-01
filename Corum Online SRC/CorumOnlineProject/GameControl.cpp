@@ -74,7 +74,7 @@ NETMARBLE_LOGIN		g_NetMarble;
 CSoundControl*		g_pSoundControl			= NULL;
 INPUT_BUFFER*		g_InputBuffer			= NULL;
 CMainUser*			g_pMainPlayer			= NULL;						
-CMap*				g_pMap					= NULL;
+CorumCMap*				g_pMap					= NULL;
 DUNGEON_DATA_EX*	g_pThisDungeon			= NULL;
 
 
@@ -918,7 +918,7 @@ void LoadWorldMap( DWORD dwMapResourceUID )
 	ReadFile(hFile, &dwTileSize, sizeof(DWORD), &dwRead, NULL);
 	ReadFile(hFile, &dwObjNum, sizeof(DWORD), &dwRead, NULL);
 	
-	CMap* pMap = new CMap(dwXLen, dwZLen, (float)dwTileSize);	
+	CorumCMap* pMap = new CorumCMap(dwXLen, dwZLen, (float)dwTileSize);	
 		
 	// 속성 정보 읽어드림 
 	MAP_TILE *pTile=0;	int nZ=0, nX=0;
@@ -1046,7 +1046,7 @@ void InitMap( DWORD dwLayerID )
 	ReadFile(hFile, &dwTileSize, sizeof(DWORD), &dwRead, NULL);
 	ReadFile(hFile, &dwObjNum, sizeof(DWORD), &dwRead, NULL);
 
-	CMap* pMap = new CMap(dwXLen, dwZLen, TILE_SIZE);	
+	CorumCMap* pMap = new CorumCMap(dwXLen, dwZLen, TILE_SIZE);	
 		
 	//속성 정보 읽어드림 
 	MAP_TILE *pTile = 0;	int nZ=0, nX=0;
@@ -1858,7 +1858,7 @@ BOOL InitChrInfo( char* szFileName, DWORD dwKind, DWORD dwFlag )
 	return TRUE;
 }
 
-BOOL InitSearchModule(CMap* pMap)
+BOOL InitSearchModule(CorumCMap* pMap)
 {
 	if(!pMap)
 		return FALSE;

@@ -91,7 +91,7 @@ struct CP_DESC
 	V2_SPRITE*	pSpr_Cp_GuageBoard;
 	V2_SPRITE*	pSpr_Minimap_Dot;
 };
-class CMap
+class CorumCMap
 {
 	
 protected:
@@ -120,12 +120,12 @@ public:
 	BOOL				SetMap(DWORD dwX, DWORD dwZ, MAP_TILE* pTile);
 	MAP_TILE*			GetTile(float fx, float fz);
 	
-	CMap(DWORD dwWidth, DWORD dwHeight, float fTileSize);
-	~CMap();
+	CorumCMap(DWORD dwWidth, DWORD dwHeight, float fTileSize);
+	~CorumCMap();
 
 };
 
 
 #pragma pack (pop)
 
-extern CMap* g_pMap;
+extern CorumCMap* g_pMap;
