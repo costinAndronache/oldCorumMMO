@@ -1875,6 +1875,8 @@ void QueryAllServer()
 
 	for(int i =0; i<nRet; i++)
 	{
+		__lstrcpyn(RecordSet[i].IPForServer, "127.0.0.1", MAX_IP_LENGTH);
+		__lstrcpyn(RecordSet[i].IPForUser, "127.0.0.1", MAX_IP_LENGTH);
 		// Port°¡ ID
 		SERVER_DATA* pServer = g_pServerTable->AllocNewServer(RecordSet[ i ].Port-10000);		
 
@@ -1915,6 +1917,10 @@ void QueryAllServer()
 
 	for(int i = 0; i < nRet; i++)
 	{
+		if (rs[i].m_dwID == 1) {
+			rs[i].m_dwPort = 16201;
+		}
+
 		DUNGEON_DATA_EX* pDungeon = g_pDungeonTable->AllocNewDungeon( (WORD)rs[i].m_dwID );
 		memcpy((DUNGEON_DATA*)pDungeon, &rs[i], sizeof(DUNGEON_DATA));
 				

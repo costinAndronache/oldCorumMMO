@@ -234,7 +234,7 @@ void CmdTryToJoinDungeon(CWorldUser* pUser ,char* pMsg,DWORD dwLength)
 	if(	IS_ABLE_SERVICE_TYPE(ST_DEVELOP) 
 	||	IS_ABLE_NATION(NC_JAPAN) )//hwoarang
 	{
-	if (pDungeon->m_byEntererMinLevel > pUser->m_dwLevel || pDungeon->m_byEntererMaxLevel < pUser->m_dwLevel)
+	if (/*pDungeon->m_byEntererMinLevel > pUser->m_dwLevel || pDungeon->m_byEntererMaxLevel < pUser->m_dwLevel*/ false)
 	{
 		// 레벨제한 걸렷나?
 		WSTC_DUNGEON_JOIN_FAILED	packet;

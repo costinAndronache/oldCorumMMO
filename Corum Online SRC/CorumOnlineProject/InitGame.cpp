@@ -2409,7 +2409,7 @@ void LoadBaseItemTable()
 	}	
 
 #pragma warning 
-//	SetCommonServerBaseItemHash(g_pItemTableHash_get());
+	SetCommonServerBaseItemHash(g_pItemTableHash_get());
 
 	return;
 

@@ -1476,6 +1476,7 @@ void CMainUser::SendSkill()
 
 BOOL CMainUser::IsSkilling()
 {
+	if (m_pSkillPacket == NULL) { return FALSE; }
 	Effect* pEffect = g_pEffectLayer->GetEffectInfo(m_bSkillTmp);
 	return m_pSkillPacket->bStatus && (pEffect->bType == TYPE_DRIVE || pEffect->bID == __SKILL_AURARECHARGE__);
 }

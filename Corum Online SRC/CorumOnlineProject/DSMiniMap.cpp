@@ -192,7 +192,7 @@ void CMiniMapWnd::RenderText()
 
 		DUNGEON_DATA_EX* pDungeonInfo = g_pDungeonTable->GetDungeonInfo(m_wMapId);
 				
-		if(!IsEmptyString(pDungeonInfo->m_szDungeonName))
+		if(pDungeonInfo && !IsEmptyString(pDungeonInfo->m_szDungeonName))
 		{			
 			// 던젼 이름 //
 #if IS_JAPAN_LOCALIZING()
@@ -209,7 +209,7 @@ void CMiniMapWnd::RenderText()
 #endif
 		}		
 		
-		if(pDungeonInfo->m_dwID/1000!=0)
+		if(pDungeonInfo && pDungeonInfo->m_dwID/1000!=0)
 		{
 			// 던젼 층수 //
 			if(m_byMapLayer==0)

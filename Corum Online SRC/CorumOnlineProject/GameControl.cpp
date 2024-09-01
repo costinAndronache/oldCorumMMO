@@ -730,6 +730,10 @@ void ShowObject(GXOBJECT_HANDLE handle)
 
 void HideObject(GXOBJECT_HANDLE handle)
 {
+	if (!handle) {
+		return;
+	}
+
 	g_pExecutive->DisableRender(handle);
 	g_pExecutive->DisableSchedule(handle);
 }

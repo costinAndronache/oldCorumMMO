@@ -43,6 +43,9 @@ BOOL CPartyMatchingWnd::Init()
 
 	m_byPMatchResultTrue  = 0;
 	m_byPMatchResultFalse = 1;
+	m_szInfo[0][0] = '\0';
+	m_szInfo[1][0] = '\0';
+
 
 	return TRUE;
 }

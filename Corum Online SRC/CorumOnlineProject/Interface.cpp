@@ -213,6 +213,7 @@ BOOL CInterface::InitInterface(BYTE byServer)
 		m_nSize[i*2]	= 0;
 		m_nSize[i*2+1]	= 0;
 		memset(m_szName[i], 0, sizeof(m_szName[i]));
+		m_pMenu[i] = NULL;
 	}
 												
 	// Interface Á¤ÀÇ //	

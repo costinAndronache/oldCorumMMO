@@ -412,7 +412,7 @@ void CmdServerAttach(DWORD dwConnectionIndex, char* pMsg, DWORD dwLength)
 	if(__strcmp(pServer->szIPForServer, szIP))		
 	{
 		Log(LOG_IMPORTANT, "Invalid Server IP Address Connected! Check ServerTable For System DB!(%s)", szIP);
-		return;
+		//return;
 	}
 		
 	pServer->dwConnectionIndex	= dwConnectionIndex;

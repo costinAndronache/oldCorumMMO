@@ -172,7 +172,7 @@ BOOL InitGameDungeon()
 	g_pExecutive->SetAfterInterpolation(AfterInterpolation);
 	SetRenderMode(RENDER_MODE_NORMAL);
 	
-	g_pExecutive->SetFramePerSec(25);
+	g_pExecutive->SetFramePerSec(30);
 	
 	srand( g_dwCurTick );
 	
@@ -187,13 +187,13 @@ BOOL InitGameDungeon()
 	
 	RECT rt = {0,};
 	rt.left = 8;	rt.right = 546;	rt.top = 630;	rt.bottom = 642;	
-	g_pInputManager->InitializeInput(INPUT_BUFFER_19, FONT_SS3D_GAME, rt, 0xffffffff, 101);
+	g_pInputManager->InitializeInput(INPUT_BUFFER_19, FONT_D3D_GAME, rt, 0xffffffff, 101);
 
 	rt.left = 8;	rt.right = 566;	rt.top = 15;	rt.bottom = 70;
-	g_pInputManager->InitializeInput(INPUT_BUFFER_1, 4, rt, 0xffffffff, 101);
+	g_pInputManager->InitializeInput(INPUT_BUFFER_1, FONT_D3D_GAME, rt, 0xffffffff, 101);
 	
 	rt.left = 8;	rt.right = 566;	rt.top = 15;	rt.bottom = 70;
-	g_pInputManager->InitializeInput(INPUT_BUFFER_PARTY_ENTRY, FONT_SS3D_GAME, rt, 0xff00ffff, 100);
+	g_pInputManager->InitializeInput(INPUT_BUFFER_PARTY_ENTRY, FONT_D3D_GAME, rt, 0xff00ffff, 100);
 
 	::SetTimer(g_hMainWnd, 22, 5000, NULL);
 	
@@ -590,7 +590,7 @@ void UpdateGameDungeon()
 		}
 	}
 
-	if( g_pThisDungeon->IsStadium() )
+	if(g_pThisDungeon && g_pThisDungeon->IsStadium() )
 	{
 		DWORD	dwAlpha = 0xff;
 		BOOL	bMin;
@@ -911,7 +911,7 @@ DWORD __stdcall BeforeRenderGameDungeon()
 			}
 		}
 
-		if (g_pThisDungeon->m_bSiege)
+		if (g_pThisDungeon && g_pThisDungeon->m_bSiege)
 		{
 			if (g_pMainPlayer->m_bAttackMode != ATTACK_MODE_DEFENSE)
 			{
@@ -1007,6 +1007,7 @@ DWORD __stdcall BeforeRenderGameDungeon()
 
 DWORD __stdcall AfterRenderGameDungeon()
 {
+
 #ifdef DEVELOP_MODE
 	if( g_bShowTileAttr ) 
 		RenderTileAttr();
@@ -1028,9 +1029,14 @@ DWORD __stdcall AfterRenderGameDungeon()
 		RenderUserSelectRect();
 	}
 
-	pInterface->Render();	
+	pInterface->m_byIndex = 5;
+	pInterface->Render();
+	
+
 	g_pSprManager->RenderAllSprite();
-	pInterface->SetMiniMapPos();	
+	pInterface->SetMiniMapPos();
+	
+
 	pUserInterface->SetMousePointerPos((float)g_Mouse.MousePos.x, (float)g_Mouse.MousePos.y);
 	if( !g_pThisDungeon->IsStadium() || (g_pMainPlayer->m_dwGuildWarFlag != G_W_F_OBSERVER) )
 	{
@@ -1068,55 +1074,7 @@ DWORD __stdcall AfterRenderGameDungeon()
 	// INPUT BUFFER 체크
 	// 작업중.. by minjin. 2004. 10. 06.
 	for(DWORD i = 0; i < MAX_INPUT_BUFFER_NUM; i++)	
-	{
-#ifdef _USE_IME		
-		if(!(pInterface->m_pMenu[QUANTITY_WND]->GetActive() && i==INPUT_BUFFER_5))
-		{
-			if(IsEmptyString(g_pInputManager->GetInputBuffer(i, TRUE)))
-				continue;
-		}		
-		
-		switch ( i )
-		{
-		case INPUT_BUFFER_6 :
-			if(pInterface->m_pMenu[CHAT_WND]->GetActive() == FALSE)		continue;
-			break;
-		case INPUT_BUFFER_5:
-			if(pInterface->m_pMenu[QUANTITY_WND]->GetActive() == FALSE)	continue;
-			break;
-		case INPUT_BUFFER_7:
-			if(pInterface->m_pMenu[GUILDEX_WND]->GetActive() == FALSE)	continue;
-			break;
-		case INPUT_BUFFER_2:
-		case INPUT_BUFFER_3:
-			if (CPlayerShopWnd::GetInstance()->GetActive() == FALSE) 	continue;
-			break;
-		}
-
-		if( GET_IMEEDIT()->GetEditIndex() == 1 )
-		{
-			if(i!=0 && i!=7 && i!=12)
-			{
-				if(i>=8 && i<=11)
-				{
-					if(i==g_pInputManager->GetCurFocusInputID())
-						continue;
-				}
-				g_pInputManager->RenderInputBuffer(i);			
-			}
-		}
-		else if( GET_IMEEDIT()->GetEditIndex() == 2 )
-		{
-			if(i != 6)
-			{
-				g_pInputManager->RenderInputBuffer(i);				
-			}
-		}
-		else
-		{		
-			g_pInputManager->RenderInputBuffer(i);			
-		}			
-#else				
+	{			
 		if(i==INPUT_BUFFER_6)
 		{
 			if(pInterface->m_pMenu[CHAT_WND]->GetActive()==FALSE)
@@ -1144,15 +1102,8 @@ DWORD __stdcall AfterRenderGameDungeon()
 		}
 		
 		g_pInputManager->RenderInputBuffer(i);		
-#endif		
+	
 	}
-
-#ifdef _USE_IME	
-	if(GET_IMEEDIT()->GetEditIndex()==2)
-		GET_IMEEDIT()->RenderSprite(g_pInputManager->GetInputOrder(INPUT_BUFFER_6)+1);	
-	else
-		GET_IMEEDIT()->RenderSprite();
-#endif
 
 	if(!g_pUserHash)
 		return 0;
@@ -1548,10 +1499,13 @@ DWORD __stdcall AfterRenderGameDungeon()
 	char szTempEx[0xff] = {0,};
 	MAP_TILE* pTile = g_pMap->GetTile(g_Mouse.v3Mouse.x, g_Mouse.v3Mouse.z);
 
+	
+	sprintf(szTempEx, "%ld, %ld,", g_Mouse.MousePos.x, g_Mouse.MousePos.y);
+	RenderFont(szTempEx, 500, 1200, 50, 90, 0);
 	if (pTile)
 	{
 		sprintf(szTempEx, "x:%6.1f, z:%6.1f, Tile_X:%d, Tile_Z:%d, ATTR:%d", g_Mouse.v3Mouse.x, g_Mouse.v3Mouse.z, pTile->wIndex_X, pTile->wIndex_Z, pTile->wAttr.uAttr);
-		RenderFont(szTempEx, 500, 1200, 50, 90, 0);		
+		//RenderFont(szTempEx, 500, 1200, 50, 90, 0);		
 	}
 #endif	
 
@@ -2059,8 +2013,6 @@ void OnLButtonDownDungeon(WPARAM wParam, LPARAM lParam)
 	CUserInterface* pUserInterface	= CUserInterface::GetInstance();	
 	g_Mouse.dwLButtonDownTime		= g_dwCurTick;
 	g_pMainPlayer->m_i64PickupItem	= 0;
-
-
 
 	if( GetAsyncKeyState(VK_SHIFT) & 0x800000 && g_bLshift )	
 	{

@@ -45,7 +45,10 @@
 #include "ItemNative.h"
 #include "GuildWarFinalSettingWnd.h"
 #include "GuildWarStatusWnd.h"
-	 
+
+
+extern LPBASEITEM_HASH		g_pBaseItemHash;
+
 void InitPacketProcDungeon()
 {				
 	PacketProc[UPDATE_GAME_PLAY][Protocol_DSTC::CMD_DUNGEON_JOIN]				= CmdJoinDungeon;
@@ -2548,6 +2551,7 @@ void CmdJoinDungeon( char* pMsg, DWORD dwLen )
 
 	InitMap(pJoin->dwLayerID);
 	
+	
 	CStoreWnd* pStoreWnd	= CStoreWnd::GetInstance();
 	pStoreWnd->m_dwMapId	= pJoin->wMapID;
 	g_dwLayerID				= pJoin->dwLayerID;
@@ -2566,6 +2570,8 @@ void CmdJoinDungeon( char* pMsg, DWORD dwLen )
 	{
 		DungeonEnvironmentSetting(pDungeon);
 	}
+
+	
 
 	SPR(SPR_LOADING_BACK)->ShowSprite(FALSE);
 		

@@ -560,7 +560,8 @@ void CItemWnd::RenderBelt()// : 050110 hwoarang
 				continue;
 			}
 		}
-		const int iQuantity = g_pMainPlayer->m_pBelt[i].GetQuantity();
+		auto item = g_pMainPlayer->m_pBelt[i];
+		const int iQuantity = item.GetQuantity();
 		if(1 < iQuantity)
 		{
 			wsprintf(m_szInfo, "%d", iQuantity );
