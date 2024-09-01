@@ -153,16 +153,16 @@ BOOL InitGameLogin()
 
 	VECTOR3		From;
 	VECTOR3		Rotate;
-/*	
-	From.x = -48.0f;							
-	From.y = 145.71f;							
-	From.z = 23.98f;	
-*/
+	
+	//From.x = -48.0f;							
+	//From.y = 145.71f;							
+	//From.z = 23.98f;	
+
 	From.x = -210.88f;
 	From.y = -80.90f;
 	From.z = 200.34f;
 
-	//g_pGeometry->ResetCamera(&From, 100.0f, 80000.0f, DEG45, 0 );
+//	g_pGeometry->ResetCamera(&From, 100.0f, 80000.0f, DEG45, 0 );
 	g_pGeometry->ResetCamera(&From, 100.0f, 80000.0f, 0.90000000000000000000f, 0 );
 
 	//Rotate.x = -0.40f;	Rotate.y = 6.28f;	Rotate.z = 0.0f;

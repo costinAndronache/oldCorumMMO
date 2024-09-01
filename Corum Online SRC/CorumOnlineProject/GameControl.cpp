@@ -839,8 +839,8 @@ void CreateConvertCDBToMAP(char* pszFileName)
 {
 	// cdb -> map 파일 생성.	
 	// 미리 길이를 알 수 있는 방법이나 그런 게 없을까? 일단 100K로 세팅.
-	char* szTempBuf = new char[102400];
-	ZeroMemory(szTempBuf, 102400);
+	char* szTempBuf = new char[250000];
+	ZeroMemory(szTempBuf, 250000);
 
 	DWORD dwTotalRead = DecodeCDBData( pszFileName, szTempBuf, DECODE_KEY, DECODE_SUBKEY);
 	pszFileName[lstrlen(pszFileName)-3]='m';
@@ -1505,6 +1505,7 @@ BOOL LoadWorldMapScript(char* szMapFile, DWORD dwFlag)
 	} 
 
 	fclose(fp);
+	g_pExecutive->Render();
 	return TRUE;
 }
 
@@ -2401,7 +2402,8 @@ DWORD DecodeCDBData(char* szLoadFile,  void* pReturnValue, char* szDecodeKey, in
 
 	fread(&dwTotalLen, sizeof(DWORD), 1, fp );
 
-	char* szBuffer = new char[ dwTotalLen ];
+	static char szBuffer[1024 * 1024 * 50];
+	//char* szBuffer = (char*)malloc(dwTotalLen);
 	
 	int nRemain;
 	while( bRet )
@@ -2421,7 +2423,7 @@ DWORD DecodeCDBData(char* szLoadFile,  void* pReturnValue, char* szDecodeKey, in
 	
 
 	memcpy(pReturnValue, szBuffer, dwTotalLen);
-	delete [] szBuffer;
+	//free(szBuffer);
 	fclose(fp);
 
 	return dwCur;	//총 읽어드린 바이트수를 리

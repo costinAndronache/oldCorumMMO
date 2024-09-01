@@ -24,7 +24,7 @@ class	DUNGEON_DATA_EX;
 #define MINIMAP_RATIO_Y				0.011718	// 220 / 15360	
 
 #define DASH_TICK					200
-#define MAX_MAP_OBJECT_NUM			0xff
+#define MAX_MAP_OBJECT_NUM			1000
 
 
 #define WORLD_OBJECT_WATER			100000
