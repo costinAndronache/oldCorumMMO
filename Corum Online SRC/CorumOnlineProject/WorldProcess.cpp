@@ -182,7 +182,7 @@ BOOL InitGameWorld()
 	UpdateMainPlayerToMap();
 	g_pMainPlayer->m_hPlayer.pDesc->ObjectFunc = NULL;
 
-	MinimizePlayer(g_pMainPlayer->m_hPlayer.pHandle);	//캐릭터 축소 
+	//MinimizePlayer(g_pMainPlayer->m_hPlayer.pHandle);	//캐릭터 축소 
 	g_pExecutive->GXOEnableHFieldApply(g_pMainPlayer->m_hPlayer.pHandle);
 
 
@@ -1348,8 +1348,8 @@ DWORD __stdcall AfterRenderGameWorld()
 					lstrcpy(szBuf, pDungeon->m_szDungeonName);
 				}
 #else
-				int nLen = lstrlen(pDungeon->m_szDungeonName);
-				lstrcpy(szBuf, pDungeon->m_szDungeonName);
+				wsprintf(szBuf, "%s + (%d, %d)", pDungeon->m_szDungeonName, pDungeon->m_dwID, pDungeon->m_wGroupID);
+				int nLen = lstrlen(szBuf);
 #endif
 
 				rect.left	= x - (nLen/2)*8;

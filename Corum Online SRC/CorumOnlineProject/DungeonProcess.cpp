@@ -1029,7 +1029,7 @@ DWORD __stdcall AfterRenderGameDungeon()
 		RenderUserSelectRect();
 	}
 
-	pInterface->m_byIndex = 5;
+	pInterface->m_byIndex = 10;
 	pInterface->Render();
 	
 

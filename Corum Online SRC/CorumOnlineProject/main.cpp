@@ -101,7 +101,7 @@ int APIENTRY WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdL
 #endif
 
 #ifdef DEVELOP_MODE
-	g_Dev.bRenderFramePerSec	= FALSE;
+	g_Dev.bRenderFramePerSec	= TRUE;
 #endif
 
 #ifdef DEVELOP_MODE

@@ -63,6 +63,18 @@
 #pragma comment(lib, ".\\CommonServer.lib")
 
 
+extern int windowWidth();
+extern int windowHeight();
+
+int windowWidth() {
+	int w = GetSystemMetrics(SM_CXSCREEN);
+	return 1024;
+}
+
+int windowHeight() {
+	int h = GetSystemMetrics(SM_CYSCREEN);
+	return 768;
+}
 
 //==================================================================================
 // Global Variable : 여기다가 이쁘게 선언할것 딴데다가 하지마셈 
@@ -1797,6 +1809,10 @@ ATOM RegisterWindowClass(HINSTANCE hInstance)
 
 void CentreWindow(HWND hwnd)
 {
+
+	SetWindowLongPtr(hwnd, GWL_STYLE, WS_VISIBLE | WS_POPUP);
+	SetWindowPos(hwnd, HWND_TOP, 0, 0, windowWidth(), windowHeight(), SWP_FRAMECHANGED);
+
     RECT winrect, workrect;
     
     SystemParametersInfo(SPI_GETWORKAREA, 0, &workrect, 0);
