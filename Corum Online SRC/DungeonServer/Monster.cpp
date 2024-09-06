@@ -5054,9 +5054,10 @@ int CMonster::GetDropItem(int nMagicItemRate, int iRate)
 	// 몬스터 아이템 주머니 부터 조사해랑
 	for(int i = 0; i < 10; i++ )
 	{
+
 		if( iRate <= m_pBaseMonster->ItemRate[i].ItemRate * nMagicItemRate )
 		{
-			iItemID = m_pBaseMonster->ItemRate[i].ItemID;
+			//iItemID = m_pBaseMonster->ItemRate[i].ItemID;
 
 			// 속주머니를 뒤져야 하나?
 			if (iItemID > BASE_ITEMBOTARY_INDEX && iItemID < (BASE_ITEMBOTARY_INDEX+200))

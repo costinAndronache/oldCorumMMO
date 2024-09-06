@@ -266,7 +266,7 @@ void CUserInterface::InsertUIData()
 {
 	int Order = __ORDER_USERINTERFACE_START_;
 	float original = 640;
-	const float bottomSpace = 550;
+	const float bottomSpace = 640;
 
 #define adjusted(x) bottomSpace + (x - original)
 

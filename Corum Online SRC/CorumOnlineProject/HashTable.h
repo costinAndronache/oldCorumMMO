@@ -9,8 +9,8 @@
 #include "Menu.h"
 
 
-typedef CAbyssHash<ITEM>		ITEM_HASH, * LPITEM_HASH;
-typedef CAbyssHash<CBaseItem>	BASEITEM_HASH,* LPBASEITEM_HASH;
+typedef CAbyssHash64<ITEM>		ITEM_HASH, * LPITEM_HASH;
+typedef CAbyssHash64<CBaseItem>	BASEITEM_HASH,* LPBASEITEM_HASH;
 
 
 class CUserHash : public CAbyssHash<CUser>

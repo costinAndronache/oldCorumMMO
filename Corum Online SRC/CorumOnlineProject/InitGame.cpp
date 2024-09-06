@@ -68,13 +68,15 @@ extern int windowHeight();
 
 int windowWidth() {
 	int w = GetSystemMetrics(SM_CXSCREEN);
-	return 1024;
+	return w;
 }
 
 int windowHeight() {
 	int h = GetSystemMetrics(SM_CYSCREEN);
-	return 768;
+	return h;
 }
+
+std::vector<DroppedItemTooltipInfo> droppedItemTooltips;
 
 //==================================================================================
 // Global Variable : 여기다가 이쁘게 선언할것 딴데다가 하지마셈 
@@ -225,6 +227,8 @@ CItemAttrLayer*				g_pItemAttrLayer		= NULL;
 #define pcheck(x) DFOutputDebugString(#x" = %p\n", x);
 
 void PointerIntegrityCheck(const char* msg) {
+	return;
+
 	DFOutputDebugString("%s\n\n", msg);
 	DFOutputDebugString("GXOBJECT_HANDLE  g_hHandle = %p", g_hHandle);
 	DFOutputDebugString("g_hEffectHandle = %p", g_hEffectHandle);
@@ -318,7 +322,7 @@ char* g_pszKeyArray[0xff] =
 	"M",	"N",	"O",	"P",	"Q",	"S",	"T",	"U",	"V",	"W",	"X",	"Y",
 	"Z",	"0",	"1",	"2",	"3",	"4",	"5",	"6",	"7",	"8",	"9",	"F1",
 	"F2",	"F3",	"F4",	"F5",	"F6",	"F7",	"F8",	"F9",	"F10",	"F11",	"F12",	";",
-	"'",	"[",	"]",	"-",	"=",	"\\",	",",	".",	"/",	"SPACE"
+	"'",	"[",	"]",	"-",	"=",	"\\",	",",	".",	"/",	"SPACE", "`"
 };
 
 int g_nKey[0xff] = 
@@ -327,7 +331,7 @@ int g_nKey[0xff] =
 	0x4D, 0x4E, 0x4F, 0x50, 0x51, 0x53, 0x54, 0x55, 0x56, 0x57, 0x58, 0x59,
 	0x5A, 0x30, 0x31, 0x32, 0x33, 0x34, 0x35, 0x36, 0x37, 0x38, 0x39, 0x70,
 	0x71, 0x72, 0x73, 0x74, 0x75, 0x76, 0x77, 0x78, 0x79, 0x7A, 0x7B, 0xBA,
-	0xDE, 0xDB, 0xDD, 0xBD, 0xBB, 0xDC, 0xBC, 0xBE, 0xBF, 0x20,
+	0xDE, 0xDB, 0xDD, 0xBD, 0xBB, 0xDC, 0xBC, 0xBE, 0xBF, 0x20, 192
 };
 
 int g_nHanKey[0xff] = 
@@ -749,7 +753,7 @@ BOOL InitGame()
 		"SKILL1", "SKILL2", "SKILL3", "SKILL4", "SKILL5", "SKILL6", "SKILL7", "SKILL8",
 		"SKILL9", "SKILL10", "SKILL11", "SKILL12", "SKILL13", "SKILL14", "SKILL15",  "SKILL16",
 
-		"ITEM", "GUARDIAN OPEN"
+		"ITEM", "GUARDIAN OPEN", "SEE DROPPED ITEMS",
 	};
 
 
@@ -764,7 +768,7 @@ BOOL InitGame()
 		"F1", "F2", "F3", "F4", "F5", "F6", "F7", "F8", 
 		"F9", "F10", "F11", "F12", "Z", "X", "C", "V", 
 
-		"SPACE", "G"
+		"SPACE", "G", "`"
 	};	
 	
 	wsprintf(szFile, "%s\\%s", g_szBasePath, "KeyConfig.ini");
@@ -787,7 +791,8 @@ BOOL InitGame()
 			break;
 		}
 		g_sKeyConfig.snKey[i]	= nKey;
-	}	
+	}
+	g_sKeyConfig.snKey[36] = __ASCII_CODE___KEY_SEE_ALL_DROPPED_ITEMS;
 
 	wsprintf(szInfo, "%s\\%s", g_szBasePath, "OptionConfig.ini");
 	
@@ -1813,6 +1818,8 @@ void CentreWindow(HWND hwnd)
 	SetWindowLongPtr(hwnd, GWL_STYLE, WS_VISIBLE | WS_POPUP);
 	SetWindowPos(hwnd, HWND_TOP, 0, 0, windowWidth(), windowHeight(), SWP_FRAMECHANGED);
 
+	return;
+
     RECT winrect, workrect;
     
     SystemParametersInfo(SPI_GETWORKAREA, 0, &workrect, 0);
@@ -2241,7 +2248,10 @@ void LoadBaseItemTable()
 		pBaseItem = new CBaseItem;
 		memset(pBaseItem, 0, sizeof(CBaseItem));		
 		memcpy(pBaseItem, &sWeaponItem[i], nSize);
-		g_pItemTableHash_get()->Insert(pBaseItem, pBaseItem->wID);			
+		//ITEM HERE
+		DFOutputDebugString("item: %d\n\n", pBaseItem->wID);
+		g_pItemTableHash_get()->Insert(pBaseItem, pBaseItem->wID);
+		
 	}
 	
 	// Armor 
@@ -2253,7 +2263,8 @@ void LoadBaseItemTable()
 		pBaseItem = new CBaseItem;
 		memset(pBaseItem, 0, sizeof(CBaseItem));		
 		memcpy(pBaseItem, &sArmorItem[i], nSize);
-		g_pItemTableHash_get()->Insert(pBaseItem, pBaseItem->wID);				
+		g_pItemTableHash_get()->Insert(pBaseItem, pBaseItem->wID);
+		DFOutputDebugString("item: %d\n\n", pBaseItem->wID);
 	}
 
 	// Supplies
@@ -2265,7 +2276,8 @@ void LoadBaseItemTable()
 		pBaseItem = new CBaseItem;
 		memset(pBaseItem, 0, sizeof(CBaseItem));		
 		memcpy(pBaseItem, &sSuppliesItem[i], nSize);
-		g_pItemTableHash_get()->Insert(pBaseItem, pBaseItem->wID);				
+		g_pItemTableHash_get()->Insert(pBaseItem, pBaseItem->wID);	
+		DFOutputDebugString("item: %d\n\n", pBaseItem->wID);
 	}	
 
 	// Ride
@@ -2277,7 +2289,8 @@ void LoadBaseItemTable()
 		pBaseItem = new CBaseItem;
 		memset(pBaseItem, 0, sizeof(CBaseItem));		
 		memcpy(pBaseItem, &sRideItem[i], sizeof(CBaseItem));
-		g_pItemTableHash_get()->Insert(pBaseItem, pBaseItem->wID);				
+		g_pItemTableHash_get()->Insert(pBaseItem, pBaseItem->wID);	
+		DFOutputDebugString("item: %d\n\n", pBaseItem->wID);
 	}	
 
 	// Special	
@@ -2289,7 +2302,8 @@ void LoadBaseItemTable()
 		pBaseItem = new CBaseItem;
 		memset(pBaseItem, 0, sizeof(CBaseItem));		
 		memcpy(pBaseItem, &sSpecialItem[i], nSize);
-		g_pItemTableHash_get()->Insert(pBaseItem, pBaseItem->wID);				
+		g_pItemTableHash_get()->Insert(pBaseItem, pBaseItem->wID);	
+		DFOutputDebugString("item: %d\n\n", pBaseItem->wID);
 	}	
 
 	// Zodiac 
@@ -2301,7 +2315,8 @@ void LoadBaseItemTable()
 		pBaseItem = new CBaseItem;
 		memset(pBaseItem, 0, sizeof(CBaseItem));		
 		memcpy(pBaseItem, &sZodiacItem[i], nSize);
-		g_pItemTableHash_get()->Insert(pBaseItem, pBaseItem->wID);				
+		g_pItemTableHash_get()->Insert(pBaseItem, pBaseItem->wID);	
+		DFOutputDebugString("item: %d\n\n", pBaseItem->wID);
 	}	
 
 	// Guardian	
@@ -2313,7 +2328,8 @@ void LoadBaseItemTable()
 		pBaseItem = new CBaseItem;
 		memset(pBaseItem, 0, sizeof(CBaseItem));		
 		memcpy(pBaseItem, &sGuardianItem[i], nSize);
-		g_pItemTableHash_get()->Insert(pBaseItem, pBaseItem->wID);				
+		g_pItemTableHash_get()->Insert(pBaseItem, pBaseItem->wID);	
+		DFOutputDebugString("item: %d\n\n", pBaseItem->wID);
 	}	
 
 	// MagicArray
@@ -2325,7 +2341,8 @@ void LoadBaseItemTable()
 		pBaseItem = new CBaseItem;
 		memset(pBaseItem, 0, sizeof(CBaseItem));		
 		memcpy(pBaseItem, &sMagicArrayItem[i], nSize);
-		g_pItemTableHash_get()->Insert(pBaseItem, pBaseItem->wID);				
+		g_pItemTableHash_get()->Insert(pBaseItem, pBaseItem->wID);	
+		DFOutputDebugString("item: %d\n\n", pBaseItem->wID);
 	}	
 
 	// Material
@@ -2337,7 +2354,8 @@ void LoadBaseItemTable()
 		pBaseItem = new CBaseItem;
 		memset(pBaseItem, 0, sizeof(CBaseItem));		
 		memcpy(pBaseItem, &sMaterials[i], nSize);
-		g_pItemTableHash_get()->Insert(pBaseItem, pBaseItem->wID);				
+		g_pItemTableHash_get()->Insert(pBaseItem, pBaseItem->wID);	
+		DFOutputDebugString("item: %d\n\n", pBaseItem->wID);
 	}	
 
 	// MixUpgrade 
@@ -2349,7 +2367,8 @@ void LoadBaseItemTable()
 		pBaseItem = new CBaseItem;
 		memset(pBaseItem, 0, sizeof(CBaseItem));		
 		memcpy(pBaseItem, &sMixUpgrade[i], sizeof(CBaseItem));
-		g_pItemTableHash_get()->Insert(pBaseItem, pBaseItem->wID);				
+		g_pItemTableHash_get()->Insert(pBaseItem, pBaseItem->wID);	
+		DFOutputDebugString("item: %d\n\n", pBaseItem->wID);
 	}	
 
 	// MagicFieldArray
@@ -2361,7 +2380,8 @@ void LoadBaseItemTable()
 		pBaseItem = new CBaseItem;
 		memset(pBaseItem, 0, sizeof(CBaseItem));		
 		memcpy(pBaseItem, &sMagicFieldArray[i], nSize);
-		g_pItemTableHash_get()->Insert(pBaseItem, pBaseItem->wID);				
+		g_pItemTableHash_get()->Insert(pBaseItem, pBaseItem->wID);	
+		DFOutputDebugString("item: %d\n\n", pBaseItem->wID);
 	}	
 
 	// Consumable
@@ -2373,7 +2393,8 @@ void LoadBaseItemTable()
 		pBaseItem = new CBaseItem;
 		memset(pBaseItem, 0, sizeof(CBaseItem));		
 		memcpy(pBaseItem, &sCunsumableItem[i], nSize);
-		g_pItemTableHash_get()->Insert(pBaseItem, pBaseItem->wID);				
+		g_pItemTableHash_get()->Insert(pBaseItem, pBaseItem->wID);	
+		DFOutputDebugString("item: %d\n\n", pBaseItem->wID);
 	}	
 
 	// Upgrade 
@@ -2385,7 +2406,8 @@ void LoadBaseItemTable()
 		pBaseItem = new CBaseItem;
 		memset(pBaseItem, 0, sizeof(CBaseItem));		
 		memcpy(pBaseItem, &sUpGradeItem[i], nSize);
-		g_pItemTableHash_get()->Insert(pBaseItem, pBaseItem->wID);				
+		g_pItemTableHash_get()->Insert(pBaseItem, pBaseItem->wID);	
+		DFOutputDebugString("item: %d\n\n", pBaseItem->wID);
 	}	
 
 	// liquid 
@@ -2397,7 +2419,8 @@ void LoadBaseItemTable()
 		pBaseItem = new CBaseItem;
 		memset(pBaseItem, 0, sizeof(CBaseItem));		
 		memcpy(pBaseItem, &sLiQuidItem[i], sizeof(CBaseItem));
-		g_pItemTableHash_get()->Insert(pBaseItem, pBaseItem->wID);				
+		g_pItemTableHash_get()->Insert(pBaseItem, pBaseItem->wID);	
+		DFOutputDebugString("item: %d\n\n", pBaseItem->wID);
 	}	
 
 	// Edition //
@@ -2409,7 +2432,8 @@ void LoadBaseItemTable()
 		pBaseItem = new CBaseItem;
 		memset(pBaseItem, 0, sizeof(CBaseItem));		
 		memcpy(pBaseItem, &sEditionItem[i], nSize);
-		g_pItemTableHash_get()->Insert(pBaseItem, pBaseItem->wID);				
+		g_pItemTableHash_get()->Insert(pBaseItem, pBaseItem->wID);	
+		DFOutputDebugString("item: %d\n\n", pBaseItem->wID);
 	}
 
 	// Bag
@@ -2421,7 +2445,8 @@ void LoadBaseItemTable()
 		pBaseItem = new CBaseItem;
 		memset(pBaseItem, 0, sizeof(CBaseItem));		
 		memcpy(pBaseItem, &sBagItem[i], nSize);		
-		g_pItemTableHash_get()->Insert(pBaseItem, pBaseItem->wID);				
+		g_pItemTableHash_get()->Insert(pBaseItem, pBaseItem->wID);	
+		DFOutputDebugString("item: %d\n\n", pBaseItem->wID);
 	}	
 
 #pragma warning 

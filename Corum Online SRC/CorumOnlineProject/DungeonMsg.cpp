@@ -3226,6 +3226,7 @@ void CmdAppearItem( char* pMsg, DWORD dwLen )
 	LOGOUT( "AppearItem CreateItem Type %d", pAppearItem->bType );
 	
 	// 아이템 해쉬에 삽입한다.
+	DWORD asDWORD = pItem->Item.m_Serial.i64Serial;
 	g_pItemHash->Insert( pItem, pItem->Item.m_Serial.i64Serial );	
 }
 

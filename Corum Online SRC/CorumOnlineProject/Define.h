@@ -332,6 +332,8 @@ enum DUNGEON_JOIN_FAIL
 #define __KEY_SKILL16__					33				// 스킬16.
 #define __KEY_ITEM__					34				// 아이템 줍기.
 #define __KEY_GUARDIAN_OPEN__			35				// 가디언창 열기.
+#define __KEY_SEE_ALL_DROPPED_ITEMS     36              // `
+#define __ASCII_CODE___KEY_SEE_ALL_DROPPED_ITEMS 192
 
 #define CHAT_MODE_CHAT					0
 #define CHAT_MODE_MESSAGE				1
@@ -354,8 +356,11 @@ enum DUNGEON_JOIN_FAIL
 #define __MAX_IVICON_COUNT__			6
 #define __MAX_BELTICON_COUNT__			8
 
-#define	__GAME_SIZE_X__					1024
-#define	__GAME_SIZE_Y__					768
+extern int windowWidth();
+extern int windowHeight();
+
+#define	__GAME_SIZE_X__					windowWidth()
+#define	__GAME_SIZE_Y__					windowHeight()
 
 // 윈도우 위치 설정 //
 #define	EXITWND_SIZE_X				256
@@ -993,7 +998,7 @@ enum DUNGEON_JOIN_FAIL
 // Status
 #define MAX_STATUS						5
 
-#define MAX_KEY							36
+#define MAX_KEY							37
 
 
 //-------------------------------------------------------------------------------------------//

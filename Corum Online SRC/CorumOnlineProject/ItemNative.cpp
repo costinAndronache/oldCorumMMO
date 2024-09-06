@@ -2112,7 +2112,102 @@ void ItemChk()
 
 
 void ItemInfoRender()
-{ 					
+{ 	
+	{
+		for (int i = 0; i < droppedItemTooltips.size(); i++) {
+			DroppedItemTooltipInfo tooltipInfo = droppedItemTooltips[i];
+			ITEM* pItem = tooltipInfo.item;
+
+			if (pItem->v3ItemPos.x >= g_pMainPlayer->m_v3CurPos.x - (8*TILE_SIZE ) &&
+				pItem->v3ItemPos.x <= g_pMainPlayer->m_v3CurPos.x + (8*TILE_SIZE ))
+			{
+				if (pItem->v3ItemPos.z >= g_pMainPlayer->m_v3CurPos.z - (8*TILE_SIZE ) &&
+					pItem->v3ItemPos.z <= g_pMainPlayer->m_v3CurPos.z + (8*TILE_SIZE ))
+				{
+					CUserInterface* pUserInterface = CUserInterface::GetInstance();
+
+					CBaseItem* lpItemTalbe = g_pItemTableHash_get()->GetData(pItem->Item.GetID());
+
+					if (lpItemTalbe)
+					{
+						int		iOption = pItem->Item.GetOptionCount();
+						DWORD	dwColor = 0xffffffff;
+
+
+						// 스몰포션 아이템 노란색 표시 수정 김영대 2005.02.06
+						WORD wKind = GetItemKind(lpItemTalbe->GetID());
+						//switch( lpItemTalbe->bCode_Type )
+						switch (wKind)
+						{
+						case ITEM_KIND_WEAPON:
+						{
+							switch (lpItemTalbe->BaseItem_Weapon.byDropBox)
+							{
+							case 1:
+								if (iOption > 0)
+									dwColor = TEXT_COLOR_BLUE;
+								break;
+							case 2:
+								dwColor = TEXT_COLOR_GREEN;
+								break;
+							case 3:
+								dwColor = TEXT_COLOR_YELLOW;
+								break;
+							}
+						}
+						break;
+						case ITEM_KIND_AROMR:
+						{
+							switch (lpItemTalbe->BaseItem_Armor.byDropBox)
+							{
+							case 1:
+								if (iOption > 0)
+									dwColor = TEXT_COLOR_BLUE;
+								break;
+							case 2:
+								dwColor = TEXT_COLOR_GREEN;
+								break;
+							case 3:
+								dwColor = TEXT_COLOR_YELLOW;
+								break;
+							}
+						}
+						break;
+						}
+
+						int x = tooltipInfo.screenX * windowWidth();
+						int y = tooltipInfo.screenY * windowHeight();
+
+						// Item이 있을 경우만 //
+						int nSize = lstrlen(lpItemTalbe->szItemName_Eng);
+						RenderFont(lpItemTalbe->szItemName_Eng, x + 18, x + 18 + nSize * 7, y + 5, y + 19, __ORDER_ITEM_DESC__ + 1, dwColor);
+						CInterface::GetInstance()->RenderInfoBox(x + 10, y, nSize * 8 + 5, 19, __ORDER_ITEM_DESC__);
+					}
+					else
+					{
+						if (pItem->Item.GetID() == ITEM_MONEY_INDEX * ITEM_DISTRIBUTE)
+						{
+							int x = tooltipInfo.screenX * windowWidth();
+							int y = tooltipInfo.screenY * windowHeight();
+
+							char szInfo[0xff] = { 0, };
+							wsprintf(szInfo, g_Message[ETC_MESSAGE866].szMessage, pItem->Item.m_Item_Money.dwMoney);//"%u Karz"
+
+							// Item이 있을 경우만 //
+							int nSize = lstrlen(szInfo);
+
+							RenderFont(szInfo, x + 18, x + 18 + nSize * 8, y + 5, y + 19, __ORDER_ITEM_DESC__ + 1);
+							CInterface::GetInstance()->RenderInfoBox(x + ITEMINFO_RENDER_POSITION, y, nSize * 8 + 5, 19, __ORDER_ITEM_DESC__);
+						}
+					}
+				}
+			}
+		}
+	}
+
+	/// <summary>
+	/// ////////////////////////////////////////////////////////////////////
+	/// </summary>
 	if(g_pMainPlayer->m_dwItemInfoType==2)
 	{
 		/*pseudo-code for all dropped items tooltips here*/

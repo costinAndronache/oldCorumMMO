@@ -1029,7 +1029,7 @@ DWORD __stdcall AfterRenderGameDungeon()
 		RenderUserSelectRect();
 	}
 
-	pInterface->m_byIndex = 10;
+	pInterface->m_byIndex = 16;
 	pInterface->Render();
 	
 
@@ -1670,6 +1670,7 @@ void OnKeyDownDungeon(WPARAM wParam, LPARAM lParam)
 	case 0xBE:
 	case 0xBF:
 	case 0x20:
+	case __ASCII_CODE___KEY_SEE_ALL_DROPPED_ITEMS:
 		{	
 			if(IsGuildCreate() && wParam==0x20)
 				DisplayMessageAdd(g_Message[ETC_MESSAGE1239].szMessage, 0xFFFF0000);
@@ -1933,6 +1934,12 @@ void OnKeyUpDungeon(WPARAM wParam, LPARAM lParam)
 		{
 			g_bLshift = FALSE;
 			SetRect( &g_rcSelectBox, 0, 0, 0, 0 );
+		}
+		break;
+
+		case __ASCII_CODE___KEY_SEE_ALL_DROPPED_ITEMS:
+		{
+			droppedItemTooltips.clear();
 		}
 		break;
 	}
@@ -6326,6 +6333,35 @@ void SetKey(int nKey)
 				}
 			}
 			
+			if (nKey == g_sKeyConfig.snKey[__KEY_SEE_ALL_DROPPED_ITEMS])
+			{
+				if (!g_pGVDungeon->bChatMode)
+				{
+					droppedItemTooltips.clear();
+
+					CItemTradeShopWnd* pItemTradeShopWnd = CItemTradeShopWnd::GetInstance();
+
+					ListNode<ITEM>* pNode;
+					ITEM* pItem;
+
+					pNode = g_pItemHash->GetHead();
+
+					while (pNode)
+					{
+						pItem = (ITEM*)pNode->pData;
+
+						if (pItem)
+						{
+							VECTOR3 itemXY;
+							GetScreenXYFromXYZ(g_pGeometry, 0, &(pItem->v3ItemPos), &itemXY);
+							DroppedItemTooltipInfo ttip = { pItem, itemXY.x, itemXY.y };
+							droppedItemTooltips.push_back(ttip);
+						}
+						pNode = pNode->pNext;
+					}
+				}
+			}
+
 			if(nKey==g_sKeyConfig.snKey[__KEY_ITEM__])
 			{	
 				if(!g_pGVDungeon->bChatMode)
@@ -6402,7 +6438,7 @@ void SetKey(int nKey)
 									}
 									else
 									{
-										SendPickupItem(pItem, FALSE, FALSE);											
+ 										SendPickupItem(pItem, FALSE, FALSE);											
 									}									
 
 									bChk = TRUE;

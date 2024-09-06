@@ -311,8 +311,12 @@ LRESULT CALLBACK	WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 DWORD				GetExpTableOfLevel(GAME_OBJECT_TYPE eObjectType, DWORD dwLevel);
 DWORD				GetGuardianItemLevel(DWORD dwExp);
 
+struct DroppedItemTooltipInfo {
+	ITEM* item;
+	float screenX, screenY;
+};
 
-
+extern std::vector<DroppedItemTooltipInfo> droppedItemTooltips;
 
 
 
