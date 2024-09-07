@@ -76,7 +76,7 @@ int windowHeight() {
 	return h;
 }
 
-std::vector<DroppedItemTooltipInfo> droppedItemTooltips;
+std::vector<ITEM*> selectedItemsForTooltipRendering;
 
 //==================================================================================
 // Global Variable : 여기다가 이쁘게 선언할것 딴데다가 하지마셈 

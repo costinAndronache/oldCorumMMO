@@ -1004,6 +1004,7 @@ DWORD __stdcall BeforeRenderGameDungeon()
 	return 0;
 }
 
+extern void renderAllDroppedItemsTooltips(const std::vector<ITEM*>& droppedItemTooltips);
 
 DWORD __stdcall AfterRenderGameDungeon()
 {
@@ -1509,6 +1510,8 @@ DWORD __stdcall AfterRenderGameDungeon()
 	}
 #endif	
 
+	renderAllDroppedItemsTooltips(droppedItemTooltips);
+
 	return 0;
 }
 
@@ -1939,7 +1942,7 @@ void OnKeyUpDungeon(WPARAM wParam, LPARAM lParam)
 
 		case __ASCII_CODE___KEY_SEE_ALL_DROPPED_ITEMS:
 		{
-			droppedItemTooltips.clear();
+			selectedItemsForTooltipRendering.clear();
 		}
 		break;
 	}
@@ -6337,7 +6340,7 @@ void SetKey(int nKey)
 			{
 				if (!g_pGVDungeon->bChatMode)
 				{
-					droppedItemTooltips.clear();
+					selectedItemsForTooltipRendering.clear();
 
 					CItemTradeShopWnd* pItemTradeShopWnd = CItemTradeShopWnd::GetInstance();
 
@@ -6352,10 +6355,7 @@ void SetKey(int nKey)
 
 						if (pItem)
 						{
-							VECTOR3 itemXY;
-							GetScreenXYFromXYZ(g_pGeometry, 0, &(pItem->v3ItemPos), &itemXY);
-							DroppedItemTooltipInfo ttip = { pItem, itemXY.x, itemXY.y };
-							droppedItemTooltips.push_back(ttip);
+							selectedItemsForTooltipRendering.push_back(pItem);
 						}
 						pNode = pNode->pNext;
 					}

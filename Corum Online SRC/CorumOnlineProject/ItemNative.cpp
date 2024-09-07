@@ -2110,23 +2110,24 @@ void ItemChk()
 	}	
 }
 
-
-void ItemInfoRender()
-{ 	
+void renderAllDroppedItemsTooltips(const std::vector<ITEM*>& droppedItemTooltips) {
 	{
 		for (int i = 0; i < droppedItemTooltips.size(); i++) {
-			DroppedItemTooltipInfo tooltipInfo = droppedItemTooltips[i];
-			ITEM* pItem = tooltipInfo.item;
+			ITEM* pItem = droppedItemTooltips[i];
 
-			if (pItem->v3ItemPos.x >= g_pMainPlayer->m_v3CurPos.x - (8*TILE_SIZE ) &&
-				pItem->v3ItemPos.x <= g_pMainPlayer->m_v3CurPos.x + (8*TILE_SIZE ))
+			if (pItem->v3ItemPos.x >= g_pMainPlayer->m_v3CurPos.x - (8 * TILE_SIZE) &&
+				pItem->v3ItemPos.x <= g_pMainPlayer->m_v3CurPos.x + (8 * TILE_SIZE))
 			{
-				if (pItem->v3ItemPos.z >= g_pMainPlayer->m_v3CurPos.z - (8*TILE_SIZE ) &&
-					pItem->v3ItemPos.z <= g_pMainPlayer->m_v3CurPos.z + (8*TILE_SIZE ))
+				if (pItem->v3ItemPos.z >= g_pMainPlayer->m_v3CurPos.z - (8 * TILE_SIZE) &&
+					pItem->v3ItemPos.z <= g_pMainPlayer->m_v3CurPos.z + (8 * TILE_SIZE))
 				{
 					CUserInterface* pUserInterface = CUserInterface::GetInstance();
 
 					CBaseItem* lpItemTalbe = g_pItemTableHash_get()->GetData(pItem->Item.GetID());
+					VECTOR3 vOut;
+					GetScreenXYFromXYZ(g_pGeometry, 0, &pItem->v3ItemPos, &vOut);
+					const int x = vOut.x * windowWidth();
+					const int y = vOut.y * windowHeight();
 
 					if (lpItemTalbe)
 					{
@@ -2175,8 +2176,7 @@ void ItemInfoRender()
 						break;
 						}
 
-						int x = tooltipInfo.screenX * windowWidth();
-						int y = tooltipInfo.screenY * windowHeight();
+
 
 						// Item이 있을 경우만 //
 						int nSize = lstrlen(lpItemTalbe->szItemName_Eng);
@@ -2187,8 +2187,6 @@ void ItemInfoRender()
 					{
 						if (pItem->Item.GetID() == ITEM_MONEY_INDEX * ITEM_DISTRIBUTE)
 						{
-							int x = tooltipInfo.screenX * windowWidth();
-							int y = tooltipInfo.screenY * windowHeight();
 
 							char szInfo[0xff] = { 0, };
 							wsprintf(szInfo, g_Message[ETC_MESSAGE866].szMessage, pItem->Item.m_Item_Money.dwMoney);//"%u Karz"
@@ -2204,6 +2202,11 @@ void ItemInfoRender()
 			}
 		}
 	}
+}
+
+void ItemInfoRender()
+{ 	
+	
 
 	/// <summary>
 	/// ////////////////////////////////////////////////////////////////////
