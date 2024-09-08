@@ -5047,33 +5047,36 @@ void CMonster::SetHP(DWORD dwHP, const CUnit* pAttackUser)
 }
 
 // 확률에 해당하는 아이템을 드롭시켜라.
-int CMonster::GetDropItem(int nMagicItemRate, int iRate)
+int CMonster::GetDropItem(int userDropFactor, int itemDropBarrier)
 {
-	int iItemID = 0;
+	const int maxItemCount = 10; 
+	std::vector<int> candidateItemsIndexes;
 
-	// 몬스터 아이템 주머니 부터 조사해랑
-	for(int i = 0; i < 10; i++ )
+	for (int i = 0; i < maxItemCount; i++) {
+		if (itemDropBarrier <= m_pBaseMonster->ItemRate[i].ItemRate * userDropFactor) {
+			candidateItemsIndexes.push_back(i);
+		}
+	}
+
+	if (candidateItemsIndexes.empty()) {
+		return 0;
+	}
+
+	const int droppedItemIndex = rand() % candidateItemsIndexes.size();
+
+	const int iItemID = m_pBaseMonster->ItemRate[droppedItemIndex].ItemID;
+
+	// 속주머니를 뒤져야 하나?
+	if (iItemID > BASE_ITEMBOTARY_INDEX && iItemID < (BASE_ITEMBOTARY_INDEX + 200))
 	{
+		int botaryDropBarrier = rand();
 
-		if( iRate <= m_pBaseMonster->ItemRate[i].ItemRate * nMagicItemRate )
+		for (int j = 0; j < 20; ++j)
 		{
-			//iItemID = m_pBaseMonster->ItemRate[i].ItemID;
-
-			// 속주머니를 뒤져야 하나?
-			if (iItemID > BASE_ITEMBOTARY_INDEX && iItemID < (BASE_ITEMBOTARY_INDEX+200))
+			if (botaryDropBarrier <= g_pBaseBotary[iItemID - BASE_ITEMBOTARY_INDEX].ItemRate[j].ItemRate * userDropFactor)
 			{
-				iRate = rand();
-
-				for(int j  = 0; j < 20; ++j)
-				{
-					if (iRate <= g_pBaseBotary[iItemID-BASE_ITEMBOTARY_INDEX].ItemRate[j].ItemRate)
-					{
-						return g_pBaseBotary[iItemID-BASE_ITEMBOTARY_INDEX].ItemRate[j].ItemID;					
-					}
-				}
+				return g_pBaseBotary[iItemID - BASE_ITEMBOTARY_INDEX].ItemRate[j].ItemID;
 			}
-
-			break;
 		}
 	}
 	

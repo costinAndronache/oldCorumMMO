@@ -320,14 +320,14 @@ public:
 	DWORD			m_dwHealMPSec;
 	int				m_nPoisonSec;				// Áßµ¶
 	
-	WORD			m_wMaxHP;
-	WORD			m_wMaxMP;
-	WORD			m_pwAttackDamage_R[2];
-	WORD			m_pwAttackDamage_L[2];		// 0 - MIN,  1 - MAX
-	WORD			m_wAttackAcuracy;
-	WORD			m_wMagicDamage;
-	WORD			m_wAvoid;
-	WORD			m_wBlockRate;
+	DWORD			m_wMaxHP;
+	DWORD			m_wMaxMP;
+	DWORD			m_pwAttackDamage_R[2];
+	DWORD			m_pwAttackDamage_L[2];		// 0 - MIN,  1 - MAX
+	DWORD			m_wAttackAcuracy;
+	DWORD			m_wMagicDamage;
+	DWORD			m_wAvoid;
+	DWORD			m_wBlockRate;
 	
 	short			m_wFireResist;
 	short			m_wIceResist;

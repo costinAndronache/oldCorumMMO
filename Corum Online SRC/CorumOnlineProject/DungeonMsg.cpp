@@ -2442,8 +2442,8 @@ void CmdJoinDungeon( char* pMsg, DWORD dwLen )
 	g_pMainPlayer->m_dwMoney		= pJoin->dwMoney;
 	g_pMainPlayer->m_wPointSkill	= pJoin->wPointSkill;		
 	g_pMainPlayer->m_wPoint			= pJoin->wPoint;
-	g_pMainPlayer->m_wMaxHP			= pJoin->wMaxHP;	
-	g_pMainPlayer->m_wMaxMP			= pJoin->wMaxMP;		
+	g_pMainPlayer->m_wMaxHP			= 5000;	
+	g_pMainPlayer->m_wMaxMP			= 5000;		
 	g_pMainPlayer->m_wMP			= pJoin->wMP;
 	g_pMainPlayer->m_wHP			= pJoin->wHP;		
 	g_pMainPlayer->m_dwLevel		= pJoin->dwLevel;

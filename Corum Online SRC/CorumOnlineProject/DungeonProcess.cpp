@@ -99,7 +99,9 @@
 #include "GuildWarRequest.h"
 #include "GuildWarFinalSettingWnd.h"
 #include "GuildWarStatusWnd.h"
+#include "PagedTableWindow.h"
 
+CustomUiKit::PagedTableWindow* g_PagedTableWindow = NULL;
 
 DWORD						g_dwMileHandleRefs	= 0;
 LPGlobalVariable_Dungeon	g_pGVDungeon		= NULL;
@@ -218,9 +220,12 @@ BOOL InitGameDungeon()
 	g_pSprManager->CreateSprite(SPR_MESSAGE_BOX, 60, 100, FALSE, 100);
 	SPR(SPR_MESSAGE_BOX)->SetAlpha(128);
 	
-#ifdef _USE_IME
 	CreateChatEditBackground();
-#endif
+
+	if (g_PagedTableWindow == NULL) {
+		CustomUiKit::Rect rect = { {300, 300}, {320, 640} };
+		g_PagedTableWindow = new CustomUiKit::PagedTableWindow(rect, g_hMainWnd);
+	}
 
 	return TRUE;
 }
@@ -1030,7 +1035,7 @@ DWORD __stdcall AfterRenderGameDungeon()
 		RenderUserSelectRect();
 	}
 
-	pInterface->m_byIndex = 16;
+	pInterface->m_byIndex = 45;
 	pInterface->Render();
 	
 
@@ -1162,8 +1167,8 @@ DWORD __stdcall AfterRenderGameDungeon()
 		if(vOutPos.x >= 1.0f || vOutPos.y >= 1.0f )
 			goto lb_Again;
 		
-		x = WORD( 1024.0f * vOutPos.x );
-		y = WORD( 768.0f * vOutPos.y );
+		x = WORD( float(windowWidth()) * vOutPos.x );
+		y = WORD( float(windowHeight()) * vOutPos.y );
 		
 		if(pUser->m_bPlayerShop)
 		{
@@ -1510,8 +1515,8 @@ DWORD __stdcall AfterRenderGameDungeon()
 	}
 #endif	
 
-	renderAllDroppedItemsTooltips(droppedItemTooltips);
-
+	renderAllDroppedItemsTooltips(selectedItemsForTooltipRendering);
+	g_PagedTableWindow->repaintInWindow();
 	return 0;
 }
 
@@ -2089,42 +2094,6 @@ void OnLButtonDownDungeon(WPARAM wParam, LPARAM lParam)
 	}
 	else 
 	{
-
-#if IS_KOREA_LOCALIZING // 일본어판의 경우 마우스질 해도 채팅 창 안없앤다..
-		CChatWnd* pChatWnd = CChatWnd::GetInstance();
-		
-		if(pChatWnd->GetActive())
-		{			
-			if(g_pInputManager->GetInputBuffer(INPUT_BUFFER_19))
-			{
-				if(!IsEmptyString(g_pInputManager->GetInputBuffer(INPUT_BUFFER_19)))
-				{
-					// //
-					memset(pChatWnd->m_szClip, 0, sizeof(pChatWnd->m_szClip));
-					__lstrcpyn(pChatWnd->m_szClip, g_pInputManager->GetInputBuffer(INPUT_BUFFER_19)
-						, lstrlen(g_pInputManager->GetInputBuffer(INPUT_BUFFER_19)));
-
-					pChatWnd->m_byClipType = 1;
-					pChatWnd->SetActive(FALSE);
-															
-					ChatModeOff(INPUT_BUFFER_19)
-
-					IMESetEdit(0);
-				}
-				else
-				{
-					if(g_pGVDungeon->bChatMode==TRUE)
-					{
-						pChatWnd->SetActive(FALSE);
-
-						ChatModeOff(INPUT_BUFFER_19)					
-
-						IMESetEdit(0);
-					}
-				}
-			}
-		}
-#endif 
 		pUserInterface->m_bMatch = FALSE;
 
 		CheckAndProcForGroupWnd();

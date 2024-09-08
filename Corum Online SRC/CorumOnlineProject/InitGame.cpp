@@ -181,7 +181,10 @@ STMPOOL_HANDLE				g_pEffectPool			= NULL;
 
 LPBASEITEM_HASH				g_pItemTableHash_get() {
 
-	static LPBASEITEM_HASH hash = new BASEITEM_HASH;
+	static LPBASEITEM_HASH hash = NULL;
+	if (hash == NULL) {
+		hash = new BASEITEM_HASH;
+	}
 	if (hash->GetMaxBucketNum() == 0) {
 		hash->InitializeHashTable(10000, 10000);
 	}
@@ -662,7 +665,7 @@ BOOL InitGame()
 	//
 	g_Res.Init("CorumResource.erd", g_szBasePath);	
 	g_ResDefined.Init("DefResource.erd", g_szBasePath);		
-	SetRect( &g_rcScreenRect, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT );
+	SetRect( &g_rcScreenRect, 0, 0, windowWidth(), windowHeight() );
 
 	InitFunctionPointer();
 	InitPacketProc();
@@ -2451,6 +2454,8 @@ void LoadBaseItemTable()
 
 #pragma warning 
 	SetCommonServerBaseItemHash(g_pItemTableHash_get());
+
+	auto dbug = g_pItemTableHash_get();
 
 	return;
 

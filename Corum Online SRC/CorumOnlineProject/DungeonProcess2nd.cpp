@@ -1036,7 +1036,7 @@ void DungeonMove()
 	{
 		// 움직일수 있는 상태라면.
 		GXSetPosition(CUserInterface::GetInstance()->m_pUserClickHandle.pHandle, &g_Mouse.v3Mouse, FALSE);
-		SetAction(CUserInterface::GetInstance()->m_pUserClickHandle.pHandle, 1, ACTION_ONCE);
+		SetAction(CUserInterface::GetInstance()->m_pUserClickHandle.pHandle, 1, ACTION_LOOP);
 		ShowObject(CUserInterface::GetInstance()->m_pUserClickHandle.pHandle);
 
 		if( PathFindDungeon() )

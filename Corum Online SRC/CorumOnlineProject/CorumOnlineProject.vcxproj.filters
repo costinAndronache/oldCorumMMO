@@ -166,6 +166,9 @@
     <Filter Include="CommonServer">
       <UniqueIdentifier>{105619e5-244b-4be8-9885-62c2edb0e533}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Interface\ItemPickupFilterWindow">
+      <UniqueIdentifier>{183f20f3-2790-4ce6-a6d7-beb5f96ddd8b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ChrInfo.cpp">
@@ -755,6 +758,9 @@
     </ClCompile>
     <ClCompile Include="InterfaceProcTemp.cpp">
       <Filter>minjin</Filter>
+    </ClCompile>
+    <ClCompile Include="PagedTableWindow.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1414,6 +1420,9 @@
     </ClInclude>
     <ClInclude Include="InterfaceProcTemp.h">
       <Filter>minjin</Filter>
+    </ClInclude>
+    <ClInclude Include="PagedTableWindow.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

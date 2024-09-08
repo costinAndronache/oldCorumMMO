@@ -25,10 +25,15 @@
 #include "LocalTimeObserver.h"
 #include "NetworkTimeObserver.h"
 #include "ChinaHackToolBlock.h"
-
+#include <Windows.h>
+#include <GdiPlusInit.h>
 
 int APIENTRY WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nShowCmd )
 {
+	GdiplusStartupInput gdiplusStartupInput;
+	ULONG_PTR gdiplusToken;
+	GdiplusStartup(&gdiplusToken, &gdiplusStartupInput, NULL);
+
 #ifndef DEVELOP_MODE	
 	if(!CheckGlobalEventHandle())
 	{

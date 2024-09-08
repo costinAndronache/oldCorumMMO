@@ -265,38 +265,34 @@ void	CUserInterface::CreateMenu(
 void CUserInterface::InsertUIData()
 {
 	int Order = __ORDER_USERINTERFACE_START_;
-	float original = 640;
-	const float bottomSpace = 640;
-
-#define adjusted(x) bottomSpace + (x - original)
-
-	InsertData(SPR_OBJ_UI_LEFT, SPR_INTERFACE_UI_LEFT, 0, bottomSpace, 1.0f, 1.0f, Order, FALSE, FALSE, FALSE);
-	InsertData(SPR_OBJ_UI_RIGHT, SPR_INTERFACE_UI_RIGHT, 512, bottomSpace, 1.0f, 1.0f, Order, FALSE, FALSE, FALSE);	
-	InsertData(SPR_OBJ_EN2, SPR_INTERFACE_EN2, 0, adjusted(709), 0.0f, 1.0f,  Order+1,FALSE, FALSE, FALSE);
-	InsertData(SPR_OBJ_EN1, SPR_INTERFACE_EN1, 0, adjusted(709), 0.0f, 1.0f, Order+2,FALSE, FALSE, FALSE);
-	InsertData(SPR_OBJ_EXP, SPR_INTERFACE_EXP, 0, adjusted(725), 1.0f, 1.0f, Order+3, FALSE, FALSE, FALSE);
-	InsertData(SPR_OBJ_MANA2, SPR_INTERFACE_MANA2, 1023, adjusted(709), 0.0f, 1.0f, Order+1, FALSE, FALSE, FALSE);
-	InsertData(SPR_OBJ_MANA1, SPR_INTERFACE_MANA1, 723, adjusted(709), 0.0f, 1.0f, Order+2, FALSE, FALSE, FALSE);
-	InsertData(SPR_OBJ_CAST, SPR_INTERFACE_CAST, 723, adjusted(725), (float)g_pMainPlayer->m_fCurCoolPoint/(float)g_pMainPlayer->m_fMaxCoolPoint*300/2, 1.0f, Order+3, FALSE, FALSE, FALSE);
 	
-	InsertData(BUTTON_OBJ_ITEM1, BUTTON_INTERFACE_ITEM1, 83, adjusted(684), 1.0f, 1.0f, Order+1, FALSE, FALSE, FALSE);
-	InsertData(BUTTON_OBJ_CHR1, BUTTON_INTERFACE_CHR1, 164, adjusted(684), 1.0f, 1.0f, Order+1, FALSE, FALSE, FALSE);
-	InsertData(BUTTON_OBJ_SKILL1, BUTTON_INTERFACE_SKILL1, 243, adjusted(684), 1.0f, 1.0f, Order+1, FALSE, FALSE, FALSE);
-	InsertData(BUTTON_OBJ_GUILD1, BUTTON_INTERFACE_GUILD1, 747, adjusted(684), 1.0f, 1.0f, Order+1, FALSE, FALSE, FALSE);
-	InsertData(BUTTON_OBJ_PARTY1, BUTTON_INTERFACE_PARTY1, 827, adjusted(684), 1.0f, 1.0f, Order+1, FALSE, FALSE, FALSE);
-	InsertData(BUTTON_OBJ_CHAT1, BUTTON_INTERFACE_CHAT1, 907, adjusted(684), 1.0f, 1.0f, Order+1, FALSE, FALSE, FALSE);
-	InsertData(BUTTON_OBJ_ITEM2, BUTTON_INTERFACE_ITEM2, 83, adjusted(684), 1.0f, 1.0f, Order+1, FALSE, FALSE, FALSE);
-	InsertData(BUTTON_OBJ_CHR2, BUTTON_INTERFACE_CHR2, 164, adjusted(684), 1.0f, 1.0f, Order+1, FALSE, FALSE, FALSE);
-	InsertData(BUTTON_OBJ_SKILL2, BUTTON_INTERFACE_SKILL2, 243, adjusted(684), 1.0f, 1.0f, Order+1, FALSE, FALSE, FALSE);
-	InsertData(BUTTON_OBJ_GUILD2, BUTTON_INTERFACE_GUILD2, 747, adjusted(684), 1.0f, 1.0f, Order+1, FALSE, FALSE, FALSE);
-	InsertData(BUTTON_OBJ_PARTY2, BUTTON_INTERFACE_PARTY2, 827, adjusted(684), 1.0f, 1.0f, Order+1, FALSE, FALSE, FALSE);
-	InsertData(BUTTON_OBJ_CHAT2, BUTTON_INTERFACE_CHAT2, 907, adjusted(684), 1.0f, 1.0f, Order+1, FALSE, FALSE, FALSE);
-	InsertData(BUTTON_OBJ_SYSTEM1, BUTTON_INTERFACE_SYSTEM1, 659, adjusted(731), 1.0f, 1.0f, Order+1, FALSE, FALSE, FALSE);	
-	InsertData(BUTTON_OBJ_SYSTEM2, BUTTON_INTERFACE_SYSTEM2, 659, adjusted(731), 1.0f, 1.0f, Order+1, FALSE, FALSE, FALSE);
-	InsertData(BUTTON_OBJ_PKON1, BUTTON_INTERFACE_PKON1, 333, adjusted(731), 1.0f, 1.0f, Order+1, FALSE, FALSE, FALSE);
-	InsertData(BUTTON_OBJ_PKON2, BUTTON_INTERFACE_PKON2, 333, adjusted(731), 1.0f, 1.0f, Order+1, FALSE, FALSE, FALSE);
-	InsertData(BUTTON_OBJ_PKOFF1, BUTTON_INTERFACE_PKOFF1, 333, adjusted(731), 1.0f, 1.0f, Order+1, FALSE, FALSE, FALSE);
-	InsertData(BUTTON_OBJ_PKOFF2, BUTTON_INTERFACE_PKOFF2, 333, adjusted(731), 1.0f, 1.0f, Order+1, FALSE, FALSE, FALSE);
+	InsertData(SPR_OBJ_UI_LEFT, SPR_INTERFACE_UI_LEFT, 0, 640, 1.0f, 1.0f, Order, FALSE, FALSE, FALSE);
+	InsertData(SPR_OBJ_UI_RIGHT, SPR_INTERFACE_UI_RIGHT, 512, 640, 1.0f, 1.0f, Order, FALSE, FALSE, FALSE);	
+	InsertData(SPR_OBJ_EN2, SPR_INTERFACE_EN2, 0, 709, 0.0f, 1.0f,  Order+1,FALSE, FALSE, FALSE);
+	InsertData(SPR_OBJ_EN1, SPR_INTERFACE_EN1, 0, 709, 0.0f, 1.0f, Order+2,FALSE, FALSE, FALSE);
+	InsertData(SPR_OBJ_EXP, SPR_INTERFACE_EXP, 0, 725, 1.0f, 1.0f, Order+3, FALSE, FALSE, FALSE);		
+	InsertData(SPR_OBJ_MANA2, SPR_INTERFACE_MANA2, 1023, 709, 0.0f, 1.0f, Order+1, FALSE, FALSE, FALSE);
+	InsertData(SPR_OBJ_MANA1, SPR_INTERFACE_MANA1, 723, 709, 0.0f, 1.0f, Order+2, FALSE, FALSE, FALSE);		
+	InsertData(SPR_OBJ_CAST, SPR_INTERFACE_CAST, 723, 725, (float)g_pMainPlayer->m_fCurCoolPoint/(float)g_pMainPlayer->m_fMaxCoolPoint*300/2, 1.0f, Order+3, FALSE, FALSE, FALSE);			
+	
+	InsertData(BUTTON_OBJ_ITEM1, BUTTON_INTERFACE_ITEM1, 83, 684, 1.0f, 1.0f, Order+1, FALSE, FALSE, FALSE);
+	InsertData(BUTTON_OBJ_CHR1, BUTTON_INTERFACE_CHR1, 164, 684, 1.0f, 1.0f, Order+1, FALSE, FALSE, FALSE);
+	InsertData(BUTTON_OBJ_SKILL1, BUTTON_INTERFACE_SKILL1, 243, 684, 1.0f, 1.0f, Order+1, FALSE, FALSE, FALSE);
+	InsertData(BUTTON_OBJ_GUILD1, BUTTON_INTERFACE_GUILD1, 747, 684, 1.0f, 1.0f, Order+1, FALSE, FALSE, FALSE);
+	InsertData(BUTTON_OBJ_PARTY1, BUTTON_INTERFACE_PARTY1, 827, 684, 1.0f, 1.0f, Order+1, FALSE, FALSE, FALSE);
+	InsertData(BUTTON_OBJ_CHAT1, BUTTON_INTERFACE_CHAT1, 907, 684, 1.0f, 1.0f, Order+1, FALSE, FALSE, FALSE);	
+	InsertData(BUTTON_OBJ_ITEM2, BUTTON_INTERFACE_ITEM2, 83, 684, 1.0f, 1.0f, Order+1, FALSE, FALSE, FALSE);
+	InsertData(BUTTON_OBJ_CHR2, BUTTON_INTERFACE_CHR2, 164, 684, 1.0f, 1.0f, Order+1, FALSE, FALSE, FALSE);
+	InsertData(BUTTON_OBJ_SKILL2, BUTTON_INTERFACE_SKILL2, 243, 684, 1.0f, 1.0f, Order+1, FALSE, FALSE, FALSE);
+	InsertData(BUTTON_OBJ_GUILD2, BUTTON_INTERFACE_GUILD2, 747, 684, 1.0f, 1.0f, Order+1, FALSE, FALSE, FALSE);
+	InsertData(BUTTON_OBJ_PARTY2, BUTTON_INTERFACE_PARTY2, 827, 684, 1.0f, 1.0f, Order+1, FALSE, FALSE, FALSE);
+	InsertData(BUTTON_OBJ_CHAT2, BUTTON_INTERFACE_CHAT2, 907, 684, 1.0f, 1.0f, Order+1, FALSE, FALSE, FALSE);		
+	InsertData(BUTTON_OBJ_SYSTEM1, BUTTON_INTERFACE_SYSTEM1, 659, 731, 1.0f, 1.0f, Order+1, FALSE, FALSE, FALSE);	
+	InsertData(BUTTON_OBJ_SYSTEM2, BUTTON_INTERFACE_SYSTEM2, 659, 731, 1.0f, 1.0f, Order+1, FALSE, FALSE, FALSE);
+	InsertData(BUTTON_OBJ_PKON1, BUTTON_INTERFACE_PKON1, 333, 731, 1.0f, 1.0f, Order+1, FALSE, FALSE, FALSE);
+	InsertData(BUTTON_OBJ_PKON2, BUTTON_INTERFACE_PKON2, 333, 731, 1.0f, 1.0f, Order+1, FALSE, FALSE, FALSE);
+	InsertData(BUTTON_OBJ_PKOFF1, BUTTON_INTERFACE_PKOFF1, 333, 731, 1.0f, 1.0f, Order+1, FALSE, FALSE, FALSE);
+	InsertData(BUTTON_OBJ_PKOFF2, BUTTON_INTERFACE_PKOFF2, 333, 731, 1.0f, 1.0f, Order+1, FALSE, FALSE, FALSE);
 
 	InsertData(SPR_OBJ_MONSTERHP_BAR1, SPR_INTERFACE_MONSTERHP_BAR1, 401, 0, 1.0f, 1.0f, Order, FALSE, FALSE, FALSE);
 	InsertData(SPR_OBJ_MONSTERHP_BAR2, SPR_INTERFACE_MONSTERHP_BAR2, 598, 0, 1.0f, 1.0f, Order, FALSE, FALSE, FALSE);	
@@ -310,27 +306,27 @@ void CUserInterface::InsertUIData()
 	InsertData(SPR_OBJ_GUARDIAN_WND1, SPR_INTERFACE_GUARDIAN_WND1, 0, 0, 1.0f, 1.0f, Order, FALSE, FALSE, FALSE);
 	InsertData(SPR_OBJ_GUARDIAN_EN, SPR_INTERFACE_GUARDIAN_EN, 0, 0, 1.0f, 1.0f, Order+1, FALSE, FALSE, FALSE);
 
-	InsertData(SPR_OBJ_UI_TRADE1, SPR_INTERFACE_UI_TRADE1, 0, adjusted(661), 1.0f, 1.0f, Order+1, FALSE, FALSE, FALSE);	
-	InsertData(SPR_OBJ_UI_TRADE2, SPR_INTERFACE_UI_TRADE2, 0, adjusted(661), 1.0f, 1.0f, Order+1, FALSE, FALSE, FALSE);
-	InsertData(SPR_OBJ_UI_TRADE3, SPR_INTERFACE_UI_TRADE3, 0, adjusted(661), 1.0f, 1.0f, Order+1, FALSE, FALSE, FALSE);
-	InsertData(SPR_OBJ_UI_SHOP1, SPR_INTERFACE_UI_SHOP1, 0, adjusted(679), 1.0f, 1.0f, Order+1, FALSE, FALSE, FALSE);	
-	InsertData(SPR_OBJ_UI_SHOP2, SPR_INTERFACE_UI_SHOP2, 0, adjusted(679), 1.0f, 1.0f, Order+1, FALSE, FALSE, FALSE);
-	InsertData(SPR_OBJ_UI_SHOP3, SPR_INTERFACE_UI_SHOP3, 0, adjusted(679), 1.0f, 1.0f, Order+1, FALSE, FALSE, FALSE);
-	InsertData(SPR_OBJ_UI_REST1, SPR_INTERFACE_UI_REST1, 977, adjusted(661), 1.0f, 1.0f, Order+1, FALSE, FALSE, FALSE);	
-	InsertData(SPR_OBJ_UI_REST2, SPR_INTERFACE_UI_REST2, 977, adjusted(661), 1.0f, 1.0f, Order+1, FALSE, FALSE, FALSE);
-	InsertData(SPR_OBJ_UI_REST3, SPR_INTERFACE_UI_REST3, 977, adjusted(661), 1.0f, 1.0f, Order+1, FALSE, FALSE, FALSE);
-	InsertData(SPR_OBJ_UI_MATCH1, SPR_INTERFACE_UI_MATCH1, 977, adjusted(679), 1.0f, 1.0f, Order+1, FALSE, FALSE, FALSE);	
-	InsertData(SPR_OBJ_UI_MATCH2, SPR_INTERFACE_UI_MATCH2, 977, adjusted(679), 1.0f, 1.0f, Order+1, FALSE, FALSE, FALSE);
-	InsertData(SPR_OBJ_UI_MATCH3, SPR_INTERFACE_UI_MATCH3, 977, adjusted(679), 1.0f, 1.0f, Order+1, FALSE, FALSE, FALSE);
+	InsertData(SPR_OBJ_UI_TRADE1, SPR_INTERFACE_UI_TRADE1, 0, 661, 1.0f, 1.0f, Order+1, FALSE, FALSE, FALSE);	
+	InsertData(SPR_OBJ_UI_TRADE2, SPR_INTERFACE_UI_TRADE2, 0, 661, 1.0f, 1.0f, Order+1, FALSE, FALSE, FALSE);	
+	InsertData(SPR_OBJ_UI_TRADE3, SPR_INTERFACE_UI_TRADE3, 0, 661, 1.0f, 1.0f, Order+1, FALSE, FALSE, FALSE);		
+	InsertData(SPR_OBJ_UI_SHOP1, SPR_INTERFACE_UI_SHOP1, 0, 679, 1.0f, 1.0f, Order+1, FALSE, FALSE, FALSE);	
+	InsertData(SPR_OBJ_UI_SHOP2, SPR_INTERFACE_UI_SHOP2, 0, 679, 1.0f, 1.0f, Order+1, FALSE, FALSE, FALSE);	
+	InsertData(SPR_OBJ_UI_SHOP3, SPR_INTERFACE_UI_SHOP3, 0, 679, 1.0f, 1.0f, Order+1, FALSE, FALSE, FALSE);		
+	InsertData(SPR_OBJ_UI_REST1, SPR_INTERFACE_UI_REST1, 977, 661, 1.0f, 1.0f, Order+1, FALSE, FALSE, FALSE);	
+	InsertData(SPR_OBJ_UI_REST2, SPR_INTERFACE_UI_REST2, 977, 661, 1.0f, 1.0f, Order+1, FALSE, FALSE, FALSE);	
+	InsertData(SPR_OBJ_UI_REST3, SPR_INTERFACE_UI_REST3, 977, 661, 1.0f, 1.0f, Order+1, FALSE, FALSE, FALSE);	
+	InsertData(SPR_OBJ_UI_MATCH1, SPR_INTERFACE_UI_MATCH1, 977, 679, 1.0f, 1.0f, Order+1, FALSE, FALSE, FALSE);	
+	InsertData(SPR_OBJ_UI_MATCH2, SPR_INTERFACE_UI_MATCH2, 977, 679, 1.0f, 1.0f, Order+1, FALSE, FALSE, FALSE);	
+	InsertData(SPR_OBJ_UI_MATCH3, SPR_INTERFACE_UI_MATCH3, 977, 679, 1.0f, 1.0f, Order+1, FALSE, FALSE, FALSE);		
 	
-	InsertData(SPR_OBJ_UI_QUICKSLOT_INABLE1, SPR_INTERFACE_UI_QUICKSLOT_INABLE, 727, adjusted(733), 1.0f, 1.0f, __ORDER_USER_BLET__+1, FALSE, FALSE, FALSE);
-	InsertData(SPR_OBJ_UI_QUICKSLOT_INABLE2, SPR_INTERFACE_UI_QUICKSLOT_INABLE, 764, adjusted(733), 1.0f, 1.0f, __ORDER_USER_BLET__+1, FALSE, FALSE, FALSE);
-	InsertData(SPR_OBJ_UI_QUICKSLOT_INABLE3, SPR_INTERFACE_UI_QUICKSLOT_INABLE, 801, adjusted(733), 1.0f, 1.0f, __ORDER_USER_BLET__+1, FALSE, FALSE, FALSE);
-	InsertData(SPR_OBJ_UI_QUICKSLOT_INABLE4, SPR_INTERFACE_UI_QUICKSLOT_INABLE, 838, adjusted(733), 1.0f, 1.0f, __ORDER_USER_BLET__+1, FALSE, FALSE, FALSE);
-	InsertData(SPR_OBJ_UI_QUICKSLOT_INABLE5, SPR_INTERFACE_UI_QUICKSLOT_INABLE, 875, adjusted(733), 1.0f, 1.0f, __ORDER_USER_BLET__+1, FALSE, FALSE, FALSE);
-	InsertData(SPR_OBJ_UI_QUICKSLOT_INABLE6, SPR_INTERFACE_UI_QUICKSLOT_INABLE, 912, adjusted(733), 1.0f, 1.0f, __ORDER_USER_BLET__+1, FALSE, FALSE, FALSE);
-	InsertData(SPR_OBJ_UI_QUICKSLOT_INABLE7, SPR_INTERFACE_UI_QUICKSLOT_INABLE, 949, adjusted(733), 1.0f, 1.0f, __ORDER_USER_BLET__+1, FALSE, FALSE, FALSE);
-	InsertData(SPR_OBJ_UI_QUICKSLOT_INABLE8, SPR_INTERFACE_UI_QUICKSLOT_INABLE, 986, adjusted(733), 1.0f, 1.0f, __ORDER_USER_BLET__+1, FALSE, FALSE, FALSE);
+	InsertData(SPR_OBJ_UI_QUICKSLOT_INABLE1, SPR_INTERFACE_UI_QUICKSLOT_INABLE, 727, 733, 1.0f, 1.0f, __ORDER_USER_BLET__+1, FALSE, FALSE, FALSE);
+	InsertData(SPR_OBJ_UI_QUICKSLOT_INABLE2, SPR_INTERFACE_UI_QUICKSLOT_INABLE, 764, 733, 1.0f, 1.0f, __ORDER_USER_BLET__+1, FALSE, FALSE, FALSE);
+	InsertData(SPR_OBJ_UI_QUICKSLOT_INABLE3, SPR_INTERFACE_UI_QUICKSLOT_INABLE, 801, 733, 1.0f, 1.0f, __ORDER_USER_BLET__+1, FALSE, FALSE, FALSE);
+	InsertData(SPR_OBJ_UI_QUICKSLOT_INABLE4, SPR_INTERFACE_UI_QUICKSLOT_INABLE, 838, 733, 1.0f, 1.0f, __ORDER_USER_BLET__+1, FALSE, FALSE, FALSE);
+	InsertData(SPR_OBJ_UI_QUICKSLOT_INABLE5, SPR_INTERFACE_UI_QUICKSLOT_INABLE, 875, 733, 1.0f, 1.0f, __ORDER_USER_BLET__+1, FALSE, FALSE, FALSE);
+	InsertData(SPR_OBJ_UI_QUICKSLOT_INABLE6, SPR_INTERFACE_UI_QUICKSLOT_INABLE, 912, 733, 1.0f, 1.0f, __ORDER_USER_BLET__+1, FALSE, FALSE, FALSE);
+	InsertData(SPR_OBJ_UI_QUICKSLOT_INABLE7, SPR_INTERFACE_UI_QUICKSLOT_INABLE, 949, 733, 1.0f, 1.0f, __ORDER_USER_BLET__+1, FALSE, FALSE, FALSE);
+	InsertData(SPR_OBJ_UI_QUICKSLOT_INABLE8, SPR_INTERFACE_UI_QUICKSLOT_INABLE, 986, 733, 1.0f, 1.0f, __ORDER_USER_BLET__+1, FALSE, FALSE, FALSE);	
 
 	// 가디언 스탯창 열기 버튼 : 최덕석 2005.3.29 
 	InsertData(SPR_OBJ_UI_GUARDIAN_STATUS, SPR_INTERFACE_UI_GUARDIAN_STATUS, 0, 49, 1.0f, 1.0f, Order+1, FALSE, FALSE, FALSE);	
@@ -437,12 +433,6 @@ void CUserInterface::Remove()
 
 int	CUserInterface::GetChk()
 {
-
-	float original = 640;
-	const float bottomSpace = 550;
-
-#define adjusted(x) bottomSpace + (x - original)
-
 	CSkillWnd* pSkillWnd = CSkillWnd::GetInstance();
 	CMonster *pGuardian = g_pMainPlayer->m_pGuardian[0];
 
@@ -450,8 +440,8 @@ int	CUserInterface::GetChk()
 	{		
 		if(	g_Mouse.MousePos.x>=116 &&
 			g_Mouse.MousePos.x<=116+32 &&
-			g_Mouse.MousePos.y>= adjusted(646) &&
-			g_Mouse.MousePos.y<= adjusted(646) +32)
+			g_Mouse.MousePos.y>=646 &&
+			g_Mouse.MousePos.y<=646+32)
 		{
 			switch(pSkillWnd->m_bySkillIndex)
 			{
@@ -477,7 +467,7 @@ int	CUserInterface::GetChk()
 					if(g_pMainPlayer->GetSkillLevel(g_sSkillListManager.byLeftSkill[i])>0)
 					{
 						int nPosX = 116+32*(nCount%5);
-						int nPosY = adjusted(646)-32*(nCount/5);
+						int nPosY = 646-32*(nCount/5);
 
 						if( g_Mouse.MousePos.x>=nPosX &&
 							g_Mouse.MousePos.x<=nPosX+32 &&
@@ -500,7 +490,7 @@ int	CUserInterface::GetChk()
 					if(g_pMainPlayer->GetSkillLevel(g_sSkillListManager.byRightSkill[i])>0)
 					{
 						int nPosX = 116+32*(nCount%5);
-						int nPosY = adjusted(646)-32*(nCount/5);
+						int nPosY = 646-32*(nCount/5);
 
 						if( g_Mouse.MousePos.x>=nPosX &&
 							g_Mouse.MousePos.x<=nPosX+32 &&
@@ -521,7 +511,7 @@ int	CUserInterface::GetChk()
 					if(pGuardian->GetSkillLevel(pGuardian->m_Skill[i].wSkill) > 0)
 					{
 						int nPosX = 116+32*(nCount%5);
-						int nPosY = adjusted(646)-32*(nCount/5);
+						int nPosY = 646-32*(nCount/5);
 
 						if( g_Mouse.MousePos.x>=nPosX &&
 							g_Mouse.MousePos.x<=nPosX+32 &&
@@ -551,9 +541,7 @@ int	CUserInterface::GetChk()
 			return 21;	
 	}
 
-	auto x1 = adjusted(733);
-	auto x2 = adjusted(768);
-
+ 
 	if( (g_Mouse.MousePos.x>=0   && g_Mouse.MousePos.x<=340  && g_Mouse.MousePos.y>=661 && g_Mouse.MousePos.y<=768)	||
 		(g_Mouse.MousePos.x>=341 && g_Mouse.MousePos.x<=370  && g_Mouse.MousePos.y>=723 && g_Mouse.MousePos.y<=768)	||
 		(g_Mouse.MousePos.x>=653 && g_Mouse.MousePos.x<=682  && g_Mouse.MousePos.y>=723 && g_Mouse.MousePos.y<=768)	||
@@ -563,35 +551,35 @@ int	CUserInterface::GetChk()
 		(g_Mouse.MousePos.x>=683 && g_Mouse.MousePos.x<=1024 && g_Mouse.MousePos.y>=631 && g_Mouse.MousePos.y<=768) )	//kjk
 #endif
 	{	
-		if (g_Mouse.MousePos.x >= 83 && g_Mouse.MousePos.x <= 83 + 32 && g_Mouse.MousePos.y >= adjusted(684) && g_Mouse.MousePos.y <= adjusted(684) + 16)
+		if(g_Mouse.MousePos.x>=83 && g_Mouse.MousePos.x<=83+32 && g_Mouse.MousePos.y>=684 && g_Mouse.MousePos.y<=684+16)
 			return 2;
-		else if (g_Mouse.MousePos.x >= 164 && g_Mouse.MousePos.x <= 164 + 32 && g_Mouse.MousePos.y >= adjusted(684) && g_Mouse.MousePos.y <= adjusted(684) + 16)
+		else if(g_Mouse.MousePos.x>=164 && g_Mouse.MousePos.x<=164+32 && g_Mouse.MousePos.y>=684 && g_Mouse.MousePos.y<=684+16)
 			return 3;
-		else if (g_Mouse.MousePos.x >= 243 && g_Mouse.MousePos.x <= 243 + 32 && g_Mouse.MousePos.y >= adjusted(684) && g_Mouse.MousePos.y <= adjusted(684) + 16)
+		else if(g_Mouse.MousePos.x>=243 && g_Mouse.MousePos.x<=243+32 && g_Mouse.MousePos.y>=684 && g_Mouse.MousePos.y<=684+16)
 			return 4;
-		else if (g_Mouse.MousePos.x >= 747 && g_Mouse.MousePos.x <= 747 + 32 && g_Mouse.MousePos.y >= adjusted(684) && g_Mouse.MousePos.y <= adjusted(684) + 16)
+		else if(g_Mouse.MousePos.x>=747 && g_Mouse.MousePos.x<=747+32 && g_Mouse.MousePos.y>=684 && g_Mouse.MousePos.y<=684+16)
 			return 5;
-		else if (g_Mouse.MousePos.x >= 827 && g_Mouse.MousePos.x <= 827 + 32 && g_Mouse.MousePos.y >= adjusted(684) && g_Mouse.MousePos.y <= adjusted(684) + 16)
+		else if(g_Mouse.MousePos.x>=827 && g_Mouse.MousePos.x<=827+32 && g_Mouse.MousePos.y>=684 && g_Mouse.MousePos.y<=684+16)
 			return 6;
-		else if (g_Mouse.MousePos.x >= 907 && g_Mouse.MousePos.x <= 907 + 32 && g_Mouse.MousePos.y >= adjusted(684) && g_Mouse.MousePos.y <= adjusted(684) + 16)
+		else if(g_Mouse.MousePos.x>=907 && g_Mouse.MousePos.x<=907+32 && g_Mouse.MousePos.y>=684 && g_Mouse.MousePos.y<=684+16)
 			return 7;
-		else if (g_Mouse.MousePos.x >= 659 && g_Mouse.MousePos.x <= 659 + 32 && g_Mouse.MousePos.y >= adjusted(731) && g_Mouse.MousePos.y <= adjusted(731) + 32)
+		else if(g_Mouse.MousePos.x>=659 && g_Mouse.MousePos.x<=659+32 && g_Mouse.MousePos.y>=731 && g_Mouse.MousePos.y<=731+32)
 			return 8;
-		else if (g_Mouse.MousePos.x >= 132 && g_Mouse.MousePos.x <= 132 + 32 && g_Mouse.MousePos.y >= adjusted(733) && g_Mouse.MousePos.y <= adjusted(733) + 32)
+		else if(g_Mouse.MousePos.x>=132 && g_Mouse.MousePos.x<=132+32 && g_Mouse.MousePos.y>=733 && g_Mouse.MousePos.y<=733+32)
 			return 9;
-		else if (g_Mouse.MousePos.x >= 245 && g_Mouse.MousePos.x <= 245 + 32 && g_Mouse.MousePos.y >= adjusted(733) && g_Mouse.MousePos.y <= adjusted(733) + 32)
+		else if(g_Mouse.MousePos.x>=245 && g_Mouse.MousePos.x<=245+32 && g_Mouse.MousePos.y>=733 && g_Mouse.MousePos.y<=733+32)
 			return 10;
-		else if (g_Mouse.MousePos.x >= 333 && g_Mouse.MousePos.x <= 333 + 32 && g_Mouse.MousePos.y >= adjusted(731) && g_Mouse.MousePos.y <= adjusted(731) + 32)
+		else if(g_Mouse.MousePos.x>=333 && g_Mouse.MousePos.x<=333+32 && g_Mouse.MousePos.y>=731 && g_Mouse.MousePos.y<=731+32)
 			return 13;
-		else if (g_Mouse.MousePos.x >= 727 && g_Mouse.MousePos.x <= 1024 && g_Mouse.MousePos.y >= adjusted(733) && g_Mouse.MousePos.y <= adjusted(768))
+		else if(g_Mouse.MousePos.x>=727 && g_Mouse.MousePos.x<=1024 && g_Mouse.MousePos.y>=733 && g_Mouse.MousePos.y<=768)
 			return 14;
-		else if(g_Mouse.MousePos.x>=0 && g_Mouse.MousePos.x<=46 && g_Mouse.MousePos.y>=adjusted(661) && g_Mouse.MousePos.y<=adjusted(677))
+		else if(g_Mouse.MousePos.x>=0 && g_Mouse.MousePos.x<=46 && g_Mouse.MousePos.y>=661 && g_Mouse.MousePos.y<=677)
 			return 16;	// 교환.
-		else if(g_Mouse.MousePos.x>=0 && g_Mouse.MousePos.x<=64 && g_Mouse.MousePos.y>=adjusted(679) && g_Mouse.MousePos.y<=adjusted(695))
+		else if(g_Mouse.MousePos.x>=0 && g_Mouse.MousePos.x<=64 && g_Mouse.MousePos.y>=679 && g_Mouse.MousePos.y<=695)
 			return 17;	// 앉기.
-		else if(g_Mouse.MousePos.x>=977 && g_Mouse.MousePos.x<=1024 && g_Mouse.MousePos.y>=adjusted(661) && g_Mouse.MousePos.y<=adjusted(677))
+		else if(g_Mouse.MousePos.x>=977 && g_Mouse.MousePos.x<=1024 && g_Mouse.MousePos.y>=661 && g_Mouse.MousePos.y<=677)
 			return 18;	// 샾.
-		else if(g_Mouse.MousePos.x>=977 && g_Mouse.MousePos.x<=1024 && g_Mouse.MousePos.y>=adjusted(679) && g_Mouse.MousePos.y<=adjusted(695))
+		else if(g_Mouse.MousePos.x>=977 && g_Mouse.MousePos.x<=1024 && g_Mouse.MousePos.y>=679 && g_Mouse.MousePos.y<=695)
 			return 19;	// 대결.
 #ifdef VER_RIVAL_GUILD_WAR	//kjk
 		else if(g_Mouse.MousePos.x>=977 && g_Mouse.MousePos.x<=1024 && g_Mouse.MousePos.y>=634 && g_Mouse.MousePos.y<=659)
