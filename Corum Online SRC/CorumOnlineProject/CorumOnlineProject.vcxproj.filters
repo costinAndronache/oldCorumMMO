@@ -166,9 +166,6 @@
     <Filter Include="CommonServer">
       <UniqueIdentifier>{105619e5-244b-4be8-9885-62c2edb0e533}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Interface\ItemPickupFilterWindow">
-      <UniqueIdentifier>{183f20f3-2790-4ce6-a6d7-beb5f96ddd8b}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ChrInfo.cpp">
@@ -759,7 +756,25 @@
     <ClCompile Include="InterfaceProcTemp.cpp">
       <Filter>minjin</Filter>
     </ClCompile>
-    <ClCompile Include="PagedTableWindow.cpp">
+    <ClCompile Include="CustomUiKit\PagedTableWindow\PagedTableWindow.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CustomUiKit\Renderer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CustomUiKitGXRenderer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CustomDXDrawing\Renderer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ItemPickupFiltering\ItemInfoView.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ItemPickupFiltering\ItemPickupFiltering.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ItemPickupFiltering\PagedItemViewTable.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -1421,7 +1436,31 @@
     <ClInclude Include="InterfaceProcTemp.h">
       <Filter>minjin</Filter>
     </ClInclude>
-    <ClInclude Include="PagedTableWindow.h">
+    <ClInclude Include="CustomUiKit\PagedTableWindow\PagedTableWindow.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CustomUiKit\Renderer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CustomUiKit\Base.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CustomUiKitGXRenderer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CustomDXDrawing\Colors.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CustomDXDrawing\Renderer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ItemPickupFiltering\ItemInfoView.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ItemPickupFiltering\ItemPickupFiltering.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ItemPickupFiltering\PagedItemViewTable.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

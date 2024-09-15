@@ -1210,7 +1210,7 @@ DWORD __stdcall AfterRenderGameWorld()
 		}
 	}
 	//===========================================================================//
-	//g_pInputManager->RenderInputBufferAll();
+	g_pInputManager->RenderInputBufferAll();
 	int nFontIndex = 0;
 	//ID 폰트 출력
 

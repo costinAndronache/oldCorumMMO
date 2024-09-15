@@ -12,7 +12,7 @@ void CInterfaceSprHash::DeleteData(void* pData)
 
 	pSprData->pSpr->Release();
 
-	LALFree(g_pInterfaceSprPool, pSprData);
+	//LALFree(g_pInterfaceSprPool, pSprData);
 	pSprData = NULL;
 }
 //==================================================//

@@ -48,7 +48,9 @@ CGameMenuWnd::~CGameMenuWnd()
 //======================================================//
 BOOL CGameMenuWnd::Init()
 {	
-	/*
+	m_bInit = TRUE;
+	return TRUE;
+
 	InsertData(SPR_OBJ_OPTIONWND, SPR_INTERFACE_OPTIONWND, 0, 0, 1.0f, 1.0f, 0);
 	InsertData(SPR_OBJ_OPTION_SHADOW, SPR_INTERFACE_OPTION_CHECK, 45, 53, 1.0f, 1.0f, 1);	
 	InsertData(SPR_OBJ_OPTION_BGM, SPR_INTERFACE_OPTION_CHECK, 199, 23, 1.0f, 1.0f, 1);
@@ -84,7 +86,7 @@ BOOL CGameMenuWnd::Init()
 	InsertCheckInterface(46, 47, 196, 55, 19, CHECK_SCROLL);
 	InsertCheckInterface(90, 88, 98, 96, 20, CHECK_BTN);
 	InsertCheckInterface(118, 88, 126, 96, 21, CHECK_BTN);	
-	*/
+	
 	m_bInit = TRUE;
 
 	return TRUE;
@@ -109,7 +111,7 @@ void CGameMenuWnd::OpenWnd()
 {
 	// Background //
 	if(m_bBGMFlag)
-		SetPosObjX(SPR_OBJ_OPTION_BGM, 199);
+		SetPosObjX(SPR_OBJ_OPTION_BGM, 260);
 	else
 		SetPosObjX(SPR_OBJ_OPTION_BGM, 225);
 	// Effect Sound //

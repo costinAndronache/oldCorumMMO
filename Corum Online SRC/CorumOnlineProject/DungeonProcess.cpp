@@ -99,9 +99,7 @@
 #include "GuildWarRequest.h"
 #include "GuildWarFinalSettingWnd.h"
 #include "GuildWarStatusWnd.h"
-#include "PagedTableWindow.h"
-
-CustomUiKit::PagedTableWindow* g_PagedTableWindow = NULL;
+#include "ItemPickupFiltering/ItemPickupFiltering.h"
 
 DWORD						g_dwMileHandleRefs	= 0;
 LPGlobalVariable_Dungeon	g_pGVDungeon		= NULL;
@@ -138,7 +136,6 @@ GXOBJECT_HANDLE				g_TileAttr[ MAX_KIND_OF_DEBUG_TILE ][ MAX_DEBUG_TILE_NUM ];
 BYTE						g_bShowTileAttr = 0;
 #endif
 
-
 DWORD __stdcall AfterInterpolation(AFTER_INTERPOLATION_CALL_BACK_ARG* pArg)
 {
 	if (NULL == g_pMainPlayer->m_hPlayer.pHandle)
@@ -153,8 +150,8 @@ DWORD __stdcall AfterInterpolation(AFTER_INTERPOLATION_CALL_BACK_ARG* pArg)
 		{
 			VECTOR3 v3Tmp = 
 			{
-				g_pMainPlayer->m_v3CurPos.x + g_Camera.fCameraDistance_x,
-				g_pMainPlayer->m_v3CurPos.y + g_Camera.fCameraDistance_y,
+				g_pMainPlayer->m_v3CurPos.x + g_Camera.fCameraDistance_x + 300,
+				g_pMainPlayer->m_v3CurPos.y + g_Camera.fCameraDistance_y + 150,
 				g_pMainPlayer->m_v3CurPos.z + g_Camera.fCameraDistance_z
 			};
 
@@ -168,6 +165,7 @@ DWORD __stdcall AfterInterpolation(AFTER_INTERPOLATION_CALL_BACK_ARG* pArg)
 
 BOOL InitGameDungeon()
 {
+	CBankWnd::GetInstance()->Init();
 	// 카메라 이동에 관련된 플래그 세팅.
 	g_Camera.iCameraMoveOption = CAMERA_MOVE_OPTION_SCREEN_FRAME;
 
@@ -221,11 +219,6 @@ BOOL InitGameDungeon()
 	SPR(SPR_MESSAGE_BOX)->SetAlpha(128);
 	
 	CreateChatEditBackground();
-
-	if (g_PagedTableWindow == NULL) {
-		CustomUiKit::Rect rect = { {300, 300}, {320, 640} };
-		g_PagedTableWindow = new CustomUiKit::PagedTableWindow(rect, g_hMainWnd);
-	}
 
 	return TRUE;
 }
@@ -1516,7 +1509,8 @@ DWORD __stdcall AfterRenderGameDungeon()
 #endif	
 
 	renderAllDroppedItemsTooltips(selectedItemsForTooltipRendering);
-	g_PagedTableWindow->repaintInWindow();
+	ItemPickupFiltering::sharedInstance()->render();
+
 	return 0;
 }
 

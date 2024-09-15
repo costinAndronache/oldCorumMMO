@@ -1058,7 +1058,7 @@ void CInterface::ItemInfoRender_Weapon(char szItemInfo[100][255], int* iInfoRow,
 	{
 		BOOL bClass = FALSE;
 
-		if(pItemInfo->BaseItem_Weapon.bClassID & (BYTE)( 1 << (g_pMainPlayer->m_wClass-1) ))
+		if(g_pMainPlayer && pItemInfo->BaseItem_Weapon.bClassID & (BYTE)( 1 << (g_pMainPlayer->m_wClass-1) ))
 			bClass = TRUE;
 
 		if(bClass)
@@ -1269,7 +1269,7 @@ void CInterface::ItemInfoRender_Armor(char szItemInfo[100][255], int* iInfoRow, 
 	{
 		BOOL bClass = FALSE;
 		
-		if(pItemInfo->BaseItem_Armor.bClassID & (BYTE)( 1 << (g_pMainPlayer->m_wClass - 1) ))
+		if(g_pMainPlayer && pItemInfo->BaseItem_Armor.bClassID & (BYTE)( 1 << (g_pMainPlayer->m_wClass - 1) ))
 			bClass = TRUE;
 
 		if(bClass)
@@ -1921,7 +1921,7 @@ void CInterface::ItemInfoRender_Default(char szItemInfo[100][255], int* iInfoRow
 	if ( (pItem->m_wItemID >= BAG_ITEM_NUM_FRIST && pItem->m_wItemID <= BAG_ITEM_NUM_LAST) )
 	{
 		wsprintf( szItemInfo[*iInfoRow], g_Message[ETC_MESSAGE347].szMessage,  pItemInfo->BaseItem_Bag.wMin_Lev ); 
-		if ( g_pMainPlayer->m_dwLevel < pItemInfo->BaseItem_Bag.wMin_Lev)	pdwTextColor[*iInfoRow] = TEXT_COLOR_RED;
+		if (g_pMainPlayer && g_pMainPlayer->m_dwLevel < pItemInfo->BaseItem_Bag.wMin_Lev)	pdwTextColor[*iInfoRow] = TEXT_COLOR_RED;
 		*iInfoRow += 1;
 		nSize = lstrlen(szItemInfo[*iInfoRow]);
 		if(*nMaxSize < nSize)	*nMaxSize = nSize;
@@ -2166,12 +2166,12 @@ void CInterface::ItemInfoRender(CItem* pItem, BOOL isEquip, BOOL bPrice, DWORD d
 		
 			for(int i = 0; i < MAX_EQUIP_POOL; i++ )
 			{
-				if(g_pMainPlayer->m_bCurrnetHand == 1)
+				if(g_pMainPlayer && g_pMainPlayer->m_bCurrnetHand == 1)
 				{
 					if(i == EQUIP_TYPE_RHAND2 || i == EQUIP_TYPE_LHAND2)
 						continue;
 				}
-				else if(g_pMainPlayer->m_bCurrnetHand == 2)
+				else if(g_pMainPlayer && g_pMainPlayer->m_bCurrnetHand == 2)
 				{
 					if(i == EQUIP_TYPE_RHAND1 || i == EQUIP_TYPE_LHAND1)
 						continue;
@@ -2181,10 +2181,10 @@ void CInterface::ItemInfoRender(CItem* pItem, BOOL isEquip, BOOL bPrice, DWORD d
 					i == EQUIP_TYPE_LRING2 || i == EQUIP_TYPE_LRING3)
 					continue;				
 			
-				if(g_pMainPlayer->CheckItem(&g_pMainPlayer->m_pEquip[i])==FALSE)
+				if(g_pMainPlayer && g_pMainPlayer->CheckItem(&g_pMainPlayer->m_pEquip[i])==FALSE)
 					continue;
 					
-				if( g_pMainPlayer->m_pEquip[i].m_wItemID == NULL )
+				if(g_pMainPlayer && g_pMainPlayer->m_pEquip[i].m_wItemID == NULL )
 					continue;
 
 				pItemTmp		= g_pItemTableHash_get()->GetData(g_pMainPlayer->m_pEquip[i].m_wItemID);
@@ -2360,11 +2360,11 @@ void CInterface::ItemInfoRender(CItem* pItem, BOOL isEquip, BOOL bPrice, DWORD d
 	if(isEquip && byOption)
 		nInfoIndex+=8;
 
-	if(g_Mouse.MousePos.y + 5 + (nInfoIndex * 18) + 14 > 768)
-		nOverYSize = g_Mouse.MousePos.y + 5 + (nInfoIndex * 18) + 14 - 768;
+	if(g_Mouse.MousePos.y + 5 + (nInfoIndex * 18) + 14 > windowHeight())
+		nOverYSize = g_Mouse.MousePos.y + 5 + (nInfoIndex * 18) + 14 - windowHeight();
 
-	if((g_Mouse.MousePos.x + ITEMINFO_RENDER_POSITION)+(float)(nMaxSize*6.5f+10) > 1024)
-		nOverXSize = (int)((g_Mouse.MousePos.x + ITEMINFO_RENDER_POSITION)+(float)(nMaxSize*6.5f+10) - 1024);
+	if((g_Mouse.MousePos.x + ITEMINFO_RENDER_POSITION)+(float)(nMaxSize*6.5f+10) > windowWidth())
+		nOverXSize = (int)((g_Mouse.MousePos.x + ITEMINFO_RENDER_POSITION)+(float)(nMaxSize*6.5f+10) - windowWidth());
 
 	if(bPrice)
 	{
