@@ -3,6 +3,8 @@
 #include "../CorumResource.h"
 #include "PagedItemViewTable.h"
 
+using namespace CustomUI;
+
 static PagedItemViewTable* table = nullptr;
 
 std::vector<CItem*> getDebugItemList();
@@ -30,6 +32,7 @@ std::vector<CItem*> getDebugItemList() {
 	auto head = g_pItemTableHash_get()->GetHead();
 
 	while (head) {
+		result.push_back(createItemWithBase(head->pData));
 		switch (head->pData->dwCode_ID)
 		{
 		case ITEM_KIND_WEAPON:
@@ -39,15 +42,15 @@ std::vector<CItem*> getDebugItemList() {
 			//result.push_back(createItemWithBase(head->pData));
 			break;
 		case ITEM_KIND_GUARDIAN:
-			result.push_back(createItemWithBase(head->pData));
+			//result.push_back(createItemWithBase(head->pData));
 			break;
 		case ITEM_KIND_SUPPLIES:
-
+			//result.push_back(createItemWithBase(head->pData));
 			break;
 		case ITEM_KIND_CONSUMABLE:
 			break;
 		case ITEM_KIND_ZODIAC:
-
+			//result.push_back(createItemWithBase(head->pData));
 			break;
 		case ITEM_KIND_SPECIAL:
 		case ITEM_KIND_UPGRADE:
@@ -62,6 +65,7 @@ std::vector<CItem*> getDebugItemList() {
 
 			break;
 		default:
+			//result.push_back(createItemWithBase(head->pData));
 			break;
 		}
 		head = head->pNext;

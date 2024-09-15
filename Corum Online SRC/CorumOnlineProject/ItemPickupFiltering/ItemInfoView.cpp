@@ -3,6 +3,7 @@
 #include "../CorumResource.h"
 #include "../Interface.h"
 
+using namespace CustomUI;
 IDISpriteObject* ItemInfoView::backgroundSprite = NULL;
 Size ItemInfoView::bgSpriteSize;
 
@@ -25,8 +26,7 @@ bool ItemInfoView::renderInfoIfMouseHover() {
 		return false;
 	}
 
-	if (_rect.origin.x < g_Mouse.MousePos.x && g_Mouse.MousePos.x < (_rect.origin.x + _rect.size.width) &&
-		_rect.origin.y < g_Mouse.MousePos.y && g_Mouse.MousePos.y < (_rect.origin.y + _rect.size.height)) {
+	if (_rect.isGlobalMouseInside()) {
 		CInterface::GetInstance()->ItemInfoRender(_model.item, FALSE);
 		return true;
 	}
@@ -34,7 +34,7 @@ bool ItemInfoView::renderInfoIfMouseHover() {
 	return false;
 }
 
-void ItemInfoView::renderImageWithRenderer(I4DyuchiGXRenderer* renderer) {
+void ItemInfoView::renderImageWithRenderer(I4DyuchiGXRenderer* renderer, int order) {
 	VECTOR2 vPos = { _rect.origin.x, _rect.origin.y };
 
 	VECTOR2 scale = { 
@@ -42,7 +42,8 @@ void ItemInfoView::renderImageWithRenderer(I4DyuchiGXRenderer* renderer) {
 	    ((float)_rect.size.height) / ItemInfoView::bgSpriteSize.height
 	};
 	g_pRenderer->RenderSprite(backgroundSprite
-		, &scale, 0.0f, &vPos, NULL, 0xffffffff, 99, RENDER_TYPE_DISABLE_TEX_FILTERING);
+		, &scale, 0.0f, &vPos, NULL, 0xffffffff, order, RENDER_TYPE_DISABLE_TEX_FILTERING);
+
 
 	if (_model.item == NULL) {
 		return;
@@ -60,6 +61,6 @@ void ItemInfoView::renderImageWithRenderer(I4DyuchiGXRenderer* renderer) {
 		}
 
 		g_pRenderer->RenderSprite(lpItemResourceEx->pSpr
-			, &itemScale, 0.0f, &vPos, NULL, 0xffffffff, 100, RENDER_TYPE_DISABLE_TEX_FILTERING);
+			, &itemScale, 0.0f, &vPos, NULL, 0xffffffff, order, RENDER_TYPE_DISABLE_TEX_FILTERING);
 	}
 }

@@ -253,9 +253,9 @@ void COkWnd::SetActive(BOOL bActive)
 		SetPos(384, 320);
 
 		SetRender(SPR_OBJ_OK_CREATE_WND, TRUE);
-		SetRender(SPR_OBJ_OK_OK1, TRUE);
-		SetRender(SPR_OBJ_OK_CANCEL1, TRUE);
-		SetRender(SPR_OBJ_OK_CLOSE1, TRUE);	
+		//SetRender(SPR_OBJ_OK_OK1, TRUE);
+		//SetRender(SPR_OBJ_OK_CANCEL1, TRUE);
+		//SetRender(SPR_OBJ_OK_CLOSE1, TRUE);	
 
 		_PlaySound(0, SOUND_TYPE_SYSTEM, SOUND_SYSTEM_WNDOPEN, g_v3InterfaceSoundPos, FALSE);
 	}
