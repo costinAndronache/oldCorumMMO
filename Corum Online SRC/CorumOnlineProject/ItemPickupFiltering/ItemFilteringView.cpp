@@ -34,10 +34,50 @@ void ItemFilteringView::renderWithRenderer(I4DyuchiGXRenderer* renderer, int ord
 	_table->renderWithRenderer(renderer, order + 1);
 }
 
-bool ItemFilteringView::handleKeyUp(WORD keyCode) {
-	return _inputField->handleKeyUp(keyCode);
+bool ItemFilteringView::handleMouseDown() {
+	return _frame.isGlobalMouseInside();
+}
+
+bool ItemFilteringView::handleMouseUp() {
+	return _frame.isGlobalMouseInside();
+}
+
+
+bool ItemFilteringView::handleKeyDown(WPARAM wparam, LPARAM lparam) {
+	return _inputField->handleKeyDown(wparam, lparam);
+}
+
+bool ItemFilteringView::handleKeyUp(WPARAM wparam, LPARAM lparam) {
+	return _inputField->handleKeyUp(wparam, lparam);
 }
 
 void ItemFilteringView::onInputFieldTextChange(InputField* inputField, const char* text) {
+	if (strlen(text) == 0) {
+		_table->setDisplayedItems(_allItems);
+		return;
+	}
 
+	updateDisplayedItemsOnNameFilter(text);
+}
+
+void ItemFilteringView::updateDisplayedItemsOnNameFilter(const char* nameFilter) {
+	char lowerText[InputField::maxChars];
+	strcpy(lowerText, nameFilter);
+	strlwr(lowerText);
+
+	char lowerName[InputField::maxChars];
+	std::vector<CItem*> result;
+
+	for (int i = 0; i < _allItems.size(); i++) {
+		CItem* item = _allItems[i];
+		strcpy(lowerName, item->GetBaseItem()->szItemName_Eng);
+		strlwr(lowerName);
+
+		if (strstr(lowerName, lowerText)) {
+			result.push_back(item);
+		}
+
+	}
+
+	_table->setDisplayedItems(result);
 }

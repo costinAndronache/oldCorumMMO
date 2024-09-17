@@ -25,7 +25,7 @@ _frame(frame), _client(client), _bgSpriteModel(bgSpriteModel) {
 	_caretStateON = false;
 	_lastCaretUpdateTime = 0;
 	InputFieldResources::initialize();
-	_buffer = "TEST";
+	_buffer = "";
 }
 
 void InputField::renderWithRenderer(I4DyuchiGXRenderer* renderer, int order) {
@@ -37,23 +37,30 @@ void InputField::renderWithRenderer(I4DyuchiGXRenderer* renderer, int order) {
 		NULL, 0xffffffff,
 		order, RENDER_TYPE_DISABLE_TEX_FILTERING);
 
+	char renderedText[maxChars + 1];
+	int count = _buffer.size();
+	strcpy(renderedText, _buffer.c_str());
+
+	if (_caretStateON) {
+		strcat(renderedText, "|");
+		count += 1;
+	}
+
 	RECT rt = { _frame.origin.x + 5, _frame.origin.y + 5, _frame.maxX(), _frame.maxY() };
 	g_pGeometry->RenderFont(GetFont(), 
-							(TCHAR*)_buffer.c_str(), _buffer.size(), 
+							(TCHAR*)renderedText, count, 
 							&rt, WHITE(255), CHAR_CODE_TYPE_ASCII, 
 							order + 1, 0
 	);
 
 	if (g_Mouse.bLDown) {
 		if (_frame.isGlobalMouseInside()) {
-			_isActive = !_isActive;
+			_isActive = true;
+			_caretStateON = true;
 		}
 		else {
 			_isActive = false;
-			if (_caretStateON) {
-				_buffer.erase(_buffer.end() - 1);
-				_caretStateON = false;
-			}
+			_caretStateON = false;
 		}
 	}
 
@@ -62,36 +69,51 @@ void InputField::renderWithRenderer(I4DyuchiGXRenderer* renderer, int order) {
 		if (now - _lastCaretUpdateTime > 1200) {
 			_lastCaretUpdateTime = now;
 			_caretStateON = !_caretStateON;
-
-			if (_caretStateON) {
-				_buffer.append("|");
-			}
-			else {
-				_buffer.erase(_buffer.end() - 1);
-			}
 		}
 	}
 }
 
-bool InputField::handleKeyUp(WORD keyCode) {
+bool InputField::handleKeyDown(WPARAM wparam, LPARAM lparam) {
+	return _isActive;
+} 
+
+void InputField::notifyClient() {
+	if (_client) {
+		_client->onInputFieldTextChange(this, _buffer.c_str());
+	}
+}
+
+bool InputField::handleKeyUp(WPARAM wparam, LPARAM lParam) {
+	BYTE keyState[256];
 	if (!_isActive) {
 		return false;
 	}
-	if (('a' <= keyCode && keyCode <= 'z') ||
-		('A' <= keyCode && keyCode <= 'Z')) {
-		char str[2] = { keyCode, '\0' };
 
-		if (_caretStateON) {
+	if (wparam == VK_BACK) {
+		if (!_buffer.empty()) {
 			_buffer.erase(_buffer.end() - 1);
-			_buffer.append(str);
-			_buffer.append("|");
+			notifyClient();
 		}
-		else {
-			_buffer.append(str);
-		}
+		return true;
 	}
-	else {
-		_isActive = false;
+
+	GetKeyboardState(keyState);
+	WORD wascii[3];
+	int scanCode = (lParam >> 16) & 0xff;
+	if (ToAscii(wparam, scanCode, keyState, wascii, 0) != 1) {
+		return true;
+	}
+
+	char key = wascii[0];
+
+	if (('a' <= key && key <= 'z') ||
+		('A' <= key && key <= 'Z')) {
+		char str[2] = { key, '\0' };
+
+		if (_buffer.size() < maxChars) {
+			_buffer.append(str);
+			notifyClient();
+		}
 	}
 
 	return true;

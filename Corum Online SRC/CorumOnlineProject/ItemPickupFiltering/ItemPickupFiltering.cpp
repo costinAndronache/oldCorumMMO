@@ -88,8 +88,26 @@ ItemPickupFiltering* ItemPickupFiltering::sharedInstance() {
 	return shared;
 }
 
-bool ItemPickupFiltering::handleKeyUp(WORD keyCode) {
-	return debugView()->handleKeyUp(keyCode);
+bool ItemPickupFiltering::isInterfaceFocused() {
+	return _isInterfaceFocused;
+}
+
+bool ItemPickupFiltering::handleMouseDown() {
+	_isInterfaceFocused = debugView()->handleMouseDown();
+	return _isInterfaceFocused;
+}
+
+bool ItemPickupFiltering::handleMouseUp() {
+	_isInterfaceFocused = debugView()->handleMouseUp();
+	return _isInterfaceFocused;
+}
+
+bool ItemPickupFiltering::handleKeyUp(WPARAM wparam, LPARAM lparam) {
+	return debugView()->handleKeyUp(wparam, lparam);
+}
+
+bool ItemPickupFiltering::handleKeyDown(WPARAM wparam, LPARAM lparam) {
+	return debugView()->handleKeyDown(wparam, lparam);
 }
 
 void ItemPickupFiltering::render() {

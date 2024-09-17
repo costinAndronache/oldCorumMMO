@@ -1517,7 +1517,7 @@ DWORD __stdcall AfterRenderGameDungeon()
 
 void OnKeyDownDungeon(WPARAM wParam, LPARAM lParam)
 {	
-	if (ItemPickupFiltering::sharedInstance()->handleKeyUp(LOWORD(wParam))) {
+	if (ItemPickupFiltering::sharedInstance()->handleKeyDown(wParam, lParam)) {
 		return;
 	}
 
@@ -1926,6 +1926,10 @@ void OnKeyDownDungeon(WPARAM wParam, LPARAM lParam)
 
 void OnKeyUpDungeon(WPARAM wParam, LPARAM lParam)
 {	
+	if (ItemPickupFiltering::sharedInstance()->handleKeyUp(wParam, lParam)) {
+		return;
+	}
+
 	g_bKeyChkUp = FALSE;
 
 	switch( LOWORD(wParam) )
@@ -1954,6 +1958,10 @@ void OnKeyUpDungeon(WPARAM wParam, LPARAM lParam)
 
 BOOL OnLButtonDownInterfaceDungeon()
 {
+	if (ItemPickupFiltering::sharedInstance()->handleMouseDown()) {
+		return TRUE;
+	}
+
 	CInterface*			pInterface		= CInterface::GetInstance();
 
 	if( g_pThisDungeon->IsStadium() && g_pMainPlayer->m_dwGuildWarFlag == G_W_F_OBSERVER )
@@ -2023,6 +2031,10 @@ BOOL OnLButtonDownInterfaceDungeon()
 
 void OnLButtonDownDungeon(WPARAM wParam, LPARAM lParam)
 {
+	if (ItemPickupFiltering::sharedInstance()->handleMouseDown()) {
+		return;
+	}
+
 	CGroupWnd*		pGroupWnd		= CGroupWnd::GetInstance();
 	CUserInterface* pUserInterface	= CUserInterface::GetInstance();	
 	g_Mouse.dwLButtonDownTime		= g_dwCurTick;
@@ -2139,7 +2151,10 @@ lb_move:
 
 
 void OnLButtonUpDungeon(WPARAM wParam, LPARAM lParam)
-{	
+{
+	if (ItemPickupFiltering::sharedInstance()->handleMouseUp()) {
+		return;
+	}
 	CInterface*			pInterface			= CInterface::GetInstance();
 	CUserInterface*		pUserInterface		= CUserInterface::GetInstance();
 	CGroupWnd*			pGroupWnd			= CGroupWnd::GetInstance();
@@ -3414,6 +3429,10 @@ void OnTimerEventDungeon(DWORD dwTimerIndex)
 
 void MouseEventDungeon()
 {
+	if (ItemPickupFiltering::sharedInstance()->isInterfaceFocused()) {
+		return;
+	}
+
 	BYTE btMainPlayerStatus = g_pMainPlayer->GetStatus();
 	if(	btMainPlayerStatus == UNIT_STATUS_DEAD ||
 		btMainPlayerStatus == UNIT_STATUS_PLAYER_SHOP)
