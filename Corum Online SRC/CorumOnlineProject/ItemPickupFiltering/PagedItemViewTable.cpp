@@ -4,17 +4,13 @@
 
 using namespace CustomUI;
 
-//#define	SPR_CHATLIST_UPDOWN1            	167779230   	// .\Data\UI\menu_1.tga
-//#define	SPR_CHATLIST_UPDOWN2 
 
-static Size standardLargeItemSize = { 32, 64 };
-static Size blackBackgroundSize = { 2 , 2 };
-
-static Size backgroundSpriteSize = { 38, 70 };
-static V2_SPRITE* blackBackground = NULL;
-
-static Size downArrowSize = { 14, 14 };
-static IDISpriteObject* downArrow = NULL;
+SpriteModel PagedItemViewTableResources::bgSpriteModel = { NULL, {2, 2}, 0 };
+void PagedItemViewTableResources::initialize() {
+	if (bgSpriteModel.sprite == NULL) {
+		bgSpriteModel.sprite = g_pSprManager->CreateSprite(SPR_SPEAKING_BOX, 100, 100, FALSE, 255)->pSpr;
+	}
+}
 
 CItem* PagedItemViewTable::getCurrentItemForDisplayedCell(int row, int column) {
 	int index = (_currentTopRowIndex + row) * _numberOfColumns + column;
@@ -24,29 +20,19 @@ CItem* PagedItemViewTable::getCurrentItemForDisplayedCell(int row, int column) {
 	return nullptr;
 }
 
-PagedItemViewTable::PagedItemViewTable(Rect frame, std::vector<CItem*> allItems):
-	_frame(frame), _allItems(allItems), _currentDisplayedItems(allItems) {
-	const Size referenceSize = { backgroundSpriteSize.width, backgroundSpriteSize.height };
-
-	IDISpriteObject* bgspr = g_pRenderer->CreateSpriteObject(GetFile("menu_4.tif", DATA_TYPE_UI),
-		0, 0,
-		38, 70,
-		0);
-
-	ItemInfoView::setupBackgroundSprite(bgspr, backgroundSpriteSize);
-
-	if (blackBackground == NULL) {
-		blackBackground = g_pSprManager->CreateSprite(SPR_SPEAKING_BOX, 100, 100, FALSE, 255);
-	}
-
+PagedItemViewTable::PagedItemViewTable(Rect frame, SpriteModel bgSpriteModel): 
+	_frame(frame), _bgSpriteModel(bgSpriteModel) {
 
 	Size buttonsSize = { 28, 28 };
-	Size tableSize = _frame.size;//{ _frame.size.width - buttonsSize.width, _frame.size.height - buttonsSize.height };
+	Size tableSize = { _frame.size.width - buttonsSize.width, _frame.size.height - buttonsSize.height };
+
+	ItemInfoViewResources::initialize();
+	const Size referenceSize = ItemInfoViewResources::bgSpriteModel.size;
 
 	_numberOfRows = tableSize.height / referenceSize.height;
 	_numberOfColumns = tableSize.width / referenceSize.width;
 	_currentTopRowIndex = 0;
-
+	
 	for (int i = 0; i < _numberOfRows; i++) {
 		_viewsTable.push_back(std::vector<ItemInfoView*>());
 
@@ -59,21 +45,23 @@ PagedItemViewTable::PagedItemViewTable(Rect frame, std::vector<CItem*> allItems)
 				referenceSize
 			};
 			ItemInfoView::Model model = { current, referenceSize };
-			_viewsTable[i].push_back(new ItemInfoView(model, viewFrame));
+			_viewsTable[i].push_back(new ItemInfoView(model, viewFrame, ItemInfoViewResources::bgSpriteModel));
 		}
 	}
 
 	ButtonResources::initialize();
-	Button::SpriteModel scrollDownModel = {
+	SpriteModel scrollDownModel = {
 		ButtonResources::downArrow,
 		ButtonResources::downArrowSize,
 		0.0
 	};
-	Button::SpriteModel scrollDownPressedModel = {
+
+	SpriteModel scrollDownPressedModel = {
 		ButtonResources::downArrowPressed,
 		ButtonResources::downArrowSize,
 		0.0
 	};
+
 	Rect scrollDownBtnFrame = { {_frame.maxX() - buttonsSize.width, _frame.maxY() - buttonsSize.height}, buttonsSize };
 	_scrollDownBtn = new Button(scrollDownModel, scrollDownPressedModel, scrollDownBtnFrame, this);
 
@@ -88,19 +76,20 @@ void PagedItemViewTable::updateDisplayedRowsWithCurrentItems() {
 		for (int j = 0; j < _numberOfColumns; j++) {
 			CItem* current = getCurrentItemForDisplayedCell(i, j);
 			Rect viewFrame = { {
-					_frame.origin.x + (j * standardLargeItemSize.width),
-					_frame.origin.y + (i * standardLargeItemSize.height)
+					_frame.origin.x + (j * ItemInfoViewResources::bgSpriteModel.size.width),
+					_frame.origin.y + (i * ItemInfoViewResources::bgSpriteModel.size.height)
 				},
-				standardLargeItemSize
 			};
-			ItemInfoView::Model model = { current, standardLargeItemSize };
+			ItemInfoView::Model model = { current, ItemInfoViewResources::bgSpriteModel.size };
 			_viewsTable[i][j]->updateModel(model);
 		}
 	}
 }
 
-void PagedItemViewTable::updateFilter(const char* nameFilter) {
-
+void PagedItemViewTable::setDisplayedItems(std::vector<CItem*>& items) {
+	_currentDisplayedItems = items;
+	updateDisplayedRowsWithCurrentItems();
+	_currentTopRowIndex = 0;
 }
 
 void PagedItemViewTable::scrollUp() {
@@ -113,22 +102,25 @@ void PagedItemViewTable::scrollDown() {
 	updateDisplayedRowsWithCurrentItems();
 }
 
-void PagedItemViewTable::render() {
-	VECTOR2 blackBackgroundScale = {_frame.size.width/blackBackgroundSize.width, _frame.size.height/blackBackgroundSize.height};
-	VECTOR2 pos = { _frame.origin.x, _frame.origin.y };
+void PagedItemViewTable::renderWithRenderer(I4DyuchiGXRenderer *renderer, int order) {
+	if (_bgSpriteModel.sprite) {
+		VECTOR2 blackBackgroundScale = _frame.size.divideBy(_bgSpriteModel.size);
+		VECTOR2 pos = { _frame.origin.x, _frame.origin.y };
 
-	g_pRenderer->RenderSprite(blackBackground->pSpr
-		, &blackBackgroundScale, 0.0f, &pos, NULL, 0xffffffff, 1, RENDER_TYPE_DISABLE_TEX_FILTERING);
+		renderer->RenderSprite(_bgSpriteModel.sprite,
+			&blackBackgroundScale, 0.0f, &pos, 
+			NULL, 0xffffffff, order, RENDER_TYPE_DISABLE_TEX_FILTERING);
 
-	_scrollDownBtn->renderWithRenderer(g_pRenderer, 2);
-	_scrollUpBtn->renderWithRenderer(g_pRenderer, 2);
+	}
+	
+	_scrollDownBtn->renderWithRenderer(g_pRenderer, order + 1);
+	_scrollUpBtn->renderWithRenderer(g_pRenderer, order + 1);
 
 	for (int i = 0; i < _numberOfRows; i++) {
 		for (int j = 0; j < _numberOfColumns; j++) {
-			_viewsTable[i][j]->renderImageWithRenderer(g_pRenderer, 3);
+			_viewsTable[i][j]->renderImageWithRenderer(g_pRenderer, order + 2);
 		}
 	}
-
 
 	for (int i = 0; i < _numberOfRows; i++) {
 		for (int j = 0; j < _numberOfColumns; j++) {
@@ -139,8 +131,7 @@ void PagedItemViewTable::render() {
 	}
 }
 
-void PagedItemViewTable::onButtonPress(Button* button) {
-}
+void PagedItemViewTable::onButtonPress(Button* button) { }
 
 void PagedItemViewTable::onButtonPressRelease(Button* button) {
 	if (button == _scrollDownBtn) {

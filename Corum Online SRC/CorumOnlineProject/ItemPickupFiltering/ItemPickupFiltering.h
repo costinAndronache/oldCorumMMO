@@ -10,6 +10,7 @@ public:
 	static ItemPickupFiltering* sharedInstance();
 
 	void render();
+	bool handleKeyUp(WORD keyCode);
 
 private: 
 	std::vector<CItem*> totalItemsList;

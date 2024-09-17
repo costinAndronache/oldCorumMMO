@@ -4,17 +4,21 @@
 #include "../Interface.h"
 
 using namespace CustomUI;
-IDISpriteObject* ItemInfoView::backgroundSprite = NULL;
-Size ItemInfoView::bgSpriteSize;
 
-void ItemInfoView::setupBackgroundSprite(IDISpriteObject* bgSprite, Size bgSpriteSize) {
-	ItemInfoView::backgroundSprite = bgSprite;
-	ItemInfoView::bgSpriteSize = bgSpriteSize;
+SpriteModel ItemInfoViewResources::bgSpriteModel = { NULL, {38, 70}, 0 };
+void ItemInfoViewResources::initialize() {
+	if (bgSpriteModel.sprite == NULL) {
+		bgSpriteModel.sprite = g_pRenderer->CreateSpriteObject(
+			GetFile("menu_4.tif", DATA_TYPE_UI),
+			0, 0,
+			bgSpriteModel.size.width, bgSpriteModel.size.height,
+			0);
+	}
 }
 
-ItemInfoView::ItemInfoView(Model model, Rect rect) : 
-	 _rect(rect), _model(model) {
-
+ItemInfoView::ItemInfoView(Model model, Rect rect, SpriteModel backgroundSpriteModel) :
+	 _rect(rect), _model(model), _backgroundSpriteModel(backgroundSpriteModel) {
+	
 }
 
 void ItemInfoView::updateModel(Model newModel) {
@@ -37,12 +41,13 @@ bool ItemInfoView::renderInfoIfMouseHover() {
 void ItemInfoView::renderImageWithRenderer(I4DyuchiGXRenderer* renderer, int order) {
 	VECTOR2 vPos = { _rect.origin.x, _rect.origin.y };
 
-	VECTOR2 scale = { 
-		((float)_rect.size.width) / ItemInfoView::bgSpriteSize.width, 
-	    ((float)_rect.size.height) / ItemInfoView::bgSpriteSize.height
-	};
-	g_pRenderer->RenderSprite(backgroundSprite
-		, &scale, 0.0f, &vPos, NULL, 0xffffffff, order, RENDER_TYPE_DISABLE_TEX_FILTERING);
+	VECTOR2 scale = _rect.size.divideBy(_backgroundSpriteModel.size);
+	g_pRenderer->RenderSprite(
+		_backgroundSpriteModel.sprite,
+		&scale, 0.0f, &vPos, 
+		NULL, 0xffffffff, 
+		order, RENDER_TYPE_DISABLE_TEX_FILTERING
+	);
 
 
 	if (_model.item == NULL) {

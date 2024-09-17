@@ -2,7 +2,13 @@
 #include "../InitGame.h"
 
 namespace CustomUI {
-	struct Size { int width; int height; };
+	struct Size { 
+		int width; int height;
+		VECTOR2 divideBy(Size other) const {
+			VECTOR2 result = { (float)width / other.width, (float)height / other.height };
+			return result;
+		}
+	};
 	struct Point { int x; int y; };
 	struct Rect {
 		Point origin;
@@ -15,6 +21,14 @@ namespace CustomUI {
 			return (origin.x < g_Mouse.MousePos.x && g_Mouse.MousePos.x < maxX() &&
 					origin.y < g_Mouse.MousePos.y && g_Mouse.MousePos.y < maxY());
 		}
+	};
+
+	struct SpriteModel {
+		IDISpriteObject* sprite;
+		Size size;
+		float rotation;
+
+		static SpriteModel zero;
 	};
 }
 

@@ -2,6 +2,8 @@
 #include "../InitGame.h"
 #include "CustomUIBase.h"
 
+
+
 namespace CustomUI {
 	class Button;
 	class ButtonClient 
@@ -14,11 +16,6 @@ namespace CustomUI {
 	class Button 
 	{
 	public:
-		struct SpriteModel {
-			IDISpriteObject* sprite;
-			Size size;
-			float rotation;
-		};
 		Button(SpriteModel spriteModel, SpriteModel pressedSpriteModel, Rect frame, ButtonClient* client);
 		void renderWithRenderer(I4DyuchiGXRenderer *renderer, int order);
 	private:

@@ -11,16 +11,19 @@ namespace CustomUI {
 			CItem* item;
 			Size itemResourceSize;
 		};
-		ItemInfoView(Model model, Rect frame);
+		ItemInfoView(Model model, Rect frame, SpriteModel backgroundSpriteModel);
 		void updateModel(Model newModel);
 		void renderImageWithRenderer(I4DyuchiGXRenderer* renderer, int order);
 		bool renderInfoIfMouseHover();
-		static void setupBackgroundSprite(IDISpriteObject* bgSprite, Size bgSpriteSize);
 	private:
 		const Rect _rect;
 		Model _model;
-		static IDISpriteObject* backgroundSprite;
-		static Size bgSpriteSize;
+		SpriteModel _backgroundSpriteModel;
+	};
+
+	struct ItemInfoViewResources {
+		static void initialize();
+		static SpriteModel bgSpriteModel;
 	};
 }
 

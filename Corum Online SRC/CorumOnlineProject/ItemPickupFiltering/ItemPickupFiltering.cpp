@@ -1,19 +1,19 @@
 #include "ItemPickupFiltering.h"
 #include "../InitGame.h"
 #include "../CorumResource.h"
-#include "PagedItemViewTable.h"
+#include "ItemFilteringView.h"
 
 using namespace CustomUI;
 
-static PagedItemViewTable* table = nullptr;
+static ItemFilteringView* table = nullptr;
 
 std::vector<CItem*> getDebugItemList();
 
-static PagedItemViewTable* debugView() {
+static ItemFilteringView* debugView() {
 	if (table == NULL) {
 		auto items = getDebugItemList();
 		Rect frame = { { 100, 100}, {340, 340} };
-		table = new PagedItemViewTable(frame, items);
+		table = new ItemFilteringView(frame, items);
 	}
 
 	return table;
@@ -32,7 +32,7 @@ std::vector<CItem*> getDebugItemList() {
 	auto head = g_pItemTableHash_get()->GetHead();
 
 	while (head) {
-		result.push_back(createItemWithBase(head->pData));
+		//result.push_back(createItemWithBase(head->pData));
 		switch (head->pData->dwCode_ID)
 		{
 		case ITEM_KIND_WEAPON:
@@ -45,12 +45,13 @@ std::vector<CItem*> getDebugItemList() {
 			//result.push_back(createItemWithBase(head->pData));
 			break;
 		case ITEM_KIND_SUPPLIES:
-			//result.push_back(createItemWithBase(head->pData));
+			result.push_back(createItemWithBase(head->pData));
 			break;
 		case ITEM_KIND_CONSUMABLE:
+			result.push_back(createItemWithBase(head->pData));
 			break;
 		case ITEM_KIND_ZODIAC:
-			//result.push_back(createItemWithBase(head->pData));
+			result.push_back(createItemWithBase(head->pData));
 			break;
 		case ITEM_KIND_SPECIAL:
 		case ITEM_KIND_UPGRADE:
@@ -87,6 +88,10 @@ ItemPickupFiltering* ItemPickupFiltering::sharedInstance() {
 	return shared;
 }
 
+bool ItemPickupFiltering::handleKeyUp(WORD keyCode) {
+	return debugView()->handleKeyUp(keyCode);
+}
+
 void ItemPickupFiltering::render() {
-	debugView()->render();
+	debugView()->renderWithRenderer(g_pRenderer, 1);
 }

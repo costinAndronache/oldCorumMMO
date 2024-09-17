@@ -1517,6 +1517,10 @@ DWORD __stdcall AfterRenderGameDungeon()
 
 void OnKeyDownDungeon(WPARAM wParam, LPARAM lParam)
 {	
+	if (ItemPickupFiltering::sharedInstance()->handleKeyUp(LOWORD(wParam))) {
+		return;
+	}
+
 	BOOL bHanMode = TRUE;
 	
 	switch( wParam )
@@ -1923,6 +1927,7 @@ void OnKeyDownDungeon(WPARAM wParam, LPARAM lParam)
 void OnKeyUpDungeon(WPARAM wParam, LPARAM lParam)
 {	
 	g_bKeyChkUp = FALSE;
+
 	switch( LOWORD(wParam) )
 	{
 		case VK_CONTROL:
