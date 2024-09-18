@@ -3,15 +3,26 @@
 #include "../CorumResource.h"
 #include "../Interface.h"
 
+// 191 185, 32 32 menu1 tga
 using namespace CustomUI;
 
 SpriteModel ItemInfoViewResources::bgSpriteModel = { NULL, {38, 70}, 0 };
+SpriteModel ItemInfoViewResources::unknownSpriteModel = { NULL, {32, 32}, 0 };
+
 void ItemInfoViewResources::initialize() {
 	if (bgSpriteModel.sprite == NULL) {
 		bgSpriteModel.sprite = g_pRenderer->CreateSpriteObject(
 			GetFile("menu_4.tif", DATA_TYPE_UI),
 			0, 0,
 			bgSpriteModel.size.width, bgSpriteModel.size.height,
+			0);
+	}
+
+	if (unknownSpriteModel.sprite == NULL) {
+		unknownSpriteModel.sprite = g_pRenderer->CreateSpriteObject(
+			GetFile("menu_1.tga", DATA_TYPE_UI),
+			191, 185,
+			unknownSpriteModel.size.width, unknownSpriteModel.size.height,
 			0);
 	}
 }
@@ -38,7 +49,7 @@ bool ItemInfoView::renderInfoIfMouseHover() {
 	return false;
 }
 
-void ItemInfoView::renderImageWithRenderer(I4DyuchiGXRenderer* renderer, int order) {
+void ItemInfoView::renderWithRenderer(I4DyuchiGXRenderer* renderer, int order) {
 	VECTOR2 vPos = { _rect.origin.x, _rect.origin.y };
 
 	VECTOR2 scale = _rect.size.divideBy(_backgroundSpriteModel.size);
@@ -65,7 +76,12 @@ void ItemInfoView::renderImageWithRenderer(I4DyuchiGXRenderer* renderer, int ord
 			itemScale.y = ((float)_rect.size.height) / _model.itemResourceSize.height;
 		}
 
-		g_pRenderer->RenderSprite(lpItemResourceEx->pSpr
+		renderer->RenderSprite(lpItemResourceEx->pSpr
 			, &itemScale, 0.0f, &vPos, NULL, 0xffffffff, order, RENDER_TYPE_DISABLE_TEX_FILTERING);
+	}
+	else {
+		VECTOR2 scale = _rect.size.divideBy(ItemInfoViewResources::unknownSpriteModel.size);
+		renderer->RenderSprite(ItemInfoViewResources::unknownSpriteModel.sprite
+			, &scale, 0.0f, &vPos, NULL, 0xffffffff, order, RENDER_TYPE_DISABLE_TEX_FILTERING);
 	}
 }

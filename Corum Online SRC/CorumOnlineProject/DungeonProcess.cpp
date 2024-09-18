@@ -6351,6 +6351,8 @@ void SetKey(int nKey)
 
 			if(nKey==g_sKeyConfig.snKey[__KEY_ITEM__])
 			{	
+				std::set<DWORD> filterIDs = ItemPickupFiltering::sharedInstance()->currentSelectedIDs();
+
 				if(!g_pGVDungeon->bChatMode)
 				{
 					CItemTradeShopWnd* pItemTradeShopWnd = CItemTradeShopWnd::GetInstance();
@@ -6409,23 +6411,22 @@ void SetKey(int nKey)
 										g_pMainPlayer->GetStatus()!=UNIT_STATUS_RUNNING)
 										return;
 
-									// 대만은 무게 포화상태가 되면 아이템을 집을수 없게 막는다.
-#if IS_TAIWAN_LOCALIZING()
-									if ((g_pMainPlayer->GetAverageWeight()) >= 100.f )
-									{
-										// "포화무게한도에 도달하여 달리기가 안되며, 포션의 사용 딜레이가 증가합니다."
-										DisplayMessageAdd(g_Message[ETC_MESSAGE986].szMessage, 0xffff0000);			
 
-										return;
-									}
-#endif
 									if(g_ItemMoveManager.GetNewItemMoveMode())
 									{
 										g_ItemMoveManager.TileToInvPickupItem(pItem);
 									}
 									else
 									{
- 										SendPickupItem(pItem, FALSE, FALSE);											
+										DWORD id = pItem->Item.GetID();
+										if (!filterIDs.empty()) {
+											if (filterIDs.find(id) != filterIDs.end()) {
+												SendPickupItem(pItem, FALSE, FALSE);
+											}
+										}
+										else {
+											SendPickupItem(pItem, FALSE, FALSE);
+										}
 									}									
 
 									bChk = TRUE;

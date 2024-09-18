@@ -2,6 +2,11 @@
 #include "../InitGame.h"
 
 namespace CustomUI {
+	class Renderable {
+	public:
+		virtual void renderWithRenderer(I4DyuchiGXRenderer* renderer, int order) = 0;
+	};
+
 	struct Size { 
 		int width; int height;
 		VECTOR2 divideBy(Size other) const {

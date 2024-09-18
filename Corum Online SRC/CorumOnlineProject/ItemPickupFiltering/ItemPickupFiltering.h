@@ -1,6 +1,7 @@
 #pragma once
 #include "ItemInfoView.h"
 #include <vector>
+#include <set>
 
 extern class CItem;
 
@@ -15,6 +16,8 @@ public:
 	bool handleMouseDown();
 	bool handleMouseUp();
 	bool isInterfaceFocused();
+	std::set<DWORD> currentSelectedIDs();
+
 private: 
 	std::vector<CItem*> totalItemsList;
 	bool _isInterfaceFocused;

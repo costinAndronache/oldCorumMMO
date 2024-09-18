@@ -1,8 +1,10 @@
 #include "ItemFilteringView.h"
+#include "ItemInfoView.h"
+
 using namespace CustomUI;
 
-ItemFilteringView::ItemFilteringView(Rect frame, std::vector<CItem*>& allItems): 
-	_frame(frame), _allItems(allItems) {
+ItemFilteringView::ItemFilteringView(Rect frame, std::vector<CItem*>& allItems, std::set<DWORD>& selectedItemIDs):
+	_frame(frame), _allItems(allItems), _displayedItems(allItems), _selectedItemIDs(selectedItemIDs) {
 
 	Rect inputFieldRect = {
 		{ frame.origin.x + 5, frame.origin.y + 5 },
@@ -16,11 +18,21 @@ ItemFilteringView::ItemFilteringView(Rect frame, std::vector<CItem*>& allItems):
 		{ frame.size.width - 10, frame.size.height - (inputFieldRect.size.height + 10) }
 	};
 
+	ItemInfoViewResources::initialize();
+
 	PagedItemViewTableResources::initialize();
-	_table = new PagedItemViewTable(tableFrame, SpriteModel::zero);
-	_table->setDisplayedItems(allItems);
+	_table = new PagedItemViewTable(tableFrame, this, ItemInfoViewResources::bgSpriteModel.size, allItems.size(), SpriteModel::zero);
 }
 
+void ItemFilteringView::selectionViewDidChangeSelectionState(SelectionView* view, bool isSelected) {
+	DWORD id = (DWORD)view->data;
+	if (isSelected) {
+		_selectedItemIDs.insert(id);
+	}
+	else {
+		_selectedItemIDs.erase(id);
+	}
+}
 
 void ItemFilteringView::renderWithRenderer(I4DyuchiGXRenderer* renderer, int order) {
 	VECTOR2 scale = _frame.size.divideBy(PagedItemViewTableResources::bgSpriteModel.size);
@@ -32,6 +44,13 @@ void ItemFilteringView::renderWithRenderer(I4DyuchiGXRenderer* renderer, int ord
 
 	_inputField->renderWithRenderer(renderer, order + 1);
 	_table->renderWithRenderer(renderer, order + 1);
+
+	for (int i = 0; i < _createdInfoViews.size(); i++) {
+		ItemInfoView* iv = static_cast<ItemInfoView*>(_createdInfoViews[i]->renderable());
+		if (iv->renderInfoIfMouseHover()) {
+			return;
+		}
+	}
 }
 
 bool ItemFilteringView::handleMouseDown() {
@@ -53,7 +72,8 @@ bool ItemFilteringView::handleKeyUp(WPARAM wparam, LPARAM lparam) {
 
 void ItemFilteringView::onInputFieldTextChange(InputField* inputField, const char* text) {
 	if (strlen(text) == 0) {
-		_table->setDisplayedItems(_allItems);
+		_displayedItems = _allItems;
+		_table->reloadData(_displayedItems.size());
 		return;
 	}
 
@@ -79,5 +99,50 @@ void ItemFilteringView::updateDisplayedItemsOnNameFilter(const char* nameFilter)
 
 	}
 
-	_table->setDisplayedItems(result);
+	_displayedItems = result;
+	_table->reloadData(_displayedItems.size());
+}
+
+Renderable* ItemFilteringView::buildRenderableForModelAtIndexWithFrame(int modelIndex, Rect frame) {
+	CItem* current = NULL;
+	if (0 <= modelIndex && modelIndex < _displayedItems.size()) {
+		current = _displayedItems[modelIndex];
+	}
+
+	ItemInfoView::Model model = { current, ItemInfoViewResources::bgSpriteModel.size };
+	ItemInfoView* view = new ItemInfoView(model, frame, ItemInfoViewResources::bgSpriteModel);
+	SelectionView* sv = new SelectionView(frame, view, this);
+	
+
+	if (current && current->GetBaseItem()) {
+		DWORD id = current->GetBaseItem()->GetID();
+		sv->setSelectionState(_selectedItemIDs.find(id) != _selectedItemIDs.end());
+		sv->data = (void*)id;
+	}
+	_createdInfoViews.push_back(sv);
+
+	return sv;
+}
+
+void ItemFilteringView::updateRenderableWithModelAtIndex(Renderable* renderable, int modelIndex) {
+	SelectionView* sv = static_cast<SelectionView*>(renderable);
+	ItemInfoView* infoView = static_cast<ItemInfoView*>(sv->renderable());
+
+	CItem* current = NULL;
+	if (0 <= modelIndex && modelIndex < _displayedItems.size()) {
+		current = _displayedItems[modelIndex];
+	}
+
+	if (current && current->GetBaseItem()) {
+		DWORD id = current->GetBaseItem()->GetID();
+		sv->setSelectionState(_selectedItemIDs.find(id) != _selectedItemIDs.end());
+		sv->data = (void*)id;
+	}
+
+	ItemInfoView::Model model = { current, ItemInfoViewResources::bgSpriteModel.size };
+	infoView->updateModel(model);
+}
+
+std::set<DWORD> ItemFilteringView::currentSelectedIDs() {
+	return _selectedItemIDs;
 }

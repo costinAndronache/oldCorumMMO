@@ -13,7 +13,8 @@ static ItemFilteringView* debugView() {
 	if (table == NULL) {
 		auto items = getDebugItemList();
 		Rect frame = { { 100, 100}, {340, 340} };
-		table = new ItemFilteringView(frame, items);
+		std::set<DWORD> ids;
+		table = new ItemFilteringView(frame, items, ids);
 	}
 
 	return table;
@@ -31,24 +32,23 @@ std::vector<CItem*> getDebugItemList() {
 
 	auto head = g_pItemTableHash_get()->GetHead();
 
-	while (head) {
-		//result.push_back(createItemWithBase(head->pData));
+	while (head) {		
 		switch (head->pData->dwCode_ID)
 		{
 		case ITEM_KIND_WEAPON:
 			
 			break;
 		case ITEM_KIND_AROMR:
-			//result.push_back(createItemWithBase(head->pData));
+			result.push_back(createItemWithBase(head->pData));
 			break;
 		case ITEM_KIND_GUARDIAN:
 			//result.push_back(createItemWithBase(head->pData));
 			break;
 		case ITEM_KIND_SUPPLIES:
-			result.push_back(createItemWithBase(head->pData));
+			//result.push_back(createItemWithBase(head->pData));
 			break;
 		case ITEM_KIND_CONSUMABLE:
-			result.push_back(createItemWithBase(head->pData));
+			//result.push_back(createItemWithBase(head->pData));
 			break;
 		case ITEM_KIND_ZODIAC:
 			result.push_back(createItemWithBase(head->pData));
@@ -112,4 +112,8 @@ bool ItemPickupFiltering::handleKeyDown(WPARAM wparam, LPARAM lparam) {
 
 void ItemPickupFiltering::render() {
 	debugView()->renderWithRenderer(g_pRenderer, 1);
+}
+
+std::set<DWORD> ItemPickupFiltering::currentSelectedIDs() {
+	return debugView()->currentSelectedIDs();
 }

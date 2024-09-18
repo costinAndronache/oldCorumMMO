@@ -4,7 +4,6 @@
 
 using namespace CustomUI;
 
-
 SpriteModel PagedItemViewTableResources::bgSpriteModel = { NULL, {2, 2}, 0 };
 void PagedItemViewTableResources::initialize() {
 	if (bgSpriteModel.sprite == NULL) {
@@ -12,40 +11,40 @@ void PagedItemViewTableResources::initialize() {
 	}
 }
 
-CItem* PagedItemViewTable::getCurrentItemForDisplayedCell(int row, int column) {
+int PagedItemViewTable::getCurrentModelIndexForDisplayedCell(int row, int column, int totalItems) {
 	int index = (_currentTopRowIndex + row) * _numberOfColumns + column;
-	if (0 <= index && index < _currentDisplayedItems.size()) {
-		return _currentDisplayedItems[index];
+	if (0 <= index && index < totalItems) {
+		return index;
 	}
-	return nullptr;
+	return -1;
 }
 
-PagedItemViewTable::PagedItemViewTable(Rect frame, SpriteModel bgSpriteModel): 
-	_frame(frame), _bgSpriteModel(bgSpriteModel) {
+PagedItemViewTable::PagedItemViewTable(Rect frame, PagedItemViewTableClient* client, Size viewsSize, int initialModelCount, SpriteModel bgSpriteModel):
+	_frame(frame), _bgSpriteModel(bgSpriteModel), _client(client), _viewsSize(viewsSize), _modelCount(initialModelCount) {
 
 	Size buttonsSize = { 28, 28 };
 	Size tableSize = { _frame.size.width - buttonsSize.width, _frame.size.height - buttonsSize.height };
 
-	ItemInfoViewResources::initialize();
-	const Size referenceSize = ItemInfoViewResources::bgSpriteModel.size;
+	
+	const Size referenceSize = viewsSize;
 
 	_numberOfRows = tableSize.height / referenceSize.height;
 	_numberOfColumns = tableSize.width / referenceSize.width;
 	_currentTopRowIndex = 0;
 	
 	for (int i = 0; i < _numberOfRows; i++) {
-		_viewsTable.push_back(std::vector<ItemInfoView*>());
+		_viewsTable.push_back(std::vector<Renderable*>());
 
 		for (int j = 0; j < _numberOfColumns; j++) {
-			CItem* current = getCurrentItemForDisplayedCell(i, j);
+			int index = getCurrentModelIndexForDisplayedCell(i, j, _modelCount);
 			Rect viewFrame = { { 
 					_frame.origin.x + (j * referenceSize.width),
 					_frame.origin.y + (i * referenceSize.height)
 				}, 
 				referenceSize
 			};
-			ItemInfoView::Model model = { current, referenceSize };
-			_viewsTable[i].push_back(new ItemInfoView(model, viewFrame, ItemInfoViewResources::bgSpriteModel));
+
+			_viewsTable[i].push_back(_client->buildRenderableForModelAtIndexWithFrame(index, viewFrame));
 		}
 	}
 
@@ -74,22 +73,16 @@ PagedItemViewTable::PagedItemViewTable(Rect frame, SpriteModel bgSpriteModel):
 void PagedItemViewTable::updateDisplayedRowsWithCurrentItems() {
 	for (int i = 0; i < _numberOfRows; i++) {
 		for (int j = 0; j < _numberOfColumns; j++) {
-			CItem* current = getCurrentItemForDisplayedCell(i, j);
-			Rect viewFrame = { {
-					_frame.origin.x + (j * ItemInfoViewResources::bgSpriteModel.size.width),
-					_frame.origin.y + (i * ItemInfoViewResources::bgSpriteModel.size.height)
-				},
-			};
-			ItemInfoView::Model model = { current, ItemInfoViewResources::bgSpriteModel.size };
-			_viewsTable[i][j]->updateModel(model);
+			int index = getCurrentModelIndexForDisplayedCell(i, j, _modelCount);
+			_client->updateRenderableWithModelAtIndex(_viewsTable[i][j], index);
 		}
 	}
 }
 
-void PagedItemViewTable::setDisplayedItems(std::vector<CItem*>& items) {
-	_currentDisplayedItems = items;
-	updateDisplayedRowsWithCurrentItems();
+void PagedItemViewTable::reloadData(int newItemsCount) {
+	_modelCount = newItemsCount;
 	_currentTopRowIndex = 0;
+	updateDisplayedRowsWithCurrentItems();
 }
 
 void PagedItemViewTable::scrollUp() {
@@ -118,17 +111,10 @@ void PagedItemViewTable::renderWithRenderer(I4DyuchiGXRenderer *renderer, int or
 
 	for (int i = 0; i < _numberOfRows; i++) {
 		for (int j = 0; j < _numberOfColumns; j++) {
-			_viewsTable[i][j]->renderImageWithRenderer(g_pRenderer, order + 2);
+			_viewsTable[i][j]->renderWithRenderer(g_pRenderer, order + 2);
 		}
 	}
 
-	for (int i = 0; i < _numberOfRows; i++) {
-		for (int j = 0; j < _numberOfColumns; j++) {
-			if (_viewsTable[i][j]->renderInfoIfMouseHover()) {
-				return;
-			}
-		}
-	}
 }
 
 void PagedItemViewTable::onButtonPress(Button* button) { }

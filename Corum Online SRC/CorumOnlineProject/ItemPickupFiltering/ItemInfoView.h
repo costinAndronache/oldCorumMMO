@@ -5,7 +5,7 @@
 #include <string>
 
 namespace CustomUI {
-	class ItemInfoView {
+	class ItemInfoView: public Renderable {
 	public:
 		struct Model {
 			CItem* item;
@@ -13,7 +13,7 @@ namespace CustomUI {
 		};
 		ItemInfoView(Model model, Rect frame, SpriteModel backgroundSpriteModel);
 		void updateModel(Model newModel);
-		void renderImageWithRenderer(I4DyuchiGXRenderer* renderer, int order);
+		void renderWithRenderer(I4DyuchiGXRenderer* renderer, int order) override;
 		bool renderInfoIfMouseHover();
 	private:
 		const Rect _rect;
@@ -24,6 +24,7 @@ namespace CustomUI {
 	struct ItemInfoViewResources {
 		static void initialize();
 		static SpriteModel bgSpriteModel;
+		static SpriteModel unknownSpriteModel;
 	};
 }
 

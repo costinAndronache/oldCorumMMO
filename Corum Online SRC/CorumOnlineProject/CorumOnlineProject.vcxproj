@@ -4091,6 +4091,7 @@
     <ClCompile Include="ItemPickupFiltering\ItemInfoView.cpp" />
     <ClCompile Include="ItemPickupFiltering\ItemPickupFiltering.cpp" />
     <ClCompile Include="ItemPickupFiltering\PagedItemViewTable.cpp" />
+    <ClCompile Include="ItemPickupFiltering\SelectionView.cpp" />
     <ClCompile Include="ItemShopWnd.cpp">
       <BasicRuntimeChecks Condition="'$(Configuration)|$(Platform)'=='CHINA_DEV|Win32'">EnableFastChecks</BasicRuntimeChecks>
       <BrowseInformation Condition="'$(Configuration)|$(Platform)'=='CHINA_DEV|Win32'">true</BrowseInformation>
@@ -6692,6 +6693,7 @@
     <ClInclude Include="ItemPickupFiltering\ItemInfoView.h" />
     <ClInclude Include="ItemPickupFiltering\ItemPickupFiltering.h" />
     <ClInclude Include="ItemPickupFiltering\PagedItemViewTable.h" />
+    <ClInclude Include="ItemPickupFiltering\SelectionView.h" />
     <ClInclude Include="ItemShopWnd.h" />
     <ClInclude Include="ItemTradeShopWnd.h" />
     <ClInclude Include="ItemTradeWnd.h" />

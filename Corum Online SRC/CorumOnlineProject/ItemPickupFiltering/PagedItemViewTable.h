@@ -1,31 +1,41 @@
 #pragma once
-#include "ItemInfoView.h"
 #include "Button.h"
 
 #include <vector>
 class CItem;
 
 namespace CustomUI {
+	class PagedItemViewTableClient {
+	public:
+		virtual Renderable* buildRenderableForModelAtIndexWithFrame(int modelIndex, Rect frame) = 0;
+		virtual void updateRenderableWithModelAtIndex(Renderable* renderable, int modelIndex) = 0;
+
+	};
+
 	class PagedItemViewTable: public ButtonClient {
 	public:
-		PagedItemViewTable(Rect frame, SpriteModel bgSpriteModel);
-		void setDisplayedItems(std::vector<CItem*>& items);
+		PagedItemViewTable(Rect frame, PagedItemViewTableClient* _client, Size viewsSize, int initialModelCount, SpriteModel bgSpriteModel);
+		void reloadData(int newItemsCount);
 		void renderWithRenderer(I4DyuchiGXRenderer* renderer, int order);
 		
 		void onButtonPress(Button*) override;
 		void onButtonPressRelease(Button*) override;
 	private:
-		std::vector<CItem*> _currentDisplayedItems;
-		std::vector<std::vector<ItemInfoView*>> _viewsTable;
+		PagedItemViewTableClient* _client;
+		Size _viewsSize;
 		Rect _frame;
 		SpriteModel _bgSpriteModel;
+
+		std::vector<std::vector<Renderable*>> _viewsTable;
+		int _modelCount;
+
 		int _numberOfRows;
 		int _numberOfColumns;
 		int _currentTopRowIndex;
 
 		Button* _scrollUpBtn;
 		Button* _scrollDownBtn;
-		CItem* getCurrentItemForDisplayedCell(int row, int column);
+		int getCurrentModelIndexForDisplayedCell(int row, int column, int totalItems);
 		void updateDisplayedRowsWithCurrentItems();
 		void scrollUp();
 		void scrollDown();
