@@ -6425,7 +6425,7 @@ void SetKey(int nKey)
 											}
 										}
 										else {
-											SendPickupItem(pItem, FALSE, FALSE);
+ 											SendPickupItem(pItem, FALSE, FALSE);
 										}
 									}									
 

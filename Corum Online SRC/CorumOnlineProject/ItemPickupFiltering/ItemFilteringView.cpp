@@ -88,15 +88,19 @@ void ItemFilteringView::updateDisplayedItemsOnNameFilter(const char* nameFilter)
 	char lowerName[InputField::maxChars];
 	std::vector<CItem*> result;
 
-	for (int i = 0; i < _allItems.size(); i++) {
-		CItem* item = _allItems[i];
-		strcpy(lowerName, item->GetBaseItem()->szItemName_Eng);
+	const int size = _allItems.size();
+	for (int i = 0; i < size; i++) {
+		CBaseItem* item = _allItems[i]->GetBaseItem();
+		if (!(item && item->szItemName_Eng)) { continue; }
+		strcpy(lowerName, item->szItemName_Eng);
 		strlwr(lowerName);
 
-		if (strstr(lowerName, lowerText)) {
-			result.push_back(item);
+		if (
+			strstr(lowerName, lowerText) || 
+		    (atoi(nameFilter) == item->GetID() && item->GetID() != 0)
+			) {
+			result.push_back(_allItems[i]);
 		}
-
 	}
 
 	_displayedItems = result;
@@ -136,7 +140,12 @@ void ItemFilteringView::updateRenderableWithModelAtIndex(Renderable* renderable,
 	if (current && current->GetBaseItem()) {
 		DWORD id = current->GetBaseItem()->GetID();
 		sv->setSelectionState(_selectedItemIDs.find(id) != _selectedItemIDs.end());
+		sv->setEnableSelection(true);
 		sv->data = (void*)id;
+	}
+	else {
+		sv->setSelectionState(false);
+		sv->setEnableSelection(false);
 	}
 
 	ItemInfoView::Model model = { current, ItemInfoViewResources::bgSpriteModel.size };

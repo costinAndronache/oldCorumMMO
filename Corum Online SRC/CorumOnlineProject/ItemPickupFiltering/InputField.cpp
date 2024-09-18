@@ -79,7 +79,8 @@ bool InputField::handleKeyDown(WPARAM wparam, LPARAM lparam) {
 
 void InputField::notifyClient() {
 	if (_client) {
-		_client->onInputFieldTextChange(this, _buffer.c_str());
+		const char* text = _buffer.c_str();
+		_client->onInputFieldTextChange(this, text);
 	}
 }
 

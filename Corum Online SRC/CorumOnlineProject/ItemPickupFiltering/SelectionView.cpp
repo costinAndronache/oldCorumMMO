@@ -40,6 +40,10 @@ bool SelectionView::isSelected() {
 	return _isSelected;
 }
 
+void SelectionView::setEnableSelection(bool selectionEnabled) {
+	_selectionEnabled = selectionEnabled;
+}
+
 Renderable* SelectionView::renderable() {
 	return _renderable;
 }
@@ -49,6 +53,10 @@ void SelectionView::onButtonPress(Button* button) {
 }
 
 void SelectionView::onButtonPressRelease(Button* button) {
+	if (!_selectionEnabled) {
+		return;
+	}
+
 	_isSelected = !_isSelected;
 	if (_client) { _client->selectionViewDidChangeSelectionState(this, _isSelected); }
 }

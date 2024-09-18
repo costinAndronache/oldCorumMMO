@@ -36,7 +36,7 @@ std::vector<CItem*> getDebugItemList() {
 		switch (head->pData->dwCode_ID)
 		{
 		case ITEM_KIND_WEAPON:
-			
+			result.push_back(createItemWithBase(head->pData));
 			break;
 		case ITEM_KIND_AROMR:
 			result.push_back(createItemWithBase(head->pData));
@@ -45,10 +45,10 @@ std::vector<CItem*> getDebugItemList() {
 			//result.push_back(createItemWithBase(head->pData));
 			break;
 		case ITEM_KIND_SUPPLIES:
-			//result.push_back(createItemWithBase(head->pData));
+			result.push_back(createItemWithBase(head->pData));
 			break;
 		case ITEM_KIND_CONSUMABLE:
-			//result.push_back(createItemWithBase(head->pData));
+			result.push_back(createItemWithBase(head->pData));
 			break;
 		case ITEM_KIND_ZODIAC:
 			result.push_back(createItemWithBase(head->pData));
@@ -63,10 +63,10 @@ std::vector<CItem*> getDebugItemList() {
 		case ITEM_KIND_MAGICARRAY:
 		case ITEM_KIND_RIDE:
 		case ITEM_KIND_BAG:
-
+			result.push_back(createItemWithBase(head->pData));
 			break;
 		default:
-			//result.push_back(createItemWithBase(head->pData));
+			result.push_back(createItemWithBase(head->pData));
 			break;
 		}
 		head = head->pNext;

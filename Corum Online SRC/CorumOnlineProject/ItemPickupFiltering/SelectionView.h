@@ -16,6 +16,7 @@ namespace CustomUI {
 		SelectionView(Rect frame, Renderable* subView, SelectionViewClient* client);
 		void renderWithRenderer(I4DyuchiGXRenderer* renderer, int order) override;
 		void setSelectionState(bool isSelected);
+		void setEnableSelection(bool selectionEnabled);
 		bool isSelected();
 		Renderable* renderable();
 
@@ -30,6 +31,7 @@ namespace CustomUI {
 		SelectionViewClient* _client;
 
 		bool _isSelected;
+		bool _selectionEnabled;
 		Button* _button;
 	};
 
