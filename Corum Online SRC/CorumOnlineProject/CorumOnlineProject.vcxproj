@@ -4090,6 +4090,7 @@
     <ClCompile Include="ItemPickupFiltering\ItemFilteringView.cpp" />
     <ClCompile Include="ItemPickupFiltering\ItemInfoView.cpp" />
     <ClCompile Include="ItemPickupFiltering\ItemPickupFiltering.cpp" />
+    <ClCompile Include="ItemPickupFiltering\Label.cpp" />
     <ClCompile Include="ItemPickupFiltering\PagedItemViewTable.cpp" />
     <ClCompile Include="ItemPickupFiltering\SelectionView.cpp" />
     <ClCompile Include="ItemShopWnd.cpp">
@@ -6692,6 +6693,7 @@
     <ClInclude Include="ItemPickupFiltering\ItemFilteringView.h" />
     <ClInclude Include="ItemPickupFiltering\ItemInfoView.h" />
     <ClInclude Include="ItemPickupFiltering\ItemPickupFiltering.h" />
+    <ClInclude Include="ItemPickupFiltering\Label.h" />
     <ClInclude Include="ItemPickupFiltering\PagedItemViewTable.h" />
     <ClInclude Include="ItemPickupFiltering\SelectionView.h" />
     <ClInclude Include="ItemShopWnd.h" />

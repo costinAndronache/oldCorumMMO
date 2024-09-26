@@ -792,6 +792,9 @@
     <ClCompile Include="ItemPickupFiltering\SelectionView.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="ItemPickupFiltering\Label.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MouseLib.h">
@@ -1491,6 +1494,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ItemPickupFiltering\SelectionView.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ItemPickupFiltering\Label.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

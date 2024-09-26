@@ -22,6 +22,23 @@ ItemFilteringView::ItemFilteringView(Rect frame, std::vector<CItem*>& allItems, 
 
 	PagedItemViewTableResources::initialize();
 	_table = new PagedItemViewTable(tableFrame, this, ItemInfoViewResources::bgSpriteModel.size, allItems.size(), SpriteModel::zero);
+
+	Rect labelFrame = {
+		{ tableFrame.origin.x, tableFrame.maxY() - 20 },
+		ButtonResources::genericBackgroundSize
+	};
+	Color labelColor;
+	labelColor.a = 255;
+	labelColor.r = 200;
+	labelColor.g = 200; 
+	labelColor.b = 0;
+	Label::Appearance appearance = { 20, labelColor };
+	std::string text = "Test text";
+	Button::LabelModel lm = { "Action", appearance};
+
+	SpriteModel lbSpr = { ButtonResources::genericBackground, ButtonResources::genericBackgroundSize, 0 };
+	SpriteModel lbPrSpr = { ButtonResources::genericPressedBackground, ButtonResources::genericBackgroundSize, 0 };
+	_labeledButton = new Button(lbSpr, lbPrSpr, lm, labelFrame, NULL);
 }
 
 void ItemFilteringView::selectionViewDidChangeSelectionState(SelectionView* view, bool isSelected) {
@@ -51,6 +68,8 @@ void ItemFilteringView::renderWithRenderer(I4DyuchiGXRenderer* renderer, int ord
 			return;
 		}
 	}
+
+	_labeledButton->renderWithRenderer(renderer, order + 1);
 }
 
 bool ItemFilteringView::handleMouseDown() {

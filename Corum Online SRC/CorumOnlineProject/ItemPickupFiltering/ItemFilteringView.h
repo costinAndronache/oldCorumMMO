@@ -3,6 +3,7 @@
 #include "InputField.h"
 #include "ItemInfoView.h"
 #include "SelectionView.h"
+#include "Label.h"
 #include <set>
 
 namespace CustomUI {
@@ -33,6 +34,7 @@ namespace CustomUI {
 
 		PagedItemViewTable* _table;
 		InputField* _inputField;
+		Button* _labeledButton;
 
 		void updateDisplayedItemsOnNameFilter(const char* nameFilter);
 	};
