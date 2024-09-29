@@ -40,7 +40,10 @@ ItemFilteringView::ItemFilteringView(Rect frame, std::vector<CItem*>& allItems, 
 		.withHeight(30);
 
 	InputFieldResources::initialize();
-	_inputField = new InputField(inputFieldContainer, InputFieldResources::bgSpriteModel, this);
+	SpriteModel clearBtnModel = { ButtonResources::xRedBlack, ButtonResources::xRedBlackSize, 0 };
+	SpriteModel clearBtnPressedModel = { ButtonResources::xRedBlackPressed, ButtonResources::xRedBlackSize, 0 };
+
+	_inputField = new InputField(inputFieldContainer, InputFieldResources::bgSpriteModel, clearBtnModel, clearBtnPressedModel, this);
 
 	Rect categoriesFilterContainer = Rect::zero()
 		.horizontallyAlignedWith(inputFieldContainer)
@@ -77,7 +80,7 @@ void ItemFilteringView::selectionViewDidChangeSelectionState(SelectionView* view
 		_client->itemFilteringViewDidUpdateSelection(this, _selectedItemIDs);
 	}
 
-	_table->reloadData(_displayedItems.size());
+	_table->refresh();
 }
 
 void ItemFilteringView::renderWithRenderer(I4DyuchiGXRenderer* renderer, int order) {

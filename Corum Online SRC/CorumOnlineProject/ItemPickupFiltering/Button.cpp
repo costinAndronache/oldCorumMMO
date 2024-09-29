@@ -15,6 +15,10 @@ IDISpriteObject* ButtonResources::xClose = NULL;
 IDISpriteObject* ButtonResources::xClosePressed = NULL;
 Size ButtonResources::xCloseSize = { 13, 13 };
 
+IDISpriteObject* ButtonResources::xRedBlack = NULL;
+IDISpriteObject* ButtonResources::xRedBlackPressed = NULL;
+Size ButtonResources::xRedBlackSize = { 33, 33 };
+
 void ButtonResources::initialize() {
 	if (downArrow == NULL) {
 		char* resourceFile = GetFile("menu_1.tga", DATA_TYPE_UI);
@@ -49,6 +53,18 @@ void ButtonResources::initialize() {
 		xClosePressed = g_pRenderer->CreateSpriteObject(resourceFile,
 			200, 16,
 			xCloseSize.width, xCloseSize.height,
+			0);
+	}
+
+	if (xRedBlack == NULL) {
+		char* resourceFile = GetFile("menu_4.tif", DATA_TYPE_UI);
+		xRedBlack = g_pRenderer->CreateSpriteObject(resourceFile,
+			38, 38,
+			xRedBlackSize.width, xRedBlackSize.height,
+			0);
+		xRedBlackPressed = g_pRenderer->CreateSpriteObject(resourceFile,
+			37, 42,
+			xRedBlackSize.width, 28,
 			0);
 	}
 }

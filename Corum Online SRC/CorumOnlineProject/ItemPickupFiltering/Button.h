@@ -49,6 +49,10 @@ namespace CustomUI {
 		static IDISpriteObject* xClose;
 		static IDISpriteObject* xClosePressed;
 		static Size xCloseSize;
+
+		static IDISpriteObject* xRedBlack;
+		static IDISpriteObject* xRedBlackPressed;
+		static Size xRedBlackSize;
 	};
 }
 

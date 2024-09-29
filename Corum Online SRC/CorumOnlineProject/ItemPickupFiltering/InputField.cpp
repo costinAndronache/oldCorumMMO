@@ -26,6 +26,33 @@ _frame(frame), _client(client), _bgSpriteModel(bgSpriteModel) {
 	_lastCaretUpdateTime = 0;
 	InputFieldResources::initialize();
 	_buffer = "";
+
+	_clearButton = NULL;
+}
+
+InputField::InputField(Rect frame, SpriteModel bgSpriteModel, SpriteModel clearBtnModel, SpriteModel clearBtnPressedModel, InputFieldClient* client) :
+	_frame(frame), _client(client), _bgSpriteModel(bgSpriteModel) {
+	_isActive = false;
+	_caretStateON = false;
+	_lastCaretUpdateTime = 0;
+	InputFieldResources::initialize();
+	_buffer = "";
+
+	Rect clearBtnFrame = frame
+		.fromMaxXOrigin(-clearBtnModel.size.width-5)
+		.withSize(clearBtnModel.size)
+		.scaled(0.8, 0.8)
+		.centeredVerticallyWith(frame);
+
+	_clearButton = new Button(clearBtnModel, clearBtnPressedModel, clearBtnFrame, this);
+}
+
+
+void InputField::onButtonPress(Button* button) { }
+
+void InputField::onButtonPressRelease(Button* button) { 
+	_buffer.erase(_buffer.begin(), _buffer.end());
+	notifyClient();
 }
 
 void InputField::renderWithRenderer(I4DyuchiGXRenderer* renderer, int order) {
@@ -71,6 +98,10 @@ void InputField::renderWithRenderer(I4DyuchiGXRenderer* renderer, int order) {
 			_caretStateON = !_caretStateON;
 		}
 	}
+
+	if (_clearButton) {
+		_clearButton->renderWithRenderer(renderer, order + 1);
+	}
 }
 
 bool InputField::handleKeyDown(WPARAM wparam, LPARAM lparam) {
@@ -97,6 +128,12 @@ bool InputField::handleKeyUp(WPARAM wparam, LPARAM lParam) {
 		return true;
 	}
 
+	if (wparam == VK_SPACE) {
+		_buffer.append(" ");
+		notifyClient();
+		return true;
+	}
+
 	const short asciiResult = getASCII(wparam, lParam);
 	if (asciiResult < 0) {
 		return true;
@@ -105,7 +142,8 @@ bool InputField::handleKeyUp(WPARAM wparam, LPARAM lParam) {
 	char key = (char)asciiResult;
 
 	if (('a' <= key && key <= 'z') ||
-		('A' <= key && key <= 'Z')) {
+		('A' <= key && key <= 'Z') ||
+		('0' <= key && key <= '9')) {
 		char str[2] = { key, '\0' };
 
 		if (_buffer.size() < maxChars) {

@@ -16,6 +16,7 @@ namespace CustomUI {
 	public:
 		PagedItemViewTable(Rect frame, PagedItemViewTableClient* _client, Size viewsSize, int initialModelCount, SpriteModel bgSpriteModel);
 		void reloadData(int newItemsCount);
+		void refresh();
 		void renderWithRenderer(I4DyuchiGXRenderer* renderer, int order);
 		
 		void onButtonPress(Button*) override;
@@ -37,7 +38,6 @@ namespace CustomUI {
 		Button* _scrollUpBtn;
 		Button* _scrollDownBtn;
 		int getCurrentModelIndexForDisplayedCell(int row, int column, int totalItems);
-		void updateDisplayedRowsWithCurrentItems();
 		void scrollUp();
 		void scrollDown();
 	};

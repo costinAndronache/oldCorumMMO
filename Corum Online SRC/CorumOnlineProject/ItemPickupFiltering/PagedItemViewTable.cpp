@@ -79,7 +79,7 @@ int PagedItemViewTable::fittedHeightWithin(int containerHeight, int viewHeight) 
 	return viewHeight * count;
 }
 
-void PagedItemViewTable::updateDisplayedRowsWithCurrentItems() {
+void PagedItemViewTable::refresh() {
 	for (int i = 0; i < _numberOfRows; i++) {
 		for (int j = 0; j < _numberOfColumns; j++) {
 			int index = getCurrentModelIndexForDisplayedCell(i, j, _modelCount);
@@ -91,17 +91,17 @@ void PagedItemViewTable::updateDisplayedRowsWithCurrentItems() {
 void PagedItemViewTable::reloadData(int newItemsCount) {
 	_modelCount = newItemsCount;
 	_currentTopRowIndex = 0;
-	updateDisplayedRowsWithCurrentItems();
+	refresh();
 }
 
 void PagedItemViewTable::scrollUp() {
 	_currentTopRowIndex = max(0, _currentTopRowIndex - 1);
-	updateDisplayedRowsWithCurrentItems();
+	refresh();
 }
 
 void PagedItemViewTable::scrollDown() {
 	_currentTopRowIndex += 1;
-	updateDisplayedRowsWithCurrentItems();
+	refresh();
 }
 
 void PagedItemViewTable::renderWithRenderer(I4DyuchiGXRenderer *renderer, int order) {
