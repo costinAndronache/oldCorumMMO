@@ -795,6 +795,15 @@
     <ClCompile Include="ItemPickupFiltering\Label.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="ItemPickupFiltering\ToggleButton.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ItemPickupFiltering\RadioButtonGroup.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ItemPickupFiltering\ItemCategoryFilterView.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MouseLib.h">
@@ -1497,6 +1506,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ItemPickupFiltering\Label.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ItemPickupFiltering\ToggleButton.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ItemPickupFiltering\RadioButtonGroup.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ItemPickupFiltering\ItemCategoryFilterView.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

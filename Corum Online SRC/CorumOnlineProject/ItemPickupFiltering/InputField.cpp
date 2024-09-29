@@ -4,15 +4,15 @@ using namespace CustomUI;
 
 #define WHITE(alpha)         D3DCOLOR_ARGB(alpha, 255, 255, 255)
 
-SpriteModel InputFieldResources::bgSpriteModel = { NULL, {54, 16}, 0 };
-// menu1 tga, 160,0 54x16
+SpriteModel InputFieldResources::bgSpriteModel = { NULL, {53, 12}, 0 };
+// menu1 tga, 74,0 53x12
 
 void InputFieldResources::initialize() {
 	if (bgSpriteModel.sprite == NULL) {
 		char* resourceFile = GetFile("menu_1.tga", DATA_TYPE_UI);
 		bgSpriteModel.sprite = g_pRenderer->CreateSpriteObject(
 			resourceFile,
-			160, 0,
+			74, 0,
 			bgSpriteModel.size.width, bgSpriteModel.size.height,
 			0
 		);
@@ -118,4 +118,8 @@ bool InputField::handleKeyUp(WPARAM wparam, LPARAM lParam) {
 	}
 
 	return true;
+}
+
+const char* InputField::currentText() {
+	return _buffer.c_str();
 }

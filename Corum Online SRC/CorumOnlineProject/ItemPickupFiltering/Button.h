@@ -17,11 +17,14 @@ namespace CustomUI {
 	public:
 		struct LabelModel {
 			const char* text;
-			Label::Appearance appearance;
+			SingleLineLabel::Appearance appearance;
 		};
 		Button(SpriteModel spriteModel, SpriteModel pressedSpriteModel, Rect frame, ButtonClient* client);
 		Button(SpriteModel spriteModel, SpriteModel pressedSpriteModel, LabelModel labelModel, Rect frame, ButtonClient* client);
 		void renderWithRenderer(I4DyuchiGXRenderer *renderer, int order);
+
+		void updateSpriteModelTo(SpriteModel newModel);
+		void updatePressedSpriteModelTo(SpriteModel newPressedStateSpriteModel);
 	private:
 		SpriteModel _spriteModel;
 		SpriteModel _pressedSpriteModel;
@@ -29,7 +32,7 @@ namespace CustomUI {
 		ButtonClient* _client;
 		bool _detectedPress;
 		DWORD _lastPressNotifyTime;
-		Label* _label;
+		SingleLineLabel* _label;
 	};
 
 	struct ButtonResources {
@@ -43,6 +46,9 @@ namespace CustomUI {
 		static IDISpriteObject* genericPressedBackground;
 		static Size genericBackgroundSize;
 
+		static IDISpriteObject* xClose;
+		static IDISpriteObject* xClosePressed;
+		static Size xCloseSize;
 	};
 }
 

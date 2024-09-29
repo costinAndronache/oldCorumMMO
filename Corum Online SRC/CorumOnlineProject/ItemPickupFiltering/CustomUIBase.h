@@ -49,10 +49,17 @@ namespace CustomUI {
 					origin.y < g_Mouse.MousePos.y && g_Mouse.MousePos.y < maxY());
 		}
 
-		Rect centeredXYWith(Rect other) const {
+		Rect centeredWith(Rect other) const {
 			Rect result = {
 				{ other.midX() - (size.width/2), other.midY() - (size.height/2) },
 				size
+			};
+			return result;
+		}
+
+		Rect centeredVerticallyWith(Rect other) const {
+			Rect result = {
+				{ origin.x,  other.midY() - (size.height / 2)}, size
 			};
 			return result;
 		}
@@ -66,12 +73,56 @@ namespace CustomUI {
 			return result;
 		}
 
-		Rect offsetX(int offset) {
+		Rect offsetX(int offset) const {
 			Rect result = *this;
 			result.origin.x += offset;
 			return result;
 		}
 
+		Rect fromMaxXOrigin(int offset) const {
+			Rect result = *this;
+			result.origin.x = result.maxX() + offset;
+			return result;
+		}
+
+		Rect horizontallyAlignedWith(Rect other) const {
+			Rect result = { { other.origin.x, origin.y }, {other.size.width, size.height} };
+			return result;
+		}
+
+		Rect positionedBelow(Rect other, int offset = 0) const {
+			Rect result = { {origin.x, other.maxY() + offset}, size };
+			return result;
+		}
+
+		Rect withHeight(int height) const {
+			Rect result = *this;
+			result.size.height = height;
+			return result;
+		}
+
+		Rect withSize(Size otherSize) const {
+			Rect result = { origin, otherSize };
+			return result;
+		}
+
+		Rect withWidth(int width) const {
+			Rect result = *this;
+			result.size.width = width;
+			return result;
+		}
+
+		Rect scaled(float xScale, float yScale = 1.0) const {
+			Rect result = *this;
+			result.size.width = float(result.size.width) * xScale;
+			result.size.height = float(result.size.height) * yScale;
+			return result;
+		}
+
+		static Rect zero() {
+			Rect result = { {0,0}, {0,0} };
+			return result;
+		}
 	};
 
 	struct SpriteModel {

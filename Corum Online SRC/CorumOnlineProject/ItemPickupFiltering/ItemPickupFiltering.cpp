@@ -2,23 +2,11 @@
 #include "../InitGame.h"
 #include "../CorumResource.h"
 #include "ItemFilteringView.h"
-
+#include <iostream>
 using namespace CustomUI;
 
-static ItemFilteringView* table = nullptr;
 
 std::vector<CItem*> getDebugItemList();
-
-static ItemFilteringView* debugView() {
-	if (table == NULL) {
-		auto items = getDebugItemList();
-		Rect frame = { { 100, 100}, {340, 340} };
-		std::set<DWORD> ids;
-		table = new ItemFilteringView(frame, items, ids);
-	}
-
-	return table;
-}
 
 CItem* createItemWithBase(CBaseItem* baseItem) {
 	CItem* item = new CItem;
@@ -75,7 +63,52 @@ std::vector<CItem*> getDebugItemList() {
 	return result;
 }
 
-ItemPickupFiltering::ItemPickupFiltering() { }
+static std::string filePath() {
+	std::string base(g_szBasePath);
+	base.append("\\ItemFiltering.fil");
+	return base;
+}
+
+static std::set<DWORD> readStoredSelectedIDs() {
+	std::set<DWORD> result;
+
+	std::ifstream ifs;
+	std::string path = filePath();
+	ifs.open(path.c_str(), std::ifstream::in);
+	if (ifs.good()) {
+		int count = 0;
+		ifs >> count;
+		for (int i = 0; i < count; i++) {
+			DWORD id = 0;
+			ifs >> id;
+			result.insert(id);
+		}
+	}
+
+	ifs.close();
+	return result;
+}
+
+static void storeSelectedIDs(std::set<DWORD> ids) {
+	std::ofstream ofs;
+	std::string path = filePath();
+	ofs.open(path, std::ofstream::out);
+	if (ofs.good()) {
+		ofs << ids.size() << '\n';
+		for (auto it = ids.begin(); it != ids.end(); it++) {
+			ofs << *it << '\n';
+		}
+	}
+
+	ofs.close();
+}
+
+ItemPickupFiltering::ItemPickupFiltering() {
+	auto items = getDebugItemList();
+	Rect frame = { { 100, 100}, {380, 395} };
+	std::set<DWORD> ids = readStoredSelectedIDs();
+	_view = new ItemFilteringView(frame, items, ids, this);
+}
 
 static ItemPickupFiltering *shared = nullptr;
 
@@ -93,27 +126,36 @@ bool ItemPickupFiltering::isInterfaceFocused() {
 }
 
 bool ItemPickupFiltering::handleMouseDown() {
-	_isInterfaceFocused = debugView()->handleMouseDown();
+	_isInterfaceFocused = _view->handleMouseDown();
 	return _isInterfaceFocused;
 }
 
 bool ItemPickupFiltering::handleMouseUp() {
-	_isInterfaceFocused = debugView()->handleMouseUp();
+	_isInterfaceFocused = _view->handleMouseUp();
 	return _isInterfaceFocused;
 }
 
 bool ItemPickupFiltering::handleKeyUp(WPARAM wparam, LPARAM lparam) {
-	return debugView()->handleKeyUp(wparam, lparam);
+	return _view->handleKeyUp(wparam, lparam);
 }
 
 bool ItemPickupFiltering::handleKeyDown(WPARAM wparam, LPARAM lparam) {
-	return debugView()->handleKeyDown(wparam, lparam);
+	return _view->handleKeyDown(wparam, lparam);
 }
 
 void ItemPickupFiltering::render() {
-	debugView()->renderWithRenderer(g_pRenderer, 1);
+	_view->renderWithRenderer(g_pRenderer, 1);
+}
+
+void ItemPickupFiltering::openView() {
+	_view->setHidden(false);
 }
 
 std::set<DWORD> ItemPickupFiltering::currentSelectedIDs() {
-	return debugView()->currentSelectedIDs();
+	return _view->currentSelectedIDs();
 }
+
+void ItemPickupFiltering::itemFilteringViewDidUpdateSelection(ItemFilteringView*, std::set<DWORD> selectedItemIDs) {
+	storeSelectedIDs(selectedItemIDs);
+}
+

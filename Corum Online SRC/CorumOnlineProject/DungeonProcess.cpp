@@ -1685,6 +1685,11 @@ void OnKeyDownDungeon(WPARAM wParam, LPARAM lParam)
 			bHanMode = FALSE;
 		}
 		break;
+	case __ASCII_CODE___KEY_OPEN_ITEM_FILTERING:
+		{
+		ItemPickupFiltering::sharedInstance()->openView();
+		}
+	break;
 	case VK_RETURN:
 		{	
 			if( !g_pThisDungeon->IsStadium() || g_pMainPlayer->m_dwGuildWarFlag != G_W_F_OBSERVER )

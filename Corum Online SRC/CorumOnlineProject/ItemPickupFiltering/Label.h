@@ -3,14 +3,13 @@
 #include <string>
 
 namespace CustomUI {
-	class Label: public Renderable {
+	class SingleLineLabel: public Renderable {
 	public:
 		struct Appearance {
-			int size;
 			Color color;
 		};
-		Label(Rect frame, Appearance appearance, std::string& text);
-		Label(Rect frame, Appearance appearance, const char* text);
+		SingleLineLabel(Rect frame, Appearance appearance, std::string& text);
+		SingleLineLabel(Rect frame, Appearance appearance, const char* text);
 		void renderWithRenderer(I4DyuchiGXRenderer* renderer, int order) override;
 
 		static Size fittedSize(int charCount) {

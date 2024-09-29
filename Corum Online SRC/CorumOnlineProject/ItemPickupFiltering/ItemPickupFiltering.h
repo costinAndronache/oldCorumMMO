@@ -1,11 +1,11 @@
 #pragma once
-#include "ItemInfoView.h"
+#include "ItemFilteringView.h"
 #include <vector>
 #include <set>
 
 extern class CItem;
 
-class ItemPickupFiltering {
+class ItemPickupFiltering: private ItemFilteringViewClient {
 public:
 	ItemPickupFiltering();
 	static ItemPickupFiltering* sharedInstance();
@@ -18,7 +18,10 @@ public:
 	bool isInterfaceFocused();
 	std::set<DWORD> currentSelectedIDs();
 
-private: 
+	void openView();
+private:
+	ItemFilteringView* _view;
+	void itemFilteringViewDidUpdateSelection(ItemFilteringView*, std::set<DWORD> selectedItemIDs);
 	std::vector<CItem*> totalItemsList;
 	bool _isInterfaceFocused;
 };

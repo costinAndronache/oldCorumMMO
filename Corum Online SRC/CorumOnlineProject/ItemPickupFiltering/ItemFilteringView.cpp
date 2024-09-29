@@ -1,44 +1,66 @@
 #include "ItemFilteringView.h"
 #include "ItemInfoView.h"
+#include "../InitGame.h"
+#include "../CorumResource.h"
 
 using namespace CustomUI;
 
-ItemFilteringView::ItemFilteringView(Rect frame, std::vector<CItem*>& allItems, std::set<DWORD>& selectedItemIDs):
-	_frame(frame), _allItems(allItems), _displayedItems(allItems), _selectedItemIDs(selectedItemIDs) {
+ItemFilteringView::ItemFilteringView(Rect frame, std::vector<CItem*>& allItems, std::set<DWORD>& selectedItemIDs, ItemFilteringViewClient* client):
+	_frame(frame), _allItems(allItems), _textFilteringSourceItems(allItems), _displayedItems(allItems), _selectedItemIDs(selectedItemIDs),
+	_isHidden(false), _client(client) {
 
-	Rect inputFieldRect = {
-		{ frame.origin.x + 5, frame.origin.y + 5 },
-		{ frame.size.width - 10, 30}
+	ButtonResources::initialize();
+
+	Rect topContainer = {
+		{frame.origin.x + 5, frame.origin.y + 5},
+		{frame.size.width - 5, 30}
 	};
+
+	const char* title = "Item pick-up filtering";
+	Rect titleLabelRect = topContainer
+		.withSize(SingleLineLabel::fittedSize(strlen(title)))
+		.centeredVerticallyWith(topContainer);
+
+	SingleLineLabel::Appearance titleAppearance = { {255,255,255,255 } };
+
+	_titleLabel = new SingleLineLabel(titleLabelRect, titleAppearance, title);
+
+	SpriteModel closeSpriteModel = { ButtonResources::xClose, ButtonResources::xCloseSize, 0 };
+	SpriteModel closePressedSpriteModel = { ButtonResources::xClosePressed, ButtonResources::xCloseSize, 0 };
+	Rect closeButtonRect = topContainer
+		.fromMaxXOrigin(-30)
+		.withWidth(30);
+
+	_closeButton = new Button(closeSpriteModel, closePressedSpriteModel, closeButtonRect, this);
+
+	Rect inputFieldContainer = Rect::zero()
+		.horizontallyAlignedWith(topContainer)
+		.positionedBelow(topContainer, 2)
+		.withHeight(30);
+
 	InputFieldResources::initialize();
-	_inputField = new InputField(inputFieldRect, InputFieldResources::bgSpriteModel, this);
+	_inputField = new InputField(inputFieldContainer, InputFieldResources::bgSpriteModel, this);
 
-	Rect tableFrame = {
-		{ frame.origin.x + 5, inputFieldRect.maxY() + 5 },
-		{ frame.size.width - 10, frame.size.height - (inputFieldRect.size.height + 10) }
-	};
+	Rect categoriesFilterContainer = Rect::zero()
+		.horizontallyAlignedWith(inputFieldContainer)
+		.positionedBelow(inputFieldContainer, 2)
+		.withHeight(40);
+
+	_categoriesFilterView = new ItemCategoryFilterView(categoriesFilterContainer, CategoryType::CategoryTypeAll, this);
+
+	Rect tableContainer = Rect::zero()
+		.horizontallyAlignedWith(categoriesFilterContainer)
+		.positionedBelow(categoriesFilterContainer, 2)
+		.withHeight(frame.maxY() - categoriesFilterContainer.maxY() - 2);
+
+	tableContainer.size.height = PagedItemViewTable::fittedHeightWithin(tableContainer.size.height, 
+		ItemInfoViewResources::bgSpriteModel.size.height);
 
 	ItemInfoViewResources::initialize();
 
 	PagedItemViewTableResources::initialize();
-	_table = new PagedItemViewTable(tableFrame, this, ItemInfoViewResources::bgSpriteModel.size, allItems.size(), SpriteModel::zero);
-
-	Rect labelFrame = {
-		{ tableFrame.origin.x, tableFrame.maxY() - 20 },
-		ButtonResources::genericBackgroundSize
-	};
-	Color labelColor;
-	labelColor.a = 255;
-	labelColor.r = 200;
-	labelColor.g = 200; 
-	labelColor.b = 0;
-	Label::Appearance appearance = { 20, labelColor };
-	std::string text = "Test text";
-	Button::LabelModel lm = { "Action", appearance};
-
-	SpriteModel lbSpr = { ButtonResources::genericBackground, ButtonResources::genericBackgroundSize, 0 };
-	SpriteModel lbPrSpr = { ButtonResources::genericPressedBackground, ButtonResources::genericBackgroundSize, 0 };
-	_labeledButton = new Button(lbSpr, lbPrSpr, lm, labelFrame, NULL);
+	_table = new PagedItemViewTable(tableContainer, this, ItemInfoViewResources::bgSpriteModel.size, allItems.size(), SpriteModel::zero);
+	
 }
 
 void ItemFilteringView::selectionViewDidChangeSelectionState(SelectionView* view, bool isSelected) {
@@ -49,9 +71,17 @@ void ItemFilteringView::selectionViewDidChangeSelectionState(SelectionView* view
 	else {
 		_selectedItemIDs.erase(id);
 	}
+
+	if (_client) {
+		_client->itemFilteringViewDidUpdateSelection(this, _selectedItemIDs);
+	}
 }
 
 void ItemFilteringView::renderWithRenderer(I4DyuchiGXRenderer* renderer, int order) {
+	if (_isHidden) {
+		return;
+	}
+
 	VECTOR2 scale = _frame.size.divideBy(PagedItemViewTableResources::bgSpriteModel.size);
 	VECTOR2 pos = { _frame.origin.x, _frame.origin.y };
 	renderer->RenderSprite(PagedItemViewTableResources::bgSpriteModel.sprite,
@@ -61,6 +91,9 @@ void ItemFilteringView::renderWithRenderer(I4DyuchiGXRenderer* renderer, int ord
 
 	_inputField->renderWithRenderer(renderer, order + 1);
 	_table->renderWithRenderer(renderer, order + 1);
+	_categoriesFilterView->renderWithRenderer(renderer, order + 1);
+	_titleLabel->renderWithRenderer(renderer, order + 1);
+	_closeButton->renderWithRenderer(renderer, order + 1);
 
 	for (int i = 0; i < _createdInfoViews.size(); i++) {
 		ItemInfoView* iv = static_cast<ItemInfoView*>(_createdInfoViews[i]->renderable());
@@ -68,61 +101,28 @@ void ItemFilteringView::renderWithRenderer(I4DyuchiGXRenderer* renderer, int ord
 			return;
 		}
 	}
-
-	_labeledButton->renderWithRenderer(renderer, order + 1);
 }
 
 bool ItemFilteringView::handleMouseDown() {
-	return _frame.isGlobalMouseInside();
+	return !_isHidden && _frame.isGlobalMouseInside();
 }
 
 bool ItemFilteringView::handleMouseUp() {
-	return _frame.isGlobalMouseInside();
+	return !_isHidden && _frame.isGlobalMouseInside();
 }
 
 
 bool ItemFilteringView::handleKeyDown(WPARAM wparam, LPARAM lparam) {
-	return _inputField->handleKeyDown(wparam, lparam);
+	return !_isHidden && _inputField->handleKeyDown(wparam, lparam);
 }
 
 bool ItemFilteringView::handleKeyUp(WPARAM wparam, LPARAM lparam) {
-	return _inputField->handleKeyUp(wparam, lparam);
+	return !_isHidden && _inputField->handleKeyUp(wparam, lparam);
 }
 
+std::vector<CItem*> itemsMatchingNameFilter(const std::vector<CItem*>& sourceItems, const char* nameFilter);
 void ItemFilteringView::onInputFieldTextChange(InputField* inputField, const char* text) {
-	if (strlen(text) == 0) {
-		_displayedItems = _allItems;
-		_table->reloadData(_displayedItems.size());
-		return;
-	}
-
-	updateDisplayedItemsOnNameFilter(text);
-}
-
-void ItemFilteringView::updateDisplayedItemsOnNameFilter(const char* nameFilter) {
-	char lowerText[InputField::maxChars];
-	strcpy(lowerText, nameFilter);
-	strlwr(lowerText);
-
-	char lowerName[InputField::maxChars];
-	std::vector<CItem*> result;
-
-	const int size = _allItems.size();
-	for (int i = 0; i < size; i++) {
-		CBaseItem* item = _allItems[i]->GetBaseItem();
-		if (!(item && item->szItemName_Eng)) { continue; }
-		strcpy(lowerName, item->szItemName_Eng);
-		strlwr(lowerName);
-
-		if (
-			strstr(lowerName, lowerText) || 
-		    (atoi(nameFilter) == item->GetID() && item->GetID() != 0)
-			) {
-			result.push_back(_allItems[i]);
-		}
-	}
-
-	_displayedItems = result;
+	_displayedItems = itemsMatchingNameFilter(_textFilteringSourceItems, text);
 	_table->reloadData(_displayedItems.size());
 }
 
@@ -171,6 +171,143 @@ void ItemFilteringView::updateRenderableWithModelAtIndex(Renderable* renderable,
 	infoView->updateModel(model);
 }
 
+void ItemFilteringView::onButtonPress(Button* button) { }
+
+void ItemFilteringView::onButtonPressRelease(Button* button) {
+	if (button == _closeButton) {
+		_isHidden = true;
+	}
+}
+
 std::set<DWORD> ItemFilteringView::currentSelectedIDs() {
 	return _selectedItemIDs;
 }
+
+void ItemFilteringView::setHidden(bool isHidden) {
+	_isHidden = isHidden;
+}
+
+void ItemFilteringView::updateTextFilteringSourceItemsTo(std::vector<CItem*> newSourceItems) {
+	_textFilteringSourceItems = newSourceItems;
+	_displayedItems = itemsMatchingNameFilter(_textFilteringSourceItems, _inputField->currentText());
+	_table->reloadData(_displayedItems.size());
+}
+
+std::vector<CItem*> itemsMatchingSelectedIDs(std::vector<CItem*>& sourceItems, std::set<DWORD> selectedIDs);
+std::vector<CItem*> itemsMatchingCategoryIDs(std::vector<CItem*>& sourceItems, std::vector<DWORD> ids);
+void ItemFilteringView::itemCategoryFilterViewDidSwitchToCategory(ItemCategoryFilterView*, CategoryType category) {
+	std::vector<DWORD> ids;
+	
+	switch (category) {
+	case CategoryType::CategoryTypeAll: {
+		updateTextFilteringSourceItemsTo(_allItems);
+		return;
+	} break;
+	case CategoryType::CategoryTypeSelectedOnly: {
+		updateTextFilteringSourceItemsTo(itemsMatchingSelectedIDs(_allItems, _selectedItemIDs));
+		return;
+	} break;
+	case CategoryType::CategoryTypeWearable: {
+		DWORD arr[] = { ITEM_KIND_AROMR };
+		ids.insert(ids.begin(), arr, arr + sizeof(arr));
+	} break;
+	case CategoryType::CategoryTypeWeapon: {
+		DWORD arr[] = { ITEM_KIND_WEAPON };
+		ids.insert(ids.begin(), arr, arr + sizeof(arr));
+	} break;
+	case CategoryType::CategoryTypeSmall: {
+		DWORD arr[] = {
+			ITEM_KIND_SUPPLIES,
+			ITEM_KIND_CONSUMABLE,
+			ITEM_KIND_ZODIAC,
+			ITEM_KIND_SPECIAL,
+			ITEM_KIND_UPGRADE,
+			ITEM_KIND_LIQUID,
+			ITEM_KIND_EDITION,
+			ITEM_KIND_MAGICFIELDARRAY,
+			ITEM_KIND_MIXUPGRADE,
+			ITEM_KIND_MATERIALS,
+			ITEM_KIND_MAGICARRAY,
+			ITEM_KIND_RIDE,
+			ITEM_KIND_BAG
+		};
+	
+		ids.insert(ids.begin(), arr, arr + sizeof(arr));
+	} break;
+
+	}
+
+	updateTextFilteringSourceItemsTo(itemsMatchingCategoryIDs(_allItems, ids));
+}
+
+static std::vector<CItem*> itemsMatchingNameFilter(const std::vector<CItem*>& sourceItems, const char* nameFilter) {
+	if (strlen(nameFilter) == 0) {
+		return sourceItems;
+	}
+
+	char lowerText[InputField::maxChars];
+	strcpy(lowerText, nameFilter);
+	strlwr(lowerText);
+
+	char lowerName[InputField::maxChars];
+	std::vector<CItem*> result;
+
+	const int size = sourceItems.size();
+	for (int i = 0; i < size; i++) {
+		CBaseItem* item = sourceItems[i]->GetBaseItem();
+		if (!(item && item->szItemName_Eng)) { continue; }
+		strcpy(lowerName, item->szItemName_Eng);
+		strlwr(lowerName);
+
+		if (
+			strstr(lowerName, lowerText) ||
+			(atoi(nameFilter) == item->GetID() && item->GetID() != 0)
+			) {
+			result.push_back(sourceItems[i]);
+		}
+	}
+
+	return result;
+}
+
+static std::vector<CItem*> itemsMatchingCategoryIDs(std::vector<CItem*>& sourceItems, std::vector<DWORD> ids) {
+	std::vector<CItem*> result;
+	for (auto it = sourceItems.begin(); it != sourceItems.end(); it++) {
+		CItem* item = *it;
+		if (!item->GetBaseItem()) {
+			continue;
+		}
+		DWORD id = item->GetBaseItem()->dwCode_ID;
+		if (std::find(ids.begin(), ids.end(), id) != ids.end()) {
+			result.push_back(item);
+		}
+
+	}
+	return result;
+}
+
+static std::vector<CItem*> itemsMatchingSelectedIDs(std::vector<CItem*>& sourceItems, std::set<DWORD> selectedIDs) {
+	std::vector<CItem*> result;
+	for (auto it = sourceItems.begin(); it != sourceItems.end(); it++) {
+		if (std::find(selectedIDs.begin(), selectedIDs.end(), (*it)->GetID()) != selectedIDs.end()) {
+			result.push_back(*it);
+		}
+	}
+
+	return result;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

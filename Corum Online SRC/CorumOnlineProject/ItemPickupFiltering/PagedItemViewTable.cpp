@@ -4,10 +4,14 @@
 
 using namespace CustomUI;
 
-SpriteModel PagedItemViewTableResources::bgSpriteModel = { NULL, {2, 2}, 0 };
+SpriteModel PagedItemViewTableResources::bgSpriteModel = { NULL, {24, 24}, 0 };
 void PagedItemViewTableResources::initialize() {
 	if (bgSpriteModel.sprite == NULL) {
-		bgSpriteModel.sprite = g_pSprManager->CreateSprite(SPR_SPEAKING_BOX, 100, 100, FALSE, 255)->pSpr;
+		char* resourceFile = GetFile("menu_1.tga", DATA_TYPE_UI);
+		bgSpriteModel.sprite = g_pRenderer->CreateSpriteObject(resourceFile,
+			30, 115,
+			bgSpriteModel.size.width, bgSpriteModel.size.height,
+			0);
 	}
 }
 
@@ -23,7 +27,7 @@ PagedItemViewTable::PagedItemViewTable(Rect frame, PagedItemViewTableClient* cli
 	_frame(frame), _bgSpriteModel(bgSpriteModel), _client(client), _viewsSize(viewsSize), _modelCount(initialModelCount) {
 
 	Size buttonsSize = { 28, 28 };
-	Size tableSize = { _frame.size.width - buttonsSize.width, _frame.size.height - buttonsSize.height };
+	Size tableSize = { _frame.size.width - buttonsSize.width, _frame.size.height};
 
 	
 	const Size referenceSize = viewsSize;
@@ -68,6 +72,11 @@ PagedItemViewTable::PagedItemViewTable(Rect frame, PagedItemViewTableClient* cli
 	scrollDownPressedModel.rotation = PI;
 	Rect scrollUpBtnFrame = { {_frame.maxX() - buttonsSize.width, _frame.origin.y}, buttonsSize };
 	_scrollUpBtn = new Button(scrollDownModel, scrollDownPressedModel, scrollUpBtnFrame, this);
+}
+
+int PagedItemViewTable::fittedHeightWithin(int containerHeight, int viewHeight) {
+	int count = containerHeight / viewHeight;
+	return viewHeight * count;
 }
 
 void PagedItemViewTable::updateDisplayedRowsWithCurrentItems() {

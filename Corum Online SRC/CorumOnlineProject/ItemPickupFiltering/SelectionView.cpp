@@ -17,6 +17,7 @@ SelectionView::SelectionView(Rect frame, Renderable* subView, SelectionViewClien
 	_frame(frame), _renderable(subView), _client(client), _isSelected(false) {
 	SelectionViewResources::initialize();
 	_button = new Button(SpriteModel::zero, SpriteModel::zero, frame, this);
+	_checkmarkFrame = frame.scaled(0.5, 0.5).centeredWith(frame);
 }
 
 void SelectionView::renderWithRenderer(I4DyuchiGXRenderer* renderer, int order) {
@@ -25,8 +26,8 @@ void SelectionView::renderWithRenderer(I4DyuchiGXRenderer* renderer, int order) 
 	_button->renderWithRenderer(renderer, order);
 
 	if (_isSelected) {
-		VECTOR2 scale = _frame.size.divideBy(SelectionViewResources::checkmarkSpriteModel.size);
-		VECTOR2 pos = { _frame.origin.x, _frame.origin.y };
+		VECTOR2 scale = _checkmarkFrame.size.divideBy(SelectionViewResources::checkmarkSpriteModel.size);
+		VECTOR2 pos = { _checkmarkFrame.origin.x, _checkmarkFrame.origin.y };
 		renderer->RenderSprite(SelectionViewResources::checkmarkSpriteModel.sprite
 			, &scale, 0.0f, &pos, NULL, 0xffffffff, order, RENDER_TYPE_DISABLE_TEX_FILTERING);
 	}

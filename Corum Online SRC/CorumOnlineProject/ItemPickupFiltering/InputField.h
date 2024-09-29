@@ -18,6 +18,7 @@ namespace CustomUI {
 		bool handleKeyUp(WPARAM wparam, LPARAM lparam);
 		bool handleKeyDown(WPARAM wparam, LPARAM lparam);
 
+		const char* currentText();
 		static const int maxChars = 124;
 	private:
 		void notifyClient();

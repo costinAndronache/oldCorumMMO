@@ -30,6 +30,8 @@ namespace CustomUI {
 		Renderable* _renderable;
 		SelectionViewClient* _client;
 
+		Rect _checkmarkFrame;
+
 		bool _isSelected;
 		bool _selectionEnabled;
 		Button* _button;

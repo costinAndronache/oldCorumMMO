@@ -11,6 +11,10 @@ IDISpriteObject* ButtonResources::genericBackground = NULL;
 IDISpriteObject* ButtonResources::genericPressedBackground = NULL;
 Size ButtonResources::genericBackgroundSize = { 62, 19 };
 
+IDISpriteObject* ButtonResources::xClose = NULL;
+IDISpriteObject* ButtonResources::xClosePressed = NULL;
+Size ButtonResources::xCloseSize = { 13, 13 };
+
 void ButtonResources::initialize() {
 	if (downArrow == NULL) {
 		char* resourceFile = GetFile("menu_1.tga", DATA_TYPE_UI);
@@ -35,6 +39,18 @@ void ButtonResources::initialize() {
 			genericBackgroundSize.width, genericBackgroundSize.height,
 			0);
 	}
+
+	if (xClose == NULL) {
+		char* resourceFile = GetFile("menu_1.tga", DATA_TYPE_UI);
+		xClose = g_pRenderer->CreateSpriteObject(resourceFile,
+			187, 16,
+			xCloseSize.width, xCloseSize.height,
+			0);
+		xClosePressed = g_pRenderer->CreateSpriteObject(resourceFile,
+			200, 16,
+			xCloseSize.width, xCloseSize.height,
+			0);
+	}
 }
 
 Button::Button(SpriteModel spriteModel, SpriteModel pressedSpriteModel, Rect frame, ButtonClient* client) :
@@ -49,9 +65,17 @@ Button::Button(SpriteModel spriteModel, SpriteModel pressedSpriteModel, LabelMod
 	_detectedPress = false;
 	_lastPressNotifyTime = 0;
 
-	Rect labelFrame = { frame.origin, Label::fittedSize(strlen(labelModel.text)) };
-	labelFrame = labelFrame.centeredXYWith(frame);
-	_label = new Label(labelFrame, labelModel.appearance, labelModel.text);
+	Rect labelFrame = { frame.origin, SingleLineLabel::fittedSize(strlen(labelModel.text)) };
+	labelFrame = labelFrame.centeredWith(frame);
+	_label = new SingleLineLabel(labelFrame, labelModel.appearance, labelModel.text);
+}
+
+void Button::updateSpriteModelTo(SpriteModel newModel) {
+	_spriteModel = newModel;
+}
+
+void Button::updatePressedSpriteModelTo(SpriteModel newPressedStateSpriteModel) {
+	_pressedSpriteModel = newPressedStateSpriteModel;
 }
 
 void Button::renderWithRenderer(I4DyuchiGXRenderer* renderer, int order) {

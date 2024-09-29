@@ -20,6 +20,7 @@ namespace CustomUI {
 		
 		void onButtonPress(Button*) override;
 		void onButtonPressRelease(Button*) override;
+		static int fittedHeightWithin(int containerHeight, int viewHeight);
 	private:
 		PagedItemViewTableClient* _client;
 		Size _viewsSize;
