@@ -101,6 +101,8 @@
 #include "GuildWarStatusWnd.h"
 #include "ItemPickupFiltering/ItemPickupFiltering.h"
 
+using namespace ItemPickupFiltering;
+
 DWORD						g_dwMileHandleRefs	= 0;
 LPGlobalVariable_Dungeon	g_pGVDungeon		= NULL;
 SDGCHATMSG					g_sDgChatMsg[__MAX_QUEUE__];
@@ -162,9 +164,41 @@ DWORD __stdcall AfterInterpolation(AFTER_INTERPOLATION_CALL_BACK_ARG* pArg)
 	return 0;
 }
 
+//
+void populateForTooltipRenderingAllDropped() {
+	if (!g_pGVDungeon->bChatMode)
+	{
+		selectedItemsForTooltipRendering.clear();
+
+		CItemTradeShopWnd* pItemTradeShopWnd = CItemTradeShopWnd::GetInstance();
+
+		ListNode<ITEM>* pNode;
+		ITEM* pItem;
+
+		pNode = g_pItemHash->GetHead();
+
+		while (pNode)
+		{
+			pItem = (ITEM*)pNode->pData;
+
+			if (pItem)
+			{
+				selectedItemsForTooltipRendering.push_back(pItem);
+			}
+			pNode = pNode->pNext;
+		}
+	}
+}
+
+void cancelTooltipRenderingForAllDropped() {
+	selectedItemsForTooltipRendering.clear();
+}
+//
 
 BOOL InitGameDungeon()
 {
+	ItemPickupFilteringSystem::sharedInstance()->setViewActive(false);
+
 	CBankWnd::GetInstance()->Init();
 	// 카메라 이동에 관련된 플래그 세팅.
 	g_Camera.iCameraMoveOption = CAMERA_MOVE_OPTION_SCREEN_FRAME;
@@ -172,7 +206,7 @@ BOOL InitGameDungeon()
 	g_pExecutive->SetAfterInterpolation(AfterInterpolation);
 	SetRenderMode(RENDER_MODE_NORMAL);
 	
-	g_pExecutive->SetFramePerSec(30);
+	g_pExecutive->SetFramePerSec(20);
 	
 	srand( g_dwCurTick );
 	
@@ -1509,7 +1543,7 @@ DWORD __stdcall AfterRenderGameDungeon()
 #endif	
 
 	renderAllDroppedItemsTooltips(selectedItemsForTooltipRendering);
-	ItemPickupFiltering::sharedInstance()->render();
+	ItemPickupFilteringSystem::sharedInstance()->render();
 
 	return 0;
 }
@@ -1517,8 +1551,16 @@ DWORD __stdcall AfterRenderGameDungeon()
 
 void OnKeyDownDungeon(WPARAM wParam, LPARAM lParam)
 {	
-	if (ItemPickupFiltering::sharedInstance()->handleKeyDown(wParam, lParam)) {
-		return;
+	if (CustomUI::safeToHandleKeyEvents()) {
+		if (ItemPickupFilteringSystem::sharedInstance()->handleKeyDown(wParam, lParam)) {
+			return;
+		}
+
+		switch (ItemPickupFiltering::actionCodeFromKeyEvent(wParam, lParam)) {
+		case ActionCode::ActionCodeDroppedItemsTooltipRendering:
+			populateForTooltipRenderingAllDropped();
+			break;
+		}
 	}
 
 	BOOL bHanMode = TRUE;
@@ -1676,7 +1718,6 @@ void OnKeyDownDungeon(WPARAM wParam, LPARAM lParam)
 	case 0xBE:
 	case 0xBF:
 	case 0x20:
-	case __ASCII_CODE___KEY_SEE_ALL_DROPPED_ITEMS:
 		{	
 			if(IsGuildCreate() && wParam==0x20)
 				DisplayMessageAdd(g_Message[ETC_MESSAGE1239].szMessage, 0xFFFF0000);
@@ -1685,11 +1726,6 @@ void OnKeyDownDungeon(WPARAM wParam, LPARAM lParam)
 			bHanMode = FALSE;
 		}
 		break;
-	case __ASCII_CODE___KEY_OPEN_ITEM_FILTERING:
-		{
-		ItemPickupFiltering::sharedInstance()->openView();
-		}
-	break;
 	case VK_RETURN:
 		{	
 			if( !g_pThisDungeon->IsStadium() || g_pMainPlayer->m_dwGuildWarFlag != G_W_F_OBSERVER )
@@ -1931,8 +1967,19 @@ void OnKeyDownDungeon(WPARAM wParam, LPARAM lParam)
 
 void OnKeyUpDungeon(WPARAM wParam, LPARAM lParam)
 {	
-	if (ItemPickupFiltering::sharedInstance()->handleKeyUp(wParam, lParam)) {
-		return;
+	if (CustomUI::safeToHandleKeyEvents()) {
+		if (ItemPickupFilteringSystem::sharedInstance()->handleKeyUp(wParam, lParam)) {
+			return;
+		}
+
+		switch (ItemPickupFiltering::actionCodeFromKeyEvent(wParam, lParam)) {
+		case ActionCode::ActionCodeDroppedItemsTooltipRendering:
+			cancelTooltipRenderingForAllDropped();
+			break;
+		case ActionCode::ActionCodePickupFiltering:
+			ItemPickupFilteringSystem::sharedInstance()->setViewActive(!ItemPickupFilteringSystem::sharedInstance()->isViewActive());
+			break;
+		}
 	}
 
 	g_bKeyChkUp = FALSE;
@@ -1952,18 +1999,12 @@ void OnKeyUpDungeon(WPARAM wParam, LPARAM lParam)
 			SetRect( &g_rcSelectBox, 0, 0, 0, 0 );
 		}
 		break;
-
-		case __ASCII_CODE___KEY_SEE_ALL_DROPPED_ITEMS:
-		{
-			selectedItemsForTooltipRendering.clear();
-		}
-		break;
 	}
 }
 
 BOOL OnLButtonDownInterfaceDungeon()
 {
-	if (ItemPickupFiltering::sharedInstance()->handleMouseDown()) {
+	if (ItemPickupFilteringSystem::sharedInstance()->handleMouseDown()) {
 		return TRUE;
 	}
 
@@ -2036,7 +2077,7 @@ BOOL OnLButtonDownInterfaceDungeon()
 
 void OnLButtonDownDungeon(WPARAM wParam, LPARAM lParam)
 {
-	if (ItemPickupFiltering::sharedInstance()->handleMouseDown()) {
+	if (ItemPickupFilteringSystem::sharedInstance()->handleMouseDown()) {
 		return;
 	}
 
@@ -2157,7 +2198,7 @@ lb_move:
 
 void OnLButtonUpDungeon(WPARAM wParam, LPARAM lParam)
 {
-	if (ItemPickupFiltering::sharedInstance()->handleMouseUp()) {
+	if (ItemPickupFilteringSystem::sharedInstance()->handleMouseUp()) {
 		return;
 	}
 	CInterface*			pInterface			= CInterface::GetInstance();
@@ -3434,7 +3475,7 @@ void OnTimerEventDungeon(DWORD dwTimerIndex)
 
 void MouseEventDungeon()
 {
-	if (ItemPickupFiltering::sharedInstance()->isInterfaceFocused()) {
+	if (ItemPickupFilteringSystem::sharedInstance()->isInterfaceFocused()) {
 		return;
 	}
 
@@ -6328,35 +6369,9 @@ void SetKey(int nKey)
 				}
 			}
 			
-			if (nKey == g_sKeyConfig.snKey[__KEY_SEE_ALL_DROPPED_ITEMS])
-			{
-				if (!g_pGVDungeon->bChatMode)
-				{
-					selectedItemsForTooltipRendering.clear();
-
-					CItemTradeShopWnd* pItemTradeShopWnd = CItemTradeShopWnd::GetInstance();
-
-					ListNode<ITEM>* pNode;
-					ITEM* pItem;
-
-					pNode = g_pItemHash->GetHead();
-
-					while (pNode)
-					{
-						pItem = (ITEM*)pNode->pData;
-
-						if (pItem)
-						{
-							selectedItemsForTooltipRendering.push_back(pItem);
-						}
-						pNode = pNode->pNext;
-					}
-				}
-			}
-
 			if(nKey==g_sKeyConfig.snKey[__KEY_ITEM__])
 			{	
-				std::set<DWORD> filterIDs = ItemPickupFiltering::sharedInstance()->currentSelectedIDs();
+				std::set<DWORD> filterIDs = ItemPickupFilteringSystem::sharedInstance()->currentSelectedIDs();
 
 				if(!g_pGVDungeon->bChatMode)
 				{
@@ -6423,9 +6438,9 @@ void SetKey(int nKey)
 									}
 									else
 									{
-										DWORD id = pItem->Item.GetID();
-										if (!filterIDs.empty()) {
-											if (filterIDs.find(id) != filterIDs.end()) {
+										DWORD itemID = pItem->Item.GetID();
+										if (!filterIDs.empty() && itemID != ITEM_KARZ_ID) {
+											if (filterIDs.find(itemID) != filterIDs.end()) {
 												SendPickupItem(pItem, FALSE, FALSE);
 											}
 										}

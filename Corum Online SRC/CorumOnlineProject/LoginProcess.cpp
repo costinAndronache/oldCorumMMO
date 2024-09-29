@@ -59,8 +59,6 @@ void InitPacketProcLogin()
 
 BOOL InitGameLogin()
 {
-	ItemPickupFiltering::sharedInstance();
-
 	g_byChkMessenger	= 0;
 	g_dwStatusTime		= 0;
 

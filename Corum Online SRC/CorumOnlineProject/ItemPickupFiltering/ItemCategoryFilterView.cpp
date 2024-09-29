@@ -1,6 +1,7 @@
 #include "ItemCategoryFilterView.h"
 
 using namespace CustomUI;
+using namespace ItemPickupFiltering;
 
 ItemCategoryFilterView::ItemCategoryFilterView(CustomUI::Rect frame, CategoryType currentSelectedCategory, ItemCategoryFilterViewClient* client): 
 	_client(client) {
@@ -25,7 +26,7 @@ ItemCategoryFilterView::ItemCategoryFilterView(CustomUI::Rect frame, CategoryTyp
 		models.push_back(specimen);
 	}
 
-	_radioButtonGroup = new RadioButtonGroup(models, frame, 0, this);
+	_radioButtonGroup = new RadioButtonGroup(models, frame, currentSelectedCategory, this);
 }
 
 void ItemCategoryFilterView::renderWithRenderer(I4DyuchiGXRenderer* renderer, int order) {
@@ -37,5 +38,7 @@ void ItemCategoryFilterView::radioButtonGroupToggledActiveButtonAt(CustomUI::Rad
 		if (_client) {
 			_client->itemCategoryFilterViewDidSwitchToCategory(this, (CategoryType)index);
 		}
+
+		_PlaySound(0, SOUND_TYPE_SYSTEM, SOUND_SYSTEM_BTNCLICK, g_v3InterfaceSoundPos, FALSE);
 	}
 }

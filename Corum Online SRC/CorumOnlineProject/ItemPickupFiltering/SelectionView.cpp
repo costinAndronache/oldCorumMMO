@@ -60,4 +60,7 @@ void SelectionView::onButtonPressRelease(Button* button) {
 
 	_isSelected = !_isSelected;
 	if (_client) { _client->selectionViewDidChangeSelectionState(this, _isSelected); }
+
+	_PlaySound(0, SOUND_TYPE_SYSTEM, SOUND_SYSTEM_BTNCLICK, g_v3InterfaceSoundPos, FALSE);
+
 }

@@ -139,5 +139,8 @@ namespace CustomUI {
 			return D3DCOLOR_ARGB(a, r, g, b);
 		}
 	};
+
+	char getASCII(WPARAM wparam, LPARAM lParam); // 0 if not from keyboard
+	bool safeToHandleKeyEvents();
 }
 

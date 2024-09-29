@@ -17,7 +17,7 @@ static void fillButtons(
 }
 
 RadioButtonGroup::RadioButtonGroup(std::vector<ButtonModel> models, Rect frame, unsigned int activeButtonIndex, RadioButtonGroupClient* client):
-_frame(frame), _client(client) {
+_frame(frame), _client(client), _activeButtonIndex(activeButtonIndex) {
 	_buttons.reserve(models.size());
 	if (frame.size.width > frame.size.height) {
 		Size size = { frame.size.width / models.size(), frame.size.height };
@@ -27,10 +27,11 @@ _frame(frame), _client(client) {
 		Size size = { frame.size.width, frame.size.height / models.size() };
 		fillButtons(_buttons, models.size(), frame.origin, size, 0, size.height, (void*)&models, &RadioButtonGroup::buildFromModelList, this);
 	}
+	adjustButtons(_activeButtonIndex);
 }
 
 RadioButtonGroup::RadioButtonGroup(std::vector<LabeledButtonModel> models, Rect frame, unsigned int activeButtonIndex, RadioButtonGroupClient* client):
-	_frame(frame), _client(client) {
+	_frame(frame), _client(client), _activeButtonIndex(activeButtonIndex) {
 	_buttons.reserve(models.size());
 	if (frame.size.width > frame.size.height) {
 		Size size = { frame.size.width / models.size(), frame.size.height };
@@ -40,6 +41,7 @@ RadioButtonGroup::RadioButtonGroup(std::vector<LabeledButtonModel> models, Rect 
 		Size size = { frame.size.width, frame.size.height / models.size() };
 		fillButtons(_buttons, models.size(), frame.origin, size, 0, size.height, (void*)&models, &RadioButtonGroup::buildFromLabeledModelList, this);
 	}
+	adjustButtons(_activeButtonIndex);
 }
 
 void RadioButtonGroup::renderWithRenderer(I4DyuchiGXRenderer* renderer, int order) {

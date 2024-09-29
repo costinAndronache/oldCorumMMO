@@ -4,10 +4,11 @@
 #include "../CorumResource.h"
 
 using namespace CustomUI;
+using namespace ItemPickupFiltering;
 
 ItemFilteringView::ItemFilteringView(Rect frame, std::vector<CItem*>& allItems, std::set<DWORD>& selectedItemIDs, ItemFilteringViewClient* client):
 	_frame(frame), _allItems(allItems), _textFilteringSourceItems(allItems), _displayedItems(allItems), _selectedItemIDs(selectedItemIDs),
-	_isHidden(false), _client(client) {
+	_isHidden(true), _client(client) {
 
 	ButtonResources::initialize();
 
@@ -75,6 +76,8 @@ void ItemFilteringView::selectionViewDidChangeSelectionState(SelectionView* view
 	if (_client) {
 		_client->itemFilteringViewDidUpdateSelection(this, _selectedItemIDs);
 	}
+
+	_table->reloadData(_displayedItems.size());
 }
 
 void ItemFilteringView::renderWithRenderer(I4DyuchiGXRenderer* renderer, int order) {
@@ -84,9 +87,11 @@ void ItemFilteringView::renderWithRenderer(I4DyuchiGXRenderer* renderer, int ord
 
 	VECTOR2 scale = _frame.size.divideBy(PagedItemViewTableResources::bgSpriteModel.size);
 	VECTOR2 pos = { _frame.origin.x, _frame.origin.y };
+	Color c = { 255, 0, 255, 255 };
+
 	renderer->RenderSprite(PagedItemViewTableResources::bgSpriteModel.sprite,
 		&scale, 0, &pos,
-		NULL, 0xffffffff,
+		NULL, c.asDXColor(),
 		order, RENDER_TYPE_DISABLE_TEX_FILTERING);
 
 	_inputField->renderWithRenderer(renderer, order + 1);
@@ -176,6 +181,7 @@ void ItemFilteringView::onButtonPress(Button* button) { }
 void ItemFilteringView::onButtonPressRelease(Button* button) {
 	if (button == _closeButton) {
 		_isHidden = true;
+		_PlaySound(0, SOUND_TYPE_SYSTEM, SOUND_SYSTEM_WNDCLOSE, g_v3InterfaceSoundPos, FALSE);
 	}
 }
 

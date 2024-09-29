@@ -4,7 +4,7 @@
 #include "ItemFilteringView.h"
 #include <iostream>
 using namespace CustomUI;
-
+using namespace ItemPickupFiltering;
 
 std::vector<CItem*> getDebugItemList();
 
@@ -103,59 +103,73 @@ static void storeSelectedIDs(std::set<DWORD> ids) {
 	ofs.close();
 }
 
-ItemPickupFiltering::ItemPickupFiltering() {
+ItemPickupFilteringSystem::ItemPickupFilteringSystem() {
 	auto items = getDebugItemList();
+	Rect screen = { { 0, 0}, { windowWidth(), windowHeight() } };
 	Rect frame = { { 100, 100}, {380, 395} };
+	frame = frame.centeredWith(screen);
+
 	std::set<DWORD> ids = readStoredSelectedIDs();
 	_view = new ItemFilteringView(frame, items, ids, this);
 }
 
-static ItemPickupFiltering *shared = nullptr;
+static ItemPickupFilteringSystem *shared = nullptr;
 
-ItemPickupFiltering* ItemPickupFiltering::sharedInstance() {
+ItemPickupFilteringSystem* ItemPickupFilteringSystem::sharedInstance() {
 	
 	if (shared == nullptr) {
-		shared = new ItemPickupFiltering();
+		shared = new ItemPickupFilteringSystem();
 	}
 
 	return shared;
 }
 
-bool ItemPickupFiltering::isInterfaceFocused() {
+bool ItemPickupFilteringSystem::isInterfaceFocused() {
 	return _isInterfaceFocused;
 }
 
-bool ItemPickupFiltering::handleMouseDown() {
+bool ItemPickupFilteringSystem::handleMouseDown() {
 	_isInterfaceFocused = _view->handleMouseDown();
 	return _isInterfaceFocused;
 }
 
-bool ItemPickupFiltering::handleMouseUp() {
+bool ItemPickupFilteringSystem::handleMouseUp() {
 	_isInterfaceFocused = _view->handleMouseUp();
 	return _isInterfaceFocused;
 }
 
-bool ItemPickupFiltering::handleKeyUp(WPARAM wparam, LPARAM lparam) {
+bool ItemPickupFilteringSystem::handleKeyUp(WPARAM wparam, LPARAM lparam) {
 	return _view->handleKeyUp(wparam, lparam);
 }
 
-bool ItemPickupFiltering::handleKeyDown(WPARAM wparam, LPARAM lparam) {
+bool ItemPickupFilteringSystem::handleKeyDown(WPARAM wparam, LPARAM lparam) {
 	return _view->handleKeyDown(wparam, lparam);
 }
 
-void ItemPickupFiltering::render() {
+void ItemPickupFilteringSystem::render() {
 	_view->renderWithRenderer(g_pRenderer, 1);
 }
 
-void ItemPickupFiltering::openView() {
-	_view->setHidden(false);
+void ItemPickupFilteringSystem::setViewActive(bool active) {
+	_view->setHidden(!active);
+
+	if (active) {
+		_PlaySound(0, SOUND_TYPE_SYSTEM, SOUND_SYSTEM_WNDOPEN, g_v3InterfaceSoundPos, FALSE);
+	}
+	else {
+		_PlaySound(0, SOUND_TYPE_SYSTEM, SOUND_SYSTEM_WNDCLOSE, g_v3InterfaceSoundPos, FALSE);
+	}
 }
 
-std::set<DWORD> ItemPickupFiltering::currentSelectedIDs() {
+bool ItemPickupFilteringSystem::isViewActive() {
+	return !_view->getHidden();
+}
+
+std::set<DWORD> ItemPickupFilteringSystem::currentSelectedIDs() {
 	return _view->currentSelectedIDs();
 }
 
-void ItemPickupFiltering::itemFilteringViewDidUpdateSelection(ItemFilteringView*, std::set<DWORD> selectedItemIDs) {
+void ItemPickupFilteringSystem::itemFilteringViewDidUpdateSelection(ItemFilteringView*, std::set<DWORD> selectedItemIDs) {
 	storeSelectedIDs(selectedItemIDs);
 }
 

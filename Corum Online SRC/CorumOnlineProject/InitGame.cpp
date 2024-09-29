@@ -325,7 +325,7 @@ char* g_pszKeyArray[0xff] =
 	"M",	"N",	"O",	"P",	"Q",	"S",	"T",	"U",	"V",	"W",	"X",	"Y",
 	"Z",	"0",	"1",	"2",	"3",	"4",	"5",	"6",	"7",	"8",	"9",	"F1",
 	"F2",	"F3",	"F4",	"F5",	"F6",	"F7",	"F8",	"F9",	"F10",	"F11",	"F12",	";",
-	"'",	"[",	"]",	"-",	"=",	"\\",	",",	".",	"/",	"SPACE", "`"
+	"'",	"[",	"]",	"-",	"=",	"\\",	",",	".",	"/",	"SPACE", "`",
 };
 
 int g_nKey[0xff] = 
@@ -756,7 +756,7 @@ BOOL InitGame()
 		"SKILL1", "SKILL2", "SKILL3", "SKILL4", "SKILL5", "SKILL6", "SKILL7", "SKILL8",
 		"SKILL9", "SKILL10", "SKILL11", "SKILL12", "SKILL13", "SKILL14", "SKILL15",  "SKILL16",
 
-		"ITEM", "GUARDIAN OPEN", "SEE DROPPED ITEMS",
+		"ITEM", "GUARDIAN OPEN", "SEE DROPPED ITEMS", "OPEN ITEM FILTERING"
 	};
 
 
@@ -771,7 +771,7 @@ BOOL InitGame()
 		"F1", "F2", "F3", "F4", "F5", "F6", "F7", "F8", 
 		"F9", "F10", "F11", "F12", "Z", "X", "C", "V", 
 
-		"SPACE", "G", "`"
+		"SPACE", "G", "`", "/"
 	};	
 	
 	wsprintf(szFile, "%s\\%s", g_szBasePath, "KeyConfig.ini");
@@ -795,7 +795,8 @@ BOOL InitGame()
 		}
 		g_sKeyConfig.snKey[i]	= nKey;
 	}
-	g_sKeyConfig.snKey[36] = __ASCII_CODE___KEY_SEE_ALL_DROPPED_ITEMS;
+	g_sKeyConfig.snKey[__KEY_SEE_ALL_DROPPED_ITEMS] = __ASCII_CODE___KEY_SEE_ALL_DROPPED_ITEMS;
+	g_sKeyConfig.snKey[__KEY_OPEN_ITEM_FILTERING] = __ASCII_CODE___KEY_OPEN_ITEM_FILTERING;
 
 	wsprintf(szInfo, "%s\\%s", g_szBasePath, "OptionConfig.ini");
 	

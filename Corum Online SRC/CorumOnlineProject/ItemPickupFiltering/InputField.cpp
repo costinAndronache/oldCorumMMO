@@ -66,7 +66,7 @@ void InputField::renderWithRenderer(I4DyuchiGXRenderer* renderer, int order) {
 
 	if (_isActive) {
 		DWORD now = timeGetTime();
-		if (now - _lastCaretUpdateTime > 1200) {
+		if (now - _lastCaretUpdateTime > 600) {
 			_lastCaretUpdateTime = now;
 			_caretStateON = !_caretStateON;
 		}
@@ -85,7 +85,6 @@ void InputField::notifyClient() {
 }
 
 bool InputField::handleKeyUp(WPARAM wparam, LPARAM lParam) {
-	BYTE keyState[256];
 	if (!_isActive) {
 		return false;
 	}
@@ -98,14 +97,12 @@ bool InputField::handleKeyUp(WPARAM wparam, LPARAM lParam) {
 		return true;
 	}
 
-	GetKeyboardState(keyState);
-	WORD wascii[3];
-	int scanCode = (lParam >> 16) & 0xff;
-	if (ToAscii(wparam, scanCode, keyState, wascii, 0) != 1) {
+	const short asciiResult = getASCII(wparam, lParam);
+	if (asciiResult < 0) {
 		return true;
 	}
 
-	char key = wascii[0];
+	char key = (char)asciiResult;
 
 	if (('a' <= key && key <= 'z') ||
 		('A' <= key && key <= 'Z')) {

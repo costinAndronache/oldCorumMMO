@@ -4,12 +4,12 @@
 
 using namespace CustomUI;
 
-SpriteModel PagedItemViewTableResources::bgSpriteModel = { NULL, {24, 24}, 0 };
+SpriteModel PagedItemViewTableResources::bgSpriteModel = { NULL, {2, 2}, 0 };
 void PagedItemViewTableResources::initialize() {
 	if (bgSpriteModel.sprite == NULL) {
-		char* resourceFile = GetFile("menu_1.tga", DATA_TYPE_UI);
+		char* resourceFile = GetFile("speaking_box.tif", DATA_TYPE_UI);
 		bgSpriteModel.sprite = g_pRenderer->CreateSpriteObject(resourceFile,
-			30, 115,
+			0, 0,
 			bgSpriteModel.size.width, bgSpriteModel.size.height,
 			0);
 	}
