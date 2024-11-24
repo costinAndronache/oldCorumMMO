@@ -2517,8 +2517,6 @@ void __stdcall CoD3DDevice::FreeRenderTriBuffer(void* pTriBufferHandle)
 	m_RenderTriBuffer.FreeBuffer((IVERTEX_TRI_ITEM*)pTriBufferHandle);
 }
 
-
-
 void __stdcall CoD3DDevice::RenderPoint(VECTOR3* pv3Point,DWORD dwColor)
 {
 	D3DLVERTEX v3Point;

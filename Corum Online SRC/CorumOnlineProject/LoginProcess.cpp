@@ -28,6 +28,10 @@
 #include "Interface.h"
 #include "PacketEncrypt.h"
 #include "GuildWarFinalSettingWnd.h"
+#include "CustomUiKit/PagedTableWindow/PagedTableWindow.h"
+#include "CustomUiKitGXRenderer.h"
+
+#include "ItemPickupFiltering/ItemPickupFiltering.h"
 
 
 LPGlobalVariable_Login	g_pGVLogin = NULL;
@@ -52,9 +56,9 @@ void InitPacketProcLogin()
 // End - minjin.
 }
 
+
 BOOL InitGameLogin()
 {
-	g_byStatusMessenger	= 0;	
 	g_byChkMessenger	= 0;
 	g_dwStatusTime		= 0;
 
@@ -431,8 +435,7 @@ DWORD __stdcall AfterRenderGameLogin()
 		g_pInputManager->RenderConvertToSpecialCharacter(INPUT_BUFFER_LOGIN_PASSWORD, '*');		
 	}
 
-//	CInterface::GetInstance()->Render();
-	
+	CInterface::GetInstance()->Render();
 	return 0;
 }
 

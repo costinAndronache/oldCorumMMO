@@ -182,7 +182,7 @@ BOOL InitGameWorld()
 	UpdateMainPlayerToMap();
 	g_pMainPlayer->m_hPlayer.pDesc->ObjectFunc = NULL;
 
-	//MinimizePlayer(g_pMainPlayer->m_hPlayer.pHandle);	//캐릭터 축소 
+	MinimizePlayer(g_pMainPlayer->m_hPlayer.pHandle);	//캐릭터 축소 
 	g_pExecutive->GXOEnableHFieldApply(g_pMainPlayer->m_hPlayer.pHandle);
 
 
@@ -1210,7 +1210,7 @@ DWORD __stdcall AfterRenderGameWorld()
 		}
 	}
 	//===========================================================================//
-	//g_pInputManager->RenderInputBufferAll();
+	g_pInputManager->RenderInputBufferAll();
 	int nFontIndex = 0;
 	//ID 폰트 출력
 

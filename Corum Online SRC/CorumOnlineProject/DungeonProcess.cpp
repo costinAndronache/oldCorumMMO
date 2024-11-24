@@ -99,7 +99,9 @@
 #include "GuildWarRequest.h"
 #include "GuildWarFinalSettingWnd.h"
 #include "GuildWarStatusWnd.h"
+#include "ItemPickupFiltering/ItemPickupFiltering.h"
 
+using namespace ItemPickupFiltering;
 
 DWORD						g_dwMileHandleRefs	= 0;
 LPGlobalVariable_Dungeon	g_pGVDungeon		= NULL;
@@ -136,7 +138,6 @@ GXOBJECT_HANDLE				g_TileAttr[ MAX_KIND_OF_DEBUG_TILE ][ MAX_DEBUG_TILE_NUM ];
 BYTE						g_bShowTileAttr = 0;
 #endif
 
-
 DWORD __stdcall AfterInterpolation(AFTER_INTERPOLATION_CALL_BACK_ARG* pArg)
 {
 	if (NULL == g_pMainPlayer->m_hPlayer.pHandle)
@@ -151,8 +152,8 @@ DWORD __stdcall AfterInterpolation(AFTER_INTERPOLATION_CALL_BACK_ARG* pArg)
 		{
 			VECTOR3 v3Tmp = 
 			{
-				g_pMainPlayer->m_v3CurPos.x + g_Camera.fCameraDistance_x,
-				g_pMainPlayer->m_v3CurPos.y + g_Camera.fCameraDistance_y,
+				g_pMainPlayer->m_v3CurPos.x + g_Camera.fCameraDistance_x + 300,
+				g_pMainPlayer->m_v3CurPos.y + g_Camera.fCameraDistance_y + 150,
 				g_pMainPlayer->m_v3CurPos.z + g_Camera.fCameraDistance_z
 			};
 
@@ -163,16 +164,49 @@ DWORD __stdcall AfterInterpolation(AFTER_INTERPOLATION_CALL_BACK_ARG* pArg)
 	return 0;
 }
 
+//
+void populateForTooltipRenderingAllDropped() {
+	if (!g_pGVDungeon->bChatMode)
+	{
+		selectedItemsForTooltipRendering.clear();
+
+		CItemTradeShopWnd* pItemTradeShopWnd = CItemTradeShopWnd::GetInstance();
+
+		ListNode<ITEM>* pNode;
+		ITEM* pItem;
+
+		pNode = g_pItemHash->GetHead();
+
+		while (pNode)
+		{
+			pItem = (ITEM*)pNode->pData;
+
+			if (pItem)
+			{
+				selectedItemsForTooltipRendering.push_back(pItem);
+			}
+			pNode = pNode->pNext;
+		}
+	}
+}
+
+void cancelTooltipRenderingForAllDropped() {
+	selectedItemsForTooltipRendering.clear();
+}
+//
 
 BOOL InitGameDungeon()
 {
+	ItemPickupFilteringSystem::sharedInstance()->setViewActive(false);
+
+	CBankWnd::GetInstance()->Init();
 	// 카메라 이동에 관련된 플래그 세팅.
 	g_Camera.iCameraMoveOption = CAMERA_MOVE_OPTION_SCREEN_FRAME;
 
 	g_pExecutive->SetAfterInterpolation(AfterInterpolation);
 	SetRenderMode(RENDER_MODE_NORMAL);
 	
-	g_pExecutive->SetFramePerSec(30);
+	g_pExecutive->SetFramePerSec(20);
 	
 	srand( g_dwCurTick );
 	
@@ -218,9 +252,7 @@ BOOL InitGameDungeon()
 	g_pSprManager->CreateSprite(SPR_MESSAGE_BOX, 60, 100, FALSE, 100);
 	SPR(SPR_MESSAGE_BOX)->SetAlpha(128);
 	
-#ifdef _USE_IME
 	CreateChatEditBackground();
-#endif
 
 	return TRUE;
 }
@@ -1030,7 +1062,7 @@ DWORD __stdcall AfterRenderGameDungeon()
 		RenderUserSelectRect();
 	}
 
-	pInterface->m_byIndex = 16;
+	pInterface->m_byIndex = 45;
 	pInterface->Render();
 	
 
@@ -1162,8 +1194,8 @@ DWORD __stdcall AfterRenderGameDungeon()
 		if(vOutPos.x >= 1.0f || vOutPos.y >= 1.0f )
 			goto lb_Again;
 		
-		x = WORD( 1024.0f * vOutPos.x );
-		y = WORD( 768.0f * vOutPos.y );
+		x = WORD( float(windowWidth()) * vOutPos.x );
+		y = WORD( float(windowHeight()) * vOutPos.y );
 		
 		if(pUser->m_bPlayerShop)
 		{
@@ -1510,7 +1542,8 @@ DWORD __stdcall AfterRenderGameDungeon()
 	}
 #endif	
 
-	renderAllDroppedItemsTooltips(droppedItemTooltips);
+	renderAllDroppedItemsTooltips(selectedItemsForTooltipRendering);
+	ItemPickupFilteringSystem::sharedInstance()->render();
 
 	return 0;
 }
@@ -1518,6 +1551,18 @@ DWORD __stdcall AfterRenderGameDungeon()
 
 void OnKeyDownDungeon(WPARAM wParam, LPARAM lParam)
 {	
+	if (CustomUI::safeToHandleKeyEvents()) {
+		if (ItemPickupFilteringSystem::sharedInstance()->handleKeyDown(wParam, lParam)) {
+			return;
+		}
+
+		switch (ItemPickupFiltering::actionCodeFromKeyEvent(wParam, lParam)) {
+		case ActionCode::ActionCodeDroppedItemsTooltipRendering:
+			populateForTooltipRenderingAllDropped();
+			break;
+		}
+	}
+
 	BOOL bHanMode = TRUE;
 	
 	switch( wParam )
@@ -1673,7 +1718,6 @@ void OnKeyDownDungeon(WPARAM wParam, LPARAM lParam)
 	case 0xBE:
 	case 0xBF:
 	case 0x20:
-	case __ASCII_CODE___KEY_SEE_ALL_DROPPED_ITEMS:
 		{	
 			if(IsGuildCreate() && wParam==0x20)
 				DisplayMessageAdd(g_Message[ETC_MESSAGE1239].szMessage, 0xFFFF0000);
@@ -1923,7 +1967,23 @@ void OnKeyDownDungeon(WPARAM wParam, LPARAM lParam)
 
 void OnKeyUpDungeon(WPARAM wParam, LPARAM lParam)
 {	
+	if (CustomUI::safeToHandleKeyEvents()) {
+		if (ItemPickupFilteringSystem::sharedInstance()->handleKeyUp(wParam, lParam)) {
+			return;
+		}
+
+		switch (ItemPickupFiltering::actionCodeFromKeyEvent(wParam, lParam)) {
+		case ActionCode::ActionCodeDroppedItemsTooltipRendering:
+			cancelTooltipRenderingForAllDropped();
+			break;
+		case ActionCode::ActionCodePickupFiltering:
+			ItemPickupFilteringSystem::sharedInstance()->setViewActive(!ItemPickupFilteringSystem::sharedInstance()->isViewActive());
+			break;
+		}
+	}
+
 	g_bKeyChkUp = FALSE;
+
 	switch( LOWORD(wParam) )
 	{
 		case VK_CONTROL:
@@ -1939,17 +1999,15 @@ void OnKeyUpDungeon(WPARAM wParam, LPARAM lParam)
 			SetRect( &g_rcSelectBox, 0, 0, 0, 0 );
 		}
 		break;
-
-		case __ASCII_CODE___KEY_SEE_ALL_DROPPED_ITEMS:
-		{
-			selectedItemsForTooltipRendering.clear();
-		}
-		break;
 	}
 }
 
 BOOL OnLButtonDownInterfaceDungeon()
 {
+	if (ItemPickupFilteringSystem::sharedInstance()->handleMouseDown()) {
+		return TRUE;
+	}
+
 	CInterface*			pInterface		= CInterface::GetInstance();
 
 	if( g_pThisDungeon->IsStadium() && g_pMainPlayer->m_dwGuildWarFlag == G_W_F_OBSERVER )
@@ -2019,6 +2077,10 @@ BOOL OnLButtonDownInterfaceDungeon()
 
 void OnLButtonDownDungeon(WPARAM wParam, LPARAM lParam)
 {
+	if (ItemPickupFilteringSystem::sharedInstance()->handleMouseDown()) {
+		return;
+	}
+
 	CGroupWnd*		pGroupWnd		= CGroupWnd::GetInstance();
 	CUserInterface* pUserInterface	= CUserInterface::GetInstance();	
 	g_Mouse.dwLButtonDownTime		= g_dwCurTick;
@@ -2089,42 +2151,6 @@ void OnLButtonDownDungeon(WPARAM wParam, LPARAM lParam)
 	}
 	else 
 	{
-
-#if IS_KOREA_LOCALIZING // 일본어판의 경우 마우스질 해도 채팅 창 안없앤다..
-		CChatWnd* pChatWnd = CChatWnd::GetInstance();
-		
-		if(pChatWnd->GetActive())
-		{			
-			if(g_pInputManager->GetInputBuffer(INPUT_BUFFER_19))
-			{
-				if(!IsEmptyString(g_pInputManager->GetInputBuffer(INPUT_BUFFER_19)))
-				{
-					// //
-					memset(pChatWnd->m_szClip, 0, sizeof(pChatWnd->m_szClip));
-					__lstrcpyn(pChatWnd->m_szClip, g_pInputManager->GetInputBuffer(INPUT_BUFFER_19)
-						, lstrlen(g_pInputManager->GetInputBuffer(INPUT_BUFFER_19)));
-
-					pChatWnd->m_byClipType = 1;
-					pChatWnd->SetActive(FALSE);
-															
-					ChatModeOff(INPUT_BUFFER_19)
-
-					IMESetEdit(0);
-				}
-				else
-				{
-					if(g_pGVDungeon->bChatMode==TRUE)
-					{
-						pChatWnd->SetActive(FALSE);
-
-						ChatModeOff(INPUT_BUFFER_19)					
-
-						IMESetEdit(0);
-					}
-				}
-			}
-		}
-#endif 
 		pUserInterface->m_bMatch = FALSE;
 
 		CheckAndProcForGroupWnd();
@@ -2171,7 +2197,10 @@ lb_move:
 
 
 void OnLButtonUpDungeon(WPARAM wParam, LPARAM lParam)
-{	
+{
+	if (ItemPickupFilteringSystem::sharedInstance()->handleMouseUp()) {
+		return;
+	}
 	CInterface*			pInterface			= CInterface::GetInstance();
 	CUserInterface*		pUserInterface		= CUserInterface::GetInstance();
 	CGroupWnd*			pGroupWnd			= CGroupWnd::GetInstance();
@@ -3446,6 +3475,10 @@ void OnTimerEventDungeon(DWORD dwTimerIndex)
 
 void MouseEventDungeon()
 {
+	if (ItemPickupFilteringSystem::sharedInstance()->isInterfaceFocused()) {
+		return;
+	}
+
 	BYTE btMainPlayerStatus = g_pMainPlayer->GetStatus();
 	if(	btMainPlayerStatus == UNIT_STATUS_DEAD ||
 		btMainPlayerStatus == UNIT_STATUS_PLAYER_SHOP)
@@ -6336,34 +6369,10 @@ void SetKey(int nKey)
 				}
 			}
 			
-			if (nKey == g_sKeyConfig.snKey[__KEY_SEE_ALL_DROPPED_ITEMS])
-			{
-				if (!g_pGVDungeon->bChatMode)
-				{
-					selectedItemsForTooltipRendering.clear();
-
-					CItemTradeShopWnd* pItemTradeShopWnd = CItemTradeShopWnd::GetInstance();
-
-					ListNode<ITEM>* pNode;
-					ITEM* pItem;
-
-					pNode = g_pItemHash->GetHead();
-
-					while (pNode)
-					{
-						pItem = (ITEM*)pNode->pData;
-
-						if (pItem)
-						{
-							selectedItemsForTooltipRendering.push_back(pItem);
-						}
-						pNode = pNode->pNext;
-					}
-				}
-			}
-
 			if(nKey==g_sKeyConfig.snKey[__KEY_ITEM__])
 			{	
+				std::set<DWORD> filterIDs = ItemPickupFilteringSystem::sharedInstance()->currentSelectedIDs();
+
 				if(!g_pGVDungeon->bChatMode)
 				{
 					CItemTradeShopWnd* pItemTradeShopWnd = CItemTradeShopWnd::GetInstance();
@@ -6422,23 +6431,22 @@ void SetKey(int nKey)
 										g_pMainPlayer->GetStatus()!=UNIT_STATUS_RUNNING)
 										return;
 
-									// 대만은 무게 포화상태가 되면 아이템을 집을수 없게 막는다.
-#if IS_TAIWAN_LOCALIZING()
-									if ((g_pMainPlayer->GetAverageWeight()) >= 100.f )
-									{
-										// "포화무게한도에 도달하여 달리기가 안되며, 포션의 사용 딜레이가 증가합니다."
-										DisplayMessageAdd(g_Message[ETC_MESSAGE986].szMessage, 0xffff0000);			
 
-										return;
-									}
-#endif
 									if(g_ItemMoveManager.GetNewItemMoveMode())
 									{
 										g_ItemMoveManager.TileToInvPickupItem(pItem);
 									}
 									else
 									{
- 										SendPickupItem(pItem, FALSE, FALSE);											
+										DWORD itemID = pItem->Item.GetID();
+										if (!filterIDs.empty() && itemID != ITEM_KARZ_ID) {
+											if (filterIDs.find(itemID) != filterIDs.end()) {
+												SendPickupItem(pItem, FALSE, FALSE);
+											}
+										}
+										else {
+ 											SendPickupItem(pItem, FALSE, FALSE);
+										}
 									}									
 
 									bChk = TRUE;

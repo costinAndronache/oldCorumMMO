@@ -303,7 +303,7 @@ STDAPI DllRegisterServer(void)
   GetModuleFileName(g_hDllInst,szModulePath,sizeof(szModulePath)/sizeof(TCHAR));
 
   
-  StringFromGUID2(CLSID_4DyuchiGXRenderer, wszID, GUID_SIZE);
+  StringFromGUID2(CLSID_4DyuchiGXRenderer, (LPOLESTR)wszID, GUID_SIZE);
   sprintf(szID,"%S",wszID);
 
   lstrcpy(szCLSID, TEXT("CLSID\\"));
@@ -391,7 +391,7 @@ STDAPI DllUnregisterServer(void)
 
 
    //Create some base key strings.
-  StringFromGUID2(CLSID_4DyuchiGXRenderer, wszID, GUID_SIZE);
+  StringFromGUID2(CLSID_4DyuchiGXRenderer, (LPOLESTR)wszID, GUID_SIZE);
   sprintf(szID,"%S",wszID);
 
   lstrcpy(szCLSID, TEXT("CLSID\\"));

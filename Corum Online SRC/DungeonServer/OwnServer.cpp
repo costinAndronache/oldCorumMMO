@@ -297,7 +297,10 @@ BOOL COwnServer::PreLoadDungeon()
 		
 		g_pDungeonTable->Add(pDungeon);
 		
-		Log(LOG_JUST_DISPLAY, "@ Dungeon(%s) Create Successfully!", m_pDungeonInfo[ i ].m_szDungeonName);	
+		Log(LOG_IMPORTANT, 
+			"@ Dungeon(%s, %d) Created Successfully!", 
+			m_pDungeonInfo[ i ].m_szDungeonName,
+			m_pDungeonInfo[i].m_dwID);	
 	}
 	
 	return TRUE;

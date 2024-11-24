@@ -332,8 +332,6 @@ enum DUNGEON_JOIN_FAIL
 #define __KEY_SKILL16__					33				// 스킬16.
 #define __KEY_ITEM__					34				// 아이템 줍기.
 #define __KEY_GUARDIAN_OPEN__			35				// 가디언창 열기.
-#define __KEY_SEE_ALL_DROPPED_ITEMS     36              // `
-#define __ASCII_CODE___KEY_SEE_ALL_DROPPED_ITEMS 192
 
 #define CHAT_MODE_CHAT					0
 #define CHAT_MODE_MESSAGE				1
@@ -998,7 +996,7 @@ extern int windowHeight();
 // Status
 #define MAX_STATUS						5
 
-#define MAX_KEY							37
+#define MAX_KEY							38
 
 
 //-------------------------------------------------------------------------------------------//
@@ -1041,7 +1039,9 @@ extern int windowHeight();
 #define EMOTICON_12			12
 #define EMOTICON_13			13
 
-
+#define __KEY_SEE_ALL_DROPPED_ITEMS     36              // `
+#define __ASCII_CODE___KEY_SEE_ALL_DROPPED_ITEMS 192
+#define __ASCII_CODE___KEY_OPEN_ITEM_FILTERING 92
 
 
 #define _SEVEN_MEMORY_CHECK

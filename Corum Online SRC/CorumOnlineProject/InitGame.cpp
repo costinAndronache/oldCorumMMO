@@ -181,7 +181,10 @@ STMPOOL_HANDLE				g_pEffectPool			= NULL;
 
 LPBASEITEM_HASH				g_pItemTableHash_get() {
 
-	static LPBASEITEM_HASH hash = new BASEITEM_HASH;
+	static LPBASEITEM_HASH hash = NULL;
+	if (hash == NULL) {
+		hash = new BASEITEM_HASH;
+	}
 	if (hash->GetMaxBucketNum() == 0) {
 		hash->InitializeHashTable(10000, 10000);
 	}
@@ -322,7 +325,7 @@ char* g_pszKeyArray[0xff] =
 	"M",	"N",	"O",	"P",	"Q",	"S",	"T",	"U",	"V",	"W",	"X",	"Y",
 	"Z",	"0",	"1",	"2",	"3",	"4",	"5",	"6",	"7",	"8",	"9",	"F1",
 	"F2",	"F3",	"F4",	"F5",	"F6",	"F7",	"F8",	"F9",	"F10",	"F11",	"F12",	";",
-	"'",	"[",	"]",	"-",	"=",	"\\",	",",	".",	"/",	"SPACE", "`"
+	"'",	"[",	"]",	"-",	"=",	"\\",	",",	".",	"/",	"SPACE", "`",
 };
 
 int g_nKey[0xff] = 
@@ -662,7 +665,7 @@ BOOL InitGame()
 	//
 	g_Res.Init("CorumResource.erd", g_szBasePath);	
 	g_ResDefined.Init("DefResource.erd", g_szBasePath);		
-	SetRect( &g_rcScreenRect, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT );
+	SetRect( &g_rcScreenRect, 0, 0, windowWidth(), windowHeight() );
 
 	InitFunctionPointer();
 	InitPacketProc();
@@ -753,7 +756,7 @@ BOOL InitGame()
 		"SKILL1", "SKILL2", "SKILL3", "SKILL4", "SKILL5", "SKILL6", "SKILL7", "SKILL8",
 		"SKILL9", "SKILL10", "SKILL11", "SKILL12", "SKILL13", "SKILL14", "SKILL15",  "SKILL16",
 
-		"ITEM", "GUARDIAN OPEN", "SEE DROPPED ITEMS",
+		"ITEM", "GUARDIAN OPEN", "SEE DROPPED ITEMS", "OPEN ITEM FILTERING"
 	};
 
 
@@ -768,7 +771,7 @@ BOOL InitGame()
 		"F1", "F2", "F3", "F4", "F5", "F6", "F7", "F8", 
 		"F9", "F10", "F11", "F12", "Z", "X", "C", "V", 
 
-		"SPACE", "G", "`"
+		"SPACE", "G", "`", "/"
 	};	
 	
 	wsprintf(szFile, "%s\\%s", g_szBasePath, "KeyConfig.ini");
@@ -792,7 +795,6 @@ BOOL InitGame()
 		}
 		g_sKeyConfig.snKey[i]	= nKey;
 	}
-	g_sKeyConfig.snKey[36] = __ASCII_CODE___KEY_SEE_ALL_DROPPED_ITEMS;
 
 	wsprintf(szInfo, "%s\\%s", g_szBasePath, "OptionConfig.ini");
 	
@@ -2451,6 +2453,8 @@ void LoadBaseItemTable()
 
 #pragma warning 
 	SetCommonServerBaseItemHash(g_pItemTableHash_get());
+
+	auto dbug = g_pItemTableHash_get();
 
 	return;
 

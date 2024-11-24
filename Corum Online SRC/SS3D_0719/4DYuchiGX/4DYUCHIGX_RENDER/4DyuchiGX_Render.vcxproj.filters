@@ -1,0 +1,439 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{e28209da-87d7-4fca-8fcd-01e55a783503}</UniqueIdentifier>
+      <Extensions>cpp;c;cxx;rc;def;r;odl;idl;hpj;bat</Extensions>
+    </Filter>
+    <Filter Include="Render Object">
+      <UniqueIdentifier>{c03ab5b9-6d88-45f7-bc67-da5efbef9ad5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Render Object\LightMap Object">
+      <UniqueIdentifier>{d23bc8e3-afe2-426f-8163-034cd18383f2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Render Object\Font">
+      <UniqueIdentifier>{218d8c61-d15a-4fba-8663-7fa9a5abc91f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Render Object\VertexLight Object">
+      <UniqueIdentifier>{5efeb186-755c-410c-900a-3264fe25f8c5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Render Object\Base Element">
+      <UniqueIdentifier>{7c7868f1-8611-4d58-a9c7-235e98732ca4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Render Object\HeightField">
+      <UniqueIdentifier>{d5b1058f-0ed4-44cf-8210-54a8d99dc7ac}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Render Object\sprite">
+      <UniqueIdentifier>{72c203fa-f85a-4ae8-8794-6b0a1dbc203a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Render Object\BillBoard">
+      <UniqueIdentifier>{ec91f932-4810-4c66-8633-580bcfc6d9e6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Render Object\ImmMeshObject">
+      <UniqueIdentifier>{4717ab56-e86d-436b-b591-089328cc11d8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="misc">
+      <UniqueIdentifier>{bb3ed005-94aa-4faf-9821-494253fce055}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="COM Interface">
+      <UniqueIdentifier>{6f8b9b37-3660-4a09-a14e-9001768fd2b9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="device">
+      <UniqueIdentifier>{46d5bfb4-eff0-4ae8-bf2d-2d6ed3adfd0d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{8b99c1f1-6f48-417c-992d-e655519fa0fb}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl</Extensions>
+    </Filter>
+    <Filter Include="RenderQueue">
+      <UniqueIdentifier>{2911cf60-9902-43a5-a79b-c561b024e1ea}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders">
+      <UniqueIdentifier>{0daf6d59-c856-4149-82df-5355142fb3cc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ProjectionLight">
+      <UniqueIdentifier>{9b35f590-2fad-49e7-814f-d8b8991246d7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{cba3555b-d9d1-4465-91ae-2c8ceeedf65c}</UniqueIdentifier>
+      <Extensions>ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="4DyuchiGX_Render.def">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="..\4DyuchiGRX_common\math.inl">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="dynamic_light_map.vsh">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="test.vsh">
+      <Filter>Shaders</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="dllmain.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="factory.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="hashsearch.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="circle.cpp">
+      <Filter>Render Object</Filter>
+    </ClCompile>
+    <ClCompile Include="LMMeshObject.cpp">
+      <Filter>Render Object\LightMap Object</Filter>
+    </ClCompile>
+    <ClCompile Include="font.cpp">
+      <Filter>Render Object\Font</Filter>
+    </ClCompile>
+    <ClCompile Include="FontCache.cpp">
+      <Filter>Render Object\Font</Filter>
+    </ClCompile>
+    <ClCompile Include="FontHash.cpp">
+      <Filter>Render Object\Font</Filter>
+    </ClCompile>
+    <ClCompile Include="FontObject.cpp">
+      <Filter>Render Object\Font</Filter>
+    </ClCompile>
+    <ClCompile Include="VLMeshObject.cpp">
+      <Filter>Render Object\VertexLight Object</Filter>
+    </ClCompile>
+    <ClCompile Include="VLSMeshObject.cpp">
+      <Filter>Render Object\VertexLight Object</Filter>
+    </ClCompile>
+    <ClCompile Include="Base_facegroup.cpp">
+      <Filter>Render Object\Base Element</Filter>
+    </ClCompile>
+    <ClCompile Include="BaseFontObject.cpp">
+      <Filter>Render Object\Base Element</Filter>
+    </ClCompile>
+    <ClCompile Include="BaseMeshObject.cpp">
+      <Filter>Render Object\Base Element</Filter>
+    </ClCompile>
+    <ClCompile Include="CTexture.cpp">
+      <Filter>Render Object\Base Element</Filter>
+    </ClCompile>
+    <ClCompile Include="d3dtexture.cpp">
+      <Filter>Render Object\Base Element</Filter>
+    </ClCompile>
+    <ClCompile Include="IndexBuffer.cpp">
+      <Filter>Render Object\Base Element</Filter>
+    </ClCompile>
+    <ClCompile Include="LMFaceGRoup.cpp">
+      <Filter>Render Object\Base Element</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderTexture.cpp">
+      <Filter>Render Object\Base Element</Filter>
+    </ClCompile>
+    <ClCompile Include="VertexBuffer.cpp">
+      <Filter>Render Object\Base Element</Filter>
+    </ClCompile>
+    <ClCompile Include="VLFaceGroup.cpp">
+      <Filter>Render Object\Base Element</Filter>
+    </ClCompile>
+    <ClCompile Include="HFieldManager.cpp">
+      <Filter>Render Object\HeightField</Filter>
+    </ClCompile>
+    <ClCompile Include="HFieldObject.cpp">
+      <Filter>Render Object\HeightField</Filter>
+    </ClCompile>
+    <ClCompile Include="3DSprite.cpp">
+      <Filter>Render Object\sprite</Filter>
+    </ClCompile>
+    <ClCompile Include="BiiBoard.cpp">
+      <Filter>Render Object\BillBoard</Filter>
+    </ClCompile>
+    <ClCompile Include="ImmMeshObject.cpp">
+      <Filter>Render Object\ImmMeshObject</Filter>
+    </ClCompile>
+    <ClCompile Include="d3d_helper.cpp">
+      <Filter>misc</Filter>
+    </ClCompile>
+    <ClCompile Include="image.cpp">
+      <Filter>misc</Filter>
+    </ClCompile>
+    <ClCompile Include="TIF.CPP">
+      <Filter>misc</Filter>
+    </ClCompile>
+    <ClCompile Include="VariableBuffer.cpp">
+      <Filter>misc</Filter>
+    </ClCompile>
+    <ClCompile Include="CoD3DDevice.cpp">
+      <Filter>device</Filter>
+    </ClCompile>
+    <ClCompile Include="D3DResourceBufferHeap.cpp">
+      <Filter>device</Filter>
+    </ClCompile>
+    <ClCompile Include="D3DResourceManager.cpp">
+      <Filter>device</Filter>
+    </ClCompile>
+    <ClCompile Include="IBCache.cpp">
+      <Filter>device</Filter>
+    </ClCompile>
+    <ClCompile Include="IBHeap.cpp">
+      <Filter>device</Filter>
+    </ClCompile>
+    <ClCompile Include="MaterialManager.cpp">
+      <Filter>device</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderTexturePool.cpp">
+      <Filter>device</Filter>
+    </ClCompile>
+    <ClCompile Include="StaticD3DResourcePool.cpp">
+      <Filter>device</Filter>
+    </ClCompile>
+    <ClCompile Include="StaticIBPool.cpp">
+      <Filter>device</Filter>
+    </ClCompile>
+    <ClCompile Include="StaticVBPool.cpp">
+      <Filter>device</Filter>
+    </ClCompile>
+    <ClCompile Include="texture_manager.cpp">
+      <Filter>device</Filter>
+    </ClCompile>
+    <ClCompile Include="VBCache.cpp">
+      <Filter>device</Filter>
+    </ClCompile>
+    <ClCompile Include="VBHeap.cpp">
+      <Filter>device</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderQ.cpp">
+      <Filter>RenderQueue</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderTriBuffer.cpp">
+      <Filter>RenderQueue</Filter>
+    </ClCompile>
+    <ClCompile Include="SpriteBuffer.cpp">
+      <Filter>RenderQueue</Filter>
+    </ClCompile>
+    <ClCompile Include="TextBuffer.cpp">
+      <Filter>RenderQueue</Filter>
+    </ClCompile>
+    <ClCompile Include="ProjectionLight.cpp">
+      <Filter>ProjectionLight</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Script1.rc">
+      <Filter>Source Files</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="circle.h">
+      <Filter>Render Object</Filter>
+    </ClInclude>
+    <ClInclude Include="LMMeshObject.h">
+      <Filter>Render Object\LightMap Object</Filter>
+    </ClInclude>
+    <ClInclude Include="font.h">
+      <Filter>Render Object\Font</Filter>
+    </ClInclude>
+    <ClInclude Include="FontCache.h">
+      <Filter>Render Object\Font</Filter>
+    </ClInclude>
+    <ClInclude Include="FontHash.h">
+      <Filter>Render Object\Font</Filter>
+    </ClInclude>
+    <ClInclude Include="FontObject.h">
+      <Filter>Render Object\Font</Filter>
+    </ClInclude>
+    <ClInclude Include="VLMeshObject.h">
+      <Filter>Render Object\VertexLight Object</Filter>
+    </ClInclude>
+    <ClInclude Include="VLSMeshObject.h">
+      <Filter>Render Object\VertexLight Object</Filter>
+    </ClInclude>
+    <ClInclude Include="Base_facegroup.h">
+      <Filter>Render Object\Base Element</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseFontObject.h">
+      <Filter>Render Object\Base Element</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseMeshObject.h">
+      <Filter>Render Object\Base Element</Filter>
+    </ClInclude>
+    <ClInclude Include="CTexture.h">
+      <Filter>Render Object\Base Element</Filter>
+    </ClInclude>
+    <ClInclude Include="d3dtexture.h">
+      <Filter>Render Object\Base Element</Filter>
+    </ClInclude>
+    <ClInclude Include="IndexBuffer.h">
+      <Filter>Render Object\Base Element</Filter>
+    </ClInclude>
+    <ClInclude Include="IResource.h">
+      <Filter>Render Object\Base Element</Filter>
+    </ClInclude>
+    <ClInclude Include="LMFaceGroup.h">
+      <Filter>Render Object\Base Element</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderTexture.h">
+      <Filter>Render Object\Base Element</Filter>
+    </ClInclude>
+    <ClInclude Include="VertexBuffer.h">
+      <Filter>Render Object\Base Element</Filter>
+    </ClInclude>
+    <ClInclude Include="VLFaceGroup.h">
+      <Filter>Render Object\Base Element</Filter>
+    </ClInclude>
+    <ClInclude Include="HFieldManager.h">
+      <Filter>Render Object\HeightField</Filter>
+    </ClInclude>
+    <ClInclude Include="HFieldObject.h">
+      <Filter>Render Object\HeightField</Filter>
+    </ClInclude>
+    <ClInclude Include="3DSprite.h">
+      <Filter>Render Object\sprite</Filter>
+    </ClInclude>
+    <ClInclude Include="BillBoard.h">
+      <Filter>Render Object\BillBoard</Filter>
+    </ClInclude>
+    <ClInclude Include="ImmMeshObject.h">
+      <Filter>Render Object\ImmMeshObject</Filter>
+    </ClInclude>
+    <ClInclude Include="d3d_helper.h">
+      <Filter>misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\4DyuchiGXGFunc\global.h">
+      <Filter>misc</Filter>
+    </ClInclude>
+    <ClInclude Include="image.h">
+      <Filter>misc</Filter>
+    </ClInclude>
+    <ClInclude Include="render_type.h">
+      <Filter>misc</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer_typedef.h">
+      <Filter>misc</Filter>
+    </ClInclude>
+    <ClInclude Include="TIF.H">
+      <Filter>misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\4DyuchiGRX_common\typedef.h">
+      <Filter>misc</Filter>
+    </ClInclude>
+    <ClInclude Include="VariableBuffer.h">
+      <Filter>misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\4DyuchiGRX_common\FileStorage_typedef.h">
+      <Filter>COM Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="..\4DyuchiGRX_common\IExecutive.h">
+      <Filter>COM Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="..\4DyuchiGRX_common\IExecutive_GUID.h">
+      <Filter>COM Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="..\4DyuchiGRX_common\IFileStorage.h">
+      <Filter>COM Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="..\4DyuchiGRX_common\IFileStorage_GUID.h">
+      <Filter>COM Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="..\4DyuchiGRX_common\IGeometry.h">
+      <Filter>COM Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="..\4DyuchiGRX_common\IGeometry_GUID.h">
+      <Filter>COM Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="..\4DyuchiGRX_common\IRenderer.h">
+      <Filter>COM Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="..\4DyuchiGRX_common\IRenderer_GUID.h">
+      <Filter>COM Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="CoD3DDevice.h">
+      <Filter>device</Filter>
+    </ClInclude>
+    <ClInclude Include="D3DResourceBufferHeap.h">
+      <Filter>device</Filter>
+    </ClInclude>
+    <ClInclude Include="D3DResourceManager.h">
+      <Filter>device</Filter>
+    </ClInclude>
+    <ClInclude Include="IBCache.h">
+      <Filter>device</Filter>
+    </ClInclude>
+    <ClInclude Include="IBHeap.h">
+      <Filter>device</Filter>
+    </ClInclude>
+    <ClInclude Include="IBManager.h">
+      <Filter>device</Filter>
+    </ClInclude>
+    <ClInclude Include="IResourcePool.h">
+      <Filter>device</Filter>
+    </ClInclude>
+    <ClInclude Include="MaterialManager.h">
+      <Filter>device</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderTexturePool.h">
+      <Filter>device</Filter>
+    </ClInclude>
+    <ClInclude Include="StaticD3DResourcePool.h">
+      <Filter>device</Filter>
+    </ClInclude>
+    <ClInclude Include="StaticIBPool.h">
+      <Filter>device</Filter>
+    </ClInclude>
+    <ClInclude Include="StaticVBPool.h">
+      <Filter>device</Filter>
+    </ClInclude>
+    <ClInclude Include="texture_manager.h">
+      <Filter>device</Filter>
+    </ClInclude>
+    <ClInclude Include="VBCache.h">
+      <Filter>device</Filter>
+    </ClInclude>
+    <ClInclude Include="VBHeap.h">
+      <Filter>device</Filter>
+    </ClInclude>
+    <ClInclude Include="VBManager.h">
+      <Filter>device</Filter>
+    </ClInclude>
+    <ClInclude Include="factory.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="global_variable.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="hashsearch.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\4DyuchiGRX_common\mesh_flag.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\4DyuchiGRX_common\motion_flag.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderQ.h">
+      <Filter>RenderQueue</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderTriBuffer.h">
+      <Filter>RenderQueue</Filter>
+    </ClInclude>
+    <ClInclude Include="SpriteBuffer.h">
+      <Filter>RenderQueue</Filter>
+    </ClInclude>
+    <ClInclude Include="TextBuffer.h">
+      <Filter>RenderQueue</Filter>
+    </ClInclude>
+    <ClInclude Include="ProjectionLight.h">
+      <Filter>ProjectionLight</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

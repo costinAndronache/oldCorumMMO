@@ -25,10 +25,18 @@
 #include "LocalTimeObserver.h"
 #include "NetworkTimeObserver.h"
 #include "ChinaHackToolBlock.h"
+#include <Windows.h>
+#include <GdiPlusInit.h>
+#include "CustomUiKit/PagedTableWindow/PagedTableWindow.h"
 
 
 int APIENTRY WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nShowCmd )
 {
+	Gdiplus::GdiplusStartupInput gdiplusStartupInput;
+	ULONG_PTR gdiplusToken;
+	Gdiplus::GdiplusStartup(&gdiplusToken, &gdiplusStartupInput, NULL);
+
+
 #ifndef DEVELOP_MODE	
 	if(!CheckGlobalEventHandle())
 	{
@@ -177,6 +185,7 @@ lb_Process:
 	OpenWebSite("http://corum.9you.com");
 #endif
 #endif
+	return 0L;
 
 	ReleaseGame();
 	return 0L;
@@ -513,7 +522,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			break;
 		}
 		break;
-
 	default:
 		return DefWindowProc(hWnd, message, wParam, lParam);
 	}

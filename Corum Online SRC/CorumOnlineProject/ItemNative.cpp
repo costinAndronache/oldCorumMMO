@@ -2086,7 +2086,7 @@ void ItemChk()
 				{
 //					sung-han 2005-03-15 거래, 드롭, 노점않되는 아이템 처리, 여기는 드롭...
 					CBaseItem* lpItemTalbe = g_pItemTableHash_get()->GetData(g_pMainPlayer->m_MouseItem.GetID());
-					if(lpItemTalbe && lpItemTalbe->GetMovable() == 0)
+					if(lpItemTalbe)// && lpItemTalbe->GetMovable() == 0)
 					{
 						SetItemPacket(&ItemPickup, 10, 0, 0, 0, 0);
 						ItemPickup.fItemX	= g_Mouse.v3Mouse.x;

@@ -370,8 +370,10 @@ void RenderNormal()
 #endif
 }
 
+
 void RenderMultiple()
-{	
+{
+
 #ifndef DEVELOP_MODE	
 	if( g_bPause ) return;	
 	
@@ -421,7 +423,7 @@ void RenderMultiple()
 		(*UpdateGameProcess[ GetGameStatus() ])();
 	}
 	
-	g_pGeometry->BeginRender(0,0xff000000, BEGIN_RENDER_FLAG_USE_RENDER_TEXTURE);
+	g_pGeometry->BeginRender(0,0xff000000, BEGIN_RENDER_FLAG_CLEAR_FRAMEBUFFER);
 	if(BeforeRender[ GetGameStatus()])
 		(*BeforeRender[ GetGameStatus() ])();
 

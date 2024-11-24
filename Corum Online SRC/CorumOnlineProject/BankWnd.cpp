@@ -44,7 +44,7 @@ BOOL CBankWnd::Init()
 
 	if(pInterface->m_byServer==__SERVER_TYPE_VILL__)
 	{
-		/*
+		
 		InsertData(SPR_OBJ_BANK_WND1, SPR_INTERFACE_DF_WND1, 0, 0, 1.0f, 1.0f, 0);
 		InsertData(SPR_OBJ_BANK_WND2, SPR_INTERFACE_DF_WND2, 0, 48, 1.0f, 22.0f, 0);
 		InsertData(SPR_OBJ_BANK_WND3, SPR_INTERFACE_BANK_WND3, 0, 400, 1.0f, 1.0f, 0);
@@ -67,7 +67,7 @@ BOOL CBankWnd::Init()
 		InsertCheckInterface(243, 48, 253, 400, 6, CHECK_SCROLL);
 		InsertCheckInterface(4, 50, 242, 400, 7, CHECK_ITEM);
 		InsertCheckInterface(23, 410, 232, 426, 8, CHECK_BTN);										
-		*/
+		
 		SetScroll(__MAX_BANK_SC__, 48, 400);
 
 		m_bInit = TRUE;

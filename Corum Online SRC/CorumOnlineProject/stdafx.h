@@ -4,11 +4,15 @@
 
 
 // Windows Header Files:
+#undef WIN32_LEAN_AND_MEAN
+
 #include <windows.h>
 #include <windowsx.h>
 #include <ole2.h>
 #include <initguid.h>
 #include <mmsystem.h>
+#include <gdiplus.h>
+#include <GdiPlusInit.h>
 
 // C RunTime Header Files
 #include <stdlib.h>

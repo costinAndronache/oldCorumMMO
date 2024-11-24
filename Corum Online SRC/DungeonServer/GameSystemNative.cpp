@@ -1705,7 +1705,8 @@ void CreateItemByMonster( CMonster* pMonster, CUser* pUser )
 	if( !pMonster )	return;
 	if( !pUser )	return;
 
-	int		i = 0, iRandX = 0, iRandZ = 0, iRandItem = 0, iItemRate = 0, iItemKind = 0;
+	int		i = 0, iRandX = 0, iRandZ = 0, iRandItem = 0, iItemKind = 0;
+	int dropBarrier = 0;
 	WORD	wOptionNum = 0;
 
 	if( pMonster->GetTemp(NPC_TEMP_ITEM) != 0 )	
@@ -1727,13 +1728,14 @@ void CreateItemByMonster( CMonster* pMonster, CUser* pUser )
 		}
 	}
 	
-	iItemRate = rand();	
-	iRandItem = pMonster->GetDropItem(
-		(int)((100 + g_pThis->m_GLOBAL_MAGIC_FIND_PBT + pUser->GetItemAttr(ITEM_ATTR_MAGIC_FIND_PBT)) / 100.), iItemRate);
+	dropBarrier = rand();	
+	int sum = 100 + g_pThis->m_GLOBAL_MAGIC_FIND_PBT + pUser->GetItemAttr(ITEM_ATTR_MAGIC_FIND_PBT);
+	int userDropFactor = sum / 100;
+	iRandItem = pMonster->GetDropItem(userDropFactor, dropBarrier);
 	
 	if(!iRandItem)
 	{
-		if( iItemRate <= pMonster->GetBaseMonsterInfo()->wMoneyRate )			
+		if( dropBarrier <= pMonster->GetBaseMonsterInfo()->wMoneyRate )			
 			iRandItem = __ITEM_KARZ__;
 		else
 			return;			
@@ -1741,17 +1743,17 @@ void CreateItemByMonster( CMonster* pMonster, CUser* pUser )
 	
 	iItemKind = iRandItem / ITEM_DISTRIBUTE;	
 	
-	iItemRate = rand();
+	int optionBarrier = rand();
 	
-	if( iItemRate <= pMonster->GetBaseMonsterInfo()->wOption_0 )
+	if( optionBarrier <= pMonster->GetBaseMonsterInfo()->wOption_0 )
 	{
-		wOptionNum = 0;
+		optionBarrier = 0;
 	}
 	else
 	{
 		for( i = 0; i < 2; i++ )
 		{
-			if( iItemRate <= pMonster->GetBaseMonsterInfo()->wOptionRate[i] )
+			if( optionBarrier <= pMonster->GetBaseMonsterInfo()->wOptionRate[i] )
 			{
 				wOptionNum = i + 1;
 				break;
