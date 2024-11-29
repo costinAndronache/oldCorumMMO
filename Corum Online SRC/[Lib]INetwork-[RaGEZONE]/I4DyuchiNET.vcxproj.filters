@@ -1,0 +1,236 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Memory">
+      <UniqueIdentifier>{135a1b6f-3c25-442a-a28d-80049756764b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Main Process">
+      <UniqueIdentifier>{2338df8c-3e74-455a-9985-bdacbc9b0091}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Debug">
+      <UniqueIdentifier>{6d4df8b0-737e-422d-8fad-8db28b6ac360}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Component">
+      <UniqueIdentifier>{07c289be-3d9c-47ba-868a-a2a51e61cd4d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Network Base">
+      <UniqueIdentifier>{2cdc681b-e367-4afb-aa24-e6b5f2d33ed4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="cpio">
+      <UniqueIdentifier>{001377c4-7121-4fac-b7df-98727be9e5dc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="etc">
+      <UniqueIdentifier>{808e2c46-76c8-40c0-a667-8d03dbad59a2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="confirm">
+      <UniqueIdentifier>{1ac8f5a0-3da3-4a42-8aa7-3a07e637438e}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="dynamic_memory.cpp">
+      <Filter>Memory</Filter>
+    </ClCompile>
+    <ClCompile Include="memory_object.cpp">
+      <Filter>Memory</Filter>
+    </ClCompile>
+    <ClCompile Include="read_memory_handle.cpp">
+      <Filter>Memory</Filter>
+    </ClCompile>
+    <ClCompile Include="write_memory_handle.cpp">
+      <Filter>Memory</Filter>
+    </ClCompile>
+    <ClCompile Include="mainthread.cpp">
+      <Filter>Main Process</Filter>
+    </ClCompile>
+    <ClCompile Include="que.cpp">
+      <Filter>Main Process</Filter>
+    </ClCompile>
+    <ClCompile Include="quemanager.cpp">
+      <Filter>Main Process</Filter>
+    </ClCompile>
+    <ClCompile Include="switch_que.cpp">
+      <Filter>Main Process</Filter>
+    </ClCompile>
+    <ClCompile Include="timer.cpp">
+      <Filter>Main Process</Filter>
+    </ClCompile>
+    <ClCompile Include="exception.cpp">
+      <Filter>Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="log.cpp">
+      <Filter>Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="conetwork.cpp">
+      <Filter>Component</Filter>
+    </ClCompile>
+    <ClCompile Include="dllmain.cpp">
+      <Filter>Component</Filter>
+    </ClCompile>
+    <ClCompile Include="factory.cpp">
+      <Filter>Component</Filter>
+    </ClCompile>
+    <ClCompile Include="accept.cpp">
+      <Filter>Network Base</Filter>
+    </ClCompile>
+    <ClCompile Include="connect.cpp">
+      <Filter>Network Base</Filter>
+    </ClCompile>
+    <ClCompile Include="connect_que.cpp">
+      <Filter>Network Base</Filter>
+    </ClCompile>
+    <ClCompile Include="connection.cpp">
+      <Filter>Network Base</Filter>
+    </ClCompile>
+    <ClCompile Include="network.cpp">
+      <Filter>Network Base</Filter>
+    </ClCompile>
+    <ClCompile Include="overlapped.cpp">
+      <Filter>Network Base</Filter>
+    </ClCompile>
+    <ClCompile Include="overlapped_recv.cpp">
+      <Filter>Network Base</Filter>
+    </ClCompile>
+    <ClCompile Include="overlapped_send.cpp">
+      <Filter>Network Base</Filter>
+    </ClCompile>
+    <ClCompile Include="overlapped_udp.cpp">
+      <Filter>Network Base</Filter>
+    </ClCompile>
+    <ClCompile Include="pre_connect.cpp">
+      <Filter>Network Base</Filter>
+    </ClCompile>
+    <ClCompile Include="cpio.cpp">
+      <Filter>cpio</Filter>
+    </ClCompile>
+    <ClCompile Include="collect_confirm_packet.cpp">
+      <Filter>confirm</Filter>
+    </ClCompile>
+    <ClCompile Include="confirm.cpp">
+      <Filter>confirm</Filter>
+    </ClCompile>
+    <ClCompile Include="create_index.cpp" />
+    <ClCompile Include="net_global.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="dynamic_memory.h">
+      <Filter>Memory</Filter>
+    </ClInclude>
+    <ClInclude Include="memory_object.h">
+      <Filter>Memory</Filter>
+    </ClInclude>
+    <ClInclude Include="read_memory_handle.h">
+      <Filter>Memory</Filter>
+    </ClInclude>
+    <ClInclude Include="write_memory_handle.h">
+      <Filter>Memory</Filter>
+    </ClInclude>
+    <ClInclude Include="mainthread.h">
+      <Filter>Main Process</Filter>
+    </ClInclude>
+    <ClInclude Include="que.h">
+      <Filter>Main Process</Filter>
+    </ClInclude>
+    <ClInclude Include="quemanager.h">
+      <Filter>Main Process</Filter>
+    </ClInclude>
+    <ClInclude Include="switch_que.h">
+      <Filter>Main Process</Filter>
+    </ClInclude>
+    <ClInclude Include="timer.h">
+      <Filter>Main Process</Filter>
+    </ClInclude>
+    <ClInclude Include="exception.h">
+      <Filter>Debug</Filter>
+    </ClInclude>
+    <ClInclude Include="log.h">
+      <Filter>Debug</Filter>
+    </ClInclude>
+    <ClInclude Include="conetwork.h">
+      <Filter>Component</Filter>
+    </ClInclude>
+    <ClInclude Include="factory.h">
+      <Filter>Component</Filter>
+    </ClInclude>
+    <ClInclude Include="accept.h">
+      <Filter>Network Base</Filter>
+    </ClInclude>
+    <ClInclude Include="connect.h">
+      <Filter>Network Base</Filter>
+    </ClInclude>
+    <ClInclude Include="connect_que.h">
+      <Filter>Network Base</Filter>
+    </ClInclude>
+    <ClInclude Include="connection.h">
+      <Filter>Network Base</Filter>
+    </ClInclude>
+    <ClInclude Include="network.h">
+      <Filter>Network Base</Filter>
+    </ClInclude>
+    <ClInclude Include="overlapped.h">
+      <Filter>Network Base</Filter>
+    </ClInclude>
+    <ClInclude Include="overlapped_recv.h">
+      <Filter>Network Base</Filter>
+    </ClInclude>
+    <ClInclude Include="overlapped_send.h">
+      <Filter>Network Base</Filter>
+    </ClInclude>
+    <ClInclude Include="overlapped_udp.h">
+      <Filter>Network Base</Filter>
+    </ClInclude>
+    <ClInclude Include="pre_connect.h">
+      <Filter>Network Base</Filter>
+    </ClInclude>
+    <ClInclude Include="cpio.h">
+      <Filter>cpio</Filter>
+    </ClInclude>
+    <ClInclude Include="code_guid.h">
+      <Filter>etc</Filter>
+    </ClInclude>
+    <ClInclude Include="define.h">
+      <Filter>etc</Filter>
+    </ClInclude>
+    <ClInclude Include="icode.h">
+      <Filter>etc</Filter>
+    </ClInclude>
+    <ClInclude Include="inetwork.h">
+      <Filter>etc</Filter>
+    </ClInclude>
+    <ClInclude Include="INetwork_GUID.h">
+      <Filter>etc</Filter>
+    </ClInclude>
+    <ClInclude Include="net_define.h">
+      <Filter>etc</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>etc</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h">
+      <Filter>etc</Filter>
+    </ClInclude>
+    <ClInclude Include="typedef.h">
+      <Filter>etc</Filter>
+    </ClInclude>
+    <ClInclude Include="collect_confirm_packet.h">
+      <Filter>confirm</Filter>
+    </ClInclude>
+    <ClInclude Include="confirm.h">
+      <Filter>confirm</Filter>
+    </ClInclude>
+    <ClInclude Include="confirm_type.h">
+      <Filter>confirm</Filter>
+    </ClInclude>
+    <ClInclude Include="create_index.h" />
+    <ClInclude Include="net_global.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="I4DyuchiNET.def">
+      <Filter>Component</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="ver.rc">
+      <Filter>etc</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+</Project>
