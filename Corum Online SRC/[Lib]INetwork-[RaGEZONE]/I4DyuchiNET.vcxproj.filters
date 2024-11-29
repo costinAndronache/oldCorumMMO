@@ -228,9 +228,4 @@
       <Filter>Component</Filter>
     </None>
   </ItemGroup>
-  <ItemGroup>
-    <ResourceCompile Include="ver.rc">
-      <Filter>etc</Filter>
-    </ResourceCompile>
-  </ItemGroup>
 </Project>

@@ -2,7 +2,7 @@
 
 #include "CommonServer.h"
 #include "IOleDBThread.h"
-#include "INetWork.h"
+#include <conetwork.h>
 
 
 // 패킷 암호화 g_pNet 구성 변경 
@@ -73,7 +73,7 @@ public:
 	CNTNetWork(void);
 	~CNTNetWork(void);
 protected:
-	I4DyuchiNET * m_pNetwork;
+	Co4DyuchiNET* m_pNetwork;
 };
 
 

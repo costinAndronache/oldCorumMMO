@@ -179,6 +179,9 @@
     <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='TAIWAN_LOCALIZING_RRS|Win32'" />
     <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='TAIWAN_LOCALIZING_RRS|Win32'" />
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <IncludePath>..\staticLibsOutput\I4DyuchiNET\include;$(IncludePath)</IncludePath>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='CHINA_LOCALIZING_RRS|Win32'">
     <ClCompile>
       <Optimization>MaxSpeed</Optimization>
@@ -319,7 +322,7 @@
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>odbc32.lib;odbccp32.lib;WS2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>odbc32.lib;odbccp32.lib;WS2_32.lib;..\staticLibsOutput\I4DyuchiNET\lib\I4DyuchiNET.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)CommonServer.dll</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -849,9 +852,7 @@
     <ClInclude Include="UniqueProcess.h" />
     <ClInclude Include="DBStruct.h" />
     <ClInclude Include="global.h" />
-    <ClInclude Include="inetwork.h" />
     <ClInclude Include="IOleDBThread.h" />
-    <ClInclude Include="network_guid.h" />
     <ClInclude Include="typedef.h" />
     <ClInclude Include="BaseItem.h" />
     <ClInclude Include="Item.h" />

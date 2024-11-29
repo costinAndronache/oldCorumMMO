@@ -203,13 +203,7 @@
     <ClInclude Include="global.h">
       <Filter>COM Interface</Filter>
     </ClInclude>
-    <ClInclude Include="inetwork.h">
-      <Filter>COM Interface</Filter>
-    </ClInclude>
     <ClInclude Include="IOleDBThread.h">
-      <Filter>COM Interface</Filter>
-    </ClInclude>
-    <ClInclude Include="network_guid.h">
       <Filter>COM Interface</Filter>
     </ClInclude>
     <ClInclude Include="typedef.h">
