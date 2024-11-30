@@ -28,6 +28,8 @@ void InitializeProcFunctionForLicensing()
 
 BOOL ConnectToLicensingServer()
 {
+	return true;
+
 	if(g_pThis->IsLicensingServerConnected())
 	{
 		Log(LOG_IMPORTANT, "@ Already connected with Licensing server!");

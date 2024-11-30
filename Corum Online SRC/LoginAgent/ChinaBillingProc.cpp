@@ -32,6 +32,8 @@ void InitializeProcFunction()
 
 void ConnectToBillingServer()
 {
+	return;
+
 	if(g_pThis->IsBillingServerConnected())
 	{
 		Log(LOG_JUST_DISPLAY, "@ Already connected with billing server!");

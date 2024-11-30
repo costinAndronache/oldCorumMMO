@@ -2163,6 +2163,8 @@ WORD CUser::GetInvLargeItemSumWeight()
 //==============================================
 WORD CUser::GetSmallItemSumWeight()
 {
+	return 0;
+
 	WORD wWeight = 0;
 
 	for(int i = 0; i < MAX_INV_SMALL_POOL; i++)
@@ -2172,7 +2174,10 @@ WORD CUser::GetSmallItemSumWeight()
 			CBaseItem* pBaseItem = g_pBaseItemHash->GetData(m_pInv_Small[i].m_wItemID);
 			if(pBaseItem)				
 			{
-				wWeight += (pBaseItem->GetWeight() * m_pInv_Small[i].GetQuantity());
+				CItem itemInfo = m_pInv_Small[i];
+				int count = itemInfo.GetQuantity();
+				int weight = pBaseItem->GetWeight();
+				wWeight += (weight * count);
 			}
 		}
 	}

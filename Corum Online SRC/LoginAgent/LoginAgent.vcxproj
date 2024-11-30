@@ -165,8 +165,8 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <GenerateManifest>false</GenerateManifest>
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
-    <OutDir>E:\Git\oldCorumMMO\Corum Online SRC\LoginAgent\</OutDir>
+    <IncludePath>..\staticLibsOutput\I4DyuchiNET\include;$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
+    <OutDir>..\INNER\1_LoginAgent Configurations_INNER</OutDir>
     <TargetName>LoginAgentResult</TargetName>
     <IntDir>.</IntDir>
   </PropertyGroup>
@@ -241,7 +241,7 @@
       <TargetMachine>MachineX86</TargetMachine>
       <IgnoreSpecificDefaultLibraries>LIBC.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
       <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
-      <OutputFile>E:\Git\oldCorumMMO\Corum Online SRC\LoginAgent\LoginAgentResult.exe</OutputFile>
+      <OutputFile>..\INNER\1_LoginAgent Configurations_INNER\LoginAgentResult.exe</OutputFile>
     </Link>
     <Midl>
       <TypeLibraryName>.\Debug/LoginAgent.tlb</TypeLibraryName>
