@@ -1861,7 +1861,7 @@ GLOBAL_FUNC_DLL BOOL __stdcall CalcBoundingMesh(VECTOR3* pv3,DWORD dwVertexNum,C
 
 	float	rs = -1000000.0f;
 
-	for (i=0; i<3; i++)
+	for (int i=0; i<3; i++)
 	{
 		if (rs < len[i])
 			rs = len[i];

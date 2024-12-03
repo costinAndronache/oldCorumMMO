@@ -134,7 +134,7 @@
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\Release\</IntDir>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</LinkIncremental>
     <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.\Debug\</OutDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.\Debug\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.\Debug\Intermediate\</IntDir>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</LinkIncremental>
     <OutDir Condition="'$(Configuration)|$(Platform)'=='CHINA_LOCALIZING_DBG|Win32'">.\CommonServer___Win32_CHINA_LOCALIZING_DBG\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='CHINA_LOCALIZING_DBG|Win32'">.\CommonServer___Win32_CHINA_LOCALIZING_DBG\</IntDir>
@@ -322,7 +322,7 @@
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>odbc32.lib;odbccp32.lib;WS2_32.lib;..\staticLibsOutput\I4DyuchiNET\lib\I4DyuchiNET.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>odbc32.lib;odbccp32.lib;WS2_32.lib;..\centralizedOutput\I4DyuchiNET\lib\I4DyuchiNET.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)CommonServer.dll</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -343,6 +343,9 @@
       <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <Culture>0x0412</Culture>
     </ResourceCompile>
+    <PostBuildEvent>
+      <Command>..\..\scripts\postBuildCentraliseOutput_CommonServer.bat</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='CHINA_LOCALIZING_DBG|Win32'">
     <ClCompile>

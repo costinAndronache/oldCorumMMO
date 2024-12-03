@@ -118,9 +118,9 @@
     <OutDir Condition="'$(Configuration)|$(Platform)'=='CHINA_LOCALIZING|Win32'">.\DungeonServer___Win32_CHINA_LOCALIZING\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='CHINA_LOCALIZING|Win32'">.\DungeonServer___Win32_CHINA_LOCALIZING\</IntDir>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='CHINA_LOCALIZING|Win32'">false</LinkIncremental>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.\..\INNER\3_DungeonServer Configurations\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.\Debug\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.\Debug\</IntDir>
-    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</LinkIncremental>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</LinkIncremental>
     <OutDir Condition="'$(Configuration)|$(Platform)'=='Dev|Win32'">.\DungeonServer___Win32_Dev\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Dev|Win32'">.\DungeonServer___Win32_Dev\</IntDir>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Dev|Win32'">false</LinkIncremental>
@@ -264,7 +264,7 @@
     </ClCompile>
     <Link>
       <AdditionalDependencies>CommonServer.lib;odbc32.lib;odbccp32.lib;WS2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <OutputFile>.\..\INNER\3_DungeonServer Configurations\DungeonServerResult.exe</OutputFile>
+      <OutputFile>.\Debug\DungeonServerResult.exe</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <IgnoreSpecificDefaultLibraries>libc.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
@@ -287,6 +287,9 @@
       <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <Culture>0x0412</Culture>
     </ResourceCompile>
+    <PostBuildEvent>
+      <Command>..\..\scripts\postBuildCentraliseOutput_DungeonServer.bat</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Dev|Win32'">
     <ClCompile>

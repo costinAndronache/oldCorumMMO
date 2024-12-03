@@ -82,7 +82,7 @@ ITEM_CONTAINER*	CHashSearch::InsertItem(DWORD* pdwUID,DWORD dwUIDNum,void* pItem
 
 	pNewContainer->dwKey = dwKey;
 	pNewContainer->dwUIDNum = dwUIDNum;
-	for (i=0; i<dwUIDNum; i++)
+	for (int i=0; i<dwUIDNum; i++)
 	{
 		pNewContainer->dwUID[i] = pdwUID[i];
 	}
@@ -124,7 +124,7 @@ void* CHashSearch::SearchItem(DWORD* pdwUID,DWORD dwUIDNum)
 		if (pCur->dwUIDNum != dwUIDNum)
 			goto lb_skip;
 
-		for (i=0; i<pCur->dwUIDNum; i++)
+		for (int i=0; i<pCur->dwUIDNum; i++)
 		{
 			if (pCur->dwUID[i] != pdwUID[i])
 				goto lb_skip;

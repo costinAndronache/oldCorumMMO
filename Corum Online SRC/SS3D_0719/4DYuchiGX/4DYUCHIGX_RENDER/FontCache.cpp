@@ -114,7 +114,7 @@ BOOL CFontCache::Initialize(CoD3DDevice* pRenderer,DWORD dwMaxCacheItemNum,DWORD
 		memset(pBufferDesc,0,sizeof(TEXTURE_BUFFER_DESC));
 	}
 	pBufferDesc->pNext = m_pTextureBufferDesc;
-	for (i=0; i<(int)m_dwTextureBufferNum; i++)
+	for (int i=0; i<(int)m_dwTextureBufferNum; i++)
 	{
 		HRESULT		hr = m_pRenderer->GetD3DResourceManager()->CreateTexture(
 			dwTexWidth,
@@ -158,7 +158,7 @@ BOOL CFontCache::Initialize(CoD3DDevice* pRenderer,DWORD dwMaxCacheItemNum,DWORD
 	BSAEInitialize(m_pLineDescSearch,m_dwMaxLineDescNum);
 	m_fontHash.Initialize(m_dwMaxCacheItemNum,MAX_STRING_BYTES_NUM);
 
-	for (i=0; i<4; i++)
+	for (int i=0; i<4; i++)
 	{
 		m_v4Rect[i].z = 0.1f;
 		m_v4Rect[i].w = 1.0f;

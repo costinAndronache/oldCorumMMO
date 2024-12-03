@@ -124,8 +124,8 @@
     <OutDir Condition="'$(Configuration)|$(Platform)'=='TAIWAN_LOCALIZING|Win32'">.\WorldServer___Win32_TAIWAN_LOCALIZING\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='TAIWAN_LOCALIZING|Win32'">.\WorldServer___Win32_TAIWAN_LOCALIZING\</IntDir>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='TAIWAN_LOCALIZING|Win32'">true</LinkIncremental>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.\..\INNER\2_WorldServer Configurations\</OutDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.\Debug\</IntDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.\Debug\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.\Debug\Intermediate\</IntDir>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</LinkIncremental>
     <OutDir Condition="'$(Configuration)|$(Platform)'=='CHINA_BILLING|Win32'">.\WorldServer___Win32_CHINA_BILLING\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='CHINA_BILLING|Win32'">.\WorldServer___Win32_CHINA_BILLING\</IntDir>
@@ -166,8 +166,9 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <GenerateManifest>false</GenerateManifest>
-    <IncludePath>..\staticLibsOutput\I4DyuchiNET\include;C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.27.29110\atlmfc\include;$(IncludePath)</IncludePath>
+    <IncludePath>..\staticLibsOutput\I4DyuchiNET\include;$(IncludePath)</IncludePath>
     <TargetName>WorldServerResult</TargetName>
+    <LibraryPath>$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='JAPAN_LOCALIZING|Win32'">
     <ClCompile>
@@ -326,6 +327,9 @@
       <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <Culture>0x0412</Culture>
     </ResourceCompile>
+    <PostBuildEvent>
+      <Command>..\..\scripts\postBuildCentraliseOutput_WorldServer.bat</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='CHINA_BILLING|Win32'">
     <ClCompile>

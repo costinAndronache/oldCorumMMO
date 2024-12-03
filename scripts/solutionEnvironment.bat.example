@@ -1,0 +1,4 @@
+VSSDKDIR=C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.27.29110\
+VS2010SDKDIR=E:\Program Files (x86)\Microsoft Visual Studio 10.0\VC
+DX8SDKDIR=E:\Git\oldCorumMMO\directx8-msdx8
+WINSDKDIR=C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\

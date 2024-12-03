@@ -202,5 +202,6 @@
       <Filter>CommonServer</Filter>
     </None>
     <None Include="ReadMe.txt" />
+    <None Include="..\I4DyuchiNET\I4DyuchiNET.sln" />
   </ItemGroup>
 </Project>

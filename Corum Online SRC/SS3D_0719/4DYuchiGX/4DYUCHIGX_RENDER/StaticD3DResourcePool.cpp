@@ -106,7 +106,7 @@ BOOL CStaticD3DResourcePool::Initialize(CD3DResourceManager* pResourceManager,DW
 	memset(m_pItemList,0,sizeof(STATIC_D3DRC_BUFFER_ITEM)*dwMaxItemNum);
 
 	STATIC_D3DRC_BUFFER_ITEM*	pCurItem;
-	for (i=0; i<dwMaxItemNum; i++)
+	for (int i=0; i<dwMaxItemNum; i++)
 	{
 		pCurItem = m_pItemList+i;
 		if (pCurItem->pNext)

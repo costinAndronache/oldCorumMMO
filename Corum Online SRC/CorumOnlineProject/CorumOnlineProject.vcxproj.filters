@@ -762,9 +762,6 @@
     <ClCompile Include="CustomUiKit\Renderer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="CustomUiKitGXRenderer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="CustomDXDrawing\Renderer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -1473,9 +1470,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="CustomUiKit\Base.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="CustomUiKitGXRenderer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="CustomDXDrawing\Colors.h">

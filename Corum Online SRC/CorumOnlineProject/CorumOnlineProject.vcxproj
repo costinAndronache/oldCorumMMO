@@ -261,13 +261,15 @@
     <LinkIncremental>false</LinkIncremental>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <OutDir>..\Installed Client</OutDir>
-    <IntDir>.\Debug\</IntDir>
+    <OutDir>.\Debug\</OutDir>
+    <IntDir>.\Debug\Intermediate\</IntDir>
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\include;E:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include;C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.27.29110\atlmfc\include;E:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\atlmfc\include;E:\Git\oldCorumMMO\directx8-msdx8\include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\Lib;E:\Git\oldCorumMMO\directx8-msdx8\lib;E:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\lib;C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.27.29110\atlmfc\lib;C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\lib</LibraryPath>
+    <IncludePath>$(SOLUTION_INCLUDES);$(IncludePath)</IncludePath>
+    <LibraryPath>$(SOLUTION_LIBS)</LibraryPath>
     <TargetName>CorumOnlineResult</TargetName>
     <GenerateManifest>false</GenerateManifest>
+    <CustomBuildAfterTargets>
+    </CustomBuildAfterTargets>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>.\Release\</OutDir>
@@ -793,7 +795,7 @@
     </ClCompile>
     <Link>
       <AdditionalDependencies>odbc32.lib;odbccp32.lib;imm32.lib;Winmm.lib;WS2_32.lib;d3d8.lib;mss32.lib;version.lib;gdiplus.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <OutputFile>.\..\Installed Client\CorumOnlineResult.exe</OutputFile>
+      <OutputFile>.\Debug\CorumOnlineResult.exe</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <IgnoreSpecificDefaultLibraries>LIBC.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -817,6 +819,13 @@
       <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <Culture>0x0412</Culture>
     </ResourceCompile>
+    <CustomBuildStep>
+      <Command>
+      </Command>
+    </CustomBuildStep>
+    <PostBuildEvent>
+      <Command>..\..\scripts\postBuildCentraliseOutput_CorumOnlineProject.bat</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -1877,7 +1886,6 @@
       <BrowseInformation Condition="'$(Configuration)|$(Platform)'=='dev|Win32'">true</BrowseInformation>
     </ClCompile>
     <ClCompile Include="CustomDXDrawing\Renderer.cpp" />
-    <ClCompile Include="CustomUiKitGXRenderer.cpp" />
     <ClCompile Include="CustomUiKit\PagedTableWindow\PagedTableWindow.cpp" />
     <ClCompile Include="CustomUiKit\Renderer.cpp" />
     <ClCompile Include="DamageNumber.cpp">
@@ -6605,7 +6613,6 @@
     <ClInclude Include="crtNode.h" />
     <ClInclude Include="CustomDXDrawing\Colors.h" />
     <ClInclude Include="CustomDXDrawing\Renderer.h" />
-    <ClInclude Include="CustomUiKitGXRenderer.h" />
     <ClInclude Include="CustomUiKit\Base.h" />
     <ClInclude Include="CustomUiKit\PagedTableWindow\PagedTableWindow.h" />
     <ClInclude Include="CustomUiKit\Renderer.h" />

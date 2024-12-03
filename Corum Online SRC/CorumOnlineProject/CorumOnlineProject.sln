@@ -18,7 +18,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "4DyuchiGX_Render", "..\SS3D
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "4DyuchiGXGFunc", "..\SS3D_0719\4DYuchiGX\4DyuchiGXGFunc\4DyuchiGXGFunc.vcxproj", "{CFB0CD92-3451-4AB6-BB4C-CE2CF5B58D0A}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "I4DyuchiNET", "..\[Lib]INetwork-[RaGEZONE]\I4DyuchiNET.vcxproj", "{1B17878E-9CB1-422B-985C-F07C3E5678D8}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "I4DyuchiNET", "..\I4DyuchiNET\I4DyuchiNET.vcxproj", "{1B17878E-9CB1-422B-985C-F07C3E5678D8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

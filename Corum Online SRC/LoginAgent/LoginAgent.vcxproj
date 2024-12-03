@@ -166,9 +166,9 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <GenerateManifest>false</GenerateManifest>
     <IncludePath>..\staticLibsOutput\I4DyuchiNET\include;$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
-    <OutDir>..\INNER\1_LoginAgent Configurations_INNER</OutDir>
+    <OutDir>.\Debug\</OutDir>
     <TargetName>LoginAgentResult</TargetName>
-    <IntDir>.</IntDir>
+    <IntDir>.\Debug\Intermediate\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='JAPAN|Win32'">
     <ClCompile>
@@ -252,6 +252,9 @@
       <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <Culture>0x0412</Culture>
     </ResourceCompile>
+    <PostBuildEvent>
+      <Command>..\..\scripts\postBuildCentraliseOutput_LoginAgent.bat</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -1002,6 +1005,7 @@
     <Library Include="CommonServer.lib" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\I4DyuchiNET\I4DyuchiNET.sln" />
     <None Include="libcomservice2.dll" />
     <None Include="CommonServer.dll" />
     <None Include="ReadMe.txt" />
