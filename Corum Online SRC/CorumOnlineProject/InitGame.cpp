@@ -702,6 +702,14 @@ BOOL InitGame()
 	g_Camera.v3Angle.y =  g_Camera.CameraDesc.fYRot;
 	g_Camera.v3Angle.z =  g_Camera.CameraDesc.fZRot;
 
+	//
+	SLEVEL_EXP *testDecode = new SLEVEL_EXP[300];
+	memset(testDecode, 0, sizeof(SLEVEL_EXP) * 300);
+
+	DecodeCDBData(GetFile("ExodusLevel.cdb", DATA_TYPE_MANAGER), testDecode);
+	//
+
+
 	SetListener(&g_Camera.v3Angle);
 	LoadCursorDoIt();
 	InitializePool();

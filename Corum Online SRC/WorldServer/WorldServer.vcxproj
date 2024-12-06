@@ -125,7 +125,7 @@
     <IntDir Condition="'$(Configuration)|$(Platform)'=='TAIWAN_LOCALIZING|Win32'">.\WorldServer___Win32_TAIWAN_LOCALIZING\</IntDir>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='TAIWAN_LOCALIZING|Win32'">true</LinkIncremental>
     <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.\Debug\</OutDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.\Debug\Intermediate\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.\Debug\</IntDir>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</LinkIncremental>
     <OutDir Condition="'$(Configuration)|$(Platform)'=='CHINA_BILLING|Win32'">.\WorldServer___Win32_CHINA_BILLING\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='CHINA_BILLING|Win32'">.\WorldServer___Win32_CHINA_BILLING\</IntDir>
@@ -308,7 +308,7 @@
     </ClCompile>
     <Link>
       <AdditionalDependencies>odbc32.lib;odbccp32.lib;WS2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <OutputFile>.\..\INNER\2_WorldServer Configurations\/WorldServerResult.exe</OutputFile>
+      <OutputFile>.\Debug\WorldServerResult.exe</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <ProgramDatabaseFile>.\..INNER\2_WorldServer Configurations\WorldServer.pdb</ProgramDatabaseFile>

@@ -78,7 +78,7 @@
     <ConfigurationType>Application</ConfigurationType>
     <UseOfMfc>Static</UseOfMfc>
     <CharacterSet>MultiByte</CharacterSet>
-    <UseOfAtl>Static</UseOfAtl>
+    <UseOfAtl>false</UseOfAtl>
     <PlatformToolset>v142</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='JAPAN|Win32'" Label="Configuration">
@@ -165,10 +165,11 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <GenerateManifest>false</GenerateManifest>
-    <IncludePath>..\staticLibsOutput\I4DyuchiNET\include;$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
+    <IncludePath>..\staticLibsOutput\I4DyuchiNET\include</IncludePath>
     <OutDir>.\Debug\</OutDir>
     <TargetName>LoginAgentResult</TargetName>
-    <IntDir>.\Debug\Intermediate\</IntDir>
+    <IntDir>.\Debug\</IntDir>
+    <LibraryPath>$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='JAPAN|Win32'">
     <ClCompile>
@@ -241,7 +242,7 @@
       <TargetMachine>MachineX86</TargetMachine>
       <IgnoreSpecificDefaultLibraries>LIBC.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
       <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
-      <OutputFile>..\INNER\1_LoginAgent Configurations_INNER\LoginAgentResult.exe</OutputFile>
+      <OutputFile>.\Debug\LoginAgentResult.exe</OutputFile>
     </Link>
     <Midl>
       <TypeLibraryName>.\Debug/LoginAgent.tlb</TypeLibraryName>
