@@ -1,5 +1,6 @@
 #include "../../StdAfx.h"
 #include "ForbidWord.h"
+#include <string>
 
 LPCFORBIDWORD	CFORBIDWORD::m_gpForbidWord = NULL;
 

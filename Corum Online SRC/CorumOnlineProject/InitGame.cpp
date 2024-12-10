@@ -1593,7 +1593,7 @@ BOOL InitCOMObject()
 
 	g_pGeometry->SetDirectionalLight(&dirLight,0);
 	g_pGeometry->EnableDirectionalLight(0);
-
+	
 	g_hBaseNetworkHandle = LoadLibrary("BaseNetwork.dll");
 
 	DllGetClassObject_BaseNetwork	pNetFunc;

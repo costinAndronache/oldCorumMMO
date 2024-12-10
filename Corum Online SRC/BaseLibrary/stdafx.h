@@ -5,6 +5,9 @@
 
 #pragma once
 
+#define _SILENCE_STDEXT_HASH_DEPRECATION_WARNINGS
+#define _CRT_SECURE_NO_WARNINGS
+
 #if _MSC_VER <= 1200
 #pragma warning (disable: 4786)
 #endif

@@ -2,6 +2,7 @@
 #define		__FORBID_WORD_HEADER__
 
 #include <list>
+#include <string>
 
 static char	g_szDefaultFilename[] = "sfilter.dat";
 class CFORBIDWORD

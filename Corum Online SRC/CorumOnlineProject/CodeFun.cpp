@@ -193,7 +193,7 @@ void SetMousePointerType(BYTE byPointerType)
 
 	if(!g_hCursor[ byPointerType ] || byPointerType >= __MAX_MOUSE_POINTER__)	
 	{
-		asm_int3();
+		//asm_int3();
 		return;
 	}
 

@@ -1,6 +1,8 @@
 chdir %~dp0
 echo "Begin copying WorldServer executable"
 
-COPY /Y /B "..\Corum Online SRC\WorldServer\Debug\WorldServer.exe" "..\Corum Online SRC\centralizedOutput\WorldServer.exe"
+XCOPY /Y /B "..\Corum Online SRC\WorldServer\Debug\WorldServerResult.exe" "..\Corum Online SRC\centralizedOutput\WorldServerResult.exe*"
 
 echo "copying done"
+
+.\installProducts.bat

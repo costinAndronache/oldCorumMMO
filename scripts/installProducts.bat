@@ -18,3 +18,4 @@ COPY /Y /B "..\Corum Online SRC\centralizedOutput\DungeonServerResult.exe" "..\C
 COPY /Y /B "..\Corum Online SRC\centralizedOutput\DungeonServerResult.exe" "..\Corum Online SRC\INNER\3_DungeonServer Configurations_Ludilos\DungeonServerResult.exe"
 
 echo "copying done"
+pause
