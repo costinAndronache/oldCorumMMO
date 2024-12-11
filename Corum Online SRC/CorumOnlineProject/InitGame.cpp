@@ -120,7 +120,7 @@ HCURSOR						g_hCursor[__MAX_MOUSE_POINTER__];
 
 DUNGEONPRODUCTIONITEMMINMAX	g_DungeonProductionItemMinMax[DUNGEON_PROPERTY_MAX];
 NPC_TABLE					g_NPCTable[MAX_NPC_NUM_PER_VILLAGE];
-BASE_CLASS_INFO				g_sBaseClassInfo[5];
+BASE_CLASS_INFO				g_sBaseClassInfo[10];
 SSKILL_DPINFO				g_sSkillInfoDP[MAX_SKILL];
 SLEVEL_EXP					g_sLevelExp[MAX_LEVEL+1];
 SLEVEL_EXP					g_sGuardianLevelExp[MAX_LEVEL+1];
@@ -666,6 +666,9 @@ BOOL InitGame()
 	g_Res.Init("CorumResource.erd", g_szBasePath);	
 	g_ResDefined.Init("DefResource.erd", g_szBasePath);		
 	SetRect( &g_rcScreenRect, 0, 0, windowWidth(), windowHeight() );
+
+	char* resFilenamePath = g_Res.GetResFileName(1677724600);
+	char* resFilenameOnly = g_Res.GetResFileNameOnly(167772161);
 
 	InitFunctionPointer();
 	InitPacketProc();
@@ -1524,8 +1527,12 @@ void InitFunctionPointer()
 
 BOOL InitCOMObject()
 {
+	char crtDirName[201];
+	GetCurrentDirectory(200, crtDirName);
+	SetCurrentDirectory(g_szBasePath);
 	CoInitialize(NULL);
 	g_hExecutiveHandle = LoadLibrary("SS3DExecutiveForCorum.dll");
+	DWORD lastError = GetLastError();
 	CREATE_INSTANCE_FUNC pFunc = (CREATE_INSTANCE_FUNC)GetProcAddress(g_hExecutiveHandle,"DllCreateInstance");
 	
 	HRESULT hr = pFunc((void**)&g_pExecutive);

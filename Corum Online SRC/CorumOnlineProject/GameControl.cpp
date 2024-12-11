@@ -2327,8 +2327,15 @@ void CheckTick()
 
 LPObjectDesc AllocObjDesc()
 {
-	LPObjectDesc pDesc;
+	LPObjectDesc pDesc = new OBJECT_DESC;
 	
+	memset(pDesc, 0, sizeof(OBJECT_DESC));
+
+	pDesc->bSkip = TRUE;
+
+	g_dwDescNum++;
+	return pDesc;
+
 	pDesc = (LPObjectDesc)LALAlloc( g_pObjDescPool );
 	if( !pDesc )
 	{
@@ -2348,6 +2355,11 @@ LPObjectDesc AllocObjDesc()
 void FreeObjDesc( LPObjectDesc pDesc )
 {
 	if( !pDesc ) return;
+	delete pDesc;
+	g_dwDescNum--;
+
+	return;
+
 	LALFree( g_pObjDescPool, (void*)pDesc );
 	memset(pDesc, 0, sizeof(OBJECT_DESC));
 	pDesc = NULL;
