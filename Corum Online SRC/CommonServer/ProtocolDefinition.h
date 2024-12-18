@@ -14,7 +14,7 @@
 //////////////////////////////////////////////////////////////////////////
 //	Common Packet Header Structure Definition
 //////////////////////////////////////////////////////////////////////////
-#pragma pack (push,1 )
+#pragma pack (push,1)
 struct WORLD_PACKET_HEADER
 {
 	BYTE	bGameStatus;
@@ -724,6 +724,6 @@ struct Protocol_DSTC
 	};
 };
 
-#pragma pack (pop,1)
+#pragma pack (pop)
 
 #endif	
