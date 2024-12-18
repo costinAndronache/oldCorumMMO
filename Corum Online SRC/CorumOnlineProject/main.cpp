@@ -32,10 +32,6 @@
 
 int APIENTRY WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nShowCmd )
 {
-	Gdiplus::GdiplusStartupInput gdiplusStartupInput;
-	ULONG_PTR gdiplusToken;
-	Gdiplus::GdiplusStartup(&gdiplusToken, &gdiplusStartupInput, NULL);
-
 
 #ifndef DEVELOP_MODE	
 	if(!CheckGlobalEventHandle())

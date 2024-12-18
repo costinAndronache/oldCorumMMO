@@ -195,7 +195,7 @@ DWORD Sw::FindShortestWay ( DWORD dwStart_X, DWORD dwStart_Y, DWORD dwTarget_X, 
 	pVirtualBlock_Parent->fCostFromStart = 1000.0f;\
 	pVirtualBlock_Parent++
 	
-	iA = dwCounter_Max/8;
+	iA = dwCounter_Max%8;
 	iB = dwCounter_Max%8;
 
 	for(a=0;a<iA;a++)

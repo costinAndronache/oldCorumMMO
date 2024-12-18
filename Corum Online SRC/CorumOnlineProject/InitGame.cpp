@@ -462,9 +462,15 @@ BOOL LoadCDBMessage()
 {
 	int nTotalSize = 0;
 
-	if(!g_Message.LoadTextResource(GetFile("message.cdb", DATA_TYPE_MANAGER)))						return FALSE;
-	if(!g_ConvMessage.LoadTextResource(GetFile("filter_conv_message.cdb", DATA_TYPE_MANAGER)))		return FALSE;
-	if(!g_NotConvMessage.LoadTextResource(GetFile("filter_notconv_message.cdb", DATA_TYPE_MANAGER)))return FALSE;
+	if(!g_Message.LoadTextResource(GetFile("message.cdb", DATA_TYPE_MANAGER)))						
+		return FALSE;
+
+	if(!g_ConvMessage.LoadTextResource(GetFile("filter_conv_message.cdb", DATA_TYPE_MANAGER)))		
+		return FALSE;
+
+	if(!g_NotConvMessage.LoadTextResource(GetFile("filter_notconv_message.cdb", DATA_TYPE_MANAGER)))
+		return FALSE;
+
 	if(!g_CmdMessage.LoadTextResource(GetFile("cmd_message.cdb", DATA_TYPE_MANAGER)))				return FALSE;
 	if(!g_Emoticon.LoadTextResource(GetFile("emoticon.cdb", DATA_TYPE_MANAGER)))					return FALSE;
 
