@@ -1945,12 +1945,9 @@ BOOL CMonster::PathFind(const VECTOR2* v2Dest /* = NULL  */)
 		return FALSE;
 	}
 
-	if (m_pBaseMonster->dwID) {
-		return FALSE;
-	}
-
 	CDungeonLayer* dl = GetCurDungeonLayer();
-	Sw* searchEngine = dl->m_pSw;
+	Sw* searchEngine = dl->getSearchEngine();
+	
 	m_PathFinder.dwCurveNum	= searchEngine->FindShortestWay( dwStartX, 
 													dwStartZ,
 													dwEndX,

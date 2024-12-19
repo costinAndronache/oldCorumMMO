@@ -25,6 +25,15 @@
 
 #include ".\tm_killingfield.h"
 
+Sw* CDungeonLayer::getSearchEngine() {
+	if (searchEngine == NULL) {
+		searchEngine = new Sw;
+		searchEngine->Initialize(20, 20, m_pMap->m_dwTileNumWidth, m_pMap->m_dwTileNumHeight, sizeof(MAP_TILE), (PVOID) & (m_pMap->GetTile(0, 0)->wAttr));
+	}
+
+	return searchEngine;
+}
+
 //-----------------------------------------------------------------------------
 // 던전의 한층(Layer)을 생성한다(일반 던전서버일 경우) 
 //	
@@ -53,11 +62,7 @@ void CDungeonLayer::Create(DWORD dwID, BYTE bLayer, CDungeon* pParent)
 	
 	// 대전 초기값.
 	InitMatch();
-	
-	// PathFinder
-	m_pSw = new Sw;
-	m_pSw->Initialize( 20, 20, m_pMap->m_dwTileNumWidth, m_pMap->m_dwTileNumHeight, sizeof(MAP_TILE), (PVOID)&( m_pMap->GetTile(0, 0)->wAttr ) );
-	
+
 	// Make Layer Formation.
 	char szQuery[ 0xff ]={0,};
 	wsprintf(szQuery, "Select DungeonID, Layer, MonsterFormation, MonsterKind from LayerFormation where DungeonID=%d and Layer=%d", m_pParent->GetID(), bLayer );
@@ -147,12 +152,6 @@ void CDungeonLayer::Destroy()
 		m_pStartSpot = NULL;
 	}
 	
-	if( m_pSw )
-	{
-		delete m_pSw;
-		m_pSw = NULL;
-	}
-
 	if (m_pPcList)
 	{
 		m_pPcList->RemoveAll();
@@ -205,7 +204,12 @@ void CDungeonLayer::Destroy()
 	{
 		delete m_pLayerFormation;
 		m_pLayerFormation = NULL;
-	}	
+	}
+
+	if (searchEngine) {
+		delete searchEngine;
+		searchEngine = NULL;
+	}
 }
 
 DWORD CDungeonLayer::GetUserCount()	

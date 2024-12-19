@@ -78,8 +78,8 @@ public:
 	WORD					m_wMoveSpotNum;
 	Move_Spot*				m_pMoveSpot;
 	CDungeonLayer*			m_pPrvInfo;			
-	CDungeonLayer*			m_pNextInfo;	
-	Sw*						m_pSw;
+	CDungeonLayer*			m_pNextInfo;
+	Sw*						searchEngine;
 	DWORD					m_dwLastFrameSec;
 	DWORD					m_dwLastOwnerFrameSec;
 
@@ -98,9 +98,8 @@ public:
 	DWORD					m_dwEndMatchJudgmentTick;		// 대전 종료후 5초간 이러저러한 일들 을 한다.
 	DWORD					m_dw10SecEndMatchLayerTick;		// 대전이 종료되고 10초후에 대전 종료 플레그를 세팅한다. 
 
-	
-
 public:
+	Sw*			    getSearchEngine();
 	void			Create(DWORD dwID, BYTE bLayer, CDungeon* pParent);
 	void			Destroy();	
 	void			InitMatch();
