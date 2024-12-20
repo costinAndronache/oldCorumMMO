@@ -163,6 +163,8 @@ void __stdcall ShowAllDungeonStatus(DWORD dwVal)
 
 void __stdcall ReconnectWorldServer(DWORD dwVal)
 {
+	return;
+
 	Log(LOG_NORMAL, "Try to reconnect WorldServer! (IP:%s, Port:%d)", g_pThis->GetIPForWorldServer(), g_pThis->GetPortForWorldServer());
 	ConnectToWorldServer();
 }

@@ -29,6 +29,9 @@
 #include <GdiPlusInit.h>
 #include "CustomUiKit/PagedTableWindow/PagedTableWindow.h"
 
+void message(char* const info) {
+	MessageBox(g_hMainWnd, info, "CorumOnlineProject", MB_OK);
+}
 
 int APIENTRY WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nShowCmd )
 {
@@ -77,6 +80,7 @@ int APIENTRY WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdL
 
 
 
+	message("Begin client initialization");
 
 #ifdef DEVELOP_MODE
 	GetCurrentDirectory(_MAX_PATH, g_Dev.szDevIniPath);
@@ -98,7 +102,10 @@ int APIENTRY WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdL
 	_CrtSetDbgFlag(flag);
 #endif	
 		
-	if(!InitGame())	return 0;
+	if (!InitGame()) {
+		message("Could not initialise internals!");
+		return 0;
+	}
 
 #ifdef __USE_CLIENT_SPEEDHACK_CHECKER
 	InitializeClietSpeedHackChecker();
@@ -141,7 +148,7 @@ lb_Process:
 		g_bIsRunning = FALSE;
 	}
 
-	
+	message("Begin game");
 
 	while(g_bIsRunning)
 	{
