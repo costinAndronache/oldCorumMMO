@@ -255,8 +255,8 @@ public:
 	// QuickSlot 관련 함수
 	void	EnableQuickSlot(BOOL bEnAble);	
 	
-	void	SetDengeonHp(WORD wHp);
-	void	SetDengeonMp(WORD wMp);
+	void	SetDengeonHp(DWORD wHp);
+	void	SetDengeonMp(DWORD wMp);
 
 	void	SetMousePointerPos(float fPosX, float fPosZ);
 	void	SetMousePointerType(BYTE byPointerType);

@@ -920,11 +920,11 @@ void CmdUserStatus( char* pMsg, DWORD dwLen )
 		switch( pUserStatus->pStatus[i].dwCode )
 		{
 		case USER_MAXHP:
-			g_pMainPlayer->m_wMaxHP	= (WORD)pUserStatus->pStatus[i].dwMin;
+			g_pMainPlayer->m_wMaxHP	= (DWORD)pUserStatus->pStatus[i].dwMin;
 			break;
 		
 		case USER_MAXMP:
-			g_pMainPlayer->m_wMaxMP = (WORD)pUserStatus->pStatus[i].dwMin;
+			g_pMainPlayer->m_wMaxMP = (DWORD)pUserStatus->pStatus[i].dwMin;
 			break;
 		
 		case USER_HONOR:
@@ -956,45 +956,45 @@ void CmdUserStatus( char* pMsg, DWORD dwLen )
 			break;
 		
 		case USER_ATTACK_R:
-			g_pMainPlayer->m_pwAttackDamage_R[0]	= (WORD)pUserStatus->pStatus[i].dwMin;
-			g_pMainPlayer->m_pwAttackDamage_R[1]	= (WORD)pUserStatus->pStatus[i].dwMax;
+			g_pMainPlayer->m_pwAttackDamage_R[0]	= (DWORD)pUserStatus->pStatus[i].dwMin;
+			g_pMainPlayer->m_pwAttackDamage_R[1]	= (DWORD)pUserStatus->pStatus[i].dwMax;
 			break;
 		
 		case USER_ATTACK_L:
-			g_pMainPlayer->m_pwAttackDamage_L[0]	= (WORD)pUserStatus->pStatus[i].dwMin;
-			g_pMainPlayer->m_pwAttackDamage_L[1]	= (WORD)pUserStatus->pStatus[i].dwMax;
+			g_pMainPlayer->m_pwAttackDamage_L[0]	= (DWORD)pUserStatus->pStatus[i].dwMin;
+			g_pMainPlayer->m_pwAttackDamage_L[1]	= (DWORD)pUserStatus->pStatus[i].dwMax;
 			break;
 		
 		case USER_AA:
-			g_pMainPlayer->m_wAttackAcuracy	= (WORD)pUserStatus->pStatus[i].dwMin;
+			g_pMainPlayer->m_wAttackAcuracy	= (DWORD)pUserStatus->pStatus[i].dwMin;
 			break;
 		
 		case USER_AVOID:
-			g_pMainPlayer->m_wAvoid	= (WORD)pUserStatus->pStatus[i].dwMin;
+			g_pMainPlayer->m_wAvoid	= (DWORD)pUserStatus->pStatus[i].dwMin;
 			break;
 		
 		case USER_BLOCKRATE:
-			g_pMainPlayer->m_wBlockRate	= (WORD)pUserStatus->pStatus[i].dwMin;
+			g_pMainPlayer->m_wBlockRate	= (DWORD)pUserStatus->pStatus[i].dwMin;
 			break;
 		
 		case USER_FIRE_RESIST:
-			g_pMainPlayer->m_wFireResist	= (WORD)pUserStatus->pStatus[i].dwMin;
+			g_pMainPlayer->m_wFireResist	= (DWORD)pUserStatus->pStatus[i].dwMin;
 			break;
 		
 		case USER_ICE_RESIST:
-			g_pMainPlayer->m_wIceResist		= (WORD)pUserStatus->pStatus[i].dwMin;
+			g_pMainPlayer->m_wIceResist		= (DWORD)pUserStatus->pStatus[i].dwMin;
 			break;
 		
 		case USER_LIGHT_RESIST:
-			g_pMainPlayer->m_wLightResist		= (WORD)pUserStatus->pStatus[i].dwMin;
+			g_pMainPlayer->m_wLightResist		= (DWORD)pUserStatus->pStatus[i].dwMin;
 			break;
 		
 		case USER_POI_RESIST:
-			g_pMainPlayer->m_wPoiResist		= (WORD)pUserStatus->pStatus[i].dwMin;
+			g_pMainPlayer->m_wPoiResist		= (DWORD)pUserStatus->pStatus[i].dwMin;
 			break;
 		
 		case USER_PHY_RESIST:
-			g_pMainPlayer->m_wPhyResist		= (WORD)pUserStatus->pStatus[i].dwMin;
+			g_pMainPlayer->m_wPhyResist		= (DWORD)pUserStatus->pStatus[i].dwMin;
 			break;		
 		case USER_MOVESPEED:
 			// 일단 이건 생각좀 해봐야 하는것.
@@ -1028,7 +1028,7 @@ void CmdUserStatus( char* pMsg, DWORD dwLen )
 			//_PlaySound(0, SOUND_TYPE_SYSTEM, SOUND_SYSTEM_HPRECOVER, g_pMainPlayer->m_v3CurPos, FALSE);
 			// comment by minjin. 2004. 10. 29.
 			// 소리는, 포션 썼을때 내자.
-			pUserInterface->SetDengeonHp(WORD(pUserStatus->pStatus[i].dwMin));
+			pUserInterface->SetDengeonHp(DWORD(pUserStatus->pStatus[i].dwMin));
 			break;		
 		case USER_MP:
 			//_PlaySound(0, SOUND_TYPE_SYSTEM, SOUND_SYSTEM_HPRECOVER, g_pMainPlayer->m_v3CurPos, FALSE);

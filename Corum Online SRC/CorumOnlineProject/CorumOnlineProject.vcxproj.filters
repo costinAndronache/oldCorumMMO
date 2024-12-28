@@ -759,9 +759,6 @@
     <ClCompile Include="CustomUiKit\PagedTableWindow\PagedTableWindow.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="CustomUiKit\Renderer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="CustomDXDrawing\Renderer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>

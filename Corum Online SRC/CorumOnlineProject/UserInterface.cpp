@@ -1835,8 +1835,8 @@ void CUserInterface::DengeonHpInc()
 		float fSize = (g_pMainPlayer->m_wHP>g_pMainPlayer->m_wMaxHP) ?
 			1.0f : (float)g_pMainPlayer->m_wHP/(float)g_pMainPlayer->m_wMaxHP;
 
-		SetScalingObj(SPR_OBJ_EN2, fSize*300/2, 1.0);
-
+		SetScalingObj(SPR_OBJ_EN2, 150, 1.0);
+		SetScalingObj(SPR_OBJ_EN1, 150, 1.0);
 		if(m_fEnIncDec<fSize*300)
 		{
 			if(m_fEnIncDec+m_fEnDecSpeed>fSize*300)
@@ -1844,7 +1844,7 @@ void CUserInterface::DengeonHpInc()
 			else
 				m_fEnIncDec += m_fEnDecSpeed;
 
-			SetScalingObj(SPR_OBJ_EN1, m_fEnIncDec/2.0f, 1.0);
+			SetScalingObj(SPR_OBJ_EN1, 1.0, 1.0);
 		}
 		else
 		{
@@ -1967,7 +1967,7 @@ void CUserInterface::DengeonExpDefInc()
 	}	
 }
 
-void CUserInterface::SetDengeonHp(WORD wHp)
+void CUserInterface::SetDengeonHp(DWORD wHp)
 {
 	if(g_pMainPlayer->m_wHP>wHp)
 		SetDengeonHpDec();
@@ -1982,7 +1982,7 @@ void CUserInterface::SetDengeonHp(WORD wHp)
 		g_pMainPlayer->m_wHP = wHp;
 }
 
-void CUserInterface::SetDengeonMp(WORD wMp)
+void CUserInterface::SetDengeonMp(DWORD wMp)
 {
 	if(g_pMainPlayer->m_wMP>wMp)
 		SetDengeonManaDec();

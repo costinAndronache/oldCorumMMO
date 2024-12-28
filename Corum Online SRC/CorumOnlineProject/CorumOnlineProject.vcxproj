@@ -1889,7 +1889,6 @@
     </ClCompile>
     <ClCompile Include="CustomDXDrawing\Renderer.cpp" />
     <ClCompile Include="CustomUiKit\PagedTableWindow\PagedTableWindow.cpp" />
-    <ClCompile Include="CustomUiKit\Renderer.cpp" />
     <ClCompile Include="DamageNumber.cpp">
       <BasicRuntimeChecks Condition="'$(Configuration)|$(Platform)'=='CHINA_DEV|Win32'">EnableFastChecks</BasicRuntimeChecks>
       <BrowseInformation Condition="'$(Configuration)|$(Platform)'=='CHINA_DEV|Win32'">true</BrowseInformation>

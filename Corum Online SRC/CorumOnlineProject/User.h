@@ -280,12 +280,12 @@ class CMainUser : public CUser
 
 public:
 	
-	WORD			m_wRace;
-	WORD			m_wGrade;
-	WORD			m_wHP;					
-	WORD			m_wMP;
-	WORD			m_wPoint;				// 레벨업시 발생하는 보너스 포인트.
-	WORD			m_wPointSkill;
+	DWORD			m_wRace;
+	DWORD			m_wGrade;
+	DWORD			m_wHP;					
+	DWORD			m_wMP;
+	DWORD			m_wPoint;				// 레벨업시 발생하는 보너스 포인트.
+	DWORD			m_wPointSkill;
 
 	DWORD			m_dwExp;
 	DWORD			m_dwLevel;
@@ -315,7 +315,7 @@ public:
 	SSKILL_TABLE	sSkillTable[MAX_SKILL];
 	WORD			m_wClassRank;
 
-	WORD			m_wAttackSpeed;
+	DWORD			m_wAttackSpeed;
 	DWORD			m_dwHealHPSec;
 	DWORD			m_dwHealMPSec;
 	int				m_nPoisonSec;				// 중독
@@ -329,12 +329,12 @@ public:
 	DWORD			m_wAvoid;
 	DWORD			m_wBlockRate;
 	
-	short			m_wFireResist;
-	short			m_wIceResist;
-	short			m_wLightResist;
-	short			m_wPoiResist;
-	short			m_wPhyResist;
-	BYTE			m_bMaxResist;
+	DWORD			m_wFireResist;
+	DWORD			m_wIceResist;
+	DWORD			m_wLightResist;
+	DWORD			m_wPoiResist;
+	DWORD			m_wPhyResist;
+	DWORD			m_bMaxResist;
 	
 	float			m_fMaxCoolPoint;
 	float			m_fCurCoolPoint;

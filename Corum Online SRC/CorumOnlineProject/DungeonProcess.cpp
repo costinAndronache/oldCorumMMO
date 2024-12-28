@@ -1023,10 +1023,10 @@ DWORD __stdcall BeforeRenderGameDungeon()
 
 			if(fPerWeight < WEIGTH_80PER_OVER)
 			{
-				pUserInterface->SetDengeonHp((WORD)min(g_pMainPlayer->m_wMaxHP, g_pMainPlayer->m_wHP+g_pMainPlayer->m_dwHealHPSec));
+				pUserInterface->SetDengeonHp(min(g_pMainPlayer->m_wMaxHP, g_pMainPlayer->m_wHP+g_pMainPlayer->m_dwHealHPSec));
 				
 				if (g_pMainPlayer->m_wClass != CLASS_TYPE_WARRIOR) // 전사는 오라리차지로 올려야 한다. ㅡ.ㅡ
-					pUserInterface->SetDengeonMp((WORD)min(g_pMainPlayer->m_wMaxMP, g_pMainPlayer->m_wMP+g_pMainPlayer->m_dwHealMPSec));
+					pUserInterface->SetDengeonMp(min(g_pMainPlayer->m_wMaxMP, g_pMainPlayer->m_wMP+g_pMainPlayer->m_dwHealMPSec));
 			}	
 			
 			g_pMainPlayer->m_dwTemp[USER_TEMP_5SECTICK] = g_dwCurTick+5000;
