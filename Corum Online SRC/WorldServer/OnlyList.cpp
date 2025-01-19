@@ -28,7 +28,7 @@ CNode* COnlyList::NewNode(CNode* pPrev, CNode* pNext)
 {
     CNode* pNode;
 
-    pNode = (CNode*)LALAlloc(m_pNodePool);
+	pNode = new CNode;
 	if (pNode == NULL) 
 		return NULL;
 
@@ -51,7 +51,7 @@ void COnlyList::FreeNode(CNode* pNode)
     if (pNode == NULL) 
 		return;
     
-	LALFree(m_pNodePool, pNode);
+	delete pNode;
 
 	m_nCount--;
 }

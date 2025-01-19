@@ -1,15 +1,13 @@
 #pragma once
 
 
-#pragma pack(push,1)
-
 #include <map>
 #include "User.h"
 
 #define	MAX_ATTR_DEFINE		500
 #define	MAX_ATTR_VALUE_LIST	500
 
-
+#pragma pack(push,1)
 struct ITEM_ATTR_DEFINE
 {
 	DWORD	dwID;

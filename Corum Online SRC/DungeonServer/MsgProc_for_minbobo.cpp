@@ -2843,7 +2843,7 @@ void CmdTradeResult(DWORD dwConnectionIndex, char* pMsg, DWORD dwLength)
 	else if(pPacket->byCode==0)
 	{
 		// 트레이드 신청 승락.. 
-		ITEM_TRADE* pItemTrade = (ITEM_TRADE*)LALAlloc(g_pItemTradePool);
+		ITEM_TRADE* pItemTrade = new ITEM_TRADE;
 		memset(pItemTrade, 0, sizeof(ITEM_TRADE));
 		
 		if( pUser->GetID() > pDstUser->GetID() )

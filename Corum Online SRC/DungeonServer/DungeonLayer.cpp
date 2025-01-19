@@ -1216,7 +1216,7 @@ void CDungeonLayer::__ProcessCreateItem()
 
 		memcpy( &AppearItem.Item, &pCreateItem->Item, sizeof(CItem) );
 		
-		ITEM_SERVER* pItem = (ITEM_SERVER*)LALAlloc( g_pItemPool );
+		ITEM_SERVER* pItem = new ITEM_SERVER;
 
 		MakeItemStruct( pItem, &pCreateItem->Item, &pCreateItem->v2ItemPos, pCreateItem->dwSectionNum, pCreateItem->dwOwnerIndex, pCreateItem->dwPartyIndex, 0, 0 );
 

@@ -1589,7 +1589,7 @@ void __stdcall TimerPer5Minute(DWORD dwVal)
 					if(lpGuildWarTime && lpGuildWarTime->n64Id==lpGuildWarTime->n64Id)
 					{
 						g_pGuildWarTimeList->RemoveAt(pos);
-						LALFree(g_pGuildWarTimePool, lpGuildWarTime);
+						delete lpGuildWarTime;
 						break;
 					}
 				}																							
@@ -2200,7 +2200,7 @@ BOOL InitDungeonList()
 
 	for(int i = 0; i < nCount; i++)
 	{				
-		LP_DUNGEON_NODE lpDungeonListNode = (LP_DUNGEON_NODE)LALAlloc(g_pDungeonNodePool);
+		LP_DUNGEON_NODE lpDungeonListNode = new SDUNGEON_NODE;
 
 		if(!lpDungeonListNode)
 			goto lb_fail;
@@ -2256,7 +2256,7 @@ BOOL InitGroupInformation()
 		}
 		else
 		{
-			lpGroupInfoTable = (LP_GROUPINFO_TABLE)LALAlloc(g_pGroupTablePool);
+			lpGroupInfoTable = new SGROUPINFO_TABLE;
 			memset(lpGroupInfoTable, 0, sizeof(SGROUPINFO_TABLE));						
 			lpGroupInfoTable->sGroupInfo[sGroup[i].byType-1].byAura			= sGroup[i].byAura;
 			lpGroupInfoTable->sGroupInfo[sGroup[i].byType-1].byLevel		= sGroup[i].byLevel;

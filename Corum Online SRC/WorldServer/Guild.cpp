@@ -1370,7 +1370,7 @@ void CmdGuildDelete(CWorldUser* pUser, char* pMsg, DWORD dwLength)
 				if(lpGuildWarRank->dwGuildId==pUser->m_dwGuildId)
 				{
 					memset(lpGuildWarRank, 0, sizeof(lpGuildWarRank));
-					LALFree(g_pRankListPool, lpGuildWarRank);
+					delete lpGuildWarRank;
 					lpGuildWarRank = NULL;
 					g_pRankList->RemoveAt(posTemp);
 					break;
@@ -2448,7 +2448,7 @@ void CmdGuildWarCreate(CWorldUser* pUser, char* pMsg,DWORD dwLength)
 
 							g_pNet->BroadcastUser((char*)&pAllUserPacket, pAllUserPacket.GetPacketSize(), FLAG_SEND_NOT_ENCRYPTION);
 							
-							LP_GUILDWAR_TIME lpGuildWarTimeNew = (LP_GUILDWAR_TIME)LALAlloc(g_pGuildWarTimePool);
+							LP_GUILDWAR_TIME lpGuildWarTimeNew = new SGUILDWAR_TIME;
 							GuildWarTime(lpGuildWarTimeNew, pPacket->dwGuildId, pPacket->dwDstGuildId);
 							lpGuildWarTimeNew->sTime	= lpGuildList->sGuildNode[byGuildListIndex].sTime;
 							g_pGuildWarTimeList->AddTail(lpGuildWarTimeNew);
@@ -3154,7 +3154,7 @@ void CmdGuildWarExit(CWorldUser* pUser, char* pMsg,DWORD dwLength)
 											if(lpGuildWarTime->n64Id==sGuildWarTime.n64Id)
 											{
 												g_pGuildWarTimeList->RemoveAt(pos);
-												LALFree(g_pGuildWarTimePool, lpGuildWarTime);
+												delete lpGuildWarTime;
 												break;
 											}
 										}
@@ -3281,7 +3281,7 @@ BOOL InitGuildInformations()
 	{
 	//	Log(LOG_IMPORTANT, "GuildLoad: %d", i );//0500315 Àç¿ø
 		// Hash Insert //		
-		lpGuildTable = (LP_GUILD_TABLE)LALAlloc(g_pGuildTablePool);
+		lpGuildTable = new GUILD_TABLE;
 		memset(lpGuildTable, 0, sizeof(lpGuildTable));
 		
 		// Guild User Hash //
@@ -3315,7 +3315,7 @@ BOOL InitGuildInformations()
 		
 		for(int j = 0; j < nUserCount; j++)
 		{			
-			lpGuildOfflineTable = (LP_GUILD_OFFLINE_USER)LALAlloc(g_pGuildOfflinePool);
+			lpGuildOfflineTable = new GUILD_OFFLINE_USER;
 			memset(lpGuildOfflineTable, 0, sizeof(lpGuildOfflineTable));
 			memcpy(lpGuildOfflineTable, &sGuildOfflineUser[j], sizeof(GUILD_OFFLINE_USER));						
 
@@ -3323,7 +3323,7 @@ BOOL InitGuildInformations()
 				lpGuildTable->pGuildOfflineHash->Insert(lpGuildOfflineTable, lpGuildOfflineTable->dwUserIndex);
 		}
 		
-		LP_GUILDWAR_RANK lpGuildWarRankNew = (LP_GUILDWAR_RANK)LALAlloc(g_pRankListPool);
+		LP_GUILDWAR_RANK lpGuildWarRankNew = new GUILDWAR_RANK;
 
 		memset(lpGuildWarRankNew, 0, sizeof(GUILDWAR_RANK));
 				
@@ -3401,7 +3401,7 @@ BOOL InitGuildInformations()
 
 	for(i = 0; i < nCount; i++)	
 	{
-		lpGuildListTable = (LP_GUILD_LIST)LALAlloc(g_pGuildWarPool);
+		lpGuildListTable = new GUILD_LIST;
 		memset(lpGuildListTable, 0, sizeof(SGUILD_LIST));
 		memcpy(lpGuildListTable, &psGuildList[i], sizeof(SGUILD_LIST));						
 
@@ -3488,7 +3488,7 @@ BOOL InitGuildInformations()
 						
 						if(bChk)
 						{
-							LP_GUILDWAR_TIME lpGuildWarTimeNew = (LP_GUILDWAR_TIME)LALAlloc(g_pGuildWarTimePool);
+							LP_GUILDWAR_TIME lpGuildWarTimeNew = new SGUILDWAR_TIME;
 							
 							lpGuildWarTimeNew->n64Id	= sGuildWarTime.n64Id;
 							lpGuildWarTimeNew->sTime	= sGuildWarTime.sTime;

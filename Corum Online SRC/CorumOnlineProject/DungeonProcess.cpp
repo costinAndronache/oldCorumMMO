@@ -3935,7 +3935,7 @@ void InitMainPlayer( DSTC_CHANGE_LAYER* pLayer )
 
 CUser* InitPlayer( DSTC_APPEAR* pAppear )
 {	
-	CUser*				pPlayer		= (CUser*)LALAlloc( g_pUserPool );	
+	CUser*				pPlayer		= new CUser;	
 	CBaseItem*			pItemTable	= 0;
 	Section_Link_Info*	pSection	= 0;
 	
@@ -4196,7 +4196,7 @@ CUser* InitPlayer( DSTC_APPEAR* pAppear )
 
 void InitMonster( DSTC_APPEAR_MON* pAppear )
 {
-	CMonster* pMonster = (CMonster*)LALAlloc( g_pMonsterPool );
+	CMonster* pMonster = new CMonster;
 	memset( pMonster, 0, sizeof( CMonster ) );
 	pMonster->CreateResource();
 	

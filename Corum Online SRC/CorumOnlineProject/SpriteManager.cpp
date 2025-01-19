@@ -22,7 +22,7 @@ CSpriteManager::CSpriteManager(DWORD dwNum)
 
 V2_SPRITE*	CSpriteManager::CreateSprite(DWORD dwSprID, float x, float y, bool bShow, int nOrder, BYTE bAlpha)
 {	
-	V2_SPRITE* pSpr = (V2_SPRITE*)LALAlloc(m_pSpritePool);
+	V2_SPRITE* pSpr = new V2_SPRITE;
 
 	if(pSpr==NULL)
 		MessageBox(g_hMainWnd, "SpritePool = NULL", "CorumOnline", MB_OK);
@@ -77,7 +77,7 @@ V2_SPRITE*	CSpriteManager::CreateSprite(DWORD dwSprID, float x, float y, bool bS
 
 V2_SPRITE*	CSpriteManager::CreateSprite(DWORD dwSprID, float x, float y, int nStartX, int nStartY, int nWidth, int nHeight, bool bShow, int nOrder, BYTE bAlpha)
 {	
-	V2_SPRITE*		pSpr	= (V2_SPRITE*)LALAlloc(m_pSpritePool);
+	V2_SPRITE*		pSpr	= new V2_SPRITE;
 	DWORD			dwAlpha = 0xffffffff;
 	IMAGE_HEADER	desc;
 		
@@ -137,7 +137,7 @@ V2_SPRITE*	CSpriteManager::CreateSprite(DWORD dwSprID, float x, float y, int nSt
 
 V2_SPRITE*	CSpriteManager::CreateSpriteFile(DWORD dwSprID, char* szFilePath, float x, float y, bool bShow, int nOrder, BYTE bAlpha)
 {	
-	V2_SPRITE*		pSpr	= (V2_SPRITE*)LALAlloc(m_pSpritePool);
+	V2_SPRITE*		pSpr	= new V2_SPRITE;
 	DWORD			dwAlpha = 0xffffffff;
 	IMAGE_HEADER	desc;
 
@@ -185,7 +185,7 @@ V2_SPRITE*	CSpriteManager::CreateSpriteFile(DWORD dwSprID, char* szFilePath, flo
 
 V2_SPRITE*	CSpriteManager::CreateSpriteFile(DWORD dwSprID, char* szFilePath, float x, float y,  int nStartX, int nStartY, int nWidth, int nHeight, bool bShow, int nOrder, BYTE bAlpha)
 {
-	V2_SPRITE*		pSpr	= (V2_SPRITE*)LALAlloc(m_pSpritePool);
+	V2_SPRITE*		pSpr	= new V2_SPRITE;
 	DWORD			dwAlpha = 0xffffffff;
 	IMAGE_HEADER	desc;
 

@@ -121,7 +121,7 @@ void CAbyssHash64<Td>::DeleteData( Td* pData )
 template<class Td>
 ListNode<Td>*	CAbyssHash64<Td>::AddList(Td* pData)
 {
-	ListNode<Td>* pListNode = (ListNode<Td>*)LALAlloc(m_pListNodePool);
+	ListNode<Td>* pListNode = new ListNode<Td>;
 	pListNode->pData	= pData;
 
 	if( !m_pHead )
@@ -157,7 +157,7 @@ void CAbyssHash64<Td>::RemoveAtList( ListNode<Td>* pListNode )
 		pListNode->pNext->pPrev = pListNode->pPrev;
 
 
-	LALFree( m_pListNodePool, (void*)pListNode);
+	delete pListNode;
 }
 
 
@@ -196,7 +196,7 @@ void	CAbyssHash64<Td>::Destroy( BOOL bDeleteData )
 
 	while(pListNode)
 	{
-		LALFree( m_pListNodePool, pListNode );
+		delete pListNode;
 		pListNode = pListNode->pNext;
 	}
 	

@@ -29,8 +29,6 @@ enum GENERAL_COMMAND
 	General_Command_CHARACTERINFO		= 17,
 	General_Command_BILL_REMAINTIME		= 18, 
 };
-#pragma pack(push,1)
-
 
 struct GENERAL_CMD_PARAM
 {

@@ -834,7 +834,7 @@ void CmdPartyApprove(CWorldUser* pUser, char* pMsg, DWORD dwLength)
 		}
 
 		// 새로 생성 //		
-		lpParty					= (LP_PARTY_TABLE)LALAlloc(g_pPartyTablePool);
+		lpParty = new PARTY_TABLE;
 		lpParty->pPartyUserList = new COnlyList(MAX_PARTY);
 		lpParty->dwPartyId		= g_dwPartyId;
 		lpParty->bCount			= 2;
@@ -1036,7 +1036,7 @@ void CmdPartyEntry(CWorldUser* pUser, char* pMsg, DWORD dwLength)
 		}
 		else
 		{
-			LP_PARTYBOARD_TABLE lpPartyBoardTable = (LP_PARTYBOARD_TABLE)LALAlloc(g_pPartyBoardTablePool);
+			LP_PARTYBOARD_TABLE lpPartyBoardTable = new PARTYBOARD_TABLE;
 
 			if(lpPartyBoardTable)
 			{			

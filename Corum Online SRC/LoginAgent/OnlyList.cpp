@@ -20,7 +20,7 @@ CNode* COnlyList::NewNode(CNode* pPrev, CNode* pNext)
 {
     CNode* pNode;
 
-    pNode = (CNode*)LALAlloc(m_pNodePool);
+    pNode = new CNode;
 	if (pNode == NULL) 
 		return NULL;
 

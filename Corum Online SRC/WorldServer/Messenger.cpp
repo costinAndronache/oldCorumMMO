@@ -136,7 +136,7 @@ void CmdMessengerAnswer(CWorldUser* pUser, char* pMsg, DWORD dwLength)
 
 				if(!lpMessengerUser)
 				{
-					LP_MESSENGER_USER lpMessengerUser = (LP_MESSENGER_USER)LALAlloc(g_pMessengerUserPool);
+					LP_MESSENGER_USER lpMessengerUser = new MESSENGER_USER;
 
 					if(!lpMessengerUser)
 						return;
@@ -166,7 +166,7 @@ void CmdMessengerAnswer(CWorldUser* pUser, char* pMsg, DWORD dwLength)
 
 				if(!lpMessengerUserDst)
 				{
-					LP_MESSENGER_USER lpMessengerSubUser = (LP_MESSENGER_USER)LALAlloc(g_pMessengerUserPool);
+					LP_MESSENGER_USER lpMessengerSubUser = new MESSENGER_USER;
 
 					if(!lpMessengerSubUser)
 						return;

@@ -70,7 +70,7 @@ CWorldUserTable::~CWorldUserTable()
 
 CWorldUser* CWorldUserTable::AllocNewUser()
 {
-	CWorldUser* pUser = (CWorldUser*)LALAlloc(m_pUserPool);
+	CWorldUser* pUser = new CWorldUser;
 	memset(pUser, 0, sizeof(CWorldUser));
 
 	pUser->m_bCommand		= TRUE;
@@ -305,5 +305,5 @@ void CWorldUserTable::RemoveUserResource(CWorldUser* pUser)
 		pUser->m_pListOwnDungeon = NULL;
 	}
 
-	LALFree(m_pUserPool, pUser);
+	delete pUser;
 }

@@ -298,7 +298,7 @@ CNode* CVoidList::NewNode(CNode* pPrev, CNode* pNext)
 { 
     CNode* pNode;
 
-    pNode = (CNode*)LALAlloc( g_pNodePool );
+    pNode = new CNode;
 	if (pNode == NULL) return NULL;
 
     pNode->pPrev = pPrev;
@@ -322,7 +322,7 @@ void CVoidList::FreeNode(CNode* pNode)
 
     FreeData((void*)(pNode->data));
 
-	LALFree( g_pNodePool, (void*)pNode );
+    delete pNode;
 
     --m_nCount;
 }

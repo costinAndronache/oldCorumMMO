@@ -67,7 +67,7 @@ void ACmdGuildCharacterDelete(SERVER_DATA* pServer, char* pMsg, DWORD dwLength)
 				if(lpGuildWarRank->dwGuildId==pPacket->dwGuildId)
 				{
 					memset(lpGuildWarRank, 0, sizeof(lpGuildWarRank));
-					LALFree(g_pRankListPool, lpGuildWarRank);
+					delete lpGuildWarRank;
 					lpGuildWarRank = NULL;
 					g_pRankList->RemoveAt(posTemp);
 					break;

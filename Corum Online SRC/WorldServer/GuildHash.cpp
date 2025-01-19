@@ -38,7 +38,7 @@ void CDungeonListHash::DeleteData(void* pData)
 		return;	
 	
 	memset(pDungeonNode, 0, sizeof(SDUNGEON_NODE));
-	LALFree(g_pDungeonNodePool, pDungeonNode);	
+	delete pDungeonNode;
 	pDungeonNode = NULL;			
 }
 
@@ -50,7 +50,7 @@ void CGuildOfflineHash::DeleteData(void* pData)
 		return;	
 	
 	memset(pGuildOfflineTable, 0, sizeof(GUILD_OFFLINE_USER));
-	LALFree(g_pGuildOfflinePool, pGuildOfflineTable);	
+	delete pGuildOfflineTable;
 	pGuildOfflineTable = NULL;
 }
 
@@ -80,7 +80,7 @@ void CGuildTableHash::DeleteData(void* pData)
 	if(!pGuildTable)
 		return;	
 	
-	LALFree(g_pGuildTablePool, pGuildTable);	
+	delete pGuildTable;
 }
 
 void CGroupInfoTableHash::DeleteData(void* pData)
@@ -91,7 +91,7 @@ void CGroupInfoTableHash::DeleteData(void* pData)
 		return;	
 	
 	memset(pGroupInfoTable, 0, sizeof(SGROUPINFO_TABLE));
-	LALFree(g_pGroupTablePool, pGroupInfoTable);	
+	delete pGroupInfoTable;
 	pGroupInfoTable = NULL;
 }
 
@@ -104,7 +104,7 @@ void CGuildWarHash::DeleteData(void* pData)
 		return;	
 	
 	memset(pGuildList, 0, sizeof(SGUILD_LIST));
-	LALFree(g_pGuildWarPool, pGuildList);	
+	delete pGuildList;
 	pGuildList = NULL;
 }
 //======================================================//

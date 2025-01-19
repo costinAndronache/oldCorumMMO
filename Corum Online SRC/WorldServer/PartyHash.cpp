@@ -35,7 +35,7 @@ void CPartyTableHash::DeleteData(void* pData)
 		}
 		pPartyTable->dwPartyId	= 0;
 		pPartyTable->bCount		= 0;
-		LALFree(g_pPartyTablePool, pPartyTable);	
+		delete pPartyTable;
 	}
 }
 
@@ -45,7 +45,7 @@ void CPartyBoardTableHash::DeleteData(void* pData)
 
 	if(pPartyBoardTable)
 	{		
-		LALFree(g_pPartyBoardTablePool, pPartyBoardTable);	
+		delete pPartyBoardTable;
 		pPartyBoardTable = NULL;
 	}
 }

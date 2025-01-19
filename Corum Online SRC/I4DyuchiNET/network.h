@@ -19,14 +19,7 @@ struct CONNECTION_DESC
 	CConnection*		pConnection;
 	CONNECTION_STATUS	status;
 };
-/*
-GLOBAL_FUNC_DLL STMPOOL_HANDLE	__stdcall	;
-GLOBAL_FUNC_DLL void			__stdcall	;
-GLOBAL_FUNC_DLL BOOL			__stdcall	InitializeStaticMemoryPool(STMPOOL_HANDLE pool,DWORD dwUnitSize,DWORD dwDefaultCommitNum,DWORD dwMaxNum);
 
-GLOBAL_FUNC_DLL void*			__stdcall	LALAlloc(STMPOOL_HANDLE pool);
-GLOBAL_FUNC_DLL void			__stdcall	LALFree(STMPOOL_HANDLE pool,void* pMemory);
-*/
 
 class CNetwork
 {

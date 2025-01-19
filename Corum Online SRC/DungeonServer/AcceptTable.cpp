@@ -23,7 +23,7 @@ CAcceptTable::CAcceptTable(DWORD dwNum)
 
 ACCEPT_USER* CAcceptTable::AllocNewAccept(DWORD dwDungeonID, DWORD dwUserIndex)
 {
-	ACCEPT_USER* pUser = (ACCEPT_USER*)LALAlloc( m_pAcceptPool );
+	ACCEPT_USER* pUser = new ACCEPT_USER;
 	memset(pUser, 0, sizeof(ACCEPT_USER));
 	pUser->dwDungeonID = dwDungeonID;
 	pUser->dwUserIndex = dwUserIndex;

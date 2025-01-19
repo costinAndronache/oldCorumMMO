@@ -456,7 +456,7 @@ DUNGEON_JOIN_FAIL CDungeon::JoinUser(CUser* pUser, BYTE bLayerIndex, VECTOR2 *pv
 	NetSendToUser( pUser->m_dwConnectionIndex, (char*)&dungeonJoin, dungeonJoin.GetPacketSize(), FLAG_SEND_NOT_ENCRYPTION );
 	
 	pUser->SetStatus(UNIT_STATUS_NORMAL);	
-	ITEM_SHOP* pItemShop = (ITEM_SHOP*)LALAlloc(g_pItemShopPool);
+	ITEM_SHOP* pItemShop = new ITEM_SHOP;
 	
 	if(pItemShop)
 	{

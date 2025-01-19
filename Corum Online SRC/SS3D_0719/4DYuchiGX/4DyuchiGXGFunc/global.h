@@ -153,15 +153,6 @@ GLOBAL_FUNC_DLL void			__stdcall	ResetReadPosition(ITEMQ_HANDLE pQ);
 GLOBAL_FUNC_DLL STMPOOL_HANDLE	__stdcall	CreateStaticMemoryPool();
 GLOBAL_FUNC_DLL void			__stdcall	ReleaseStaticMemoryPool(STMPOOL_HANDLE pool);
 GLOBAL_FUNC_DLL BOOL			__stdcall	InitializeStaticMemoryPool(STMPOOL_HANDLE pool,DWORD dwUnitSize,DWORD dwDefaultCommitNum,DWORD dwMaxNum);
-
-GLOBAL_FUNC_DLL void*			__stdcall	LALAlloc(STMPOOL_HANDLE pool);
-GLOBAL_FUNC_DLL void			__stdcall	LALFree(STMPOOL_HANDLE pool,void* pMemory);
-GLOBAL_FUNC_DLL void			__stdcall	LALFreeWithCheck(STMPOOL_HANDLE pool,void* pMemory);
-GLOBAL_FUNC_DLL void			__stdcall	LALEnableBlockCheck(STMPOOL_HANDLE pool,BOOL bSwitch);
-GLOBAL_FUNC_DLL DWORD			__stdcall	LALGetAllocatedNum(STMPOOL_HANDLE pool);
-
-
-
 // Various Bytes HashTable
 GLOBAL_FUNC_DLL DWORD			__stdcall	VBHGetAllItem(VBHASH_HANDLE pHash,DWORD* pdwItemList,DWORD dwMaxItemNum);
 GLOBAL_FUNC_DLL	DWORD			__stdcall	VBHSelect(VBHASH_HANDLE pHash,DWORD OUT* pItems,DWORD dwMaxItemNum,void* pKeyData,DWORD dwSize);

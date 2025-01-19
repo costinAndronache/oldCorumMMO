@@ -592,7 +592,7 @@ BOOL AppearItem(CUser* pUser, const CItem* pItem, BYTE byCount, DWORD dwMoney, B
 	if (AppearItem.v2ItemPos.y > pLayer->GetMap()->m_dwTileNumHeight*TILE_SIZE)
 		AppearItem.v2ItemPos.y = pLayer->GetMap()->m_dwTileNumHeight*TILE_SIZE-1;
 
-	ITEM_SERVER* pSItem = (ITEM_SERVER*)LALAlloc(g_pItemPool);
+	ITEM_SERVER* pSItem = new ITEM_SERVER;
 
 	if(!pSItem)
 		return FALSE;
@@ -1784,7 +1784,7 @@ void CreateItemByMonster( CMonster* pMonster, CUser* pUser )
 		return;
 	}
 
-	ITEM_CREATE* pItem = (ITEM_CREATE*)LALAlloc( g_pCreateItemPool );
+	ITEM_CREATE* pItem = new ITEM_CREATE;
 	if( !pItem ) return;
 
 	memcpy( pItem, &AppearItem, sizeof( ITEM_CREATE ) );
@@ -1850,7 +1850,7 @@ void CreateItemByGM( CUser* pUser, DWORD dwBaseItemID )
 		return;
 	}
 
-	ITEM_CREATE* pItem = (ITEM_CREATE*)LALAlloc( g_pCreateItemPool );
+	ITEM_CREATE* pItem = new ITEM_CREATE;
 	if( !pItem ) return;
 
 	memcpy( pItem, &AppearItem, sizeof( ITEM_CREATE ) );

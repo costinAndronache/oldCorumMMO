@@ -52,7 +52,7 @@ CAcceptTable::~CAcceptTable()
 //New로 메모리 할당해서 생성..      일번 던전일 경우 
 ACCEPT_USER* CAcceptTable::AllocNewAccept()
 {
-	ACCEPT_USER* pUser = (ACCEPT_USER*)LALAlloc( m_pAcceptPool );
+	ACCEPT_USER* pUser = new ACCEPT_USER;
 	if(!pUser)
 	{
 		Log(LOG_IMPORTANT, "Allocation Failed in CAcceptTable::AllocNewAccept() !!!");
@@ -146,7 +146,7 @@ void CAcceptTable::Remove(ACCEPT_USER* pUser)
 
 			if(cur)	
 			{
-				LALFree( m_pAcceptPool, (void*)cur );
+				delete cur;
 			}
 										
 			cur = NULL;
@@ -171,7 +171,7 @@ void CAcceptTable::RemoveAcceptTable()
 		while (cur)
 		{
 			next = cur->pNextData;
-			LALFree( m_pAcceptPool, (void*)cur );
+			delete cur;
 			cur = next;
 		}
 

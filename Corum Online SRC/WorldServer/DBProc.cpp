@@ -449,7 +449,7 @@ void QueryTypeUserInfo(DBRECEIVEDATA* pResult)
 	// DB Update //
 	char szQuery[0xff]={0,};
 	
-	LP_MESSENGER_TABLE lpMessengerTable = (LP_MESSENGER_TABLE)LALAlloc(g_pMessengerTablePool);
+	LP_MESSENGER_TABLE lpMessengerTable = new MESSENGER_TABLE;
 
 	if(lpMessengerTable)
 	{
@@ -535,7 +535,7 @@ void QueryMessenger(DBRECEIVEDATA* pResult)
 			bChk = TRUE;
 		else
 		{
-			lpMessengerUser = (LP_MESSENGER_USER)LALAlloc(g_pMessengerUserPool);
+			lpMessengerUser = new MESSENGER_USER;
 			memset(lpMessengerUser, 0, sizeof(MESSENGER_USER));
 			lpMessengerUser->byType			= sMessengerUser[i].byType; 
 			lpMessengerUser->dwUserIndex	= sMessengerUser[i].dwUserIndex;
@@ -697,7 +697,7 @@ void QueryGuildId(DBRECEIVEDATA* pResult)
 	memcpy(&sGuildId, pResult->Query.select.pResult, sizeof(SGUILD_ID));
 	
 	// 길드 해쉬에 추가 //
-	lpGuildAdd = (LP_GUILD_TABLE)LALAlloc(g_pGuildTablePool);	
+	lpGuildAdd = new GUILD_TABLE;	
 	memset(lpGuildAdd, 0, sizeof(GUILD_TABLE));
 
 	// Off-Line Guild User Hash //
@@ -747,7 +747,7 @@ void QueryGuildId(DBRECEIVEDATA* pResult)
 
 #endif
 	
-	LP_GUILDWAR_RANK lpGuildWarRankNew = (LP_GUILDWAR_RANK)LALAlloc(g_pRankListPool);
+	LP_GUILDWAR_RANK lpGuildWarRankNew = new GUILDWAR_RANK;
 
 	if(g_pRankList->GetCount()==0)	// 처음 생성한 길드을 1등 길드로 만든다.
 	{

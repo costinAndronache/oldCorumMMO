@@ -24,7 +24,7 @@ BOOL CNameSearchTable::Add(CWorldUser* pUser)
 		return FALSE;
 	}
 
-	NameBlock *pBlock = (NameBlock*)LALAlloc(m_pNameBlockPool);
+	NameBlock *pBlock = new NameBlock;
 
 	if(!pBlock)
 	{	
@@ -172,8 +172,8 @@ void CNameSearchTable::Remove(const char* szCharacterName)
 			if (next)
 				next->pPrevData = prv;
 
-			if(cur)	
-				LALFree(m_pNameBlockPool, cur);
+			if (cur)
+				delete cur;
 				//m_pNameBlockPool->Free((char*)cur);
 							
 			cur = NULL;
@@ -216,7 +216,7 @@ void CNameSearchTable::RemoveNameSearchTable()
 		while (cur)
 		{
 			next = cur->pNextData;
-			LALFree(m_pNameBlockPool, cur);
+			delete cur;
 
 			cur = next;
 		}

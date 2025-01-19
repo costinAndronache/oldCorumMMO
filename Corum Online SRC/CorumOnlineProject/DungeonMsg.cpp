@@ -3055,7 +3055,7 @@ void CmdAppearItem( char* pMsg, DWORD dwLen )
 		return;
 
 	MAP_TILE*	pTile;
-	ITEM*	pItem = (ITEM*)LALAlloc( g_pItemPool );
+	ITEM*	pItem = new ITEM;
 	BYTE	bAction = 1;
 	DWORD dwResourceID = MOD_ITEM_BOTARI;
 	if(!pItem)

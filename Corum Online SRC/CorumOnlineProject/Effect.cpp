@@ -375,7 +375,7 @@ EffectDesc* EffectLayer::CreateStatusEffect(BYTE bSkillKind, BYTE bJoint, BOOL b
 
 EffectDesc* EffectLayer::CreateGXObject(char *szFile, BOOL bOwn, WORD wChrNum)
 {
-	EffectDesc*	pEffectDesc = (EffectDesc*)LALAlloc( g_pEffectPool );
+	EffectDesc* pEffectDesc = new EffectDesc;
 	memset(pEffectDesc, 0, sizeof(EffectDesc));
 
 	pEffectDesc->hEffect.pDesc				= AllocObjDesc();	

@@ -54,7 +54,7 @@ CUserTable::~CUserTable()
 
 CUser* CUserTable::AllocNewUser()
 {
-	CUser* pUser = (CUser*)LALAlloc(m_pUserPool);
+	CUser* pUser = new CUser;
 
 	memset(pUser, 0, sizeof(CUser));
 	pUser->m_bTryCreateCharSlot = 0xff;
@@ -65,7 +65,7 @@ CUser* CUserTable::AllocNewUser()
 
 void CUserTable::FreeUser(CUser* pUser)
 {
-	LALFree(m_pUserPool, pUser);
+	delete pUser;
 }
 
 

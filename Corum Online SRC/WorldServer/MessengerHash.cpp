@@ -16,7 +16,7 @@ void CMessengerUserHash::DeleteData(void* pData)
 
 	if(lpMessengerUser)
 	{
-		LALFree(g_pMessengerUserPool, lpMessengerUser);	
+		delete lpMessengerUser;
 		lpMessengerUser = NULL;
 	}
 }
@@ -33,7 +33,7 @@ void CMessengerTableHash::DeleteData(void* pData)
 			delete lpMessengerTable->pMessengerUserHash;
 			lpMessengerTable->pMessengerUserHash = NULL;
 		}
-		LALFree(g_pMessengerTablePool, lpMessengerTable);	
+		delete lpMessengerTable;
 		memset(lpMessengerTable, 0, sizeof(MESSENGER_TABLE));
 		lpMessengerTable = NULL;
 	}

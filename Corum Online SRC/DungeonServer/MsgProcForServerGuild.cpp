@@ -178,7 +178,7 @@ void CmdGuildList(DWORD dwConnectionIndex, char* pMsg, DWORD dwLength)
 {
 	WSTDS_GUILD_LIST* pPacket = (WSTDS_GUILD_LIST*)pMsg;	
 	
-	GUILD_NODE* pGuildNode = (GUILD_NODE*)LALAlloc(g_pGuildListPool);
+	GUILD_NODE* pGuildNode = new GUILD_NODE;
 
 	if(pGuildNode)
 	{

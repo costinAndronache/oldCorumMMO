@@ -965,7 +965,7 @@ void __GuildDisconnectUser(CWorldUser* pUser)
 			SYSTEMTIME SystemTime;
 			GetLocalTime(&SystemTime);
 				
-			LP_GUILD_OFFLINE_USER lpGuildOfflineTable = (LP_GUILD_OFFLINE_USER)LALAlloc(g_pGuildOfflinePool);
+			LP_GUILD_OFFLINE_USER lpGuildOfflineTable = new GUILD_OFFLINE_USER;
 			memset(lpGuildOfflineTable, 0, sizeof(lpGuildOfflineTable));
 			lpGuildOfflineTable->byRank			= pUser->m_byRank;
 			lpGuildOfflineTable->dwUserIndex	= pUser->m_dwUserIndex;
