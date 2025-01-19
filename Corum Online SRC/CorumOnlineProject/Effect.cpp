@@ -153,16 +153,17 @@ void EffectLayer::LoadScript(BOOL bChk)
 
 DWORD EffectLayer::Load(char *szFileName)
 {
-	BASESKILL baseskill[MAX_SKILL_COUNT];	memset(baseskill, 0, sizeof(baseskill));
+	DecodeCDBDataResult result = DecodeCDBData(szFileName);
+	BASESKILL* baseskill = (BASESKILL*)result.buffer;
 	
-	int nTotalSize = DecodeCDBData(szFileName, baseskill);
+	int nTotalSize = result.size;
 	int m_nMaxNode = nTotalSize / sizeof(BASESKILL);
 	
 	for(int i=0; i<m_nMaxNode; i++ )
 	{
 		memcpy(&m_Effect[baseskill[i].bID], &baseskill[i], sizeof(BASESKILL));		
 	}
-		
+	
 	return TRUE;
 }
 

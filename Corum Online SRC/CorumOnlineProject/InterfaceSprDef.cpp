@@ -15,9 +15,10 @@ void InterfaceSprLoad(BYTE /*byType*/)
 	int i;
 
 	{
-		INTERFACE_RESOURCE_INFO	sInterfaceResourceInfo_Back[MAX_INTERFACE_RESOURCE_INFO];
+		DecodeCDBDataResult result = DecodeCDBData(GetFile(_T("InterfaceResourceInfo.cdb"), DATA_TYPE_MANAGER));
+		INTERFACE_RESOURCE_INFO	*sInterfaceResourceInfo_Back = (INTERFACE_RESOURCE_INFO*)result.buffer;
 
-		nTotalSize	= DecodeCDBData( GetFile( _T("InterfaceResourceInfo.cdb"), DATA_TYPE_MANAGER ), sInterfaceResourceInfo_Back );
+		nTotalSize = result.size;
 		nMaxNode	= nTotalSize / sizeof(INTERFACE_RESOURCE_INFO);
 
 		for( i = 0; i < nMaxNode; i++)
@@ -30,9 +31,10 @@ void InterfaceSprLoad(BYTE /*byType*/)
 		}
 	}
 
-	INTERFACE_SPRITE_MANAGER sInterfaceSprite[MAX_INTERFACE_SPRITE_MANAGER];		
+	DecodeCDBDataResult result = DecodeCDBData(GetFile("InterfaceSpriteManager.cdb", DATA_TYPE_MANAGER));
+	INTERFACE_SPRITE_MANAGER *sInterfaceSprite = (INTERFACE_SPRITE_MANAGER*)result.buffer;
 
-	nTotalSize	= DecodeCDBData( GetFile("InterfaceSpriteManager.cdb", DATA_TYPE_MANAGER), sInterfaceSprite );
+	nTotalSize = result.size;
 	nMaxNode	= nTotalSize / sizeof(INTERFACE_SPRITE_MANAGER);
 
 	// 모든 스프라이트는 자동으로 생성한다 //

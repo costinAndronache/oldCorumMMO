@@ -24,7 +24,7 @@ OBJECT_HANDLE_DESC*	CObjectManager::CreateObject(DWORD dwObjID, float x, float y
 {
 	//OBJECT_HANDLE_DESC* pObj = (OBJECT_HANDLE_DESC*)m_pObjPool->Alloc();
 
-	OBJECT_HANDLE_DESC* pObj = (OBJECT_HANDLE_DESC*)LALAlloc(m_pObjPool);
+	OBJECT_HANDLE_DESC* pObj = new OBJECT_HANDLE_DESC;
 	pObj->dwObjID = dwObjID;
 	
 	//pObj->pDesc = (LPObjectDesc)g_pObjDescPool->Alloc();
@@ -50,7 +50,7 @@ OBJECT_HANDLE_DESC*	CObjectManager::CreateObject(DWORD dwObjID, float x, float y
 		//m_pObjPool->Free((char*)pObj);
 		FreeObjDesc( pObj->pDesc);
 		pObj->pDesc = NULL;
-		LALFree(m_pObjPool, pObj);
+		delete pObj;
 		return NULL;
 	}
 
@@ -137,7 +137,7 @@ void CObjectManager::RemoveObject(DWORD dwObjID)
 				DeleteHandleObject(cur->pHandle);
 				FreeObjDesc( cur->pDesc);
 				cur->pDesc = NULL;
-				LALFree(m_pObjPool, cur);
+				delete cur;
 			}
 						
 			cur = NULL;
@@ -182,7 +182,7 @@ void CObjectManager::RemoveObject(OBJECT_HANDLE_DESC* pInfo)
 				FreeObjDesc( cur->pDesc);
 				cur->pDesc = NULL;
 				//m_pObjPool->Free((char*)cur);
-				LALFree(m_pObjPool, cur);
+				delete cur;
 			}
 						
 			cur = NULL;
@@ -210,7 +210,7 @@ void CObjectManager::RemoveAllObject()
 			DeleteHandleObject(cur->pHandle);
 			FreeObjDesc( cur->pDesc);
 			cur->pDesc = NULL;
-			LALFree(m_pObjPool, cur);
+			delete cur;
 			
 			cur = next;
 		}

@@ -542,7 +542,7 @@ void CmdPartyJoinId( char* pMsg, DWORD dwLen )
 			pMiniMapWnd->SetPartyPtr(byIndex, 1);
 		}
 		
-		LP_PARTY_USER lpPartyUser = (LP_PARTY_USER)LALAlloc(g_pPartyPool);
+		LP_PARTY_USER lpPartyUser = new PARTY_USER;
 		memset(lpPartyUser, 0, sizeof(lpPartyUser));
 		lpPartyUser->wClass			= pPacket->wClass;
 		lpPartyUser->dwUserIndex	= pPacket->dwUserIndex;
@@ -726,7 +726,7 @@ void CmdPartyInfoRequest(char* pMsg, DWORD dwLen)
 	WSTC_PARTY_INFOREQUEST* pPacket				= (WSTC_PARTY_INFOREQUEST*)pMsg;
 	CGroupWnd*				pGroupWnd			= CGroupWnd::GetInstance();
 	CPartyBoardInfoWnd*		pPartyBoardInfoWnd	= CPartyBoardInfoWnd::GetInstance();	
-	LP_PARTY_BOARD			lpPartyBoard		= (LP_PARTY_BOARD)LALAlloc(g_pPartyBoardPool);
+	LP_PARTY_BOARD			lpPartyBoard = new SPARTY_BOARD;
 
 	if(lpPartyBoard)
 	{		

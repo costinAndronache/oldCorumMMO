@@ -344,7 +344,7 @@ BOOL CMiniMapWnd::CreateMap()
 //		wsprintf(szMapModelFile, "%s", GetFile(szFileNameTIF, DATA_TYPE_MAP));
 		lstrcpy(szMapModelFile, GetFile(szFileNameTIF, DATA_TYPE_MAP));
 			
-		LP_SPRITE_DATA	lpSpriteData	= (LP_SPRITE_DATA)LALAlloc(g_pInterfaceSprPool);	
+		LP_SPRITE_DATA	lpSpriteData = new sSprite_Data;
 		memset(lpSpriteData, 0, sizeof(SSPRITE_DATA));
 		lpSpriteData->dwId				= SPR_INTERFACE_MAP;
 		lpSpriteData->pSpr				= g_pRenderer->CreateSpriteObject(GetFile(szFileNameTIF, DATA_TYPE_MAP), 0);

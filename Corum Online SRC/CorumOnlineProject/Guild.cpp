@@ -307,7 +307,7 @@ void CmdGuildDataRequest(char* pMsg, DWORD dwLen)
 
 	if(!lpGuildInfo)
 	{
-		LP_GUILD_DATA lpGuildDataInfo = (LP_GUILD_DATA)LALAlloc(g_pGuildDataPool);
+		LP_GUILD_DATA lpGuildDataInfo = new GUILD_DATA;
 		memset(lpGuildDataInfo, 0, sizeof(lpGuildDataInfo));
 		lpGuildDataInfo->dwGuildId	= pPacket->dwGuildId;
 		__lstrcpyn(lpGuildDataInfo->szGuildName, pPacket->szName, MAX_GUILD_NAME_REAL_LENGTH);
@@ -369,7 +369,7 @@ void CmdGuildoffLine(char* pMsg, DWORD dwLen)
 {
 	WSTC_GUILD_OFFLINEUSER* pPacket = (WSTC_GUILD_OFFLINEUSER*)pMsg;
 	
-	LP_GUILD_OFFLINE_USER lpGuildOffLineUser = (LP_GUILD_OFFLINE_USER)LALAlloc(g_pGuildOfflinePool);
+	LP_GUILD_OFFLINE_USER lpGuildOffLineUser = new GUILD_OFFLINE_USER;
 
 	if(lpGuildOffLineUser)
 	{
@@ -488,7 +488,7 @@ void CmdDgGuildUserInfo( char* pMsg, DWORD dwLen )
 
 	if(g_pMainPlayer->m_byRank!=__GUILD_MASTER__)
 	{
-		LP_GUILD_USER pGuildUser = (LP_GUILD_USER)LALAlloc(g_pGuildPool);
+		LP_GUILD_USER pGuildUser = new GUILD_USER;
 		memset(pGuildUser, 0, sizeof(GUILD_USER));
 
 		pGuildUser->byRank		= pPacket->byRank;	
@@ -933,7 +933,7 @@ void CmdGuildUserInfo(char* pMsg, DWORD dwLen)
 	
 	if(g_pMainPlayer->m_dwUserIndex!=pPacket->dwUserIndex)
 	{
-		LP_GUILD_USER pGuildUser = (LP_GUILD_USER)LALAlloc(g_pGuildPool);
+		LP_GUILD_USER pGuildUser = new GUILD_USER;
 		memset(pGuildUser, 0, sizeof(GUILD_USER));		
 
 		pGuildUser->dwLev		= pPacket->dwLev;
@@ -1032,7 +1032,7 @@ void CmdGuildList(char* pMsg, DWORD dwLen)
 {
 	WSTC_GUILD_LIST* pPacket = (WSTC_GUILD_LIST*)pMsg;
 
-	LP_GUILD_WAR lpGuildWar = (LP_GUILD_WAR)LALAlloc(g_pGuildWarPool);
+	LP_GUILD_WAR lpGuildWar = new SGUILD_WAR;
 	
 	if(lpGuildWar)
 	{

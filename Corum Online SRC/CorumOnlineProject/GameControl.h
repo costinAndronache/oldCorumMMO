@@ -297,7 +297,14 @@ void			SetListener(VECTOR3 * pV3Angle);
 GXLIGHT_HANDLE	CreateLight(LIGHT_DESC* pLightDesc, VECTOR3* pVecPostion, BYTE bLightNum);
 void			ReleaseMainPlayerResource();
 void			InitializeEffect(BOOL bChk = FALSE);
-DWORD			DecodeCDBData(char* szLoadFile,  void* pReturnValue, char* szDecodeKey = DECODE_KEY, int nDecodeSubKey = DECODE_SUBKEY);
+
+struct			DecodeCDBDataResult {
+	bool success;
+	void* buffer;
+	DWORD size;
+};
+
+DecodeCDBDataResult	DecodeCDBData(char* szLoadFile, char* szDecodeKey = DECODE_KEY, int nDecodeSubKey = DECODE_SUBKEY);
 BOOL			InitChrInfo( char* szFileName, DWORD dwKind, DWORD dwFlag );
 LPMouseState	GetMouse();
 void			InitBaseMonsterInfo();

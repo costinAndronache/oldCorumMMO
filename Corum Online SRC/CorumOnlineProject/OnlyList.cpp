@@ -45,7 +45,7 @@ void COnlyList::FreeNode(CNode* pNode)
     if (pNode == NULL) return;
     //FreeData((void*)(pNode->data));
 	//m_pNodePool->Free((char*)pNode);
-	LALFree(m_pNodePool, pNode);
+	delete pNode;
 	 m_nCount--;
 }
 

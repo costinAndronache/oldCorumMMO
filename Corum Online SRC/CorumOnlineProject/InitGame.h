@@ -179,8 +179,8 @@ extern GXOBJECT_HANDLE				g_hHandle;
 extern GXOBJECT_HANDLE				g_hEffectHandle;
 
 extern GUILD_INFO					g_pGuildInfo;
-extern DUNGEONPRODUCTIONITEMMINMAX	g_DungeonProductionItemMinMax[DUNGEON_PROPERTY_MAX];
-extern BASE_CLASS_INFO				g_sBaseClassInfo[10];
+extern DUNGEONPRODUCTIONITEMMINMAX	*g_DungeonProductionItemMinMax;
+extern BASE_CLASS_INFO				*g_sBaseClassInfo;
 extern SSKILL_LIST_MANAGER			g_sSkillListManager;
 extern SSKILL_DPINFO				g_sSkillInfoDP[MAX_SKILL];
 extern A_STAR						g_PathFinder; 

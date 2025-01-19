@@ -66,7 +66,7 @@ MouseState			g_Mouse;
 CAMERA_INFO			g_Camera;
 KEY_PRESS_STATE		g_KeyPress;
 GXMAP_HANDLE		g_pMapHandle = NULL;
-CPTable				g_pCPTable[MAX_CP_TABLE];
+CPTable* g_pCPTable = NULL;;
 HELP_LOAD_SPRITE	g_helpLoadingSprite;
 FOG_DESC			g_FogDesc;
 NETMARBLE_LOGIN		g_NetMarble;
@@ -845,10 +845,9 @@ void CreateConvertCDBToMAP(char* pszFileName)
 {
 	// cdb -> map 파일 생성.	
 	// 미리 길이를 알 수 있는 방법이나 그런 게 없을까? 일단 100K로 세팅.
-	char* szTempBuf = new char[250000];
-	ZeroMemory(szTempBuf, 250000);
 
-	DWORD dwTotalRead = DecodeCDBData( pszFileName, szTempBuf, DECODE_KEY, DECODE_SUBKEY);
+	DecodeCDBDataResult result =  DecodeCDBData(pszFileName, DECODE_KEY, DECODE_SUBKEY);
+	DWORD dwTotalRead = result.size;
 	pszFileName[lstrlen(pszFileName)-3]='m';
 	pszFileName[lstrlen(pszFileName)-2]='a';
 	pszFileName[lstrlen(pszFileName)-1]='p';
@@ -866,11 +865,9 @@ void CreateConvertCDBToMAP(char* pszFileName)
 	else
 	{
 		DWORD dwWrite;
-		WriteFile(hFile, szTempBuf,dwTotalRead , &dwWrite,  NULL);
+		WriteFile(hFile, result.buffer,dwTotalRead , &dwWrite,  NULL);
 		CloseHandle(hFile);
 	}
-
-	delete [] szTempBuf;
 }
 
 void SendLoadingStatus(BYTE bIsLoading)
@@ -2011,7 +2008,7 @@ void FreeUser( CUser* pUser )
 	
 	pUser->RemoveResource();
 	memset( pUser, 0, sizeof( CUser ) );
-	LALFree( g_pUserPool, (void*)pUser );
+	delete pUser;
 	
 	pUser = NULL;
 }
@@ -2049,7 +2046,7 @@ void FreeMonster( CMonster* pMonster )
 
 	pMonster->RemoveResource();
 	memset( pMonster, 0, sizeof( CMonster ) );
-	LALFree( g_pMonsterPool, (void*)pMonster );
+	delete pMonster;
 	pMonster = NULL; 
 }
 
@@ -2065,7 +2062,7 @@ void FreeItem( ITEM* pItem )
 	pItem->hItem.pDesc = NULL;
 
 	memset( pItem, 0, sizeof( ITEM ) );
-	LALFree( g_pItemPool, (void*)pItem );
+	delete pItem;
 	pItem = NULL;
 }
 
@@ -2082,7 +2079,7 @@ void FreeEffect( EffectDesc* pEffectDesc )
 	pEffectDesc->hEffect.pDesc = NULL;
 
 	memset( pEffectDesc, 0, sizeof( EffectDesc ) );
-	LALFree( g_pEffectPool, (void*)pEffectDesc );
+	delete pEffectDesc;
 	pEffectDesc = NULL;
 }
 
@@ -2336,7 +2333,7 @@ LPObjectDesc AllocObjDesc()
 	g_dwDescNum++;
 	return pDesc;
 
-	pDesc = (LPObjectDesc)LALAlloc( g_pObjDescPool );
+	pDesc = new OBJECT_DESC;
 	if( !pDesc )
 	{
 		MessageBox( g_hMainWnd, "Alloc ObjectDesc Failed!", "Failed", MB_ICONSTOP );
@@ -2360,7 +2357,7 @@ void FreeObjDesc( LPObjectDesc pDesc )
 
 	return;
 
-	LALFree( g_pObjDescPool, (void*)pDesc );
+	delete pDesc;
 	memset(pDesc, 0, sizeof(OBJECT_DESC));
 	pDesc = NULL;
 	g_dwDescNum--;	
@@ -2405,8 +2402,10 @@ void DeleteHandleObject( GXOBJECT_HANDLE hHandle )
 }
 
 
-DWORD DecodeCDBData(char* szLoadFile,  void* pReturnValue, char* szDecodeKey, int nDecodeSubKey)
+DecodeCDBDataResult DecodeCDBData(char* szLoadFile, char* szDecodeKey, int nDecodeSubKey)
 {
+	DecodeCDBDataResult result{ true };
+
 	int nKeyLen = lstrlen(szDecodeKey);
 
 	FILE* fp;	
@@ -2415,18 +2414,23 @@ DWORD DecodeCDBData(char* szLoadFile,  void* pReturnValue, char* szDecodeKey, in
 	BOOL bRet = TRUE;
 	
 	fp = fopen( szLoadFile, "rb" );
-	if(!fp)
-		return FALSE;
+	if (!fp) {
+		result.success = false;
+		result.size = 0;
+		result.buffer = nullptr;
+		return result;
+	}
 
 	fread(&dwTotalLen, sizeof(DWORD), 1, fp );
 
-	static char szBuffer[1024 * 1024 * 50];
-	//char* szBuffer = (char*)malloc(dwTotalLen);
-	
+	//static char szBuffer[1024 * 1024 * 50];
+	result.buffer = malloc(dwTotalLen);
+	result.size = dwTotalLen;
+
 	int nRemain;
 	while( bRet )
 	{
-		if(!fread(szBuffer + dwCur, nKeyLen, 1, fp ))
+		if(!fread((char*)result.buffer + dwCur, nKeyLen, 1, fp ))
 			bRet = FALSE;
 
 		 nRemain = nKeyLen;
@@ -2434,17 +2438,15 @@ DWORD DecodeCDBData(char* szLoadFile,  void* pReturnValue, char* szDecodeKey, in
 			nRemain = dwTotalLen - dwCur;
 
 		for(int k=0; k<nRemain; k++ )
-			szBuffer[ dwCur + k ] ^= (szDecodeKey[k] + nDecodeSubKey);
+			((char*)result.buffer)[ dwCur + k ] ^= (szDecodeKey[k] + nDecodeSubKey);
 
 		dwCur += nRemain;
 	}
 	
 
-	memcpy(pReturnValue, szBuffer, dwTotalLen);
-	//free(szBuffer);
 	fclose(fp);
 
-	return dwCur;	//총 읽어드린 바이트수를 리
+	return result;	//총 읽어드린 바이트수를 리
 }
 
 

@@ -67,7 +67,7 @@ V2_SPRITE*	CSpriteManager::CreateSprite(DWORD dwSprID, float x, float y, bool bS
 	if(!AddSprite(pSpr))
 	{
 		char szInfo[0xff] = {0,};
-		LALFree(m_pSpritePool, pSpr);
+		delete pSpr;
 		wsprintf(szInfo, "AddSprtite Fail = %d", dwSprID);
 		MessageBox(g_hMainWnd, szInfo, "CorumOnline", MB_OK);
 		return NULL;
@@ -124,7 +124,7 @@ V2_SPRITE*	CSpriteManager::CreateSprite(DWORD dwSprID, float x, float y, int nSt
 		
 	if(!AddSprite(pSpr))
 	{		
-		LALFree(m_pSpritePool, pSpr);
+		delete pSpr;
 
 		char szInfo[0xff] = {0,};
 		wsprintf(szInfo, "AddSprtite Fail = %d", dwSprID);
@@ -173,7 +173,7 @@ V2_SPRITE*	CSpriteManager::CreateSpriteFile(DWORD dwSprID, char* szFilePath, flo
 		
 	if(!AddSprite(pSpr))
 	{		
-		LALFree(m_pSpritePool, pSpr);
+		delete pSpr;
 
 		char szInfo[0xff] = {0,};
 		wsprintf(szInfo, "AddSprite Fail = %d", dwSprID);
@@ -221,7 +221,7 @@ V2_SPRITE*	CSpriteManager::CreateSpriteFile(DWORD dwSprID, char* szFilePath, flo
 		
 	if(!AddSprite(pSpr))
 	{		
-		LALFree(m_pSpritePool, pSpr);
+		delete pSpr;
 
 		char szInfo[0xff] = {0,};
 		wsprintf(szInfo, "AddSprite  = %d", dwSprID);
@@ -233,7 +233,7 @@ V2_SPRITE*	CSpriteManager::CreateSpriteFile(DWORD dwSprID, char* szFilePath, flo
 
 V2_SPRITE*	CSpriteManager::CreateBackground(DWORD dwSprID, float x, float y)
 {	
-	m_pBackSprite = (V2_SPRITE*)LALAlloc(m_pSpritePool);
+	m_pBackSprite = new V2_SPRITE;
 
 	if(m_pBackSprite==NULL)		
 		MessageBox(g_hMainWnd, "SpritePool = NULL", "CorumOnline", MB_OK);
@@ -262,7 +262,7 @@ V2_SPRITE*	CSpriteManager::CreateBackground(DWORD dwSprID, float x, float y)
 V2_SPRITE*	CSpriteManager::CreateBackground(char* szFilePath, float x, float y)
 {
 	//m_pBackSprite = (V2_SPRITE*)m_pSpritePool->Alloc();
-	LALAlloc(m_pSpritePool);
+	
 	memset(m_pBackSprite, 0, sizeof(V2_SPRITE));
 
 	m_pBackSprite->dwSprID = 0;			//배경 스프라이트 
@@ -369,7 +369,7 @@ void CSpriteManager::RemoveSprite(DWORD dwSprID)
 				}
 
 				cur->pSpr->Release();
-				LALFree(m_pSpritePool, cur);
+				delete cur;
 			}
 						
 			cur = NULL;
@@ -416,7 +416,7 @@ void CSpriteManager::RemoveSprite(V2_SPRITE* pInfo)
 			if(cur)	
 			{
 				cur->pSpr->Release();
-				LALFree(m_pSpritePool, cur);
+				delete cur;
 			}
 						
 			cur = NULL;
@@ -434,7 +434,7 @@ void CSpriteManager::RemoveBackground()
 	if(m_pBackSprite)
 	{
 		m_pBackSprite->pSpr->Release();
-		LALFree(m_pSpritePool, m_pBackSprite);
+		delete m_pBackSprite;
 		m_pBackSprite = NULL;
 	}
 }
@@ -453,7 +453,7 @@ void CSpriteManager::RemoveAllSprite()
 		{
 			next = cur->pNext;
 			cur->pSpr->Release();
-			LALFree(m_pSpritePool, cur);
+			delete cur;
 			cur = next;
 		}
 		m_ppInfoTable[i] = NULL;

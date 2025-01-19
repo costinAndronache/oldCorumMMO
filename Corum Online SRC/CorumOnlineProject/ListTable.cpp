@@ -13,7 +13,7 @@ void DeleteAllChatList()
 			posTemp = pos;
 
 			LP_CHAT_MSG lpChatNode = (LP_CHAT_MSG)g_pWhisperChatList->GetNext(pos);
-			LALFree(g_pChatPool, lpChatNode);
+			delete lpChatNode;
 			lpChatNode	= NULL;
 			g_pWhisperChatList->RemoveAt(posTemp);
 		}		
@@ -32,7 +32,7 @@ void DeleteGuildChatList()
 			posTemp = pos;
 
 			LP_CHAT_MSG lpChatNode = (LP_CHAT_MSG)g_pGuildChatList->GetNext(pos);
-			LALFree(g_pChatPool, lpChatNode);
+			delete lpChatNode;
 			lpChatNode	= NULL;
 			g_pGuildChatList->RemoveAt(posTemp);
 		}		
@@ -51,7 +51,7 @@ void DeleteFriendChatList()
 			posTemp = pos;
 
 			LP_CHAT_MSG lpChatNode = (LP_CHAT_MSG)g_pFriendChatList->GetNext(pos);
-			LALFree(g_pChatPool, lpChatNode);
+			delete lpChatNode;
 			lpChatNode	= NULL;
 			g_pFriendChatList->RemoveAt(posTemp);
 		}		
@@ -70,7 +70,7 @@ void DeleteWhisperChatList()
 			posTemp = pos;
 
 			LP_CHAT_MSG lpChatNode = (LP_CHAT_MSG)g_pWhisperChatList->GetNext(pos);
-			LALFree(g_pChatPool, lpChatNode);
+			delete lpChatNode;
 			lpChatNode	= NULL;
 			g_pWhisperChatList->RemoveAt(posTemp);
 		}		
@@ -89,7 +89,7 @@ void DeletePartyChatList()
 			posTemp = pos;
 
 			LP_CHAT_MSG lpChatNode = (LP_CHAT_MSG)g_pPartyChatList->GetNext(pos);
-			LALFree(g_pChatPool, lpChatNode);
+			delete lpChatNode;
 			lpChatNode	= NULL;
 			g_pPartyChatList->RemoveAt(posTemp);
 		}

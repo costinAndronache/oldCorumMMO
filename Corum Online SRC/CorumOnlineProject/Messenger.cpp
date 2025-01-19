@@ -17,7 +17,7 @@ void CmdMessengerUser( char* pMsg, DWORD dwLen )
 {
 	WSTC_MESSENGER_USER* pPacket = (WSTC_MESSENGER_USER*)pMsg;
 
-	LP_MESSENGER_USER lpMessengerUser = (LP_MESSENGER_USER)LALAlloc(g_pMessengerUserPool);
+	LP_MESSENGER_USER lpMessengerUser = new MESSENGER_USER;
 	
 	if(lpMessengerUser)
 	{		
@@ -65,7 +65,7 @@ void CmdMessengerUserInfo( char* pMsg, DWORD dwLen )
 
 		if(lpMessengerUser)
 		{
-			lpMessengerCopyUser = (LP_MESSENGER_USER)LALAlloc(g_pMessengerUserPool);
+			lpMessengerCopyUser = new MESSENGER_USER;
 			
 			memcpy(lpMessengerCopyUser, lpMessengerUser, sizeof(MESSENGER_USER));
 			lpMessengerCopyUser->byType	= pPacket->byType;
@@ -83,7 +83,7 @@ void CmdMessengerUserInfo( char* pMsg, DWORD dwLen )
 
 		if(lpMessengerUser)
 		{
-			lpMessengerCopyUser = (LP_MESSENGER_USER)LALAlloc(g_pMessengerUserPool);
+			lpMessengerCopyUser = new MESSENGER_USER;
 
 			memcpy(lpMessengerCopyUser, lpMessengerUser, sizeof(MESSENGER_USER));
 			lpMessengerCopyUser->byType	= pPacket->byType;
@@ -210,7 +210,7 @@ void CmdMessengerSuccess( char* pMsg, DWORD dwLen )
 	wsprintf(szInfo, g_Message[ETC_MESSAGE748].szMessage, pPacket->szName); // "%s 님이 친구 리스트에 등록되었습니다."
 	DisplayMessageAdd(szInfo, 0xff92D5FF, TRUE, DEF_CHAT_TYPE_FRIEND);
 
-	LP_MESSENGER_USER lpMessengerUser = (LP_MESSENGER_USER)LALAlloc(g_pMessengerUserPool);
+	LP_MESSENGER_USER lpMessengerUser = new MESSENGER_USER;
 	
 	if(lpMessengerUser)
 	{		

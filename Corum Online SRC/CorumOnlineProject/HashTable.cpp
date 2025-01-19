@@ -30,7 +30,7 @@ void CGuildInfoHash::DeleteData( void* pData )
 	if(!pGuildInfoTable)
 		return;	
 		
-	LALFree(g_pGuildDataPool, pGuildInfoTable);
+	delete pGuildInfoTable;
 }
 
 
@@ -41,7 +41,7 @@ void CGroupInfoHash::DeleteData(void* pData)
 	if(!pGroupInfoTable)
 		return;	
 		
-	LALFree(g_pGroupInfoPool, pGroupInfoTable);	
+	delete pGroupInfoTable;
 }
 
 void CItemStoreHash::DeleteData(void* pData)
@@ -51,7 +51,7 @@ void CItemStoreHash::DeleteData(void* pData)
 	if(!pItemStore)
 		return;	
 
-	LALFree(g_pItemStorePool, pItemStore);	
+	delete pItemStore;
 }
 
 void CHelpInfoHash::DeleteData(void* pData)
@@ -61,7 +61,7 @@ void CHelpInfoHash::DeleteData(void* pData)
 	if(!pHelpInfoTable)
 		return;	
 		
-	LALFree(g_pHelpInfoPool, pHelpInfoTable);	
+	delete pHelpInfoTable;
 }
 
 void CItemResourceHash::DeleteData(void* pData)
@@ -77,7 +77,7 @@ void CItemResourceHash::DeleteData(void* pData)
 		pItemResource->pSpr = NULL;
 	}
 
-	LALFree(g_pItemResourcePool, pItemResource);	
+	delete pItemResource;
 	pItemResource = NULL;
 }
 
@@ -88,7 +88,7 @@ void CItemOptionHash::DeleteData(void* pData)
 	if(!pItemOption)
 		return;	
 		
-	LALFree(g_pItemOptionPool, pItemOption);	
+	delete pItemOption;
 }
 
 void CSetItemInfoHash::DeleteData( void* pData )
@@ -116,7 +116,7 @@ void CPartyUserHash::DeleteData( void* pData )
 	if(!pParty)	return;
 
 	FreeWorldPartyUser( pParty );
-	LALFree(g_pPartyPool, pParty);
+	delete pParty;
 }
 
 void CGuildUserHash::DeleteData( void* pData )
@@ -126,7 +126,7 @@ void CGuildUserHash::DeleteData( void* pData )
 	if(!pGuildUser)
 		return;
 
-	LALFree(g_pGuildPool, pGuildUser);
+	delete pGuildUser;
 }
 
 void CGuildOffLineHash::DeleteData( void* pData )
@@ -136,7 +136,7 @@ void CGuildOffLineHash::DeleteData( void* pData )
 	if(!pGuildOfflineUser)
 		return;
 
-	LALFree(g_pGuildOfflinePool, pGuildOfflineUser);
+	delete pGuildOfflineUser;
 }
 
 void CMessengerUserHash::DeleteData( void* pData )
@@ -146,7 +146,7 @@ void CMessengerUserHash::DeleteData( void* pData )
 	if(!pMessengerUser)
 		return;
 
-	LALFree(g_pMessengerUserPool, pMessengerUser);
+	delete pMessengerUser;
 }
 
 void CGuildListHash::DeleteData( void* pData )
@@ -156,7 +156,7 @@ void CGuildListHash::DeleteData( void* pData )
 	if(!pGuildWar)
 		return;
 
-	LALFree(g_pGuildWarPool, pGuildWar);
+	delete pGuildWar;
 }
 
 void CPartyBoardHash::DeleteData( void* pData )
@@ -166,7 +166,7 @@ void CPartyBoardHash::DeleteData( void* pData )
 	if(!lpPartyBoard)
 		return;
 
-	LALFree(g_pPartyBoardPool, lpPartyBoard);
+	delete lpPartyBoard;
 	memset(lpPartyBoard, 0, sizeof(SPARTY_BOARD));
 	lpPartyBoard = NULL;
 }

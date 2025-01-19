@@ -462,7 +462,7 @@ void RemoveChat(POSITION_ pos, BYTE byType)
 
 	if(lpChatMsg)
 	{
-		LALFree(g_pChatPool, lpChatMsg);
+		delete g_pChatPool;
 		lpChatMsg = NULL;
 	}
 }
@@ -471,7 +471,7 @@ void RemoveChat(POSITION_ pos, BYTE byType)
 //==============================================================//
 void AddChat(char* pszText, DWORD dwColor, BYTE byType, int nSize)
 {
-	LP_CHAT_MSG lpChatMsg = (LP_CHAT_MSG)LALAlloc(g_pChatPool);
+	LP_CHAT_MSG lpChatMsg = new CHAT_MSG;
 	memset(lpChatMsg->szText, 0, sizeof(lpChatMsg->szText));
 
 	if(nSize)
@@ -502,7 +502,7 @@ void AddChat(char* pszText, DWORD dwColor, BYTE byType, int nSize)
 		{
 			if(lpChatMsg)
 			{
-				LALFree(g_pChatPool, lpChatMsg);
+				delete g_pChatPool;
 				lpChatMsg = NULL;
 			}
 		}

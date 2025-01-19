@@ -183,7 +183,7 @@ void	CAbyssHash64<Td>::Destroy( BOOL bDeleteData )
 					DeleteData(pDel->pData);	
 				}
 
-				LALFree( m_pNodePool, (void*)pDel );
+				delete pDel;
 			}
 
 			m_pBucket[i] = NULL;
@@ -246,7 +246,7 @@ __int64 CAbyssHash64<Td>::Insert( Td* pdata, __int64 i64Key )
 {
 	__int64 i64Index = i64Key%m_dwMaxBucketNum;
 
-	Node64<Td>* pnode = (Node64<Td>*)LALAlloc(m_pNodePool);
+	Node64<Td>* pnode = new Node64<Td>;
 	
 	if( !pnode )
 	{
@@ -271,7 +271,7 @@ __int64 CAbyssHash64<Td>::Insert( Td* pdata, __int64 i64Key )
 		{
 			if( pCurNode->i64Key == i64Key )	// 같은 키값이 들어오면 넣지 않는다.
 			{
-				LALFree( m_pNodePool, (void*)pnode );
+				delete pnode;
 				pnode = NULL;
 				return -1;
 			}
@@ -322,7 +322,7 @@ void CAbyssHash64<Td>::Delete( Td* pdata, __int64 i64Key, BOOL bDeleteData)
 			// List에서 삭제 
 			RemoveAtList( pDel->pListPos );	
 			
-			LALFree( m_pNodePool, (void*)pDel );
+			delete pDel;
 
 			break;
 		}

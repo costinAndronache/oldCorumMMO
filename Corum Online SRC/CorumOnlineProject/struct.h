@@ -623,7 +623,7 @@ struct CPTable	// 써버랑 클라이언트랑 구조체가 틀리다. 주의해라.
 };
 
 
-extern CPTable	g_pCPTable[MAX_CP_TABLE];
+extern CPTable *g_pCPTable;
 
 
 struct NPC_TABLE

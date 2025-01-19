@@ -125,9 +125,11 @@ CInterface::~CInterface()
 //==================================================//
 BOOL CInterface::LoadInterfaceComponentInfoCDB(char* pFileName)
 {
-	INTERFACE_COMPONENT_INFO sInterfaceComponentInfo[MAX_INTERFACE_COMPONENT_INFO];
+	DecodeCDBDataResult result = DecodeCDBData(GetFile(pFileName, DATA_TYPE_MANAGER));
+	INTERFACE_COMPONENT_INFO* sInterfaceComponentInfo = (INTERFACE_COMPONENT_INFO*)result.buffer;
 	
-	int nTotalSize = DecodeCDBData(GetFile(pFileName, DATA_TYPE_MANAGER), sInterfaceComponentInfo);
+
+	int nTotalSize = result.size;
 	int nMaxNode = nTotalSize / sizeof(INTERFACE_COMPONENT_INFO);	
 	
 	// 키 설정 데이터 //
@@ -182,9 +184,10 @@ BOOL CInterface::LoadInterfaceComponentInfoCDB(char* pFileName)
 
 BOOL CInterface::LoadInterfaceFrameInfoCDB(char* pFileName)
 {
-	INTERFACE_FRAME_INFO sInterfaceFrameInfo[MAX_INTERFACE_FRAME_INFO];
+	DecodeCDBDataResult result = DecodeCDBData(GetFile(pFileName, DATA_TYPE_MANAGER));
+	INTERFACE_FRAME_INFO* sInterfaceFrameInfo = (INTERFACE_FRAME_INFO*)result.buffer;
 	
-	int nTotalSize = DecodeCDBData(GetFile(pFileName, DATA_TYPE_MANAGER), sInterfaceFrameInfo);
+	int nTotalSize = result.size;
 	int nMaxNode = nTotalSize / sizeof(INTERFACE_FRAME_INFO);	
 	
 	for(int i = 0; i < nMaxNode; i++)

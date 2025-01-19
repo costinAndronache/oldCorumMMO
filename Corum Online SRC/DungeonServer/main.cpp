@@ -54,7 +54,7 @@ BASEITEM_BOTARY*			g_pBaseBotary					= NULL;
 BASEITEM_PRESENT_BOX*		g_pBasePresentBox				= NULL;
 Character_Propensity		g_pCharacter_Propensity[MAX_CHARACTER_PROPENSITY];
 cGDI*						g_pGDI							= NULL;
-CPTable						g_pCPTable[MAX_CP_TABLE];
+CPTable						*g_pCPTable;
 CItemMoveManager			g_ItemMoveManager;
 CItemUsedManager			g_ItemUsedManager;
 BASE_CLASS_INFO				g_pBaseClassInfo[MAX_CLASS+1];

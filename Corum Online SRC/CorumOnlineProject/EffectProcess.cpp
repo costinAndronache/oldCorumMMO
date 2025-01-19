@@ -2850,7 +2850,9 @@ BOOL LoadNpcInfo()
 		return FALSE;
 	}
 
-	DWORD dwTotalRead = DecodeCDBData( pFile, g_NPCTable, DECODE_KEY, DECODE_SUBKEY);
+	DecodeCDBDataResult result = DecodeCDBData(pFile, DECODE_KEY, DECODE_SUBKEY);
+	memcpy(g_NPCTable, result.buffer, result.size);
+	DWORD dwTotalRead = result.size;
 	DWORD dwNum = dwTotalRead / sizeof(NPC_TABLE);
 	dwNum;
 
