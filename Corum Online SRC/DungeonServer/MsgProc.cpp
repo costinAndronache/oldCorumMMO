@@ -218,7 +218,7 @@ void CmdPortalMove( DWORD dwConnectionIndex, char* pMsg, DWORD dwLength )
 			if(pUser->pBufForPortal)
 			{
 				// Portal 처리 마치기 전에 또 한번 쓴 경우 겠지...
-				LALFree(g_pPortalBufferPool, pUser->pBufForPortal );
+				delete pUser->pBufForPortal;
 				pUser->pBufForPortal = NULL;
 				
 				FAIL_VALUE(byPortalFail, 5);				
@@ -228,7 +228,7 @@ void CmdPortalMove( DWORD dwConnectionIndex, char* pMsg, DWORD dwLength )
 			pUser->m_bPortalMoving = 1;	
 
 			// 승인 요청의 응답을 받을때 까지 PORTAL_BUCKET을 저장하고 있자..
-			PORTAL_BUCKET* pPortal =  (PORTAL_BUCKET*)LALAlloc(g_pPortalBufferPool);	
+			PORTAL_BUCKET* pPortal = new PORTAL_BUCKET;
 			memset(pPortal, 0, sizeof(PORTAL_BUCKET));	
 			
 			pPortal->wPortalItemID	= pPacket->wPortalItemID;
@@ -6207,7 +6207,7 @@ void CmdDungeonJoin(DWORD dwConnectionIndex, char* pMsg, DWORD dwLength)
 	//포탈 Join일 경우 
 	if(join->bIsPortalJoin)
 	{
-		PORTAL_BUCKET* pPortal	= (PORTAL_BUCKET*)LALAlloc(g_pPortalBufferPool);
+		PORTAL_BUCKET* pPortal = new PORTAL_BUCKET;
 		pPortal->wToDungeonID	= join->wDungeonID;
 		pPortal->bLayerNo		= join->bLayerNum;
 		pPortal->v2Pos			= join->v2Pos;

@@ -202,7 +202,7 @@ void CmdUserAcceptFailedForPortal(DWORD dwConnectionIndex, char* pMsg, DWORD dwL
 				PORTAL_BUCKET* pPortal = (PORTAL_BUCKET*)(pUser->pBufForPortal);
 				SendPortalFailMessage(pUser, pPortal->wToDungeonID, pPacket->bErrorCode, pPortal->wPortalItemID );
 				
-				LALFree(g_pPortalBufferPool, pUser->pBufForPortal);
+				delete pUser->pBufForPortal;
 				pUser->pBufForPortal = NULL;
 			}
 			else

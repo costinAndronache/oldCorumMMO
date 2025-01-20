@@ -741,7 +741,7 @@ void __DisconnectUserUpdate(CUser* pUser,DWORD dwConnectionIndex)
 	
 	if(pUser->pBufForPortal)
 	{
-		LALFree(g_pPortalBufferPool, pUser->pBufForPortal);
+		delete pUser->pBufForPortal;
 		pUser->pBufForPortal = NULL;
 	}	
 

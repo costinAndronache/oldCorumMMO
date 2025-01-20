@@ -1298,7 +1298,7 @@ void PlayerShopPriceLog(CUser* pUser, CItem* pItem, BYTE byInv, BYTE byIndex, DW
 	char szQuery[0xff]={0,};
 	memset(szQuery, 0, sizeof(szQuery));
 
-	PLAYERSHOP_LOG* pPlayerShopLog = (PLAYERSHOP_LOG*)LALAlloc(g_pPlayerShopLogPool);
+	PLAYERSHOP_LOG* pPlayerShopLog = new PLAYERSHOP_LOG;
 
 	if(!pPlayerShopLog)
 		__asm int 3
@@ -1342,7 +1342,7 @@ void PlayerShopLog(CUser* pUser, CItem* pItem, BYTE byInv, BYTE byIndex, DWORD d
 	char szQuery[0xff]={0,};
 	memset(szQuery, 0, sizeof(szQuery));
 
-	PLAYERSHOP_LOG* pPlayerShopLog = (PLAYERSHOP_LOG*)LALAlloc(g_pPlayerShopLogPool);
+	PLAYERSHOP_LOG* pPlayerShopLog = new PLAYERSHOP_LOG;
 
 	if(!pPlayerShopLog)
 		__asm int 3

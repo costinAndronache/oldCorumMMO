@@ -1772,7 +1772,7 @@ BOOL CUser::SetUserVirtualItemNativeLink(const CItem* pItemNative,BYTE byLinkCnt
 		if(NULL == pItem)
 		{
 			// 링크 시킬수 있다.
-			pItem = (CItem*)LALAlloc(g_pVirtualLinkItemNativePool);		
+			pItem = new CItem;
 
 			if(pItem == NULL)
 				return FALSE;
@@ -1805,7 +1805,7 @@ BOOL CUser::SetUserVirtualItemNativeLink(const CItem* pItemNative,BYTE byLinkCnt
 		if(NULL == pItem)
 		{
 			// 링크 시킬수 있다.
-			pItem = (CItem*)LALAlloc(g_pVirtualLinkItemNativePool);		
+			pItem = new CItem;
 
 			if(pItem == NULL)
 				return FALSE;
@@ -1852,7 +1852,7 @@ BOOL CUser::SetUserVirtualItemNativeLinkReturn(const CItem* pItemNative,BYTE byL
 					{
 						// 지워버려 
 						m_pVirtualLinkItemNativeHash->Delete(pItem, pItem->m_Serial.i64Serial);
-						LALFree(g_pVirtualLinkItemNativePool, pItem);
+						delete pItem;
 						pItem = NULL;
 					}
 				}
@@ -1864,7 +1864,7 @@ BOOL CUser::SetUserVirtualItemNativeLinkReturn(const CItem* pItemNative,BYTE byL
 					{
 						// 지워버려
 						m_pVirtualLinkItemNativeHash->Delete(pItem, pItem->m_Serial.i64Serial);
-						LALFree(g_pVirtualLinkItemNativePool, pItem);
+						delete pItem;
 						pItem = NULL;
 					}
 				}				
@@ -1886,7 +1886,7 @@ BOOL CUser::SetUserVirtualItemNativeLinkReturn(const CItem* pItemNative,BYTE byL
 		{
 			// 지워버려 
 			m_pVirtualLinkItemNativeHash->Delete(pItem, pItem->m_Serial.i64Serial);
-			LALFree(g_pVirtualLinkItemNativePool, pItem);
+			delete pItem;
 			pItem = NULL;
 			return TRUE;
 		}
@@ -1925,7 +1925,7 @@ BOOL CUser::SetUserVirtualItemNativeLinkSell(const CItem* pItemNative,BYTE bySel
 					// 링크한 수량 다 팔린거야.
 					// 지워버려 
 					m_pVirtualLinkItemNativeHash->Delete(pItem, pItem->m_Serial.i64Serial);
-					LALFree(g_pVirtualLinkItemNativePool, pItem);
+					delete pItem;
 					pItem = NULL;
 				}
 
@@ -1947,7 +1947,7 @@ BOOL CUser::SetUserVirtualItemNativeLinkSell(const CItem* pItemNative,BYTE bySel
 		{
 			// 지워버려 
 			m_pVirtualLinkItemNativeHash->Delete(pItem, pItem->m_Serial.i64Serial);
-			LALFree(g_pVirtualLinkItemNativePool, pItem);
+			delete pItem;
 			pItem = NULL;
 			return TRUE;
 		}
@@ -1966,7 +1966,7 @@ BOOL CUser::RemoveUserVirtualItemNativeLink(const CItem* pItemNative)
 	if(pItem)
 	{
 		m_pVirtualLinkItemNativeHash->Delete(pItem, pItem->m_Serial.i64Serial);
-		LALFree(g_pVirtualLinkItemNativePool, pItem);
+		delete pItem;
 		pItem = NULL;
 		return TRUE;
 	}
@@ -1986,7 +1986,7 @@ void CUser::RemoveAllVirtualItemNativeLink()
 		if(pItem)
 		{
 			m_pVirtualLinkItemNativeHash->Delete(pItem, pItem->m_Serial.i64Serial);
-			LALFree(g_pVirtualLinkItemNativePool, pItem);
+			delete pItem;
 			pItem = NULL;
 		}
 

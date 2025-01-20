@@ -1129,7 +1129,7 @@ BOOL CDungeonLayer::RemoveItem( ITEM_SERVER* pItem )
 	m_pItemHash->Delete( pItem, pItem->Item.m_Serial.i64Serial );
 	m_pSection[pItem->dwSectionNum-1]->m_pItemHash->Delete( pItem, pItem->Item.m_Serial.i64Serial );
 	
-	LALFree( g_pItemPool, (void*)pItem );
+	delete pItem;
 
 	return true;
 }
@@ -1221,7 +1221,7 @@ void CDungeonLayer::__ProcessCreateItem()
 		MakeItemStruct( pItem, &pCreateItem->Item, &pCreateItem->v2ItemPos, pCreateItem->dwSectionNum, pCreateItem->dwOwnerIndex, pCreateItem->dwPartyIndex, 0, 0 );
 
 		m_pCreateItemList->RemoveAt( pCreateItem->DelPos );	// 생성했으면 지운다.
-		LALFree( g_pCreateItemPool, (void*)pCreateItem );
+		delete pCreateItem;
 		
 		if( InsertItem( pItem ) == false ) 
 		{

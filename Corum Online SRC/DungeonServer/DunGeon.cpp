@@ -585,7 +585,7 @@ BOOL CDungeon::PermissionJoinDungeon(CUser* pUser)
 			PORTAL_BUCKET* pPortal = (PORTAL_BUCKET*)pUser->pBufForPortal;
 			eJoinFail = JoinUser( pUser, pPortal->bLayerNo, &pPortal->v2Pos );
 			
-			LALFree(g_pPortalBufferPool, pUser->pBufForPortal);
+			delete pUser->pBufForPortal;
 			pUser->pBufForPortal = NULL;
 
 			if(DUNGEON_JOIN_SUCCESS != eJoinFail)

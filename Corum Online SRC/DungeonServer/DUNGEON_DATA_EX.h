@@ -68,7 +68,6 @@ public:
 	virtual ~DUNGEON_DATA_EX();
 
 };
-#pragma pack(pop)
 
 #endif 
 

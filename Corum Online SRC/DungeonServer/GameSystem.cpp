@@ -898,7 +898,7 @@ void CPlayerShopLogHash::DeleteData(PLAYERSHOP_LOG* pData)
 	if(pPlayerShopLog)
 	{
 		memset(pPlayerShopLog, 0, sizeof(pPlayerShopLog));
-		LALFree(g_pPlayerShopLogPool, pPlayerShopLog);
+		delete pPlayerShopLog;
 		pPlayerShopLog = NULL;
 	}
 }
@@ -909,7 +909,7 @@ void CItemTradeHash::DeleteData(ITEM_TRADE* pData)
 
 	if(pItemTrade)
 	{
-		LALFree(g_pItemTradePool, pItemTrade);		
+		delete pItemTrade;
 		pItemTrade = NULL;
 	}
 }
@@ -920,7 +920,7 @@ void CItemStoreHash::DeleteData(ITEM_STORE* pData)
 
 	if(pItemStore)
 	{
-		LALFree(g_pItemStorePool, pItemStore);		
+		delete pItemStore;
 		pItemStore = NULL;
 	}
 }
@@ -931,7 +931,7 @@ void CItemShopHash::DeleteData(ITEM_SHOP* pData)
 
 	if(pItemShop)
 	{
-		LALFree(g_pItemShopPool, pItemShop);		
+		delete pItemShop;
 		pItemShop = NULL;
 	}
 }
@@ -942,7 +942,7 @@ void CShopTileHash::DeleteData(SHOP_TILE* pData)
 
 	if(pShopTile)
 	{
-		LALFree(g_pShopTilePool, pShopTile);		
+		delete pShopTile;
 		pShopTile = NULL;
 	}
 }
@@ -959,7 +959,7 @@ void CGuildListHash::DeleteData(GUILD_NODE* pData)
 
 	if(pGuildNode)
 	{		
-		LALFree(g_pGuildListPool, pGuildNode);
+		delete pGuildNode;
 		pGuildNode = NULL;
 	}
 }
@@ -970,7 +970,7 @@ void CVirtualLinkItemNativeHash::DeleteData(CItem* pData)
 
 	if(pVirtualLinkItemNative)
 	{
-		LALFree(g_pVirtualLinkItemNativePool, pVirtualLinkItemNative);		
+		delete pVirtualLinkItemNative;
 		pVirtualLinkItemNative = NULL;
 	}
 }

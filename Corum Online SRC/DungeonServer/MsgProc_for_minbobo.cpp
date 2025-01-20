@@ -666,7 +666,7 @@ void CmdPlayerShopOpen( DWORD dwConnectionIndex, char* pMsg, DWORD dwLength )
 
 	pItemShop->byType	= 1;
 
-	SHOP_TILE* pNewShopTile = (SHOP_TILE*)LALAlloc(g_pShopTilePool);
+	SHOP_TILE* pNewShopTile = new SHOP_TILE;
 
 	if(pNewShopTile)
 	{

@@ -347,7 +347,7 @@ void QueryTypeUUIDDungeonJoin(DBRECEIVEDATA* pResult)
 			Log(LOG_IMPORTANT, "Query Failed! (DB_UUID_DUNGEON_JOIN)");
 			if(pUser->pBufForPortal)
 			{
-				LALFree(g_pPortalBufferPool, pUser->pBufForPortal);
+				delete pUser->pBufForPortal;
 				pUser->pBufForPortal = NULL;
 				//__asm int 3
 			}
@@ -926,7 +926,7 @@ void QueryTypeUserUpdate(DBRECEIVEDATA* pResult)
 			
 			if(pUser->pBufForPortal)
 			{
-				LALFree(g_pPortalBufferPool, pUser->pBufForPortal);
+				delete pUser->pBufForPortal;
 				pUser->pBufForPortal = NULL;
 			}
 		}
@@ -957,7 +957,7 @@ void QueryTypeUserUpdate(DBRECEIVEDATA* pResult)
 				pDungeon->ReportUserEnterEventDungeonByPortal(packet.wToDungeonID);
 			}							
 			
-			LALFree(g_pPortalBufferPool, pUser->pBufForPortal);
+			delete pUser->pBufForPortal;
 			pUser->pBufForPortal = NULL;
 		}
 	}

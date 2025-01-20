@@ -6,14 +6,14 @@
 void CPcList::FreeNode(CNode* pNode)
 {
     if (pNode == NULL) return;
-	LALFree( g_pNodePool, (void*)pNode );
+	delete pNode;
     m_nCount--;
 }
 
 void CActiveSectionList::FreeNode(CNode* pNode)
 {
     if (pNode == NULL) return;
-	LALFree( g_pNodePool, (void*)pNode );
+	delete pNode;
     m_nCount--;
 }
 
@@ -21,14 +21,14 @@ void CActiveSectionList::FreeNode(CNode* pNode)
 void CDungeonList::FreeNode(CNode* pNode)
 {
     if (pNode == NULL) return;
-	LALFree( g_pNodePool, (void*)pNode );
+	delete pNode;
     m_nCount--;
 }
 
 void CCreateItemList::FreeNode( CNode* pNode )
 {
 	if( pNode == NULL ) return;
-	LALFree( g_pNodePool, (void*)pNode );
+	delete pNode;
 	m_nCount--;
 }
 

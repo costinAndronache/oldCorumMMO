@@ -104,8 +104,8 @@ void CAcceptTable::Remove(ACCEPT_USER* pUser)
 			if (next)
 				next->pPrevData = prv;
 
-			if(cur)	
-				LALFree( m_pAcceptPool, (void*)cur );
+			if (cur)
+				delete cur;
 										
 			cur = NULL;
 			m_dwNum--;
@@ -144,7 +144,7 @@ void CAcceptTable::RemoveAcceptTable()
 		while (cur)
 		{
 			next = cur->pNextData;
-			LALFree( m_pAcceptPool, (void*)cur );
+			delete cur;
 			cur = next;
 		}
 

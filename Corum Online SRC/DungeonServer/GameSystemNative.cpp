@@ -608,7 +608,7 @@ BOOL AppearItem(CUser* pUser, const CItem* pItem, BYTE byCount, DWORD dwMoney, B
 
 	if(pSItem->dwSectionNum == 0)
 	{
-		LALFree( g_pItemPool, (void*)pSItem );
+		delete pSItem;
 		return FALSE;
 	}
 
@@ -622,7 +622,7 @@ BOOL AppearItem(CUser* pUser, const CItem* pItem, BYTE byCount, DWORD dwMoney, B
 
 	if(pLayer->InsertItem(pSItem)==false)
 	{
-		LALFree( g_pItemPool, (void*)pSItem );
+		delete pSItem;
 		return FALSE;
 	}
 

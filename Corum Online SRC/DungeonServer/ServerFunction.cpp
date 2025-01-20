@@ -1533,7 +1533,7 @@ BOOL LoadDungeonServerData()
 	pData = g_pDb->OpenRecordEx("Select ItemId From Item_Store Group by ItemId", 1500, DEFAULT_ROWS_PER_READ, GAME_DB);	
 	for(int i = 0; i < pData->Query.select.dwRowCount; i++ )
 	{
-		pItemStore = (ITEM_STORE*)LALAlloc(g_pItemStorePool);
+		pItemStore = new ITEM_STORE;
 		memcpy(pItemStore, pData->Query.select.pResult + ( i * pData->Query.select.dwRowSize ), pData->Query.select.dwRowSize );	
 		g_pItemStoreHash->Insert(pItemStore, pItemStore->wItemId);
 	}
