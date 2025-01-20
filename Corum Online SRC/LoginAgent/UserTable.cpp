@@ -163,7 +163,7 @@ void CUserTable::Remove(CUser* pInfo)
 			if(cur)	
 			{
 				if(cur->m_pItemMallBox)	delete [] cur->m_pItemMallBox;
-				LALFree(m_pUserPool, cur);
+				delete cur;
 			}
 									
 			cur = NULL;
@@ -209,7 +209,7 @@ void CUserTable::RemoveUserTable()
 			next = cur->m_pNextData;
 
 			if(cur->m_pItemMallBox)	delete [] cur->m_pItemMallBox;
-			LALFree(m_pUserPool, cur);
+			delete cur;
 			
 			cur = next;
 		}
