@@ -1006,7 +1006,6 @@
     <Library Include="CommonServer.lib" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\I4DyuchiNET\I4DyuchiNET.sln" />
     <None Include="libcomservice2.dll" />
     <None Include="CommonServer.dll" />
     <None Include="ReadMe.txt" />

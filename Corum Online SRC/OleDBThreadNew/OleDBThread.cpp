@@ -408,7 +408,7 @@ DBRECEIVEDATA* COleDBThread::OpenRecordEx(wchar_t* szQuerySQL, DWORD dwMaxNumRow
     while(lNumRowsRetrieved > 0) 
 	{
         //For each row, print the column data.
-        for(j=0; j<lNumRowsRetrieved; j++) 
+        for(int j=0; j<lNumRowsRetrieved; j++) 
 		{
 			if(dwTotalReceivedRow >= dwMaxNumRows)	//파라미터로 지정해준 MAX 행까지 받았으면 Release 한후 끝낸다.
 			{
@@ -622,7 +622,7 @@ DBRECEIVEDATA* COleDBThread::OpenRecordExForThread(wchar_t* szQuerySQL, DWORD dw
     while(lNumRowsRetrieved > 0) 
 	{
         //For each row, print the column data.
-        for(j = 0; j < lNumRowsRetrieved; j++) 
+        for(int j = 0; j < lNumRowsRetrieved; j++) 
 		{
 			if(dwTotalReceivedRow >= dwMaxNumRows)	//파라미터로 지정해준 MAX 행까지 받았으면 Release 한후 끝낸다.
 			{
@@ -770,7 +770,7 @@ int	COleDBThread::OpenRecord(WCHAR* szQuerySQL, void* pRecordSet, DWORD dwMaxNum
     while(lNumRowsRetrieved > 0) 
 	{
         //For each row, print the column data.
-        for(j=0; j<lNumRowsRetrieved; j++) 
+        for(int j=0; j<lNumRowsRetrieved; j++) 
 		{
             //Clear the buffer.
             //memset(pBuffer, 0, ConsumerBufColOffset);
