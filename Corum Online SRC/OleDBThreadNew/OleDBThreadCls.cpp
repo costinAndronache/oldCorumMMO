@@ -169,7 +169,7 @@ BOOL __stdcall COleDBThreadCls::InitDBModule(DB_INITIALIZE_DESC* desc)
 {	
 	m_dwOLEDBSize = 0;
 
-	memcpy(&m_InitDesc, desc, sizeof(m_InitDesc));
+	m_InitDesc = *desc;
 
 	if(m_InitDesc.bUsingThread)
 	{

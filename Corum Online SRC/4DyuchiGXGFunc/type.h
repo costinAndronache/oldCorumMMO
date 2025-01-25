@@ -68,3 +68,12 @@ typedef void* (*RESOURCR_ALLOC_FUNC)(void* pArg1,void* pArg2,void* pArg3,DWORD d
 typedef void (*RESOURCR_FREE_FUNC)(void* pResource);
 
 
+typedef void* POSITION_;
+
+
+struct CNode
+{
+	CNode* pNext;
+	CNode* pPrev;
+	void* data;
+};

@@ -3,7 +3,7 @@
 
 #pragma once
 
-#include "../4DyuchiGXGFunc/global.h"
+#include <global2.h>
 #include "OnlyList.h"
 
 class CUser;

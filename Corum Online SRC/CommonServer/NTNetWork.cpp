@@ -5,7 +5,7 @@
 
 CNTNetWork::CNTNetWork(void)
 {
-
+	m_pNetwork = NULL;
 }
 
 CNTNetWork::~CNTNetWork(void)

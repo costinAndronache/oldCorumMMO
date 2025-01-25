@@ -10,4 +10,7 @@
     </LocalDebuggerCommandArguments>
     <LocalDebuggerWorkingDirectory>..\LoginAgent\LoginAgent___Win32_CHINA</LocalDebuggerWorkingDirectory>
   </PropertyGroup>
+  <PropertyGroup>
+    <ShowAllFiles>true</ShowAllFiles>
+  </PropertyGroup>
 </Project>

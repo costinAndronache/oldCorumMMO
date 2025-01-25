@@ -1,7 +1,6 @@
 #pragma once
 
 #include "CommonServer.h"
-#include "IOleDBThread.h"
 #include <conetwork.h>
 
 

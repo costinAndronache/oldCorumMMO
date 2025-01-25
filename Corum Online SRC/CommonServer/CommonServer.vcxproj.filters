@@ -36,9 +36,6 @@
     <ClCompile Include="NTAes.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="NTNetWork.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="StdAfx.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -65,6 +62,9 @@
     </ClCompile>
     <ClCompile Include="ItemManager.cpp">
       <Filter>Item</Filter>
+    </ClCompile>
+    <ClCompile Include="NTNetWork.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -102,9 +102,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="NTAes.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="NTNetWork.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="PartyMatchPacket.h">
@@ -196,18 +193,6 @@
     </ClInclude>
     <ClInclude Include="UniqueProcess.h">
       <Filter>Common</Filter>
-    </ClInclude>
-    <ClInclude Include="DBStruct.h">
-      <Filter>COM Interface</Filter>
-    </ClInclude>
-    <ClInclude Include="global.h">
-      <Filter>COM Interface</Filter>
-    </ClInclude>
-    <ClInclude Include="IOleDBThread.h">
-      <Filter>COM Interface</Filter>
-    </ClInclude>
-    <ClInclude Include="typedef.h">
-      <Filter>COM Interface</Filter>
     </ClInclude>
     <ClInclude Include="BaseItem.h">
       <Filter>Item</Filter>

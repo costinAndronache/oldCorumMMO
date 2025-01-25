@@ -30,7 +30,9 @@
 #include "../CommonServer/CommonAccessory.h"
 #include "../CommonServer/ComInterface.h"
 #include "../CommonServer/NTNetwork.h"
-
+#include <IOleDBThread.h>
+#include <DBStruct.h>
+#include <global2.h>
 
 typedef CAbyssHash64<CBaseItem> BASEITEM_HASH, * LPBASEITEM_HASH;
 

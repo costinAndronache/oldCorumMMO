@@ -1,6 +1,6 @@
 #pragma once
 #include "linkedlist.h"
-#include "../4DyuchiGXGFunc/global.h"
+#include <global2.h>
 
 
 

@@ -8,16 +8,6 @@
 #endif
 
 
-typedef void* POSITION_;
-
-
-struct CNode
-{
-    CNode*  pNext;
-    CNode*  pPrev;
-    void*    data;
-};
-
 class CVoidList
 {
 public:

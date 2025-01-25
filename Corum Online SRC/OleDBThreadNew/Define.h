@@ -1,7 +1,0 @@
-#pragma once
-
-#define MAX_ROW_PER_READ		100
-#define MAX_ROW_SIZE			1024
-#define MAX_RETURNED_ROW_NUM	20
-#define MAX_PARAM_VALUE_SIZE	10240
-

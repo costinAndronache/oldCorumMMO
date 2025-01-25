@@ -1,8 +1,6 @@
 #include "stdafx.h"
 #include "TSMemPool.h"
 
-
-
 CThreadSafeStaticMemPool::CThreadSafeStaticMemPool(int dwObjSize, DWORD dwBaseSize, DWORD dwMaxCount)
 {
 	m_dwObjSize = dwObjSize;

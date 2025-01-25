@@ -10,7 +10,7 @@
 #include "ChinaBillingProc.h"
 #include "LicensingProc.h"
 #include "PacketEncrypt.h"
-
+#include <OleDBThreadCls.h>
 
 extern LPBASEITEM_HASH		g_pBaseItemHash;
 extern BOOL					g_bIsServerRunning;
@@ -71,17 +71,11 @@ void DisplayDBBillReport(char* szMsg)
 
 void InitOleDBThread()
 {
-	HRESULT hr = ::CoCreateInstance(CLSID_OLEDBTHREAD, NULL, CLSCTX_INPROC_SERVER, IID_OLEDBTHREAD, (void**)&g_pDb);
-
-	if (FAILED(hr))
-	{
-		Log(LOG_NORMAL, "Cannot create IID_OLEDBTHREAD");
-		return;
-	}
+	g_pDb = new COleDBThreadCls;
 
 	DB_INITIALIZE_DESC desc;
 
-	desc.bUsingThread = TRUE;					//Thread 모델의 사용 여부, FALSE일 경우 (접두어 TH~ 계열의 메소드는 사용불가!)
+	desc.bUsingThread = FALSE;					//Thread 모델의 사용 여부, FALSE일 경우 (접두어 TH~ 계열의 메소드는 사용불가!)
 	desc.bUsingEventObject = TRUE;				//TRUE  : Event Object 방식으로 쿼리결과를 받음
 												//FALSE : Message 방식으로 쿼리 결과를 Callback 함수  
 	
@@ -126,15 +120,10 @@ void InitOleDBThread()
 	g_pDb->SetPerformanceReport(FALSE);
 
 	// Billing Check DB Instance 생성 
-	hr = ::CoCreateInstance( CLSID_OLEDBTHREAD, NULL, CLSCTX_INPROC_SERVER, IID_OLEDBTHREAD, (void**)&g_pBillDb);
+	g_pBillDb = new COleDBThreadCls;
 
-	if (FAILED(hr))
-	{
-		Log(LOG_NORMAL, "Cannot create IID_OLEDBTHREAD(BillingDB)");
-		return;
-	}
 
-	desc.bUsingThread		= TRUE;						//Thread 모델의 사용 여부, FALSE일 경우 (접두어 TH~ 계열의 메소드는 사용불가!)
+	desc.bUsingThread		= FALSE;						//Thread 모델의 사용 여부, FALSE일 경우 (접두어 TH~ 계열의 메소드는 사용불가!)
 	desc.bUsingEventObject	= TRUE;						//TRUE  : Event Object 방식으로 쿼리결과를 받음
 														//FALSE : Message 방식으로 쿼리 결과를 Callback 함수  
 	
@@ -181,17 +170,12 @@ void InitOleDBThread()
 	// LogDB 컴포넌트 생성
 	//////////////////////////////////////////////////////////////////////////
 	// LogDB..	
-	hr = ::CoCreateInstance(CLSID_OLEDBTHREAD, NULL, CLSCTX_INPROC_SERVER, IID_OLEDBTHREAD, (void**)&g_pLogDb);
 
-	if (FAILED(hr))
-	{
-		Log(LOG_NORMAL, "Cannot create IID_OLEDBTHREAD(LogDB)");
-		return;
-	}
+	g_pLogDb = new COleDBThreadCls;
 
 	//	DB_INITIALIZE_DESC desc;
 
-	desc.bUsingThread		= TRUE;					//Thread 모델의 사용 여부, FALSE일 경우 (접두어 TH~ 계열의 메소드는 사용불가!)
+	desc.bUsingThread		= FALSE;					//Thread 모델의 사용 여부, FALSE일 경우 (접두어 TH~ 계열의 메소드는 사용불가!)
 	desc.bUsingEventObject	= TRUE;					//TRUE  : Event Object 방식으로 쿼리결과를 받음
 	//FALSE : Message 방식으로 쿼리 결과를 Callback 함수  
 
@@ -1351,22 +1335,6 @@ void InitNetwork()
 	// 2005.01.05 김영대
 	//HRESULT hr;
 	g_pNet = new CNTNetWork();
-	hr = g_pNet->CreateInstance();
-    
-/*	hr = CoCreateInstance(
-           CLSID_4DyuchiNET,
-           NULL,
-           CLSCTX_INPROC_SERVER,
-           IID_4DyuchiNET,
-           (void**)&g_pNet);
-*/
-	
-	
-	if (FAILED(hr))
-	{
-		Log(LOG_NORMAL, "Can not initialize IID_4DyuchiNET!");
-	}
-
 	if (!g_pNet->CreateNetwork(&desc, 50 , 0))
 	{
 		Log(LOG_NORMAL, "Fail to CreateNetwork!");
