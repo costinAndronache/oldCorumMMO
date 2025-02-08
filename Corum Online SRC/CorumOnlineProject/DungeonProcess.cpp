@@ -4285,7 +4285,7 @@ void InitMonster( DSTC_APPEAR_MON* pAppear )
 	pMonster->m_hMonster.pDesc->pInfo = (void*)pMonster;		// 몬스터 클래스의 주소 입력.
 	pMonster->WithActionFunc = NULL;
 	
-	char szBuf[100] = {0,};
+	char* szBuf = (char*)malloc(2048);
 	wsprintf( szBuf, "m%05d.chr", pAppear->wMonNo );
 	
 	pMonster->m_hMonster.pHandle = NULL;
@@ -4483,6 +4483,7 @@ void InitMonster( DSTC_APPEAR_MON* pAppear )
 	pMonster->wMove[0]			=	pAppear->wMove[0];
 	pMonster->wMove[1]			=	pAppear->wMove[1];
 #endif
+	free(szBuf);
 }
 
 

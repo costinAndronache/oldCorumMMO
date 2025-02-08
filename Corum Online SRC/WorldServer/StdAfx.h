@@ -18,7 +18,7 @@
 #include <ole2.h>
 #include <initguid.h>
 #include <mstcpip.h>
-
+#include <algorithm>
 
 #include "GlobalDefine.h"
 #include "../CommonServer/CommonAccessory.h"
