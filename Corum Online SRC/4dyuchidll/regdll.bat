@@ -1,2 +1,2 @@
-regsvr32.exe inetwork.dll
-regsvr32.exe OleDbThread.dll
+chdir /d %~dp0
+regsvr32.exe .\OleDbThread.dll

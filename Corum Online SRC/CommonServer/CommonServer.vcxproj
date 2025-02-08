@@ -182,7 +182,7 @@
     <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='TAIWAN_LOCALIZING_RRS|Win32'" />
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>..\staticLibsOutput\I4DyuchiNET\include;$(IncludePath)</IncludePath>
+    <IncludePath>..\I4DyuchiNET\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='CHINA_LOCALIZING_RRS|Win32'">
     <ClCompile>
@@ -325,7 +325,7 @@
       <LanguageStandard>stdcpp14</LanguageStandard>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>odbc32.lib;odbccp32.lib;WS2_32.lib;..\centralizedOutput\I4DyuchiNET\lib\I4DyuchiNET.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>odbc32.lib;odbccp32.lib;WS2_32.lib;..\centralizedOutput\I4DyuchiNET.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)CommonServer.dll</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <GenerateDebugInformation>true</GenerateDebugInformation>

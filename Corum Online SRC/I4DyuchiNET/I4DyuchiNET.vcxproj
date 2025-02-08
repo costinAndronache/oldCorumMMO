@@ -67,6 +67,7 @@
     <OutDir>.\Debug\</OutDir>
     <IntDir>.</IntDir>
     <LinkIncremental>false</LinkIncremental>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);.\include</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='release confirm|Win32'">
     <OutDir>.\I4DyuchiNET___Win32_release_confirm\</OutDir>
@@ -572,44 +573,7 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="accept.h" />
-    <ClInclude Include="code_guid.h" />
-    <ClInclude Include="collect_confirm_packet.h" />
-    <ClInclude Include="conetwork.h" />
-    <ClInclude Include="confirm.h" />
-    <ClInclude Include="confirm_type.h" />
-    <ClInclude Include="connect.h" />
-    <ClInclude Include="connection.h" />
-    <ClInclude Include="connect_que.h" />
-    <ClInclude Include="cpio.h" />
-    <ClInclude Include="create_index.h" />
-    <ClInclude Include="define.h" />
-    <ClInclude Include="dynamic_memory.h" />
     <ClInclude Include="exception.h" />
-    <ClInclude Include="factory.h" />
-    <ClInclude Include="icode.h" />
-    <ClInclude Include="inetwork.h" />
-    <ClInclude Include="INetwork_GUID.h" />
-    <ClInclude Include="log.h" />
-    <ClInclude Include="mainthread.h" />
-    <ClInclude Include="memory_object.h" />
-    <ClInclude Include="network.h" />
-    <ClInclude Include="net_define.h" />
-    <ClInclude Include="net_global.h" />
-    <ClInclude Include="overlapped.h" />
-    <ClInclude Include="overlapped_recv.h" />
-    <ClInclude Include="overlapped_send.h" />
-    <ClInclude Include="overlapped_udp.h" />
-    <ClInclude Include="pre_connect.h" />
-    <ClInclude Include="que.h" />
-    <ClInclude Include="quemanager.h" />
-    <ClInclude Include="read_memory_handle.h" />
-    <ClInclude Include="resource.h" />
-    <ClInclude Include="stdafx.h" />
-    <ClInclude Include="switch_que.h" />
-    <ClInclude Include="timer.h" />
-    <ClInclude Include="typedef.h" />
-    <ClInclude Include="write_memory_handle.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="I4DyuchiNET.def" />

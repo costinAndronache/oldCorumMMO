@@ -165,11 +165,11 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <GenerateManifest>false</GenerateManifest>
-    <IncludePath>..\staticLibsOutput\I4DyuchiNET\include</IncludePath>
+    <IncludePath>$(IncludePath);..\I4DyuchiNET\include;</IncludePath>
     <OutDir>.\Debug\</OutDir>
     <TargetName>LoginAgentResult</TargetName>
     <IntDir>.\Debug\</IntDir>
-    <LibraryPath>$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(LibraryPath);..\centralizedOutput</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='JAPAN|Win32'">
     <ClCompile>
