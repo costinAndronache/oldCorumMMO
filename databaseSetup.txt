@@ -1,0 +1,68 @@
+1. Install Microsoft SQL Server Express 2022; Go with all the default settings
+2. Install SQL Server Management Studio (SSMS). 
+3. Open up SSMS, you will be greeted with a window with connection details. 
+If you went with the default settings during the sql server setup the server name should look like: <your-pc-name>\SQLEXPRESS
+ and the authentication : `Windows Authentication`
+
+Check `Trust server certificate` then click `Connect`.
+
+
+4. On the left-side panel you will see a menu tree with <your-pc-name>\SQLEXPRESS at the root. Right click on the `Databases` item, 
+choose `Restore Database`
+
+5. In the new window, in the "Source" area choose the `Device` radio option, then tap on the `...` dots button.
++ A `Select backup devices` window will appear; 
+    - make sure the media type is 'File' not 'URL', click on `Add`, 
+    - navigate in the new explorer window that opens to the `DatabaseSnapshots`, select the `Corum_Total_DB.bak` file. 
+    - click `OK` now in the `Select backup devices` window to close it 
++ The `Restore Database` window should now be populated with the info of that file. 
+    - click 'OK' , you should see a confirmation window with this message: `Corum_Total_DB` restored succesfully.
+
++ Repeat this process for all the other remaining files. 
+	- At the end you should have 4 databases: Corum_Total_DB, Corum0, Member, Log_Corum_0
+
+
+6. Now go into the `Security` item -> right click on its `Logins` child -> `New login'
+ + A `Login - New` window should open :
+  	- for `Login name` type: `potato` 
+	- then select `SQL Server authentication`, type in: `ahffk` for both password fields
+             (Note: you can find these credentials hardcoded in the server source code too) 
+	- Uncheck `Enforce password expiration` then click `OK`
+	- now this `potato` user should appear in the list of users under the `Logins` item. 
+
+7. Now open up (via the `+` next to it) the `Corum_Total_DB`
+	- `Security` -> `Users`
+	 - if you see a user `potato` there, double-click on it and delete it; it is probalby malformed and we have to re-create it
+	- right click on `Users` -> `New User`
+	- in the new window for `User Type` select `SQL user with login`
+	- put `potato` in `User name`
+	- in `Login name` click on the `...` button  
+		- in the new `Select Login` window click `Browse`
+		- in the new `Browse Objects` window scroll until you find the `potato` user and select it, confirm via `OK`
++ `potato` should now appear in the list of users now too; right click on it -> `Properties` -> `Membership`
+	- check `db_datareader`, `db_datawriter`, `db_owner` ; confirm with `OK`
+
+Repeat these steps for the other 3 remaining databases. 
+
+8. Back in the left-side panel right click the server name (<your-pc-name>\SQLEXPRESS) 
+  -> `Properties' -> `Security'
+   -> under 'Server authentication' select the mixed authentication option (with both sql server and windows authentication)
+
+
+Now open the `SQL Server 2022 Configuration Manager` app
+ -> expand `SQL Server Network Configuration` -> `Protocols for SQLEXPRESS`
+  -> right lick on `TCP/IP' -> ``Properties``
+
+  - in the new window in the `Protocol` tab set `Enabled` to `Yes`
+  - switch to `IP Addresses` tab; Put `Enabled` : `Yes` to every ip in there
+  - in the last item, `IPAll` ::
+	- on `TCP Dynamic Ports` delete everything in there, leave it blank
+	- on `TCP Port` put 1433, `Apply`. 
+
+
+
+For these changes to take effect SQL Server has to be restarted. You can do it either from the services management console
+or by simply restarting your pc.
+
+You can verify everything is ok by opening command prompt and executing this command:
+`sqlcmd -S 127.0.0.1,1433 -U potato -P ahffk` ; if you do not encounter any error then all is properly set up. close the window or type 'exit' then hit enter

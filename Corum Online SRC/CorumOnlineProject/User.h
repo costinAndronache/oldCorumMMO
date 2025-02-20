@@ -284,6 +284,8 @@ public:
 	DWORD			m_wGrade;
 	DWORD			m_wHP;					
 	DWORD			m_wMP;
+	DWORD			m_wMaxHP;
+	DWORD			m_wMaxMP;
 	DWORD			m_wPoint;				// 레벨업시 발생하는 보너스 포인트.
 	DWORD			m_wPointSkill;
 
@@ -320,8 +322,6 @@ public:
 	DWORD			m_dwHealMPSec;
 	int				m_nPoisonSec;				// 중독
 	
-	DWORD			m_wMaxHP;
-	DWORD			m_wMaxMP;
 	DWORD			m_pwAttackDamage_R[2];
 	DWORD			m_pwAttackDamage_L[2];		// 0 - MIN,  1 - MAX
 	DWORD			m_wAttackAcuracy;

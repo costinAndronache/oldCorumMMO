@@ -1,0 +1,2 @@
+Navigate to \Corum Online SRC\4dyuchidll
+right click on "regdll.bat" -> Run as Administrator 

@@ -103,6 +103,8 @@
 
 using namespace ItemPickupFiltering;
 
+char globalDebugLine[255];
+
 DWORD						g_dwMileHandleRefs	= 0;
 LPGlobalVariable_Dungeon	g_pGVDungeon		= NULL;
 SDGCHATMSG					g_sDgChatMsg[__MAX_QUEUE__];
@@ -859,6 +861,7 @@ void RenderTileAttr()
 }
 #endif
 
+extern char globalDebugLine[255];
 
 DWORD __stdcall BeforeRenderGameDungeon()
 {
@@ -1025,8 +1028,15 @@ DWORD __stdcall BeforeRenderGameDungeon()
 			{
 				pUserInterface->SetDengeonHp(min(g_pMainPlayer->m_wMaxHP, g_pMainPlayer->m_wHP+g_pMainPlayer->m_dwHealHPSec));
 				
-				if (g_pMainPlayer->m_wClass != CLASS_TYPE_WARRIOR) // 전사는 오라리차지로 올려야 한다. ㅡ.ㅡ
-					pUserInterface->SetDengeonMp(min(g_pMainPlayer->m_wMaxMP, g_pMainPlayer->m_wMP+g_pMainPlayer->m_dwHealMPSec));
+				if (g_pMainPlayer->m_wClass != CLASS_TYPE_WARRIOR) {
+					const DWORD maxMP = g_pMainPlayer->m_wMaxMP;
+					const DWORD currentMP = g_pMainPlayer->m_wMP;
+					const DWORD mpRegen = g_pMainPlayer->m_dwHealMPSec;
+
+					sprintf(globalDebugLine, "SetDengeonMP:: max: %d, current: %d, mpRegen: %d", maxMP, currentMP, mpRegen);
+					pUserInterface->SetDengeonMp(min(maxMP, currentMP + mpRegen));
+
+				}// 전사는 오라리차지로 올려야 한다. ㅡ.ㅡ
 			}	
 			
 			g_pMainPlayer->m_dwTemp[USER_TEMP_5SECTICK] = g_dwCurTick+5000;
@@ -1534,7 +1544,10 @@ DWORD __stdcall AfterRenderGameDungeon()
 
 	
 	sprintf(szTempEx, "%ld, %ld,", g_Mouse.MousePos.x, g_Mouse.MousePos.y);
-	RenderFont(szTempEx, 500, 1200, 50, 90, 0);
+	//RenderFont(szTempEx, 500, 1200, 50, 90, 0);
+
+	RenderFont((char*)globalDebugLine, 500, 1200, 50, 90, 0);
+
 	if (pTile)
 	{
 		sprintf(szTempEx, "x:%6.1f, z:%6.1f, Tile_X:%d, Tile_Z:%d, ATTR:%d", g_Mouse.v3Mouse.x, g_Mouse.v3Mouse.z, pTile->wIndex_X, pTile->wIndex_Z, pTile->wAttr.uAttr);

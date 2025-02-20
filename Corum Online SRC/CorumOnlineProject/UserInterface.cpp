@@ -1835,8 +1835,8 @@ void CUserInterface::DengeonHpInc()
 		float fSize = (g_pMainPlayer->m_wHP>g_pMainPlayer->m_wMaxHP) ?
 			1.0f : (float)g_pMainPlayer->m_wHP/(float)g_pMainPlayer->m_wMaxHP;
 
-		SetScalingObj(SPR_OBJ_EN2, 150, 1.0);
-		SetScalingObj(SPR_OBJ_EN1, 150, 1.0);
+		SetScalingObj(SPR_OBJ_EN2, fSize * 150, 1.0);
+		SetScalingObj(SPR_OBJ_EN1, fSize * 150, 1.0);
 		if(m_fEnIncDec<fSize*300)
 		{
 			if(m_fEnIncDec+m_fEnDecSpeed>fSize*300)
@@ -1870,12 +1870,18 @@ void CUserInterface::DengeonHpDef()
 	}
 }
 
+extern char globalDebugLine[255];
+
 void CUserInterface::DengeonManaDec()
 {
 	if(m_bManaDec)
 	{	
-		float fSize = (g_pMainPlayer->m_wMP>g_pMainPlayer->m_wMaxMP) ?
-			1.0f : (float)g_pMainPlayer->m_wMP/(float)g_pMainPlayer->m_wMaxMP;
+		const float currentMana = g_pMainPlayer->m_wMP / 2;
+		const float maxMana = g_pMainPlayer->m_wMaxMP;
+		float fSize = (currentMana > maxMana) ?
+			1.0f : currentMana / maxMana;
+
+		//sprintf(globalDebugLine, "CURRENT: %.1f, MAX: %.1f, fSize: %.3f", currentMana, maxMana, fSize);
 
 		SetScalingObj(SPR_OBJ_MANA1, fSize*300/2, 1.0);
 		SetPosObjX(SPR_OBJ_MANA1, 1023-fSize*300);
@@ -1902,8 +1908,12 @@ void CUserInterface::DengeonManaInc()
 {
 	if(m_bManaInc)
 	{	
-		float fSize = (g_pMainPlayer->m_wMP>g_pMainPlayer->m_wMaxMP) ?
-			1.0f : (float)g_pMainPlayer->m_wMP/(float)g_pMainPlayer->m_wMaxMP;
+		const float currentMana = g_pMainPlayer->m_wMP / 2;
+		const float maxMana = g_pMainPlayer->m_wMaxMP;
+		float fSize = (currentMana > maxMana) ?
+			1.0f : currentMana/maxMana;
+
+		//sprintf(globalDebugLine, "CURRENT: %.1f, MAX: %.1f, fSize: %.3f", currentMana, maxMana, fSize);
 
 		SetScalingObj(SPR_OBJ_MANA2, fSize*300/2, 1.0);
 		SetPosObjX(SPR_OBJ_MANA2, 1023-fSize*300);
@@ -1989,12 +1999,19 @@ void CUserInterface::SetDengeonMp(DWORD wMp)
 	else
 		SetDengeonManaInc();
 
-	if(wMp>g_pMainPlayer->m_wMaxMP)	
+	const int inputMp = wMp;
+	const int testMp = g_pMainPlayer->m_wMaxMP;
+
+	sprintf(globalDebugLine, "SetDengeonMP:: input: %d, max: %d", inputMp, testMp);
+	if (inputMp <= testMp) {
 		g_pMainPlayer->m_wMP = g_pMainPlayer->m_wMaxMP;
-	else if(wMp<0)
+	}
+	else if (wMp < 0) {
 		g_pMainPlayer->m_wMP = 0;
-	else
+	}
+	else {
 		g_pMainPlayer->m_wMP = wMp;
+	}
 }
 
 void CUserInterface::SetDengeonExpDefInc()
