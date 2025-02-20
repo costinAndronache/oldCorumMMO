@@ -1,4 +1,3 @@
-#include "StdAfx.h"
 //#include	"../../4DyuchiGXExecutive/GXObject.h"
 #include	"../myself97common.h"
 #include	"../CheckClock.h"

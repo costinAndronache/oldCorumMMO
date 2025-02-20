@@ -1266,7 +1266,7 @@ void MClipper::AddIndexToLink(STMPOOL_HANDLE pool, MClipperObjLink *pLink, int i
 		}
 		else if( pLink->pNext->iIndex > iIndex)		// 끼워넣을 조건.
 		{
-			pNew	=	(MClipperObjLink*)LALAlloc( pool);
+			pNew = new MClipperObjLink;
 			pNew->iIndex			=	iIndex;
 			pNew->pPrev				=	pLink;
 			pNew->pNext				=	pLink->pNext;
@@ -1305,7 +1305,7 @@ BOOL MClipper::DeleteIndexFromLink(STMPOOL_HANDLE pool, MClipperObjLink* pLink, 
 			pLink->pPrev->pNext		=	pLink->pNext;
 			pLink->pNext->pPrev		=	pLink->pPrev;
 
-			LALFree( pool, pLink);
+			delete pLink;
 			return		TRUE;
 		}
 
@@ -1328,10 +1328,10 @@ lbReturnFalse:
 ****************************************************************************/
 MClipperObjLink* MClipper::CreateDummyLink(STMPOOL_HANDLE pool)
 {
-	MClipperObjLink*	pDLink	=	(MClipperObjLink*)LALAlloc( pool);
+	MClipperObjLink* pDLink = new MClipperObjLink;
 	pDLink->pPrev			=	0;
 	pDLink->iIndex			=	-1;
-	pDLink->pNext			=	(MClipperObjLink*)LALAlloc( pool);
+	pDLink->pNext = new MClipperObjLink;
 	pDLink->pNext->pPrev	=	pDLink;
 	pDLink->pNext->iIndex	=	INT_MAX;
 	pDLink->pNext->pNext		=	0;
@@ -1497,7 +1497,7 @@ void MClipper::DeleteLink(STMPOOL_HANDLE pool, MClipperObjLink *pLink)
 	while(1)
 	{
 		pNext	=	pLink->pNext;
-		LALFree( pool, pLink);
+		delete pLink;
 		pLink	=	pNext;
 
 		if( pLink == 0)

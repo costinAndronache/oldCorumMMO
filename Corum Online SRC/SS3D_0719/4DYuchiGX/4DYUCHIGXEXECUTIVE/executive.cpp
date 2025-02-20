@@ -1935,7 +1935,7 @@ CoGXObject*	CoExecutive::AddGXObject(MODEL_HANDLE* pModelHandle,DWORD dwModelNum
 	
 	DWORD			i;
 
-	pObj = (CoGXObject*)LALAlloc(m_pStaticPoolGXObject);
+	pObj = new CoGXObject;
 	
 	if (!pObj)
 		goto lb_return;
@@ -1948,7 +1948,7 @@ CoGXObject*	CoExecutive::AddGXObject(MODEL_HANDLE* pModelHandle,DWORD dwModelNum
 	
 	if (dwIndex == 0xffffffff)
 	{
-		LALFree(m_pStaticPoolGXObject,pObj);
+		delete pObj;
 		pObj = NULL;
 		goto lb_return;
 	}
@@ -1986,10 +1986,8 @@ GXLIGHT_HANDLE CoExecutive::CreateGXLight(LIGHT_DESC* pDesc,GXLightSchedulePROC 
 	CoGXLight*		pDummy = m_pDummyGXLight;
 	DWORD			dwIndex;
 
-	pLight = (CoGXLight*)LALAlloc(m_pStaticPoolGXLight);
+	pLight = new CoGXLight;
 	
-
-
 	if (!pLight)
 	{
 #ifdef _DEBUG
@@ -2007,7 +2005,7 @@ GXLIGHT_HANDLE CoExecutive::CreateGXLight(LIGHT_DESC* pDesc,GXLightSchedulePROC 
 	dwIndex = ITAddItem(m_pIndexItemTableGXLight,(void*)pLight);
 	if (dwIndex == 0xffffffff)
 	{
-		LALFree(m_pStaticPoolGXLight,pLight);
+		delete pLight;
 		pLight = NULL;
 #ifdef _DEBUG
 		PrintfDebugString("Fail to CreateGXLight(),Fail to ITAddItem()\n");
@@ -2982,7 +2980,7 @@ CoExecutive::~CoExecutive()
 		m_hRenderer = NULL;
 	}
 
-	for (i=0; i<m_dwPackFilesNum; i++)
+	for (int i=0; i<m_dwPackFilesNum; i++)
 	{
 		if (m_pPackFileHandleList[i])
 		{
@@ -4036,7 +4034,7 @@ BOOL __stdcall CoExecutive::DeleteAllGXObjects()
 #endif
 		ITDeleteItem(m_pIndexItemTableGXObject,pObj->GetIndex());
 		pObj->Release();
-		LALFree(m_pStaticPoolGXObject,pObj);
+		delete pObj;
 	}
 		
 	VIEW_VOLUME			vv;
@@ -4071,7 +4069,7 @@ BOOL __stdcall CoExecutive::DeleteAllGXLights()
 #endif
 		ITDeleteItem(m_pIndexItemTableGXLight,pLight->GetIndex());
 		pLight->Release();
-		LALFree(m_pStaticPoolGXLight,pLight);
+		delete pLight;
 	}
 	bResult = TRUE;
 
@@ -4141,7 +4139,7 @@ BOOL __stdcall CoExecutive::ImmDeleteGXObject(GXOBJECT_HANDLE gxh)
 #endif
 
 
-	LALFree(m_pStaticPoolGXObject,pObj);
+	delete pObj;
 	bResult = TRUE;
 
 	VIEW_VOLUME			vv;
@@ -4170,7 +4168,7 @@ BOOL __stdcall CoExecutive::ImmDeleteGXLight(GXLIGHT_HANDLE gxh)
 	
 	pLight->Release();
 	ITDeleteItem(m_pIndexItemTableGXLight,dwItemIndex);
-	LALFree(m_pStaticPoolGXLight,pLight);
+	delete pLight;
 
 	bResult = TRUE;
 lb_return:
@@ -4269,7 +4267,7 @@ GXDECAL_HANDLE __stdcall CoExecutive::CreateGXDecal( DECAL_DESC* pDesc, GXDecalS
 
 
 	// ÀÎµ¦½º ¹ß±Þ.
-	pDecal = (CGXDecal*)LALAlloc(m_pStaticPoolGXDecal);
+	pDecal = new CGXDecal;
 	
 	if (!pDecal)
 		goto lb_return;
@@ -4282,7 +4280,7 @@ GXDECAL_HANDLE __stdcall CoExecutive::CreateGXDecal( DECAL_DESC* pDesc, GXDecalS
 	if (dwIndex == 0xffffffff)
 	{
 lb_fail:
-		LALFree(m_pStaticPoolGXDecal,pDecal);
+		delete pDecal;
 		pDecal = NULL;
 		goto lb_return;
 	}
@@ -4412,7 +4410,7 @@ BOOL __stdcall CoExecutive::ImmDeleteGXDecal( GXDECAL_HANDLE gxd)
 	pDecal->Delete();
 
 	ITDeleteItem(m_pIndexItemTableGXDecal,pDecal->GetIndex());
-	LALFree(m_pStaticPoolGXDecal,pDecal);
+	delete pDecal;
 	
 	m_dwCurrentDecalCount--;
 	bResult = TRUE;

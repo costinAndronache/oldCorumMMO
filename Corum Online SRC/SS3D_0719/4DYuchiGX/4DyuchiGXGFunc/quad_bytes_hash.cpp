@@ -131,6 +131,11 @@ lb_return:
 	}
 }
 
+
+QB_BUCKET* QBBucketAlloc(void*) {
+	return new QB_BUCKET;
+}
+
 GLOBAL_FUNC_DLL __declspec(naked) void* __stdcall QBHInsert(QBHASH_HANDLE pHash,DWORD dwItem,DWORD dwKeyData)
 {
 	__asm
@@ -147,7 +152,7 @@ GLOBAL_FUNC_DLL __declspec(naked) void* __stdcall QBHInsert(QBHASH_HANDLE pHash,
 		movd		mm0,ebx
 
 		push		edx
-		call		LALAlloc
+		call		QBBucketAlloc
 				
 		or			eax,eax
 		jz			lb_return
@@ -215,7 +220,7 @@ GLOBAL_FUNC_DLL BOOL __stdcall 	QBHDelete(QBHASH_HANDLE pHash,void* pBucket)
 	if (pCurBucket->m_pNext)
 		pCurBucket->m_pNext->m_pPrv = pCurBucket->m_pPrv;
 	
-	LALFree(pQBHash->m_pStaticMemoryPool,pBucket);
+	delete pBucket;
 	
 	return TRUE;
 }
@@ -284,7 +289,7 @@ GLOBAL_FUNC_DLL void __stdcall QBDeleteAll(QBHASH_HANDLE pHash)
 		while (pCurBucket)
 		{
 			pNext = pCurBucket->m_pNext;
-			LALFree(pQBHash->m_pStaticMemoryPool,pCurBucket);
+			delete pCurBucket;
 			pCurBucket = pNext;
 		}
 	}

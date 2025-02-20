@@ -123,7 +123,6 @@ class CoExecutive : public I4DyuchiGXExecutive
 	DWORD						m_dwCurrentDecalCount;
 	
 	DWORD						m_dwRenderFrameCount;
-	void						ResourceCheck();
 
 	AfterInterpolationCallBack	m_pfAfterInterpolationCallBack;
 
@@ -132,6 +131,7 @@ class CoExecutive : public I4DyuchiGXExecutive
 	BOOL							Initialize(I4DyuchiGXGeometry* pGeometry,I4DyuchiGXRenderer* pRenderer,HWND hWnd,DISPLAY_INFO* pInfo,DWORD dwMaxObjectNum,DWORD dwMaxLightNum,DWORD dwMaxTriggerNum,DWORD dwViewportNum, DWORD dwMaxDecalNum,ErrorHandleProc pErrorHandleFunc);
 	BOOL							InitializeFileStorageCommon(DWORD dwMaxFileNum,DWORD dwMaxFileHandleNumAtSameTime,DWORD dwMaxFileNameLen,FILE_ACCESS_METHOD accessMethod,PACKFILE_NAME_TABLE* pPackFileList,DWORD dwNum);
 public:
+	void						ResourceCheck();
 #ifdef _DEBUG
 	void						CheckHandle(GXMAP_OBJECT_HANDLE gxh);
 	void						CheckGXLightsList(CoGXLight* pInLight);

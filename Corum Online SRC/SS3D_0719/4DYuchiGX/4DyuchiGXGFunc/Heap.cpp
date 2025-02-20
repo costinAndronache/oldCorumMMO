@@ -80,7 +80,7 @@ void CHeap::FreeMemoryStatusDesc(MEMORY_STATUS_DESC_LINK* pDesc)
 	pPrv->pNext = pNext;
 	pNext->pPrv = pPrv;
 
-	LALFree(m_pStatusDescLinkPool,pDesc);
+	delete m_pStatusDescLinkPool;
 }
 
 CHeap::CHeap()
@@ -157,8 +157,8 @@ BOOL CHeap::Initialize(void* pMassMemory,DWORD dwMassMemorySize,DWORD dwMaxBlock
 		
 		pAlignSet = new ALIGN_SET;
 
-		pAlignSet->pHeadTerminator = (MEMORY_STATUS_DESC_LINK*)LALAlloc(m_pStatusDescLinkPool);
-		pAlignSet->pTailTerminator = (MEMORY_STATUS_DESC_LINK*)LALAlloc(m_pStatusDescLinkPool);
+		pAlignSet->pHeadTerminator = new MEMORY_STATUS_DESC_LINK;
+		pAlignSet->pTailTerminator = new MEMORY_STATUS_DESC_LINK;
 
 		pAlignSet->pHeadTerminator->pPrv = NULL;
 		pAlignSet->pHeadTerminator->bStatus = MEMORY_STATUS_TERMINATOR;
@@ -168,8 +168,8 @@ BOOL CHeap::Initialize(void* pMassMemory,DWORD dwMassMemorySize,DWORD dwMaxBlock
 
 
 
-		pMemDesc = (MEMORY_BLOCK_DESC*)LALAlloc(m_pDescPool);
-		pStatusDesc = (MEMORY_STATUS_DESC_LINK*)LALAlloc(m_pStatusDescLinkPool);
+		pMemDesc = new MEMORY_BLOCK_DESC;
+		pStatusDesc = new MEMORY_STATUS_DESC_LINK;
 
 		pAlignSet->pHeadTerminator->pNext = pStatusDesc;
 		pStatusDesc->pPrv = pAlignSet->pHeadTerminator;
@@ -207,9 +207,6 @@ BOOL CHeap::Initialize(void* pMassMemory,DWORD dwMassMemorySize,DWORD dwMaxBlock
 
 	/////////////////
 	
-	DWORD dwNum = LALGetAllocatedNum(m_pDescPool);
-	dwNum = LALGetAllocatedNum(m_pStatusDescLinkPool);
-
 	
 	bResult = TRUE;
 //lb_return:
@@ -266,7 +263,7 @@ void* CHeap::Alloc(DWORD* pdwErrorCode,DWORD dwSize,BOOL bAlign)
 	if (iAvlSize > 0)
 	{
 		// 메모리 블럭의 남는 부분이 새로운 메모리 블럭으로 사용 가능할 경우 새로운 디스크립터에 연결해서 링크시킨다.
-		MEMORY_BLOCK_DESC*	pNewMemDesc = (MEMORY_BLOCK_DESC*)LALAlloc(m_pDescPool);
+		MEMORY_BLOCK_DESC* pNewMemDesc = new MEMORY_BLOCK_DESC;
 		if (!pNewMemDesc)
 		{
 			// 새로운 블럭을 할당할 수 없으므로 원상복구 
@@ -291,7 +288,7 @@ void* CHeap::Alloc(DWORD* pdwErrorCode,DWORD dwSize,BOOL bAlign)
 		pNewMemDesc->bStatus = MEMORY_STATUS_AVAILABLE;
 
 		MEMORY_STATUS_DESC_LINK*	pNewStatusDesc;
-		pNewMemDesc->pStatusDesc = pNewStatusDesc = (MEMORY_STATUS_DESC_LINK*)LALAlloc(m_pStatusDescLinkPool);
+		pNewMemDesc->pStatusDesc = pNewStatusDesc = new MEMORY_STATUS_DESC_LINK;
 		
 		// 새 블럭디스크립터 링크에 메모리의 기본정보를 세팅
 		pNewStatusDesc->pMemDesc = pNewMemDesc;
@@ -372,7 +369,7 @@ void CHeap::Free(void* pMem)
 			__asm int 3
 #endif
 			
-		LALFree(m_pDescPool,pMemDescFront);
+		delete pMemDescFront;
 	}
 	if (pRearStatus->bStatus == MEMORY_STATUS_AVAILABLE)
 	{
@@ -385,7 +382,7 @@ void CHeap::Free(void* pMem)
 		
 		FreeMemoryStatusDesc(pRearStatus);
 
-		LALFree(m_pDescPool,pMemDescRear);
+		delete pMemDescRear;
 	}
 	pMemDesc->bStatus = MEMORY_STATUS_AVAILABLE;
 	// 상태 블럭 디스크립터 재설정 
@@ -458,10 +455,6 @@ lb_return:
 void CHeap::LeakCheck()
 {
 	BOOL	bCheck = FALSE;;
-
-	DWORD dwNum = LALGetAllocatedNum(m_pDescPool);
-	dwNum = LALGetAllocatedNum(m_pStatusDescLinkPool);
-
 	
 	char txt[512];
 	memset(txt,0,512);

@@ -91,7 +91,7 @@ CShadeManager::~CShadeManager()
 	}
 	WaitForMultipleObjects(m_dwMaxThreadNum,m_hThread,TRUE,INFINITE);
 
-	for (i=0; i<m_dwMaxThreadNum; i++)
+	for (int i=0; i<m_dwMaxThreadNum; i++)
 	{
 		CloseHandle(m_hThread[i]);
 		CloseHandle(m_hThreadStandby[i]);

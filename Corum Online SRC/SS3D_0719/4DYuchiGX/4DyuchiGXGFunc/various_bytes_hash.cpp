@@ -128,6 +128,11 @@ lb_return:
 
 	return dwResult;
 }
+
+VB_BUCKET* VBBucketAlloc() {
+	return new VB_BUCKET;
+}
+
 GLOBAL_FUNC_DLL void* __stdcall VBHInsert(VBHASH_HANDLE pHash,DWORD dwItem,void* pKeyData,DWORD dwSize)
 {
 	void*	pSearchHandle;
@@ -158,7 +163,7 @@ GLOBAL_FUNC_DLL void* __stdcall VBHInsert(VBHASH_HANDLE pHash,DWORD dwItem,void*
 
 		mov			edx,dword ptr[ebx+16]		; m_pLookAsideList
 		push		edx
-		call		LALAlloc
+		call		VBBucketAlloc
 		
 		
 		or			eax,eax
@@ -235,7 +240,7 @@ GLOBAL_FUNC_DLL BOOL __stdcall VBHDelete(VBHASH_HANDLE pHash,void* pBucket)
 	if (pCurBucket->m_pNext)
 		pCurBucket->m_pNext->m_pPrv = pCurBucket->m_pPrv;
 	
-	LALFree(pVBHash->m_pStaticMemoryPool,pCurBucket);
+	delete pCurBucket;
 		
 	return TRUE;
 }
@@ -376,7 +381,7 @@ GLOBAL_FUNC_DLL void __stdcall	VBHDeleteAll(VBHASH_HANDLE pHash)
 		while (pCurBucket)
 		{
 			pNext = pCurBucket->m_pNext;
-			LALFree(pVBHash->m_pStaticMemoryPool,pCurBucket);
+			delete pCurBucket;
 			pCurBucket = pNext;
 		}
 	}

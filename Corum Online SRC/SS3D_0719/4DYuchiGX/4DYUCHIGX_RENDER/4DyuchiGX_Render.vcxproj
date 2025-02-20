@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
       <Configuration>Debug</Configuration>
@@ -11,6 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
+    <VCProjectVersion>17.0</VCProjectVersion>
     <ProjectGuid>{7D7B58DC-ED02-464E-A5B2-3B39F14524F0}</ProjectGuid>
     <SccProjectName>"$/4DyuchiGX/4DyuchiGX_Render", DGAAAAAA</SccProjectName>
     <SccAuxPath />
@@ -20,14 +21,14 @@
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <UseOfMfc>false</UseOfMfc>
     <CharacterSet>MultiByte</CharacterSet>
     <WholeProgramOptimization>true</WholeProgramOptimization>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <UseOfMfc>false</UseOfMfc>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
@@ -42,14 +43,12 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
-    <_ProjectFileVersion>16.0.34930.59</_ProjectFileVersion>
+    <_ProjectFileVersion>17.0.35707.178</_ProjectFileVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <OutDir>./../../4DYuchiDLL\</OutDir>
     <IntDir>.\Debug\</IntDir>
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(IncludePath);E:\Git\oldCorumMMO\directx8-msdx8\include</IncludePath>
-    <LibraryPath>../../../directx8-msdx8/lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>./../../4DYuchiDLL\</OutDir>
@@ -166,8 +165,6 @@
   <ItemGroup>
     <None Include="..\4DyuchiGRX_common\math.inl" />
     <None Include="4DyuchiGX_Render.def" />
-    <None Include="dynamic_light_map.vsh" />
-    <None Include="test.vsh" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="3DSprite.cpp">
@@ -679,6 +676,16 @@
     <ClInclude Include="VLFaceGroup.h" />
     <ClInclude Include="VLMeshObject.h" />
     <ClInclude Include="VLSMeshObject.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="dynamic_light_map.vsh" />
+    <FxCompile Include="test.vsh" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\4DyuchiGXGFunc\4DyuchiGXGFunc.vcxproj">
+      <Project>{cfb0cd92-3451-4ab6-bb4c-ce2cf5b58d0a}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

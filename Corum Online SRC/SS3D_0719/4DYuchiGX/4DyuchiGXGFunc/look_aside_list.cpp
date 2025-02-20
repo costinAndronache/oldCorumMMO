@@ -165,13 +165,6 @@ GLOBAL_FUNC_DLL void __stdcall LALEnableBlockCheck(STMPOOL_HANDLE pool,BOOL bSwi
 {
 	((CLookAsideList*)pool)->m_bBugCheck  = bSwitch;
 }
-GLOBAL_FUNC_DLL void __stdcall LALFreeWithCheck(STMPOOL_HANDLE pool,void* pMemory)
-{
-
-	BlockCheck((CLookAsideList*)pool,(char*)pMemory);
-	LALFree(pool,pMemory);
-}
-
 
 void __declspec(naked) InitializeMemoryBlock(void* pBlockEntry,MEMORY_DESC* pDescEntry,DWORD dwUnitSize,DWORD dwNum)
 {

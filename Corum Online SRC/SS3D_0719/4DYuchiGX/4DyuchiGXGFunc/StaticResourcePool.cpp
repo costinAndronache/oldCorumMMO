@@ -84,7 +84,7 @@ lb_return:
 void* CStaticResourcePool::Alloc(BOOL* pbEnable,DWORD* pdwResourceHandle,void* pArg1,void* pArg2,void* pArg3,DWORD dwSize)
 {
 lb_alloc:
-	STATIC_RESOURCE_ITEM*	pItem= (STATIC_RESOURCE_ITEM*)LALAlloc(m_pItemPool);
+	STATIC_RESOURCE_ITEM* pItem = new STATIC_RESOURCE_ITEM;
 
 	if (!pItem)
 	{
@@ -127,7 +127,7 @@ void CStaticResourcePool::Free(DWORD dwResourceHandle)
 	*pItem->pbEnable = FALSE;
 	m_pFreeFunc(pItem->pVoid);
 	UnLinkFromSortLink(&m_pSortLinkHead,&m_pSortLinkTail,&pItem->sortLink);
-	LALFree(m_pItemPool,pItem);
+	delete pItem;
 }
 
 void CStaticResourcePool::Cleanup()
