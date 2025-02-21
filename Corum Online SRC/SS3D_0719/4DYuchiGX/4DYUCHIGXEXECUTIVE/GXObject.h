@@ -8,8 +8,11 @@
 class CoGXLight;
 class CoGXObject : public CGXMapObject
 {
+	GXSchedulePROC		m_pProc;
+	BOOL				defaultScheduleProc;
+
 	friend	void MClipper::DeleteAll();
-	MODEL_HANDLE		m_ModelList[MAX_MODEL_NUM_PER_GXOBJECT];
+	MODEL_HANDLE		m_ModelList[MAX_MODEL_NUM_PER_GXOBJECT * 10];
 	DWORD				m_dwModelNum;
 	
 	MATRIX4				m_matTransform;
@@ -19,10 +22,10 @@ class CoGXObject : public CGXMapObject
 	MATRIX4*			m_pParentMatrix;
 		
 	CoGXObject*			m_pParentGXObject;
-	CoGXObject*			m_pChildGXObject[MAX_ATTATCH_OBJECTS_NUM];
+	CoGXObject*			m_pChildGXObject[MAX_ATTATCH_OBJECTS_NUM * 10];
 	DWORD				m_dwChildGXObjectNum;
 
-	CoGXLight*			m_pChildLight[MAX_ATTATCH_OBJECTS_NUM];
+	CoGXLight*			m_pChildLight[MAX_ATTATCH_OBJECTS_NUM * 10];
 	DWORD				m_dwChildGXLightNum;
 	
 	DWORD				m_dwCurrentFrame;
@@ -35,7 +38,6 @@ class CoGXObject : public CGXMapObject
 	float				m_fRad;
 	VECTOR3				m_v3Pos;
 	VECTOR3				m_v3Scale;
-	GXSchedulePROC		m_pProc;
 	DWORD				m_dwUpdateFlag;
 
 	VECTOR3				m_v3Velocity;				// º”µµ∫§≈Õ.
@@ -76,8 +78,9 @@ public:
 
 	friend	void	CoExecutive::ResourceCheck();
 
-	void				SetScheduleProc(GXSchedulePROC pProc) {m_pProc = pProc;}
-	GXSchedulePROC		GetScheduleProc() {return m_pProc;}
+	void				SetDefaultScheduleProc();
+	void				SetScheduleProc(GXSchedulePROC pProc);
+	GXSchedulePROC		GetScheduleProc();
 
 	BOOL				InitializeIllusionEffect(DWORD dwMaxIllusionFrameNum,char* szObjName,void* pMtlHandle,DWORD dwFlag);
 	void				SetModelFileDesc(MODEL_FILE_DESC* pModFileDesc) {m_pModelFileItem = pModFileDesc;}

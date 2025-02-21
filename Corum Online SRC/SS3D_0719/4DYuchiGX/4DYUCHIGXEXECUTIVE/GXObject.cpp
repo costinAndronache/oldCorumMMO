@@ -79,10 +79,10 @@ BOOL CoGXObject::Initialize(CoExecutive* pExecutive,MODEL_HANDLE* pModelHandle,D
 	
 	}
 	
-	m_pProc = pProc;
+	SetScheduleProc(pProc);
 	if (dwFlag & GXOBJECT_CREATE_TYPE_DEFAULT_PROC)
 	{
-		m_pProc = GXDefaultSchedulePROC;
+		SetScheduleProc(GXDefaultSchedulePROC);
 	}
 
 	SetIdentityMatrix(&m_matTransform);
@@ -149,6 +149,17 @@ DWORD CoGXObject::GetEffectIndex()
 	return m_dwEffectIndex;
 }
 
+void CoGXObject::SetDefaultScheduleProc() {
+	defaultScheduleProc = true;
+}
+
+void CoGXObject::SetScheduleProc(GXSchedulePROC pProc) {
+	m_pProc = pProc; 
+}
+
+GXSchedulePROC CoGXObject::GetScheduleProc() { 
+	return m_pProc; 
+}
 
 BOOL CoGXObject::InitializeIllusionEffect(DWORD dwMaxIllusionFrameNum,char* szObjName,void* pMtlHandle,DWORD dwFlag)
 {
