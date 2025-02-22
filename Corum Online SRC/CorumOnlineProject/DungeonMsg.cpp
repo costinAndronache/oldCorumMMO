@@ -3079,7 +3079,7 @@ void CmdAppearItem( char* pMsg, DWORD dwLen )
 	switch( ( pItem->Item.m_wItemID / ITEM_DISTRIBUTE ) )
 	{
 	case ITEM_MONEY_INDEX:
-		pItem->hItem.pHandle = CreateHandleObject( FILE( MOD_ITEM_MONEY ), GXPlayerPROC, pItem->hItem.pDesc, 0 );
+		pItem->hItem.pHandle = CreateHandleObject( FILE( MOD_ITEM_MONEY ), GXPlayerPROC::shared(), pItem->hItem.pDesc, 0);
 		_PlaySound(0, SOUND_TYPE_ITEM, SOUND_ITEM_THROW_MONEY, pItem->v3ItemPos, FALSE);
 		break;
 
@@ -3196,7 +3196,7 @@ void CmdAppearItem( char* pMsg, DWORD dwLen )
 				break;
 			}
 
-			pItem->hItem.pHandle = CreateHandleObject( GetFile(g_pObjManager->GetFile(dwResourceID), DATA_TYPE_ITEM), GXPlayerPROC, pItem->hItem.pDesc, 0 );
+			pItem->hItem.pHandle = CreateHandleObject( GetFile(g_pObjManager->GetFile(dwResourceID), DATA_TYPE_ITEM), GXPlayerPROC::shared(), pItem->hItem.pDesc, 0);
 		}	
 		break;
 	}

@@ -206,9 +206,9 @@ BOOL InitGameCharSelect()
 
 		g_pGVLogin->ChrSelectInfo[i].pDescGround->dwTempBuf[1] = i;		//Rotate할때 자신의 현재 위치 어디인가 기억할 변수 	
 	
-		g_pGVLogin->ChrSelectInfo[i].hGroundHandle = CreateHandleObject(FILE(MOD_CHAR_SELECT_GROUND), GXPlayerPROC, g_pGVLogin->ChrSelectInfo[i].pDescGround, NULL);
+		g_pGVLogin->ChrSelectInfo[i].hGroundHandle = CreateHandleObject(FILE(MOD_CHAR_SELECT_GROUND), GXPlayerPROC::shared(), g_pGVLogin->ChrSelectInfo[i].pDescGround, NULL);
 		//Spot Light 생성 
-		g_pGVLogin->ChrSelectInfo[i].hSpotLightHandle = CreateHandleObject(FILE(MOD_CHAR_SELECT_LIGHT), GXPlayerPROC, g_pGVLogin->ChrSelectInfo[i].pDescSpotLight, NULL);
+		g_pGVLogin->ChrSelectInfo[i].hSpotLightHandle = CreateHandleObject(FILE(MOD_CHAR_SELECT_LIGHT), GXPlayerPROC::shared(), g_pGVLogin->ChrSelectInfo[i].pDescSpotLight, NULL);
 				
 		switch(i)
 		{
@@ -238,7 +238,7 @@ BOOL InitGameCharSelect()
 
 		if(wItemId[0]==0)	//갑옷이 없는경우 기본 몸뚱이 
 		{				
-			g_pGVLogin->ChrSelectInfo[i].hHandle = CreateHandleObject(GetFile(RESTYPE_BASE_BODY, g_pGVLogin->ChrSelectInfo[i].ReceivedChrInfo.wClass), GXPlayerPROC, g_pGVLogin->ChrSelectInfo[i].pDesc, 0);
+			g_pGVLogin->ChrSelectInfo[i].hHandle = CreateHandleObject(GetFile(RESTYPE_BASE_BODY, g_pGVLogin->ChrSelectInfo[i].ReceivedChrInfo.wClass), GXPlayerPROC::shared(), g_pGVLogin->ChrSelectInfo[i].pDesc, 0);
 		}
 		else
 		{
@@ -250,7 +250,7 @@ BOOL InitGameCharSelect()
 			if(lpItemResource)
 			{
 				if(lpItemResource->wModCount>0)
-					g_pGVLogin->ChrSelectInfo[i].hHandle = CreateHandleObject(GetFile(szInfo, DATA_TYPE_CHARACTER), GXPlayerPROC, g_pGVLogin->ChrSelectInfo[i].pDesc, 0);
+					g_pGVLogin->ChrSelectInfo[i].hHandle = CreateHandleObject(GetFile(szInfo, DATA_TYPE_CHARACTER), GXPlayerPROC::shared(), g_pGVLogin->ChrSelectInfo[i].pDesc, 0);
 			}
 		}		
 	
@@ -378,7 +378,7 @@ BOOL InitGameCharSelect()
 	for(i = 0; i < MAX_KIND_OF_CLASS; i++)
 	{
 		pDesc = AllocObjDesc();		
-		g_pGVLogin->EnumCharForCreate[i] = CreateHandleObject(GetFile(RESTYPE_BASE_BODY, i+1), GXPlayerPROC, pDesc, NULL);
+		g_pGVLogin->EnumCharForCreate[i] = CreateHandleObject(GetFile(RESTYPE_BASE_BODY, i+1), GXPlayerPROC::shared(), pDesc, NULL);
 		HideObject(g_pGVLogin->EnumCharForCreate[i]);
 	}
 	
@@ -1984,13 +1984,13 @@ BOOL CreateMainPlayer(WSTC_WORLD_USER_INFO* pInfo)
 
 	// 달릴때 시작 이펙트와 정지 이펙트.
 	g_pMainPlayer->m_hMoveStartEffect.pHandle = 
-		CreateHandleObject( g_pObjManager->GetFile( SKILL_DUST1 ), GXPlayerPROC, g_pMainPlayer->m_hMoveStartEffect.pDesc, 0 );
+		CreateHandleObject( g_pObjManager->GetFile( SKILL_DUST1 ), GXPlayerPROC::shared(), g_pMainPlayer->m_hMoveStartEffect.pDesc, 0);
 
 	g_pMainPlayer->m_hMoveStopEffect.pHandle = 
-		CreateHandleObject( g_pObjManager->GetFile( SKILL_DUST2 ), GXPlayerPROC, g_pMainPlayer->m_hMoveStopEffect.pDesc, 0 );
+		CreateHandleObject( g_pObjManager->GetFile( SKILL_DUST2 ), GXPlayerPROC::shared(), g_pMainPlayer->m_hMoveStopEffect.pDesc, 0);
 
 	g_pMainPlayer->m_hPlayerShop.pHandle = 
-		CreateHandleObject(GetFile("playershop_sign.chr", DATA_TYPE_ITEM), GXPlayerPROC, g_pMainPlayer->m_hPlayerShop.pDesc, 0 );
+		CreateHandleObject(GetFile("playershop_sign.chr", DATA_TYPE_ITEM), GXPlayerPROC::shared(), g_pMainPlayer->m_hPlayerShop.pDesc, 0);
 	
 	//Self Portal Effect Create
 	if(!g_pMainPlayer->m_hSelfPortalEffect.pHandle)
@@ -1999,7 +1999,7 @@ BOOL CreateMainPlayer(WSTC_WORLD_USER_INFO* pInfo)
 		memset(g_pMainPlayer->m_hSelfPortalEffect.pDesc, 0, sizeof(OBJECT_DESC));
 		g_pMainPlayer->m_hSelfPortalEffect.pDesc->bType = OBJECT_TYPE_EFFECT;
 		g_pMainPlayer->m_hSelfPortalEffect.pDesc->pInfo = (void*)g_pMainPlayer;
-		g_pMainPlayer->m_hSelfPortalEffect.pHandle = CreateHandleObject( FILE(MOD_SELF_PORTAL_EFFECT) , GXPlayerPROC, 
+		g_pMainPlayer->m_hSelfPortalEffect.pHandle = CreateHandleObject( FILE(MOD_SELF_PORTAL_EFFECT) , GXPlayerPROC::shared(),
 														g_pMainPlayer->m_hSelfPortalEffect.pDesc, GXOBJECT_CREATE_TYPE_EFFECT);
 		HideObject(g_pMainPlayer->m_hSelfPortalEffect.pHandle);
 	}

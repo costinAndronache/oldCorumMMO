@@ -320,7 +320,7 @@ BOOL InitGameWorld()
 			
 				ItemDataName(szInfo, g_pMainPlayer->m_pEquip[ EQUIP_TYPE_RIDE ].m_wItemID);
 				
-				g_pMainPlayer->m_RideObject.pHandle = CreateHandleObject(GetFile(szInfo, DATA_TYPE_ITEM), GXPlayerPROC, g_pMainPlayer->m_RideObject.pDesc, 0);
+				g_pMainPlayer->m_RideObject.pHandle = CreateHandleObject(GetFile(szInfo, DATA_TYPE_ITEM), GXPlayerPROC::shared(), g_pMainPlayer->m_RideObject.pDesc, 0);
 
 				SetBoundingVolume(g_pMainPlayer->m_RideObject.pHandle, 80.0f);
 				g_pExecutive->GXOEnableHFieldApply(g_pMainPlayer->m_RideObject.pHandle);
@@ -2881,7 +2881,7 @@ BOOL InitWorldPlayer( WORLD_PARTY_APPEAR_INFO* pAppear, LP_PARTY_USER pPlayer )
 	if(!pPlayer->m_hPlayer.pHandle)
 	{
 		if(pAppear->wArmor==0)
-			pPlayer->m_hPlayer.pHandle = CreateHandleObject(GetFile(RESTYPE_BASE_BODY, pAppear->wClass), GXPlayerPROC, pPlayer->m_hPlayer.pDesc, NULL);
+			pPlayer->m_hPlayer.pHandle = CreateHandleObject(GetFile(RESTYPE_BASE_BODY, pAppear->wClass), GXPlayerPROC::shared(), pPlayer->m_hPlayer.pDesc, NULL);
 		else
 		{			
 			lpItemResource = g_pItemResourceHash->GetData(pAppear->wArmor);
@@ -2892,7 +2892,7 @@ BOOL InitWorldPlayer( WORLD_PARTY_APPEAR_INFO* pAppear, LP_PARTY_USER pPlayer )
 				{
 					ItemDataName(szInfo, pAppear->wArmor, pAppear->wClass-1);
 									
-					pPlayer->m_hPlayer.pHandle = CreateHandleObject(GetFile(szInfo, DATA_TYPE_CHARACTER), GXPlayerPROC, pPlayer->m_hPlayer.pDesc, NULL);					
+					pPlayer->m_hPlayer.pHandle = CreateHandleObject(GetFile(szInfo, DATA_TYPE_CHARACTER), GXPlayerPROC::shared(), pPlayer->m_hPlayer.pDesc, NULL);
 				}			
 			}
 		}

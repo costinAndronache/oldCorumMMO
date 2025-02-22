@@ -44,7 +44,7 @@ void CmdEmoticon( char* pMsg, DWORD dwLen )
 
 		lstrcpy(szBuf, "e0202000.chr");
 		pUser->m_hPlayerEmoticon.pHandle = 
-			CreateHandleObject(GetFile(szBuf, DATA_TYPE_EFFECT), GXPlayerPROC, pUser->m_hPlayerEmoticon.pDesc, GXOBJECT_CREATE_TYPE_EFFECT);
+			CreateHandleObject(GetFile(szBuf, DATA_TYPE_EFFECT), GXPlayerPROC::shared(), pUser->m_hPlayerEmoticon.pDesc, GXOBJECT_CREATE_TYPE_EFFECT);
 	}
 
 	GXSetPosition(pUser->m_hPlayerEmoticon.pHandle, &pUser->m_v3CurPos, FALSE, TRUE);

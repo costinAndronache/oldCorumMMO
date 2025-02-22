@@ -481,7 +481,7 @@ void CmdArmorItem(char* pMsg, DWORD dwLen)
 		if(pPacket->dwArmor == 0)
 		{
 			pUser->m_hPlayer.pHandle = CreateHandleObject( GetFile(RESTYPE_BASE_BODY, pUser->m_wClass)
-			, GXPlayerPROC
+			, GXPlayerPROC::shared()
 			, pUser->m_hPlayer.pDesc
 			, NULL);
 		}
@@ -497,7 +497,7 @@ void CmdArmorItem(char* pMsg, DWORD dwLen)
 
 					ItemDataName(szInfo, (WORD)pPacket->dwArmor, pUser->m_wClass-1);
 					pUser->m_hPlayer.pHandle = CreateHandleObject(	GetFile(szInfo, DATA_TYPE_CHARACTER)
-						, GXPlayerPROC
+						, GXPlayerPROC::shared()
 						, pUser->m_hPlayer.pDesc
 						, NULL);
 				}

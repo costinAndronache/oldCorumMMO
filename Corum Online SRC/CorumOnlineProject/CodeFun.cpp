@@ -58,7 +58,7 @@ void ItemAttach(WORD wItemId, GXOBJECT_HANDLE* hHandle, LPObjectDesc pDesc, GXOB
 		wsprintf(szInfo, szItemInfo);	
 
 		pDesc		= AllocObjDesc();
-		hItemHandle	= CreateHandleObject(szInfo, GXPlayerPROC, pDesc, 0);
+		hItemHandle	= CreateHandleObject(szInfo, GXPlayerPROC::shared(), pDesc, 0);
 		g_pExecutive->GXOAttach(hItemHandle, hAttachItemHandle, "Bip01 Spine3");	
 
 		if(hHandle)
@@ -82,7 +82,7 @@ void ItemAttach(WORD wItemId, GXOBJECT_HANDLE* hHandle, LPObjectDesc pDesc, GXOB
 	if(lpItemResource->byAnimation==1)
 	{			
 		pDesc		= AllocObjDesc();
-		hItemHandle	= CreateHandleObject(GetFile(szInfo, BYTE(dwDir)), GXPlayerPROC, pDesc, 0);
+		hItemHandle	= CreateHandleObject(GetFile(szInfo, BYTE(dwDir)), GXPlayerPROC::shared(), pDesc, 0);
 	}
 	else
 	{

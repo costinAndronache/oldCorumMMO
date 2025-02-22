@@ -4,7 +4,7 @@
 #include "GXDefault.h"
 #include "../4DyuchiGXGFunc/global.h"
 
-BOOL CoGXLight::Initialize(CoExecutive* pExecutive,LIGHT_DESC* pDesc,MATERIAL* pMtl,GXSchedulePROC pProc,DWORD dwFlag)
+BOOL CoGXLight::Initialize(CoExecutive* pExecutive,LIGHT_DESC* pDesc,MATERIAL* pMtl,GXLightSchedulePROC pProc,DWORD dwFlag)
 {
 	memset(this,0,sizeof(CoGXLight));
 	CGXMapObject::Cleanup();

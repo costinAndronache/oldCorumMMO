@@ -32,7 +32,7 @@ OBJECT_HANDLE_DESC*	CObjectManager::CreateObject(DWORD dwObjID, float x, float y
 	memset(pObj->pDesc, 0, sizeof(OBJECT_DESC));
 	pObj->pDesc->bActionFlag = bActionFlag;
 
-	pObj->pHandle = CreateHandleObject(FILE(dwObjID), GXPlayerPROC, pObj->pDesc, dwFlag);
+	pObj->pHandle = CreateHandleObject(FILE(dwObjID), GXPlayerPROC::shared(), pObj->pDesc, dwFlag);
 
 	if(!pObj->pHandle)
 		return NULL;

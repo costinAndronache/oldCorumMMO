@@ -101,7 +101,7 @@ class CoExecutive : public I4DyuchiGXExecutive
 	int							PreLoadModelData(void* pFP);
 
 	DWORD						LoadGXObject(MODEL_HANDLE* pModelHandle,DWORD dwMaxModelNum,char* szFileName);
-	CoGXObject*					AddGXObject(MODEL_HANDLE* pModelHandle,DWORD dwModelNum,GXSchedulePROC pProc,DWORD dwFlag);
+	CoGXObject*					AddGXObject(MODEL_HANDLE* pModelHandle,DWORD dwModelNum, GXProcedureHandler* pProc,DWORD dwFlag);
 	
 	// gxobject에서 충돌처리할때 쓰일 헬퍼.		2002/05/29
 	DBG_COLLISION_INFO			m_CollisionInfo;
@@ -297,9 +297,9 @@ public:
 
 
 
-	GXOBJECT_HANDLE		__stdcall	CreateGXObject(char* szFileName,GXSchedulePROC pProc,void* pData,DWORD dwFlag);
+	GXOBJECT_HANDLE		__stdcall	CreateGXObject(char* szFileName, GXProcedureHandler* pProc,void* pData,DWORD dwFlag);
 	GXLIGHT_HANDLE		__stdcall	CreateGXLight(LIGHT_DESC* pDesc,GXLightSchedulePROC pProc,void* pData,DWORD dwProjTexIndex,MATERIAL* pMtl,DWORD dwFlag);
-	GXTRIGGER_HANDLE	__stdcall	CreateGXEventTrigger(GXSchedulePROC pProc,void* pData,DWORD dwFlag);
+	GXTRIGGER_HANDLE	__stdcall	CreateGXEventTrigger(GXProcedureHandler* pProc,void* pData,DWORD dwFlag);
 	GXMAP_HANDLE		__stdcall	CreateGXMap(GXMapSchedulePROC pProc,void* pData,DWORD dwFlag);
 	
 	void				__stdcall	UnloadPreLoadedGXObject(GXOBJECT_HANDLE gxo);
@@ -412,8 +412,8 @@ public:
 	void				__stdcall	GXOEndIllusionEffect(GXOBJECT_HANDLE gxh);
 	DWORD				__stdcall	GXOGetAttachedGXObjects(GXOBJECT_HANDLE gxh,GXOBJECT_HANDLE* pGXOList,DWORD dwMaxNum);
 	
-	void				__stdcall	GXOSetScheduleProc(GXOBJECT_HANDLE gxo,GXSchedulePROC pProc);
-	GXSchedulePROC		__stdcall	GXOGetScheduleProc(GXOBJECT_HANDLE gxo);
+	void				__stdcall	GXOSetScheduleProc(GXOBJECT_HANDLE gxo, GXProcedureHandler* pProc);
+	GXProcedureHandler* __stdcall	GXOGetScheduleProc(GXOBJECT_HANDLE gxo);
 	
 	void				__stdcall	GXOSetEffectIndex(GXOBJECT_HANDLE gxo,DWORD dwEffectIndex);
 	DWORD				__stdcall	GXOGetEffectIndex(GXOBJECT_HANDLE gxo);

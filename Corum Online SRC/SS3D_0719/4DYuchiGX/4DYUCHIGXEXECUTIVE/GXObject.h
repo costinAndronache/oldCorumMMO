@@ -8,9 +8,8 @@
 class CoGXLight;
 class CoGXObject : public CGXMapObject
 {
-	GXSchedulePROC		m_pProc;
-	BOOL				defaultScheduleProc;
-
+	GXProcedureHandler* m_ProcHandler;
+	
 	friend	void MClipper::DeleteAll();
 	MODEL_HANDLE		m_ModelList[MAX_MODEL_NUM_PER_GXOBJECT * 10];
 	DWORD				m_dwModelNum;
@@ -78,9 +77,8 @@ public:
 
 	friend	void	CoExecutive::ResourceCheck();
 
-	void				SetDefaultScheduleProc();
-	void				SetScheduleProc(GXSchedulePROC pProc);
-	GXSchedulePROC		GetScheduleProc();
+	void				SetProcedureHandler(GXProcedureHandler *pProc);
+	GXProcedureHandler*		GetProcedureHandler();
 
 	BOOL				InitializeIllusionEffect(DWORD dwMaxIllusionFrameNum,char* szObjName,void* pMtlHandle,DWORD dwFlag);
 	void				SetModelFileDesc(MODEL_FILE_DESC* pModFileDesc) {m_pModelFileItem = pModFileDesc;}
@@ -104,7 +102,7 @@ public:
 	DWORD				GetEffectIndex();
 	
 	void				UpdateCollisionMesh();	
-	BOOL				Initialize(CoExecutive* pExecutive,MODEL_HANDLE* pModelHandle,DWORD dwModelNum,GXSchedulePROC pProc,DWORD dwFlag);
+	BOOL				Initialize(CoExecutive* pExecutive,MODEL_HANDLE* pModelHandle,DWORD dwModelNum,GXProcedureHandler *procHandler,DWORD dwFlag);
 	
 
 	I3DModel*			GetModel(DWORD dwModelIndex)		{return m_ModelList[dwModelIndex].pModel;}
@@ -170,8 +168,7 @@ public:
 	void				DefaultProc();
 	BOOL				Replace(DWORD dwModelIndex,char* szFileName);
 	BOOL				RenderToViewport(DWORD dwViewport);
-
-	GXSchedulePROC		GetProcedure(){ return m_pProc;}		
+	
 	void				UnRegistFileNameHash();
 
 	DWORD				Release();

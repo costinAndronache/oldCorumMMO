@@ -45,7 +45,7 @@ public:
 	
 	DWORD					GetImageWidth() {return m_dwWidth;}
 	DWORD					GetImageHeight() {return m_dwHeight;}
-	BOOL					Initialize(CoExecutive* pExecutive,LIGHT_DESC* pDesc,MATERIAL* pMtl,GXSchedulePROC pProc,DWORD dwFlag);
+	BOOL					Initialize(CoExecutive* pExecutive,LIGHT_DESC* pDesc,MATERIAL* pMtl,GXLightSchedulePROC pProc,DWORD dwFlag);
 	void					UpdateCollisionMesh();
 	void					GetLightDesc(LIGHT_DESC* pLightDesc) {*pLightDesc = m_LightDesc;}
 	void					SetLightDesc(LIGHT_DESC* pLightDesc);

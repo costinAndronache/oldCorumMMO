@@ -8,8 +8,16 @@ extern UPDATE_GAME_STATUS	g_bGameStatus;// sung-han
 
 static DWORD g_dwFrame = 0;
 
+GXPlayerPROC* GXPlayerPROC::shared() {
+	static GXPlayerPROC* _shared = nullptr;
+	if (_shared == nullptr) {
+		_shared = new GXPlayerPROC;
+	}
+	return _shared;
+}
+
 // 플레이어의 애니메이션 프레임 관리 프로시져.
-DWORD __stdcall GXPlayerPROC(I4DyuchiGXExecutive* pExecutive, GXOBJECT_HANDLE gxh, DWORD msg, int arg1, int arg2, void* pData)
+DWORD GXPlayerPROC::GXSchedulePROC(I4DyuchiGXExecutive* pExecutive, GXOBJECT_HANDLE gxh, DWORD msg, int arg1, int arg2, void* pData)
 {	
 	LPObjectDesc pObjDesc = (LPObjectDesc)pData;
 	DWORD	dwMotionIndex = pExecutive->GXOGetCurrentMotionIndex(gxh);

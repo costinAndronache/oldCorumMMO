@@ -11,7 +11,7 @@ class CoGXEventTrigger : public CGXMapObject
 	
 	COLLISION_MESH_OBJECT_DESC	m_colMeshDesc;
 	PLANE						m_pPlane[6];				// 충돌 메쉬 객체 기술자와 같은 면 집합. 면의 윗면은 중심에서 바깥쪽으로 향해있다.
-	GXSchedulePROC				m_pProc;
+	GXProcedureHandler* m_pProc;
 	EVENT_TRIGGER_DESC			m_EventTriggerDesc;
 	VECTOR3						m_v3DefaultLength;
 	
@@ -19,7 +19,7 @@ class CoGXEventTrigger : public CGXMapObject
 public:
 	CoGXEventTrigger();
 
-	BOOL				Initialize(CoExecutive* pExecutive,GXSchedulePROC pProc,DWORD dwFlag);
+	BOOL				Initialize(CoExecutive* pExecutive, GXProcedureHandler* pProc,DWORD dwFlag);
 	void				SetPosition(VECTOR3* pv3Pos);
 	void				SetRotation(VECTOR3* pv3Rot);
 	void				SetScale(VECTOR3* pv3Scale);
@@ -28,7 +28,7 @@ public:
 	void				BuildMesh();
 	DWORD				Release();
 
-	GXSchedulePROC		GetProc(){	return	m_pProc;}
+	GXProcedureHandler* GetProc(){	return	m_pProc;}
 
 	PLANE*				GetPlanes(){return	m_pPlane;}
 	

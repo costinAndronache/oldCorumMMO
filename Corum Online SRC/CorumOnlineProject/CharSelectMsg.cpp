@@ -279,7 +279,7 @@ void CmdMoveCharacterSuccess(char* pMsg, DWORD dwLen)
 	{
 		g_pGVLogin->ChrSelectInfo[wIndex].hHandle = 
 			CreateHandleObject(GetFile(RESTYPE_BASE_BODY, g_pGVLogin->ChrSelectInfo[wIndex].ReceivedChrInfo.wClass)
-			, GXPlayerPROC, g_pGVLogin->ChrSelectInfo[wIndex].pDesc, 0);
+			, GXPlayerPROC::shared(), g_pGVLogin->ChrSelectInfo[wIndex].pDesc, 0);
 	}
 	else
 	{
@@ -293,7 +293,7 @@ void CmdMoveCharacterSuccess(char* pMsg, DWORD dwLen)
 			if(lpItemResource->wModCount>0)							
 			{
 				g_pGVLogin->ChrSelectInfo[wIndex].hHandle =
-					CreateHandleObject(GetFile(szInfo, DATA_TYPE_CHARACTER), GXPlayerPROC, g_pGVLogin->ChrSelectInfo[wIndex].pDesc, 0);
+					CreateHandleObject(GetFile(szInfo, DATA_TYPE_CHARACTER), GXPlayerPROC::shared(), g_pGVLogin->ChrSelectInfo[wIndex].pDesc, 0);
 			}
 		}
 	}		
@@ -494,7 +494,7 @@ void CmdCreateCharacterSuccess( char* pMsg, DWORD dwLen )
 	LPObjectDesc pDesc = AllocObjDesc();
 		
 	//货肺款 某腐磐狼 个积己 
-	g_pGVLogin->ChrSelectInfo[ g_pGVLogin->dwCurCharIndex ].hHandle = CreateHandleObject(GetFile(RESTYPE_BASE_BODY, g_pGVLogin->bCurClassIndexForCreate), GXPlayerPROC, pDesc, NULL);
+	g_pGVLogin->ChrSelectInfo[ g_pGVLogin->dwCurCharIndex ].hHandle = CreateHandleObject(GetFile(RESTYPE_BASE_BODY, g_pGVLogin->bCurClassIndexForCreate), GXPlayerPROC::shared(), pDesc, NULL);
 	
 	//赣府积己 
 	if(wSex)

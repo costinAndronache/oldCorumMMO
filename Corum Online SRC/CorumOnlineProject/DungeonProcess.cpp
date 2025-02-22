@@ -3709,31 +3709,31 @@ void InitMainPlayer( DSTC_JOIN* pJoin )
 		case 1:
 			{
 				g_pMainPlayer->m_hPlayerFlag.pHandle	= CreateHandleObject(GetFile("GuildFlag.chr", DATA_TYPE_ITEM)
-					, GXPlayerPROC, g_pMainPlayer->m_hPlayerFlag.pDesc, NULL);
+					, GXPlayerPROC::shared(), g_pMainPlayer->m_hPlayerFlag.pDesc, NULL);
 			}
 			break;
 		case 2:
 			{
 				g_pMainPlayer->m_hPlayerFlag.pHandle	= CreateHandleObject(GetFile("GuildFlag2.chr", DATA_TYPE_ITEM)
-					, GXPlayerPROC, g_pMainPlayer->m_hPlayerFlag.pDesc, NULL);
+					, GXPlayerPROC::shared(), g_pMainPlayer->m_hPlayerFlag.pDesc, NULL);
 			}
 			break;
 		case 3:
 			{
 				g_pMainPlayer->m_hPlayerFlag.pHandle	= CreateHandleObject(GetFile("GuildFlag3.chr", DATA_TYPE_ITEM)
-					, GXPlayerPROC, g_pMainPlayer->m_hPlayerFlag.pDesc, NULL);
+					, GXPlayerPROC::shared(), g_pMainPlayer->m_hPlayerFlag.pDesc, NULL);
 			}
 			break;
 		case 4:
 			{
 				g_pMainPlayer->m_hPlayerFlag.pHandle	= CreateHandleObject(GetFile("GuildFlag4.chr", DATA_TYPE_ITEM)
-					, GXPlayerPROC, g_pMainPlayer->m_hPlayerFlag.pDesc, NULL);
+					, GXPlayerPROC::shared(), g_pMainPlayer->m_hPlayerFlag.pDesc, NULL);
 			}
 			break;
 		case 5:
 			{
 				g_pMainPlayer->m_hPlayerFlag.pHandle	= CreateHandleObject(GetFile("GuildFlag5.chr", DATA_TYPE_ITEM)
-					, GXPlayerPROC, g_pMainPlayer->m_hPlayerFlag.pDesc, NULL);
+					, GXPlayerPROC::shared(), g_pMainPlayer->m_hPlayerFlag.pDesc, NULL);
 			}
 			break;
 		}
@@ -4013,7 +4013,7 @@ CUser* InitPlayer( DSTC_APPEAR* pAppear )
 	{
 		if(pAppear->wArmor==0)
 		{
-			pPlayer->m_hPlayer.pHandle = CreateHandleObject(GetFile(RESTYPE_BASE_BODY, pAppear->wClass), GXPlayerPROC, pPlayer->m_hPlayer.pDesc, NULL);
+			pPlayer->m_hPlayer.pHandle = CreateHandleObject(GetFile(RESTYPE_BASE_BODY, pAppear->wClass), GXPlayerPROC::shared(), pPlayer->m_hPlayer.pDesc, NULL);
 		}
 		else
 		{
@@ -4026,7 +4026,7 @@ CUser* InitPlayer( DSTC_APPEAR* pAppear )
 					char szInfo[0xff] = {0,};
 
 					ItemDataName(szInfo, pAppear->wArmor, pPlayer->m_wClass-1);
-					pPlayer->m_hPlayer.pHandle = CreateHandleObject(GetFile(szInfo, DATA_TYPE_CHARACTER), GXPlayerPROC, pPlayer->m_hPlayer.pDesc, NULL);
+					pPlayer->m_hPlayer.pHandle = CreateHandleObject(GetFile(szInfo, DATA_TYPE_CHARACTER), GXPlayerPROC::shared(), pPlayer->m_hPlayer.pDesc, NULL);
 				}
 			}
 		}			
@@ -4175,9 +4175,9 @@ CUser* InitPlayer( DSTC_APPEAR* pAppear )
 	pPlayer->m_hPlayerShop.pDesc->ObjectFunc		= NULL;
 
 	// 달릴때 시작 이펙트와 정지 이펙트.
-	pPlayer->m_hMoveStartEffect.pHandle = CreateHandleObject( g_pObjManager->GetFile( SKILL_DUST1 ), GXPlayerPROC, pPlayer->m_hMoveStartEffect.pDesc, 0 );	
-	pPlayer->m_hMoveStopEffect.pHandle	= CreateHandleObject( g_pObjManager->GetFile( SKILL_DUST2 ), GXPlayerPROC, pPlayer->m_hMoveStopEffect.pDesc, 0 );	
-	pPlayer->m_hPlayerShop.pHandle		= CreateHandleObject( GetFile("playershop_sign.chr", DATA_TYPE_ITEM), GXPlayerPROC, pPlayer->m_hPlayerShop.pDesc, 0 );
+	pPlayer->m_hMoveStartEffect.pHandle = CreateHandleObject( g_pObjManager->GetFile( SKILL_DUST1 ), GXPlayerPROC::shared(), pPlayer->m_hMoveStartEffect.pDesc, 0);
+	pPlayer->m_hMoveStopEffect.pHandle	= CreateHandleObject( g_pObjManager->GetFile( SKILL_DUST2 ), GXPlayerPROC::shared(), pPlayer->m_hMoveStopEffect.pDesc, 0);
+	pPlayer->m_hPlayerShop.pHandle		= CreateHandleObject( GetFile("playershop_sign.chr", DATA_TYPE_ITEM), GXPlayerPROC::shared(), pPlayer->m_hPlayerShop.pDesc, 0);
 	
 	HideObject( pPlayer->m_hMoveStartEffect.pHandle );
 	HideObject( pPlayer->m_hMoveStopEffect.pHandle );
@@ -4193,7 +4193,7 @@ CUser* InitPlayer( DSTC_APPEAR* pAppear )
 	memset(pPlayer->m_hSelfPortalEffect.pDesc, 0, sizeof(OBJECT_DESC));
 	pPlayer->m_hSelfPortalEffect.pDesc->bType = OBJECT_TYPE_EFFECT;
 	pPlayer->m_hSelfPortalEffect.pDesc->pInfo = (void*)pPlayer;
-	pPlayer->m_hSelfPortalEffect.pHandle = CreateHandleObject( FILE(MOD_SELF_PORTAL_EFFECT) , GXPlayerPROC, 
+	pPlayer->m_hSelfPortalEffect.pHandle = CreateHandleObject( FILE(MOD_SELF_PORTAL_EFFECT) , GXPlayerPROC::shared(),
 													pPlayer->m_hSelfPortalEffect.pDesc, NULL);
 	HideObject(pPlayer->m_hSelfPortalEffect.pHandle);
 	
@@ -4303,7 +4303,7 @@ void InitMonster( DSTC_APPEAR_MON* pAppear )
 	
 	pMonster->m_hMonster.pHandle = NULL;
 	pMonster->m_hMonster.pHandle = CreateHandleObject( GetFile( szBuf, DATA_TYPE_MONSTER )
-		, GXPlayerPROC, pMonster->m_hMonster.pDesc, 0);
+		, GXPlayerPROC::shared(), pMonster->m_hMonster.pDesc, 0);
 
 	// == //
 	switch(pAppear->wMonNo)
@@ -4368,7 +4368,7 @@ void InitMonster( DSTC_APPEAR_MON* pAppear )
 	{    
 		wsprintf( szBuf, "m%05d.chr", 10 );
 		pMonster->m_hMonster.pHandle = 
-		CreateHandleObject( GetFile( szBuf, DATA_TYPE_MONSTER ), GXPlayerPROC, pMonster->m_hMonster.pDesc, 0);
+		CreateHandleObject( GetFile( szBuf, DATA_TYPE_MONSTER ), GXPlayerPROC::shared(), pMonster->m_hMonster.pDesc, 0);
 		
 		wsprintf( szBuf, "m%05d.cdt", 10 );
 		InitChrInfo( GetFile( szBuf, DATA_TYPE_CDT ), 10, OBJECT_TYPE_MONSTER );

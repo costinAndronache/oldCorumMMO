@@ -80,7 +80,7 @@ void AAEllipsoidCollisionTest( CoExecutive* pExecutive, CoGXObject* pThis, COLLI
 
 
 	// 프로시져.
-	GXSchedulePROC	pProc	=	pThis->GetProcedure();
+	GXProcedureHandler* pProc = pThis->GetProcedureHandler();
 
 
 	// 이 오브젝트의 충돌 모델이 될 타원체 만든다.
@@ -146,7 +146,7 @@ void AAEllipsoidCollisionTest( CoExecutive* pExecutive, CoGXObject* pThis, COLLI
 			{
 				GXSCHEDULE_PROC_MSG_MEET_EVENT_TRIGGER_ARG		TriggerArg;
 				TriggerArg.dwEventTriggerID		=	ppTrigger[i]->GetID();
-				DWORD	dwEventTriggerReturn	=	pProc( pExecutive, GXOBJECT_HANDLE(pThis), GXSCHEDULE_PROC_MSG_MEET_EVENT_TRIGGER, DWORD( &TriggerArg), 0, pThis->GetData());
+				DWORD	dwEventTriggerReturn	=	pProc->GXSchedulePROC( pExecutive, GXOBJECT_HANDLE(pThis), GXSCHEDULE_PROC_MSG_MEET_EVENT_TRIGGER, DWORD( &TriggerArg), 0, pThis->GetData());
 			}
 
 lbBreakTrigger:

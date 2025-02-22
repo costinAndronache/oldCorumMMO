@@ -128,9 +128,9 @@ interface I4DyuchiGXExecutive : public IUnknown
 	
 	virtual	BOOL				__stdcall	PreCreateLight(char* szFileName,DWORD dwFlag) = 0;
 	virtual DWORD				__stdcall	PreLoadGXObject(char* szFileName) = 0;
-	virtual GXOBJECT_HANDLE 	__stdcall	CreateGXObject(char* szFileName,GXSchedulePROC pProc,void* pData,DWORD dwFlag) = 0;
+	virtual GXOBJECT_HANDLE 	__stdcall	CreateGXObject(char* szFileName,GXProcedureHandler* pProc,void* pData,DWORD dwFlag) = 0;
 	virtual GXLIGHT_HANDLE		__stdcall	CreateGXLight(LIGHT_DESC* pDesc,GXLightSchedulePROC pProc,void* pData,DWORD dwProjTexIndex,MATERIAL* pMtl,DWORD dwFlag) = 0;
-	virtual GXTRIGGER_HANDLE	__stdcall	CreateGXEventTrigger(GXSchedulePROC pProc,void* pData,DWORD dwFlag) = 0;
+	virtual GXTRIGGER_HANDLE	__stdcall	CreateGXEventTrigger(GXProcedureHandler* pProc,void* pData,DWORD dwFlag) = 0;
 	
 	virtual GXMAP_HANDLE		__stdcall	CreateGXMap(GXMapSchedulePROC pProc,void* pData,DWORD dwFlag) = 0;
 	virtual void				__stdcall	UnloadAllPreLoadedGXObject(DWORD dwFlag) = 0;
@@ -225,8 +225,8 @@ interface I4DyuchiGXExecutive : public IUnknown
 	virtual void				__stdcall	GXOEndIllusionEffect(GXOBJECT_HANDLE gxh) = 0;
 	virtual DWORD				__stdcall	GXOGetAttachedGXObjects(GXOBJECT_HANDLE gxh,GXOBJECT_HANDLE* pGXOList,DWORD dwMaxNum) = 0;
 
-	virtual void				__stdcall	GXOSetScheduleProc(GXOBJECT_HANDLE gxo,GXSchedulePROC pProc) = 0;
-	virtual GXSchedulePROC		__stdcall	GXOGetScheduleProc(GXOBJECT_HANDLE gxo) = 0;
+	virtual void				__stdcall	GXOSetScheduleProc(GXOBJECT_HANDLE gxo, GXProcedureHandler* pProc) = 0;
+	virtual GXProcedureHandler* __stdcall	GXOGetScheduleProc(GXOBJECT_HANDLE gxo) = 0;
 
 	virtual	void				__stdcall	GXOSetEffectIndex(GXOBJECT_HANDLE gxo,DWORD dwEffectIndex) = 0;
 	virtual	DWORD				__stdcall	GXOGetEffectIndex(GXOBJECT_HANDLE gxo) = 0;

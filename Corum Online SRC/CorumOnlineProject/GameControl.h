@@ -289,7 +289,7 @@ void			SearchHack();
 void			CheckTick();
 LPObjectDesc	AllocObjDesc();
 void			FreeObjDesc( LPObjectDesc pDesc );
-GXOBJECT_HANDLE	CreateHandleObject( char* szFileName, GXSchedulePROC pProc, void* pData, DWORD dwFlag );
+GXOBJECT_HANDLE	CreateHandleObject( char* szFileName, GXProcedureHandler* pProc, void* pData, DWORD dwFlag );
 void			DeleteHandleObject( GXOBJECT_HANDLE hHandle );
 BOOL			CreateSound( SOUND_HANDLE_DESC* pSoundDesc, DWORD dwSoundNum, VECTOR3 *pv3SoundPos );
 BOOL			ReleaseSound( SOUND_HANDLE_DESC* pSoundDesc );

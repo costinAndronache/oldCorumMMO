@@ -2363,7 +2363,7 @@ void FreeObjDesc( LPObjectDesc pDesc )
 	g_dwDescNum--;	
 }
 
-GXOBJECT_HANDLE	CreateHandleObject( char* szFileName, GXSchedulePROC pProc, void* pData, DWORD dwFlag )
+GXOBJECT_HANDLE	CreateHandleObject( char* szFileName, GXProcedureHandler* pProc, void* pData, DWORD dwFlag )
 {
 	GXOBJECT_HANDLE	hHandle;
 	

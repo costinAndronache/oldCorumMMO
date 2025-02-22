@@ -16,6 +16,11 @@
 // warning number 4012 is 'unreferenced label' warning.
 #pragma warning( disable : 4102 )
 
+//
+DWORD GXProcedureHandler::GXSchedulePROC(I4DyuchiGXExecutive* pExecutive, GXOBJECT_HANDLE gxh, DWORD msg, int arg1, int arg2, void* pData) {
+	return GXDefaultSchedulePROC(pExecutive, gxh, msg, arg1, arg2, pData);
+}
+//
 
 BOOL __stdcall CoGXObject::IsCollisionWithScreenCoord(VECTOR3* pv3IntersectPoint,DWORD* pdwModelIndex,DWORD* pdwObjIndex,float* pfDist,POINT* ptCursor,DWORD dwViewportIndex,DWORD dwFlag)
 {
@@ -59,7 +64,7 @@ lb_return:
 }
 
 
-BOOL CoGXObject::Initialize(CoExecutive* pExecutive,MODEL_HANDLE* pModelHandle,DWORD dwModelNum,GXSchedulePROC pProc,DWORD dwFlag)
+BOOL CoGXObject::Initialize(CoExecutive* pExecutive,MODEL_HANDLE* pModelHandle,DWORD dwModelNum,GXProcedureHandler *procHandler,DWORD dwFlag)
 {
 	
 	BOOL	bResult = FALSE;
@@ -79,10 +84,10 @@ BOOL CoGXObject::Initialize(CoExecutive* pExecutive,MODEL_HANDLE* pModelHandle,D
 	
 	}
 	
-	SetScheduleProc(pProc);
+	SetProcedureHandler(procHandler);
 	if (dwFlag & GXOBJECT_CREATE_TYPE_DEFAULT_PROC)
 	{
-		SetScheduleProc(GXDefaultSchedulePROC);
+		SetProcedureHandler(new GXProcedureHandler());
 	}
 
 	SetIdentityMatrix(&m_matTransform);
@@ -149,16 +154,13 @@ DWORD CoGXObject::GetEffectIndex()
 	return m_dwEffectIndex;
 }
 
-void CoGXObject::SetDefaultScheduleProc() {
-	defaultScheduleProc = true;
+
+void CoGXObject::SetProcedureHandler(GXProcedureHandler *ph) {
+	m_ProcHandler = ph;
 }
 
-void CoGXObject::SetScheduleProc(GXSchedulePROC pProc) {
-	m_pProc = pProc; 
-}
-
-GXSchedulePROC CoGXObject::GetScheduleProc() { 
-	return m_pProc; 
+GXProcedureHandler* CoGXObject::GetProcedureHandler() {
+	return m_ProcHandler;
 }
 
 BOOL CoGXObject::InitializeIllusionEffect(DWORD dwMaxIllusionFrameNum,char* szObjName,void* pMtlHandle,DWORD dwFlag)
@@ -600,8 +602,8 @@ DWORD CoGXObject::OnFrame(I4DyuchiGXExecutive* pExecutive,DWORD msg,int arg1,int
 		__asm nop
 	}
 */
-	if (m_pProc)
-		m_pProc(pExecutive,this,msg,arg1,arg2,m_pData);
+	if (m_ProcHandler)
+		m_ProcHandler->GXSchedulePROC(pExecutive,this,msg,arg1,arg2,m_pData);
 
 //	if( m_bApplyVelocity)
 //		OnFrameApplyVelocity();

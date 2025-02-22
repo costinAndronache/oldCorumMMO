@@ -1219,7 +1219,7 @@ BOOL __stdcall CoExecutive::GXOIsEnableSelfIllumin(GXOBJECT_HANDLE gxo)
 	return ((CoGXObject*)gxo)->IsEnableSelfIllumin();
 }
 
-GXOBJECT_HANDLE CoExecutive::CreateGXObject(char* szFileName,GXSchedulePROC pProc,void* pData,DWORD dwFlag)
+GXOBJECT_HANDLE CoExecutive::CreateGXObject(char* szFileName, GXProcedureHandler* pProc,void* pData,DWORD dwFlag)
 {
 	CoGXObject*	gxh = NULL;
 	
@@ -1324,7 +1324,7 @@ void CoExecutive::DeleteModelFileDesc(MODEL_FILE_DESC* pModelFileDesc)
 	}
 }
 
-GXTRIGGER_HANDLE __stdcall CoExecutive::CreateGXEventTrigger(GXSchedulePROC pProc,void* /*pData*/,DWORD dwFlag)
+GXTRIGGER_HANDLE __stdcall CoExecutive::CreateGXEventTrigger(GXProcedureHandler* pProc,void* /*pData*/,DWORD dwFlag)
 {
 	CoGXEventTrigger*	pTrigger = new CoGXEventTrigger;
 #ifdef _DEBUG
@@ -1721,15 +1721,15 @@ void __stdcall CoExecutive::UnloadPreLoadedGXObject(GXOBJECT_HANDLE gxo)
 }
 
 
-void __stdcall CoExecutive::GXOSetScheduleProc(GXOBJECT_HANDLE gxo,GXSchedulePROC pProc)
+void __stdcall CoExecutive::GXOSetScheduleProc(GXOBJECT_HANDLE gxo, GXProcedureHandler* pProc)
 {
 	CoGXObject*	pGXO = (CoGXObject*)gxo;
-	pGXO->SetScheduleProc(pProc);
+	pGXO->SetProcedureHandler(pProc);
 }
-GXSchedulePROC __stdcall CoExecutive::GXOGetScheduleProc(GXOBJECT_HANDLE gxo)
+GXProcedureHandler* __stdcall CoExecutive::GXOGetScheduleProc(GXOBJECT_HANDLE gxo)
 {
 	CoGXObject*	pGXO = (CoGXObject*)gxo;
-	return pGXO->GetScheduleProc();
+	return pGXO->GetProcedureHandler();
 }
 
 int CoExecutive::PreLoadModelData(void* pFP)
@@ -1927,7 +1927,7 @@ void __stdcall CoExecutive::SetHFieldDetail(DWORD dwDetail)
 		}
 	}
 }
-CoGXObject*	CoExecutive::AddGXObject(MODEL_HANDLE* pModelHandle,DWORD dwModelNum,GXSchedulePROC pProc,DWORD dwFlag)
+CoGXObject*	CoExecutive::AddGXObject(MODEL_HANDLE* pModelHandle,DWORD dwModelNum, GXProcedureHandler* pProc,DWORD dwFlag)
 {
 	CoGXObject*		pObj = NULL;
 	DWORD			dwIndex;
@@ -3234,13 +3234,13 @@ BOOL __stdcall CoExecutive::LoadMapScript(char* szFileName,LOAD_CALLBACK_FUNC pF
 					
 					if (dwLoadFlag & LOAD_MAP_FLAG_DEFAULT_PROC_AUTOANIMATION)
 					{
-						if (!gxo->GetScheduleProc())
+						if (!gxo->GetProcedureHandler())
 						{
 							for (DWORD i=0; i<gxo->GetModelNum(); i++)
 							{
 								if (gxo->GetMotionNum(i))
 								{
-									gxo->SetScheduleProc(GXDefaultSchedulePROC);
+									gxo->SetProcedureHandler(new GXProcedureHandler());
 									goto lb_set_proc_exit;
 								}
 							}

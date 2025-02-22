@@ -380,7 +380,7 @@ EffectDesc* EffectLayer::CreateGXObject(char *szFile, BOOL bOwn, WORD wChrNum)
 	memset(pEffectDesc, 0, sizeof(EffectDesc));
 
 	pEffectDesc->hEffect.pDesc				= AllocObjDesc();	
-	pEffectDesc->hEffect.pHandle			= CreateHandleObject( szFile, GXPlayerPROC, pEffectDesc->hEffect.pDesc,0);//GXOBJECT_CREATE_TYPE_EFFECT );
+	pEffectDesc->hEffect.pHandle			= CreateHandleObject( szFile, GXPlayerPROC::shared(), pEffectDesc->hEffect.pDesc, 0);//GXOBJECT_CREATE_TYPE_EFFECT );
 	pEffectDesc->hEffect.pDesc->bType		= OBJECT_TYPE_EFFECT;
 	pEffectDesc->hEffect.pDesc->pInfo		= pEffectDesc;
 	pEffectDesc->wChrNum					= wChrNum;

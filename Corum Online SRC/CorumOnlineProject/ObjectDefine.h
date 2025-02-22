@@ -82,7 +82,7 @@ typedef struct
 {
 	LPVOID	pHandle;							// 3d 객체 핸들
 	char	szChrName[MAX_FILE_LENGTH];			// chr 화일 이름 
-	GXSchedulePROC pProc;	
+	GXProcedureHandler* pProc;
 	BYTE	bType;								// 오브젝트 타입
 	
 	WORD	wId;								// Uniq ID

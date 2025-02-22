@@ -1192,13 +1192,15 @@ typedef void* GXSOUND_HANDLE;
 
 
 
+class GXProcedureHandler {
+public:
+	virtual DWORD GXSchedulePROC(I4DyuchiGXExecutive* pExecutive, GXOBJECT_HANDLE gxh, DWORD msg, int arg1, int arg2, void* pData);
+};
 
-
-typedef DWORD (__stdcall *GXSchedulePROC)(I4DyuchiGXExecutive* pExecutive,GXOBJECT_HANDLE gxh,DWORD msg,int arg1,int arg2,void* pData);
-typedef DWORD (__stdcall *GXLightSchedulePROC)(I4DyuchiGXExecutive* pExecutive,GXLIGHT_HANDLE gxh,DWORD msg,int arg1,int arg2,void* pData);
-typedef DWORD (__stdcall *GXMapObjectSchedulePROC)(I4DyuchiGXExecutive* pExecutive,GXMAP_OBJECT_HANDLE gxh,DWORD msg,int arg1,int arg2,void* pData);
-typedef DWORD (__stdcall *GXMapSchedulePROC)(DWORD msg,int frame_ince,int arg2,void* pData);
-typedef DWORD (__stdcall *GXDecalSchedulePROC)(I4DyuchiGXExecutive* pExecutive,GXDECAL_HANDLE gxh,DWORD msg,int arg1,int arg2,void* pData);
+typedef DWORD (*GXLightSchedulePROC)(I4DyuchiGXExecutive* pExecutive,GXLIGHT_HANDLE gxh,DWORD msg,int arg1,int arg2,void* pData);
+typedef DWORD (*GXMapObjectSchedulePROC)(I4DyuchiGXExecutive* pExecutive,GXMAP_OBJECT_HANDLE gxh,DWORD msg,int arg1,int arg2,void* pData);
+typedef DWORD (*GXMapSchedulePROC)(DWORD msg,int frame_ince,int arg2,void* pData);
+typedef DWORD (*GXDecalSchedulePROC)(I4DyuchiGXExecutive* pExecutive,GXDECAL_HANDLE gxh,DWORD msg,int arg1,int arg2,void* pData);
 
 enum ERROR_TYPE
 {

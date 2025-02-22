@@ -10,7 +10,7 @@ void CoGXEventTrigger::Cleanup()
 {
 
 }
-BOOL CoGXEventTrigger::Initialize(CoExecutive* pExecutive,GXSchedulePROC pProc,DWORD dwFlag)
+BOOL CoGXEventTrigger::Initialize(CoExecutive* pExecutive, GXProcedureHandler* pProc,DWORD dwFlag)
 {
 	CGXMapObject::Cleanup();
 	m_pExecutive = pExecutive;

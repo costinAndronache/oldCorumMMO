@@ -27,7 +27,7 @@ void	InitDamageNumber()
 				g_pDamageNumberPool[0].pDamageNumberPool[j].m_hDamageNumber[k][l].pDesc = AllocObjDesc();
 
 				g_pDamageNumberPool[0].pDamageNumberPool[j].m_hDamageNumber[k][l].pHandle = 
-					CreateHandleObject( GetFile( szBuf, DATA_TYPE_DAMAGENUMBER ), GXPlayerPROC, g_pDamageNumberPool[0].pDamageNumberPool[j].m_hDamageNumber[k][l].pDesc, 0);						
+					CreateHandleObject( GetFile( szBuf, DATA_TYPE_DAMAGENUMBER ), GXPlayerPROC::shared(), g_pDamageNumberPool[0].pDamageNumberPool[j].m_hDamageNumber[k][l].pDesc, 0);
 
 				if (!g_pDamageNumberPool[0].pDamageNumberPool[j].m_hDamageNumber[k][l].pHandle) {
 					asm_int3();
@@ -40,11 +40,11 @@ void	InitDamageNumber()
 		g_pDamageNumberPool[0].pDamageNumberPool[j].m_hDamageChar[1].pDesc = AllocObjDesc();
 	
 		g_pDamageNumberPool[0].pDamageNumberPool[j].m_hDamageChar[0].pHandle = 
-			CreateHandleObject( GetFile( "dfyblock.chr", DATA_TYPE_DAMAGENUMBER ), GXPlayerPROC, g_pDamageNumberPool[0].pDamageNumberPool[j].m_hDamageChar[0].pDesc, 0);
+			CreateHandleObject( GetFile( "dfyblock.chr", DATA_TYPE_DAMAGENUMBER ), GXPlayerPROC::shared(), g_pDamageNumberPool[0].pDamageNumberPool[j].m_hDamageChar[0].pDesc, 0);
 		HideObject( g_pDamageNumberPool[0].pDamageNumberPool[j].m_hDamageChar[0].pHandle );
 
 		g_pDamageNumberPool[0].pDamageNumberPool[j].m_hDamageChar[1].pHandle = 
-			CreateHandleObject( GetFile( "dfymiss.chr", DATA_TYPE_DAMAGENUMBER ), GXPlayerPROC, g_pDamageNumberPool[0].pDamageNumberPool[j].m_hDamageChar[1].pDesc, 0);
+			CreateHandleObject( GetFile( "dfymiss.chr", DATA_TYPE_DAMAGENUMBER ), GXPlayerPROC::shared(), g_pDamageNumberPool[0].pDamageNumberPool[j].m_hDamageChar[1].pDesc, 0);
 		HideObject( g_pDamageNumberPool[0].pDamageNumberPool[j].m_hDamageChar[1].pHandle );
 
 		// 포인터 연결.
@@ -60,7 +60,7 @@ void	InitDamageNumber()
 				wsprintf( szBuf, "dfr%d.chr", l );
 				g_pDamageNumberPool[1].pDamageNumberPool[j].m_hDamageNumber[k][l].pDesc = AllocObjDesc();
 				g_pDamageNumberPool[1].pDamageNumberPool[j].m_hDamageNumber[k][l].pHandle = 
-					CreateHandleObject( GetFile( szBuf, DATA_TYPE_DAMAGENUMBER ), GXPlayerPROC, g_pDamageNumberPool[1].pDamageNumberPool[j].m_hDamageNumber[k][l].pDesc, GXOBJECT_CREATE_TYPE_EFFECT );						
+					CreateHandleObject( GetFile( szBuf, DATA_TYPE_DAMAGENUMBER ), GXPlayerPROC::shared(), g_pDamageNumberPool[1].pDamageNumberPool[j].m_hDamageNumber[k][l].pDesc, GXOBJECT_CREATE_TYPE_EFFECT);
 				
 				if( !g_pDamageNumberPool[1].pDamageNumberPool[j].m_hDamageNumber[k][l].pHandle ) asm_int3();
 				HideObject( g_pDamageNumberPool[1].pDamageNumberPool[j].m_hDamageNumber[k][l].pHandle );
@@ -71,11 +71,11 @@ void	InitDamageNumber()
 		g_pDamageNumberPool[1].pDamageNumberPool[j].m_hDamageChar[1].pDesc = AllocObjDesc();
 	
 		g_pDamageNumberPool[1].pDamageNumberPool[j].m_hDamageChar[0].pHandle = 
-			CreateHandleObject( GetFile( "dfrblock.chr", DATA_TYPE_DAMAGENUMBER ), GXPlayerPROC, g_pDamageNumberPool[1].pDamageNumberPool[j].m_hDamageChar[0].pDesc, GXOBJECT_CREATE_TYPE_EFFECT );
+			CreateHandleObject( GetFile( "dfrblock.chr", DATA_TYPE_DAMAGENUMBER ), GXPlayerPROC::shared(), g_pDamageNumberPool[1].pDamageNumberPool[j].m_hDamageChar[0].pDesc, GXOBJECT_CREATE_TYPE_EFFECT);
 		HideObject( g_pDamageNumberPool[1].pDamageNumberPool[j].m_hDamageChar[0].pHandle );
 
 		g_pDamageNumberPool[1].pDamageNumberPool[j].m_hDamageChar[1].pHandle = 
-			CreateHandleObject( GetFile( "dfrmiss.chr", DATA_TYPE_DAMAGENUMBER ), GXPlayerPROC, g_pDamageNumberPool[1].pDamageNumberPool[j].m_hDamageChar[1].pDesc, GXOBJECT_CREATE_TYPE_EFFECT );
+			CreateHandleObject( GetFile( "dfrmiss.chr", DATA_TYPE_DAMAGENUMBER ), GXPlayerPROC::shared(), g_pDamageNumberPool[1].pDamageNumberPool[j].m_hDamageChar[1].pDesc, GXOBJECT_CREATE_TYPE_EFFECT);
 		HideObject( g_pDamageNumberPool[1].pDamageNumberPool[j].m_hDamageChar[1].pHandle );
 
 		// 포인터 연결.

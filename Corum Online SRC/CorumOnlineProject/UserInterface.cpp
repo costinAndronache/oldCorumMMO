@@ -198,24 +198,24 @@ BOOL CUserInterface::Init()
 		
 	m_pUserClickHandle.pDesc				= AllocObjDesc();	
 	m_pUserClickHandle.pDesc->ObjectFunc	= GXClickProc;
-	m_pUserClickHandle.pHandle	= CreateHandleObject(g_pObjManager->GetFile(MOD_PLAYERCLICK), GXPlayerPROC, m_pUserClickHandle.pDesc, GXOBJECT_CREATE_TYPE_EFFECT);		
+	m_pUserClickHandle.pHandle	= CreateHandleObject(g_pObjManager->GetFile(MOD_PLAYERCLICK), GXPlayerPROC::shared(), m_pUserClickHandle.pDesc, GXOBJECT_CREATE_TYPE_EFFECT);
 	HideObject(m_pUserClickHandle.pHandle);
 				
 	char szFile[0xff]={0,};
 	
 	lstrcpy(szFile, "e0121000.chr");
 	m_pUserMouseHandle[0].pDesc				= AllocObjDesc();			
-	m_pUserMouseHandle[0].pHandle			= CreateHandleObject(GetFile(szFile, DATA_TYPE_EFFECT), GXPlayerPROC, m_pUserMouseHandle[0].pDesc, GXOBJECT_CREATE_TYPE_EFFECT);
+	m_pUserMouseHandle[0].pHandle			= CreateHandleObject(GetFile(szFile, DATA_TYPE_EFFECT), GXPlayerPROC::shared(), m_pUserMouseHandle[0].pDesc, GXOBJECT_CREATE_TYPE_EFFECT);
 	HideObject(m_pUserMouseHandle[0].pHandle);
 
 	lstrcpy(szFile, "e0125000.chr");
 	m_pUserMouseHandle[1].pDesc				= AllocObjDesc();			
-	m_pUserMouseHandle[1].pHandle			= CreateHandleObject(GetFile(szFile, DATA_TYPE_EFFECT), GXPlayerPROC, m_pUserMouseHandle[1].pDesc, GXOBJECT_CREATE_TYPE_EFFECT);
+	m_pUserMouseHandle[1].pHandle			= CreateHandleObject(GetFile(szFile, DATA_TYPE_EFFECT), GXPlayerPROC::shared(), m_pUserMouseHandle[1].pDesc, GXOBJECT_CREATE_TYPE_EFFECT);
 	HideObject(m_pUserMouseHandle[1].pHandle);
 
 	lstrcpy(szFile, "e0128000.chr");
 	m_pUserMouseHandle[2].pDesc				= AllocObjDesc();			
-	m_pUserMouseHandle[2].pHandle			= CreateHandleObject(GetFile(szFile, DATA_TYPE_EFFECT), GXPlayerPROC, m_pUserMouseHandle[2].pDesc, GXOBJECT_CREATE_TYPE_EFFECT);
+	m_pUserMouseHandle[2].pHandle			= CreateHandleObject(GetFile(szFile, DATA_TYPE_EFFECT), GXPlayerPROC::shared(), m_pUserMouseHandle[2].pDesc, GXOBJECT_CREATE_TYPE_EFFECT);
 	HideObject(m_pUserMouseHandle[2].pHandle);
 
 	m_pSprPlayerShop[0] = g_pRenderer->CreateSpriteObject(GetFile("menu_5.tga", DATA_TYPE_UI), 128, 48, 128, 19, 0);

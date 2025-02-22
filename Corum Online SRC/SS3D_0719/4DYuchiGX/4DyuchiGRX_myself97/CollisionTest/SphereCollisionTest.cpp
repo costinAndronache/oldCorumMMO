@@ -81,7 +81,7 @@ void	SphereCollisionTest(CoExecutive* pExecutive, CoGXObject* pThis, COLLISION_T
 	COLLISION_IN	in;
 	COLLISION_OUT	out;
 
-	GXSchedulePROC		pProc	=	pThis->GetProcedure();			// pThis의 프로시져.
+	GXProcedureHandler* pProc = pThis->GetProcedureHandler();			// pThis의 프로시져.
 	
 	VECTOR3		ObjPivot;		// 오브젝트의 중점. 충돌처리 하는동안 계속 변한다.
 	VECTOR3		ObjTo;			// 오브젝트의 목적지. 역시 충돌처리 하는동안 계속 변한다.
@@ -319,7 +319,7 @@ lbPassStaticTree:
 			CallBack.MeetPlane.D		=	-1.0f * ( CallBack.MeetPlane.v3Up * lastMeetOut.WhereMeet );
 			DWORD dwProcedureReturn	=	GXSCHEDULE_PROC_MSG_COLLISION_RETURN_SLIDE;		// 기본값.
 			if( pProc)
-				dwProcedureReturn	=	pProc( pExecutive, GXOBJECT_HANDLE(pThis), GXSCHEDULE_PROC_MSG_COLLISION, DWORD( &CallBack), 0, pThis->GetData());
+				dwProcedureReturn	=	pProc->GXSchedulePROC( pExecutive, GXOBJECT_HANDLE(pThis), GXSCHEDULE_PROC_MSG_COLLISION, DWORD( &CallBack), 0, pThis->GetData());
 			switch( dwProcedureReturn)		// 프로시저 리턴값에 따른 행동 양식.
 			{
 				case	GXSCHEDULE_PROC_MSG_COLLISION_RETURN_STOP:
@@ -386,9 +386,9 @@ lbReturn:
 		if( bMeetBox)		// 만났을 경우,
 		{
 			DWORD	dwTriggerProcReturn	=	0;
-			GXSchedulePROC		pTriggerProc	=	gColl.pEventBox[dwEventIndex]->GetProc();
+			GXProcedureHandler* pTriggerProc	=	gColl.pEventBox[dwEventIndex]->GetProc();
 			if( pTriggerProc)
-				pTriggerProc( pExecutive, (GXOBJECT_HANDLE)gColl.pEventBox[dwEventIndex], GXSCHEDULE_PROC_MSG_MEET_EVENT_TRIGGER, (DWORD)pThis, 0, gColl.pEventBox[dwEventIndex]->GetData());
+				pTriggerProc->GXSchedulePROC( pExecutive, (GXOBJECT_HANDLE)gColl.pEventBox[dwEventIndex], GXSCHEDULE_PROC_MSG_MEET_EVENT_TRIGGER, (DWORD)pThis, 0, gColl.pEventBox[dwEventIndex]->GetData());
 
 
 //			DWORD	dwEventTriggerReturn	=	pProc( pExecutive, GXOBJECT_HANDLE(pThis), GXSCHEDULE_PROC_MSG_MEET_EVENT_TRIGGER, DWORD( &TriggerArg), 0, pThis->GetData());
@@ -398,7 +398,7 @@ lbReturn:
 				GXSCHEDULE_PROC_MSG_MEET_EVENT_TRIGGER_ARG		TriggerArg;
 				TriggerArg.dwEventTriggerID		=	gColl.pEventBox[dwEventIndex]->GetID();
 //				dwTriggerProcReturn	=	pProc( pExecutive, GXOBJECT_HANDLE(pThis), GXSCHEDULE_PROC_MSG_MEET_EVENT_TRIGGER, (DWORD)gColl.pEventBox[dwEventIndex], 0, pThis->GetData());
-				dwTriggerProcReturn	=	pProc( pExecutive, GXOBJECT_HANDLE(pThis), GXSCHEDULE_PROC_MSG_MEET_EVENT_TRIGGER, DWORD( &TriggerArg), 0, pThis->GetData());
+				dwTriggerProcReturn	=	pProc->GXSchedulePROC( pExecutive, GXOBJECT_HANDLE(pThis), GXSCHEDULE_PROC_MSG_MEET_EVENT_TRIGGER, DWORD( &TriggerArg), 0, pThis->GetData());
 			}
 		}
 	}

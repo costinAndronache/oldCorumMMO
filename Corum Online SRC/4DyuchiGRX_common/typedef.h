@@ -1194,7 +1194,7 @@ typedef void* GXSOUND_HANDLE;
 
 
 
-typedef DWORD (__stdcall *GXSchedulePROC)(I4DyuchiGXExecutive* pExecutive,GXOBJECT_HANDLE gxh,DWORD msg,int arg1,int arg2,void* pData);
+typedef DWORD (*GXSchedulePROC)(I4DyuchiGXExecutive* pExecutive,GXOBJECT_HANDLE gxh,DWORD msg,int arg1,int arg2,void* pData);
 typedef DWORD (__stdcall *GXLightSchedulePROC)(I4DyuchiGXExecutive* pExecutive,GXLIGHT_HANDLE gxh,DWORD msg,int arg1,int arg2,void* pData);
 typedef DWORD (__stdcall *GXMapObjectSchedulePROC)(I4DyuchiGXExecutive* pExecutive,GXMAP_OBJECT_HANDLE gxh,DWORD msg,int arg1,int arg2,void* pData);
 typedef DWORD (__stdcall *GXMapSchedulePROC)(DWORD msg,int frame_ince,int arg2,void* pData);
