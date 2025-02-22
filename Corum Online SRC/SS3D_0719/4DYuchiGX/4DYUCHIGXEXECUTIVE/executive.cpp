@@ -3553,6 +3553,7 @@ DWORD __stdcall CoExecutive::Process()
 	for (i=0; i<dwGXONum; i++)
 	{
 		pGXO = (CoGXObject*)ITGetItemSequential(m_pIndexItemTableGXObject,i);
+		
 		if (!(pGXO->GetScheduleFlag() & SCHEDULE_FLAG_NOT_SCHEDULE))
 		{
 			pGXO->OnFrame(this,0,frame_inc,0);
@@ -4129,6 +4130,11 @@ BOOL __stdcall CoExecutive::ImmDeleteGXObject(GXOBJECT_HANDLE gxh)
 
 	if (!pObj)
 		goto lb_return;
+
+	if (pObj->IsCrashSource()) {
+		pObj->DbgMarkForDeletion();
+		return true;
+	}
 
 	pObj->Release();
 	ITDeleteItem(m_pIndexItemTableGXObject,dwObjectIndex);

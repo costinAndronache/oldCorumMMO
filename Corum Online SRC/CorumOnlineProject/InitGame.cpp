@@ -1541,7 +1541,7 @@ BOOL InitCOMObject()
 	GetCurrentDirectory(200, crtDirName);
 	SetCurrentDirectory(g_szBasePath);
 	CoInitialize(NULL);
-	g_hExecutiveHandle = LoadLibrary("SS3DExecutiveForCorum.dll");
+	g_hExecutiveHandle = LoadLibrary("4DyuchiGXExecutive.dll");
 	DWORD lastError = GetLastError();
 	CREATE_INSTANCE_FUNC pFunc = (CREATE_INSTANCE_FUNC)GetProcAddress(g_hExecutiveHandle,"DllCreateInstance");
 	

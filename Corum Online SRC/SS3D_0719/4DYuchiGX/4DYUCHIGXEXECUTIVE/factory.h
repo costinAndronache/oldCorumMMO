@@ -2,6 +2,12 @@
 
 #include "../4DyuchiGRX_common/stdafx.h"
 
+#ifdef GXLIBBUILDING
+#define symbol1
+#else
+#define symbol2
+#endif
+
 class CF4DyuchiGXExecutive : public IClassFactory
 {
 public:    

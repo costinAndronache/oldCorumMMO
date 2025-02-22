@@ -1191,11 +1191,19 @@ typedef void* GXDECAL_HANDLE;
 typedef void* GXSOUND_HANDLE;
 
 
+#ifdef GXLIBIMPORTING
+#define STORAGE_SPEC __declspec(dllimport)
+#else 
+#define STORAGE_SPEC __declspec(dllexport)
+#endif
 
-class GXProcedureHandler {
+
+class STORAGE_SPEC GXProcedureHandler {
 public:
 	virtual DWORD GXSchedulePROC(I4DyuchiGXExecutive* pExecutive, GXOBJECT_HANDLE gxh, DWORD msg, int arg1, int arg2, void* pData);
 };
+
+
 
 typedef DWORD (*GXLightSchedulePROC)(I4DyuchiGXExecutive* pExecutive,GXLIGHT_HANDLE gxh,DWORD msg,int arg1,int arg2,void* pData);
 typedef DWORD (*GXMapObjectSchedulePROC)(I4DyuchiGXExecutive* pExecutive,GXMAP_OBJECT_HANDLE gxh,DWORD msg,int arg1,int arg2,void* pData);

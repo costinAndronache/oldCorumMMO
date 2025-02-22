@@ -602,6 +602,7 @@ DWORD CoGXObject::OnFrame(I4DyuchiGXExecutive* pExecutive,DWORD msg,int arg1,int
 		__asm nop
 	}
 */
+
 	if (m_ProcHandler)
 		m_ProcHandler->GXSchedulePROC(pExecutive,this,msg,arg1,arg2,m_pData);
 
@@ -710,6 +711,24 @@ lb_return:
 
 	return bResult;
 }
+
+void CoGXObject::DbgMarkForDeletion() {
+	_dbgMarkedForDeletion = true;
+}
+
+bool CoGXObject::DbgIsMarkedForDeletion() {
+	return _dbgMarkedForDeletion;
+}
+
+bool CoGXObject::IsCrashSource() {
+	if (m_pModelFileItem) {
+		if (strcmp("e0708000.chr", m_pModelFileItem->szFileName) == 0) {
+			return true;
+		}
+	}
+	return false;
+}
+
 void CoGXObject::SetAlphaFlag(DWORD dwFlag)
 {
 	m_dwAlphaFlag = dwFlag;
@@ -907,6 +926,10 @@ lb_return:
 }
 DWORD CoGXObject::Release()
 {
+	if (IsCrashSource()) {
+		printf("DANGER??");
+	}
+
 	CGXMap*	pMap = m_pExecutive->GetGXMap();
 	if (pMap)
 	{
