@@ -521,7 +521,7 @@ void ReleaseGameCharSelect()
 //==================================================================//
 // 캐릭터 셀렉트 상태에서 렌더함수.									//
 //==================================================================//
-DWORD __stdcall AfterRenderGameCharSelect()
+DWORD AfterRenderGameCharSelect()
 {
 	g_helpLoadingSprite.Show();
 
@@ -552,7 +552,7 @@ DWORD __stdcall AfterRenderGameCharSelect()
 	return 0;
 }
 
-DWORD __stdcall BeforeRenderGameCharSelect()
+DWORD BeforeRenderGameCharSelect()
 {
 	return 0;
 }

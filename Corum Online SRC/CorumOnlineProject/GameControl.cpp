@@ -32,8 +32,8 @@ void	(*Render[ MAX_RENDER_MODE ])();
 BOOL	(*InitGameProcess[ MAX_UPDATE_GAME ])();
 void	(*UpdateGameProcess[ MAX_UPDATE_GAME ])();
 void	(*ReleaseGameProcess[ MAX_UPDATE_GAME ])();
-DWORD	(__stdcall *AfterRender[ MAX_UPDATE_GAME ])();
-DWORD	(__stdcall *BeforeRender[ MAX_UPDATE_GAME ])();
+DWORD	(*AfterRender[ MAX_UPDATE_GAME ])();
+DWORD	(*BeforeRender[ MAX_UPDATE_GAME ])();
 
 
 char				g_szBasePath[ _MAX_PATH ];
@@ -975,7 +975,7 @@ void LoadWorldMap( DWORD dwMapResourceUID )
 }
 
 
-DWORD __stdcall LoadingDungeonProc(DWORD dwCurCount, DWORD dwTotalCount, void* pArg)
+DWORD LoadingDungeonProc(DWORD dwCurCount, DWORD dwTotalCount, void* pArg)
 {
 	int x = (10 * (dwCurCount+1)) / dwTotalCount;
 

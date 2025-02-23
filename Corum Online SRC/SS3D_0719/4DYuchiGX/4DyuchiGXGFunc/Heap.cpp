@@ -7,65 +7,65 @@
 //#include "global.h"
 #include "Heap.h"
 
-GLOBAL_FUNC_DLL	VHEAP_HANDLE	__stdcall	VHPCreateHeap()
+GLOBAL_FUNC_DLL	VHEAP_HANDLE		VHPCreateHeap()
 {
 	CHeap*	pHeap = new CHeap;
 	return (VHEAP_HANDLE)pHeap;
 }
 
-GLOBAL_FUNC_DLL	void	__stdcall	VHPHeapCheck(VHEAP_HANDLE pVHeap)
+GLOBAL_FUNC_DLL	void		VHPHeapCheck(VHEAP_HANDLE pVHeap)
 {
 	CHeap*	pHeap = (CHeap*)pVHeap;
 	pHeap->HeapCheck();
 
 }
-GLOBAL_FUNC_DLL	void	__stdcall	VHPLeakCheck(VHEAP_HANDLE pVHeap)
+GLOBAL_FUNC_DLL	void		VHPLeakCheck(VHEAP_HANDLE pVHeap)
 {
 	CHeap*	pHeap = (CHeap*)pVHeap;
 	pHeap->LeakCheck();
 }
 
-GLOBAL_FUNC_DLL	BOOL	__stdcall	VHPInitialize(VHEAP_HANDLE pVHeap,void* pMassMemory,DWORD dwMassMemorySize,DWORD dwMaxBlockNum,DWORD dwUnitSize,DWORD dwAlignUnitNum,BOOL bEnableDebug){
+GLOBAL_FUNC_DLL	BOOL		VHPInitialize(VHEAP_HANDLE pVHeap,void* pMassMemory,DWORD dwMassMemorySize,DWORD dwMaxBlockNum,DWORD dwUnitSize,DWORD dwAlignUnitNum,BOOL bEnableDebug){
 	CHeap*	pHeap = (CHeap*)pVHeap;
 	return pHeap->Initialize(pMassMemory,dwMassMemorySize,dwMaxBlockNum,dwUnitSize,dwAlignUnitNum,bEnableDebug);
 }
 
-GLOBAL_FUNC_DLL	void*	__stdcall	VHPAlloc(VHEAP_HANDLE pVHeap,DWORD* pdwErrorCode,DWORD dwSize,BOOL bAlign)
+GLOBAL_FUNC_DLL	void*		VHPAlloc(VHEAP_HANDLE pVHeap,DWORD* pdwErrorCode,DWORD dwSize,BOOL bAlign)
 {
 	CHeap*	pHeap = (CHeap*)pVHeap;
 	return pHeap->Alloc(pdwErrorCode,dwSize,bAlign);
 }
-GLOBAL_FUNC_DLL void* 	__stdcall	VHPAllocUnit(VHEAP_HANDLE pVHeap,DWORD* pdwErrorCode,DWORD dwUnitNum,DWORD* pdwSize,BOOL bAlign)
+GLOBAL_FUNC_DLL void* 		VHPAllocUnit(VHEAP_HANDLE pVHeap,DWORD* pdwErrorCode,DWORD dwUnitNum,DWORD* pdwSize,BOOL bAlign)
 {
 	CHeap*	pHeap = (CHeap*)pVHeap;
 	return pHeap->AllocUnit(pdwErrorCode,dwUnitNum,pdwSize,bAlign);
 
 }
-GLOBAL_FUNC_DLL	void	__stdcall	VHPFree(VHEAP_HANDLE pVHeap,void* pMem)
+GLOBAL_FUNC_DLL	void		VHPFree(VHEAP_HANDLE pVHeap,void* pMem)
 {
 	CHeap*	pHeap = (CHeap*)pVHeap;
 	pHeap->Free(pMem);
 }
 
-GLOBAL_FUNC_DLL	void*	__stdcall	VHPDBGAlloc(VHEAP_HANDLE pVHeap,DWORD* pdwErrorCode,DWORD dwSize,BOOL bAlign)
+GLOBAL_FUNC_DLL	void*		VHPDBGAlloc(VHEAP_HANDLE pVHeap,DWORD* pdwErrorCode,DWORD dwSize,BOOL bAlign)
 {
 	CHeap*	pHeap = (CHeap*)pVHeap;
 	return pHeap->Alloc(pdwErrorCode,dwSize,bAlign);
 }
-GLOBAL_FUNC_DLL void* 	__stdcall	VHPDBGAllocUnit(VHEAP_HANDLE pVHeap,DWORD* pdwErrorCode,DWORD dwUnitNum,DWORD* pdwSize,BOOL bAlign)
+GLOBAL_FUNC_DLL void* 		VHPDBGAllocUnit(VHEAP_HANDLE pVHeap,DWORD* pdwErrorCode,DWORD dwUnitNum,DWORD* pdwSize,BOOL bAlign)
 {
 	CHeap*	pHeap = (CHeap*)pVHeap;
 	return pHeap->AllocUnit(pdwErrorCode,dwUnitNum,pdwSize,bAlign);
 
 }
 
-GLOBAL_FUNC_DLL	void	__stdcall 	VHPDBGFree(VHEAP_HANDLE pVHeap,void* pMem)
+GLOBAL_FUNC_DLL	void	 	VHPDBGFree(VHEAP_HANDLE pVHeap,void* pMem)
 {
 	CHeap*	pHeap = (CHeap*)pVHeap;
 	pHeap->Free(pMem);
 }
 
-GLOBAL_FUNC_DLL	void	__stdcall	VHPReleaseHeap(VHEAP_HANDLE pVHeap)
+GLOBAL_FUNC_DLL	void		VHPReleaseHeap(VHEAP_HANDLE pVHeap)
 {
 	delete (CHeap*)pVHeap;
 }

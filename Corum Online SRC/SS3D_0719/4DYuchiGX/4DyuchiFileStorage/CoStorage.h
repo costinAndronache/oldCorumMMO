@@ -42,8 +42,6 @@ class CoStorage : public I4DyuchiFileStorage
 	BOOL				m_bEnableUsePackFile;
 	VBHASH_HANDLE		m_pFileItemNameHash;
 	VBHASH_HANDLE		m_pPackFileNameHash;
-	STMPOOL_HANDLE		m_pFileDescPool;
-	STMPOOL_HANDLE		m_pFileHandlePool;
 	DWORD				m_dwClusterSize;
 
 	DWORD				m_dwMaxFileNum;
@@ -105,12 +103,12 @@ public:
 	 *
 	 * \param szPackFileName 
 	 */
-	void*	__stdcall	MapPackFile(char* szPackFileName);
+	void*		MapPackFile(char* szPackFileName);
 	/**
 	 *
 	 * \param pPackFileHandle 
 	 */
-	void	__stdcall	UnmapPackFile(void* pPackFileHandle);
+	void		UnmapPackFile(void* pPackFileHandle);
 	/**
 	 *
 	 * \param dwMaxFileNum 
@@ -119,13 +117,13 @@ public:
 	 * \param accessMethod 
 	 * \return 
 	 */
-	BOOL	__stdcall	Initialize(DWORD dwMaxFileNum,DWORD dwMaxFileHandleNumAtSameTime,DWORD dwMaxFileNameLen,FILE_ACCESS_METHOD accessMethod);
+	BOOL		Initialize(DWORD dwMaxFileNum,DWORD dwMaxFileHandleNumAtSameTime,DWORD dwMaxFileNameLen,FILE_ACCESS_METHOD accessMethod);
 	/**
 	 *
 	 * \param pPackFileHandle 
 	 * \return 
 	 */
-	DWORD	__stdcall	GetFileNum(void* pPackFileHandle);
+	DWORD		GetFileNum(void* pPackFileHandle);
 	/**
 	 *
 	 * \param pPackFileHandle 
@@ -133,20 +131,20 @@ public:
 	 * \param dwMaxNum 
 	 * \return 
 	 */
-	DWORD	__stdcall	CreateFileInfoList(void* pPackFileHandle,FSFILE_ATOM_INFO** ppInfoList,DWORD dwMaxNum);
+	DWORD		CreateFileInfoList(void* pPackFileHandle,FSFILE_ATOM_INFO** ppInfoList,DWORD dwMaxNum);
 	/**
 	 *
 	 * \param pPackFileHandle 
 	 * \param pInfoList 
 	 */
-	void	__stdcall	DeleteFileInfoList(void* pPackFileHandle,FSFILE_ATOM_INFO* pInfoList);
+	void		DeleteFileInfoList(void* pPackFileHandle,FSFILE_ATOM_INFO* pInfoList);
 
 	/**
 	 *
 	 * \param szFileName 
 	 * \return 
 	 */
-	BOOL	__stdcall	IsExistInFileStorage(char* szFileName);
+	BOOL		IsExistInFileStorage(char* szFileName);
 
 	/**
 	 *
@@ -154,52 +152,52 @@ public:
 	 * \param dwFlag 
 	 * \return 
 	 */
-	BOOL	__stdcall	LockPackFile(void* pPackFileHandle,DWORD dwFlag);
+	BOOL		LockPackFile(void* pPackFileHandle,DWORD dwFlag);
 	/**
 	 *
 	 * \param pPackFileHandle 
 	 * \param szFileName 
 	 * \return 
 	 */
-	BOOL	__stdcall	InsertFileToPackFile(void* pPackFileHandle,char* szFileName);
+	BOOL		InsertFileToPackFile(void* pPackFileHandle,char* szFileName);
 	/**
 	 *
 	 * \param szFileName 
 	 * \return 
 	 */
-	BOOL	__stdcall	DeleteFileFromPackFile(char* szFileName);
+	BOOL		DeleteFileFromPackFile(char* szFileName);
 	/**
 	 *
 	 * \param pPackFileHandle 
 	 * \param pCallBackFunc 
 	 * \return 
 	 */
-	BOOL	__stdcall	UnlockPackFile(void* pPackFileHandle,LOAD_CALLBACK_FUNC pCallBackFunc);
+	BOOL		UnlockPackFile(void* pPackFileHandle,LOAD_CALLBACK_FUNC pCallBackFunc);
 
 	/**
 	 *
 	 * \param szFileName 
 	 * \return 
 	 */
-	BOOL	__stdcall	ExtractFile(char* szFileName);
+	BOOL		ExtractFile(char* szFileName);
 	/**
 	 *
 	 * \return 
 	 */
-	BOOL	__stdcall	ExtractAllFiles();
+	BOOL		ExtractAllFiles();
 	/**
 	 *
 	 * \param pPackFileHandle 
 	 * \return 
 	 */
-	DWORD	__stdcall	ExtractAllFilesFromPackFile(void* pPackFileHandle);
+	DWORD		ExtractAllFilesFromPackFile(void* pPackFileHandle);
 
 	/**
 	 *
 	 * \param szFileName 
 	 * \param dwAccessMode 
 	 */
-	void*	__stdcall	FSOpenFile(char* szFileName,DWORD dwAccessMode);
+	void*		FSOpenFile(char* szFileName,DWORD dwAccessMode);
 	/**
 	 *
 	 * \param pFP 
@@ -207,7 +205,7 @@ public:
 	 * \param ... 
 	 * \return 
 	 */
-	int		__stdcall	FSScanf(void* pFP,char* szFormat, ...);
+	int			FSScanf(void* pFP,char* szFormat, ...);
 	/**
 	 *
 	 * \param pFP 
@@ -215,7 +213,7 @@ public:
 	 * \param dwLen 
 	 * \return 
 	 */
-	DWORD	__stdcall	FSRead(void* pFP,void* pDest,DWORD dwLen);
+	DWORD		FSRead(void* pFP,void* pDest,DWORD dwLen);
 	/**
 	 *
 	 * \param pFP 
@@ -223,13 +221,13 @@ public:
 	 * \param seekBase 
 	 * \return 
 	 */
-	DWORD	__stdcall	FSSeek(void* pFP,DWORD dwOffset,FSFILE_SEEK seekBase);
+	DWORD		FSSeek(void* pFP,DWORD dwOffset,FSFILE_SEEK seekBase);
 	/**
 	 *
 	 * \param pFP 
 	 * \return 
 	 */
-	BOOL	__stdcall	FSCloseFile(void* pFP);
+	BOOL		FSCloseFile(void* pFP);
 
 	/**
 	 *
@@ -237,19 +235,19 @@ public:
 	 * \param pFileInfo 
 	 * \return 
 	 */
-	BOOL	__stdcall	GetPackFileInfo(void* pPackFileHandle,FSPACK_FILE_INFO* pFileInfo);
+	BOOL		GetPackFileInfo(void* pPackFileHandle,FSPACK_FILE_INFO* pFileInfo);
 	/**
 	 *
 	 * \param szFileName 
 	 * \param dwFlag 
 	 * \return 
 	 */
-	BOOL	__stdcall	BeginLogging(char* szFileName,DWORD dwFlag);
+	BOOL		BeginLogging(char* szFileName,DWORD dwFlag);
 	/**
 	 *
 	 * \return 
 	 */
-	BOOL	__stdcall	EndLogging();
+	BOOL		EndLogging();
 	
 
 

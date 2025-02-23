@@ -411,7 +411,7 @@ void ReleaseGameLogin()
 	pBlockWnd->Remove();	
 }
 
-DWORD __stdcall AfterRenderGameLogin()
+DWORD AfterRenderGameLogin()
 {
 	g_pSprManager->RenderAllSprite();	
 
@@ -439,7 +439,7 @@ DWORD __stdcall AfterRenderGameLogin()
 	return 0;
 }
 
-DWORD __stdcall BeforeRenderGameLogin()
+DWORD BeforeRenderGameLogin()
 {
 	g_pSprManager->RenderBackground();	
 	return 0;

@@ -4,8 +4,8 @@
 #include "executive.h"
 
 
-//	GLOBAL_FUNC_DLL DWORD			__stdcall	QBHSelect(QBHASH_HANDLE pHash,DWORD OUT* pItems,DWORD dwMaxItemNum,DWORD dwKeyData);
-//GLOBAL_FUNC_DLL void*			__stdcall	QBHInsert(QBHASH_HANDLE pHash,DWORD dwItem,DWORD dwKeyData);
+//	GLOBAL_FUNC_DLL DWORD				QBHSelect(QBHASH_HANDLE pHash,DWORD OUT* pItems,DWORD dwMaxItemNum,DWORD dwKeyData);
+//GLOBAL_FUNC_DLL void*				QBHInsert(QBHASH_HANDLE pHash,DWORD dwItem,DWORD dwKeyData);
 
 
 void CGXMapObject::Cleanup()

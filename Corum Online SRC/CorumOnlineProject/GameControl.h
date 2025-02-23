@@ -212,8 +212,8 @@ extern void	(*Render[ MAX_RENDER_MODE ])();
 extern BOOL	(*InitGameProcess[ MAX_UPDATE_GAME ])();
 extern void (*UpdateGameProcess[ MAX_UPDATE_GAME ])();
 extern void	(*ReleaseGameProcess[MAX_UPDATE_GAME])();
-extern DWORD (__stdcall *AfterRender[ MAX_UPDATE_GAME ])();
-extern DWORD (__stdcall *BeforeRender[ MAX_UPDATE_GAME ])();
+extern DWORD (*AfterRender[ MAX_UPDATE_GAME ])();
+extern DWORD (*BeforeRender[ MAX_UPDATE_GAME ])();
 extern UPDATE_GAME_STATUS GetGameStatus();
 extern BOOL SetGameStatus( UPDATE_GAME_STATUS bStatus );
 

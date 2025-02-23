@@ -31,12 +31,12 @@ CItemQueue::~CItemQueue()
 	delete [] m_pIndexBufferPerItem;
 }
 
-GLOBAL_FUNC_DLL ITEMQ_HANDLE __stdcall CreateItemQueue()
+GLOBAL_FUNC_DLL ITEMQ_HANDLE  CreateItemQueue()
 {
 	CItemQueue*		pQ = new CItemQueue;
 	return pQ;
 }
-GLOBAL_FUNC_DLL void __stdcall ReleaseItemQueue(ITEMQ_HANDLE pQ)
+GLOBAL_FUNC_DLL void  ReleaseItemQueue(ITEMQ_HANDLE pQ)
 {
 	if (pQ)
 	{
@@ -44,21 +44,21 @@ GLOBAL_FUNC_DLL void __stdcall ReleaseItemQueue(ITEMQ_HANDLE pQ)
 	}
 }
 
-GLOBAL_FUNC_DLL DWORD __stdcall GetItemNum(ITEMQ_HANDLE pQ)
+GLOBAL_FUNC_DLL DWORD  GetItemNum(ITEMQ_HANDLE pQ)
 {
 	return ((CItemQueue*)pQ)->m_dwWritedItemNum;
 }
-GLOBAL_FUNC_DLL DWORD __stdcall GetItemNumWithType(ITEMQ_HANDLE pQ,DWORD dwTypeID)	
+GLOBAL_FUNC_DLL DWORD  GetItemNumWithType(ITEMQ_HANDLE pQ,DWORD dwTypeID)	
 {
 	return ((CItemQueue*)pQ)->m_pIndexBufferPerItem[dwTypeID].dwIndexNum;
 }
-GLOBAL_FUNC_DLL void __stdcall ResetReadPosition(ITEMQ_HANDLE pQ)	
+GLOBAL_FUNC_DLL void  ResetReadPosition(ITEMQ_HANDLE pQ)	
 {
 	((CItemQueue*)pQ)->m_dwReadedItemNum = 0;
 	((CItemQueue*)pQ)->m_dwCurrentReadOffset = 0;
 }
 
-GLOBAL_FUNC_DLL BOOL __stdcall BeginInitialize(ITEMQ_HANDLE pQ,DWORD dwMaxTypeNum)
+GLOBAL_FUNC_DLL BOOL  BeginInitialize(ITEMQ_HANDLE pQ,DWORD dwMaxTypeNum)
 {
 	((CItemQueue*)pQ)->m_dwMaxTypeNum = dwMaxTypeNum;
 	((CItemQueue*)pQ)->m_pIndexBufferPerItem = new ITEM_INDEX_BUFFER[dwMaxTypeNum];
@@ -67,7 +67,7 @@ GLOBAL_FUNC_DLL BOOL __stdcall BeginInitialize(ITEMQ_HANDLE pQ,DWORD dwMaxTypeNu
 	return TRUE;
 }
 
-GLOBAL_FUNC_DLL BOOL __stdcall SetType(ITEMQ_HANDLE pQ,DWORD dwTypeID,DWORD dwItemSize,void* pFunc,DWORD dwMaxNum)
+GLOBAL_FUNC_DLL BOOL  SetType(ITEMQ_HANDLE pQ,DWORD dwTypeID,DWORD dwItemSize,void* pFunc,DWORD dwMaxNum)
 {
 
 	// dwTypeID 는 컬럼 인덱스이므로 type종류갯수보다 작은 수여야 한다.
@@ -87,7 +87,7 @@ lb_return:
 	return bResult;
 
 }
-GLOBAL_FUNC_DLL void __stdcall EndInitialize(ITEMQ_HANDLE pQ)
+GLOBAL_FUNC_DLL void  EndInitialize(ITEMQ_HANDLE pQ)
 {
 	for (DWORD i=0; i<((CItemQueue*)pQ)->m_dwMaxTypeNum; i++)
 	{
@@ -95,7 +95,7 @@ GLOBAL_FUNC_DLL void __stdcall EndInitialize(ITEMQ_HANDLE pQ)
 	}
 	((CItemQueue*)pQ)->m_pItemBuffer = new char[((CItemQueue*)pQ)->m_dwMaxBufferSize];
 }
-GLOBAL_FUNC_DLL BOOL __stdcall PushItem(ITEMQ_HANDLE pQ,DWORD dwTypeID,char* pItem)
+GLOBAL_FUNC_DLL BOOL  PushItem(ITEMQ_HANDLE pQ,DWORD dwTypeID,char* pItem)
 {
 	BOOL	bResult = FALSE;
 	DWORD	dwSize;
@@ -122,7 +122,7 @@ lb_return:
 	return bResult;
 }
 
-GLOBAL_FUNC_DLL char* __stdcall GetItemSeq(ITEMQ_HANDLE pQ,DWORD* pdwTypeID,void** ppFunc)
+GLOBAL_FUNC_DLL char*  GetItemSeq(ITEMQ_HANDLE pQ,DWORD* pdwTypeID,void** ppFunc)
 {
 	char*	pItem = NULL;
 	DWORD	dwTypeID;
@@ -140,13 +140,13 @@ GLOBAL_FUNC_DLL char* __stdcall GetItemSeq(ITEMQ_HANDLE pQ,DWORD* pdwTypeID,void
 lb_return:
 	return pItem;
 }
-GLOBAL_FUNC_DLL char* __stdcall GetItem(ITEMQ_HANDLE pQ,void** ppFunc,DWORD dwTypeID,DWORD dwSeqIndex)
+GLOBAL_FUNC_DLL char*  GetItem(ITEMQ_HANDLE pQ,void** ppFunc,DWORD dwTypeID,DWORD dwSeqIndex)
 {
 	*ppFunc = ((CItemQueue*)pQ)->m_pIndexBufferPerItem[dwTypeID].pFunc;
 	return (char*)((CItemQueue*)pQ)->m_pIndexBufferPerItem[dwTypeID].pIndexBuffer[dwSeqIndex];
 }
 
-GLOBAL_FUNC_DLL void __stdcall Clear(ITEMQ_HANDLE pQ)
+GLOBAL_FUNC_DLL void  Clear(ITEMQ_HANDLE pQ)
 {
 	((CItemQueue*)pQ)->m_dwCurrentReadOffset = 0;
 	((CItemQueue*)pQ)->m_dwCurrentWriteOffset = 0;

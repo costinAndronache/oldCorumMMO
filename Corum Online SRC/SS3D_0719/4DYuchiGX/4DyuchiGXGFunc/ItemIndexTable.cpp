@@ -13,18 +13,18 @@ CItemIndexTable::CItemIndexTable()
 	memset(this,0,sizeof(CItemIndexTable));
 }
 
-GLOBAL_FUNC_DLL ITEMTABLE_HANDLE __stdcall ITCreate()
+GLOBAL_FUNC_DLL ITEMTABLE_HANDLE  ITCreate()
 {
 	CItemIndexTable*	pITable = new CItemIndexTable;
 	return pITable;
 }
-GLOBAL_FUNC_DLL void __stdcall	ITRelease(ITEMTABLE_HANDLE pIT)
+GLOBAL_FUNC_DLL void 	ITRelease(ITEMTABLE_HANDLE pIT)
 {
 	CItemIndexTable*	pITable = (CItemIndexTable*)pIT;
 	delete pITable;
 }
 
-GLOBAL_FUNC_DLL BOOL __stdcall ITInitialize(ITEMTABLE_HANDLE pIT,DWORD dwMaxItemNum)
+GLOBAL_FUNC_DLL BOOL  ITInitialize(ITEMTABLE_HANDLE pIT,DWORD dwMaxItemNum)
 {
 	CItemIndexTable*	pITable = (CItemIndexTable*)pIT;
 
@@ -47,7 +47,7 @@ GLOBAL_FUNC_DLL BOOL __stdcall ITInitialize(ITEMTABLE_HANDLE pIT,DWORD dwMaxItem
 
 	return TRUE;
 }
-GLOBAL_FUNC_DLL DWORD __stdcall ITAddItem(ITEMTABLE_HANDLE pIT,void* pVoid)
+GLOBAL_FUNC_DLL DWORD  ITAddItem(ITEMTABLE_HANDLE pIT,void* pVoid)
 {
 	CItemIndexTable*	pITable = (CItemIndexTable*)pIT;
 
@@ -74,7 +74,7 @@ lb_return:
 	return dwIndex;
 }
 
-GLOBAL_FUNC_DLL BOOL __stdcall ITDeleteItem(ITEMTABLE_HANDLE pIT,DWORD dwItemIndex)
+GLOBAL_FUNC_DLL BOOL  ITDeleteItem(ITEMTABLE_HANDLE pIT,DWORD dwItemIndex)
 {
 	CItemIndexTable*	pITable = (CItemIndexTable*)pIT;
 
@@ -107,12 +107,12 @@ lb_return:
 	return bResult;
 
 }
-GLOBAL_FUNC_DLL DWORD __stdcall ITGetItemNum(ITEMTABLE_HANDLE pIT)
+GLOBAL_FUNC_DLL DWORD  ITGetItemNum(ITEMTABLE_HANDLE pIT)
 {
 	CItemIndexTable*	pITable = (CItemIndexTable*)pIT;
 	return pITable->m_dwItemNum;
 }
-GLOBAL_FUNC_DLL void* __stdcall ITGetItem(ITEMTABLE_HANDLE pIT,DWORD dwItemIndex)
+GLOBAL_FUNC_DLL void*  ITGetItem(ITEMTABLE_HANDLE pIT,DWORD dwItemIndex)
 {
 	void*	pItem = NULL;
 	CItemIndexTable*	pITable = (CItemIndexTable*)pIT;
@@ -125,7 +125,7 @@ lb_return:
 	return pItem ;
 	
 }
-GLOBAL_FUNC_DLL void* __stdcall ITGetItemSequential(ITEMTABLE_HANDLE pIT,DWORD dwSeqIndex)
+GLOBAL_FUNC_DLL void*  ITGetItemSequential(ITEMTABLE_HANDLE pIT,DWORD dwSeqIndex)
 {
 	void*		pItem = NULL;
 	CItemIndexTable*	pITable = (CItemIndexTable*)pIT;

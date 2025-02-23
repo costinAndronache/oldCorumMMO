@@ -1,14 +1,12 @@
 #include "StdAfx.h"
-#ifndef GLOBAL_FUNC_DLL
-#define GLOBAL_FUNC_DLL extern "C" __declspec(dllexport)
-#endif
+
 
 #include <math.h>
 #include <stdio.h>
 #include "global.h"
 #include <cassert>
 
-GLOBAL_FUNC_DLL BOOL __stdcall IsValidTri(VECTOR3* pv3Point_0,VECTOR3* pv3Point_1,VECTOR3* pv3Point_2)
+GLOBAL_FUNC_DLL BOOL   IsValidTri(VECTOR3* pv3Point_0,VECTOR3* pv3Point_1,VECTOR3* pv3Point_2)
 {
 	BOOL	bResult = FALSE;
 	if (*pv3Point_0 == *pv3Point_1)
@@ -26,7 +24,7 @@ lb_return:
 	return bResult;
 }
 
-GLOBAL_FUNC_DLL BOOL __stdcall IsValidFloat(float f)
+GLOBAL_FUNC_DLL BOOL   IsValidFloat(float f)
 {
 	BOOL		bResult;
 	__asm 
@@ -45,7 +43,7 @@ lb_return:
 	return bResult;
 
 }
-GLOBAL_FUNC_DLL BOOL __stdcall IsValidVector3(VECTOR3* pv3,DWORD dwNum)
+GLOBAL_FUNC_DLL BOOL   IsValidVector3(VECTOR3* pv3,DWORD dwNum)
 {
 	BOOL		bResult;
 	__asm 
@@ -79,14 +77,14 @@ lb_return:
 			
 
 
-GLOBAL_FUNC_DLL void __stdcall SET_VECTOR3(VECTOR3* pv3,float fVal)
+GLOBAL_FUNC_DLL void   SET_VECTOR3(VECTOR3* pv3,float fVal)
 {
 	pv3->x = fVal;
 	pv3->y = fVal;
 	pv3->z = fVal;
 }
 #ifdef _USE_SSE
-GLOBAL_FUNC_DLL void __stdcall VECTOR3_ADD_VECTOR3(VECTOR3* pv3Result,VECTOR3* pv3Arg1,VECTOR3* pv3Arg2)
+GLOBAL_FUNC_DLL void   VECTOR3_ADD_VECTOR3(VECTOR3* pv3Result,VECTOR3* pv3Arg1,VECTOR3* pv3Arg2)
 {
 	__asm
 	{
@@ -112,7 +110,7 @@ GLOBAL_FUNC_DLL void __stdcall VECTOR3_ADD_VECTOR3(VECTOR3* pv3Result,VECTOR3* p
 	}
 }
 #else
-GLOBAL_FUNC_DLL void __stdcall VECTOR3_ADD_VECTOR3(VECTOR3* pv3Result,VECTOR3* pv3Arg1,VECTOR3* pv3Arg2)
+GLOBAL_FUNC_DLL void   VECTOR3_ADD_VECTOR3(VECTOR3* pv3Result,VECTOR3* pv3Arg1,VECTOR3* pv3Arg2)
 {
 	pv3Result->x = pv3Arg1->x + pv3Arg2->x;
 	pv3Result->y = pv3Arg1->y + pv3Arg2->y;
@@ -121,7 +119,7 @@ GLOBAL_FUNC_DLL void __stdcall VECTOR3_ADD_VECTOR3(VECTOR3* pv3Result,VECTOR3* p
 #endif
 
 #ifdef _USE_SSE
-GLOBAL_FUNC_DLL void __stdcall VECTOR3_SUB_VECTOR3(VECTOR3* pv3Result,VECTOR3* pv3Arg1,VECTOR3* pv3Arg2)
+GLOBAL_FUNC_DLL void   VECTOR3_SUB_VECTOR3(VECTOR3* pv3Result,VECTOR3* pv3Arg1,VECTOR3* pv3Arg2)
 {
 //	RDTSC_BEGIN
 	__asm
@@ -149,7 +147,7 @@ GLOBAL_FUNC_DLL void __stdcall VECTOR3_SUB_VECTOR3(VECTOR3* pv3Result,VECTOR3* p
 //	RDTSC_END
 }
 #else
-GLOBAL_FUNC_DLL void __stdcall VECTOR3_SUB_VECTOR3(VECTOR3* pv3Result,VECTOR3* pv3Arg1,VECTOR3* pv3Arg2)
+GLOBAL_FUNC_DLL void   VECTOR3_SUB_VECTOR3(VECTOR3* pv3Result,VECTOR3* pv3Arg1,VECTOR3* pv3Arg2)
 {
 	pv3Result->x = pv3Arg1->x - pv3Arg2->x;
 	pv3Result->y = pv3Arg1->y - pv3Arg2->y;
@@ -157,7 +155,7 @@ GLOBAL_FUNC_DLL void __stdcall VECTOR3_SUB_VECTOR3(VECTOR3* pv3Result,VECTOR3* p
 }
 #endif
 #ifdef _USE_SSE
-GLOBAL_FUNC_DLL void __stdcall VECTOR3_MUL_VECTOR3(VECTOR3* pv3Result,VECTOR3* pv3Arg1,VECTOR3* pv3Arg2)
+GLOBAL_FUNC_DLL void   VECTOR3_MUL_VECTOR3(VECTOR3* pv3Result,VECTOR3* pv3Arg1,VECTOR3* pv3Arg2)
 {
 	__asm
 	{
@@ -185,7 +183,7 @@ GLOBAL_FUNC_DLL void __stdcall VECTOR3_MUL_VECTOR3(VECTOR3* pv3Result,VECTOR3* p
 	}
 }
 #else
-GLOBAL_FUNC_DLL void __stdcall VECTOR3_MUL_VECTOR3(VECTOR3* pv3Result,VECTOR3* pv3Arg1,VECTOR3* pv3Arg2)
+GLOBAL_FUNC_DLL void   VECTOR3_MUL_VECTOR3(VECTOR3* pv3Result,VECTOR3* pv3Arg1,VECTOR3* pv3Arg2)
 {
 	pv3Result->x = pv3Arg1->x * pv3Arg2->x;
 	pv3Result->y = pv3Arg1->y * pv3Arg2->y;
@@ -194,7 +192,7 @@ GLOBAL_FUNC_DLL void __stdcall VECTOR3_MUL_VECTOR3(VECTOR3* pv3Result,VECTOR3* p
 #endif
 
 #ifdef _USE_SSE
-GLOBAL_FUNC_DLL void __stdcall VECTOR3_DIV_VECTOR3(VECTOR3* pv3Result,VECTOR3* pv3Arg1,VECTOR3* pv3Arg2)
+GLOBAL_FUNC_DLL void   VECTOR3_DIV_VECTOR3(VECTOR3* pv3Result,VECTOR3* pv3Arg1,VECTOR3* pv3Arg2)
 {
 	__asm
 	{
@@ -222,7 +220,7 @@ GLOBAL_FUNC_DLL void __stdcall VECTOR3_DIV_VECTOR3(VECTOR3* pv3Result,VECTOR3* p
 	}
 }
 #else
-GLOBAL_FUNC_DLL void __stdcall VECTOR3_DIV_VECTOR3(VECTOR3* pv3Result,VECTOR3* pv3Arg1,VECTOR3* pv3Arg2)
+GLOBAL_FUNC_DLL void   VECTOR3_DIV_VECTOR3(VECTOR3* pv3Result,VECTOR3* pv3Arg1,VECTOR3* pv3Arg2)
 {
 	pv3Result->x = pv3Arg1->x / pv3Arg2->x;
 	pv3Result->y = pv3Arg1->y / pv3Arg2->y;
@@ -230,7 +228,7 @@ GLOBAL_FUNC_DLL void __stdcall VECTOR3_DIV_VECTOR3(VECTOR3* pv3Result,VECTOR3* p
 }
 #endif
 #ifdef _USE_SSE
-GLOBAL_FUNC_DLL void __stdcall VECTOR3_ADDEQU_VECTOR3(VECTOR3* pv3Result,VECTOR3* pv3Arg1)
+GLOBAL_FUNC_DLL void   VECTOR3_ADDEQU_VECTOR3(VECTOR3* pv3Result,VECTOR3* pv3Arg1)
 {
 	__asm
 	{
@@ -255,7 +253,7 @@ GLOBAL_FUNC_DLL void __stdcall VECTOR3_ADDEQU_VECTOR3(VECTOR3* pv3Result,VECTOR3
 	}
 }
 #else
-GLOBAL_FUNC_DLL void __stdcall VECTOR3_ADDEQU_VECTOR3(VECTOR3* pv3Result,VECTOR3* pv3Arg1)
+GLOBAL_FUNC_DLL void   VECTOR3_ADDEQU_VECTOR3(VECTOR3* pv3Result,VECTOR3* pv3Arg1)
 {
 	pv3Result->x += pv3Arg1->x;
 	pv3Result->y += pv3Arg1->y;
@@ -264,7 +262,7 @@ GLOBAL_FUNC_DLL void __stdcall VECTOR3_ADDEQU_VECTOR3(VECTOR3* pv3Result,VECTOR3
 #endif
 
 #ifdef _USE_SSE
-GLOBAL_FUNC_DLL void __stdcall VECTOR3_SUBEQU_VECTOR3(VECTOR3* pv3Result,VECTOR3* pv3Arg1)
+GLOBAL_FUNC_DLL void   VECTOR3_SUBEQU_VECTOR3(VECTOR3* pv3Result,VECTOR3* pv3Arg1)
 {
 	__asm
 	{
@@ -289,7 +287,7 @@ GLOBAL_FUNC_DLL void __stdcall VECTOR3_SUBEQU_VECTOR3(VECTOR3* pv3Result,VECTOR3
 	}
 }
 #else
-GLOBAL_FUNC_DLL void __stdcall VECTOR3_SUBEQU_VECTOR3(VECTOR3* pv3Result,VECTOR3* pv3Arg1)
+GLOBAL_FUNC_DLL void   VECTOR3_SUBEQU_VECTOR3(VECTOR3* pv3Result,VECTOR3* pv3Arg1)
 {
 	pv3Result->x -= pv3Arg1->x;
 	pv3Result->y -= pv3Arg1->y;
@@ -298,7 +296,7 @@ GLOBAL_FUNC_DLL void __stdcall VECTOR3_SUBEQU_VECTOR3(VECTOR3* pv3Result,VECTOR3
 #endif
 
 #ifdef _USE_SSE
-GLOBAL_FUNC_DLL void __stdcall VECTOR3_MULEQU_VECTOR3(VECTOR3* pv3Result,VECTOR3* pv3Arg1)
+GLOBAL_FUNC_DLL void   VECTOR3_MULEQU_VECTOR3(VECTOR3* pv3Result,VECTOR3* pv3Arg1)
 {
 	__asm
 	{
@@ -323,7 +321,7 @@ GLOBAL_FUNC_DLL void __stdcall VECTOR3_MULEQU_VECTOR3(VECTOR3* pv3Result,VECTOR3
 	}
 }
 #else
-GLOBAL_FUNC_DLL void __stdcall VECTOR3_MULEQU_VECTOR3(VECTOR3* pv3Result,VECTOR3* pv3Arg1)
+GLOBAL_FUNC_DLL void   VECTOR3_MULEQU_VECTOR3(VECTOR3* pv3Result,VECTOR3* pv3Arg1)
 {
 	pv3Result->x *= pv3Arg1->x;
 	pv3Result->y *= pv3Arg1->y;
@@ -332,7 +330,7 @@ GLOBAL_FUNC_DLL void __stdcall VECTOR3_MULEQU_VECTOR3(VECTOR3* pv3Result,VECTOR3
 #endif
 
 #ifdef _USE_SSE
-GLOBAL_FUNC_DLL void __stdcall VECTOR3_DIVEQU_VECTOR3(VECTOR3* pv3Result,VECTOR3* pv3Arg1)
+GLOBAL_FUNC_DLL void   VECTOR3_DIVEQU_VECTOR3(VECTOR3* pv3Result,VECTOR3* pv3Arg1)
 {
 	__asm
 	{
@@ -359,7 +357,7 @@ GLOBAL_FUNC_DLL void __stdcall VECTOR3_DIVEQU_VECTOR3(VECTOR3* pv3Result,VECTOR3
 	}
 }
 #else
-GLOBAL_FUNC_DLL void __stdcall VECTOR3_DIVEQU_VECTOR3(VECTOR3* pv3Result,VECTOR3* pv3Arg1)
+GLOBAL_FUNC_DLL void   VECTOR3_DIVEQU_VECTOR3(VECTOR3* pv3Result,VECTOR3* pv3Arg1)
 {
 	pv3Result->x /= pv3Arg1->x;
 	pv3Result->y /= pv3Arg1->y;
@@ -368,7 +366,7 @@ GLOBAL_FUNC_DLL void __stdcall VECTOR3_DIVEQU_VECTOR3(VECTOR3* pv3Result,VECTOR3
 #endif
 
 #ifdef _USE_SSE
-GLOBAL_FUNC_DLL void __stdcall VECTOR3_ADDEQU_FLOAT(VECTOR3* pv3Result,float fVal)
+GLOBAL_FUNC_DLL void   VECTOR3_ADDEQU_FLOAT(VECTOR3* pv3Result,float fVal)
 {
 	__asm
 	{
@@ -388,7 +386,7 @@ GLOBAL_FUNC_DLL void __stdcall VECTOR3_ADDEQU_FLOAT(VECTOR3* pv3Result,float fVa
 	}
 }
 #else
-GLOBAL_FUNC_DLL void __stdcall VECTOR3_ADDEQU_FLOAT(VECTOR3* pv3Result,float fVal)
+GLOBAL_FUNC_DLL void   VECTOR3_ADDEQU_FLOAT(VECTOR3* pv3Result,float fVal)
 {
 	pv3Result->x += fVal;
 	pv3Result->y += fVal;
@@ -397,7 +395,7 @@ GLOBAL_FUNC_DLL void __stdcall VECTOR3_ADDEQU_FLOAT(VECTOR3* pv3Result,float fVa
 #endif
 
 #ifdef _USE_SSE
-GLOBAL_FUNC_DLL void __stdcall VECTOR3_SUBEQU_FLOAT(VECTOR3* pv3Result,float fVal)
+GLOBAL_FUNC_DLL void   VECTOR3_SUBEQU_FLOAT(VECTOR3* pv3Result,float fVal)
 {	
 	__asm
 	{
@@ -417,7 +415,7 @@ GLOBAL_FUNC_DLL void __stdcall VECTOR3_SUBEQU_FLOAT(VECTOR3* pv3Result,float fVa
 	}
 }
 #else
-GLOBAL_FUNC_DLL void __stdcall VECTOR3_SUBEQU_FLOAT(VECTOR3* pv3Result,float fVal)
+GLOBAL_FUNC_DLL void   VECTOR3_SUBEQU_FLOAT(VECTOR3* pv3Result,float fVal)
 {
 	pv3Result->x -= fVal;
 	pv3Result->y -= fVal;
@@ -427,7 +425,7 @@ GLOBAL_FUNC_DLL void __stdcall VECTOR3_SUBEQU_FLOAT(VECTOR3* pv3Result,float fVa
 
 
 #ifdef _USE_SSE
-GLOBAL_FUNC_DLL void __stdcall VECTOR3_MULEQU_FLOAT(VECTOR3* pv3Result,float fVal)
+GLOBAL_FUNC_DLL void   VECTOR3_MULEQU_FLOAT(VECTOR3* pv3Result,float fVal)
 {
 	__asm
 	{
@@ -447,7 +445,7 @@ GLOBAL_FUNC_DLL void __stdcall VECTOR3_MULEQU_FLOAT(VECTOR3* pv3Result,float fVa
 	}
 }
 #else
-GLOBAL_FUNC_DLL void __stdcall VECTOR3_MULEQU_FLOAT(VECTOR3* pv3Result,float fVal)
+GLOBAL_FUNC_DLL void   VECTOR3_MULEQU_FLOAT(VECTOR3* pv3Result,float fVal)
 {
 	pv3Result->x *= fVal;
 	pv3Result->y *= fVal;
@@ -457,7 +455,7 @@ GLOBAL_FUNC_DLL void __stdcall VECTOR3_MULEQU_FLOAT(VECTOR3* pv3Result,float fVa
 
 
 #ifdef _USE_SSE
-GLOBAL_FUNC_DLL void __stdcall VECTOR3_DIVEQU_FLOAT(VECTOR3* pv3Result,float fVal)
+GLOBAL_FUNC_DLL void   VECTOR3_DIVEQU_FLOAT(VECTOR3* pv3Result,float fVal)
 {
 	__asm
 	{
@@ -477,7 +475,7 @@ GLOBAL_FUNC_DLL void __stdcall VECTOR3_DIVEQU_FLOAT(VECTOR3* pv3Result,float fVa
 	}
 }
 #else
-GLOBAL_FUNC_DLL void __stdcall VECTOR3_DIVEQU_FLOAT(VECTOR3* pv3Result,float fVal)
+GLOBAL_FUNC_DLL void   VECTOR3_DIVEQU_FLOAT(VECTOR3* pv3Result,float fVal)
 {
 	pv3Result->x /= fVal;
 	pv3Result->y /= fVal;
@@ -487,7 +485,7 @@ GLOBAL_FUNC_DLL void __stdcall VECTOR3_DIVEQU_FLOAT(VECTOR3* pv3Result,float fVa
 
 
 #ifdef _USE_SSE
-GLOBAL_FUNC_DLL void __stdcall VECTOR3_ADD_FLOAT(VECTOR3* pv3Result,VECTOR3* pv3Arg1,float fVal)
+GLOBAL_FUNC_DLL void   VECTOR3_ADD_FLOAT(VECTOR3* pv3Result,VECTOR3* pv3Arg1,float fVal)
 {	
 	__asm
 	{
@@ -509,7 +507,7 @@ GLOBAL_FUNC_DLL void __stdcall VECTOR3_ADD_FLOAT(VECTOR3* pv3Result,VECTOR3* pv3
 	}
 }
 #else
-GLOBAL_FUNC_DLL void __stdcall VECTOR3_ADD_FLOAT(VECTOR3* pv3Result,VECTOR3* pv3Arg1,float fVal)
+GLOBAL_FUNC_DLL void   VECTOR3_ADD_FLOAT(VECTOR3* pv3Result,VECTOR3* pv3Arg1,float fVal)
 {
 	pv3Result->x = pv3Arg1->x + fVal;
 	pv3Result->y = pv3Arg1->y + fVal;
@@ -518,7 +516,7 @@ GLOBAL_FUNC_DLL void __stdcall VECTOR3_ADD_FLOAT(VECTOR3* pv3Result,VECTOR3* pv3
 #endif
 
 #ifdef _USE_SSE
-GLOBAL_FUNC_DLL void __stdcall VECTOR3_SUB_FLOAT(VECTOR3* pv3Result,VECTOR3* pv3Arg1,float fVal)
+GLOBAL_FUNC_DLL void   VECTOR3_SUB_FLOAT(VECTOR3* pv3Result,VECTOR3* pv3Arg1,float fVal)
 {
 	__asm
 	{
@@ -541,7 +539,7 @@ GLOBAL_FUNC_DLL void __stdcall VECTOR3_SUB_FLOAT(VECTOR3* pv3Result,VECTOR3* pv3
 	}
 }
 #else
-GLOBAL_FUNC_DLL void __stdcall VECTOR3_SUB_FLOAT(VECTOR3* pv3Result,VECTOR3* pv3Arg1,float fVal)
+GLOBAL_FUNC_DLL void   VECTOR3_SUB_FLOAT(VECTOR3* pv3Result,VECTOR3* pv3Arg1,float fVal)
 {
 	pv3Result->x = pv3Arg1->x - fVal;
 	pv3Result->y = pv3Arg1->y - fVal;
@@ -551,7 +549,7 @@ GLOBAL_FUNC_DLL void __stdcall VECTOR3_SUB_FLOAT(VECTOR3* pv3Result,VECTOR3* pv3
 
 
 #ifdef _USE_SSE
-GLOBAL_FUNC_DLL void __stdcall VECTOR3_MUL_FLOAT(VECTOR3* pv3Result,VECTOR3* pv3Arg1,float fVal)
+GLOBAL_FUNC_DLL void   VECTOR3_MUL_FLOAT(VECTOR3* pv3Result,VECTOR3* pv3Arg1,float fVal)
 {	
 	__asm
 	{
@@ -573,7 +571,7 @@ GLOBAL_FUNC_DLL void __stdcall VECTOR3_MUL_FLOAT(VECTOR3* pv3Result,VECTOR3* pv3
 	}
 }
 #else
-GLOBAL_FUNC_DLL void __stdcall VECTOR3_MUL_FLOAT(VECTOR3* pv3Result,VECTOR3* pv3Arg1,float fVal)
+GLOBAL_FUNC_DLL void   VECTOR3_MUL_FLOAT(VECTOR3* pv3Result,VECTOR3* pv3Arg1,float fVal)
 {
 	pv3Result->x = pv3Arg1->x * fVal;
 	pv3Result->y = pv3Arg1->y * fVal;
@@ -583,7 +581,7 @@ GLOBAL_FUNC_DLL void __stdcall VECTOR3_MUL_FLOAT(VECTOR3* pv3Result,VECTOR3* pv3
 #endif
 
 #ifdef _USE_SSE
-GLOBAL_FUNC_DLL void __stdcall VECTOR3_DIV_FLOAT(VECTOR3* pv3Result,VECTOR3* pv3Arg1,float fVal)
+GLOBAL_FUNC_DLL void   VECTOR3_DIV_FLOAT(VECTOR3* pv3Result,VECTOR3* pv3Arg1,float fVal)
 {	
 	__asm
 	{
@@ -604,7 +602,7 @@ GLOBAL_FUNC_DLL void __stdcall VECTOR3_DIV_FLOAT(VECTOR3* pv3Result,VECTOR3* pv3
 	}
 }
 #else
-GLOBAL_FUNC_DLL void __stdcall VECTOR3_DIV_FLOAT(VECTOR3* pv3Result,VECTOR3* pv3Arg1,float fVal)
+GLOBAL_FUNC_DLL void   VECTOR3_DIV_FLOAT(VECTOR3* pv3Result,VECTOR3* pv3Arg1,float fVal)
 {
 	pv3Result->x = pv3Arg1->x / fVal;
 	pv3Result->y = pv3Arg1->y / fVal;
@@ -614,7 +612,7 @@ GLOBAL_FUNC_DLL void __stdcall VECTOR3_DIV_FLOAT(VECTOR3* pv3Result,VECTOR3* pv3
 
 
 #ifdef	_USE_SSE
-GLOBAL_FUNC_DLL float __stdcall Sin(float x)
+GLOBAL_FUNC_DLL float   Sin(float x)
 {
 	int	dv = (int)(x / PI);
 	if (abs(dv) >= 1)
@@ -649,7 +647,7 @@ GLOBAL_FUNC_DLL float __stdcall Sin(float x)
 	return result;
 }
 
-GLOBAL_FUNC_DLL float __stdcall Cos(float x)
+GLOBAL_FUNC_DLL float   Cos(float x)
 {
 	int	dv = (int)(x / PI);
 	if (abs(dv) >= 1)
@@ -685,7 +683,7 @@ GLOBAL_FUNC_DLL float __stdcall Cos(float x)
 }
 
 
-GLOBAL_FUNC_DLL float __stdcall ASin(float x)
+GLOBAL_FUNC_DLL float   ASin(float x)
 {
 	float temp[4] = {0.075f,0.166666f,1.0f,1.0f};
 	float result;
@@ -714,7 +712,7 @@ GLOBAL_FUNC_DLL float __stdcall ASin(float x)
 	}
 	return result;
 }
-GLOBAL_FUNC_DLL float __stdcall ACos(float x)
+GLOBAL_FUNC_DLL float   ACos(float x)
 {
 	//float temp[4] = {120.0f,6.0f,1.0f,1.0f};
 
@@ -747,7 +745,7 @@ GLOBAL_FUNC_DLL float __stdcall ACos(float x)
 	return result;
 }
 #else
-GLOBAL_FUNC_DLL float __stdcall Sin(float x)
+GLOBAL_FUNC_DLL float   Sin(float x)
 {
 	int	dv = (int)(x / PI);
 	if (abs(dv) >= 1)
@@ -758,7 +756,7 @@ GLOBAL_FUNC_DLL float __stdcall Sin(float x)
 	float result = x - (x*x*x /6.0f) + (x*x*x*x*x / 120.0f);// - (x*x*x*x*x*x*x / 5040.0f);
 	return result;
 }
-GLOBAL_FUNC_DLL float __stdcall Cos(float x)
+GLOBAL_FUNC_DLL float   Cos(float x)
 {
 	int	dv = (int)(x / PI);
 
@@ -770,13 +768,13 @@ GLOBAL_FUNC_DLL float __stdcall Cos(float x)
 	return result;
 }
 
-GLOBAL_FUNC_DLL float __stdcall ASin(float x)
+GLOBAL_FUNC_DLL float   ASin(float x)
 {
 	float result = x + x*x*x/6.0f + 3.0f/40.0f*x*x*x*x*x;
 	return result;
 }
 
-GLOBAL_FUNC_DLL float __stdcall ACos(float x)
+GLOBAL_FUNC_DLL float   ACos(float x)
 {
 	float result = PI_DIV_2 - x - x*x*x/6.0f - 9.0f/120.0f*x*x*x*x*x;
 	return result;
@@ -786,7 +784,7 @@ GLOBAL_FUNC_DLL float __stdcall ACos(float x)
 
 
 #ifdef _USE_SSE
-GLOBAL_FUNC_DLL float __stdcall DotProduct(VECTOR3* pv3_0,VECTOR3* pv3_1)
+GLOBAL_FUNC_DLL float   DotProduct(VECTOR3* pv3_0,VECTOR3* pv3_1)
 {
 	float	result;
 
@@ -825,7 +823,7 @@ GLOBAL_FUNC_DLL float __stdcall DotProduct(VECTOR3* pv3_0,VECTOR3* pv3_1)
 }
 
 #else
-GLOBAL_FUNC_DLL float __stdcall DotProduct(VECTOR3* pv3_0,VECTOR3* pv3_1)
+GLOBAL_FUNC_DLL float   DotProduct(VECTOR3* pv3_0,VECTOR3* pv3_1)
 {
 	float result;
 
@@ -838,7 +836,7 @@ GLOBAL_FUNC_DLL float __stdcall DotProduct(VECTOR3* pv3_0,VECTOR3* pv3_1)
 
 
 #ifdef _USE_SSE
-GLOBAL_FUNC_DLL void __stdcall TransformVector3_VPTR1(VECTOR3* pv3SrcDest, MATRIX4* pMat,DWORD dwNum)
+GLOBAL_FUNC_DLL void   TransformVector3_VPTR1(VECTOR3* pv3SrcDest, MATRIX4* pMat,DWORD dwNum)
 {
 //	RDTSC_BEGIN
 
@@ -889,7 +887,7 @@ lb_loop:
 	}
 //	RDTSC_END
 }
-GLOBAL_FUNC_DLL void __stdcall TransformNSizeVector3_VPTR1(char* pv3SrcDest,DWORD dwSize,MATRIX4* pMat,DWORD dwNum)
+GLOBAL_FUNC_DLL void   TransformNSizeVector3_VPTR1(char* pv3SrcDest,DWORD dwSize,MATRIX4* pMat,DWORD dwNum)
 {
 		__asm 
 	{
@@ -939,7 +937,7 @@ lb_loop:
 	}
 }
 #else
-GLOBAL_FUNC_DLL void __stdcall TransformVector3_VPTR1(VECTOR3* pv3SrcDest, MATRIX4* pMat,DWORD dwNum)
+GLOBAL_FUNC_DLL void   TransformVector3_VPTR1(VECTOR3* pv3SrcDest, MATRIX4* pMat,DWORD dwNum)
 {
 	VECTOR3	v3;
 	
@@ -958,7 +956,7 @@ GLOBAL_FUNC_DLL void __stdcall TransformVector3_VPTR1(VECTOR3* pv3SrcDest, MATRI
 
 //	RDTSC_END
 }
-GLOBAL_FUNC_DLL void __stdcall TransformNSizeVector3_VPTR1(char* pv3SrcDest,DWORD dwSize,MATRIX4* pMat,DWORD dwNum)
+GLOBAL_FUNC_DLL void   TransformNSizeVector3_VPTR1(char* pv3SrcDest,DWORD dwSize,MATRIX4* pMat,DWORD dwNum)
 {
 	VECTOR3	v3;
 	
@@ -976,7 +974,7 @@ GLOBAL_FUNC_DLL void __stdcall TransformNSizeVector3_VPTR1(char* pv3SrcDest,DWOR
 }
 #endif
 
-GLOBAL_FUNC_DLL void __stdcall TransformV3TOV4(VECTOR4* pv3Dest,VECTOR3* pv3Src, MATRIX4* pMat,DWORD dwNum)
+GLOBAL_FUNC_DLL void   TransformV3TOV4(VECTOR4* pv3Dest,VECTOR3* pv3Src, MATRIX4* pMat,DWORD dwNum)
 {
 	
 	for (DWORD i=0; i<dwNum; i++)
@@ -992,7 +990,7 @@ GLOBAL_FUNC_DLL void __stdcall TransformV3TOV4(VECTOR4* pv3Dest,VECTOR3* pv3Src,
 }
 
 #ifdef _USE_SSE
-GLOBAL_FUNC_DLL void __stdcall TransformVector3_VPTR2(VECTOR3* pv3Dest,VECTOR3* pv3Src, MATRIX4* pMat,DWORD dwNum)
+GLOBAL_FUNC_DLL void   TransformVector3_VPTR2(VECTOR3* pv3Dest,VECTOR3* pv3Src, MATRIX4* pMat,DWORD dwNum)
 {
 //	VECTOR4	v4;
 	__asm 
@@ -1044,7 +1042,7 @@ lb_loop:
 	}
 }
 
-GLOBAL_FUNC_DLL void __stdcall TransformVector4_VPTR2(VECTOR4* pv3Dest,VECTOR4* pv3Src, MATRIX4* pMat,DWORD dwNum)
+GLOBAL_FUNC_DLL void   TransformVector4_VPTR2(VECTOR4* pv3Dest,VECTOR4* pv3Src, MATRIX4* pMat,DWORD dwNum)
 {
 	__asm 
 	{
@@ -1094,7 +1092,7 @@ lb_loop:
 	}
 }
 #else
-GLOBAL_FUNC_DLL void __stdcall TransformVector3_VPTR2(VECTOR3* pv3Dest,VECTOR3* pv3Src, MATRIX4* pMat,DWORD dwNum)
+GLOBAL_FUNC_DLL void   TransformVector3_VPTR2(VECTOR3* pv3Dest,VECTOR3* pv3Src, MATRIX4* pMat,DWORD dwNum)
 {
 	
 	for (DWORD i=0; i<dwNum; i++)
@@ -1108,7 +1106,7 @@ GLOBAL_FUNC_DLL void __stdcall TransformVector3_VPTR2(VECTOR3* pv3Dest,VECTOR3* 
 	}
 }
 
-GLOBAL_FUNC_DLL void __stdcall TransformVector4_VPTR2(VECTOR4* pv3Dest,VECTOR4* pv3Src, MATRIX4* pMat,DWORD dwNum)
+GLOBAL_FUNC_DLL void   TransformVector4_VPTR2(VECTOR4* pv3Dest,VECTOR4* pv3Src, MATRIX4* pMat,DWORD dwNum)
 {
 	
 	for (DWORD i=0; i<dwNum; i++)
@@ -1125,7 +1123,7 @@ GLOBAL_FUNC_DLL void __stdcall TransformVector4_VPTR2(VECTOR4* pv3Dest,VECTOR4* 
 #endif
 
 #ifdef _USE_SSE
-GLOBAL_FUNC_DLL void __stdcall CrossProduct(VECTOR3* r,VECTOR3* u,VECTOR3* v)
+GLOBAL_FUNC_DLL void   CrossProduct(VECTOR3* r,VECTOR3* u,VECTOR3* v)
 {
 	
 	__asm
@@ -1181,7 +1179,7 @@ GLOBAL_FUNC_DLL void __stdcall CrossProduct(VECTOR3* r,VECTOR3* u,VECTOR3* v)
 	}
 }
 #else*/
-GLOBAL_FUNC_DLL void __stdcall CrossProduct(VECTOR3* r,VECTOR3* u,VECTOR3* v)
+GLOBAL_FUNC_DLL void   CrossProduct(VECTOR3* r,VECTOR3* u,VECTOR3* v)
 {
 	VECTOR3	result;
 
@@ -1195,7 +1193,7 @@ GLOBAL_FUNC_DLL void __stdcall CrossProduct(VECTOR3* r,VECTOR3* u,VECTOR3* v)
 #endif
 
 #ifdef _USE_SSE
-GLOBAL_FUNC_DLL void __stdcall Normalize(VECTOR3* OUT vn,VECTOR3* IN v)
+GLOBAL_FUNC_DLL void   Normalize(VECTOR3* OUT vn,VECTOR3* IN v)
 {
 	__asm
 	{
@@ -1229,7 +1227,7 @@ GLOBAL_FUNC_DLL void __stdcall Normalize(VECTOR3* OUT vn,VECTOR3* IN v)
 	}
 }
 #else
-GLOBAL_FUNC_DLL void __stdcall Normalize(VECTOR3* OUT vn,VECTOR3* IN v)
+GLOBAL_FUNC_DLL void   Normalize(VECTOR3* OUT vn,VECTOR3* IN v)
 {
 	float		sqt = (float)sqrt(v->x*v->x + v->y*v->y + v->z*v->z);
 	if (sqt == 0.0f)
@@ -1247,7 +1245,7 @@ GLOBAL_FUNC_DLL void __stdcall Normalize(VECTOR3* OUT vn,VECTOR3* IN v)
 
 #ifdef _USE_SSE
 
-GLOBAL_FUNC_DLL float __stdcall CalcDistance(VECTOR3* pv3Start,VECTOR3* pv3End)
+GLOBAL_FUNC_DLL float   CalcDistance(VECTOR3* pv3Start,VECTOR3* pv3End)
 {
 	
 	float	result;
@@ -1283,7 +1281,7 @@ GLOBAL_FUNC_DLL float __stdcall CalcDistance(VECTOR3* pv3Start,VECTOR3* pv3End)
 	return result;
 }
 #else
-GLOBAL_FUNC_DLL float __stdcall CalcDistance(VECTOR3* pv3Start,VECTOR3* pv3End)
+GLOBAL_FUNC_DLL float   CalcDistance(VECTOR3* pv3Start,VECTOR3* pv3End)
 {
 	float	result;
 
@@ -1299,7 +1297,7 @@ GLOBAL_FUNC_DLL float __stdcall CalcDistance(VECTOR3* pv3Start,VECTOR3* pv3End)
 
 
 #ifdef _USE_SSE
-GLOBAL_FUNC_DLL void __stdcall MatrixMultiply2(MATRIX4* pResult, MATRIX4* mat1, MATRIX4* mat2)
+GLOBAL_FUNC_DLL void   MatrixMultiply2(MATRIX4* pResult, MATRIX4* mat1, MATRIX4* mat2)
 {
 	__asm 
 	{
@@ -1352,7 +1350,7 @@ lp:
 	}
 }
 #else
-GLOBAL_FUNC_DLL void __stdcall MatrixMultiply2(MATRIX4* pResult, MATRIX4* mat1, MATRIX4* mat2)
+GLOBAL_FUNC_DLL void   MatrixMultiply2(MATRIX4* pResult, MATRIX4* mat1, MATRIX4* mat2)
 {
 	MATRIX4 result;
 
@@ -1396,7 +1394,7 @@ GLOBAL_FUNC_DLL void __stdcall MatrixMultiply2(MATRIX4* pResult, MATRIX4* mat1, 
 }
 #endif
 
-GLOBAL_FUNC_DLL float __stdcall CalcCosAngle(VECTOR3* vec1, VECTOR3* vec2)
+GLOBAL_FUNC_DLL float   CalcCosAngle(VECTOR3* vec1, VECTOR3* vec2)
 {
 	float cosang = (float)
 		( (vec1->x*vec2->x + vec1->y*vec2->y + vec1->z*vec2->z) / 
@@ -1406,7 +1404,7 @@ GLOBAL_FUNC_DLL float __stdcall CalcCosAngle(VECTOR3* vec1, VECTOR3* vec2)
 	return cosang;
 }
 
-GLOBAL_FUNC_DLL BOOL __stdcall IsCollisionSpherAndSphere(VECTOR3* pv3PointTarget,float fRsTarget,VECTOR3* pv3PointSrc,float fRsSrc)
+GLOBAL_FUNC_DLL BOOL   IsCollisionSpherAndSphere(VECTOR3* pv3PointTarget,float fRsTarget,VECTOR3* pv3PointSrc,float fRsSrc)
 {
 	BOOL		bResult = FALSE;
 /*
@@ -1432,7 +1430,7 @@ lb_return:
 
 
 
-GLOBAL_FUNC_DLL BOOL __stdcall SetIdentityMatrix(MATRIX4* pMat)
+GLOBAL_FUNC_DLL BOOL   SetIdentityMatrix(MATRIX4* pMat)
 {
     pMat->_12 = pMat->_13 = pMat->_14 = pMat->_21 = pMat->_23 = pMat->_24 = 0.0f;
     pMat->_31 = pMat->_32 = pMat->_34 = pMat->_41 = pMat->_42 = pMat->_43 = 0.0f;
@@ -1441,7 +1439,7 @@ GLOBAL_FUNC_DLL BOOL __stdcall SetIdentityMatrix(MATRIX4* pMat)
 }
 
 
-GLOBAL_FUNC_DLL BOOL __stdcall SetInverseMatrix(MATRIX4* q, MATRIX4* a )
+GLOBAL_FUNC_DLL BOOL   SetInverseMatrix(MATRIX4* q, MATRIX4* a )
 
 {
 	BOOL		bResult = FALSE;
@@ -1482,7 +1480,7 @@ lb_return:
 	return bResult;
 }
 
-GLOBAL_FUNC_DLL void __stdcall SetRotationMatrix(MATRIX4* mat, VECTOR3* vDir, FLOAT fRads )
+GLOBAL_FUNC_DLL void   SetRotationMatrix(MATRIX4* mat, VECTOR3* vDir, FLOAT fRads )
 {
     FLOAT     fCos = (FLOAT)cos( fRads );
     FLOAT     fSin = (FLOAT)sin( fRads );
@@ -1508,13 +1506,13 @@ GLOBAL_FUNC_DLL void __stdcall SetRotationMatrix(MATRIX4* mat, VECTOR3* vDir, FL
     mat->_41 = mat->_42 = mat->_43 = 0.0f;
     mat->_44 = 1.0f;
 }
-GLOBAL_FUNC_DLL void __stdcall MatrixMultiply3(MATRIX4* pResult,MATRIX4* mat1, MATRIX4* mat2, MATRIX4* mat3)
+GLOBAL_FUNC_DLL void   MatrixMultiply3(MATRIX4* pResult,MATRIX4* mat1, MATRIX4* mat2, MATRIX4* mat3)
 {
 	MatrixMultiply2(pResult,mat1,mat2);
 	MatrixMultiply2(pResult,pResult,mat3);
 
 } 
-GLOBAL_FUNC_DLL VOID __stdcall MatrixFromQuaternion(MATRIX4* mat, QUARTERNION* q)
+GLOBAL_FUNC_DLL VOID   MatrixFromQuaternion(MATRIX4* mat, QUARTERNION* q)
 {
     FLOAT xx = q->x*q->x; FLOAT yy = q->y*q->y; FLOAT zz = q->z*q->z;
     FLOAT xy = q->x*q->y; FLOAT xz = q->x*q->z; FLOAT yz = q->y*q->z;
@@ -1536,7 +1534,7 @@ GLOBAL_FUNC_DLL VOID __stdcall MatrixFromQuaternion(MATRIX4* mat, QUARTERNION* q
     mat->_41 = mat->_42 = mat->_43 = 0.0f;
     mat->_44 = 1.0f;
 }
-GLOBAL_FUNC_DLL VOID __stdcall QuaternionSlerp(QUARTERNION* qQ,QUARTERNION* aQ,QUARTERNION* bQ,float fAlpha)
+GLOBAL_FUNC_DLL VOID   QuaternionSlerp(QUARTERNION* qQ,QUARTERNION* aQ,QUARTERNION* bQ,float fAlpha)
 {
     FLOAT fScale1;
     FLOAT fScale2;
@@ -1590,7 +1588,7 @@ GLOBAL_FUNC_DLL VOID __stdcall QuaternionSlerp(QUARTERNION* qQ,QUARTERNION* aQ,Q
 	qQ->z = fScale1*aQ->z + fScale2*bQ->z;
 	qQ->w = fScale1*aQ->w + fScale2*bQ->w;
 }
-GLOBAL_FUNC_DLL void __stdcall TranslateMatrix(MATRIX4* m, VECTOR3* vec)
+GLOBAL_FUNC_DLL void   TranslateMatrix(MATRIX4* m, VECTOR3* vec)
 {
     m->_12 = m->_13 = m->_14 = m->_21 = m->_23 = m->_24 = m->_31 = m->_32 = m->_34 = 0.0f;
     m->_11 = m->_22 = m->_33 = m->_44 = 1.0f;
@@ -1599,7 +1597,7 @@ GLOBAL_FUNC_DLL void __stdcall TranslateMatrix(MATRIX4* m, VECTOR3* vec)
 	m->_43 = vec->z; 
 }
 
-GLOBAL_FUNC_DLL void __stdcall SetScaleMatrix(MATRIX4* m, VECTOR3* v )
+GLOBAL_FUNC_DLL void   SetScaleMatrix(MATRIX4* m, VECTOR3* v )
 {
     m->_12 = m->_13 = m->_14 = m->_21 = m->_23 = m->_24 = 0.0f;
     m->_31 = m->_32 = m->_34 = m->_41 = m->_42 = m->_43 = 0.0f;
@@ -1608,7 +1606,7 @@ GLOBAL_FUNC_DLL void __stdcall SetScaleMatrix(MATRIX4* m, VECTOR3* v )
 }
 
 #ifdef _USE_SSE
-GLOBAL_FUNC_DLL float __stdcall VECTOR3Length(VECTOR3* pv3)
+GLOBAL_FUNC_DLL float   VECTOR3Length(VECTOR3* pv3)
 {
 	float r;
 
@@ -1642,7 +1640,7 @@ GLOBAL_FUNC_DLL float __stdcall VECTOR3Length(VECTOR3* pv3)
 	return (float)r;
 }
 #else
-GLOBAL_FUNC_DLL float __stdcall VECTOR3Length(VECTOR3* pv3)
+GLOBAL_FUNC_DLL float   VECTOR3Length(VECTOR3* pv3)
 {
 	float r = DotProduct(pv3,pv3);
 	r = (float)sqrt( r);
@@ -1651,7 +1649,7 @@ GLOBAL_FUNC_DLL float __stdcall VECTOR3Length(VECTOR3* pv3)
 #endif
 
 #ifdef _USE_SSE
-GLOBAL_FUNC_DLL BOOL __stdcall CalcPlaneEquation(PLANE* pPlane,VECTOR3* pv3Tri)
+GLOBAL_FUNC_DLL BOOL   CalcPlaneEquation(PLANE* pPlane,VECTOR3* pv3Tri)
 {
 //	VECTOR4	v4;
 	__asm
@@ -1745,7 +1743,7 @@ GLOBAL_FUNC_DLL BOOL __stdcall CalcPlaneEquation(PLANE* pPlane,VECTOR3* pv3Tri)
 	return TRUE;
 }
 #else
-GLOBAL_FUNC_DLL BOOL __stdcall CalcPlaneEquation(PLANE* pPlane,VECTOR3* pv3Tri)
+GLOBAL_FUNC_DLL BOOL   CalcPlaneEquation(PLANE* pPlane,VECTOR3* pv3Tri)
 {
 	VECTOR3 u,v,r;
 	
@@ -1766,7 +1764,7 @@ GLOBAL_FUNC_DLL BOOL __stdcall CalcPlaneEquation(PLANE* pPlane,VECTOR3* pv3Tri)
 }
 #endif
 
-GLOBAL_FUNC_DLL BOOL __stdcall IsCollisionSphereAndPlane(VECTOR3* pv3Point,float fRs,PLANE* pPlane)
+GLOBAL_FUNC_DLL BOOL   IsCollisionSphereAndPlane(VECTOR3* pv3Point,float fRs,PLANE* pPlane)
 {	
 	BOOL		bResult = FALSE;
 	float D = (pv3Point->x * pPlane->v3Up.x + pv3Point->y * pPlane->v3Up.y + pv3Point->z * pPlane->v3Up.z + pPlane->D);
@@ -1779,7 +1777,7 @@ GLOBAL_FUNC_DLL BOOL __stdcall IsCollisionSphereAndPlane(VECTOR3* pv3Point,float
 
 	return bResult;
 }
-GLOBAL_FUNC_DLL BOOL __stdcall ComparePlane(PLANE* pTarget,PLANE* pSrc)
+GLOBAL_FUNC_DLL BOOL   ComparePlane(PLANE* pTarget,PLANE* pSrc)
 {
 	BOOL	bResult = FALSE;
 	float	min,cosang;
@@ -1814,7 +1812,7 @@ lb_return:
 	return bResult;
 }
 
-GLOBAL_FUNC_DLL BOOL __stdcall CalcBoundingMesh(VECTOR3* pv3,DWORD dwVertexNum,COLLISION_MESH_OBJECT_DESC* pDesc)
+GLOBAL_FUNC_DLL BOOL   CalcBoundingMesh(VECTOR3* pv3,DWORD dwVertexNum,COLLISION_MESH_OBJECT_DESC* pDesc)
 {
 	
 	float	max_x = -1000000.0f;
@@ -1906,7 +1904,7 @@ GLOBAL_FUNC_DLL BOOL __stdcall CalcBoundingMesh(VECTOR3* pv3,DWORD dwVertexNum,C
 
 	return TRUE;
 }
-GLOBAL_FUNC_DLL float __stdcall CalcAngle(VECTOR3* vec1, VECTOR3* vec2)
+GLOBAL_FUNC_DLL float   CalcAngle(VECTOR3* vec1, VECTOR3* vec2)
 {
 	float ang = (float)CalcCosAngle(vec1,vec2);
 
@@ -1915,7 +1913,7 @@ GLOBAL_FUNC_DLL float __stdcall CalcAngle(VECTOR3* vec1, VECTOR3* vec2)
 	return ang;
 }
 
-GLOBAL_FUNC_DLL void __stdcall MakeViewVolumeWithOrtho(VIEW_VOLUME* pViewVolume,VECTOR3* pv3From,VECTOR3* pv3To,VECTOR3* pv3Up, float fWidth, float fHVRatio, float fFar)
+GLOBAL_FUNC_DLL void   MakeViewVolumeWithOrtho(VIEW_VOLUME* pViewVolume,VECTOR3* pv3From,VECTOR3* pv3To,VECTOR3* pv3Up, float fWidth, float fHVRatio, float fFar)
 {
 	VECTOR3		v3Right, v3Up;
 	VECTOR3		v0v1;
@@ -1979,7 +1977,7 @@ GLOBAL_FUNC_DLL void __stdcall MakeViewVolumeWithOrtho(VIEW_VOLUME* pViewVolume,
 	pViewVolume->bIsOrtho	=	TRUE;
 	pViewVolume->fWidth = fWidth;
 }
-GLOBAL_FUNC_DLL void __stdcall MakeViewVolume(VIEW_VOLUME* pViewVolume,VECTOR3* pv3From,VECTOR3* pv3To,VECTOR3* pv3Up, float fov, float fHVRatio, float fFar)
+GLOBAL_FUNC_DLL void   MakeViewVolume(VIEW_VOLUME* pViewVolume,VECTOR3* pv3From,VECTOR3* pv3To,VECTOR3* pv3Up, float fov, float fHVRatio, float fFar)
 {
 	VECTOR3		v3Right, v3Up;
 	VECTOR3		v0v1;
@@ -2058,7 +2056,7 @@ GLOBAL_FUNC_DLL void __stdcall MakeViewVolume(VIEW_VOLUME* pViewVolume,VECTOR3* 
 //	pViewVolume->fHVRatio	=	fHVRatio;
 
 }
-GLOBAL_FUNC_DLL void __stdcall CreateVertexListWithBox(char* pv3Array36,DWORD dwVertexSize,VECTOR3* pv3Oct)
+GLOBAL_FUNC_DLL void   CreateVertexListWithBox(char* pv3Array36,DWORD dwVertexSize,VECTOR3* pv3Oct)
 {
 	BYTE		bIndex[36] = 
 	{
@@ -2141,7 +2139,7 @@ GLOBAL_FUNC_DLL void __stdcall CreateVertexListWithBox(char* pv3Array36,DWORD dw
 }
 
 #ifdef _USE_SSE
-GLOBAL_FUNC_DLL	void __stdcall PhysiqueTransform(BYTE* pVertexResult,PHYSIQUE_VERTEX* pPhyVertex,DWORD dwVertexNum,DWORD dwSize,MATRIX4* pMatrixEntry)
+GLOBAL_FUNC_DLL	void   PhysiqueTransform(BYTE* pVertexResult,PHYSIQUE_VERTEX* pPhyVertex,DWORD dwVertexNum,DWORD dwSize,MATRIX4* pMatrixEntry)
 {
 	__asm
 	{
@@ -2217,7 +2215,7 @@ lb_return:
 	}
 }
 
-GLOBAL_FUNC_DLL	void __stdcall PhysiqueTransformPosAndWriteUV(BYTE* pVertexResult,PHYSIQUE_VERTEX* pPhyVertex,TVERTEX* ptv,DWORD dwVertexNum,DWORD dwSize,MATRIX4* pMatrixEntry)
+GLOBAL_FUNC_DLL	void   PhysiqueTransformPosAndWriteUV(BYTE* pVertexResult,PHYSIQUE_VERTEX* pPhyVertex,TVERTEX* ptv,DWORD dwVertexNum,DWORD dwSize,MATRIX4* pMatrixEntry)
 {
 	__asm
 	{
@@ -2300,7 +2298,7 @@ lb_loop_bones_num:
 lb_return:
 	}
 }
-void __stdcall PhysiqueTransformPosAndNormal(BYTE* pVertexResult,PHYSIQUE_VERTEX* pPhyVertex,DWORD dwVertexNum,DWORD dwSize,MATRIX4* pMatrixEntry)
+void   PhysiqueTransformPosAndNormal(BYTE* pVertexResult,PHYSIQUE_VERTEX* pPhyVertex,DWORD dwVertexNum,DWORD dwSize,MATRIX4* pMatrixEntry)
 {
 	VECTOR4			v3Normal;
 
@@ -2415,7 +2413,7 @@ lb_return:
 	}
 }
 
-void __stdcall PhysiqueTransformPosAndNormalAndUV(BYTE* pVertexResult,PHYSIQUE_VERTEX* pPhyVertex,TVERTEX* ptv,DWORD dwVertexNum,DWORD dwSize,MATRIX4* pMatrixEntry)
+void   PhysiqueTransformPosAndNormalAndUV(BYTE* pVertexResult,PHYSIQUE_VERTEX* pPhyVertex,TVERTEX* ptv,DWORD dwVertexNum,DWORD dwSize,MATRIX4* pMatrixEntry)
 {
 	VECTOR4			v3Normal;
 
@@ -2539,7 +2537,7 @@ lb_return:
 	}
 }
 #else 
-GLOBAL_FUNC_DLL	void __stdcall PhysiqueTransform(BYTE* pVertexResult,PHYSIQUE_VERTEX* pPhyVertex,DWORD dwVertexNum,DWORD dwSize,MATRIX4* pMatrixEntry)
+GLOBAL_FUNC_DLL	void   PhysiqueTransform(BYTE* pVertexResult,PHYSIQUE_VERTEX* pPhyVertex,DWORD dwVertexNum,DWORD dwSize,MATRIX4* pMatrixEntry)
 {
 	VECTOR3	v3,v3Result;
 	MATRIX4*	pBoneMatrix;
@@ -2584,7 +2582,7 @@ GLOBAL_FUNC_DLL	void __stdcall PhysiqueTransform(BYTE* pVertexResult,PHYSIQUE_VE
 		pVertexResult += dwSize;
 	}
 }
-GLOBAL_FUNC_DLL	void __stdcall PhysiqueTransformPosAndWriteUV(BYTE* pVertexResult,PHYSIQUE_VERTEX* pPhyVertex,TVERTEX* ptv,DWORD dwVertexNum,DWORD dwSize,MATRIX4* pMatrixEntry)
+GLOBAL_FUNC_DLL	void   PhysiqueTransformPosAndWriteUV(BYTE* pVertexResult,PHYSIQUE_VERTEX* pPhyVertex,TVERTEX* ptv,DWORD dwVertexNum,DWORD dwSize,MATRIX4* pMatrixEntry)
 {
 		VECTOR3	v3,v3Result;
 	MATRIX4*	pBoneMatrix;
@@ -2631,7 +2629,7 @@ GLOBAL_FUNC_DLL	void __stdcall PhysiqueTransformPosAndWriteUV(BYTE* pVertexResul
 		pVertexResult += dwSize;
 	}
 }
-GLOBAL_FUNC_DLL	void __stdcall PhysiqueTransformPosAndNormal(BYTE* pVertexResult,PHYSIQUE_VERTEX* pPhyVertex,DWORD dwVertexNum,DWORD dwSize,MATRIX4* pMatrixEntry)
+GLOBAL_FUNC_DLL	void   PhysiqueTransformPosAndNormal(BYTE* pVertexResult,PHYSIQUE_VERTEX* pPhyVertex,DWORD dwVertexNum,DWORD dwSize,MATRIX4* pMatrixEntry)
 {
 	VECTOR3	v3,v3PosResult,v3NormalResult;
 
@@ -2707,7 +2705,7 @@ GLOBAL_FUNC_DLL	void __stdcall PhysiqueTransformPosAndNormal(BYTE* pVertexResult
 		pVertexResult += dwSize;
 	}
 }
-void __stdcall PhysiqueTransformPosAndNormalAndUV(BYTE* pVertexResult,PHYSIQUE_VERTEX* pPhyVertex,TVERTEX* ptv,DWORD dwVertexNum,DWORD dwSize,MATRIX4* pMatrixEntry)
+void   PhysiqueTransformPosAndNormalAndUV(BYTE* pVertexResult,PHYSIQUE_VERTEX* pPhyVertex,TVERTEX* ptv,DWORD dwVertexNum,DWORD dwSize,MATRIX4* pMatrixEntry)
 {
 	VECTOR3	v3,v3PosResult,v3NormalResult;
 
@@ -2788,7 +2786,7 @@ void __stdcall PhysiqueTransformPosAndNormalAndUV(BYTE* pVertexResult,PHYSIQUE_V
 #endif
 
 
-GLOBAL_FUNC_DLL BOOL __stdcall IsCollisionMeshWithScreenCoord(VECTOR3* pv3IntersectPoint,float* pfDist,COLLISION_MESH_OBJECT_DESC* pColMeshDesc,MATRIX4* pMatView,MATRIX4* pMatProj,POINT* ptCursor,SHORT_RECT* pClipRect)
+GLOBAL_FUNC_DLL BOOL   IsCollisionMeshWithScreenCoord(VECTOR3* pv3IntersectPoint,float* pfDist,COLLISION_MESH_OBJECT_DESC* pColMeshDesc,MATRIX4* pMatView,MATRIX4* pMatProj,POINT* ptCursor,SHORT_RECT* pClipRect)
 {
 	BOOL		bResult = FALSE;
 
@@ -2814,7 +2812,7 @@ lb_return:
 	return bResult;
 
 }
-GLOBAL_FUNC_DLL BOOL __stdcall IsCollisionMeshAndRay(VECTOR3* pv3IntersectPoint,float* pfDist,COLLISION_MESH_OBJECT_DESC* pColMeshDesc,VECTOR3* pv3Pos,VECTOR3* pv3Dir)
+GLOBAL_FUNC_DLL BOOL   IsCollisionMeshAndRay(VECTOR3* pv3IntersectPoint,float* pfDist,COLLISION_MESH_OBJECT_DESC* pColMeshDesc,VECTOR3* pv3Pos,VECTOR3* pv3Dir)
 {
 
 	VECTOR3			v3Face[36];
@@ -2878,7 +2876,7 @@ GLOBAL_FUNC_DLL BOOL __stdcall IsCollisionMeshAndRay(VECTOR3* pv3IntersectPoint,
 lb_return:
 	return bResult;
 }/*
-GLOBAL_FUNC_DLL BOOL __stdcall CalcIntersectPointRayAndTri(VECTOR3* pv3IntersectPoint,VECTOR3* pv3Orig,VECTOR3* pv3Dir,VECTOR3* pv3Tri)
+GLOBAL_FUNC_DLL BOOL   CalcIntersectPointRayAndTri(VECTOR3* pv3IntersectPoint,VECTOR3* pv3Orig,VECTOR3* pv3Dir,VECTOR3* pv3Tri)
 {
 	PLANE	plane;
 	VECTOR3	v3To;
@@ -2888,7 +2886,7 @@ GLOBAL_FUNC_DLL BOOL __stdcall CalcIntersectPointRayAndTri(VECTOR3* pv3Intersect
 	CalcPlaneEquation(&plane,pv3Tri);
 	return CalcIntersectPointLineAndPlane(pv3IntersectPoint,&plane,pv3Orig,&v3To,&t);
 }*/
-GLOBAL_FUNC_DLL void __stdcall SetTransformBoundingMesh(COLLISION_MESH_OBJECT_DESC* pDest,COLLISION_MESH_OBJECT_DESC* pSrc,MATRIX4* pMat)
+GLOBAL_FUNC_DLL void   SetTransformBoundingMesh(COLLISION_MESH_OBJECT_DESC* pDest,COLLISION_MESH_OBJECT_DESC* pSrc,MATRIX4* pMat)
 {
 	TransformVector3_VPTR2(
 		&pDest->boundingSphere.v3Point,
@@ -2901,7 +2899,7 @@ GLOBAL_FUNC_DLL void __stdcall SetTransformBoundingMesh(COLLISION_MESH_OBJECT_DE
 		pMat,8);
 
 }
-GLOBAL_FUNC_DLL void __stdcall CalcRay(VECTOR3* pv3Pos,VECTOR3* pv3Dir,DWORD dwPosX,DWORD dwPosY,DWORD dwWidth,DWORD dwHeight,MATRIX4* pProj,MATRIX4* pView)
+GLOBAL_FUNC_DLL void   CalcRay(VECTOR3* pv3Pos,VECTOR3* pv3Dir,DWORD dwPosX,DWORD dwPosY,DWORD dwWidth,DWORD dwHeight,MATRIX4* pProj,MATRIX4* pView)
 {
 	// Compute the vector of the pick ray in screen space
 	VECTOR3		v;
@@ -2923,7 +2921,7 @@ GLOBAL_FUNC_DLL void __stdcall CalcRay(VECTOR3* pv3Pos,VECTOR3* pv3Dir,DWORD dwP
     pv3Pos->y = matViewInverser._42;
     pv3Pos->z = matViewInverser._43;
 }
-GLOBAL_FUNC_DLL void __stdcall ResetTM(NODE_TM* pTM)
+GLOBAL_FUNC_DLL void   ResetTM(NODE_TM* pTM)
 {
 	memset(pTM,0,sizeof(NODE_TM));
 	pTM->fScaleX = 1.0f;
@@ -2933,7 +2931,7 @@ GLOBAL_FUNC_DLL void __stdcall ResetTM(NODE_TM* pTM)
 	pTM->mat4Inverse = pTM->mat4;
 }
 
-GLOBAL_FUNC_DLL BOOL __stdcall IntersectTriangle(VECTOR3* pv3IntersectPoint,VECTOR3* orig,VECTOR3* dir,VECTOR3* v0,VECTOR3* v1, VECTOR3* v2,float* t, float* u, float* v,BOOL bCullBackface)
+GLOBAL_FUNC_DLL BOOL   IntersectTriangle(VECTOR3* pv3IntersectPoint,VECTOR3* orig,VECTOR3* dir,VECTOR3* v0,VECTOR3* v1, VECTOR3* v2,float* t, float* u, float* v,BOOL bCullBackface)
 {
     // Find vectors for two edges sharing vert0
 //  VECTOR3 edge1 = *v1 - *v0;
@@ -3037,7 +3035,7 @@ GLOBAL_FUNC_DLL BOOL __stdcall IntersectTriangle(VECTOR3* pv3IntersectPoint,VECT
 
     return TRUE;
 }
-GLOBAL_FUNC_DLL void __stdcall MakeViewVolumeWithSelectRange(VIEW_VOLUME* pViewVolume,VECTOR3* pv3From, VECTOR3* pv3LeftUp, VECTOR3* pv3RightUp, VECTOR3* pv3RightDown, VECTOR3* pv3LeftDown)
+GLOBAL_FUNC_DLL void   MakeViewVolumeWithSelectRange(VIEW_VOLUME* pViewVolume,VECTOR3* pv3From, VECTOR3* pv3LeftUp, VECTOR3* pv3RightUp, VECTOR3* pv3RightDown, VECTOR3* pv3LeftDown)
 {
 	pViewVolume->bIsOrtho	=	FALSE;
 	pViewVolume->From		=	*pv3From;
@@ -3083,7 +3081,7 @@ GLOBAL_FUNC_DLL void __stdcall MakeViewVolumeWithSelectRange(VIEW_VOLUME* pViewV
 	
 
 }
-GLOBAL_FUNC_DLL void __stdcall FindNearestVertexOnLine(VECTOR3* OUT pv3Result ,float* OUT pT, VECTOR3* IN pv3From, VECTOR3* IN pv3To, VECTOR3* IN pv3Point)
+GLOBAL_FUNC_DLL void   FindNearestVertexOnLine(VECTOR3* OUT pv3Result ,float* OUT pT, VECTOR3* IN pv3From, VECTOR3* IN pv3To, VECTOR3* IN pv3Point)
 {
 	//	직선 From-To위의 한 점을 점 Result라고 할때, 직선 From-To와  직선 Result-v의 내적은 0이다.
 	//	직선은 벡터Result = 벡터From + t*벡터FromTo
@@ -3124,7 +3122,7 @@ GLOBAL_FUNC_DLL void __stdcall FindNearestVertexOnLine(VECTOR3* OUT pv3Result ,f
 	pv3Result->z = pv3From->z + *pT * (pv3To->z - pv3From->z);
 	*/
 }
-GLOBAL_FUNC_DLL void __stdcall Set2PowValueLess(DWORD* pdwOut,DWORD dwIn)
+GLOBAL_FUNC_DLL void   Set2PowValueLess(DWORD* pdwOut,DWORD dwIn)
 {
 
 	DWORD	size = 2;
@@ -3136,7 +3134,7 @@ lb_pow_width:
 
 	*pdwOut = size / 2;
 }
-GLOBAL_FUNC_DLL BOOL __stdcall RemoveCRLF(char* pStr,DWORD dwLen)
+GLOBAL_FUNC_DLL BOOL   RemoveCRLF(char* pStr,DWORD dwLen)
 {	
 	BOOL	bResult = FALSE;
 	for (DWORD i=0; i<dwLen; i++)
@@ -3160,7 +3158,7 @@ GLOBAL_FUNC_DLL BOOL __stdcall RemoveCRLF(char* pStr,DWORD dwLen)
 	return bResult;
 
 }
-GLOBAL_FUNC_DLL DWORD __stdcall COLORtoDWORD(float r,float g,float b,float a)
+GLOBAL_FUNC_DLL DWORD   COLORtoDWORD(float r,float g,float b,float a)
 {
 	DWORD R = (DWORD)(r*255);
 	DWORD G = (DWORD)(g*255);
@@ -3174,7 +3172,7 @@ GLOBAL_FUNC_DLL DWORD __stdcall COLORtoDWORD(float r,float g,float b,float a)
 		( B & 0x000000ff )
 		);
 }
-GLOBAL_FUNC_DLL void __stdcall SetBitmapFromTexturePlane(char* pBits,DWORD dwPitch,TEXTURE_PLANE* pTexPlane,DWORD dwTexPlaneNum)
+GLOBAL_FUNC_DLL void   SetBitmapFromTexturePlane(char* pBits,DWORD dwPitch,TEXTURE_PLANE* pTexPlane,DWORD dwTexPlaneNum)
 {
 	PATCH*			pPatch;
 	for (DWORD m=0; m<dwTexPlaneNum; m++)
@@ -3194,7 +3192,7 @@ GLOBAL_FUNC_DLL void __stdcall SetBitmapFromTexturePlane(char* pBits,DWORD dwPit
 }
 
 #ifdef _USE_SSE
-GLOBAL_FUNC_DLL DWORD __stdcall CullBackFace(WORD* pFaceIndexList,TRI_FACE* pFaceEntry,VECTOR3* pv3Eye,DWORD dwFacesNum)
+GLOBAL_FUNC_DLL DWORD   CullBackFace(WORD* pFaceIndexList,TRI_FACE* pFaceEntry,VECTOR3* pv3Eye,DWORD dwFacesNum)
 {
 	DWORD	dwCount;
 
@@ -3253,7 +3251,7 @@ lb_next:
 
 }
 #else
-GLOBAL_FUNC_DLL DWORD __stdcall CullBackFace(WORD* pFaceIndexList,TRI_FACE* pFaceEntry,VECTOR3* pv3Eye,DWORD dwFacesNum)
+GLOBAL_FUNC_DLL DWORD   CullBackFace(WORD* pFaceIndexList,TRI_FACE* pFaceEntry,VECTOR3* pv3Eye,DWORD dwFacesNum)
 {
 	DWORD	dwCount;
 
@@ -3271,7 +3269,7 @@ GLOBAL_FUNC_DLL DWORD __stdcall CullBackFace(WORD* pFaceIndexList,TRI_FACE* pFac
 #endif
 
 #ifdef _USE_SSE
-GLOBAL_FUNC_DLL DWORD __stdcall BuildIndexBufferWithFaceIndexListForShadow(WORD* pIndexBufferEntry,TRI_FACE* pFaceEntry,WORD* pwFaceIndexEntry,VECTOR3* pv3Eye,BOUNDING_SPHERE* pSphere,DWORD dwFacesNum)
+GLOBAL_FUNC_DLL DWORD   BuildIndexBufferWithFaceIndexListForShadow(WORD* pIndexBufferEntry,TRI_FACE* pFaceEntry,WORD* pwFaceIndexEntry,VECTOR3* pv3Eye,BOUNDING_SPHERE* pSphere,DWORD dwFacesNum)
 {
 	DWORD	dwCount;
 	float	fRs = pSphere->fRs;
@@ -3379,7 +3377,7 @@ lb_next:
 	return dwCount;
 }
 #else
-GLOBAL_FUNC_DLL DWORD __stdcall BuildIndexBufferWithFaceIndexListForShadow(WORD* pIndexBufferEntry,TRI_FACE* pFaceEntry,WORD* pwFaceIndexEntry,VECTOR3* pv3Eye,BOUNDING_SPHERE* pSphere,DWORD dwFacesNum)
+GLOBAL_FUNC_DLL DWORD   BuildIndexBufferWithFaceIndexListForShadow(WORD* pIndexBufferEntry,TRI_FACE* pFaceEntry,WORD* pwFaceIndexEntry,VECTOR3* pv3Eye,BOUNDING_SPHERE* pSphere,DWORD dwFacesNum)
 {
 	DWORD dwCount;
 	dwCount = 0;
@@ -3405,7 +3403,7 @@ GLOBAL_FUNC_DLL DWORD __stdcall BuildIndexBufferWithFaceIndexListForShadow(WORD*
 #endif
 
 #ifdef _USE_SSE
-GLOBAL_FUNC_DLL DWORD __stdcall BuildIndexBufferWithFaceIndexList(WORD* pIndexBufferEntry,TRI_FACE* pFaceEntry,WORD* pwFaceIndexEntry,VECTOR3* pv3Eye,DWORD dwFacesNum)
+GLOBAL_FUNC_DLL DWORD   BuildIndexBufferWithFaceIndexList(WORD* pIndexBufferEntry,TRI_FACE* pFaceEntry,WORD* pwFaceIndexEntry,VECTOR3* pv3Eye,DWORD dwFacesNum)
 {
 	DWORD	dwCount;
 
@@ -3473,7 +3471,7 @@ lb_next:
 	return dwCount;
 }
 #else
-GLOBAL_FUNC_DLL DWORD __stdcall BuildIndexBufferWithFaceIndexList(WORD* pIndexBufferEntry,TRI_FACE* pFaceEntry,WORD* pwFaceIndexEntry,VECTOR3* pv3Eye,DWORD dwFacesNum)
+GLOBAL_FUNC_DLL DWORD   BuildIndexBufferWithFaceIndexList(WORD* pIndexBufferEntry,TRI_FACE* pFaceEntry,WORD* pwFaceIndexEntry,VECTOR3* pv3Eye,DWORD dwFacesNum)
 {
 	DWORD dwCount;
 	dwCount = 0;
@@ -3491,7 +3489,7 @@ GLOBAL_FUNC_DLL DWORD __stdcall BuildIndexBufferWithFaceIndexList(WORD* pIndexBu
 }
 #endif
 
-GLOBAL_FUNC_DLL void __stdcall BuildFaceList(TRI_FACE* pFacesEntry,VECTOR3* pv3,WORD* pIndex,DWORD dwFacesNum)
+GLOBAL_FUNC_DLL void   BuildFaceList(TRI_FACE* pFacesEntry,VECTOR3* pv3,WORD* pIndex,DWORD dwFacesNum)
 {
 	VECTOR3	center;
 
@@ -3518,7 +3516,7 @@ GLOBAL_FUNC_DLL void __stdcall BuildFaceList(TRI_FACE* pFacesEntry,VECTOR3* pv3,
 }
 
 
-GLOBAL_FUNC_DLL BOOL __stdcall MakeViewVolumeIncludingSphere(VIEW_VOLUME* pViewVolume,VECTOR3* pv3From, BOUNDING_SPHERE* pBS, float fFar)
+GLOBAL_FUNC_DLL BOOL   MakeViewVolumeIncludingSphere(VIEW_VOLUME* pViewVolume,VECTOR3* pv3From, BOUNDING_SPHERE* pBS, float fFar)
 {
 	VECTOR3		To, Right;
 	VECTOR3_SUB_VECTOR3( &To, &(pBS->v3Point), pv3From);
@@ -3551,7 +3549,7 @@ GLOBAL_FUNC_DLL BOOL __stdcall MakeViewVolumeIncludingSphere(VIEW_VOLUME* pViewV
 	return	TRUE;
 }
 
-GLOBAL_FUNC_DLL void __stdcall SetRotationXMatrix(MATRIX4* pMat, float fRad)
+GLOBAL_FUNC_DLL void   SetRotationXMatrix(MATRIX4* pMat, float fRad)
 {
 
     SetIdentityMatrix(pMat);
@@ -3562,7 +3560,7 @@ GLOBAL_FUNC_DLL void __stdcall SetRotationXMatrix(MATRIX4* pMat, float fRad)
 }
 
 
-GLOBAL_FUNC_DLL void __stdcall SetRotationYMatrix(MATRIX4* pMat, float fRad)
+GLOBAL_FUNC_DLL void   SetRotationYMatrix(MATRIX4* pMat, float fRad)
 {
 
     SetIdentityMatrix(pMat);
@@ -3572,7 +3570,7 @@ GLOBAL_FUNC_DLL void __stdcall SetRotationYMatrix(MATRIX4* pMat, float fRad)
     pMat->_33 =  (float)cos( fRad );
 }
 
-GLOBAL_FUNC_DLL void __stdcall SetRotationZMatrix(MATRIX4* pMat, float fRad)
+GLOBAL_FUNC_DLL void   SetRotationZMatrix(MATRIX4* pMat, float fRad)
 {
 
     SetIdentityMatrix(pMat);
@@ -3582,7 +3580,7 @@ GLOBAL_FUNC_DLL void __stdcall SetRotationZMatrix(MATRIX4* pMat, float fRad)
     pMat->_22  =  (float)cos( fRad );
 
 }
-GLOBAL_FUNC_DLL void __stdcall QuaternionFromRotation(QUARTERNION* pQ,VECTOR3* v, float fTheta )
+GLOBAL_FUNC_DLL void   QuaternionFromRotation(QUARTERNION* pQ,VECTOR3* v, float fTheta )
 {
 	float sinValue = (float)sin(fTheta/2);
     pQ->x = sinValue * v->x;
@@ -3590,7 +3588,7 @@ GLOBAL_FUNC_DLL void __stdcall QuaternionFromRotation(QUARTERNION* pQ,VECTOR3* v
     pQ->z = sinValue * v->z;
     pQ->w = (float)cos(fTheta/2);
 }
-GLOBAL_FUNC_DLL void __stdcall QuaternionMultiply(QUARTERNION* pQResult,QUARTERNION* pQA,QUARTERNION* pQB)
+GLOBAL_FUNC_DLL void   QuaternionMultiply(QUARTERNION* pQResult,QUARTERNION* pQA,QUARTERNION* pQB)
 {
 	float Dx,Dy,Dz,Dw;
 	
@@ -3605,7 +3603,7 @@ GLOBAL_FUNC_DLL void __stdcall QuaternionMultiply(QUARTERNION* pQResult,QUARTERN
 	pQResult->w = Dw;
 
 }
-GLOBAL_FUNC_DLL void __stdcall DWORDtoCOLOR(DWORD color,float* r,float* g,float* b,float* a)
+GLOBAL_FUNC_DLL void   DWORDtoCOLOR(DWORD color,float* r,float* g,float* b,float* a)
 {
 
 	DWORD	A = color>>24 & 0x000000ff;
@@ -3619,7 +3617,7 @@ GLOBAL_FUNC_DLL void __stdcall DWORDtoCOLOR(DWORD color,float* r,float* g,float*
 	*b =  (float)B / 255.0f;
 }
 /*
-GLOBAL_FUNC_DLL DWORD __stdcall ClipLightWithRS(LIGHT_DESC* pLightDescResult,COLLISION_MESH_OBJECT_DESC* pColMeshDesc,LIGHT_DESC* pLightDescIn,DWORD dwLightNum)
+GLOBAL_FUNC_DLL DWORD   ClipLightWithRS(LIGHT_DESC* pLightDescResult,COLLISION_MESH_OBJECT_DESC* pColMeshDesc,LIGHT_DESC* pLightDescIn,DWORD dwLightNum)
 {
 	DWORD		dwLightNumResult = 0;
 	float		distance;
@@ -3637,7 +3635,7 @@ GLOBAL_FUNC_DLL DWORD __stdcall ClipLightWithRS(LIGHT_DESC* pLightDescResult,COL
 
 }
 */	
-GLOBAL_FUNC_DLL DWORD __stdcall ClipLightWithRS(LIGHT_INDEX_DESC* pbLightIndexArrayResult,COLLISION_MESH_OBJECT_DESC* pColMeshDesc,LIGHT_DESC* pLightDescIn,DWORD dwLightNum,BYTE bStartIndex)
+GLOBAL_FUNC_DLL DWORD   ClipLightWithRS(LIGHT_INDEX_DESC* pbLightIndexArrayResult,COLLISION_MESH_OBJECT_DESC* pColMeshDesc,LIGHT_DESC* pLightDescIn,DWORD dwLightNum,BYTE bStartIndex)
 {
 	DWORD		dwLightNumResult = 0;
 	float		distance;
@@ -3661,7 +3659,7 @@ GLOBAL_FUNC_DLL DWORD __stdcall ClipLightWithRS(LIGHT_INDEX_DESC* pbLightIndexAr
 // 면:선분.
 // 평면 p와 만나는 선분 lv1, lv2를 주면, 
 // 리턴값은 COLLISIONTYPE이고, 만나는 선분rv1,rv2를 리턴값으로 하고 그때의 t값이.... 복잡하군.
-GLOBAL_FUNC_DLL BOOL __stdcall CalcIntersectPointLineAndPlane(VECTOR3* pv3Result,PLANE* pPlane,VECTOR3* pv3From,VECTOR3* pv3To, float* pft)
+GLOBAL_FUNC_DLL BOOL   CalcIntersectPointLineAndPlane(VECTOR3* pv3Result,PLANE* pPlane,VECTOR3* pv3From,VECTOR3* pv3To, float* pft)
 {
 	// 선분과 평면이 교차하는 경우.
 	// 직선 방정식과 평면방정식을 대입해 t를 찾아내고 실제 위치 버텍스를 찾아낸다.
@@ -3694,7 +3692,7 @@ lb_return:
 }
 
 
-GLOBAL_FUNC_DLL BOOL __stdcall ResizeImage(char* pDest,DWORD dwDestWidth,DWORD dwDestHeight,char* pSrc,DWORD dwSrcWidth,DWORD dwSrcHeight,DWORD dwBytesPerPixel)
+GLOBAL_FUNC_DLL BOOL   ResizeImage(char* pDest,DWORD dwDestWidth,DWORD dwDestHeight,char* pSrc,DWORD dwSrcWidth,DWORD dwSrcHeight,DWORD dwBytesPerPixel)
 {
 	DWORD	px1,py1;
 	float	dx = (float)dwDestWidth / (float)dwSrcWidth;
@@ -3723,7 +3721,7 @@ GLOBAL_FUNC_DLL BOOL __stdcall ResizeImage(char* pDest,DWORD dwDestWidth,DWORD d
 	}
 	return TRUE;
 }
-GLOBAL_FUNC_DLL BOOL __stdcall ClipRenderObjectWithViewVolume(VIEW_VOLUME* pVolume,COLLISION_MESH_OBJECT_DESC* pColMeshObjDesc,DWORD /*dwFlag*/)
+GLOBAL_FUNC_DLL BOOL   ClipRenderObjectWithViewVolume(VIEW_VOLUME* pVolume,COLLISION_MESH_OBJECT_DESC* pColMeshObjDesc,DWORD /*dwFlag*/)
 {
 	//m_bViewVolumeClip = FALSE;
 
@@ -3785,7 +3783,7 @@ lb_exit:
 lb_return:
 	return bResult;
 }
-GLOBAL_FUNC_DLL BOOL __stdcall ClipVertexWithViewVolume(VIEW_VOLUME* pVolume,VECTOR3* pv3Point)
+GLOBAL_FUNC_DLL BOOL   ClipVertexWithViewVolume(VIEW_VOLUME* pVolume,VECTOR3* pv3Point)
 {
 	//m_bViewVolumeClip = FALSE;
 
@@ -3811,7 +3809,7 @@ lb_return:
 
 
 
-GLOBAL_FUNC_DLL void __stdcall CalcXZ(float* px,float* pz,DWORD dwPosX,DWORD dwPosY,float top,float left,float /*bottom*/,float right,float width,float height,DWORD dwFacesNumX,DWORD dwFacesNumY)
+GLOBAL_FUNC_DLL void   CalcXZ(float* px,float* pz,DWORD dwPosX,DWORD dwPosY,float top,float left,float /*bottom*/,float right,float width,float height,DWORD dwFacesNumX,DWORD dwFacesNumY)
 {
 	DWORD		dwIndex;
 	
@@ -3820,7 +3818,7 @@ GLOBAL_FUNC_DLL void __stdcall CalcXZ(float* px,float* pz,DWORD dwPosX,DWORD dwP
 	*pz = (float)dwPosY/(float)dwFacesNumY * height + top;
 }
 
-GLOBAL_FUNC_DLL void __stdcall TransposeMatrix(MATRIX4* pMat)
+GLOBAL_FUNC_DLL void   TransposeMatrix(MATRIX4* pMat)
 {
 	float t_12,t_13,t_14,t_23,t_24,t_34;
 
@@ -3845,7 +3843,7 @@ GLOBAL_FUNC_DLL void __stdcall TransposeMatrix(MATRIX4* pMat)
 	pMat->_42=t_24;
 	pMat->_43=t_34;	
 }
-GLOBAL_FUNC_DLL void __stdcall SetLightTexMatrix(MATRIX4* pMat,VECTOR3* pv3Pos,float fRs)
+GLOBAL_FUNC_DLL void   SetLightTexMatrix(MATRIX4* pMat,VECTOR3* pv3Pos,float fRs)
 {
 	float		one_div_2LRs = 1.0f/(2.0f*fRs);
 
@@ -3858,7 +3856,7 @@ GLOBAL_FUNC_DLL void __stdcall SetLightTexMatrix(MATRIX4* pMat,VECTOR3* pv3Pos,f
 	pMat->_43 = (0.5f) - (pv3Pos->z*one_div_2LRs);
 }
 
-GLOBAL_FUNC_DLL BOOL __stdcall SetViewMatrix(MATRIX4* pMat,VECTOR3* pv3From,VECTOR3* pv3To,VECTOR3* pv3Up)
+GLOBAL_FUNC_DLL BOOL   SetViewMatrix(MATRIX4* pMat,VECTOR3* pv3From,VECTOR3* pv3To,VECTOR3* pv3Up)
 {
     // Get the z basis vector, which points straight ahead. This is the
     // difference from the eyepoint to the lookat point.
@@ -3956,7 +3954,7 @@ GLOBAL_FUNC_DLL BOOL __stdcall SetViewMatrix(MATRIX4* pMat,VECTOR3* pv3From,VECT
 lb_return:
 	return bResult;
 }
-GLOBAL_FUNC_DLL BOOL __stdcall SetProjectionMatrix(MATRIX4* pMat,float fFOV,float fAspect,float fNearPlane,float fFarPlane)
+GLOBAL_FUNC_DLL BOOL   SetProjectionMatrix(MATRIX4* pMat,float fFOV,float fAspect,float fNearPlane,float fFarPlane)
 {
 	BOOL	bResult = FALSE;
 
@@ -4000,7 +3998,7 @@ lb_return:
 	FromTo는 '절대로' 완전히 위를 보고있거나(y=1.0f), 완전히 아래를 보고있지(y=-1.0f) 않다고 가정한다.
 	Up은 위의 가정 하에서 언제나 (0,1,0)이다. 즉 Roll은 0이다(pOutYPR->z = 0.0f).
 */
-GLOBAL_FUNC_DLL void __stdcall ConvertFromTo2YPR(VECTOR3* pVEC, VECTOR3* pOutYPR)
+GLOBAL_FUNC_DLL void   ConvertFromTo2YPR(VECTOR3* pVEC, VECTOR3* pOutYPR)
 {
 	VECTOR3		To;
 	Normalize( &To, pVEC);
@@ -4042,7 +4040,7 @@ GLOBAL_FUNC_DLL void __stdcall ConvertFromTo2YPR(VECTOR3* pVEC, VECTOR3* pOutYPR
 
 
 // 위치만.
-GLOBAL_FUNC_DLL	void __stdcall RotatePositionWithPivot( VECTOR3* pOutPos, VECTOR3* pPivot, VECTOR3* pPosition, VECTOR3* pCameraAnglePYR, float fRotateYaw, float fRotatePitch)
+GLOBAL_FUNC_DLL	void   RotatePositionWithPivot( VECTOR3* pOutPos, VECTOR3* pPivot, VECTOR3* pPosition, VECTOR3* pCameraAnglePYR, float fRotateYaw, float fRotatePitch)
 {
 	
 	// 일단 피봇을 원점으로 옮기고,
@@ -4097,13 +4095,13 @@ lbRotateYaw:
 	// 함수 끝내다.
 	_asm nop;
 }
-GLOBAL_FUNC_DLL	float	__stdcall DistanceFromSphereAndPlane( BOUNDING_SPHERE* pSphere, PLANE* pPlane)
+GLOBAL_FUNC_DLL	float	  DistanceFromSphereAndPlane( BOUNDING_SPHERE* pSphere, PLANE* pPlane)
 {
 	float	fDist	=	DotProduct( &(pPlane->v3Up), &(pSphere->v3Point)) + pPlane->D;
 	return	fDist;
 }
 
-GLOBAL_FUNC_DLL	BOOL	__stdcall IsCollisionSphereAndBox( BOUNDING_SPHERE* pSphere, BOUNDING_BOX* pBox)
+GLOBAL_FUNC_DLL	BOOL	  IsCollisionSphereAndBox( BOUNDING_SPHERE* pSphere, BOUNDING_BOX* pBox)
 {
 	BOOL	bResult	=	FALSE;
 	float	fDistance;
@@ -4155,7 +4153,7 @@ GLOBAL_FUNC_DLL	BOOL	__stdcall IsCollisionSphereAndBox( BOUNDING_SPHERE* pSphere
 	return	bResult;
 }
 
-GLOBAL_FUNC_DLL DWORD __stdcall	RemoveExt(char* szResultName, DWORD dwBufferLen, char* szFileName)
+GLOBAL_FUNC_DLL DWORD  	RemoveExt(char* szResultName, DWORD dwBufferLen, char* szFileName)
 {
 	DWORD	dwLen = lstrlen(szFileName);
 	DWORD	dwCount = 0;
@@ -4175,7 +4173,7 @@ GLOBAL_FUNC_DLL DWORD __stdcall	RemoveExt(char* szResultName, DWORD dwBufferLen,
 lb_return:
 	return dwCount;
 }
-GLOBAL_FUNC_DLL DWORD __stdcall	GetExt(char* szResultName,char* szFileName)
+GLOBAL_FUNC_DLL DWORD  	GetExt(char* szResultName,char* szFileName)
 {
 	DWORD	dwLen = lstrlen(szFileName);
 	DWORD	dwCount = 0;
@@ -4200,7 +4198,7 @@ lb_return:
 	return dwCount;
 
 }
-GLOBAL_FUNC_DLL DWORD __stdcall GetNamePath(char* szResultPath,char* szFileName)
+GLOBAL_FUNC_DLL DWORD   GetNamePath(char* szResultPath,char* szFileName)
 {
 	DWORD	dwLen;
 	
@@ -4226,7 +4224,7 @@ lb_return:
 	return dwLen;
 
 }
-GLOBAL_FUNC_DLL DWORD __stdcall GetNameRemovePath(char* dest,char* src)
+GLOBAL_FUNC_DLL DWORD   GetNameRemovePath(char* dest,char* src)
 {
 	
 	if (!src || !dest)
@@ -4257,7 +4255,7 @@ lb_return:
 	return dwLen;
 
 }
-GLOBAL_FUNC_DLL BOOL __stdcall WriteTGA(char* szFileName,char* pSrc,DWORD dwWidth,DWORD dwHeight,DWORD dwPitch,DWORD bpp)
+GLOBAL_FUNC_DLL BOOL   WriteTGA(char* szFileName,char* pSrc,DWORD dwWidth,DWORD dwHeight,DWORD dwPitch,DWORD bpp)
 {
 	FILE*	fp = fopen(szFileName,"wb");
 	if (!fp)
@@ -4354,7 +4352,7 @@ GLOBAL_FUNC_DLL BOOL __stdcall WriteTGA(char* szFileName,char* pSrc,DWORD dwWidt
 	return TRUE;
 }
 
-GLOBAL_FUNC_DLL __declspec(naked) void __stdcall GetEIP(DWORD* pdwEIP)
+GLOBAL_FUNC_DLL __declspec(naked) void   GetEIP(DWORD* pdwEIP)
 {
 	__asm
 	{
@@ -4373,7 +4371,7 @@ GLOBAL_FUNC_DLL __declspec(naked) void __stdcall GetEIP(DWORD* pdwEIP)
 }
 
 
-GLOBAL_FUNC_DLL void __stdcall CharToSmallASCII(char* szDest,char* szStr,DWORD dwLen)
+GLOBAL_FUNC_DLL void   CharToSmallASCII(char* szDest,char* szStr,DWORD dwLen)
 {
 	__asm
 	{
@@ -4408,7 +4406,7 @@ lb_exit:
 	}
 
 }
-GLOBAL_FUNC_DLL void __stdcall CharToSmallASCIILen(char* szDest,char* szStr)
+GLOBAL_FUNC_DLL void   CharToSmallASCIILen(char* szDest,char* szStr)
 {
 	__asm
 	{
@@ -4446,7 +4444,7 @@ lb_exit:
 
 #define DIV_64_MASK	0xC0C0C0C0
 
-GLOBAL_FUNC_DLL void __stdcall Convert8BitTo2BitImage(char* p2Bits,char* p8Bits,DWORD dwWidth,DWORD dwHeight)
+GLOBAL_FUNC_DLL void   Convert8BitTo2BitImage(char* p2Bits,char* p8Bits,DWORD dwWidth,DWORD dwHeight)
 {
 	__asm
 	{
@@ -4491,7 +4489,7 @@ lb_loop:
 
 #define PIXEL_MASK_0	0x00000003
 
-GLOBAL_FUNC_DLL void __stdcall Convert2BitTo8BitImage(char* p8Bits,char* p2Bits,DWORD dwWidth,DWORD dwHeight)
+GLOBAL_FUNC_DLL void   Convert2BitTo8BitImage(char* p8Bits,char* p2Bits,DWORD dwWidth,DWORD dwHeight)
 {
 	// 00000011
 
@@ -4549,7 +4547,7 @@ lb_loop:
 
 //#define WHITE_MASK	0x3fff3fff;
 //#define WHITE_MASK	0xffffffff;
-GLOBAL_FUNC_DLL void __stdcall Convert2BitTo16BitImageWithPitch(char* p16Bits,char* p2Bits,DWORD dwWidth,DWORD dwHeight,DWORD dwPitch)
+GLOBAL_FUNC_DLL void   Convert2BitTo16BitImageWithPitch(char* p16Bits,char* p2Bits,DWORD dwWidth,DWORD dwHeight,DWORD dwPitch)
 {
 
 	// 00000011
@@ -4637,7 +4635,7 @@ lb_loop_width:
 
 
 
-GLOBAL_FUNC_DLL void __stdcall SetPixel2BitImage(char* p2Bits,DWORD dwPx,DWORD dwPy,DWORD dwWidth,DWORD /*dwHeight*/,DWORD dwColor)
+GLOBAL_FUNC_DLL void   SetPixel2BitImage(char* p2Bits,DWORD dwPx,DWORD dwPy,DWORD dwWidth,DWORD /*dwHeight*/,DWORD dwColor)
 {
 	// dwColor 는 0부터 3 사이의 값이어야 한다
 	__asm
@@ -4679,7 +4677,7 @@ GLOBAL_FUNC_DLL void __stdcall SetPixel2BitImage(char* p2Bits,DWORD dwPx,DWORD d
 	}
 }
 
-GLOBAL_FUNC_DLL void __stdcall SubPixel2BitImage(char* p2Bits,DWORD dwPx,DWORD dwPy,DWORD dwWidth,DWORD /*dwHeight*/,DWORD dwColor)
+GLOBAL_FUNC_DLL void   SubPixel2BitImage(char* p2Bits,DWORD dwPx,DWORD dwPy,DWORD dwWidth,DWORD /*dwHeight*/,DWORD dwColor)
 {
 	// dwColor 는 0부터 3 사이의 값이어야 한다
 	__asm
@@ -4731,7 +4729,7 @@ lb_not_below:
 	}
 }
 
-GLOBAL_FUNC_DLL void __stdcall AddPixel2BitImage(char* p2Bits,DWORD dwPx,DWORD dwPy,DWORD dwWidth,DWORD /*dwHeight*/,DWORD dwColor)
+GLOBAL_FUNC_DLL void   AddPixel2BitImage(char* p2Bits,DWORD dwPx,DWORD dwPy,DWORD dwWidth,DWORD /*dwHeight*/,DWORD dwColor)
 {
 	// dwColor 는 0부터 3 사이의 값이어야 한다
 	__asm
@@ -4784,7 +4782,7 @@ lb_not_overflow:
 	}
 }
 
-GLOBAL_FUNC_DLL void __stdcall Create8BitsAttenuationMap(char* p8Bits,DWORD dwWidth,DWORD dwHeight,DWORD dwRS)
+GLOBAL_FUNC_DLL void   Create8BitsAttenuationMap(char* p8Bits,DWORD dwWidth,DWORD dwHeight,DWORD dwRS)
 {
 	BYTE*			p;
 	DWORD			x,y;
@@ -4822,7 +4820,7 @@ GLOBAL_FUNC_DLL void __stdcall Create8BitsAttenuationMap(char* p8Bits,DWORD dwWi
 
 
 
-GLOBAL_FUNC_DLL void __stdcall SetOutLineBorder4Bytes(char* pBits,DWORD dwWidth,DWORD dwHeight,DWORD dwPitch,DWORD dwBorderColor)
+GLOBAL_FUNC_DLL void   SetOutLineBorder4Bytes(char* pBits,DWORD dwWidth,DWORD dwHeight,DWORD dwPitch,DWORD dwBorderColor)
 {
 	DWORD		y;
 	char*		p = pBits;
@@ -4847,7 +4845,7 @@ GLOBAL_FUNC_DLL void __stdcall SetOutLineBorder4Bytes(char* pBits,DWORD dwWidth,
 	}
 }
 
-GLOBAL_FUNC_DLL void __stdcall SetOutLineBorder2Bytes(char* pBits,DWORD dwWidth,DWORD dwHeight,DWORD dwPitch,DWORD wBorderColor)
+GLOBAL_FUNC_DLL void   SetOutLineBorder2Bytes(char* pBits,DWORD dwWidth,DWORD dwHeight,DWORD dwPitch,DWORD wBorderColor)
 {
 	DWORD		x,y;
 	char*		p = pBits;

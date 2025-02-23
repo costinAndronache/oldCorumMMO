@@ -147,8 +147,8 @@ void EffectOnceAndHideFunc( GXOBJECT_HANDLE handle, LPObjectDesc pData, DWORD dw
 //======================================================================//
 // Render 관련.															//
 //======================================================================//
-DWORD __stdcall AfterRenderGameDungeon();
-DWORD __stdcall BeforeRenderGameDungeon();
+DWORD AfterRenderGameDungeon();
+DWORD BeforeRenderGameDungeon();
 void ChatRender();									// 채팅 메세지 출력.
 void SkillRender();									// 스킬 키 출력.
 void EventDungeonRender( void );					// 이벤트 던젼 정보 렌더링.
@@ -221,7 +221,7 @@ void ChatOff();
 void CameraAccelatingMove(void);
 void SelectSummonMonster(CMonster* pMonster, BOOL bSelect);
 void PlayItemSound(WORD	wItemId);
-DWORD __stdcall AfterInterporation(AFTER_INTERPOLATION_CALL_BACK_ARG* pArg);
+DWORD AfterInterporation(AFTER_INTERPOLATION_CALL_BACK_ARG* pArg);
 BOOL FindEmptyPosNearDungeon(VECTOR3* vpDungeonPos, VECTOR3 *vpNearPos, BOOL bVillage = FALSE);
 
 //------------------------------------------------------------------------

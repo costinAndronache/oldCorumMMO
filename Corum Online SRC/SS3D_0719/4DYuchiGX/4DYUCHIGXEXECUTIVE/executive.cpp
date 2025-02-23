@@ -3,8 +3,10 @@
 #include "GXEventTriggerObject.h"
 #include "executive.h"
 #include "../4DyuchiGXGFunc/global.h"
-#include "../4DyuchiGRX_myself97/myself97common.h"
-#include "../4DyuchiGRX_myself97/CheckClock.h"
+#include "4DyuchiGRX_myself97/myself97common.h"
+#include "4DyuchiGRX_myself97/CheckClock.h"
+#include "../4DyuchiFileStorage/CoStorage.h"
+
 #include <crtdbg.h>
 #include "GXDefault.h"
 
@@ -16,7 +18,7 @@ ErrorHandleProc			g_pErrorHandleFunc = NULL;
 I4DyuchiFileStorage*	g_pFileStorage = NULL;
 
 
-DWORD __stdcall DefaultErrorHandleProc(ERROR_TYPE type,DWORD dwErrorPriority,void* /*pCodeAddress*/,char* szStr)
+DWORD  DefaultErrorHandleProc(ERROR_TYPE type,DWORD dwErrorPriority,void* /*pCodeAddress*/,char* szStr)
 {
 	/*
 	char szFileName[] = __FILE__;
@@ -125,21 +127,21 @@ void CoExecutive::CheckGXDecalsList(CGXDecal* pInDecal)
 
 
 
-BOOL __stdcall Def_DeleteGXObject(CoExecutive* pExecutive,GXOBJECT_HANDLE gxh)
+BOOL  Def_DeleteGXObject(CoExecutive* pExecutive,GXOBJECT_HANDLE gxh)
 {
 	return pExecutive->ImmDeleteGXObject(gxh);
 }
 
-BOOL __stdcall Def_DeleteGXLight(CoExecutive* pExecutive,GXLIGHT_HANDLE gxh)
+BOOL  Def_DeleteGXLight(CoExecutive* pExecutive,GXLIGHT_HANDLE gxh)
 {	
 	return pExecutive->ImmDeleteGXLight(gxh);
 }
-BOOL __stdcall Def_DeleteGXEventTrigger(CoExecutive* pExecutive,GXTRIGGER_HANDLE gxh)
+BOOL  Def_DeleteGXEventTrigger(CoExecutive* pExecutive,GXTRIGGER_HANDLE gxh)
 {
 	return pExecutive->ImmDeleteGXEventTrigger(gxh);	
 }
 
-BOOL __stdcall Def_DeleteGXDecal(CoExecutive* pExecutive,GXDECAL_HANDLE gxh)
+BOOL  Def_DeleteGXDecal(CoExecutive* pExecutive,GXDECAL_HANDLE gxh)
 {
 	return pExecutive->ImmDeleteGXDecal(gxh);
 }
@@ -227,62 +229,20 @@ DWORD CoExecutive::GetFramePerSec()
 	
 }
 
-void __stdcall CoExecutive::SetViewport(DWORD dwViewportIndex)
+void  CoExecutive::SetViewport(DWORD dwViewportIndex)
 {
 	m_dwViewportIndex = dwViewportIndex;
 }
-BOOL __stdcall CoExecutive::InitializeFileStorageWithoutRegistry(char* szFileName,DWORD dwMaxFileNum,DWORD dwMaxFileHandleNumAtSameTime,DWORD dwMaxFileNameLen,FILE_ACCESS_METHOD accessMethod,PACKFILE_NAME_TABLE* pPackFileList,DWORD dwNum)
+BOOL  CoExecutive::InitializeFileStorageWithoutRegistry(char* szFileName,DWORD dwMaxFileNum,DWORD dwMaxFileHandleNumAtSameTime,DWORD dwMaxFileNameLen,FILE_ACCESS_METHOD accessMethod,PACKFILE_NAME_TABLE* pPackFileList,DWORD dwNum)
 {
 	
-	CREATE_INSTANCE_FUNC	pFunc;
-
-
-	HRESULT		hr;
-	void*	pCreateFunc = NULL;
-	BOOL	bResult = FALSE;
-	
-	m_hStorage = LoadLibrary(szFileName);
-	if (!m_hStorage)
-		goto lb_fail;
-
-	pFunc = (CREATE_INSTANCE_FUNC)GetProcAddress(m_hStorage,"DllCreateInstance");
-	hr = pFunc((void**)&m_pFileStorage);
-
-	if (hr != S_OK)
-	{
-lb_fail:
-		MessageBox(NULL,"Fail to Create 4DyuchiFileStorage","Error",MB_OK);
-		goto lb_return;
-	}
-	bResult = InitializeFileStorageCommon(dwMaxFileNum,dwMaxFileHandleNumAtSameTime,dwMaxFileNameLen,accessMethod,pPackFileList,dwNum);
-
-lb_return:
-	return bResult;
-
+	m_pFileStorage = new CoStorage();
+	return InitializeFileStorageCommon(dwMaxFileNum,dwMaxFileHandleNumAtSameTime,dwMaxFileNameLen,accessMethod,pPackFileList,dwNum);
 }
-BOOL __stdcall CoExecutive::InitializeFileStorage(DWORD dwMaxFileNum,DWORD dwMaxFileHandleNumAtSameTime,DWORD dwMaxFileNameLen,FILE_ACCESS_METHOD accessMethod,PACKFILE_NAME_TABLE* pPackFileList,DWORD dwNum)
+BOOL  CoExecutive::InitializeFileStorage(DWORD dwMaxFileNum,DWORD dwMaxFileHandleNumAtSameTime,DWORD dwMaxFileNameLen,FILE_ACCESS_METHOD accessMethod,PACKFILE_NAME_TABLE* pPackFileList,DWORD dwNum)
 {
-	BOOL	bResult = FALSE;
-
-	HRESULT hr;
-
-	hr = CoCreateInstance(
-           CLSID_4DyuchiFileStorage,
-           NULL,
-           CLSCTX_INPROC_SERVER,
-           IID_4DyuchiFileStorage,
-           (void**)&m_pFileStorage);
-
-	if (hr != S_OK)
-	{
-		__asm int 3
-		goto lb_return;
-	}
-	bResult = InitializeFileStorageCommon(dwMaxFileNum,dwMaxFileHandleNumAtSameTime,dwMaxFileNameLen,accessMethod,pPackFileList,dwNum);
-
-	
-lb_return:
-	return bResult;
+	m_pFileStorage = new CoStorage();
+	return InitializeFileStorageCommon(dwMaxFileNum,dwMaxFileHandleNumAtSameTime,dwMaxFileNameLen,accessMethod,pPackFileList,dwNum);
 }
 
 BOOL CoExecutive::InitializeFileStorageCommon(DWORD dwMaxFileNum,DWORD dwMaxFileHandleNumAtSameTime,DWORD dwMaxFileNameLen,FILE_ACCESS_METHOD accessMethod,PACKFILE_NAME_TABLE* pPackFileList,DWORD dwNum)
@@ -310,7 +270,7 @@ BOOL CoExecutive::InitializeFileStorageCommon(DWORD dwMaxFileNum,DWORD dwMaxFile
 lb_return:
 	return bResult;
 }
-BOOL __stdcall CoExecutive::Initialize(HWND hWnd,DISPLAY_INFO* pInfo,DWORD dwMaxObjectNum,DWORD dwMaxLightNum,DWORD dwMaxTriggerNum,DWORD dwViewportNum, DWORD dwMaxDecalNum,ErrorHandleProc pErrorHandleFunc)
+BOOL  CoExecutive::Initialize(HWND hWnd,DISPLAY_INFO* pInfo,DWORD dwMaxObjectNum,DWORD dwMaxLightNum,DWORD dwMaxTriggerNum,DWORD dwViewportNum, DWORD dwMaxDecalNum,ErrorHandleProc pErrorHandleFunc)
 {
 	HRESULT hr;
 
@@ -359,7 +319,7 @@ lb_return:
 
 
 
-BOOL __stdcall CoExecutive::InitializeWithoutRegistry(char* szGeometryFileName,char* szRendererFileName,HWND hWnd,DISPLAY_INFO* pInfo,DWORD dwMaxObjectNum,DWORD dwMaxLightNum,DWORD dwMaxTriggerNum,DWORD dwViewportNum, DWORD dwMaxDecalNum,ErrorHandleProc pErrorHandleFunc)
+BOOL  CoExecutive::InitializeWithoutRegistry(char* szGeometryFileName,char* szRendererFileName,HWND hWnd,DISPLAY_INFO* pInfo,DWORD dwMaxObjectNum,DWORD dwMaxLightNum,DWORD dwMaxTriggerNum,DWORD dwViewportNum, DWORD dwMaxDecalNum,ErrorHandleProc pErrorHandleFunc)
 {
 	I4DyuchiGXGeometry*		pGeometry = NULL;
 	I4DyuchiGXRenderer*		pRenderer = NULL;
@@ -493,7 +453,7 @@ BOOL CoExecutive::Initialize(I4DyuchiGXGeometry* pGeometry,I4DyuchiGXRenderer* p
 lb_return:
 	return bResult;
 }
-HRESULT __stdcall CoExecutive::GetFileStorage(I4DyuchiFileStorage** ppFileStorage)
+HRESULT  CoExecutive::GetFileStorage(I4DyuchiFileStorage** ppFileStorage)
 {
 	HRESULT		hResult = -1;
 	if (!m_pFileStorage)
@@ -507,7 +467,7 @@ lb_return:
 	return hResult;
 }
 
-HRESULT __stdcall CoExecutive::GetRenderer(I4DyuchiGXRenderer** ppRenderer)
+HRESULT  CoExecutive::GetRenderer(I4DyuchiGXRenderer** ppRenderer)
 {
 	HRESULT		hResult = -1;
 	if (!m_pRenderer)
@@ -519,7 +479,7 @@ HRESULT __stdcall CoExecutive::GetRenderer(I4DyuchiGXRenderer** ppRenderer)
 lb_return:
 	return hResult;
 }
-HRESULT __stdcall CoExecutive::GetGeometry(I4DyuchiGXGeometry** ppGeometry)
+HRESULT  CoExecutive::GetGeometry(I4DyuchiGXGeometry** ppGeometry)
 {
 	HRESULT		hResult = -1;
 	if (!m_pGeometry)
@@ -542,12 +502,12 @@ I4DyuchiGXGeometry* CoExecutive::GetGeometry()
 	return m_pGeometry;
 }
 /*
-GXOBJECT_HANDLE	__stdcall CoExecutive::GXOGetTracedGXObject()
+GXOBJECT_HANDLE	 CoExecutive::GXOGetTracedGXObject()
 {
 	return (GXOBJECT_HANDLE)m_pTracedGXObject;
 }
 
-void __stdcall CoExecutive::GXOSetTracedGXObject(GXOBJECT_HANDLE gxo) 
+void  CoExecutive::GXOSetTracedGXObject(GXOBJECT_HANDLE gxo) 
 {
 #ifdef	_DEBUG
 	CheckHandle(gxo);
@@ -555,7 +515,7 @@ void __stdcall CoExecutive::GXOSetTracedGXObject(GXOBJECT_HANDLE gxo)
 	m_pTracedGXObject = (CoGXObject*)gxo;
 }
 */
-ULONG __stdcall	CoExecutive::GXOGetModel(GXOBJECT_HANDLE gxh,I3DModel** ppModel,DWORD* pdwRefIndex,DWORD dwModelIndex)
+ULONG 	CoExecutive::GXOGetModel(GXOBJECT_HANDLE gxh,I3DModel** ppModel,DWORD* pdwRefIndex,DWORD dwModelIndex)
 {
 
 #ifdef	_DEBUG
@@ -569,14 +529,14 @@ ULONG __stdcall	CoExecutive::GXOGetModel(GXOBJECT_HANDLE gxh,I3DModel** ppModel,
 	return 0;
 }
 
-void __stdcall CoExecutive::GXOSetEffectIndex(GXOBJECT_HANDLE gxo,DWORD dwEffectIndex)
+void  CoExecutive::GXOSetEffectIndex(GXOBJECT_HANDLE gxo,DWORD dwEffectIndex)
 {
 #ifdef	_DEBUG
 	CheckHandle(gxo);
 #endif
 	((CoGXObject*)gxo)->SetEffectIndex(dwEffectIndex);
 }
-DWORD __stdcall	CoExecutive::GXOGetEffectIndex(GXOBJECT_HANDLE gxo)
+DWORD 	CoExecutive::GXOGetEffectIndex(GXOBJECT_HANDLE gxo)
 {
 #ifdef	_DEBUG
 	CheckHandle(gxo);
@@ -637,7 +597,7 @@ void CoExecutive::GXOMovePosition(GXOBJECT_HANDLE gxh,VECTOR3* pv3Pos)
 	((CoGXObject*)gxh)->MovePosition(pv3Pos);
 	
 }
-DWORD __stdcall CoExecutive::GXOGetMaterialNum(GXOBJECT_HANDLE gxh,DWORD dwModelIndex)
+DWORD  CoExecutive::GXOGetMaterialNum(GXOBJECT_HANDLE gxh,DWORD dwModelIndex)
 {
 #ifdef	_DEBUG
 	CheckHandle(gxh);
@@ -645,14 +605,14 @@ DWORD __stdcall CoExecutive::GXOGetMaterialNum(GXOBJECT_HANDLE gxh,DWORD dwModel
 	return ((CoGXObject*)gxh)->GetMaterialNum(dwModelIndex);
 
 }
-DWORD __stdcall CoExecutive::GXOGetCurrentMaterialIndex(GXOBJECT_HANDLE gxh)
+DWORD  CoExecutive::GXOGetCurrentMaterialIndex(GXOBJECT_HANDLE gxh)
 {
 #ifdef	_DEBUG
 	CheckHandle(gxh);
 #endif
 	return ((CoGXObject*)gxh)->GetCurrentMaterialIndex();
 }
-void __stdcall CoExecutive::GXOSetCurrentMaterialIndex(GXOBJECT_HANDLE gxh,DWORD dwMaterialIndex)
+void  CoExecutive::GXOSetCurrentMaterialIndex(GXOBJECT_HANDLE gxh,DWORD dwMaterialIndex)
 {
 #ifdef	_DEBUG
 	CheckHandle(gxh);
@@ -660,7 +620,7 @@ void __stdcall CoExecutive::GXOSetCurrentMaterialIndex(GXOBJECT_HANDLE gxh,DWORD
 	((CoGXObject*)gxh)->SetCurrentMaterialIndex(dwMaterialIndex);
 }
 
-void __stdcall CoExecutive::GXOSetScale(GXOBJECT_HANDLE gxh,VECTOR3* pv3Scale)
+void  CoExecutive::GXOSetScale(GXOBJECT_HANDLE gxh,VECTOR3* pv3Scale)
 {
 #ifdef	_DEBUG
 	CheckHandle(gxh);
@@ -668,7 +628,7 @@ void __stdcall CoExecutive::GXOSetScale(GXOBJECT_HANDLE gxh,VECTOR3* pv3Scale)
 	((CoGXObject*)gxh)->SetScale(pv3Scale);
 	
 }
-void __stdcall CoExecutive::GXOGetScale(GXOBJECT_HANDLE gxh,VECTOR3* pv3Scale)
+void  CoExecutive::GXOGetScale(GXOBJECT_HANDLE gxh,VECTOR3* pv3Scale)
 {
 #ifdef	_DEBUG
 	CheckHandle(gxh);
@@ -684,7 +644,7 @@ void CoExecutive::GXOSetDirection(GXOBJECT_HANDLE gxh,VECTOR3* pv3Axis,float fRa
 	((CoGXObject*)gxh)->SetDirection(pv3Axis,fRad);
 }
 
-void __stdcall CoExecutive::GXOSetDirectionFPSStyle(GXOBJECT_HANDLE gxh, VECTOR3* pv3Angles /* in */)
+void  CoExecutive::GXOSetDirectionFPSStyle(GXOBJECT_HANDLE gxh, VECTOR3* pv3Angles /* in */)
 {
 #ifdef _DEBUG
 	CheckHandle(gxh);	
@@ -693,7 +653,7 @@ void __stdcall CoExecutive::GXOSetDirectionFPSStyle(GXOBJECT_HANDLE gxh, VECTOR3
 }
 
 
-void __stdcall CoExecutive::GXOChangeDirection(GXOBJECT_HANDLE gxh,float fRad)
+void  CoExecutive::GXOChangeDirection(GXOBJECT_HANDLE gxh,float fRad)
 {
 #ifdef	_DEBUG
 	CheckHandle(gxh);
@@ -734,7 +694,7 @@ void CoExecutive::GXOGetDirectionFPSStyle(GXOBJECT_HANDLE gxh, VECTOR3* pv3Angle
 }
 
 
-BOOL __stdcall CoExecutive::GXOReplaceModel(GXOBJECT_HANDLE gxh,DWORD dwModelIndex,char* szFileName)
+BOOL  CoExecutive::GXOReplaceModel(GXOBJECT_HANDLE gxh,DWORD dwModelIndex,char* szFileName)
 {
 #ifdef	_DEBUG
 	CheckHandle(gxh);
@@ -743,7 +703,7 @@ BOOL __stdcall CoExecutive::GXOReplaceModel(GXOBJECT_HANDLE gxh,DWORD dwModelInd
 }
 
 
-void __stdcall CoExecutive::GXOGetCollisionMesh(GXOBJECT_HANDLE gxh,COLLISION_MESH_OBJECT_DESC* pColMeshDesc)
+void  CoExecutive::GXOGetCollisionMesh(GXOBJECT_HANDLE gxh,COLLISION_MESH_OBJECT_DESC* pColMeshDesc)
 {
 #ifdef	_DEBUG
 	CheckHandle(gxh);
@@ -751,7 +711,7 @@ void __stdcall CoExecutive::GXOGetCollisionMesh(GXOBJECT_HANDLE gxh,COLLISION_ME
 	*pColMeshDesc = *((CoGXObject*)gxh)->GetCollisionMeshObjectDesc();
 }
 
-BOOL __stdcall CoExecutive::GXOGetWorldMatrixPerObject(GXOBJECT_HANDLE gxh,MATRIX4* pMatWorld,DWORD dwModelIndex,DWORD dwObjIndex)
+BOOL  CoExecutive::GXOGetWorldMatrixPerObject(GXOBJECT_HANDLE gxh,MATRIX4* pMatWorld,DWORD dwModelIndex,DWORD dwObjIndex)
 {
 #ifdef	_DEBUG
 	CheckHandle(gxh);
@@ -759,7 +719,7 @@ BOOL __stdcall CoExecutive::GXOGetWorldMatrixPerObject(GXOBJECT_HANDLE gxh,MATRI
 	return ((CoGXObject*)gxh)->GetWorldMatrixPerObject(pMatWorld,dwModelIndex,dwObjIndex);
 }
 
-DWORD __stdcall CoExecutive::GXOGetObjectIndex(GXOBJECT_HANDLE gxh,char* szObjName,DWORD dwModelIndex)
+DWORD  CoExecutive::GXOGetObjectIndex(GXOBJECT_HANDLE gxh,char* szObjName,DWORD dwModelIndex)
 {
 #ifdef	_DEBUG
 	CheckHandle(gxh);
@@ -767,7 +727,7 @@ DWORD __stdcall CoExecutive::GXOGetObjectIndex(GXOBJECT_HANDLE gxh,char* szObjNa
 	return ((CoGXObject*)gxh)->GetObjectIndex(szObjName,dwModelIndex);
 }
 
-void* __stdcall CoExecutive::GetData(GXMAP_OBJECT_HANDLE gxh)
+void*  CoExecutive::GetData(GXMAP_OBJECT_HANDLE gxh)
 {
 #ifdef	_DEBUG
 	CheckHandle(gxh);
@@ -776,7 +736,7 @@ void* __stdcall CoExecutive::GetData(GXMAP_OBJECT_HANDLE gxh)
 }
 
 
-void __stdcall CoExecutive::SetData(GXMAP_OBJECT_HANDLE gxh,void* pData)
+void  CoExecutive::SetData(GXMAP_OBJECT_HANDLE gxh,void* pData)
 {
 #ifdef	_DEBUG
 	CheckHandle(gxh);
@@ -784,7 +744,7 @@ void __stdcall CoExecutive::SetData(GXMAP_OBJECT_HANDLE gxh,void* pData)
 	((CGXMapObject*)gxh)->SetData(pData);
 }
 
-void __stdcall CoExecutive::SetPickType(GXMAP_OBJECT_HANDLE	gxh,PICK_TYPE type)
+void  CoExecutive::SetPickType(GXMAP_OBJECT_HANDLE	gxh,PICK_TYPE type)
 {
 #ifdef	_DEBUG
 	CheckHandle(gxh);
@@ -792,28 +752,28 @@ void __stdcall CoExecutive::SetPickType(GXMAP_OBJECT_HANDLE	gxh,PICK_TYPE type)
 	((CGXMapObject*)gxh)->SetPickType(type);
 }
 
-PICK_TYPE __stdcall CoExecutive::GetPickType(GXMAP_OBJECT_HANDLE gxh)
+PICK_TYPE  CoExecutive::GetPickType(GXMAP_OBJECT_HANDLE gxh)
 {
 #ifdef	_DEBUG
 	CheckHandle(gxh);
 #endif
 	return ((CGXMapObject*)gxh)->GetPickType();
 }
-void __stdcall CoExecutive::EnablePick(GXMAP_OBJECT_HANDLE gxh)
+void  CoExecutive::EnablePick(GXMAP_OBJECT_HANDLE gxh)
 {
 #ifdef	_DEBUG
 	CheckHandle(gxh);
 #endif
 	((CGXMapObject*)gxh)->EnablePick();
 }
-void __stdcall CoExecutive::DisablePick(GXMAP_OBJECT_HANDLE gxh)
+void  CoExecutive::DisablePick(GXMAP_OBJECT_HANDLE gxh)
 {
 #ifdef	_DEBUG
 	CheckHandle(gxh);
 #endif
 	((CGXMapObject*)gxh)->DisablePick();
 }
-void __stdcall CoExecutive::GXTSetPosition(GXTRIGGER_HANDLE gxh,VECTOR3* pv3Pos)
+void  CoExecutive::GXTSetPosition(GXTRIGGER_HANDLE gxh,VECTOR3* pv3Pos)
 {
 #ifdef	_DEBUG
 	CheckHandle(gxh);
@@ -821,7 +781,7 @@ void __stdcall CoExecutive::GXTSetPosition(GXTRIGGER_HANDLE gxh,VECTOR3* pv3Pos)
 	((CoGXEventTrigger*)gxh)->SetPosition(pv3Pos);
 }
 
-void __stdcall CoExecutive::GXTSetScale(GXTRIGGER_HANDLE gxh,VECTOR3* pv3Scale)
+void  CoExecutive::GXTSetScale(GXTRIGGER_HANDLE gxh,VECTOR3* pv3Scale)
 {
 #ifdef	_DEBUG
 	CheckHandle(gxh);
@@ -829,7 +789,7 @@ void __stdcall CoExecutive::GXTSetScale(GXTRIGGER_HANDLE gxh,VECTOR3* pv3Scale)
 	((CoGXEventTrigger*)gxh)->SetScale(pv3Scale);
 }
 
-void __stdcall CoExecutive::GXTSetRotation(GXTRIGGER_HANDLE gxh,VECTOR3* pv3Rot)
+void  CoExecutive::GXTSetRotation(GXTRIGGER_HANDLE gxh,VECTOR3* pv3Rot)
 {
 #ifdef	_DEBUG
 	CheckHandle(gxh);
@@ -837,7 +797,7 @@ void __stdcall CoExecutive::GXTSetRotation(GXTRIGGER_HANDLE gxh,VECTOR3* pv3Rot)
 	((CoGXEventTrigger*)gxh)->SetRotation(pv3Rot);
 }
 
-void __stdcall CoExecutive::GXTGetEventTriggerDesc(GXTRIGGER_HANDLE gxh,EVENT_TRIGGER_DESC* pEVDesc)
+void  CoExecutive::GXTGetEventTriggerDesc(GXTRIGGER_HANDLE gxh,EVENT_TRIGGER_DESC* pEVDesc)
 {
 #ifdef	_DEBUG
 	CheckHandle(gxh);
@@ -846,7 +806,7 @@ void __stdcall CoExecutive::GXTGetEventTriggerDesc(GXTRIGGER_HANDLE gxh,EVENT_TR
 
 }
 
-BOOL __stdcall CoExecutive::IsInViewVolume(GXMAP_OBJECT_HANDLE gxh)
+BOOL  CoExecutive::IsInViewVolume(GXMAP_OBJECT_HANDLE gxh)
 {
 #ifdef	_DEBUG
 	CheckHandle(gxh);
@@ -857,63 +817,63 @@ BOOL __stdcall CoExecutive::IsInViewVolume(GXMAP_OBJECT_HANDLE gxh)
 
 	return bResult;
 }
-void __stdcall CoExecutive::DisableRender(GXMAP_OBJECT_HANDLE gxh)
+void  CoExecutive::DisableRender(GXMAP_OBJECT_HANDLE gxh)
 {
 #ifdef	_DEBUG
 	CheckHandle(gxh);
 #endif
 	((CGXMapObject*)gxh)->DisableRender();
 }
-void __stdcall CoExecutive::EnableRender(GXMAP_OBJECT_HANDLE gxh)
+void  CoExecutive::EnableRender(GXMAP_OBJECT_HANDLE gxh)
 {
 #ifdef	_DEBUG
 	CheckHandle(gxh);
 #endif
 	((CGXMapObject*)gxh)->EnableRender();
 }
-void __stdcall CoExecutive::DisableSchedule(GXMAP_OBJECT_HANDLE gxh)
+void  CoExecutive::DisableSchedule(GXMAP_OBJECT_HANDLE gxh)
 {
 #ifdef	_DEBUG
 	CheckHandle(gxh);
 #endif
 	((CGXMapObject*)gxh)->DisableSchedule();
 }
-void __stdcall CoExecutive::EnableSchedule(GXMAP_OBJECT_HANDLE gxh)
+void  CoExecutive::EnableSchedule(GXMAP_OBJECT_HANDLE gxh)
 {
 #ifdef	_DEBUG
 	CheckHandle(gxh);
 #endif
 	((CGXMapObject*)gxh)->EnableSchedule();
 }
-void __stdcall CoExecutive::SetRenderFlag(GXMAP_OBJECT_HANDLE gxh,DWORD dwFlag)
+void  CoExecutive::SetRenderFlag(GXMAP_OBJECT_HANDLE gxh,DWORD dwFlag)
 {
 #ifdef	_DEBUG
 	CheckHandle(gxh);
 #endif
 	((CGXMapObject*)gxh)->SetRenderFlag(dwFlag);
 }
-DWORD __stdcall	CoExecutive::GetRenderFlag(GXMAP_OBJECT_HANDLE gxh)
+DWORD 	CoExecutive::GetRenderFlag(GXMAP_OBJECT_HANDLE gxh)
 {
 #ifdef	_DEBUG
 	CheckHandle(gxh);
 #endif
 	return ((CGXMapObject*)gxh)->GetRenderFlag();
 }
-void __stdcall CoExecutive::SetAlphaFlag(GXMAP_OBJECT_HANDLE gxh,DWORD dwFlag)
+void  CoExecutive::SetAlphaFlag(GXMAP_OBJECT_HANDLE gxh,DWORD dwFlag)
 {
 #ifdef	_DEBUG
 	CheckHandle(gxh);
 #endif
 	((CGXMapObject*)gxh)->SetAlphaFlag(dwFlag);
 }
-DWORD __stdcall CoExecutive::GetAlphaFlag(GXMAP_OBJECT_HANDLE gxh)
+DWORD  CoExecutive::GetAlphaFlag(GXMAP_OBJECT_HANDLE gxh)
 {
 #ifdef	_DEBUG
 	CheckHandle(gxh);
 #endif
 	return ((CGXMapObject*)gxh)->GetAlphaFlag();
 }
-DWORD __stdcall CoExecutive::GetID(GXMAP_OBJECT_HANDLE gxh)
+DWORD  CoExecutive::GetID(GXMAP_OBJECT_HANDLE gxh)
 {
 #ifdef	_DEBUG
 	CheckHandle(gxh);
@@ -922,49 +882,49 @@ DWORD __stdcall CoExecutive::GetID(GXMAP_OBJECT_HANDLE gxh)
 }
 
 
-BOOL __stdcall CoExecutive::SetID(GXMAP_OBJECT_HANDLE gxh,DWORD dwID)
+BOOL  CoExecutive::SetID(GXMAP_OBJECT_HANDLE gxh,DWORD dwID)
 {
 #ifdef	_DEBUG
 	CheckHandle(gxh);
 #endif
 	return ((CGXMapObject*)gxh)->SetID(dwID);
 }
-void __stdcall CoExecutive::ReleaseID(GXMAP_OBJECT_HANDLE gxh)
+void  CoExecutive::ReleaseID(GXMAP_OBJECT_HANDLE gxh)
 {
 #ifdef	_DEBUG
 	CheckHandle(gxh);
 #endif
 	((CGXMapObject*)gxh)->ReleaseID();
 }
-void __stdcall CoExecutive::SetPropertyFlag(GXMAP_OBJECT_HANDLE gxh,DWORD dwFlag)
+void  CoExecutive::SetPropertyFlag(GXMAP_OBJECT_HANDLE gxh,DWORD dwFlag)
 {
 #ifdef	_DEBUG
 	CheckHandle(gxh);
 #endif
 	((CGXMapObject*)gxh)->SetPropertyFlag(dwFlag);
 }
-DWORD __stdcall CoExecutive::GetPropertyFlag(GXMAP_OBJECT_HANDLE gxh)
+DWORD  CoExecutive::GetPropertyFlag(GXMAP_OBJECT_HANDLE gxh)
 {
 #ifdef	_DEBUG
 	CheckHandle(gxh);
 #endif
 	return ((CGXMapObject*)gxh)->GetPropertyFlag();
 }
-BOOL __stdcall CoExecutive::IsRenderable(GXMAP_OBJECT_HANDLE gxh)
+BOOL  CoExecutive::IsRenderable(GXMAP_OBJECT_HANDLE gxh)
 {
 #ifdef	_DEBUG
 	CheckHandle(gxh);
 #endif
 	return ((CGXMapObject*)gxh)->IsRenderable();
 }
-void __stdcall CoExecutive::EnableUpdateShading(GXMAP_OBJECT_HANDLE gxh)
+void  CoExecutive::EnableUpdateShading(GXMAP_OBJECT_HANDLE gxh)
 {
 #ifdef	_DEBUG
 	CheckHandle(gxh);
 #endif
 	((CGXMapObject*)gxh)->EnableUpdateShading();
 }
-void __stdcall CoExecutive::DisableUpdateShading(GXMAP_OBJECT_HANDLE gxh)
+void  CoExecutive::DisableUpdateShading(GXMAP_OBJECT_HANDLE gxh)
 {
 #ifdef	_DEBUG
 	CheckHandle(gxh);
@@ -972,7 +932,7 @@ void __stdcall CoExecutive::DisableUpdateShading(GXMAP_OBJECT_HANDLE gxh)
 	((CGXMapObject*)gxh)->DisableUpdateShading();
 }
 
-void __stdcall CoExecutive::EnableSendShadow(GXMAP_OBJECT_HANDLE gxh)
+void  CoExecutive::EnableSendShadow(GXMAP_OBJECT_HANDLE gxh)
 {
 #ifdef	_DEBUG
 	CheckHandle(gxh);
@@ -980,7 +940,7 @@ void __stdcall CoExecutive::EnableSendShadow(GXMAP_OBJECT_HANDLE gxh)
 	((CGXMapObject*)gxh)->EnableSendShadow();
 }
 
-void __stdcall CoExecutive::DisableSendShadow(GXMAP_OBJECT_HANDLE gxh)
+void  CoExecutive::DisableSendShadow(GXMAP_OBJECT_HANDLE gxh)
 {
 #ifdef	_DEBUG
 	CheckHandle(gxh);
@@ -988,7 +948,7 @@ void __stdcall CoExecutive::DisableSendShadow(GXMAP_OBJECT_HANDLE gxh)
 	((CGXMapObject*)gxh)->DisableSendShadow();
 }
 
-GXMAP_OBJECT_HANDLE __stdcall CoExecutive::GetGXMapObjectWithID(DWORD dwID)
+GXMAP_OBJECT_HANDLE  CoExecutive::GetGXMapObjectWithID(DWORD dwID)
 {
 	//	QBHSelect(QBHASH_HANDLE pHash,DWORD OUT* pItems,DWORD dwMaxItemNum,DWORD dwKeyData);
 	CGXMapObject*	pObj = NULL;
@@ -1012,7 +972,7 @@ void CoExecutive::GXOMoveForward(GXOBJECT_HANDLE gxh,float fDistance)
 	((CoGXObject*)gxh)->MoveForward(fDistance);
 
 }
-void __stdcall CoExecutive::EstimatedMoveForward(GXOBJECT_HANDLE gxh,VECTOR3* pv3Pos,float fDistance)
+void  CoExecutive::EstimatedMoveForward(GXOBJECT_HANDLE gxh,VECTOR3* pv3Pos,float fDistance)
 {
 #ifdef	_DEBUG
 	CheckHandle(gxh);
@@ -1031,7 +991,7 @@ BOOL CoExecutive::GXOAttachLight(GXOBJECT_HANDLE gxoh,char* szObjName,GXLIGHT_HA
 
 	return ((CoGXObject*)gxoh)->AttachLight((CoGXLight*)gxlh,szObjName,pv3Offset,dwAttachType);
 }
-BOOL __stdcall CoExecutive::GXODetachLight(GXOBJECT_HANDLE gxoh,GXLIGHT_HANDLE child_gxlh)
+BOOL  CoExecutive::GXODetachLight(GXOBJECT_HANDLE gxoh,GXLIGHT_HANDLE child_gxlh)
 {
 #ifdef	_DEBUG
 	CheckHandle(gxoh);
@@ -1039,7 +999,7 @@ BOOL __stdcall CoExecutive::GXODetachLight(GXOBJECT_HANDLE gxoh,GXLIGHT_HANDLE c
 #endif
 	return ((CoGXObject*)gxoh)->DetachLight((CoGXLight*)child_gxlh);
 }
-void __stdcall CoExecutive::GXLDisableStaticShadow(GXLIGHT_HANDLE gxl)
+void  CoExecutive::GXLDisableStaticShadow(GXLIGHT_HANDLE gxl)
 {
 #ifdef	_DEBUG
 	CheckHandle(gxl);
@@ -1047,7 +1007,7 @@ void __stdcall CoExecutive::GXLDisableStaticShadow(GXLIGHT_HANDLE gxl)
 
 	((CoGXLight*)gxl)->DisableStaticShadow();
 }
-void __stdcall CoExecutive::GXLEnableStaticShadow(GXLIGHT_HANDLE gxl)
+void  CoExecutive::GXLEnableStaticShadow(GXLIGHT_HANDLE gxl)
 {
 #ifdef	_DEBUG
 	CheckHandle(gxl);
@@ -1055,7 +1015,7 @@ void __stdcall CoExecutive::GXLEnableStaticShadow(GXLIGHT_HANDLE gxl)
 
 	((CoGXLight*)gxl)->EnableStaticShadow();
 }
-BOOL __stdcall CoExecutive::GXLIsDisableStaticShadow(GXLIGHT_HANDLE gxl)
+BOOL  CoExecutive::GXLIsDisableStaticShadow(GXLIGHT_HANDLE gxl)
 {
 #ifdef	_DEBUG
 	CheckHandle(gxl);
@@ -1064,14 +1024,14 @@ BOOL __stdcall CoExecutive::GXLIsDisableStaticShadow(GXLIGHT_HANDLE gxl)
 	return ((CoGXLight*)gxl)->IsDiableStaticShadow();
 }
 
-void __stdcall CoExecutive::GXLDisableDynamicLight(GXLIGHT_HANDLE gxl)
+void  CoExecutive::GXLDisableDynamicLight(GXLIGHT_HANDLE gxl)
 {
 #ifdef	_DEBUG
 	CheckHandle(gxl);
 #endif
 	((CoGXLight*)gxl)->DisableDynamicLight();
 }
-void __stdcall CoExecutive::GXLEnableDynamicLight(GXLIGHT_HANDLE gxl)
+void  CoExecutive::GXLEnableDynamicLight(GXLIGHT_HANDLE gxl)
 {
 #ifdef	_DEBUG
 	CheckHandle(gxl);
@@ -1079,14 +1039,14 @@ void __stdcall CoExecutive::GXLEnableDynamicLight(GXLIGHT_HANDLE gxl)
 	((CoGXLight*)gxl)->EnableDynamicLight();
 }
 
-BOOL __stdcall CoExecutive::GXLIsEnableDynamicLight(GXLIGHT_HANDLE gxl)
+BOOL  CoExecutive::GXLIsEnableDynamicLight(GXLIGHT_HANDLE gxl)
 {	
 #ifdef	_DEBUG
 	CheckHandle(gxl);
 #endif
 	return ((CoGXLight*)gxl)->IsEnableDynamicLight();
 }
-void __stdcall CoExecutive::GXLSetLightDesc(GXLIGHT_HANDLE gxh,LIGHT_DESC* pLightDesc)
+void  CoExecutive::GXLSetLightDesc(GXLIGHT_HANDLE gxh,LIGHT_DESC* pLightDesc)
 {
 #ifdef	_DEBUG
 	CheckHandle(gxh);
@@ -1094,7 +1054,7 @@ void __stdcall CoExecutive::GXLSetLightDesc(GXLIGHT_HANDLE gxh,LIGHT_DESC* pLigh
 	((CoGXLight*)gxh)->SetLightDesc(pLightDesc);
 }
 
-void __stdcall CoExecutive::GXLGetLightDesc(GXLIGHT_HANDLE gxh,LIGHT_DESC* pLightDesc)
+void  CoExecutive::GXLGetLightDesc(GXLIGHT_HANDLE gxh,LIGHT_DESC* pLightDesc)
 {
 #ifdef	_DEBUG
 	CheckHandle(gxh);
@@ -1102,21 +1062,21 @@ void __stdcall CoExecutive::GXLGetLightDesc(GXLIGHT_HANDLE gxh,LIGHT_DESC* pLigh
 
 	((CoGXLight*)gxh)->GetLightDesc(pLightDesc);
 }
-void __stdcall CoExecutive::GXLSetPosition(GXLIGHT_HANDLE gxh,VECTOR3* pv3Pos)
+void  CoExecutive::GXLSetPosition(GXLIGHT_HANDLE gxh,VECTOR3* pv3Pos)
 {
 #ifdef	_DEBUG
 	CheckHandle(gxh);
 #endif
 	((CoGXLight*)gxh)->SetPosition(pv3Pos);
 }
-void __stdcall CoExecutive::GXLMovePosition(GXLIGHT_HANDLE gxh,VECTOR3* pv3Pos)
+void  CoExecutive::GXLMovePosition(GXLIGHT_HANDLE gxh,VECTOR3* pv3Pos)
 {
 #ifdef	_DEBUG
 	CheckHandle(gxh);
 #endif
 	((CoGXLight*)gxh)->MovePosition(pv3Pos);
 }
-void __stdcall CoExecutive::GXLGetPosition(GXLIGHT_HANDLE gxh,VECTOR3* pv3Pos)
+void  CoExecutive::GXLGetPosition(GXLIGHT_HANDLE gxh,VECTOR3* pv3Pos)
 {
 #ifdef	_DEBUG
 	CheckHandle(gxh);
@@ -1124,28 +1084,28 @@ void __stdcall CoExecutive::GXLGetPosition(GXLIGHT_HANDLE gxh,VECTOR3* pv3Pos)
 	((CoGXLight*)gxh)->GetPosition(pv3Pos);
 }
 
-void __stdcall CoExecutive::GXOEnableHFieldApply(GXOBJECT_HANDLE gxo)
+void  CoExecutive::GXOEnableHFieldApply(GXOBJECT_HANDLE gxo)
 {
 #ifdef	_DEBUG
 	CheckHandle(gxo);
 #endif
 	((CoGXObject*)gxo)->EnableHFieldApply();
 }
-void __stdcall CoExecutive::GXODisableHFieldApply(GXOBJECT_HANDLE gxo)
+void  CoExecutive::GXODisableHFieldApply(GXOBJECT_HANDLE gxo)
 {
 #ifdef	_DEBUG
 	CheckHandle(gxo);
 #endif
 	((CoGXObject*)gxo)->DisableHFieldApply();
 }
-BOOL __stdcall CoExecutive::GXOIsHFieldApply(GXOBJECT_HANDLE gxo)
+BOOL  CoExecutive::GXOIsHFieldApply(GXOBJECT_HANDLE gxo)
 {
 #ifdef	_DEBUG
 	CheckHandle(gxo);
 #endif
 	return ((CoGXObject*)gxo)->IsHFieldApply();
 }
-BOOL __stdcall CoExecutive::GXOIsAsEffect(GXOBJECT_HANDLE gxo)
+BOOL  CoExecutive::GXOIsAsEffect(GXOBJECT_HANDLE gxo)
 {
 #ifdef	_DEBUG
 	CheckHandle(gxo);
@@ -1153,7 +1113,7 @@ BOOL __stdcall CoExecutive::GXOIsAsEffect(GXOBJECT_HANDLE gxo)
 	return ((CoGXObject*)gxo)->IsAsEffect();
 }
 
-void __stdcall CoExecutive::GXOSetZOrder(GXOBJECT_HANDLE gxo,int iZOrder)
+void  CoExecutive::GXOSetZOrder(GXOBJECT_HANDLE gxo,int iZOrder)
 {
 #ifdef	_DEBUG
 	CheckHandle(gxo);
@@ -1161,7 +1121,7 @@ void __stdcall CoExecutive::GXOSetZOrder(GXOBJECT_HANDLE gxo,int iZOrder)
 	((CoGXObject*)gxo)->SetZOrder(iZOrder);
 
 }
-void __stdcall CoExecutive::GXOEnableAsEffect(GXOBJECT_HANDLE gxo)
+void  CoExecutive::GXOEnableAsEffect(GXOBJECT_HANDLE gxo)
 {
 #ifdef	_DEBUG
 	CheckHandle(gxo);
@@ -1170,7 +1130,7 @@ void __stdcall CoExecutive::GXOEnableAsEffect(GXOBJECT_HANDLE gxo)
 }
 
 
-void __stdcall CoExecutive::GXODisableAsEffect(GXOBJECT_HANDLE gxo)
+void  CoExecutive::GXODisableAsEffect(GXOBJECT_HANDLE gxo)
 {
 #ifdef	_DEBUG
 	CheckHandle(gxo);
@@ -1178,7 +1138,7 @@ void __stdcall CoExecutive::GXODisableAsEffect(GXOBJECT_HANDLE gxo)
 	((CoGXObject*)gxo)->DisableAsEffect();
 }
 
-void __stdcall CoExecutive::GXOEnableScaleOfAttachedModel(GXOBJECT_HANDLE gxo)
+void  CoExecutive::GXOEnableScaleOfAttachedModel(GXOBJECT_HANDLE gxo)
 {
 #ifdef	_DEBUG
 	CheckHandle(gxo);
@@ -1186,7 +1146,7 @@ void __stdcall CoExecutive::GXOEnableScaleOfAttachedModel(GXOBJECT_HANDLE gxo)
 	((CoGXObject*)gxo)->SetAxisAlignOK(TRUE);
 }
 
-void __stdcall CoExecutive::GXODisableScaleOfAttachedModel(GXOBJECT_HANDLE gxo)
+void  CoExecutive::GXODisableScaleOfAttachedModel(GXOBJECT_HANDLE gxo)
 {
 #ifdef	_DEBUG
 	CheckHandle(gxo);
@@ -1196,14 +1156,14 @@ void __stdcall CoExecutive::GXODisableScaleOfAttachedModel(GXOBJECT_HANDLE gxo)
 }
 
 
-void __stdcall	CoExecutive::GXOEnableSelfIllumin(GXOBJECT_HANDLE gxo)
+void 	CoExecutive::GXOEnableSelfIllumin(GXOBJECT_HANDLE gxo)
 {
 #ifdef	_DEBUG
 	CheckHandle(gxo);
 #endif
 	((CoGXObject*)gxo)->EnableSelfIllumin();
 }
-void __stdcall	CoExecutive::GXODisableSelfIllumin(GXOBJECT_HANDLE gxo)
+void 	CoExecutive::GXODisableSelfIllumin(GXOBJECT_HANDLE gxo)
 {
 #ifdef	_DEBUG
 	CheckHandle(gxo);
@@ -1211,7 +1171,7 @@ void __stdcall	CoExecutive::GXODisableSelfIllumin(GXOBJECT_HANDLE gxo)
 	((CoGXObject*)gxo)->DisableSelfIllumin();
 }
 
-BOOL __stdcall CoExecutive::GXOIsEnableSelfIllumin(GXOBJECT_HANDLE gxo)
+BOOL  CoExecutive::GXOIsEnableSelfIllumin(GXOBJECT_HANDLE gxo)
 {
 #ifdef	_DEBUG
 	CheckHandle(gxo);
@@ -1324,7 +1284,7 @@ void CoExecutive::DeleteModelFileDesc(MODEL_FILE_DESC* pModelFileDesc)
 	}
 }
 
-GXTRIGGER_HANDLE __stdcall CoExecutive::CreateGXEventTrigger(GXSchedulePROC pProc,void* /*pData*/,DWORD dwFlag)
+GXTRIGGER_HANDLE  CoExecutive::CreateGXEventTrigger(GXSchedulePROC pProc,void* /*pData*/,DWORD dwFlag)
 {
 	CoGXEventTrigger*	pTrigger = new CoGXEventTrigger;
 #ifdef _DEBUG
@@ -1350,7 +1310,7 @@ lb_return:
 	return (GXTRIGGER_HANDLE)pTrigger;
 }
 
-BOOL __stdcall CoExecutive::PreCreateLight(char* szFileName,DWORD /*dwFlag*/)
+BOOL  CoExecutive::PreCreateLight(char* szFileName,DWORD /*dwFlag*/)
 {
 	/*
 	total	7			
@@ -1710,7 +1670,7 @@ lb_return:
 	return dwModelNum;
 	
 }
-void __stdcall CoExecutive::UnloadPreLoadedGXObject(GXOBJECT_HANDLE gxo)
+void  CoExecutive::UnloadPreLoadedGXObject(GXOBJECT_HANDLE gxo)
 {
 	#ifdef	_DEBUG
 	CheckHandle(gxo);
@@ -1721,12 +1681,12 @@ void __stdcall CoExecutive::UnloadPreLoadedGXObject(GXOBJECT_HANDLE gxo)
 }
 
 
-void __stdcall CoExecutive::GXOSetScheduleProc(GXOBJECT_HANDLE gxo,GXSchedulePROC pProc)
+void  CoExecutive::GXOSetScheduleProc(GXOBJECT_HANDLE gxo,GXSchedulePROC pProc)
 {
 	CoGXObject*	pGXO = (CoGXObject*)gxo;
 	pGXO->SetScheduleProc(pProc);
 }
-GXSchedulePROC __stdcall CoExecutive::GXOGetScheduleProc(GXOBJECT_HANDLE gxo)
+GXSchedulePROC  CoExecutive::GXOGetScheduleProc(GXOBJECT_HANDLE gxo)
 {
 	CoGXObject*	pGXO = (CoGXObject*)gxo;
 	return pGXO->GetScheduleProc();
@@ -1777,13 +1737,13 @@ int CoExecutive::PreLoadModelData(void* pFP)
 lb_return:
 	return iResult;
 }
-void __stdcall CoExecutive::UnloadAllPreLoadedGXObject(DWORD dwFlag)
+void  CoExecutive::UnloadAllPreLoadedGXObject(DWORD dwFlag)
 {
 	m_pGeometry->UnloadAllPreLoadedItem(dwFlag);
 }
 
 	
-GXMAP_HANDLE __stdcall CoExecutive::CreateGXMap(GXMapSchedulePROC pProc,void* /*pData*/,DWORD /*dwFlag*/)
+GXMAP_HANDLE  CoExecutive::CreateGXMap(GXMapSchedulePROC pProc,void* /*pData*/,DWORD /*dwFlag*/)
 {
 
 	if (m_pgxMap)
@@ -1844,7 +1804,7 @@ lb_return:
 	return (GXMAP_HANDLE*)m_pgxMap;
 
 }
-BOOL __stdcall CoExecutive::InsertHFieldToGXMap(IHeightField* pHField)
+BOOL  CoExecutive::InsertHFieldToGXMap(IHeightField* pHField)
 {
 	BOOL	bResult = FALSE;
 	if (!m_pgxMap)
@@ -1857,7 +1817,7 @@ lb_return:
 	
 
 }
-BOOL __stdcall CoExecutive::InsertStaticModelTOGXMap(I3DStaticModel* pModel)
+BOOL  CoExecutive::InsertStaticModelTOGXMap(I3DStaticModel* pModel)
 {
 	BOOL	bResult = FALSE;
 	if (!m_pgxMap)
@@ -1868,7 +1828,7 @@ BOOL __stdcall CoExecutive::InsertStaticModelTOGXMap(I3DStaticModel* pModel)
 lb_return:
 	return bResult;
 }
-BOOL __stdcall CoExecutive::BeginBuildMap(DWORD dwFlag)
+BOOL  CoExecutive::BeginBuildMap(DWORD dwFlag)
 {
 	BOOL	bResult = FALSE;
 	if (!m_pgxMap)
@@ -1880,7 +1840,7 @@ lb_return:
 	return bResult;
 }
 	
-BOOL __stdcall CoExecutive::EndBuildMap(float fTop,float fBottom)
+BOOL  CoExecutive::EndBuildMap(float fTop,float fBottom)
 {
 	BOOL	bResult = FALSE;
 	if (!m_pgxMap)
@@ -1890,7 +1850,7 @@ BOOL __stdcall CoExecutive::EndBuildMap(float fTop,float fBottom)
 lb_retrn:
 	return bResult;
 }
-BOOL __stdcall	CoExecutive::RebuildMap(float fTop,float fBottom)
+BOOL 	CoExecutive::RebuildMap(float fTop,float fBottom)
 {
 	BOOL	bResult = FALSE;
 	if (!m_pgxMap)
@@ -1903,7 +1863,7 @@ lb_retrn:
 	
 }
 
-BOOL __stdcall CoExecutive::GetWorldBoundingBox( MAABB* pWorldBox)
+BOOL  CoExecutive::GetWorldBoundingBox( MAABB* pWorldBox)
 {
 	BOOL	bResult = FALSE;
 	if (!m_pgxMap)
@@ -1917,7 +1877,7 @@ lb_return:
 	return bResult;
 }
 
-void __stdcall CoExecutive::SetHFieldDetail(DWORD dwDetail)
+void  CoExecutive::SetHFieldDetail(DWORD dwDetail)
 {
 	if (m_pgxMap)
 	{
@@ -2040,12 +2000,12 @@ lb_return:
 }
 
 
-void __stdcall CoExecutive::SetRenderMode(DWORD dwRenderMode)
+void  CoExecutive::SetRenderMode(DWORD dwRenderMode)
 {
 	m_dwRenderMode |= dwRenderMode;
 }
 
-BOOL __stdcall CoExecutive::SetSymbol(SYMBOL_TYPE type,char* szFileName)
+BOOL  CoExecutive::SetSymbol(SYMBOL_TYPE type,char* szFileName)
 {
 
 	BOOL		bResult = FALSE;
@@ -2075,7 +2035,7 @@ lb_return:
 	VECTOR3			pv3IntersectPoint;
 	float			fDist;
 
-DWORD __stdcall CoExecutive::GXOGetMultipleObjectWithScreenCoord(PICK_GXOBJECT_DESC* pPickDesc,DWORD dwMaxDescNum,POINT* ptCursor,DWORD dwViewportIndex,DWORD dwFlag)
+DWORD  CoExecutive::GXOGetMultipleObjectWithScreenCoord(PICK_GXOBJECT_DESC* pPickDesc,DWORD dwMaxDescNum,POINT* ptCursor,DWORD dwViewportIndex,DWORD dwFlag)
 {
 	// 뷰볼륨안에 들어오는 놈만 잡아서 골라낸다.
 
@@ -2135,7 +2095,7 @@ lb_return:
 
 	return dwGXOCount;
 }
-DWORD __stdcall CoExecutive::GXOGetMultipleObjectWithScreenCoordRect(PICK_GXOBJECT_DESC* pPickDesc,DWORD dwMaxDescNum,RECT* pRect,DWORD dwViewportIndex,DWORD /*dwFlag*/)
+DWORD  CoExecutive::GXOGetMultipleObjectWithScreenCoordRect(PICK_GXOBJECT_DESC* pPickDesc,DWORD dwMaxDescNum,RECT* pRect,DWORD dwViewportIndex,DWORD /*dwFlag*/)
 {
     
 	VIEW_VOLUME		vv;	
@@ -2187,7 +2147,7 @@ lb_return:
 
 	return dwGXOCount;
 }
-BOOL __stdcall CoExecutive::IsCollisionWithScreenCoord(GXOBJECT_HANDLE gxh,VECTOR3* pv3IntersectPoint,DWORD* pdwModelIndex,DWORD* pdwObjIndex,float* pfDist,POINT* ptCursor,DWORD dwViewportIndex,DWORD dwFlag)
+BOOL  CoExecutive::IsCollisionWithScreenCoord(GXOBJECT_HANDLE gxh,VECTOR3* pv3IntersectPoint,DWORD* pdwModelIndex,DWORD* pdwObjIndex,float* pfDist,POINT* ptCursor,DWORD dwViewportIndex,DWORD dwFlag)
 {
 #ifdef	_DEBUG
 	CheckHandle(gxh);
@@ -2197,7 +2157,7 @@ BOOL __stdcall CoExecutive::IsCollisionWithScreenCoord(GXOBJECT_HANDLE gxh,VECTO
 	
 }
 
-GXOBJECT_HANDLE __stdcall CoExecutive::GXOGetObjectWithScreenCoord(VECTOR3* pv3IntersectPoint,DWORD* pdwModelIndex,DWORD* pdwObjIndex,float* pfDist,POINT* ptCursor,DWORD dwViewportIndex,DWORD dwFlag)
+GXOBJECT_HANDLE  CoExecutive::GXOGetObjectWithScreenCoord(VECTOR3* pv3IntersectPoint,DWORD* pdwModelIndex,DWORD* pdwObjIndex,float* pfDist,POINT* ptCursor,DWORD dwViewportIndex,DWORD dwFlag)
 {
 	// 뷰볼륨안에 들어오는 놈만 잡아서 골라낸다.
 
@@ -2267,7 +2227,7 @@ GXOBJECT_HANDLE __stdcall CoExecutive::GXOGetObjectWithScreenCoord(VECTOR3* pv3I
 lb_return:
 	return pObjResult;
 }
-GXLIGHT_HANDLE __stdcall CoExecutive::GXLGetLightWithScreenCoord(VECTOR3* pv3IntersectPoint,float* pfDist,POINT* ptCursor,DWORD dwViewportIndex,DWORD dwFlag)
+GXLIGHT_HANDLE  CoExecutive::GXLGetLightWithScreenCoord(VECTOR3* pv3IntersectPoint,float* pfDist,POINT* ptCursor,DWORD dwViewportIndex,DWORD dwFlag)
 {
 		// 뷰볼륨안에 들어오는 놈만 잡아서 골라낸다.
 
@@ -2306,7 +2266,7 @@ GXLIGHT_HANDLE __stdcall CoExecutive::GXLGetLightWithScreenCoord(VECTOR3* pv3Int
 	
 	return pLightResult;
 }
-GXTRIGGER_HANDLE __stdcall CoExecutive::GXTGetObjectWithScreenCoord(VECTOR3* pv3IntersectPoint,float* pfDist,POINT* ptCursor,DWORD dwViewportIndex,DWORD dwFlag)
+GXTRIGGER_HANDLE  CoExecutive::GXTGetObjectWithScreenCoord(VECTOR3* pv3IntersectPoint,float* pfDist,POINT* ptCursor,DWORD dwViewportIndex,DWORD dwFlag)
 {
 	float				fMinDist	=	900000.0f;
 	VECTOR3				v3IntersectPointResult;
@@ -2344,7 +2304,7 @@ GXTRIGGER_HANDLE __stdcall CoExecutive::GXTGetObjectWithScreenCoord(VECTOR3* pv3
 }
 
 
-BOOL __stdcall CoExecutive::GXMGetCollisionPointWithScreenCoord(DWORD* pdwObjIndex,VECTOR3* pv3IntersectPoint,float* pfDist,POINT* ptCursor,DWORD dwFlag)
+BOOL  CoExecutive::GXMGetCollisionPointWithScreenCoord(DWORD* pdwObjIndex,VECTOR3* pv3IntersectPoint,float* pfDist,POINT* ptCursor,DWORD dwFlag)
 {
 	float				fMinDist	=	900000.0f;
 	VECTOR3				v3IntersectPointResult;
@@ -2415,7 +2375,7 @@ lb_return:
 
 	return bResult;
 }
-BOOL __stdcall CoExecutive::GXMGetHFieldCollisionPointWithRay(VECTOR3* pv3IntersectPoint,float* pfDist,VECTOR3* pv3Orig,VECTOR3* pv3Dir)
+BOOL  CoExecutive::GXMGetHFieldCollisionPointWithRay(VECTOR3* pv3IntersectPoint,float* pfDist,VECTOR3* pv3Orig,VECTOR3* pv3Dir)
 {
 	BOOL			bResult = FALSE;
 	
@@ -2434,7 +2394,7 @@ BOOL __stdcall CoExecutive::GXMGetHFieldCollisionPointWithRay(VECTOR3* pv3Inters
 lb_return:
 	return bResult;
 }
-ULONG __stdcall CoExecutive::GXMGetHField(IHeightField** ppHField)
+ULONG  CoExecutive::GXMGetHField(IHeightField** ppHField)
 {
 	ULONG	ulResult = 0xffffffff;
 
@@ -2452,7 +2412,7 @@ lb_return:
 
 
 }
-BOOL __stdcall CoExecutive::GXMGetHFieldHeight(float* py,float x,float z)
+BOOL  CoExecutive::GXMGetHFieldHeight(float* py,float x,float z)
 {
 	BOOL		bResult = FALSE;
 	if (!m_pgxMap)
@@ -2466,7 +2426,7 @@ BOOL __stdcall CoExecutive::GXMGetHFieldHeight(float* py,float x,float z)
 lb_return:
 	return bResult;
 }
-BOOL __stdcall CoExecutive::GXMGetHFieldCollisionPointWithScreenCoord(VECTOR3* pv3IntersectPoint,float* pfDist,POINT* ptCursor)
+BOOL  CoExecutive::GXMGetHFieldCollisionPointWithScreenCoord(VECTOR3* pv3IntersectPoint,float* pfDist,POINT* ptCursor)
 {
 	IHeightField*		pHField;
 	BOOL				bResult = FALSE;
@@ -2483,7 +2443,7 @@ BOOL __stdcall CoExecutive::GXMGetHFieldCollisionPointWithScreenCoord(VECTOR3* p
 lb_return:
 	return bResult;
 }
-BOOL __stdcall CoExecutive::GXOInitializeIllusionEffect(GXOBJECT_HANDLE gxh,DWORD dwMaxIllusionFrameNum,char* szObjName,void* pMtlHandle,DWORD dwFlag)
+BOOL  CoExecutive::GXOInitializeIllusionEffect(GXOBJECT_HANDLE gxh,DWORD dwMaxIllusionFrameNum,char* szObjName,void* pMtlHandle,DWORD dwFlag)
 {
 #ifdef	_DEBUG
 	CheckHandle(gxh);
@@ -2493,7 +2453,7 @@ BOOL __stdcall CoExecutive::GXOInitializeIllusionEffect(GXOBJECT_HANDLE gxh,DWOR
 	return pObj->InitializeIllusionEffect(dwMaxIllusionFrameNum,szObjName,pMtlHandle,dwFlag);
 }
 
-void __stdcall CoExecutive::GXOBeginIllusionEffect(GXOBJECT_HANDLE gxh)
+void  CoExecutive::GXOBeginIllusionEffect(GXOBJECT_HANDLE gxh)
 {
 #ifdef	_DEBUG
 	CheckHandle(gxh);
@@ -2501,7 +2461,7 @@ void __stdcall CoExecutive::GXOBeginIllusionEffect(GXOBJECT_HANDLE gxh)
 	CoGXObject*	pObj = (CoGXObject*)gxh;
 	pObj->BeginIllusionEffect();
 }
-void __stdcall CoExecutive::GXOEndIllusionEffect(GXOBJECT_HANDLE gxh)
+void  CoExecutive::GXOEndIllusionEffect(GXOBJECT_HANDLE gxh)
 {
 #ifdef	_DEBUG
 	CheckHandle(gxh);
@@ -2514,7 +2474,7 @@ void __stdcall CoExecutive::GXOEndIllusionEffect(GXOBJECT_HANDLE gxh)
 
 
 
-void __stdcall CoExecutive::GXODisableUnloadPreLoaded(GXOBJECT_HANDLE gxh)
+void  CoExecutive::GXODisableUnloadPreLoaded(GXOBJECT_HANDLE gxh)
 {
 #ifdef	_DEBUG
 	CheckHandle(gxh);
@@ -2522,7 +2482,7 @@ void __stdcall CoExecutive::GXODisableUnloadPreLoaded(GXOBJECT_HANDLE gxh)
 	((CoGXObject*)gxh)->DisableUnloadPreLoaded();
 }
 
-void __stdcall CoExecutive::GXOEnableUnloadPreLoaded(GXOBJECT_HANDLE gxh)
+void  CoExecutive::GXOEnableUnloadPreLoaded(GXOBJECT_HANDLE gxh)
 {
 #ifdef	_DEBUG
 	CheckHandle(gxh);
@@ -2541,7 +2501,7 @@ void __stdcall CoExecutive::GXOEnableUnloadPreLoaded(GXOBJECT_HANDLE gxh)
 
 
 
-DWORD __stdcall CoExecutive::GXOGetAttachedGXObjects(GXOBJECT_HANDLE gxh,GXOBJECT_HANDLE* pGXOList,DWORD dwMaxNum)
+DWORD  CoExecutive::GXOGetAttachedGXObjects(GXOBJECT_HANDLE gxh,GXOBJECT_HANDLE* pGXOList,DWORD dwMaxNum)
 {
 #ifdef	_DEBUG
 	CheckHandle(gxh);
@@ -2554,7 +2514,7 @@ DWORD __stdcall CoExecutive::GXOGetAttachedGXObjects(GXOBJECT_HANDLE gxh,GXOBJEC
 
 
 	
-BOOL __stdcall CoExecutive::GXOAttachCameraFront(GXOBJECT_HANDLE gxo,float fDist)
+BOOL  CoExecutive::GXOAttachCameraFront(GXOBJECT_HANDLE gxo,float fDist)
 {
 	BOOL	bResult = FALSE;
 #ifdef	_DEBUG
@@ -2573,7 +2533,7 @@ BOOL __stdcall CoExecutive::GXOAttachCameraFront(GXOBJECT_HANDLE gxo,float fDist
 lb_return:
 	return bResult;
 }
-BOOL __stdcall CoExecutive::GXODetachCameraFront(GXOBJECT_HANDLE gxo)
+BOOL  CoExecutive::GXODetachCameraFront(GXOBJECT_HANDLE gxo)
 {
 	BOOL	bResult = FALSE;
 #ifdef	_DEBUG
@@ -2591,7 +2551,7 @@ BOOL __stdcall CoExecutive::GXODetachCameraFront(GXOBJECT_HANDLE gxo)
 lb_return:
 	return bResult;
 }
-BOOL __stdcall CoExecutive::GXOAttach(GXOBJECT_HANDLE gxh,GXOBJECT_HANDLE to_gxh,char* szObjName)
+BOOL  CoExecutive::GXOAttach(GXOBJECT_HANDLE gxh,GXOBJECT_HANDLE to_gxh,char* szObjName)
 {
 #ifdef	_DEBUG
 	CheckHandle(gxh);
@@ -2610,7 +2570,7 @@ BOOL __stdcall CoExecutive::GXOAttach(GXOBJECT_HANDLE gxh,GXOBJECT_HANDLE to_gxh
 lb_return:
 	return bResult;
 }
-BOOL __stdcall CoExecutive::GXODetach(GXOBJECT_HANDLE gxh,GXOBJECT_HANDLE child_gxh)
+BOOL  CoExecutive::GXODetach(GXOBJECT_HANDLE gxh,GXOBJECT_HANDLE child_gxh)
 {
 	#ifdef	_DEBUG
 		CheckHandle(gxh);
@@ -2621,12 +2581,12 @@ BOOL __stdcall CoExecutive::GXODetach(GXOBJECT_HANDLE gxh,GXOBJECT_HANDLE child_
 	return pObj->RequestDetach((CoGXObject*)child_gxh);
 }
 
-DWORD __stdcall CoExecutive::GetFrameCount()
+DWORD  CoExecutive::GetFrameCount()
 {
 	return m_dwFrameCount;
 }
 
-BOOL __stdcall CoExecutive::GXMStaticShadeMap(DWORD dwAmbientColor,LIGHT_DESC* pLight,DWORD dwLightNum,DWORD dwFlag,SHADE_FUNC pFunc)
+BOOL  CoExecutive::GXMStaticShadeMap(DWORD dwAmbientColor,LIGHT_DESC* pLight,DWORD dwLightNum,DWORD dwFlag,SHADE_FUNC pFunc)
 {
 	BOOL	bResult = FALSE;
 	
@@ -2640,20 +2600,20 @@ lb_return:
 
 }
 
-void __stdcall CoExecutive::GXMSetHFieldAlphaFlag(DWORD dwAlpha)
+void  CoExecutive::GXMSetHFieldAlphaFlag(DWORD dwAlpha)
 {
 	if (m_pgxMap)
 		m_pgxMap->SetHFieldAlphaFlag(dwAlpha);
 
 }
-void __stdcall CoExecutive::GXMSetSTMAlphaFlag(DWORD dwAlpha)
+void  CoExecutive::GXMSetSTMAlphaFlag(DWORD dwAlpha)
 {
 	if (m_pgxMap)
 		m_pgxMap->SetSTMAlphaFlag(dwAlpha);
 }
 
 /*
-BOOL __stdcall CoExecutive::GXMStaticShadeMap(DWORD dwAmbientColor,LIGHT_DESC* pLight,DWORD dwLightNum,DWORD dwFlag)
+BOOL  CoExecutive::GXMStaticShadeMap(DWORD dwAmbientColor,LIGHT_DESC* pLight,DWORD dwLightNum,DWORD dwFlag)
 {
 	I3DStaticModel*	pModel;
 	IHeightField*	pHField;
@@ -2770,9 +2730,9 @@ lb_return:
 void CoExecutive::ResourceCheck()
 {
 
-//	GLOBAL_FUNC_DLL		DWORD				__stdcall	ITGetItemNum(ITEMTABLE_HANDLE pIT);
-//	GLOBAL_FUNC_DLL		void*				__stdcall	ITGetItem(ITEMTABLE_HANDLE pIT,DWORD dwItemIndex);
-//	GLOBAL_FUNC_DLL		void*				__stdcall	ITGetItemSequential(ITEMTABLE_HANDLE pIT,DWORD dwSeqIndex);
+//	GLOBAL_FUNC_DLL		DWORD					ITGetItemNum(ITEMTABLE_HANDLE pIT);
+//	GLOBAL_FUNC_DLL		void*					ITGetItem(ITEMTABLE_HANDLE pIT,DWORD dwItemIndex);
+//	GLOBAL_FUNC_DLL		void*					ITGetItemSequential(ITEMTABLE_HANDLE pIT,DWORD dwSeqIndex);
 #ifdef _DEBUG
 	char	txt[512];
 	DWORD	dwNum = 0;
@@ -3011,13 +2971,13 @@ CoExecutive::~CoExecutive()
 }
 
 /*
-CLIPPER_CANDIDATE_BUFF* __stdcall CoExecutive::FindNearObject( BOUNDING_SPHERE* pBS)
+CLIPPER_CANDIDATE_BUFF*  CoExecutive::FindNearObject( BOUNDING_SPHERE* pBS)
 {
 	m_Clipper.FindNearObject( pBS->v3Point, pBS->fRs);
 	return	m_Clipper.GetResult();
 }
 */
-void __stdcall	CoExecutive::GXOSetBoundingVolume( GXOBJECT_HANDLE gxh, BOUNDING_VOLUME* pBV)
+void 	CoExecutive::GXOSetBoundingVolume( GXOBJECT_HANDLE gxh, BOUNDING_VOLUME* pBV)
 {
 	#ifdef	_DEBUG
 		CheckHandle(gxh);
@@ -3026,41 +2986,41 @@ void __stdcall	CoExecutive::GXOSetBoundingVolume( GXOBJECT_HANDLE gxh, BOUNDING_
 }
 
 
-void __stdcall	CoExecutive::GXOMovePositionWithCollide(GXOBJECT_HANDLE gxh,VECTOR3* pv3Pos)		// 2002/05/22
+void 	CoExecutive::GXOMovePositionWithCollide(GXOBJECT_HANDLE gxh,VECTOR3* pv3Pos)		// 2002/05/22
 {
 	((CoGXObject*)gxh)->MovePositionWithCollide(pv3Pos);
 }
 
 
-DWORD __stdcall CoExecutive::GetGXObjectsNum()
+DWORD  CoExecutive::GetGXObjectsNum()
 {
 	return ITGetItemNum(m_pIndexItemTableGXObject);
 }
-GXOBJECT_HANDLE __stdcall CoExecutive::GetGXObjectWithSeqIndex(DWORD dwIndex)
+GXOBJECT_HANDLE  CoExecutive::GetGXObjectWithSeqIndex(DWORD dwIndex)
 {
 	return (GXLIGHT_HANDLE)ITGetItemSequential(m_pIndexItemTableGXObject,dwIndex);
 }
-DWORD __stdcall CoExecutive::GetGXLightsNum()
+DWORD  CoExecutive::GetGXLightsNum()
 {
 	return ITGetItemNum(m_pIndexItemTableGXLight);
 }
 
-GXLIGHT_HANDLE __stdcall CoExecutive::GetGXLightWithSeqIndex(DWORD dwIndex)
+GXLIGHT_HANDLE  CoExecutive::GetGXLightWithSeqIndex(DWORD dwIndex)
 {
 	return (GXLIGHT_HANDLE)ITGetItemSequential(m_pIndexItemTableGXLight,dwIndex);
 }
 
-DWORD __stdcall CoExecutive::GetGXEventTriggersNum()
+DWORD  CoExecutive::GetGXEventTriggersNum()
 {
 	return ITGetItemNum(m_pIndexItemTableGXTrigger);
 
 }
-GXTRIGGER_HANDLE __stdcall CoExecutive::GetGXEventTriggerWithSeqIndex(DWORD dwIndex)
+GXTRIGGER_HANDLE  CoExecutive::GetGXEventTriggerWithSeqIndex(DWORD dwIndex)
 {
 	return (GXTRIGGER_HANDLE)ITGetItemSequential(m_pIndexItemTableGXTrigger,dwIndex);
 }
 
-BOOL __stdcall CoExecutive::LoadMapScript(char* szFileName,LOAD_CALLBACK_FUNC pFunc,DWORD dwLoadFlag)
+BOOL  CoExecutive::LoadMapScript(char* szFileName,LOAD_CALLBACK_FUNC pFunc,DWORD dwLoadFlag)
 {
 	PrintfDebugString( "CoExecutive::LoadMapScript( \"%s\")\n", szFileName);
 
@@ -3369,7 +3329,7 @@ lb_set_proc_exit:
 	return TRUE;
 
 }
-void __stdcall CoExecutive::DeleteAllGXMapObjectsWitLoadMapScript()
+void  CoExecutive::DeleteAllGXMapObjectsWitLoadMapScript()
 {
 	PrintfDebugString("CoExecutive::DeleteAllGXMapObjectsWitLoadMapScript()\n");
 	if (m_pgxMap)
@@ -3377,7 +3337,7 @@ void __stdcall CoExecutive::DeleteAllGXMapObjectsWitLoadMapScript()
 		m_pgxMap->DeleteAllInitialObjects();
 	}
 }
-DWORD __stdcall CoExecutive::GXOGetAllObjectsWitLoadMapScript(GXOBJECT_HANDLE* pObjArray,DWORD dwMaxNum)
+DWORD  CoExecutive::GXOGetAllObjectsWitLoadMapScript(GXOBJECT_HANDLE* pObjArray,DWORD dwMaxNum)
 {
 	
 	DWORD	dwResult = 0;
@@ -3389,7 +3349,7 @@ DWORD __stdcall CoExecutive::GXOGetAllObjectsWitLoadMapScript(GXOBJECT_HANDLE* p
 }
 
 
-BOOL __stdcall CoExecutive::GetMapReadCount(char* szFileName)
+BOOL  CoExecutive::GetMapReadCount(char* szFileName)
 {
 
 	char	buf[128];
@@ -3439,14 +3399,14 @@ lb_return:
 }
 
 
-BOOL __stdcall CoExecutive::SetCameraFitGXObject(GXOBJECT_HANDLE gxo,float fNear,float fFar,float fFov,DWORD dwViewportIndex)
+BOOL  CoExecutive::SetCameraFitGXObject(GXOBJECT_HANDLE gxo,float fNear,float fFar,float fFov,DWORD dwViewportIndex)
 {
 	CoGXObject*	pGXO = (CoGXObject*)gxo;
 	m_pGeometry->SetCameraFitCollisionMesh(pGXO->GetCollisionMeshObjectDesc(),fNear,fFar,fFov,dwViewportIndex);
 	return TRUE;
 }
 
-DWORD __stdcall CoExecutive::Run(DWORD dwBackColor,GX_FUNC pfBeforeRenderFunc,GX_FUNC pfAfterRenderFunc,DWORD dwFlag)
+DWORD  CoExecutive::Run(DWORD dwBackColor,GX_FUNC pfBeforeRenderFunc,GX_FUNC pfAfterRenderFunc,DWORD dwFlag)
 {
 	DWORD		dwResult;
 
@@ -3467,7 +3427,7 @@ DWORD __stdcall CoExecutive::Run(DWORD dwBackColor,GX_FUNC pfBeforeRenderFunc,GX
 lb_return:
 	return dwResult;
 }
-BOOL __stdcall CoExecutive::RenderCameraFrontObject(float fDist)
+BOOL  CoExecutive::RenderCameraFrontObject(float fDist)
 {
 	BOOL	bResult = FALSE;
 	if (!m_pCameraAttatchedGXObject)
@@ -3485,7 +3445,7 @@ lb_return:
 	return bResult;
 }
 
-DWORD __stdcall CoExecutive::Process()
+DWORD  CoExecutive::Process()
 {
 	DWORD		i;
 
@@ -3589,7 +3549,7 @@ lb_return:
 
 
 
-DWORD __stdcall CoExecutive::GXOProcess(GXOBJECT_HANDLE gxo,DWORD dwFrameInc)
+DWORD  CoExecutive::GXOProcess(GXOBJECT_HANDLE gxo,DWORD dwFrameInc)
 {
 	#ifdef	_DEBUG
 		CheckHandle(gxo);
@@ -3597,7 +3557,7 @@ DWORD __stdcall CoExecutive::GXOProcess(GXOBJECT_HANDLE gxo,DWORD dwFrameInc)
 	return ((CoGXObject*)gxo)->OnFrame(this,0,dwFrameInc,0);
 
 }
-BOOL __stdcall CoExecutive::GXORender(GXOBJECT_HANDLE gxo)
+BOOL  CoExecutive::GXORender(GXOBJECT_HANDLE gxo)
 {
 	#ifdef	_DEBUG
 		CheckHandle(gxo);
@@ -3606,7 +3566,7 @@ BOOL __stdcall CoExecutive::GXORender(GXOBJECT_HANDLE gxo)
 	return ((CoGXObject*)gxo)->Render();
 }
 
-DWORD __stdcall CoExecutive::IsValidHandle(GXMAP_OBJECT_HANDLE gxh)
+DWORD  CoExecutive::IsValidHandle(GXMAP_OBJECT_HANDLE gxh)
 {
 	// 나중에 해쉬로 바꾸도록 하자.
 	CoGXObject*			pGXO;
@@ -3661,7 +3621,7 @@ DWORD __stdcall CoExecutive::IsValidHandle(GXMAP_OBJECT_HANDLE gxh)
 lb_return:
 	return dwResult;
 }
-void __stdcall CoExecutive::Render()
+void  CoExecutive::Render()
 {
 	m_dwRenderFrameCount++;
 
@@ -3877,7 +3837,7 @@ lb_return:
 }
 
 
-BOOL __stdcall CoExecutive::DeleteGXObject(GXOBJECT_HANDLE gxh)
+BOOL  CoExecutive::DeleteGXObject(GXOBJECT_HANDLE gxh)
 {
 	#ifdef	_DEBUG
 		CheckHandle(gxh);
@@ -3895,7 +3855,7 @@ BOOL __stdcall CoExecutive::DeleteGXObject(GXOBJECT_HANDLE gxh)
 	return bResult;
 
 }
-BOOL __stdcall CoExecutive::DeleteGXLight(GXLIGHT_HANDLE gxh)
+BOOL  CoExecutive::DeleteGXLight(GXLIGHT_HANDLE gxh)
 {
 	#ifdef	_DEBUG
 		CheckHandle(gxh);
@@ -3912,7 +3872,7 @@ BOOL __stdcall CoExecutive::DeleteGXLight(GXLIGHT_HANDLE gxh)
 	}
 	return bResult;
 }
-BOOL __stdcall CoExecutive::DeleteGXEventTrigger(GXTRIGGER_HANDLE gxh)
+BOOL  CoExecutive::DeleteGXEventTrigger(GXTRIGGER_HANDLE gxh)
 {
 	#ifdef	_DEBUG
 		CheckHandle(gxh);
@@ -3930,7 +3890,7 @@ BOOL __stdcall CoExecutive::DeleteGXEventTrigger(GXTRIGGER_HANDLE gxh)
 	return bResult;
 }
 
-BOOL __stdcall CoExecutive::DeleteGXDecal(GXLIGHT_HANDLE gxh)
+BOOL  CoExecutive::DeleteGXDecal(GXLIGHT_HANDLE gxh)
 {
 #ifdef	_DEBUG
 	CheckHandle(gxh);
@@ -3947,7 +3907,7 @@ BOOL __stdcall CoExecutive::DeleteGXDecal(GXLIGHT_HANDLE gxh)
 	}
 	return bResult;
 }
-BOOL __stdcall CoExecutive::DefDeleteGXObject(GXOBJECT_HANDLE gxh)
+BOOL  CoExecutive::DefDeleteGXObject(GXOBJECT_HANDLE gxh)
 {
 	BOOL	bResult;
 	DWORD	argList[2];
@@ -3968,7 +3928,7 @@ BOOL __stdcall CoExecutive::DefDeleteGXObject(GXOBJECT_HANDLE gxh)
 #endif
 	return bResult;
 }
-BOOL __stdcall CoExecutive::DefDeleteGXLight(GXLIGHT_HANDLE gxh)
+BOOL  CoExecutive::DefDeleteGXLight(GXLIGHT_HANDLE gxh)
 {
 	BOOL	bResult;
 	DWORD	argList[2];
@@ -3988,7 +3948,7 @@ BOOL __stdcall CoExecutive::DefDeleteGXLight(GXLIGHT_HANDLE gxh)
 #endif
 	return bResult;
 }
-BOOL __stdcall CoExecutive::DefDeleteGXEventTrigger(GXTRIGGER_HANDLE gxh)
+BOOL  CoExecutive::DefDeleteGXEventTrigger(GXTRIGGER_HANDLE gxh)
 {
 	BOOL	bResult;
 	DWORD	argList[2];
@@ -4012,7 +3972,7 @@ BOOL __stdcall CoExecutive::DefDeleteGXEventTrigger(GXTRIGGER_HANDLE gxh)
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 // DPC에 의해서 나중에 호출될 함수들..일단 delete함수들이 해당된다.
-BOOL __stdcall CoExecutive::DeleteAllGXObjects()
+BOOL  CoExecutive::DeleteAllGXObjects()
 {
 
 	BOOL	bResult = FALSE;
@@ -4048,7 +4008,7 @@ lb_return:
 	return bResult;
 }
 
-BOOL __stdcall CoExecutive::DeleteAllGXLights()
+BOOL  CoExecutive::DeleteAllGXLights()
 {
 	BOOL	bResult = FALSE;
 	CoGXLight*	pLight;
@@ -4076,7 +4036,7 @@ BOOL __stdcall CoExecutive::DeleteAllGXLights()
 lb_return:
 	return bResult;
 }
-BOOL __stdcall CoExecutive::DeleteAllGXEventTriggers()
+BOOL  CoExecutive::DeleteAllGXEventTriggers()
 {
 	BOOL	bResult = FALSE;
 
@@ -4112,7 +4072,7 @@ BOOL __stdcall CoExecutive::DeleteAllGXEventTriggers()
 lb_return:
 	return bResult;
 }
-BOOL __stdcall CoExecutive::ImmDeleteGXObject(GXOBJECT_HANDLE gxh)
+BOOL  CoExecutive::ImmDeleteGXObject(GXOBJECT_HANDLE gxh)
 {
 
 	BOOL	bResult = FALSE;
@@ -4151,7 +4111,7 @@ lb_return:
 	return bResult;
 
 }
-BOOL __stdcall CoExecutive::ImmDeleteGXLight(GXLIGHT_HANDLE gxh)
+BOOL  CoExecutive::ImmDeleteGXLight(GXLIGHT_HANDLE gxh)
 {	
 
 	BOOL	bResult = FALSE;
@@ -4174,7 +4134,7 @@ BOOL __stdcall CoExecutive::ImmDeleteGXLight(GXLIGHT_HANDLE gxh)
 lb_return:
 	return bResult;
 }
-BOOL __stdcall CoExecutive::ImmDeleteGXEventTrigger(GXTRIGGER_HANDLE gxh)
+BOOL  CoExecutive::ImmDeleteGXEventTrigger(GXTRIGGER_HANDLE gxh)
 {
 	BOOL	bResult = FALSE;
 	DWORD	dwItemIndex = ((CoGXEventTrigger*)gxh)->GetIndex();
@@ -4194,7 +4154,7 @@ lb_return:
 }
 
 
-BOOL __stdcall CoExecutive::DeleteGXMap(GXMAP_HANDLE /*gxm*/)
+BOOL  CoExecutive::DeleteGXMap(GXMAP_HANDLE /*gxm*/)
 {
 	if (m_pgxMap)
 	{
@@ -4235,22 +4195,22 @@ DWORD CoExecutive::GetGXLightList(GXOBJECT_HANDLE gxh,LIGHT_DESC* pRelatedLight,
 }*/
 /*
 // various heap
-GLOBAL_FUNC_DLL		VHEAP_HANDLE		__stdcall	VHPCreateHeap();
-GLOBAL_FUNC_DLL		void				__stdcall	VHPHeapCheck(VHEAP_HANDLE pVHeap);
-GLOBAL_FUNC_DLL		void				__stdcall	VHPLeakCheck(VHEAP_HANDLE pVHeap);
-GLOBAL_FUNC_DLL		BOOL				__stdcall	VHPInitialize(VHEAP_HANDLE pVHeap,void* pMassMemory,DWORD dwMassMemorySize,DWORD dwMaxBlockNum);
-GLOBAL_FUNC_DLL		void*				__stdcall	VHPAlloc(VHEAP_HANDLE pVHeap,DWORD dwSize);
-GLOBAL_FUNC_DLL		void				__stdcall	VHPFree(VHEAP_HANDLE pVHeap,void* pMem);
-GLOBAL_FUNC_DLL		void*				__stdcall	VHPDBGAlloc(VHEAP_HANDLE pVHeap,DWORD dwSize);
-GLOBAL_FUNC_DLL		void				__stdcall 	VHPDBGFree(VHEAP_HANDLE pVHeap,void* pMem);
-GLOBAL_FUNC_DLL		void				__stdcall	VHPReleaseHeap(VHEAP_HANDLE pVHeap);
+GLOBAL_FUNC_DLL		VHEAP_HANDLE			VHPCreateHeap();
+GLOBAL_FUNC_DLL		void					VHPHeapCheck(VHEAP_HANDLE pVHeap);
+GLOBAL_FUNC_DLL		void					VHPLeakCheck(VHEAP_HANDLE pVHeap);
+GLOBAL_FUNC_DLL		BOOL					VHPInitialize(VHEAP_HANDLE pVHeap,void* pMassMemory,DWORD dwMassMemorySize,DWORD dwMaxBlockNum);
+GLOBAL_FUNC_DLL		void*					VHPAlloc(VHEAP_HANDLE pVHeap,DWORD dwSize);
+GLOBAL_FUNC_DLL		void					VHPFree(VHEAP_HANDLE pVHeap,void* pMem);
+GLOBAL_FUNC_DLL		void*					VHPDBGAlloc(VHEAP_HANDLE pVHeap,DWORD dwSize);
+GLOBAL_FUNC_DLL		void				 	VHPDBGFree(VHEAP_HANDLE pVHeap,void* pMem);
+GLOBAL_FUNC_DLL		void					VHPReleaseHeap(VHEAP_HANDLE pVHeap);
 */
 
 // 데칼 2003.01.15
 // 데칼 생성. 익스큐티브 이니셜라이즈때의 버퍼에서 하나 할당한다.
 // 특별히 메모리에 뭔가를 생성하는건 아니다. 실시간 할당으로 고쳐야 하나.? 장래엔 그게 좋을지도.
 const DWORD	dwMaxTriCount	=	400;			// 임시 상수. 어디쯤 잡아야 하는가?
-GXDECAL_HANDLE __stdcall CoExecutive::CreateGXDecal( DECAL_DESC* pDesc, GXDecalSchedulePROC pProc, void* /*pData*/, DWORD /*dwFlag*/)
+GXDECAL_HANDLE  CoExecutive::CreateGXDecal( DECAL_DESC* pDesc, GXDecalSchedulePROC pProc, void* /*pData*/, DWORD /*dwFlag*/)
 {
 	DWORD	dwWholeFuncClock	=	GetLowClock();
 	DWORD	dwAddOneObject;
@@ -4395,7 +4355,7 @@ lb_return:
 }
 
 // 데칼 삭제. 익스큐티브 버퍼에서 그냥 하나 지운다.
-BOOL __stdcall CoExecutive::ImmDeleteGXDecal( GXDECAL_HANDLE gxd)
+BOOL  CoExecutive::ImmDeleteGXDecal( GXDECAL_HANDLE gxd)
 {
 	// 핸들체크 요..
 #ifdef	_DEBUG
@@ -4417,7 +4377,7 @@ BOOL __stdcall CoExecutive::ImmDeleteGXDecal( GXDECAL_HANDLE gxd)
 lb_return:
 	return bResult;
 }
-BOOL __stdcall CoExecutive::DefDeleteGXDecal(GXTRIGGER_HANDLE gxh)
+BOOL  CoExecutive::DefDeleteGXDecal(GXTRIGGER_HANDLE gxh)
 {
 	BOOL	bResult;
 	DWORD	argList[2];
@@ -4439,7 +4399,7 @@ BOOL __stdcall CoExecutive::DefDeleteGXDecal(GXTRIGGER_HANDLE gxh)
 }
 // 데칼 모두 삭제. 익스큐티브의 버퍼에서 모두 지운다. 
 /*
-BOOL __stdcall CoExecutive::DeleteAllGXDecal()
+BOOL  CoExecutive::DeleteAllGXDecal()
 {
 	DWORD	i;
 	for( i = 0; i < m_dwMaxDecalNum; i++)
@@ -4555,7 +4515,7 @@ void CoExecutive::GXOGetVelocity( GXOBJECT_HANDLE gxo, VECTOR3* pOutVelocity)
 */
 
 
-ULONG __stdcall CoExecutive::GXMGetStaticModel( I3DStaticModel** ppStaticModel)
+ULONG  CoExecutive::GXMGetStaticModel( I3DStaticModel** ppStaticModel)
 {
 	ULONG	ulResult;
 		
@@ -4574,7 +4534,7 @@ ULONG __stdcall CoExecutive::GXMGetStaticModel( I3DStaticModel** ppStaticModel)
 	return ulResult;
 }
 
-void __stdcall CoExecutive::GXOGetLastVelocityAfterCollisionTest( GXOBJECT_HANDLE gxh, VECTOR3* pLastVelocity)
+void  CoExecutive::GXOGetLastVelocityAfterCollisionTest( GXOBJECT_HANDLE gxh, VECTOR3* pLastVelocity)
 {
 #ifdef	_DEBUG
 	CheckHandle(gxh);

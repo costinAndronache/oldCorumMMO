@@ -3,9 +3,9 @@
 //////////////////////////////////////////////////////////////////////
 #include "StdAfx.h"
 #include "GXDecal.h"
-#include "../4DYuchiGRX_myself97/TriangleLib.h"
-#include "../4DYuchiGRX_myself97/CheckClock.h"
-#include "../4DyuchiGRX_myself97/myself97common.h"
+#include "./4DYuchiGRX_myself97/TriangleLib.h"
+#include "./4DYuchiGRX_myself97/CheckClock.h"
+#include "./4DyuchiGRX_myself97/myself97common.h"
 #include "../4DYuchiGXGFunc/global.h"
 #include "Executive.h"
 #include "GXDefault.h"
@@ -218,7 +218,7 @@ DWORD CGXDecal::ClipPolygonWithPlane( VECTOR3* pOutPoly, VECTOR3* pInPoly, DWORD
 }
 
 
-BOOL __stdcall CGXDecal::Render()
+BOOL  CGXDecal::Render()
 {
 	DWORD	dwRenderClock	=	GetLowClock();
 
@@ -506,21 +506,21 @@ void CGXDecal::Delete()
 	DeleteMaterial();
 }
 
-COLLISION_MESH_OBJECT_DESC*	__stdcall	CGXDecal::GetCollisionMeshObjectDesc()
+COLLISION_MESH_OBJECT_DESC*		CGXDecal::GetCollisionMeshObjectDesc()
 {
 	return NULL;
 }
-DWORD __stdcall	CGXDecal::OnFrame(I4DyuchiGXExecutive* pExecutive,DWORD msg,int arg1,int arg2)
+DWORD 	CGXDecal::OnFrame(I4DyuchiGXExecutive* pExecutive,DWORD msg,int arg1,int arg2)
 {
 	return m_pProc(pExecutive,this,msg,arg1,arg2,m_pData);
 
 }
-DWORD __stdcall	CGXDecal::GetObjectIndexInModel()
+DWORD 	CGXDecal::GetObjectIndexInModel()
 {
 	return 0;
 }
 
-BOOL __stdcall CGXDecal::IsCollisionWithScreenCoord(
+BOOL  CGXDecal::IsCollisionWithScreenCoord(
 	VECTOR3* pv3IntersectPoint,
 	DWORD* pdwModelIndex,
 	DWORD* pdwObjIndex,
@@ -533,14 +533,14 @@ BOOL __stdcall CGXDecal::IsCollisionWithScreenCoord(
 	*pdwObjIndex = 0xffffffff;
 	return FALSE;
 }
-DWORD __stdcall	CGXDecal::CreateIVertexList(IVERTEX** ppVertex)
+DWORD 	CGXDecal::CreateIVertexList(IVERTEX** ppVertex)
 {
 	return 0;
 }
-void __stdcall CGXDecal::ReleaseIVertexList(IVERTEX*	pVertex)
+void  CGXDecal::ReleaseIVertexList(IVERTEX*	pVertex)
 {
 }
-BOOL __stdcall CGXDecal::ShadeLightMapObject(VECTOR3* pv3,DWORD /*dwFacesNum*/,LIGHT_DESC* pLight,SHADE_FUNC pFunc)
+BOOL  CGXDecal::ShadeLightMapObject(VECTOR3* pv3,DWORD /*dwFacesNum*/,LIGHT_DESC* pLight,SHADE_FUNC pFunc)
 {
 	return FALSE;
 }

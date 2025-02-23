@@ -29,8 +29,8 @@ void OnTimerEventCharSelect(DWORD dwTimerIndex);
 void InitPacketProcCharSelect();
 
 // 렌더 함수 //
-DWORD __stdcall AfterRenderGameCharSelect();
-DWORD __stdcall BeforeRenderGameCharSelect();
+DWORD AfterRenderGameCharSelect();
+DWORD BeforeRenderGameCharSelect();
 
 // 키처리 함수 //
 void OnKeyDownCharSelect(WPARAM wParam, LPARAM lParam);

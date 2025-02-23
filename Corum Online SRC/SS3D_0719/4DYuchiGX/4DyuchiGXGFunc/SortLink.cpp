@@ -7,7 +7,7 @@
 
 #include "global.h"
 
-GLOBAL_FUNC_DLL void __stdcall LinktToSortLink(SORT_LINK** ppHead,SORT_LINK** ppTail,SORT_LINK* pNew)
+GLOBAL_FUNC_DLL void  LinktToSortLink(SORT_LINK** ppHead,SORT_LINK** ppTail,SORT_LINK* pNew)
 {
 	if (!*ppHead)
 	{
@@ -24,7 +24,7 @@ GLOBAL_FUNC_DLL void __stdcall LinktToSortLink(SORT_LINK** ppHead,SORT_LINK** pp
 		pNew->pPrv		=	NULL;				// 이진영 추가 2004/03/39.
 	}
 }
-GLOBAL_FUNC_DLL void __stdcall UnLinkFromSortLink(SORT_LINK** ppHead,SORT_LINK** ppTail,SORT_LINK* pDel)
+GLOBAL_FUNC_DLL void  UnLinkFromSortLink(SORT_LINK** ppHead,SORT_LINK** ppTail,SORT_LINK* pDel)
 {
 	SORT_LINK*	pPrv = pDel->pPrv;
 	SORT_LINK*	pNext = pDel->pNext;

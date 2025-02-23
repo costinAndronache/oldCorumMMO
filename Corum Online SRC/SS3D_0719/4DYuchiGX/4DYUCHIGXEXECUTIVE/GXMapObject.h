@@ -86,14 +86,14 @@ public:
 
 
 	
-	virtual	COLLISION_MESH_OBJECT_DESC*	__stdcall	GetCollisionMeshObjectDesc() = 0;
-	virtual DWORD						__stdcall	OnFrame(I4DyuchiGXExecutive* pExecutive,DWORD msg,int arg1,int arg2) = 0;
-	virtual DWORD						__stdcall	GetObjectIndexInModel() = 0;
-	virtual BOOL						__stdcall	Render() = 0;
-	virtual	BOOL						__stdcall	IsCollisionWithScreenCoord(VECTOR3* pv3IntersectPoint,DWORD* pdwModelIndex,DWORD* pdwObjIndex,float* pfDist,POINT* ptCursor,DWORD dwViewportIndex,DWORD dwFlag) = 0;
-	virtual DWORD						__stdcall	CreateIVertexList(IVERTEX** ppVertex) = 0;
-	virtual void						__stdcall	ReleaseIVertexList(IVERTEX*	pVertex) = 0;
-	virtual BOOL						__stdcall	ShadeLightMapObject(VECTOR3* pv3,DWORD dwFacesNum,LIGHT_DESC* pLight,SHADE_FUNC pFunc) = 0;
+	virtual	COLLISION_MESH_OBJECT_DESC*		GetCollisionMeshObjectDesc() = 0;
+	virtual DWORD							OnFrame(I4DyuchiGXExecutive* pExecutive,DWORD msg,int arg1,int arg2) = 0;
+	virtual DWORD							GetObjectIndexInModel() = 0;
+	virtual BOOL							Render() = 0;
+	virtual	BOOL							IsCollisionWithScreenCoord(VECTOR3* pv3IntersectPoint,DWORD* pdwModelIndex,DWORD* pdwObjIndex,float* pfDist,POINT* ptCursor,DWORD dwViewportIndex,DWORD dwFlag) = 0;
+	virtual DWORD							CreateIVertexList(IVERTEX** ppVertex) = 0;
+	virtual void							ReleaseIVertexList(IVERTEX*	pVertex) = 0;
+	virtual BOOL							ShadeLightMapObject(VECTOR3* pv3,DWORD dwFacesNum,LIGHT_DESC* pLight,SHADE_FUNC pFunc) = 0;
 
 
 };

@@ -32,16 +32,16 @@ class CoGXLight : public CGXMapObject
 	void					Cleanup();
 	
 public:
-	COLLISION_MESH_OBJECT_DESC*	__stdcall	GetCollisionMeshObjectDesc();
-	DWORD						__stdcall	OnFrame(I4DyuchiGXExecutive* pExecutive,DWORD msg,int arg1,int arg2);
-	DWORD						__stdcall	GetObjectIndexInModel();
-	BOOL						__stdcall	Render();		
-	DWORD						__stdcall	CreateIVertexList(IVERTEX** ppVertex);
-	void						__stdcall	ReleaseIVertexList(IVERTEX*	pVertex);
-	BOOL						__stdcall	ShadeLightMapObject(VECTOR3* pv3,DWORD dwFacesNum,LIGHT_DESC* pLight,SHADE_FUNC pFunc);
+	COLLISION_MESH_OBJECT_DESC*		GetCollisionMeshObjectDesc();
+	DWORD							OnFrame(I4DyuchiGXExecutive* pExecutive,DWORD msg,int arg1,int arg2);
+	DWORD							GetObjectIndexInModel();
+	BOOL							Render();		
+	DWORD							CreateIVertexList(IVERTEX** ppVertex);
+	void							ReleaseIVertexList(IVERTEX*	pVertex);
+	BOOL							ShadeLightMapObject(VECTOR3* pv3,DWORD dwFacesNum,LIGHT_DESC* pLight,SHADE_FUNC pFunc);
 	
 
-	BOOL						__stdcall	IsCollisionWithScreenCoord(VECTOR3* pv3IntersectPoint,DWORD* pdwModelIndex,DWORD* pdwObjIndex,float* pfDist,POINT* ptCursor,DWORD dwViewportIndex,DWORD dwFlag);
+	BOOL							IsCollisionWithScreenCoord(VECTOR3* pv3IntersectPoint,DWORD* pdwModelIndex,DWORD* pdwObjIndex,float* pfDist,POINT* ptCursor,DWORD dwViewportIndex,DWORD dwFlag);
 	
 	DWORD					GetImageWidth() {return m_dwWidth;}
 	DWORD					GetImageHeight() {return m_dwHeight;}

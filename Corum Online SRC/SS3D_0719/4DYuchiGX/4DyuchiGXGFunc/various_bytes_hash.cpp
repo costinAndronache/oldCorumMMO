@@ -9,7 +9,7 @@
 DWORD ConvertString(char* szString);
 DWORD CreateKey(void* pData,DWORD dwSampleNum,DWORD dwBucketNum);
 
-GLOBAL_FUNC_DLL	VBHASH_HANDLE	__stdcall	VBHCreate()
+GLOBAL_FUNC_DLL	VBHASH_HANDLE		VBHCreate()
 {
 	CVariousBytesHashTable* pHash = new CVariousBytesHashTable;
 	return pHash;
@@ -23,7 +23,7 @@ CVariousBytesHashTable::CVariousBytesHashTable()
 
 }
 
-GLOBAL_FUNC_DLL BOOL __stdcall VBHInitialize(VBHASH_HANDLE pHash,DWORD dwMaxBucketNum,DWORD dwMaxSize,DWORD dwMaxItemNum)
+GLOBAL_FUNC_DLL BOOL  VBHInitialize(VBHASH_HANDLE pHash,DWORD dwMaxBucketNum,DWORD dwMaxSize,DWORD dwMaxItemNum)
 {
 	CVariousBytesHashTable* pVBHash = (CVariousBytesHashTable*)pHash;
 
@@ -36,7 +36,7 @@ GLOBAL_FUNC_DLL BOOL __stdcall VBHInitialize(VBHASH_HANDLE pHash,DWORD dwMaxBuck
 	pVBHash->m_pStaticMemoryPool = CreateStaticMemoryPool();
 	return InitializeStaticMemoryPool(pVBHash->m_pStaticMemoryPool,VB_BUCKET_DEFAULT_SIZE + dwMaxSize,dwMaxItemNum/4,dwMaxItemNum);
 }
-GLOBAL_FUNC_DLL DWORD __stdcall VBHSelect(VBHASH_HANDLE pHash,DWORD OUT* pItems,DWORD dwMaxItemNum,void* pKeyData,DWORD dwSize)
+GLOBAL_FUNC_DLL DWORD  VBHSelect(VBHASH_HANDLE pHash,DWORD OUT* pItems,DWORD dwMaxItemNum,void* pKeyData,DWORD dwSize)
 {
 	VB_BUCKET*		pCurBucket;
 	DWORD			dwResult;
@@ -133,7 +133,7 @@ VB_BUCKET* VBBucketAlloc() {
 	return new VB_BUCKET;
 }
 
-GLOBAL_FUNC_DLL void* __stdcall VBHInsert(VBHASH_HANDLE pHash,DWORD dwItem,void* pKeyData,DWORD dwSize)
+GLOBAL_FUNC_DLL void*  VBHInsert(VBHASH_HANDLE pHash,DWORD dwItem,void* pKeyData,DWORD dwSize)
 {
 	void*	pSearchHandle;
 	__asm
@@ -230,7 +230,7 @@ lb_return:
 
 
 }
-GLOBAL_FUNC_DLL BOOL __stdcall VBHDelete(VBHASH_HANDLE pHash,void* pBucket)
+GLOBAL_FUNC_DLL BOOL  VBHDelete(VBHASH_HANDLE pHash,void* pBucket)
 {
 	CVariousBytesHashTable* pVBHash = (CVariousBytesHashTable*)pHash;
 
@@ -244,7 +244,7 @@ GLOBAL_FUNC_DLL BOOL __stdcall VBHDelete(VBHASH_HANDLE pHash,void* pBucket)
 		
 	return TRUE;
 }
-GLOBAL_FUNC_DLL DWORD __stdcall	VBHDeleteWithKey(VBHASH_HANDLE pHash,void* pKeyData,DWORD dwSize,DelFunc pDelFunc)
+GLOBAL_FUNC_DLL DWORD 	VBHDeleteWithKey(VBHASH_HANDLE pHash,void* pKeyData,DWORD dwSize,DelFunc pDelFunc)
 {
 	DWORD dwItem;
 
@@ -261,7 +261,7 @@ GLOBAL_FUNC_DLL DWORD __stdcall	VBHDeleteWithKey(VBHASH_HANDLE pHash,void* pKeyD
 	return dwDelCount;
 }
 
-GLOBAL_FUNC_DLL void* __stdcall VBHGetSearchHandle(VBHASH_HANDLE pHash,void* pKeyData,DWORD dwSize)
+GLOBAL_FUNC_DLL void*  VBHGetSearchHandle(VBHASH_HANDLE pHash,void* pKeyData,DWORD dwSize)
 {
 	VB_BUCKET*		pCurBucket;
 	void*			pSearchHandle;
@@ -342,7 +342,7 @@ lb_return:
 
 	return pSearchHandle;
 }
-GLOBAL_FUNC_DLL	void __stdcall VBHRelease(VBHASH_HANDLE pHash)
+GLOBAL_FUNC_DLL	void  VBHRelease(VBHASH_HANDLE pHash)
 {
 	CVariousBytesHashTable* pVBHash = (CVariousBytesHashTable*)pHash;
 
@@ -360,7 +360,7 @@ GLOBAL_FUNC_DLL	void __stdcall VBHRelease(VBHASH_HANDLE pHash)
 	delete pVBHash;
 
 }
-GLOBAL_FUNC_DLL	DWORD __stdcall	VBHGetMaxBucketNum(VBHASH_HANDLE pHash)
+GLOBAL_FUNC_DLL	DWORD 	VBHGetMaxBucketNum(VBHASH_HANDLE pHash)
 {
 	CVariousBytesHashTable* pVBHash = (CVariousBytesHashTable*)pHash;
 	
@@ -368,7 +368,7 @@ GLOBAL_FUNC_DLL	DWORD __stdcall	VBHGetMaxBucketNum(VBHASH_HANDLE pHash)
 }
 
 
-GLOBAL_FUNC_DLL void __stdcall	VBHDeleteAll(VBHASH_HANDLE pHash)
+GLOBAL_FUNC_DLL void 	VBHDeleteAll(VBHASH_HANDLE pHash)
 {
 	CVariousBytesHashTable* pVBHash = (CVariousBytesHashTable*)pHash;
 
@@ -386,7 +386,7 @@ GLOBAL_FUNC_DLL void __stdcall	VBHDeleteAll(VBHASH_HANDLE pHash)
 		}
 	}
 }
-GLOBAL_FUNC_DLL DWORD __stdcall	VBHGetAllItem(VBHASH_HANDLE pHash,DWORD* pdwItemList,DWORD dwMaxItemNum)
+GLOBAL_FUNC_DLL DWORD 	VBHGetAllItem(VBHASH_HANDLE pHash,DWORD* pdwItemList,DWORD dwMaxItemNum)
 {
 	CVariousBytesHashTable* pVBHash = (CVariousBytesHashTable*)pHash;
 
@@ -411,7 +411,7 @@ GLOBAL_FUNC_DLL DWORD __stdcall	VBHGetAllItem(VBHASH_HANDLE pHash,DWORD* pdwItem
 lb_return:
 	return dwItemNum;
 }
-GLOBAL_FUNC_DLL void* __stdcall VBHGetKeyPtr(void* pSearchHandle)
+GLOBAL_FUNC_DLL void*  VBHGetKeyPtr(void* pSearchHandle)
 {
 	return (void*)( (char*)pSearchHandle+VB_BUCKET_DEFAULT_SIZE);
 }

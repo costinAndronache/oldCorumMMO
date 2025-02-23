@@ -64,14 +64,14 @@ void UpdateGameIntro()
 //==================================================================//
 // 인트로 상태에서 렌더함수.										//
 //==================================================================//
-DWORD __stdcall AfterRenderGameIntro()
+DWORD AfterRenderGameIntro()
 {
 	g_pSprManager->RenderAllSprite();
 	g_helpLoadingSprite.Show();
 	return 0;
 }
 
-DWORD __stdcall BeforeRenderGameIntro()
+DWORD BeforeRenderGameIntro()
 {
 	
 	return 0;

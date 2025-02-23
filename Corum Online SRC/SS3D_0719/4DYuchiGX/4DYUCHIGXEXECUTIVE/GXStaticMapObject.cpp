@@ -29,21 +29,21 @@ BOOL CGXStaticMapObject::Initialize(CoExecutive* pExecutive,CGXMap* pMap,DWORD d
 	return TRUE;
 }
 
-COLLISION_MESH_OBJECT_DESC*	__stdcall CGXStaticMapObject::GetCollisionMeshObjectDesc()
+COLLISION_MESH_OBJECT_DESC*	 CGXStaticMapObject::GetCollisionMeshObjectDesc()
 {
 	COLLISION_MESH_OBJECT_DESC* pColMesh = m_pModel->GetCollisionMeshObjectDesc(m_dwObjectIndex);
 	return pColMesh;
 	
 }
 
-DWORD __stdcall	CGXStaticMapObject::OnFrame(I4DyuchiGXExecutive* /*pExecutive*/,DWORD /*msg*/,int /*arg1*/,int /*BuildFlag*/)
+DWORD 	CGXStaticMapObject::OnFrame(I4DyuchiGXExecutive* /*pExecutive*/,DWORD /*msg*/,int /*arg1*/,int /*BuildFlag*/)
 {
 	
 	
 	
 	return 0;
 }
-BOOL __stdcall CGXStaticMapObject::Render()
+BOOL  CGXStaticMapObject::Render()
 {/*
 	CoGXObject*	pGXO = m_pExecutive->GetTracedGXObject();
 	DWORD	dwAlpha = m_dwAlphaFlag;
@@ -81,12 +81,12 @@ BOOL __stdcall CGXStaticMapObject::Render()
 
 }
 
-DWORD __stdcall	CGXStaticMapObject::GetObjectIndexInModel()
+DWORD 	CGXStaticMapObject::GetObjectIndexInModel()
 {
 	return m_dwObjectIndex;
 	
 }
-BOOL __stdcall CGXStaticMapObject::IsCollisionWithScreenCoord(VECTOR3* pv3IntersectPoint,DWORD* pdwModelIndex,DWORD* pdwObjIndex,float* pfDist,POINT* ptCursor,DWORD dwViewportIndex,DWORD dwFlag)
+BOOL  CGXStaticMapObject::IsCollisionWithScreenCoord(VECTOR3* pv3IntersectPoint,DWORD* pdwModelIndex,DWORD* pdwObjIndex,float* pfDist,POINT* ptCursor,DWORD dwViewportIndex,DWORD dwFlag)
 {
 	BOOL		bResult = FALSE;
 	DWORD		dwFaceGroupIndex;
@@ -106,17 +106,17 @@ lb_return:
 
 
 
-DWORD __stdcall CGXStaticMapObject::CreateIVertexList(IVERTEX** ppVertex)
+DWORD  CGXStaticMapObject::CreateIVertexList(IVERTEX** ppVertex)
 {
 	return m_pModel->CreateIVertexListWithIndex(ppVertex,m_dwObjectIndex);
 }
 
-void __stdcall CGXStaticMapObject::ReleaseIVertexList(IVERTEX*	pVertex)
+void  CGXStaticMapObject::ReleaseIVertexList(IVERTEX*	pVertex)
 {
 	m_pModel->ReleaseIVertexList(pVertex);
 }
 
-BOOL __stdcall CGXStaticMapObject::ShadeLightMapObject(VECTOR3* pv3,DWORD dwFacesNum,LIGHT_DESC* pLight,SHADE_FUNC pFunc)
+BOOL  CGXStaticMapObject::ShadeLightMapObject(VECTOR3* pv3,DWORD dwFacesNum,LIGHT_DESC* pLight,SHADE_FUNC pFunc)
 {
 	return m_pModel->ShadeLightMapObject(m_dwObjectIndex,pv3,dwFacesNum,pLight,pFunc);
 }

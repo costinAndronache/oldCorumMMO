@@ -92,12 +92,12 @@ BOOL CoGXLight::Initialize(CoExecutive* pExecutive,LIGHT_DESC* pDesc,MATERIAL* p
 	}
 	return TRUE;
 }
-DWORD __stdcall CoGXLight::GetObjectIndexInModel()
+DWORD  CoGXLight::GetObjectIndexInModel()
 {
 	return 0xffffffff;
 }
 
-BOOL __stdcall CoGXLight::Render()
+BOOL  CoGXLight::Render()
 {
 
 	BOOL	bResult = FALSE;
@@ -191,11 +191,11 @@ void CoGXLight::Cleanup()
 	}
 	ReleaseID();
 }
-COLLISION_MESH_OBJECT_DESC*	__stdcall CoGXLight::GetCollisionMeshObjectDesc()
+COLLISION_MESH_OBJECT_DESC*	 CoGXLight::GetCollisionMeshObjectDesc()
 {
 	return &m_colMeshDesc;
 }
-DWORD __stdcall	CoGXLight::OnFrame(I4DyuchiGXExecutive* pExecutive,DWORD msg,int arg1,int arg2)
+DWORD 	CoGXLight::OnFrame(I4DyuchiGXExecutive* pExecutive,DWORD msg,int arg1,int arg2)
 {
 	if (m_pProc)
 		m_pProc(pExecutive,this,msg,arg1,arg2,m_pData);
@@ -228,7 +228,7 @@ void CoGXLight::DefaultProc()
 		UpdateCollisionMesh();
 	}
 }
-BOOL __stdcall CoGXLight::IsCollisionWithScreenCoord(VECTOR3* pv3IntersectPoint,DWORD* pdwModelIndex,DWORD* pdwObjIndex,float* pfDist,POINT* ptCursor,DWORD dwViewportIndex,DWORD dwFlag)
+BOOL  CoGXLight::IsCollisionWithScreenCoord(VECTOR3* pv3IntersectPoint,DWORD* pdwModelIndex,DWORD* pdwObjIndex,float* pfDist,POINT* ptCursor,DWORD dwViewportIndex,DWORD dwFlag)
 {
 	DWORD	dwIndex = 0xffffffff;
 	DWORD	dwFaceIndex;
@@ -304,16 +304,16 @@ DWORD CoGXLight::Release()
 }
 
 
-DWORD __stdcall CoGXLight::CreateIVertexList(IVERTEX** /*ppVertex*/)
+DWORD  CoGXLight::CreateIVertexList(IVERTEX** /*ppVertex*/)
 {
 	return 0;
 }
 
-void __stdcall CoGXLight::ReleaseIVertexList(IVERTEX*	/*pVertex*/)
+void  CoGXLight::ReleaseIVertexList(IVERTEX*	/*pVertex*/)
 {
 }
 
-BOOL __stdcall CoGXLight::ShadeLightMapObject(VECTOR3* /*pv3*/,DWORD /*dwFacesNum*/,LIGHT_DESC* /*pLight*/,SHADE_FUNC /*pFunc*/)
+BOOL  CoGXLight::ShadeLightMapObject(VECTOR3* /*pv3*/,DWORD /*dwFacesNum*/,LIGHT_DESC* /*pLight*/,SHADE_FUNC /*pFunc*/)
 {
 	return FALSE;
 }

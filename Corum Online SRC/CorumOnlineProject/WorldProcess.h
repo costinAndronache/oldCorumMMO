@@ -42,8 +42,8 @@ class	DUNGEON_DATA_EX;
 BOOL InitGameWorld();
 void UpdateGameWorld();
 void ReleaseGameWorld();
-DWORD __stdcall AfterRenderGameWorld();
-DWORD __stdcall BeforeRenderGameWorld();
+DWORD AfterRenderGameWorld();
+DWORD BeforeRenderGameWorld();
 
 void InitPacketProcWorld();
 void OnKeyDownWorld(WPARAM wParam, LPARAM lParam);

@@ -3,12 +3,12 @@
 #include "../4DyuchiGXGFunc/global.h"
 #include "GXDefault.h"
 #include "GXLight.h"
-#include "../4DyuchiGRX_myself97/myself97common.h"
-#include "../4DyuchiGRX_myself97/CheckClock.h"
+#include "4DyuchiGRX_myself97/myself97common.h"
+#include "4DyuchiGRX_myself97/CheckClock.h"
 //#include "../4DyuchiGRX_myself97/MBSPTree.h"
-#include "../4DyuchiGRX_myself97/CollisionTest/DummyCollisionTest.h"
-#include "../4DyuchiGRX_myself97/CollisionTest/SphereCollisionTest.h"
-#include "../4DyuchiGRX_myself97/CollisionTest/AAEllipsoidCollisionTest.h"
+#include "4DyuchiGRX_myself97/CollisionTest/DummyCollisionTest.h"
+#include "4DyuchiGRX_myself97/CollisionTest/SphereCollisionTest.h"
+#include "4DyuchiGRX_myself97/CollisionTest/AAEllipsoidCollisionTest.h"
 
 #include "global_variable.h"
 
@@ -17,7 +17,7 @@
 #pragma warning( disable : 4102 )
 
 
-BOOL __stdcall CoGXObject::IsCollisionWithScreenCoord(VECTOR3* pv3IntersectPoint,DWORD* pdwModelIndex,DWORD* pdwObjIndex,float* pfDist,POINT* ptCursor,DWORD dwViewportIndex,DWORD dwFlag)
+BOOL  CoGXObject::IsCollisionWithScreenCoord(VECTOR3* pv3IntersectPoint,DWORD* pdwModelIndex,DWORD* pdwObjIndex,float* pfDist,POINT* ptCursor,DWORD dwViewportIndex,DWORD dwFlag)
 {
 	DWORD	dwIndex = 0xffffffff;
 	DWORD	dwFaceIndex;
@@ -708,6 +708,14 @@ lb_return:
 
 	return bResult;
 }
+bool CoGXObject::IsCrashSource() {
+	if (m_pModelFileItem) {
+		if (strcmp("e0708000.chr", m_pModelFileItem->szFileName) == 0) {
+			return true;
+		}
+	}
+	return false;
+}
 void CoGXObject::SetAlphaFlag(DWORD dwFlag)
 {
 	m_dwAlphaFlag = dwFlag;
@@ -1058,7 +1066,7 @@ void CoGXObject::SetAxisAlignOK(BOOL bResult)
 		}
 	}
 }
-COLLISION_MESH_OBJECT_DESC*	__stdcall CoGXObject::GetCollisionMeshObjectDesc()
+COLLISION_MESH_OBJECT_DESC*	 CoGXObject::GetCollisionMeshObjectDesc()
 {
 	
 	return &m_colMeshDescWorld;
@@ -1121,12 +1129,12 @@ void CoGXObject::UnRegistFileNameHash()
 		m_pModelFileItem = NULL;
 	}
 }
-DWORD __stdcall CoGXObject::GetObjectIndexInModel()
+DWORD  CoGXObject::GetObjectIndexInModel()
 {
 	return 0xffffffff;
 }
 
-DWORD __stdcall CoGXObject::CreateIVertexList(IVERTEX** ppVertex)
+DWORD  CoGXObject::CreateIVertexList(IVERTEX** ppVertex)
 {
 	DWORD	dwTotaFacesNum = 0;
 	IVERTEX*	pVertices[MAX_MODEL_NUM_PER_GXOBJECT];
@@ -1158,12 +1166,12 @@ DWORD __stdcall CoGXObject::CreateIVertexList(IVERTEX** ppVertex)
 
 
 
-void __stdcall CoGXObject::ReleaseIVertexList(IVERTEX*	pVertex)
+void  CoGXObject::ReleaseIVertexList(IVERTEX*	pVertex)
 {
 	if (pVertex)
 		delete [] pVertex;
 }
-BOOL __stdcall CoGXObject::ShadeLightMapObject(VECTOR3* /*pv3*/,DWORD /*dwFacesNum*/,LIGHT_DESC* /*pLight*/,SHADE_FUNC /*pFunc*/)
+BOOL  CoGXObject::ShadeLightMapObject(VECTOR3* /*pv3*/,DWORD /*dwFacesNum*/,LIGHT_DESC* /*pLight*/,SHADE_FUNC /*pFunc*/)
 {
 	return FALSE;
 }
@@ -1240,7 +1248,7 @@ void	CoGXObject::MovePositionWithCollide(VECTOR3* pv3Pos)
 
 }
 /*
-BOOL __stdcall CoGXObject::IsPreCollisionWithScreenCoord(VECTOR3* pv3RayPos,VECTOR3* pv3RayDir)
+BOOL  CoGXObject::IsPreCollisionWithScreenCoord(VECTOR3* pv3RayPos,VECTOR3* pv3RayDir)
 {
 	BOOL	bResult = FALSE;
 

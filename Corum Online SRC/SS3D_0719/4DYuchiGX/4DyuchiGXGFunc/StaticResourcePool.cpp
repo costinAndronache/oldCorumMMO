@@ -10,34 +10,34 @@
 
 #include "StaticResourcePool.h"
 
-GLOBAL_FUNC_DLL STRCPOOL_HANDLE __stdcall CreateResourcePool()
+GLOBAL_FUNC_DLL STRCPOOL_HANDLE  CreateResourcePool()
 {
 	CStaticResourcePool*	pRCPool = new CStaticResourcePool;
 	return (STRCPOOL_HANDLE)pRCPool;
 
 }
-GLOBAL_FUNC_DLL BOOL __stdcall RCPInitialize(STRCPOOL_HANDLE pHandle,DWORD dwMaxItemNum,RESOURCR_ALLOC_FUNC pAllocFunc,RESOURCR_FREE_FUNC pFreeFunc)
+GLOBAL_FUNC_DLL BOOL  RCPInitialize(STRCPOOL_HANDLE pHandle,DWORD dwMaxItemNum,RESOURCR_ALLOC_FUNC pAllocFunc,RESOURCR_FREE_FUNC pFreeFunc)
 {
 	CStaticResourcePool*	pRCPool = (CStaticResourcePool*)pHandle;
 	return pRCPool->Initialize(dwMaxItemNum,pAllocFunc,pFreeFunc);
 }
 
-GLOBAL_FUNC_DLL void* __stdcall RCPAlloc(STRCPOOL_HANDLE pHandle,BOOL* pbEnable,DWORD* pdwResourceHandle,void* pArg1,void* pArg2,void* pArg3,DWORD dwSize)
+GLOBAL_FUNC_DLL void*  RCPAlloc(STRCPOOL_HANDLE pHandle,BOOL* pbEnable,DWORD* pdwResourceHandle,void* pArg1,void* pArg2,void* pArg3,DWORD dwSize)
 {
 	CStaticResourcePool*	pRCPool = (CStaticResourcePool*)pHandle;
 	return pRCPool->Alloc(pbEnable,pdwResourceHandle,pArg1,pArg2,pArg3,dwSize);
 }
-GLOBAL_FUNC_DLL void __stdcall RCPFree(STRCPOOL_HANDLE pHandle,DWORD dwResourceHandle)
+GLOBAL_FUNC_DLL void  RCPFree(STRCPOOL_HANDLE pHandle,DWORD dwResourceHandle)
 {
 	CStaticResourcePool*	pRCPool = (CStaticResourcePool*)pHandle;
 	pRCPool->Free(dwResourceHandle);
 }
-GLOBAL_FUNC_DLL void __stdcall RCPFreeAll(STRCPOOL_HANDLE pHandle)
+GLOBAL_FUNC_DLL void  RCPFreeAll(STRCPOOL_HANDLE pHandle)
 {
 	CStaticResourcePool*	pRCPool = (CStaticResourcePool*)pHandle;
 	pRCPool->FreeAll();
 }
-GLOBAL_FUNC_DLL void __stdcall RCPRelease(STRCPOOL_HANDLE pHandle)
+GLOBAL_FUNC_DLL void  RCPRelease(STRCPOOL_HANDLE pHandle)
 {
 	delete ((CStaticResourcePool*)pHandle);
 }

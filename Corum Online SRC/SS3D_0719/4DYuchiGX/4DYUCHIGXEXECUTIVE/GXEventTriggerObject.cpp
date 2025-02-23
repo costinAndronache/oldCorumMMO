@@ -1,7 +1,7 @@
 #include "StdAfx.h"
 #include "GXEventTriggerObject.h"
 
-#include "../4DYUCHIGRX_MYSELF97/Myself97Common.h"
+#include "4DYUCHIGRX_MYSELF97/Myself97Common.h"
 
 CoGXEventTrigger::CoGXEventTrigger()
 {
@@ -130,37 +130,37 @@ DWORD CoGXEventTrigger::Release()
 	return 0;
 }
 
-COLLISION_MESH_OBJECT_DESC*	__stdcall CoGXEventTrigger::GetCollisionMeshObjectDesc()
+COLLISION_MESH_OBJECT_DESC*	 CoGXEventTrigger::GetCollisionMeshObjectDesc()
 {
 	return &m_colMeshDesc;
 }
-/*dwAlphaFlag*/DWORD __stdcall CoGXEventTrigger::OnFrame(I4DyuchiGXExecutive* /*pExecutive*/,DWORD /*msg*/,int /*arg1*/,int /*arg2*/)
+/*dwAlphaFlag*/DWORD  CoGXEventTrigger::OnFrame(I4DyuchiGXExecutive* /*pExecutive*/,DWORD /*msg*/,int /*arg1*/,int /*arg2*/)
 {
 	return 0;
 }
-DWORD __stdcall	CoGXEventTrigger::GetObjectIndexInModel()
+DWORD 	CoGXEventTrigger::GetObjectIndexInModel()
 {
 	return 0xffffffff;
 }
-BOOL __stdcall CoGXEventTrigger::Render()
+BOOL  CoGXEventTrigger::Render()
 {
 	m_pExecutive->INL_GetRenderer()->RenderBox(m_colMeshDesc.boundingBox.v3Oct,m_EventTriggerDesc.dwColor);
 	return TRUE;
 }
-DWORD __stdcall CoGXEventTrigger::CreateIVertexList(IVERTEX** ppVertex)
+DWORD  CoGXEventTrigger::CreateIVertexList(IVERTEX** ppVertex)
 {
 	return 0;
 }
-void __stdcall CoGXEventTrigger::ReleaseIVertexList(IVERTEX* pVertex)
+void  CoGXEventTrigger::ReleaseIVertexList(IVERTEX* pVertex)
 {
 
 }
-BOOL __stdcall CoGXEventTrigger::ShadeLightMapObject(VECTOR3* pv3,DWORD /*dwFacesNum*/,LIGHT_DESC* pLight,SHADE_FUNC pFunc)
+BOOL  CoGXEventTrigger::ShadeLightMapObject(VECTOR3* pv3,DWORD /*dwFacesNum*/,LIGHT_DESC* pLight,SHADE_FUNC pFunc)
 {
 	return FALSE;
 }
 
-BOOL __stdcall CoGXEventTrigger::IsCollisionWithScreenCoord(VECTOR3* pv3IntersectPoint,DWORD* pdwModelIndex,DWORD* pdwObjIndex,float* pfDist,POINT* ptCursor,DWORD dwViewportIndex,DWORD /*dwFlag*/)
+BOOL  CoGXEventTrigger::IsCollisionWithScreenCoord(VECTOR3* pv3IntersectPoint,DWORD* pdwModelIndex,DWORD* pdwObjIndex,float* pfDist,POINT* ptCursor,DWORD dwViewportIndex,DWORD /*dwFlag*/)
 {
 	MATRIX4	matView,matProj;
 	WORD	wWidth,wHeight;

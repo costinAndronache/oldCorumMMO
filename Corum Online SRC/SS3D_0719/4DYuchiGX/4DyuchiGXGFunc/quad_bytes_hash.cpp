@@ -9,15 +9,15 @@
 #include "quad_bytes_hash.h"
 
 /*
-GLOBAL_FUNC_DLL DWORD			__stdcall	QBHSelect(QBHASH_HANDLE pHash,DWORD OUT* pItems,DWORD dwMaxItemNum,void* pKeyData,DWORD dwSize);
-GLOBAL_FUNC_DLL void*			__stdcall	QBHInsert(QBHASH_HANDLE pHash,DWORD dwItem,void* pKeyData,DWORD dwSize);
+GLOBAL_FUNC_DLL DWORD				QBHSelect(QBHASH_HANDLE pHash,DWORD OUT* pItems,DWORD dwMaxItemNum,void* pKeyData,DWORD dwSize);
+GLOBAL_FUNC_DLL void*				QBHInsert(QBHASH_HANDLE pHash,DWORD dwItem,void* pKeyData,DWORD dwSize);
 
 
-GLOBAL_FUNC_DLL	QBHASH_HANDLE	__stdcall	QBHCreate();
-GLOBAL_FUNC_DLL BOOL			__stdcall	QBHInitialize(QBHASH_HANDLE pHash,DWORD dwMaxBucketNum,DWORD dwMaxItemNum);
+GLOBAL_FUNC_DLL	QBHASH_HANDLE		QBHCreate();
+GLOBAL_FUNC_DLL BOOL				QBHInitialize(QBHASH_HANDLE pHash,DWORD dwMaxBucketNum,DWORD dwMaxItemNum);
 
-GLOBAL_FUNC_DLL	DWORD			__stdcall	QBHGetMaxBucketNum(QBHASH_HANDLE pHash);
-GLOBAL_FUNC_DLL	DWORD			__stdcall	QBDeleteAll(QBHASH_HANDLE pHash);
+GLOBAL_FUNC_DLL	DWORD				QBHGetMaxBucketNum(QBHASH_HANDLE pHash);
+GLOBAL_FUNC_DLL	DWORD				QBDeleteAll(QBHASH_HANDLE pHash);
 */
 CQuadBytesHashTable::CQuadBytesHashTable()
 {
@@ -27,13 +27,13 @@ CQuadBytesHashTable::CQuadBytesHashTable()
 	m_pStaticMemoryPool = NULL;
 }
 
-GLOBAL_FUNC_DLL	QBHASH_HANDLE __stdcall	QBHCreate()
+GLOBAL_FUNC_DLL	QBHASH_HANDLE 	QBHCreate()
 {
 	CQuadBytesHashTable*	pQBHash = new CQuadBytesHashTable;
 	return (QBHASH_HANDLE)pQBHash;
 }
 
-GLOBAL_FUNC_DLL BOOL __stdcall QBHInitialize(QBHASH_HANDLE pHash,DWORD dwMaxBucketNum,DWORD dwMaxItemNum)
+GLOBAL_FUNC_DLL BOOL  QBHInitialize(QBHASH_HANDLE pHash,DWORD dwMaxBucketNum,DWORD dwMaxItemNum)
 {
 	CQuadBytesHashTable* pQBHash = (CQuadBytesHashTable*)pHash;
 
@@ -45,7 +45,7 @@ GLOBAL_FUNC_DLL BOOL __stdcall QBHInitialize(QBHASH_HANDLE pHash,DWORD dwMaxBuck
 	pQBHash->m_pStaticMemoryPool = CreateStaticMemoryPool();
 	return InitializeStaticMemoryPool(pQBHash->m_pStaticMemoryPool,sizeof(QB_BUCKET),dwMaxItemNum/4,dwMaxItemNum);
 }
-GLOBAL_FUNC_DLL __declspec(naked) DWORD __stdcall QBHSelect(QBHASH_HANDLE pHash,void** ppHashHandle,DWORD OUT* pItems,DWORD dwMaxItemNum,DWORD dwKeyData)
+GLOBAL_FUNC_DLL __declspec(naked) DWORD  QBHSelect(QBHASH_HANDLE pHash,void** ppHashHandle,DWORD OUT* pItems,DWORD dwMaxItemNum,DWORD dwKeyData)
 {
 	__asm
 	{
@@ -136,7 +136,7 @@ QB_BUCKET* QBBucketAlloc(void*) {
 	return new QB_BUCKET;
 }
 
-GLOBAL_FUNC_DLL __declspec(naked) void* __stdcall QBHInsert(QBHASH_HANDLE pHash,DWORD dwItem,DWORD dwKeyData)
+GLOBAL_FUNC_DLL __declspec(naked) void*  QBHInsert(QBHASH_HANDLE pHash,DWORD dwItem,DWORD dwKeyData)
 {
 	__asm
 	{
@@ -210,7 +210,7 @@ lb_return:
 		ret		4*3
 	}
 }
-GLOBAL_FUNC_DLL BOOL __stdcall 	QBHDelete(QBHASH_HANDLE pHash,void* pBucket)
+GLOBAL_FUNC_DLL BOOL  	QBHDelete(QBHASH_HANDLE pHash,void* pBucket)
 {
 	CQuadBytesHashTable*	pQBHash = (CQuadBytesHashTable*)pHash;
 
@@ -224,7 +224,7 @@ GLOBAL_FUNC_DLL BOOL __stdcall 	QBHDelete(QBHASH_HANDLE pHash,void* pBucket)
 	
 	return TRUE;
 }
-GLOBAL_FUNC_DLL	void __stdcall QBHRelease(QBHASH_HANDLE pHash)
+GLOBAL_FUNC_DLL	void  QBHRelease(QBHASH_HANDLE pHash)
 {
 	CQuadBytesHashTable*	pQBHash = (CQuadBytesHashTable*)pHash;
 
@@ -243,13 +243,13 @@ GLOBAL_FUNC_DLL	void __stdcall QBHRelease(QBHASH_HANDLE pHash)
 
 
 }
-GLOBAL_FUNC_DLL	DWORD __stdcall QBHGetMaxBucketNum(QBHASH_HANDLE pHash)
+GLOBAL_FUNC_DLL	DWORD  QBHGetMaxBucketNum(QBHASH_HANDLE pHash)
 {
 	CQuadBytesHashTable*	pQBHash = (CQuadBytesHashTable*)pHash;
 
 	return pQBHash->m_dwMaxBucketNum;
 }
-GLOBAL_FUNC_DLL DWORD __stdcall	QBHGetAllItem(VBHASH_HANDLE pHash,DWORD* pdwItemList,DWORD dwMaxItemNum)
+GLOBAL_FUNC_DLL DWORD 	QBHGetAllItem(VBHASH_HANDLE pHash,DWORD* pdwItemList,DWORD dwMaxItemNum)
 {
 	CQuadBytesHashTable* pQBHash = (CQuadBytesHashTable*)pHash;
 
@@ -275,7 +275,7 @@ lb_return:
 	return dwItemNum;
 }
 
-GLOBAL_FUNC_DLL void __stdcall QBDeleteAll(QBHASH_HANDLE pHash)
+GLOBAL_FUNC_DLL void  QBDeleteAll(QBHASH_HANDLE pHash)
 {
 
 	CQuadBytesHashTable*	pQBHash = (CQuadBytesHashTable*)pHash;

@@ -13,14 +13,14 @@ CIndexCreator::CIndexCreator()
 {
 	memset(this,0,sizeof(CIndexCreator));
 }
-GLOBAL_FUNC_DLL INDEXCR_HANDLE __stdcall ICCreate()
+GLOBAL_FUNC_DLL INDEXCR_HANDLE  ICCreate()
 {
 	CIndexCreator*	pIC = new CIndexCreator;
 	return pIC;
 }
 
 	
-GLOBAL_FUNC_DLL BOOL __stdcall ICInitialize(INDEXCR_HANDLE pIC,DWORD dwMaxNum)
+GLOBAL_FUNC_DLL BOOL  ICInitialize(INDEXCR_HANDLE pIC,DWORD dwMaxNum)
 {
 	CIndexCreator*	pIndexCR = (CIndexCreator*)pIC;
 
@@ -37,13 +37,13 @@ GLOBAL_FUNC_DLL BOOL __stdcall ICInitialize(INDEXCR_HANDLE pIC,DWORD dwMaxNum)
 
 	return TRUE;
 }
-GLOBAL_FUNC_DLL DWORD __stdcall ICGetIndexNum(INDEXCR_HANDLE pIC)
+GLOBAL_FUNC_DLL DWORD  ICGetIndexNum(INDEXCR_HANDLE pIC)
 {
 	CIndexCreator*	pIndexCR = (CIndexCreator*)pIC;
 
 	return pIndexCR->m_dwIndexNum;
 }
-GLOBAL_FUNC_DLL DWORD __stdcall ICAllocIndex(INDEXCR_HANDLE pIC)
+GLOBAL_FUNC_DLL DWORD  ICAllocIndex(INDEXCR_HANDLE pIC)
 {
 	DWORD	dwResult;
 	__asm
@@ -86,7 +86,7 @@ lb_return:
 	return dwResult;
 }
 
-GLOBAL_FUNC_DLL void __stdcall ICFreeIndex(INDEXCR_HANDLE  pIC,DWORD dwIndex)
+GLOBAL_FUNC_DLL void  ICFreeIndex(INDEXCR_HANDLE  pIC,DWORD dwIndex)
 {
 #ifdef _DEBUG
 	if (dwIndex > ((CIndexCreator*)pIC)->m_dwMaxIndexNum)
@@ -131,7 +131,7 @@ lb_return:
 
 	}
 }
-GLOBAL_FUNC_DLL void __stdcall ICRelease(INDEXCR_HANDLE pIC)
+GLOBAL_FUNC_DLL void  ICRelease(INDEXCR_HANDLE pIC)
 {
 	CIndexCreator*	pIndexCR = (CIndexCreator*)pIC;
 	delete pIndexCR;

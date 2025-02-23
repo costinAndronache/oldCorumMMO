@@ -15,5 +15,5 @@ typedef struct GlobalVariableIntro
 } GLOBAL_VARIABLE_INTRO, *LPGlobalVariable_Intro;
 
 // ·»´õ ÇÔ¼ö.
-DWORD __stdcall AfterRenderGameIntro();
-DWORD __stdcall BeforeRenderGameIntro();
+DWORD AfterRenderGameIntro();
+DWORD BeforeRenderGameIntro();

@@ -9,7 +9,7 @@
 #pragma once
 #endif // _MSC_VER > 1000
 
-// __stdcall 전용
+//  전용
 #include "../4DyuchiGRX_Common/stdafx.h"
 
 struct DPC_ITEM

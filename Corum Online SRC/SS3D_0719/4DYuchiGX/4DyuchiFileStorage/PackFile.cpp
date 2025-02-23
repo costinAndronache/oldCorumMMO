@@ -290,12 +290,12 @@ BOOL CPackFile::DeleteFileItem(FSFILE_DESC* pfsDesc)
 
 }
 /*
-GLOBAL_FUNC_DLL STMPOOL_HANDLE	__stdcall	();
-GLOBAL_FUNC_DLL void			__stdcall	(STMPOOL_HANDLE pool);
+GLOBAL_FUNC_DLL STMPOOL_HANDLE		();
+GLOBAL_FUNC_DLL void				(STMPOOL_HANDLE pool);
 
 
-GLOBAL_FUNC_DLL void*			__stdcall	LALAlloc(STMPOOL_HANDLE pool);
-GLOBAL_FUNC_DLL void			__stdcall	LALFree(STMPOOL_HANDLE pool,void* pMemory);
+GLOBAL_FUNC_DLL void*				LALAlloc(STMPOOL_HANDLE pool);
+GLOBAL_FUNC_DLL void				LALFree(STMPOOL_HANDLE pool,void* pMemory);
 */
 BOOL CPackFile::EndCreatePackFile(LOAD_CALLBACK_FUNC pCallBackFunc)
 {

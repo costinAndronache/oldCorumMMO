@@ -56,8 +56,8 @@ void InitPacketProcLogin();
 void OnTimerEventLogin(DWORD dwTimerIndex);
 
 // 렌더 함수.
-DWORD __stdcall AfterRenderGameLogin();
-DWORD __stdcall BeforeRenderGameLogin();
+DWORD AfterRenderGameLogin();
+DWORD BeforeRenderGameLogin();
 
 // 키입력 함수.
 void OnKeyDownLogin(WPARAM wParam, LPARAM lParam);

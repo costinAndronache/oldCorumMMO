@@ -11,4 +11,4 @@
 #include "./../4dyuchiGRX_common/IExecutive.h"
 #include "./../4dyuchiGRX_common/IAudio.h"
 #endif
-DWORD __stdcall GXPlayerPROC(I4DyuchiGXExecutive* pExecutive,GXOBJECT_HANDLE gxh,DWORD msg,int arg1,int arg2,void* pData);
+DWORD GXPlayerPROC(I4DyuchiGXExecutive* pExecutive,GXOBJECT_HANDLE gxh,DWORD msg,int arg1,int arg2,void* pData);

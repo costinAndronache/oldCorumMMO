@@ -140,7 +140,7 @@ GXOBJECT_HANDLE				g_TileAttr[ MAX_KIND_OF_DEBUG_TILE ][ MAX_DEBUG_TILE_NUM ];
 BYTE						g_bShowTileAttr = 0;
 #endif
 
-DWORD __stdcall AfterInterpolation(AFTER_INTERPOLATION_CALL_BACK_ARG* pArg)
+DWORD AfterInterpolation(AFTER_INTERPOLATION_CALL_BACK_ARG* pArg)
 {
 	if (NULL == g_pMainPlayer->m_hPlayer.pHandle)
 	{
@@ -863,7 +863,7 @@ void RenderTileAttr()
 
 extern char globalDebugLine[255];
 
-DWORD __stdcall BeforeRenderGameDungeon()
+DWORD BeforeRenderGameDungeon()
 {
 	// 속도를 위해 지역변수로 접근하도록 수정한다. by deepdark.
 	CUserInterface* pUserInterface = CUserInterface::GetInstance();
@@ -1048,7 +1048,7 @@ DWORD __stdcall BeforeRenderGameDungeon()
 
 extern void renderAllDroppedItemsTooltips(const std::vector<ITEM*>& droppedItemTooltips);
 
-DWORD __stdcall AfterRenderGameDungeon()
+DWORD AfterRenderGameDungeon()
 {
 
 #ifdef DEVELOP_MODE

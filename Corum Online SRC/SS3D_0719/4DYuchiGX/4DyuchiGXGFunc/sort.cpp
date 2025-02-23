@@ -6,7 +6,7 @@
 
 #include "global.h"
 
-GLOBAL_FUNC_DLL void __stdcall QSortIntASC(SORT_ITEM_INT* pArray,DWORD dwNum)
+GLOBAL_FUNC_DLL void  QSortIntASC(SORT_ITEM_INT* pArray,DWORD dwNum)
 {
 	int			pivot;
 	DWORD		i,j,l,r;
@@ -111,7 +111,7 @@ lb_next_part:
 	return;
 
 }
-GLOBAL_FUNC_DLL void __stdcall QSortIntDSC(SORT_ITEM_INT* pArray,DWORD dwNum)
+GLOBAL_FUNC_DLL void  QSortIntDSC(SORT_ITEM_INT* pArray,DWORD dwNum)
 {
 	int			pivot;
 	DWORD		i,j,l,r;
@@ -217,7 +217,7 @@ lb_next_part:
 
 }
 
-GLOBAL_FUNC_DLL void __stdcall QSortFloatASC(SORT_ITEM_FLOAT* pArray,DWORD dwNum)
+GLOBAL_FUNC_DLL void  QSortFloatASC(SORT_ITEM_FLOAT* pArray,DWORD dwNum)
 {
 	float			pivot;
 	DWORD			i,j,l,r;
@@ -322,7 +322,7 @@ lb_next_part:
 	return;
 
 }
-GLOBAL_FUNC_DLL void __stdcall QSortFloatDSC(SORT_ITEM_FLOAT* pArray,DWORD dwNum)
+GLOBAL_FUNC_DLL void  QSortFloatDSC(SORT_ITEM_FLOAT* pArray,DWORD dwNum)
 {
 	float			pivot;
 	DWORD			i,j,l,r;

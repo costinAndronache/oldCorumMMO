@@ -1098,7 +1098,7 @@ void OnSettledownPlane(GXOBJECT_HANDLE handle, LPObjectDesc pData, DWORD dwCurFr
 	}
 }
 
-DWORD __stdcall AfterRenderGameWorld()
+DWORD AfterRenderGameWorld()
 {
 	
 	g_helpLoadingSprite.SetLoadingFlag(FALSE);
@@ -1467,7 +1467,7 @@ DWORD __stdcall AfterRenderGameWorld()
 	return 0;
 }
 
-DWORD __stdcall BeforeRenderGameWorld()
+DWORD BeforeRenderGameWorld()
 {
 	return 0;
 }

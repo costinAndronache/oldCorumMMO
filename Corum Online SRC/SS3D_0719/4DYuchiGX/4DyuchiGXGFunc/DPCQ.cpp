@@ -14,36 +14,36 @@
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-GLOBAL_FUNC_DLL DPCQ_HANDLE __stdcall DPCQCreate()
+GLOBAL_FUNC_DLL DPCQ_HANDLE  DPCQCreate()
 {
 	CDPCQ*	pDPCQ = new CDPCQ;
 	return pDPCQ;
 }
-GLOBAL_FUNC_DLL BOOL __stdcall DPCQInitialize(DPCQ_HANDLE pDPCQHandle,DWORD dwMaxBufferSize)
+GLOBAL_FUNC_DLL BOOL  DPCQInitialize(DPCQ_HANDLE pDPCQHandle,DWORD dwMaxBufferSize)
 {
 	return ((CDPCQ*)pDPCQHandle)->Initialize(dwMaxBufferSize);
 	
 }
-GLOBAL_FUNC_DLL BOOL __stdcall DPCQPushDPC(DPCQ_HANDLE pDPCQHandle,void* pStdcallFunc,WORD wArgNum,DWORD* pArgList,int* pRetAddr,int iOrder)
+GLOBAL_FUNC_DLL BOOL  DPCQPushDPC(DPCQ_HANDLE pDPCQHandle,void* pStdcallFunc,WORD wArgNum,DWORD* pArgList,int* pRetAddr,int iOrder)
 {
 	return ((CDPCQ*)pDPCQHandle)->PushDPC(pStdcallFunc,wArgNum,pArgList,pRetAddr,iOrder);
 }
 
-GLOBAL_FUNC_DLL void __stdcall DPCQProcess(DPCQ_HANDLE pDPCQHandle)
+GLOBAL_FUNC_DLL void  DPCQProcess(DPCQ_HANDLE pDPCQHandle)
 {
 	((CDPCQ*)pDPCQHandle)->Process();
 
 }
-GLOBAL_FUNC_DLL void __stdcall DPCQProcessWithAscSort(DPCQ_HANDLE pDPCQHandle)
+GLOBAL_FUNC_DLL void  DPCQProcessWithAscSort(DPCQ_HANDLE pDPCQHandle)
 {
 	((CDPCQ*)pDPCQHandle)->ProcessWithAscSort();
 }
-GLOBAL_FUNC_DLL void __stdcall DPCQClear(DPCQ_HANDLE pDPCQHandle)
+GLOBAL_FUNC_DLL void  DPCQClear(DPCQ_HANDLE pDPCQHandle)
 {
 	((CDPCQ*)pDPCQHandle)->Clear();
 }
 
-GLOBAL_FUNC_DLL void __stdcall DPCQRelease(DPCQ_HANDLE pDPCQHandle)
+GLOBAL_FUNC_DLL void  DPCQRelease(DPCQ_HANDLE pDPCQHandle)
 {
 	delete (CDPCQ*)pDPCQHandle;
 }

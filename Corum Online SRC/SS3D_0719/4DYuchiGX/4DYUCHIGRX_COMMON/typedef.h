@@ -1194,11 +1194,11 @@ typedef void* GXSOUND_HANDLE;
 
 
 
-typedef DWORD (__stdcall *GXSchedulePROC)(I4DyuchiGXExecutive* pExecutive,GXOBJECT_HANDLE gxh,DWORD msg,int arg1,int arg2,void* pData);
-typedef DWORD (__stdcall *GXLightSchedulePROC)(I4DyuchiGXExecutive* pExecutive,GXLIGHT_HANDLE gxh,DWORD msg,int arg1,int arg2,void* pData);
-typedef DWORD (__stdcall *GXMapObjectSchedulePROC)(I4DyuchiGXExecutive* pExecutive,GXMAP_OBJECT_HANDLE gxh,DWORD msg,int arg1,int arg2,void* pData);
-typedef DWORD (__stdcall *GXMapSchedulePROC)(DWORD msg,int frame_ince,int arg2,void* pData);
-typedef DWORD (__stdcall *GXDecalSchedulePROC)(I4DyuchiGXExecutive* pExecutive,GXDECAL_HANDLE gxh,DWORD msg,int arg1,int arg2,void* pData);
+typedef DWORD ( *GXSchedulePROC)(I4DyuchiGXExecutive* pExecutive,GXOBJECT_HANDLE gxh,DWORD msg,int arg1,int arg2,void* pData);
+typedef DWORD ( *GXLightSchedulePROC)(I4DyuchiGXExecutive* pExecutive,GXLIGHT_HANDLE gxh,DWORD msg,int arg1,int arg2,void* pData);
+typedef DWORD ( *GXMapObjectSchedulePROC)(I4DyuchiGXExecutive* pExecutive,GXMAP_OBJECT_HANDLE gxh,DWORD msg,int arg1,int arg2,void* pData);
+typedef DWORD ( *GXMapSchedulePROC)(DWORD msg,int frame_ince,int arg2,void* pData);
+typedef DWORD ( *GXDecalSchedulePROC)(I4DyuchiGXExecutive* pExecutive,GXDECAL_HANDLE gxh,DWORD msg,int arg1,int arg2,void* pData);
 
 enum ERROR_TYPE
 {
@@ -1209,7 +1209,7 @@ enum ERROR_TYPE
 	ERROR_TYPE_RESOURCE_LEAK		=	4,
 	ERROR_TYPE_FILE_NOT_FOUND		=	5
 };
-typedef DWORD (__stdcall *ErrorHandleProc)(ERROR_TYPE type,DWORD dwErrorPriority,void* pCodeAddress,char* szStr);
+typedef DWORD ( *ErrorHandleProc)(ERROR_TYPE type,DWORD dwErrorPriority,void* pCodeAddress,char* szStr);
 
 
 #include "GXSCHEDULE_PROC_MSG.h"
@@ -1337,9 +1337,9 @@ struct GXTRIGGER_PROPERTY
 #define	PID_BOUNDINGBOX_MAX "BOX_MAX"
 #define	PID_BOUNDINGBOX_MIN	"BOX_MIN"
 
-typedef DWORD (__stdcall *LOAD_CALLBACK_FUNC)(DWORD dwCurCount,DWORD dwTotalCount,void* pArg);
-typedef DWORD (__stdcall *GX_FUNC)();
-typedef float (__stdcall *SHADE_FUNC)(float fLightRS,float fLightRsRs,float fDistance,float fDistDist,float cosang);
+typedef DWORD ( *LOAD_CALLBACK_FUNC)(DWORD dwCurCount,DWORD dwTotalCount,void* pArg);
+typedef DWORD ( *GX_FUNC)();
+typedef float ( *SHADE_FUNC)(float fLightRS,float fLightRsRs,float fDistance,float fDistDist,float cosang);
 
 
 HRESULT typedef (__stdcall *CREATE_INSTANCE_FUNC)(void* ppv);
@@ -1532,7 +1532,7 @@ struct	AFTER_INTERPOLATION_CALL_BACK_ARG
 	DWORD		dwTickPerFrame;						// 한 프레임당 배정된 틱.   dwIncreasedTick의 최대값이다.
 };
 
-typedef DWORD (__stdcall *AfterInterpolationCallBack)( AFTER_INTERPOLATION_CALL_BACK_ARG* pArg);
+typedef DWORD ( *AfterInterpolationCallBack)( AFTER_INTERPOLATION_CALL_BACK_ARG* pArg);
 // 익스큐티브::Run()에서 위치보간과 랜더링 사이에 호출되는 콜백.
 // 카메라를 캐릭터에 붙이거나할 때 쓰면 유용하다.
 
@@ -1563,6 +1563,6 @@ struct	COLLISION_TEST_RESULT
 	BOOL		bLand;				// 땅에 닿아 있는가.?
 };
 
-typedef DWORD (__stdcall *CollisionTestCallBackProcedure)(COLLISION_RESULT*	pResult);
+typedef DWORD ( *CollisionTestCallBackProcedure)(COLLISION_RESULT*	pResult);
 // 지오메트리에서 충돌처리때 쓰일 콜백.
 

@@ -85,7 +85,6 @@ CoStorage::CoStorage()
 	
 	m_pFileItemNameHash = NULL;
 	m_pPackFileNameHash = NULL;
-	m_pFileDescPool = NULL;
 	m_dwClusterSize = 8192;
 
 	m_dwMaxFileNum = 0;
@@ -101,14 +100,11 @@ CoStorage::CoStorage()
 	_CrtSetDbgFlag(flag);
 #endif
 }
-BOOL __stdcall CoStorage::Initialize(DWORD dwMaxFileNum,DWORD dwMaxFileHandleNumAtSameTime,DWORD dwMaxFileNameLen,FILE_ACCESS_METHOD accessMethod)
+BOOL  CoStorage::Initialize(DWORD dwMaxFileNum,DWORD dwMaxFileHandleNumAtSameTime,DWORD dwMaxFileNameLen,FILE_ACCESS_METHOD accessMethod)
 {
 	m_dwMaxFileNameLen = dwMaxFileNameLen;
 	m_dwMaxFileNum = dwMaxFileNum;
 
-
-	m_pFileDescPool = CreateStaticMemoryPool();
-	InitializeStaticMemoryPool(m_pFileDescPool,sizeof(FSFILE_DESC),m_dwMaxFileNum/16+1,m_dwMaxFileNum);
 
 	m_pFileItemNameHash = VBHCreate();
 	VBHInitialize(m_pFileItemNameHash,m_dwMaxFileNum / 4 + 4,m_dwMaxFileNameLen,m_dwMaxFileNum);
@@ -116,13 +112,11 @@ BOOL __stdcall CoStorage::Initialize(DWORD dwMaxFileNum,DWORD dwMaxFileHandleNum
 	m_pPackFileNameHash = VBHCreate();
 	VBHInitialize(m_pPackFileNameHash,MAX_PACK_FILE_NUM / 4 + 4,_MAX_PATH,MAX_PACK_FILE_NUM);
 
-	m_pFileHandlePool = CreateStaticMemoryPool();
-	InitializeStaticMemoryPool(m_pFileHandlePool,sizeof(FSFILE_POINTER),dwMaxFileHandleNumAtSameTime/4+1,dwMaxFileHandleNumAtSameTime);
 
 	m_fileAccessMethod = accessMethod;
 	return TRUE;
 }
-BOOL __stdcall CoStorage::BeginLogging(char* szFileName,DWORD /*dwFlag*/)
+BOOL  CoStorage::BeginLogging(char* szFileName,DWORD /*dwFlag*/)
 {
 
 	BOOL	bResult = FALSE;
@@ -135,7 +129,7 @@ lb_return:
 	return bResult;
 
 }
-BOOL __stdcall CoStorage::EndLogging()
+BOOL  CoStorage::EndLogging()
 {
 	BOOL		bResult = FALSE;
 
@@ -148,7 +142,7 @@ BOOL __stdcall CoStorage::EndLogging()
 lb_return:
 	return bResult;
 }
-DWORD __stdcall CoStorage::GetFileNum(void* pPackFileHandle)
+DWORD  CoStorage::GetFileNum(void* pPackFileHandle)
 {
 	DWORD dwNum = 0;
 
@@ -159,7 +153,7 @@ DWORD __stdcall CoStorage::GetFileNum(void* pPackFileHandle)
 	dwNum = pPackFile->GetFileNum();
 	return dwNum;
 }
-DWORD __stdcall CoStorage::CreateFileInfoList(void* pPackFileHandle,FSFILE_ATOM_INFO** ppInfoList,DWORD dwMaxNum)
+DWORD  CoStorage::CreateFileInfoList(void* pPackFileHandle,FSFILE_ATOM_INFO** ppInfoList,DWORD dwMaxNum)
 {
 	DWORD	dwFileNum = 0;
 	CPackFile*	pPackFile = (CPackFile*)pPackFileHandle;
@@ -167,12 +161,12 @@ DWORD __stdcall CoStorage::CreateFileInfoList(void* pPackFileHandle,FSFILE_ATOM_
 	return dwFileNum;
 }
 
-void __stdcall CoStorage::DeleteFileInfoList(void* pPackFileHandle,FSFILE_ATOM_INFO* pInfoList)
+void  CoStorage::DeleteFileInfoList(void* pPackFileHandle,FSFILE_ATOM_INFO* pInfoList)
 {
 	CPackFile*	pPackFile = (CPackFile*)pPackFileHandle;
 	pPackFile->DeleteFileInfoList(pInfoList);
 }
-void* __stdcall CoStorage::MapPackFile(char* szPackFileName)
+void*  CoStorage::MapPackFile(char* szPackFileName)
 {
 	CPackFile*	pPackFile = NULL;
 
@@ -210,7 +204,7 @@ void* __stdcall CoStorage::MapPackFile(char* szPackFileName)
 lb_return:
 	return pPackFile;
 }
-void __stdcall CoStorage::UnmapPackFile(void* pPackFileHandle)
+void  CoStorage::UnmapPackFile(void* pPackFileHandle)
 {
 	CPackFile*	pPackFile = (CPackFile*)pPackFileHandle;
 
@@ -220,7 +214,7 @@ void __stdcall CoStorage::UnmapPackFile(void* pPackFileHandle)
 	delete pPackFile;
 }
 /*
-BOOL __stdcall CoStorage::LockPackFile(char* szPackFileName,DWORD dwFlag)
+BOOL  CoStorage::LockPackFile(char* szPackFileName,DWORD dwFlag)
 {
 	BOOL	bResult = FALSE;
 
@@ -242,7 +236,7 @@ lb_return:
 	return bResult;
 }
 */
-BOOL __stdcall CoStorage::LockPackFile(void* pPackFileHandle,DWORD dwFlag)
+BOOL  CoStorage::LockPackFile(void* pPackFileHandle,DWORD dwFlag)
 {
 	BOOL	bResult = FALSE;
 
@@ -253,7 +247,7 @@ lb_return:
 	return bResult;
 }
 
-BOOL __stdcall CoStorage::UnlockPackFile(void* pPackFileHandle,LOAD_CALLBACK_FUNC pCallBackFunc)
+BOOL  CoStorage::UnlockPackFile(void* pPackFileHandle,LOAD_CALLBACK_FUNC pCallBackFunc)
 {
 	BOOL	bResult = FALSE;
 
@@ -265,14 +259,14 @@ lb_return:
 	return bResult;
 }
 
-BOOL __stdcall CoStorage::GetPackFileInfo(void* pPackFileHandle,FSPACK_FILE_INFO* pFileInfo)
+BOOL  CoStorage::GetPackFileInfo(void* pPackFileHandle,FSPACK_FILE_INFO* pFileInfo)
 {
 	CPackFile* pPackFile = (CPackFile*)pPackFileHandle;
 	pPackFile->GetInfo(pFileInfo);
 	return TRUE;
 }
 
-BOOL __stdcall CoStorage::IsExistInFileStorage(char* szFileName)
+BOOL  CoStorage::IsExistInFileStorage(char* szFileName)
 {
 	BOOL	bResult = FALSE;
 
@@ -291,7 +285,7 @@ BOOL __stdcall CoStorage::IsExistInFileStorage(char* szFileName)
 lb_return:
 	return bResult;
 }
-BOOL __stdcall CoStorage::InsertFileToPackFile(void* pPackFileHandle,char* szFileName)
+BOOL  CoStorage::InsertFileToPackFile(void* pPackFileHandle,char* szFileName)
 {
 	
 
@@ -319,8 +313,7 @@ BOOL CoStorage::AddFileToPackFile(CPackFile* pPackFile,char* szFileName,FSFILE_H
 
 	dwSearchFileItemLen = GetSearchFileName(szSearchFileItemName,szFileName);
 
-	FSFILE_DESC*	pNewDesc;
-	pNewDesc = (FSFILE_DESC*)LALAlloc(m_pFileDescPool);
+	FSFILE_DESC* pNewDesc = new FSFILE_DESC;
 
 	if (!pNewDesc)
 		goto lb_return;
@@ -336,9 +329,7 @@ BOOL CoStorage::AddFileToPackFile(CPackFile* pPackFile,char* szFileName,FSFILE_H
 		
 		// 기존파일 디스크립터를 삭제한다.
 		VBHDelete(m_pFileItemNameHash,pOldDesc->pHashHandle);
-		LALFree(m_pFileDescPool,pOldDesc);
-
-
+		delete pOldDesc;
 	}
 
 	// 해쉬에다 넣는다.
@@ -347,7 +338,7 @@ BOOL CoStorage::AddFileToPackFile(CPackFile* pPackFile,char* szFileName,FSFILE_H
 	if (!pHashHandle)
 	{
 		memset(pNewDesc,0,sizeof(FSFILE_DESC));
-		LALFree(m_pFileDescPool,pNewDesc);
+		delete pNewDesc;
 		pNewDesc = NULL;
 		goto lb_return;
 	}
@@ -382,7 +373,7 @@ lb_return:
 	return bResult;
 }
 
-BOOL __stdcall CoStorage::DeleteFileFromPackFile(char* szFileName)
+BOOL  CoStorage::DeleteFileFromPackFile(char* szFileName)
 {
 
 	BOOL	bResult = FALSE;
@@ -402,7 +393,7 @@ BOOL __stdcall CoStorage::DeleteFileFromPackFile(char* szFileName)
 lb_return:
 	return bResult;
 }
-BOOL __stdcall CoStorage::ExtractAllFiles()
+BOOL  CoStorage::ExtractAllFiles()
 {
 	FSFILE_DESC**	ppDescList = new FSFILE_DESC*[m_dwMaxFileNum];
 	
@@ -416,7 +407,7 @@ BOOL __stdcall CoStorage::ExtractAllFiles()
 
 	return TRUE;
 }
-BOOL __stdcall CoStorage::ExtractFile(char* szFileName)
+BOOL  CoStorage::ExtractFile(char* szFileName)
 {
 	BOOL	bResult = FALSE;
 
@@ -435,7 +426,7 @@ BOOL __stdcall CoStorage::ExtractFile(char* szFileName)
 lb_return:
 	return bResult;
 }
-DWORD __stdcall CoStorage::ExtractAllFilesFromPackFile(void* pPackFileHandle)
+DWORD  CoStorage::ExtractAllFilesFromPackFile(void* pPackFileHandle)
 {
 	BOOL	bResult = FALSE;
 
@@ -460,7 +451,7 @@ BOOL CoStorage::RemoveFileFromPackFile(FSFILE_DESC* pDelDesc)
 
 	// 기존파일 디스크립터를 삭제한다.
 	VBHDelete(m_pFileItemNameHash,pDelDesc->pHashHandle);
-	LALFree(m_pFileDescPool,pDelDesc);
+	delete pDelDesc;
 
 	bResult = TRUE;
 
@@ -469,14 +460,13 @@ lb_return:
 	return bResult;
 }
 
-void* __stdcall	CoStorage::FSOpenFile(char* szFileName,DWORD dwAccessMode)
+void* 	CoStorage::FSOpenFile(char* szFileName,DWORD dwAccessMode)
 {
-	FSFILE_POINTER*	pFP = NULL;
+	FSFILE_POINTER*	pFP = new FSFILE_POINTER;
 	BOOL	bResult = FALSE;
 	FILE*	fp = NULL;
 	FSFILE_DESC*	pDesc = NULL;
 
-	pFP = (FSFILE_POINTER*)LALAlloc(m_pFileHandlePool);
 	if (!pFP)
 		goto lb_return;
 
@@ -539,7 +529,7 @@ lb_create_file:
 
 lb_fail:
 	// 여기까지 왔으면 파일을 여는데 실패했다.
-	LALFree(m_pFileHandlePool,pFP);
+	delete pFP;
 	pFP = NULL;
 	if (m_fpLog)
 	{
@@ -554,7 +544,7 @@ void CoStorage::WriteFileNotFoundLog(char* szFileName)
 {
 	fprintf(m_fpLog,"File Not Found : %s \n",szFileName);
 }
-DWORD __stdcall CoStorage::FSRead(void* pFP,void* pDest,DWORD dwLen)
+DWORD  CoStorage::FSRead(void* pFP,void* pDest,DWORD dwLen)
 {
 
 	FSFILE_POINTER*	pScanFP = (FSFILE_POINTER*)pFP;
@@ -583,7 +573,7 @@ DWORD __stdcall CoStorage::FSRead(void* pFP,void* pDest,DWORD dwLen)
 	return dwReadBytes;
 }
 
-DWORD __stdcall CoStorage::FSSeek(void* pFP,DWORD dwOffset,FSFILE_SEEK seekBase)
+DWORD  CoStorage::FSSeek(void* pFP,DWORD dwOffset,FSFILE_SEEK seekBase)
 {
 
 
@@ -704,7 +694,7 @@ int ConvertHexToInt(char* pStr)
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-int __stdcall SearchFloat(BYTE* pMem,float* pFloat)
+int  SearchFloat(BYTE* pMem,float* pFloat)
 {
 #ifdef _DEBUG
 	if ((int)pMem >= (int)g_pMemLast)
@@ -751,7 +741,7 @@ lb_return:
 	return iOffset;
 }
 
-int __stdcall SearchInt(BYTE* pMem,int* pInt)
+int  SearchInt(BYTE* pMem,int* pInt)
 {
 #ifdef _DEBUG
 	if ((int)pMem >= (int)g_pMemLast)
@@ -801,7 +791,7 @@ lb_return:
 	return iOffset;
 }
 
-int __stdcall SearchHex(BYTE* pMem,int* pHex)
+int  SearchHex(BYTE* pMem,int* pHex)
 {
 #ifdef _DEBUG
 	if ((int)pMem >= (int)g_pMemLast)
@@ -847,7 +837,7 @@ lb_return:
 	
 	return iOffset;
 }
-int __stdcall SearchString(BYTE* pMem,BYTE* pStr)
+int  SearchString(BYTE* pMem,BYTE* pStr)
 {
 
 //	if ((DWORD)pMem == 0x018be009)
@@ -1067,7 +1057,7 @@ lb_return:
 
 }
 
-int __stdcall CoStorage::FSScanf(void* pFP,char* szFormat, ...)
+int  CoStorage::FSScanf(void* pFP,char* szFormat, ...)
 {
 
 
@@ -1214,7 +1204,7 @@ BOOL CoStorage::FSCloseFile(void* pFP)
 		fclose(pDelFP->fp);
 	}
 
-	LALFree(m_pFileHandlePool,pFP);
+	delete pFP;
 
 	return TRUE;
 }
@@ -1249,17 +1239,6 @@ void CoStorage::Cleanup()
 		ReleaseStaticMemoryPool(m_pPackFileNameHash);
 		m_pPackFileNameHash = NULL;
 	}
-	if (m_pFileDescPool)
-	{
-		ReleaseStaticMemoryPool(m_pFileDescPool);
-		m_pFileDescPool = NULL;
-	}
-	if (m_pFileHandlePool)
-	{
-		ReleaseStaticMemoryPool(m_pFileHandlePool);
-		m_pFileHandlePool = NULL;
-	}
-
 }
 
 CoStorage::~CoStorage()

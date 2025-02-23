@@ -1,7 +1,5 @@
 #include "StdAfx.h"
-#ifndef GLOBAL_FUNC_DLL
-#define GLOBAL_FUNC_DLL extern "C" __declspec(dllexport)
-#endif
+
 
 #include "global.h"
 #include "look_aside_list.h"
@@ -21,19 +19,19 @@ CLookAsideList::CLookAsideList()
 	m_dwAllocatedNum = 0;
 	m_bBugCheck = FALSE;
 }
-GLOBAL_FUNC_DLL STMPOOL_HANDLE __stdcall CreateStaticMemoryPool()
+GLOBAL_FUNC_DLL STMPOOL_HANDLE  CreateStaticMemoryPool()
 {
 	CLookAsideList* pPool = new CLookAsideList;
 	return pPool;
 }
 
-GLOBAL_FUNC_DLL DWORD __stdcall	LALGetAllocatedNum(STMPOOL_HANDLE pool)
+GLOBAL_FUNC_DLL DWORD 	LALGetAllocatedNum(STMPOOL_HANDLE pool)
 {
 	CLookAsideList* pList = (CLookAsideList*)pool;
 	return pList->m_dwAllocatedNum;
 }
 
-GLOBAL_FUNC_DLL BOOL __stdcall InitializeStaticMemoryPool(STMPOOL_HANDLE pool,DWORD dwUnitSize,DWORD dwDefaultCommitNum,DWORD dwMaxNum)
+GLOBAL_FUNC_DLL BOOL  InitializeStaticMemoryPool(STMPOOL_HANDLE pool,DWORD dwUnitSize,DWORD dwDefaultCommitNum,DWORD dwMaxNum)
 {
 	BOOL			bResult = FALSE;
 
@@ -87,7 +85,7 @@ lb_return:
 }
 
 
-GLOBAL_FUNC_DLL void __stdcall ReleaseStaticMemoryPool(STMPOOL_HANDLE pool)
+GLOBAL_FUNC_DLL void  ReleaseStaticMemoryPool(STMPOOL_HANDLE pool)
 {
 	CLookAsideList* pList = (CLookAsideList*)pool;
 
@@ -161,7 +159,7 @@ void BlockCheck(CLookAsideList* pList,char* pMemory)
 	
 }
 
-GLOBAL_FUNC_DLL void __stdcall LALEnableBlockCheck(STMPOOL_HANDLE pool,BOOL bSwitch)
+GLOBAL_FUNC_DLL void  LALEnableBlockCheck(STMPOOL_HANDLE pool,BOOL bSwitch)
 {
 	((CLookAsideList*)pool)->m_bBugCheck  = bSwitch;
 }

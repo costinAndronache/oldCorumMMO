@@ -23,8 +23,6 @@
 #include "factory.h"
 #include "CoStorage.h"
 
-#pragma comment(lib, "./../../4dyuchidll/SS3DGFunc.lib")
-
 HINSTANCE g_hDllInst = NULL;
 
 // 베이스 네트웍 소스에서 차용.
@@ -306,7 +304,7 @@ STDAPI DllRegisterServer(void)
   TCHAR    szID[GUID_SIZE+1];
   TCHAR    szCLSID[GUID_SIZE+32];
   TCHAR    szModulePath[MAX_PATH];
-  WORD		wszID[GUID_SIZE+1];
+  wchar_t		wszID[GUID_SIZE+1];
 
  // DWORD		size = sizeof(TCHAR);
   // Obtain the path to this module's executable file for later use.
@@ -402,7 +400,7 @@ STDAPI DllUnregisterServer(void)
   TCHAR    szID[GUID_SIZE+1];
   TCHAR    szCLSID[GUID_SIZE+32];
   TCHAR    szTemp[MAX_PATH+GUID_SIZE];
-	WORD	wszID[GUID_SIZE+1];
+  wchar_t	wszID[GUID_SIZE+1];
 
 
    //Create some base key strings.

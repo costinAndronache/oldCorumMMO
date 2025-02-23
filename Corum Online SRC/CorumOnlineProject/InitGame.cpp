@@ -8,6 +8,7 @@
 #else
 #include "./../4DyuchiGXGFunc/global.h"
 #endif
+#include "../SS3D_0719/4DYuchiGX/4DYUCHIGXEXECUTIVE/executive.h"
 #include "define.h"
 #include "NetworkClient.h"
 #include "InitGame.h"
@@ -58,9 +59,7 @@
 
 
 #pragma comment(lib, ".\\CResNameResolver.lib")
-#pragma comment(lib, ".\\SS3DGFunc.lib")
 #pragma comment(lib, ".\\soundlib.lib")
-#pragma comment(lib, ".\\CommonServer.lib")
 
 
 extern int windowWidth();
@@ -1454,16 +1453,16 @@ void InitFunctionPointer()
 	memset(AfterRender, 0, sizeof(AfterRender));
 	memset(BeforeRender, 0, sizeof(BeforeRender));
 	
-	AfterRender[ UPDATE_GAME_INTRO ]				= (DWORD (__stdcall*)())&AfterRenderGameIntro;
-	AfterRender[ UPDATE_GAME_LOGIN ]				= (DWORD (__stdcall*)())&AfterRenderGameLogin;
-	AfterRender[ UPDATE_GAME_CHAR_SELECT ]			= (DWORD (__stdcall*)())&AfterRenderGameCharSelect;
-	AfterRender[ UPDATE_GAME_WORLD ]				= (DWORD (__stdcall*)())&AfterRenderGameWorld;
-	AfterRender[ UPDATE_GAME_PLAY ]					= (DWORD (__stdcall*)())&AfterRenderGameDungeon;
+	AfterRender[ UPDATE_GAME_INTRO ]				= (DWORD (*)())&AfterRenderGameIntro;
+	AfterRender[ UPDATE_GAME_LOGIN ]				= (DWORD (*)())&AfterRenderGameLogin;
+	AfterRender[ UPDATE_GAME_CHAR_SELECT ]			= (DWORD (*)())&AfterRenderGameCharSelect;
+	AfterRender[ UPDATE_GAME_WORLD ]				= (DWORD (*)())&AfterRenderGameWorld;
+	AfterRender[ UPDATE_GAME_PLAY ]					= (DWORD (*)())&AfterRenderGameDungeon;
 
-	BeforeRender[ UPDATE_GAME_LOGIN ]				= (DWORD (__stdcall*)())&BeforeRenderGameLogin;
-	BeforeRender[ UPDATE_GAME_CHAR_SELECT ]			= (DWORD (__stdcall*)())&BeforeRenderGameCharSelect;
-	BeforeRender[ UPDATE_GAME_WORLD ]				= (DWORD (__stdcall*)())&BeforeRenderGameWorld;
-	BeforeRender[ UPDATE_GAME_PLAY ]				= (DWORD (__stdcall*)())&BeforeRenderGameDungeon;
+	BeforeRender[ UPDATE_GAME_LOGIN ]				= (DWORD (*)())&BeforeRenderGameLogin;
+	BeforeRender[ UPDATE_GAME_CHAR_SELECT ]			= (DWORD (*)())&BeforeRenderGameCharSelect;
+	BeforeRender[ UPDATE_GAME_WORLD ]				= (DWORD (*)())&BeforeRenderGameWorld;
+	BeforeRender[ UPDATE_GAME_PLAY ]				= (DWORD (*)())&BeforeRenderGameDungeon;
 
 	InitGameProcess[ UPDATE_GAME_INTRO ]			= InitGameIntro;
 	InitGameProcess[ UPDATE_GAME_LOGIN ]			= InitGameLogin;
@@ -1541,17 +1540,8 @@ BOOL InitCOMObject()
 	GetCurrentDirectory(200, crtDirName);
 	SetCurrentDirectory(g_szBasePath);
 	CoInitialize(NULL);
-	g_hExecutiveHandle = LoadLibrary("SS3DExecutiveForCorum.dll");
-	DWORD lastError = GetLastError();
-	CREATE_INSTANCE_FUNC pFunc = (CREATE_INSTANCE_FUNC)GetProcAddress(g_hExecutiveHandle,"DllCreateInstance");
 	
-	HRESULT hr = pFunc((void**)&g_pExecutive);
-	if (hr != S_OK)
-	{
-		// MSG_ID : 445 ; Can not find CLSID_4DyuchiGXExecutive , 343 ; Error
-		MessageBox(g_hMainWnd,g_Message[ETC_MESSAGE445].szMessage,g_Message[ETC_MESSAGE343].szMessage,MB_OK);	
-		return FALSE;
-	}
+	g_pExecutive = new CoExecutive();
 	
 	DISPLAY_INFO dispInfo;
 	dispInfo.dwWidth		= SCREEN_WIDTH;
@@ -1615,7 +1605,8 @@ BOOL InitCOMObject()
 
 	DllGetClassObject_BaseNetwork	pNetFunc;
 	pNetFunc = (DllGetClassObject_BaseNetwork)GetProcAddress(g_hBaseNetworkHandle,"DllGetClassObject");
-	hr = pNetFunc(CLSID_SC_BASENETWORK_DLL, IID_SC_BASENETWORK_DLL, (void**)&g_pNet);
+	
+	HRESULT hr = pNetFunc(CLSID_SC_BASENETWORK_DLL, IID_SC_BASENETWORK_DLL, (void**)&g_pNet);
 	
 	if (S_OK != hr)
 	{

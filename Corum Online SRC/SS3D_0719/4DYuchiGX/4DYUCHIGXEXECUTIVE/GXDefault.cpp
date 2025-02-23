@@ -2,7 +2,7 @@
 #include "GXDefault.h"
 #include "executive.h"
 
-DWORD __stdcall GXDefaultSchedulePROC(I4DyuchiGXExecutive* pExecutive,GXOBJECT_HANDLE gxh,DWORD msg,int arg1,int arg2,void* pData)
+DWORD  GXDefaultSchedulePROC(I4DyuchiGXExecutive* pExecutive,GXOBJECT_HANDLE gxh,DWORD msg,int arg1,int arg2,void* pData)
 {
 	
 	DWORD	dwMotionIndex = pExecutive->GXOGetCurrentMotionIndex(gxh);
@@ -40,7 +40,7 @@ DWORD __stdcall GXDefaultSchedulePROC(I4DyuchiGXExecutive* pExecutive,GXOBJECT_H
 	return 0;
 }
 
-DWORD __stdcall GXDefaultLightSchedulePROC(I4DyuchiGXExecutive* pExecutive,GXLIGHT_HANDLE gxh,DWORD msg,int arg1,int arg2,void* pData)
+DWORD  GXDefaultLightSchedulePROC(I4DyuchiGXExecutive* pExecutive,GXLIGHT_HANDLE gxh,DWORD msg,int arg1,int arg2,void* pData)
 {
 //	VECTOR3		v3mov;
 //	v3mov.x = 0.0f;
@@ -54,7 +54,7 @@ DWORD __stdcall GXDefaultLightSchedulePROC(I4DyuchiGXExecutive* pExecutive,GXLIG
 	return 0;
 }
 
-DWORD __stdcall GXDefaultDecalSchedulePROC(I4DyuchiGXExecutive* pExecutive,GXDECAL_HANDLE gxd,DWORD msg,int arg1,int arg2,void* pData)
+DWORD  GXDefaultDecalSchedulePROC(I4DyuchiGXExecutive* pExecutive,GXDECAL_HANDLE gxd,DWORD msg,int arg1,int arg2,void* pData)
 {
 	DWORD	dwAlpha = pExecutive->GetAlphaFlag(gxd);
 	if (dwAlpha >= 255)
@@ -68,7 +68,7 @@ DWORD __stdcall GXDefaultDecalSchedulePROC(I4DyuchiGXExecutive* pExecutive,GXDEC
 
 	return 0;
 }
-DWORD __stdcall GXDefaultMapSchedulePROC(DWORD msg,int frame_ince,int arg2,void* pData)
+DWORD  GXDefaultMapSchedulePROC(DWORD msg,int frame_ince,int arg2,void* pData)
 {
 	return 0;
 }

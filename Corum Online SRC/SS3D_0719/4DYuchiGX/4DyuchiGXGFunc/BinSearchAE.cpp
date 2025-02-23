@@ -1,52 +1,49 @@
 #include "StdAfx.h"
-#ifndef GLOBAL_FUNC_DLL
-#define GLOBAL_FUNC_DLL extern "C" __declspec(dllexport)
-#endif
 
 #include "../4DyuchiGXGFunc/global.h"
 #include "BinSearchAE.h"
 
 	
-GLOBAL_FUNC_DLL BSAE_HANDLE __stdcall	BSAECreate()
+GLOBAL_FUNC_DLL BSAE_HANDLE 	BSAECreate()
 {
 	CBinSearchAE* pBinSearch = new CBinSearchAE;
 	return (BSAE_HANDLE)pBinSearch;
 	
 }
-GLOBAL_FUNC_DLL DWORD __stdcall BSAEGetItemNum(BSAE_HANDLE pBSAE)
+GLOBAL_FUNC_DLL DWORD  BSAEGetItemNum(BSAE_HANDLE pBSAE)
 {
 	CBinSearchAE* pBinSearch = (CBinSearchAE*)pBSAE;
 	return pBinSearch->GetItemNum();
 }
-GLOBAL_FUNC_DLL BOOL __stdcall BSAEInitialize(BSAE_HANDLE pBSAE,DWORD dwMaxItemNum)
+GLOBAL_FUNC_DLL BOOL  BSAEInitialize(BSAE_HANDLE pBSAE,DWORD dwMaxItemNum)
 {
 	CBinSearchAE* pBinSearch = (CBinSearchAE*)pBSAE;
 	return pBinSearch->Initialize(dwMaxItemNum);
 
 }
-GLOBAL_FUNC_DLL ITEM_CONTAINER_AE* __stdcall BSAEInsertItem(BSAE_HANDLE pBSAE,DWORD dwKey,void* pItem)
+GLOBAL_FUNC_DLL ITEM_CONTAINER_AE*  BSAEInsertItem(BSAE_HANDLE pBSAE,DWORD dwKey,void* pItem)
 {
 	CBinSearchAE* pBinSearch = (CBinSearchAE*)pBSAE;
 	return pBinSearch->InsertItem(dwKey,pItem);
 }
-GLOBAL_FUNC_DLL BOOL __stdcall BSAEDeleteItem(BSAE_HANDLE pBSAE,ITEM_CONTAINER_AE* pItemContainer)
+GLOBAL_FUNC_DLL BOOL  BSAEDeleteItem(BSAE_HANDLE pBSAE,ITEM_CONTAINER_AE* pItemContainer)
 {
 	CBinSearchAE* pBinSearch = (CBinSearchAE*)pBSAE;
 	return pBinSearch->DeleteItem(pItemContainer);
 
 }
-GLOBAL_FUNC_DLL void* __stdcall BSAESearchItem(BSAE_HANDLE pBSAE,DWORD dwKey)
+GLOBAL_FUNC_DLL void*  BSAESearchItem(BSAE_HANDLE pBSAE,DWORD dwKey)
 {
 	CBinSearchAE* pBinSearch = (CBinSearchAE*)pBSAE;
 	return pBinSearch->SearchItem(dwKey);
 }
-GLOBAL_FUNC_DLL ITEM_CONTAINER_AE* __stdcall BSAESearchItemContainer(BSAE_HANDLE pBSAE,DWORD dwKey)
+GLOBAL_FUNC_DLL ITEM_CONTAINER_AE*  BSAESearchItemContainer(BSAE_HANDLE pBSAE,DWORD dwKey)
 {
 	CBinSearchAE* pBinSearch = (CBinSearchAE*)pBSAE;
 	return pBinSearch->SearchItemContainer(dwKey);
 }
 
-GLOBAL_FUNC_DLL void __stdcall BSAERelease(BSAE_HANDLE pBSAE)
+GLOBAL_FUNC_DLL void  BSAERelease(BSAE_HANDLE pBSAE)
 {
 	delete (CBinSearchAE*)pBSAE;
 }
