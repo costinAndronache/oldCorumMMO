@@ -11,6 +11,7 @@
 
 #include "typedef.h"
 #include "../4DyuchiGXGFunc/global.h"
+#include <string>
 
 class	CoStorage;
 
@@ -50,7 +51,6 @@ class CPackFile
 	DWORD				m_dwMaxFileNum;
 	char				m_szFileName[_MAX_PATH];
 	DWORD				m_dwFileNameLen;
-	VBHASH_HANDLE		m_pPackFileNameHash;
 	FSFILE_DESC*		m_pfsHead;
 	DWORD				m_dwFileItemNum;
 
@@ -58,6 +58,7 @@ class CPackFile
 	BOOL				m_bExistOriginalFile;
 
 	void*				m_pSearchHandle;
+	std::string			containerKey;
 	BOOL				m_bMustRebuild;
 	DWORD				m_dwCurrentVersion;
 
@@ -84,7 +85,7 @@ public:
 	 * \param szPackFileName 
 	 * \return 
 	 */
-	BOOL				Initialize(CoStorage* pStorage,VBHASH_HANDLE pFileNameHash,char* szPackFileName);
+	BOOL				Initialize(CoStorage* pStorage,char* szPackFileName);
 	/**
 	 *
 	 * \return 

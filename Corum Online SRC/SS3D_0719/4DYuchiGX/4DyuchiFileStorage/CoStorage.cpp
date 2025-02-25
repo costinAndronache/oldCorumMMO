@@ -83,8 +83,6 @@ CoStorage::CoStorage()
 	
 	m_dwRefCount = 0;
 	
-	m_pFileItemNameHash = NULL;
-	m_pPackFileNameHash = NULL;
 	m_dwClusterSize = 8192;
 
 	m_dwMaxFileNum = 0;
@@ -104,15 +102,6 @@ BOOL  CoStorage::Initialize(DWORD dwMaxFileNum,DWORD dwMaxFileHandleNumAtSameTim
 {
 	m_dwMaxFileNameLen = dwMaxFileNameLen;
 	m_dwMaxFileNum = dwMaxFileNum;
-
-
-	m_pFileItemNameHash = VBHCreate();
-	VBHInitialize(m_pFileItemNameHash,m_dwMaxFileNum / 4 + 4,m_dwMaxFileNameLen,m_dwMaxFileNum);
-
-	m_pPackFileNameHash = VBHCreate();
-	VBHInitialize(m_pPackFileNameHash,MAX_PACK_FILE_NUM / 4 + 4,_MAX_PATH,MAX_PACK_FILE_NUM);
-
-
 	m_fileAccessMethod = accessMethod;
 	return TRUE;
 }
@@ -179,19 +168,22 @@ void*  CoStorage::MapPackFile(char* szPackFileName)
 
 	dwSearchPackFileLen = GetSearchFileName(szSearchPackFileName,szPackFileName);
 
+	std::string key(szSearchPackFileName);
+	if (_packFilePerFilename.find(key) != _packFilePerFilename.end()) {
+		return NULL;
+	}
 
-	if (VBHSelect(m_pPackFileNameHash,(DWORD*)&pPackFile,1,szSearchPackFileName,dwSearchPackFileLen))
+	/*if (VBHSelect(m_pPackFileNameHash, (DWORD*)&pPackFile, 1, szSearchPackFileName, dwSearchPackFileLen))
 	{
 		pPackFile = NULL;
 		goto lb_return;
 	}
+	*/
 	pPackFile = new CPackFile;
-	bResult = pPackFile->Initialize(this,m_pFileItemNameHash,szPackFileName);
-	
-	
+	bResult = pPackFile->Initialize(this,szPackFileName);
+	pPackFile->containerKey = key;
 
-
-	void*	pHashHandle;
+	/*void* pHashHandle;
 	pHashHandle = VBHInsert(m_pPackFileNameHash,(DWORD)pPackFile,szSearchPackFileName,dwSearchPackFileLen);
 	if (!pHashHandle)
 	{
@@ -200,42 +192,22 @@ void*  CoStorage::MapPackFile(char* szPackFileName)
 		goto lb_return;
 	}
 	pPackFile->m_pSearchHandle = pHashHandle;
+	*/
 
+	_packFilePerFilename.insert({ key, pPackFile });
 lb_return:
 	return pPackFile;
 }
 void  CoStorage::UnmapPackFile(void* pPackFileHandle)
 {
 	CPackFile*	pPackFile = (CPackFile*)pPackFileHandle;
-
 	
-
- 	VBHDelete(m_pPackFileNameHash,pPackFile->m_pSearchHandle);
+	_packFilePerFilename.erase(pPackFile->containerKey);
+	//VBHDelete(m_pPackFileNameHash,pPackFile->m_pSearchHandle);
+	
 	delete pPackFile;
 }
-/*
-BOOL  CoStorage::LockPackFile(char* szPackFileName,DWORD dwFlag)
-{
-	BOOL	bResult = FALSE;
 
-	char	szSearchPackFileName[256];
-	DWORD	dwSearchPackFileLen;
-	memset(szSearchPackFileName,0,sizeof(szSearchPackFileName));
-
-	dwSearchPackFileLen = GetSearchFileName(szSearchPackFileName,szPackFileName);
-
-
-	CPackFile*	pPackFile;
-	if (!VBHSelect(m_pPackFileNameHash,(DWORD*)&pPackFile,1,szSearchPackFileName,dwSearchPackFileLen))
-	{
-		goto lb_return;
-	}
-	bResult = pPackFile->BeginCreatePackFile(dwFlag);
-	
-lb_return:
-	return bResult;
-}
-*/
 BOOL  CoStorage::LockPackFile(void* pPackFileHandle,DWORD dwFlag)
 {
 	BOOL	bResult = FALSE;
@@ -276,14 +248,20 @@ BOOL  CoStorage::IsExistInFileStorage(char* szFileName)
 
 
 	dwSearchFileItemLen = GetSearchFileName(szSearchFileItemName,szFileName);
+	std::string key(szSearchFileItemName);
+	if (_filedescPerFilename.find(key) != _filedescPerFilename.end()) {
+		return TRUE;
+	}
+	return FALSE;
 
-	FSFILE_DESC*	pOldDesc;
+	/*FSFILE_DESC* pOldDesc;
 	if (VBHSelect(m_pFileItemNameHash,(DWORD*)&pOldDesc,1,szSearchFileItemName,dwSearchFileItemLen))
 	{
 		bResult = TRUE;
 	}
 lb_return:
 	return bResult;
+	*/
 }
 BOOL  CoStorage::InsertFileToPackFile(void* pPackFileHandle,char* szFileName)
 {
@@ -312,16 +290,26 @@ BOOL CoStorage::AddFileToPackFile(CPackFile* pPackFile,char* szFileName,FSFILE_H
 
 
 	dwSearchFileItemLen = GetSearchFileName(szSearchFileItemName,szFileName);
+	std::string key(szSearchFileItemName);
 
 	FSFILE_DESC* pNewDesc = new FSFILE_DESC;
 
-	if (!pNewDesc)
-		goto lb_return;
+	if (!pNewDesc) {
+		return FALSE;
+	}
 
 	memset(pNewDesc,0,sizeof(FSFILE_DESC));
 
-	FSFILE_DESC*	pOldDesc;
-	if (VBHSelect(m_pFileItemNameHash,(DWORD*)&pOldDesc,1,szSearchFileItemName,dwSearchFileItemLen))
+	auto found = _filedescPerFilename.find(key);
+	if (found != _filedescPerFilename.end()) {
+		auto old = found->second;
+		old->pOwnerPackFile->DeleteFileItem(old);
+		_filedescPerFilename.erase(key);
+		delete old;
+	}
+
+	/*FSFILE_DESC* pOldDesc;
+	if (VBHSelect(m_pFileItemNameHash, (DWORD*)&pOldDesc, 1, szSearchFileItemName, dwSearchFileItemLen))
 	{
 
 		// 팩 파일에서 삭제한다.
@@ -331,9 +319,13 @@ BOOL CoStorage::AddFileToPackFile(CPackFile* pPackFile,char* szFileName,FSFILE_H
 		VBHDelete(m_pFileItemNameHash,pOldDesc->pHashHandle);
 		delete pOldDesc;
 	}
+	*/
+
+	_filedescPerFilename.insert({ key, pNewDesc });
+	pNewDesc->key = key;
 
 	// 해쉬에다 넣는다.
-	void*	pHashHandle;
+	/*void* pHashHandle;
 	pHashHandle = VBHInsert(m_pFileItemNameHash,(DWORD)pNewDesc,szSearchFileItemName,dwSearchFileItemLen);
 	if (!pHashHandle)
 	{
@@ -342,14 +334,12 @@ BOOL CoStorage::AddFileToPackFile(CPackFile* pPackFile,char* szFileName,FSFILE_H
 		pNewDesc = NULL;
 		goto lb_return;
 	}
-
-
+	
 	// 팩파일에도 넣는다.
-	pNewDesc->pHashHandle = pHashHandle;
-	
-	
-	char*	pszFileName;
+	//pNewDesc->pHashHandle = pHashHandle;
+		char*	pszFileName;
 	pszFileName = (char*)VBHGetKeyPtr(pNewDesc->pHashHandle);
+	*/
 
 	if (pfsHeader)
 	{
@@ -375,27 +365,32 @@ lb_return:
 
 BOOL  CoStorage::DeleteFileFromPackFile(char* szFileName)
 {
-
-	BOOL	bResult = FALSE;
-
 	char	szSearchFileItemName[256];
 	DWORD	dwSearchFileItemLen;
 	memset(szSearchFileItemName,0,sizeof(szSearchFileItemName));
 	
 	dwSearchFileItemLen = GetSearchFileName(szSearchFileItemName,szFileName);
+	std::string key(szSearchFileItemName);
 
-	FSFILE_DESC*	pDelDesc;
+	/*FSFILE_DESC*	pDelDesc;
 	if (!VBHSelect(m_pFileItemNameHash,(DWORD*)&pDelDesc,1,szSearchFileItemName,dwSearchFileItemLen))
 		goto lb_return;
-
+	
 	bResult = RemoveFileFromPackFile(pDelDesc);
-
+	
 lb_return:
 	return bResult;
+	*/
+	auto found = _filedescPerFilename.find(key);
+	if (found != _filedescPerFilename.end()) {
+		return RemoveFileFromPackFile(found->second);
+	}
+	return FALSE;
 }
+
 BOOL  CoStorage::ExtractAllFiles()
 {
-	FSFILE_DESC**	ppDescList = new FSFILE_DESC*[m_dwMaxFileNum];
+	/*FSFILE_DESC** ppDescList = new FSFILE_DESC * [m_dwMaxFileNum];
 	
 	DWORD dwNum = VBHGetAllItem(m_pFileItemNameHash,(DWORD*)ppDescList,m_dwMaxFileNum);
 
@@ -404,9 +399,14 @@ BOOL  CoStorage::ExtractAllFiles()
 		ppDescList[i]->pOwnerPackFile->ExtractFile(ppDescList[i]);
 	}
 	delete [] ppDescList;
+	*/
 
+	for (auto const& item : _filedescPerFilename) {
+		item.second->pOwnerPackFile->ExtractFile(item.second);
+	}
 	return TRUE;
 }
+
 BOOL  CoStorage::ExtractFile(char* szFileName)
 {
 	BOOL	bResult = FALSE;
@@ -416,8 +416,9 @@ BOOL  CoStorage::ExtractFile(char* szFileName)
 	memset(szSearchFileItemName,0,sizeof(szSearchFileItemName));
 	
 	dwSearchFileItemLen = GetSearchFileName(szSearchFileItemName,szFileName);
+	std::string key(szSearchFileItemName);
 
-	FSFILE_DESC*	pDesc;
+	/**FSFILE_DESC* pDesc;
 	if (!VBHSelect(m_pFileItemNameHash,(DWORD*)&pDesc,1,szSearchFileItemName,dwSearchFileItemLen))
 		goto lb_return;
 
@@ -425,7 +426,14 @@ BOOL  CoStorage::ExtractFile(char* szFileName)
 
 lb_return:
 	return bResult;
+	*/
+	auto found = _filedescPerFilename.find(key);
+	if (found != _filedescPerFilename.end()) {
+		return found->second->pOwnerPackFile->ExtractFile(found->second);
+	}
+	return FALSE;
 }
+
 DWORD  CoStorage::ExtractAllFilesFromPackFile(void* pPackFileHandle)
 {
 	BOOL	bResult = FALSE;
@@ -435,6 +443,7 @@ DWORD  CoStorage::ExtractAllFilesFromPackFile(void* pPackFileHandle)
 	return bResult;
 
 }
+
 BOOL CoStorage::RemoveFileFromPackFile(FSFILE_DESC* pDelDesc)
 {
 
@@ -450,7 +459,8 @@ BOOL CoStorage::RemoveFileFromPackFile(FSFILE_DESC* pDelDesc)
 	
 
 	// 기존파일 디스크립터를 삭제한다.
-	VBHDelete(m_pFileItemNameHash,pDelDesc->pHashHandle);
+	//VBHDelete(m_pFileItemNameHash,pDelDesc->pHashHandle);
+	_filedescPerFilename.erase(pDelDesc->key);
 	delete pDelDesc;
 
 	bResult = TRUE;
@@ -467,15 +477,8 @@ void* 	CoStorage::FSOpenFile(char* szFileName,DWORD dwAccessMode)
 	FILE*	fp = NULL;
 	FSFILE_DESC*	pDesc = NULL;
 
-	if (!pFP)
-		goto lb_return;
 
 	memset(pFP,0,sizeof(FSFILE_POINTER));
-
-		
-	if (m_fileAccessMethod == FILE_ACCESS_METHOD_ONLY_FILE)
-		goto lb_create_file;
-
 
 	char	szSearchFileItemName[256];
 	DWORD	dwSearchFileItemLen;
@@ -483,10 +486,17 @@ void* 	CoStorage::FSOpenFile(char* szFileName,DWORD dwAccessMode)
 
 
 	dwSearchFileItemLen = GetSearchFileName(szSearchFileItemName,szFileName);
+	std::string key(szSearchFileItemName);
 	
-	
-	if (VBHSelect(m_pFileItemNameHash,(DWORD*)&pDesc,1,szSearchFileItemName,dwSearchFileItemLen))
+	//if (VBHSelect(m_pFileItemNameHash,(DWORD*)&pDesc,1,szSearchFileItemName,dwSearchFileItemLen))
+	auto found = _filedescPerFilename.find(key);
+
+	if (m_fileAccessMethod == FILE_ACCESS_METHOD_ONLY_FILE)
+		goto lb_create_file;
+
+	if (found != _filedescPerFilename.end())
 	{
+		pDesc = found->second;
 		pFP->bFromPack = TRUE;
 		pFP->pFSDesc = pDesc;
 		if (dwAccessMode == FSFILE_ACCESSMODE_TEXT)
@@ -1217,16 +1227,20 @@ void CoStorage::Cleanup()
 		m_fpLog = NULL;
 	}
 
-	CPackFile*		pPackFile[MAX_PACK_FILE_NUM];
+	for (auto const& item : _packFilePerFilename) {
+		delete item.second;
+	}
+
+	_packFilePerFilename.clear();
+	_filedescPerFilename.clear();
+
+	/*CPackFile* pPackFile[MAX_PACK_FILE_NUM];
 	DWORD dwNum = VBHGetAllItem(m_pPackFileNameHash,(DWORD*)pPackFile,MAX_PACK_FILE_NUM);
 
 	for (DWORD i=0; i<dwNum; i++)
 	{
 		delete pPackFile[i];
 	}
-
-
-
 
 	if (m_pFileItemNameHash)
 	{
@@ -1239,6 +1253,7 @@ void CoStorage::Cleanup()
 		ReleaseStaticMemoryPool(m_pPackFileNameHash);
 		m_pPackFileNameHash = NULL;
 	}
+	*/
 }
 
 CoStorage::~CoStorage()

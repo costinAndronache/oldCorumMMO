@@ -63,19 +63,17 @@ void CPackFile::InitializeMembers()
 	m_dwMaxFileNum = 0;
 	memset(m_szFileName,0,sizeof(m_szFileName));
 	m_dwFileNameLen = 0;
-	m_pPackFileNameHash = NULL;
 	m_pfsHead = NULL;
 	m_dwFileItemNum = NULL;
 	m_bExistOriginalFile = FALSE;
 }
-BOOL CPackFile::Initialize(CoStorage* pStorage,VBHASH_HANDLE pFileNameHash,char* szPackFileName)
+BOOL CPackFile::Initialize(CoStorage* pStorage,char* szPackFileName)
 {
 	InitializeMembers();
 
 	m_pStorage = pStorage;
 	
 	BOOL	bResult = FALSE;
-	m_pPackFileNameHash = pFileNameHash;
 
 	m_dwFileNameLen = lstrlen(szPackFileName);
 	memset(m_szFileName,0,sizeof(m_szFileName));
@@ -443,7 +441,7 @@ lb_skip:
 	char	szFileName[_MAX_PATH];
 	memset(szFileName,0,sizeof(szFileName));
 	memcpy(szFileName,m_szFileName,m_dwFileNameLen);
-	Initialize(m_pStorage,m_pPackFileNameHash,szFileName);
+	Initialize(m_pStorage,szFileName);
 
 	bResult = TRUE;
 	

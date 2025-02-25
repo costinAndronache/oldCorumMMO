@@ -5,8 +5,8 @@
 #include "../4DyuchiGXGFunc/global.h"
 
 #include "PackFile.h"
-
-
+#include <map>
+#include <string>
 
 /**
  * \ingroup 4DyuchiFileStorage
@@ -38,10 +38,11 @@
  */
 class CoStorage : public I4DyuchiFileStorage
 {
+	std::map<std::string, CPackFile*> _packFilePerFilename;
+	std::map<std::string, FSFILE_DESC*> _filedescPerFilename;
+
 	DWORD				m_dwRefCount;
 	BOOL				m_bEnableUsePackFile;
-	VBHASH_HANDLE		m_pFileItemNameHash;
-	VBHASH_HANDLE		m_pPackFileNameHash;
 	DWORD				m_dwClusterSize;
 
 	DWORD				m_dwMaxFileNum;

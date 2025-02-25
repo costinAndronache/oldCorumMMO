@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../4DyuchiGRX_Common/IFileStorage.h"
+#include <string>
 
 #define CURRENT_VERSION		0x00000001
 class CPackFile;
@@ -22,6 +23,7 @@ struct FSFILE_DESC
 
 
 	void*			pHashHandle;
+	std::string		key;
 	CPackFile*		pOwnerPackFile;
 
 	char*			pszFileName;				// full path ÆÄÀÏ¸í 
