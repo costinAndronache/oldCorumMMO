@@ -2,13 +2,9 @@
 
 
 #include "CResNameResolver.h"
-#ifdef SS3D_TEST
 #include "./../SS3D_0719/4dyuchigx/4DyuchiGX_UTIL/mouselib.h"
 #include "./../SS3D_0719/4dyuchigx/4DyuchiGXGFunc/global.h"
-#else
-#include "./../4DyuchiGX_UTIL/mouselib.h"
-#include "./../4DyuchiGXGFunc/global.h"
-#endif
+
 
 #include "LogWnd.h"
 #include "HashTable.h"

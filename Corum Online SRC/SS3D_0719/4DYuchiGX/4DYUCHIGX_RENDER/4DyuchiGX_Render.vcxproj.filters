@@ -430,12 +430,4 @@
       <Filter>ProjectionLight</Filter>
     </ClInclude>
   </ItemGroup>
-  <ItemGroup>
-    <FxCompile Include="dynamic_light_map.vsh">
-      <Filter>Shaders</Filter>
-    </FxCompile>
-    <FxCompile Include="test.vsh">
-      <Filter>Shaders</Filter>
-    </FxCompile>
-  </ItemGroup>
 </Project>

@@ -175,7 +175,7 @@ lb_alloc:
 	//	goto lb_alloc;;
 	}
 	
-	pHeapItemDesc = (D3DRC_HEAP_ITEM*)LALAlloc(m_pHeapItemDescPool);
+	pHeapItemDesc = new D3DRC_HEAP_ITEM;
 	if (!pHeapItemDesc)
 	{
 #ifdef _DEBUG
@@ -312,7 +312,7 @@ void CD3DResourceBufferHeap::ReleaseBuffer(void* pHandle)
 	}
 //	Unlink...
 	UnLinkFromSortLink(&m_pSortLinkHead,&m_pSortLinkTail,&pHeapItemDesc->sortLink);
-	LALFree(m_pHeapItemDescPool,pHeapItemDesc);
+	delete pHeapItemDesc;
 
 
 #ifdef _DEBUG

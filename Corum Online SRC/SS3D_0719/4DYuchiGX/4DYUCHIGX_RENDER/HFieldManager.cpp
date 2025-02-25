@@ -3,7 +3,6 @@
 #include "HFieldManager.h"
 #include "d3d_helper.h"
 #include "CoD3DDevice.h"
-#include "../4DyuchiGRX_myself97/My2DLib.h"
 
 #include "../4DyuchiGXGFunc/global.h"
 

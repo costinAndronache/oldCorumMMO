@@ -81,7 +81,7 @@ MTL_HANDLE* CMaterialManager::Add(DWORD* pdwIndexResult,MATERIAL* pMtl,DWORD /*d
 		goto lb_return;
 	}
 	
-	pMtlHandle = (MTL_HANDLE*)LALAlloc(m_pMtlMemoryPool);
+	pMtlHandle = new MTL_HANDLE;
 
 	if (!pMtlHandle)
 	{
@@ -197,7 +197,7 @@ void CMaterialManager::Free(DIMATERIAL* pMtl)
 		pMtlHandle->mtlData.TextureDiffuse.Release();
 		pMtlHandle->mtlData.TextureReflect.Release();
 
-		LALFree(m_pMtlMemoryPool,pMtlHandle);
+		delete pMtlHandle;
 		m_dwMtlNum--;
 	}
 

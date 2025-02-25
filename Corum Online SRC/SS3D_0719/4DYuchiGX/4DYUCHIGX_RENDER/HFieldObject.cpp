@@ -2,7 +2,6 @@
 #include "HFieldObject.h"
 #include "HFieldManager.h"
 #include "CoD3DDevice.h"
-#include "../4DyuchiGRX_myself97/My2DLib.h"
 #include "render_type.h"
 #include "StaticVBPool.h"
 

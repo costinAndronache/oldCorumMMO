@@ -6,7 +6,7 @@
 #include "4DyuchiGRX_myself97/myself97common.h"
 #include "4DyuchiGRX_myself97/CheckClock.h"
 #include "../4DyuchiFileStorage/CoStorage.h"
-
+#include "../4DYUCHIGX_RENDER/CoD3DDevice.h"
 #include <crtdbg.h>
 #include "GXDefault.h"
 
@@ -233,7 +233,7 @@ void  CoExecutive::SetViewport(DWORD dwViewportIndex)
 {
 	m_dwViewportIndex = dwViewportIndex;
 }
-BOOL  CoExecutive::InitializeFileStorageWithoutRegistry(char* szFileName,DWORD dwMaxFileNum,DWORD dwMaxFileHandleNumAtSameTime,DWORD dwMaxFileNameLen,FILE_ACCESS_METHOD accessMethod,PACKFILE_NAME_TABLE* pPackFileList,DWORD dwNum)
+BOOL  CoExecutive::InitializeFileStorageWithoutRegistry(DWORD dwMaxFileNum,DWORD dwMaxFileHandleNumAtSameTime,DWORD dwMaxFileNameLen,FILE_ACCESS_METHOD accessMethod,PACKFILE_NAME_TABLE* pPackFileList,DWORD dwNum)
 {
 	
 	m_pFileStorage = new CoStorage();
@@ -319,7 +319,7 @@ lb_return:
 
 
 
-BOOL  CoExecutive::InitializeWithoutRegistry(char* szGeometryFileName,char* szRendererFileName,HWND hWnd,DISPLAY_INFO* pInfo,DWORD dwMaxObjectNum,DWORD dwMaxLightNum,DWORD dwMaxTriggerNum,DWORD dwViewportNum, DWORD dwMaxDecalNum,ErrorHandleProc pErrorHandleFunc)
+BOOL  CoExecutive::InitializeWithoutRegistry(char* szGeometryFileName,HWND hWnd,DISPLAY_INFO* pInfo,DWORD dwMaxObjectNum,DWORD dwMaxLightNum,DWORD dwMaxTriggerNum,DWORD dwViewportNum, DWORD dwMaxDecalNum,ErrorHandleProc pErrorHandleFunc)
 {
 	I4DyuchiGXGeometry*		pGeometry = NULL;
 	I4DyuchiGXRenderer*		pRenderer = NULL;
@@ -330,21 +330,8 @@ BOOL  CoExecutive::InitializeWithoutRegistry(char* szGeometryFileName,char* szRe
 	HRESULT		hr;
 	void*	pCreateFunc = NULL;
 	BOOL	bResult = FALSE;
-	if (hWnd)
-	{
-		m_hRenderer = LoadLibrary(szRendererFileName);
-		if (!m_hRenderer)
-			goto lb_fail_renderer;
-
-		pFunc = (CREATE_INSTANCE_FUNC)GetProcAddress(m_hRenderer,"DllCreateInstance");
-		hr = pFunc((void**)&pRenderer);
-
-		if (hr != S_OK)
-		{
-lb_fail_renderer:
-			MessageBox(NULL,"Fail to Create 4DyuchiGXRenderer","Error",MB_OK);
-			goto lb_return;
-		}
+	if (hWnd) {
+		pRenderer = new CoD3DDevice();
 	}
 
 	m_hGeometry = LoadLibrary(szGeometryFileName);
@@ -2934,11 +2921,6 @@ CoExecutive::~CoExecutive()
 		FreeLibrary(m_hGeometry);
 		m_hGeometry = NULL;
 	}
-	if (m_hRenderer)
-	{
-		FreeLibrary(m_hRenderer);
-		m_hRenderer = NULL;
-	}
 
 	for (int i=0; i<m_dwPackFilesNum; i++)
 	{
@@ -2953,11 +2935,6 @@ CoExecutive::~CoExecutive()
 	{
 		m_pFileStorage->Release();
 		m_pFileStorage = NULL;
-	}
-	if (m_hStorage)
-	{
-		FreeLibrary(m_hStorage);
-		m_hStorage = NULL;
 	}
 	
 //	m_Collision.DeleteAll();		// 2002/05/29

@@ -4,11 +4,8 @@
 #pragma once
 //#include "GXDefault.h"
 #include "OnlyList.h"
-#ifdef SS3D_TEST
 #include "./../SS3D_0719/4dyuchigx/4DyuchiGXGFunc/global.h"
-#else
-#include "./../4DyuchiGXGFunc/global.h"
-#endif
+
 
 interface IDISpriteObject;
 #define	MAX_SPRITE_NUM_PER_SCREEN	2000

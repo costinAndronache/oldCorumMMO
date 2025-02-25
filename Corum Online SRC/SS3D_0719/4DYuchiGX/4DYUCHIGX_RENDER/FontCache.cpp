@@ -467,7 +467,7 @@ TEXTURE_BLOCK_DESC* CFontCache::AllocTextureBlock(DWORD dwWidth,DWORD dwHeight)
 	DWORD	dwKey = dwHeight;
 
 lb_alloc_texblock:
-	pBlockDesc = (TEXTURE_BLOCK_DESC*)LALAlloc(m_pBlockDescPool);
+	pBlockDesc = new TEXTURE_BLOCK_DESC;
 	if (!pBlockDesc)
 	{
 		ChangeTextureBuffer();
@@ -554,7 +554,7 @@ void CFontCache::ChangeTextureBuffer()
 		pNextLineDesc = pCurLineDesc->pNext;
 		BSAEDeleteItem(m_pLineDescSearch,pCurLineDesc->pSearchHandle);
 
-		LALFree(m_pLineDescPool,pCurLineDesc);
+		delete pCurLineDesc;
 		pCurLineDesc = pNextLineDesc;
 	}
 	TEXTURE_BLOCK_DESC*	pNextBlockDesc;
@@ -568,7 +568,7 @@ void CFontCache::ChangeTextureBuffer()
 		//
 		//////////////////////////////
 	
-		LALFree(m_pBlockDescPool,pCurBlockDesc);
+		delete pCurBlockDesc;
 		pCurBlockDesc = pNextBlockDesc;
 
 	}
@@ -590,7 +590,7 @@ TEXTURE_LINE_DESC* CFontCache::AllocLineDesc(DWORD dwHeight)
 
 	}
 	
-	pLineDesc = (TEXTURE_LINE_DESC*)LALAlloc(m_pLineDescPool);
+	pLineDesc = new TEXTURE_LINE_DESC;
 
 	pLineDesc->pBufferDesc = m_pPrimaryBufferDesc;
 	pLineDesc->pNext = m_pPrimaryBufferDesc->pLineDesc;
@@ -667,7 +667,7 @@ HBITMAP	CFontCache::CreateBitmapFromText(int* piWidth,int* piHeight,HFONT hFont,
 
 
 	if (type == CHAR_CODE_TYPE_UNICODE)
-		DrawTextW(m_hMemDC,(WORD*)szString,dwLen,&rect,DT_NOPREFIX);
+		DrawTextW(m_hMemDC,(WCHAR*)szString,dwLen,&rect,DT_NOPREFIX);
 	else
 		DrawTextA(m_hMemDC,szString,dwLen,&rect,DT_NOPREFIX);
 

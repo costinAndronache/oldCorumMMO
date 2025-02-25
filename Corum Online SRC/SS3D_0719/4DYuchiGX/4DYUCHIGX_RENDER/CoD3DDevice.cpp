@@ -30,7 +30,7 @@ I4DyuchiFileStorage*			g_pFileStorage = NULL;
 
 MATRIX4 CoD3DDevice::m_matIdentity;
 ErrorHandleProc		g_pErrorHandleFunc = NULL;
-DWORD __stdcall DefaultErrorHandleProc(
+DWORD DefaultErrorHandleProc(
 									   ERROR_TYPE /*type*/,
 									   DWORD dwErrorPriority,
 									   void* /*pCodeAddress*/,
@@ -1595,7 +1595,7 @@ IDIMeshObject* __stdcall CoD3DDevice::CreateMeshObject(CMeshFlag flag)
 
 IDIMeshObject*	__stdcall CoD3DDevice::CreateImmMeshObject(IVERTEX* piv3Tri,DWORD dwTriCount,void* pMtlHandle,DWORD dwFlag)
 {
-	CImmMeshObject*	pMeshObj = (CImmMeshObject*)LALAlloc(m_pImmMeshObjectPool);
+	CImmMeshObject*	pMeshObj = new CImmMeshObject;
 
 	if (!pMeshObj)
 		goto lb_return;
@@ -1608,7 +1608,7 @@ IDIMeshObject*	__stdcall CoD3DDevice::CreateImmMeshObject(IVERTEX* piv3Tri,DWORD
 
 		if (!pMeshObj->Build(piv3Tri,dwTriCount,pMtlHandle,dwFlag))
 		{
-			LALFree(m_pImmMeshObjectPool,pMeshObj);
+			delete pMeshObj;
 			pMeshObj = NULL;
 			goto lb_return;
 		}
@@ -1619,7 +1619,7 @@ lb_return:
 }
 void CoD3DDevice::DeleteImmMeshObject(CImmMeshObject* pMeshObj)
 {
-	LALFree(m_pImmMeshObjectPool,pMeshObj);
+	delete pMeshObj;
 }
 IDIFontObject* __stdcall CoD3DDevice::CreateFontObject(LOGFONT* pLogFont,DWORD dwFlag)
 {

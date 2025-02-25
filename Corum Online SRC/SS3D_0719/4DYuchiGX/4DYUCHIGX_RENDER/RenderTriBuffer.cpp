@@ -39,7 +39,7 @@ IVERTEX_TRI_ITEM* CRenderTriBuffer::AllocBuffer(IVERTEX** ppIVList,DWORD dwFaces
 {
 	IVERTEX_TRI_ITEM*	pItem;
 	
-	pItem = (IVERTEX_TRI_ITEM*)LALAlloc(m_pTriItemPool);
+	pItem = new IVERTEX_TRI_ITEM;
 	if (!pItem)
 		goto lb_return;
 
@@ -54,7 +54,7 @@ IVERTEX_TRI_ITEM* CRenderTriBuffer::AllocBuffer(IVERTEX** ppIVList,DWORD dwFaces
 #endif
 	if (!pItem->pIVList)
 	{
-		LALFree(m_pTriItemPool,pItem);
+		delete pItem;
 		goto lb_return;
 
 	}
@@ -205,7 +205,7 @@ void CRenderTriBuffer::FreeBuffer(IVERTEX_TRI_ITEM* pItem)
 	VHPFree(m_pVertexHeap,pItem->pIVList);
 #endif
 
-	LALFree(m_pTriItemPool,pItem);
+	delete pItem;
 
 	m_dwCurrentItemNum--;
 

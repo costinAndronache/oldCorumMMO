@@ -109,8 +109,6 @@ class CoExecutive : public I4DyuchiGXExecutive
 	DWORD						m_dwBuildTreeFlag;		// octree, bsp tree 등의 존재 여부. BUILD_TREE_FLAG타입.
 
 	HMODULE						m_hGeometry;
-	HMODULE						m_hRenderer;
-	HMODULE						m_hStorage;
 
 
 	void						SetCanDelete()				{m_bCanDeleteObject = TRUE;}
@@ -165,9 +163,9 @@ public:
 	HRESULT					GetGeometry(I4DyuchiGXGeometry** ppGeometry);		// Release필요함
 	HRESULT					GetFileStorage(I4DyuchiFileStorage** ppFileStorage);
 		
-	BOOL					InitializeWithoutRegistry(char* szGeometryFileName,char* szRendererFileName,HWND hWnd,DISPLAY_INFO* pInfo,DWORD dwMaxObjectNum,DWORD dwMaxLightNum,DWORD dwMaxTriggerNum,DWORD dwViewportNum, DWORD dwMaxDecalNum,ErrorHandleProc pErrorHandleFunc);
+	BOOL					InitializeWithoutRegistry(char* szGeometryFileName,HWND hWnd,DISPLAY_INFO* pInfo,DWORD dwMaxObjectNum,DWORD dwMaxLightNum,DWORD dwMaxTriggerNum,DWORD dwViewportNum, DWORD dwMaxDecalNum,ErrorHandleProc pErrorHandleFunc);
 	BOOL					Initialize(HWND hWnd,DISPLAY_INFO* pInfo,DWORD dwMaxObjectNum,DWORD dwMaxLightNum,DWORD dwMaxTriggerNum,DWORD dwViewportNum, DWORD dwMaxDecalNum,ErrorHandleProc pErrorHandleFunc);
-	BOOL					InitializeFileStorageWithoutRegistry(char* szFileName,DWORD dwMaxFileNum,DWORD dwMaxFileHandleNumAtSameTime,DWORD dwMaxFileNameLen,FILE_ACCESS_METHOD accessMethod,PACKFILE_NAME_TABLE* pPackFileList,DWORD dwNum);
+	BOOL					InitializeFileStorageWithoutRegistry(DWORD dwMaxFileNum,DWORD dwMaxFileHandleNumAtSameTime,DWORD dwMaxFileNameLen,FILE_ACCESS_METHOD accessMethod,PACKFILE_NAME_TABLE* pPackFileList,DWORD dwNum);
 	BOOL					InitializeFileStorage(DWORD dwMaxFileNum,DWORD dwMaxFileHandleNumAtSameTime,DWORD dwMaxFileNameLen,FILE_ACCESS_METHOD accessMethod,PACKFILE_NAME_TABLE* pPackFileList,DWORD dwNum);
 	void					SetViewport(DWORD dwViewportIndex);
 

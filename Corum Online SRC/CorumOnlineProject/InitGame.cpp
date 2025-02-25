@@ -3,11 +3,7 @@
 
 #include "stdafx.h"
 #include <Imm.h>
-#ifdef	SS3D_TEST
 #include "./../SS3D_0719/4dyuchigx/4DyuchiGXGFunc/global.h"
-#else
-#include "./../4DyuchiGXGFunc/global.h"
-#endif
 #include "../SS3D_0719/4DYuchiGX/4DYUCHIGXEXECUTIVE/executive.h"
 #include "define.h"
 #include "NetworkClient.h"
@@ -1577,8 +1573,8 @@ BOOL InitCOMObject()
 #ifdef __PACKAGE_MODE__
 	PACKFILE_NAME_TABLE sPackFileNameTable[256];
 	int iPackCount = LoadPakList("Paklist.sin", sPackFileNameTable, 256);
-	g_pExecutive->InitializeFileStorageWithoutRegistry("SS3DFileStorage.dll", 12000, 4096, 64, FILE_ACCESS_METHOD_FILE_OR_PACK,	sPackFileNameTable, iPackCount);
-	g_pExecutive->InitializeWithoutRegistry("SS3DGeometryForCorum.dll", "SS3DRendererForCorum.dll", g_hMainWnd, &dispInfo, 10000, 1024, 512, 32, 32, NULL);
+	g_pExecutive->InitializeFileStorageWithoutRegistry(12000, 4096, 64, FILE_ACCESS_METHOD_FILE_OR_PACK,	sPackFileNameTable, iPackCount);
+	g_pExecutive->InitializeWithoutRegistry("SS3DGeometryForCorum.dll", g_hMainWnd, &dispInfo, 10000, 1024, 512, 32, 32, NULL);
 #else
 	g_pExecutive->InitializeFileStorageWithoutRegistry("SS3DFileStorage.dll", 0, 4096, 0, FILE_ACCESS_METHOD_ONLY_FILE,	NULL, 0);	
 	g_pExecutive->InitializeWithoutRegistry("SS3DGeometryForCorum.dll", "SS3DRendererForCorum.dll",	g_hMainWnd,	&dispInfo, 10000, 1024,	512, 32, 32, NULL);

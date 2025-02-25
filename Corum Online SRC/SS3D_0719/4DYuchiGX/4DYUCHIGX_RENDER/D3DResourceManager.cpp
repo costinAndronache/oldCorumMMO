@@ -449,9 +449,6 @@ BOOL CD3DResourceManager::CreateTextureWithDDS(IDirect3DTexture8** ppTexture,cha
 		pool = D3DPOOL_SCRATCH;
 	}
 	
-
-
-	
 	hr = CreateTexture(ddsd.dwWidth,ddsd.dwHeight,ddsd.dwMipMapCount,0,format,pool,&pTexture);
 	if (D3D_OK != hr)
 		goto lb_close_return;
@@ -634,7 +631,7 @@ HRESULT	CD3DResourceManager::Release(IUnknown* pResource)
 
 
 	QBHDelete(m_pHashResource,pDesc->pHashHandle);
-	LALFree(m_pRCDescPool,pDesc);
+	delete pDesc;
 	
 	m_dwItemNum--;
 	
@@ -649,7 +646,7 @@ HRESULT CD3DResourceManager::CreateVertexBuffer(
 								)
 {
 	HRESULT		hr;
-	D3DRESOURCE_DESC*	pDesc = (D3DRESOURCE_DESC*)LALAlloc(m_pRCDescPool);
+	D3DRESOURCE_DESC*	pDesc = new D3DRESOURCE_DESC;
 	
 	if (!pDesc)
 		goto lb_return;
@@ -658,7 +655,7 @@ HRESULT CD3DResourceManager::CreateVertexBuffer(
 
 	if (hr != D3D_OK)
 	{
-		LALFree(m_pRCDescPool,pDesc);
+		delete pDesc;
 		OutputErrorMsg(m_pRenderer,hr,"CreateVertexBuffer");
 		goto lb_return;
 	}
@@ -690,7 +687,7 @@ HRESULT CD3DResourceManager::CreateIndexBuffer(
 {
 	
 	HRESULT		hr;
-	D3DRESOURCE_DESC*	pDesc = (D3DRESOURCE_DESC*)LALAlloc(m_pRCDescPool);
+	D3DRESOURCE_DESC*	pDesc = new D3DRESOURCE_DESC;
 	
 	if (!pDesc)
 		goto lb_return;
@@ -699,7 +696,7 @@ HRESULT CD3DResourceManager::CreateIndexBuffer(
 
 	if (hr != D3D_OK)
 	{
-		LALFree(m_pRCDescPool,pDesc);
+		delete pDesc;
 		OutputErrorMsg(m_pRenderer,hr,"CreateIndexBuffer");
 		goto lb_return;
 	}
@@ -740,7 +737,7 @@ HRESULT CD3DResourceManager::CreateTexture(
 		goto lb_return;
 	}
 	
-	pDesc = (D3DRESOURCE_DESC*)LALAlloc(m_pRCDescPool);
+	pDesc = new D3DRESOURCE_DESC;
 
 	if (!pDesc)
 	{
@@ -760,7 +757,7 @@ HRESULT CD3DResourceManager::CreateTexture(
 	pDesc->pool = Pool;
 	pDesc->pResource = *ppTexture;
 	pDesc->type = D3DRESOURCE_TYPE_TEXTURE;
-	pDesc->pHashHandle = QBHInsert(m_pHashResource,(DWORD)pDesc,(DWORD)pDesc->pResource);
+	pDesc->pHashHandle = QBHInsert(m_pHashResource, (DWORD)pDesc, (DWORD)pDesc->pResource);
 	if (!pDesc->pHashHandle)
 	{
 #ifdef _DEBUG
@@ -782,7 +779,7 @@ HRESULT CD3DResourceManager::CreateFont(
 								)
 {
 	HRESULT		hr;
-	D3DRESOURCE_DESC*	pDesc = (D3DRESOURCE_DESC*)LALAlloc(m_pRCDescPool);
+	D3DRESOURCE_DESC*	pDesc = new D3DRESOURCE_DESC;
 
 	if (!pDesc)
 		goto lb_return;
@@ -791,7 +788,7 @@ HRESULT CD3DResourceManager::CreateFont(
 		
 	if (hr != D3D_OK)
 	{
-		LALFree(m_pRCDescPool,pDesc);
+		delete pDesc;
 		OutputErrorMsg(m_pRenderer,hr,"CreateFont");
 		goto lb_return;
 	}

@@ -6,7 +6,6 @@
 #include "VLFaceGroup.h"
 #include "render_type.h"
 #include "VBHeap.h"
-#include "../4DYUCHIGRX_MYSELF97/Myself97Common.h"
 
 //DWORD CVLSMeshObject::m_dwVertexShader = 0xffffffff;
 
@@ -59,13 +58,13 @@ BOOL __stdcall CVLSMeshObject::StartInitialize(MESH_DESC* pDesc,IGeometryControl
 	// 아래에서 인터럽트가 걸린 경우, m_dwVertexNum을 보라. 하나의 오브젝트에 버텍스 갯수가 엄하게 나온 경우다.
 	if (!m_pRenderer->GetVBVLSMeshHeap()->AllocVB(&dwErrorCode,&m_VB,m_dwVertexNum,&dwSize,&m_VB.m_bEnable,NULL))
 	{
-		PrintfDebugString("CVLSMeshObject::StartInitialize() 오브젝트 하나에 %d개의 버텍스가 들어왔다. (One object has %d vertices. reduce!)\n", m_dwVertexNum, m_dwVertexNum);
+		printf("CVLSMeshObject::StartInitialize() 오브젝트 하나에 %d개의 버텍스가 들어왔다. (One object has %d vertices. reduce!)\n", m_dwVertexNum, m_dwVertexNum);
 		__asm int 3
 	}
 
 	if (!m_pRenderer->GetVBVector3MeshHeap()->AllocVB(&dwErrorCode,&m_VBProjected,m_dwVertexNum,&dwSize,&m_VBProjected.m_bEnable,NULL))
 	{
-		PrintfDebugString("CVLSMeshObject::StartInitialize() 오브젝트 하나에 %d개의 버텍스가 들어왔다. (One object has %d vertices. reduce!)\n", m_dwVertexNum, m_dwVertexNum);
+		printf("CVLSMeshObject::StartInitialize() 오브젝트 하나에 %d개의 버텍스가 들어왔다. (One object has %d vertices. reduce!)\n", m_dwVertexNum, m_dwVertexNum);
 		__asm int 3
 	}
 
