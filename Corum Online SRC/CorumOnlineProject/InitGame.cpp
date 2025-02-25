@@ -689,7 +689,7 @@ BOOL InitGame()
 	
 	g_hImc	= ImmGetContext( g_hMainWnd );	
 	
-	BOOL	bCreated = FALSE; //CreateSoundLib(&g_pSoundLib);
+	BOOL	bCreated = CreateSoundLib(&g_pSoundLib);
 	if( bCreated == FALSE)
 	{
 		OutputDebugString("Could not create sound library\n");
