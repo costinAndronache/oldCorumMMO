@@ -12,6 +12,7 @@
 #include <d3d8.h>
 #include <d3dx8.h>
 #include "../4DyuchiGXGFunc/global.h"
+#include <map>
 
 class CoD3DDevice;
 
@@ -28,7 +29,6 @@ struct D3DRESOURCE_DESC
 	IDirect3DResource8*		pResource;
 	D3DRESOURCE_TYPE		type;
 	D3DPOOL					pool;
-	void*					pHashHandle;
 };
 
 class CD3DResourceManager  
@@ -37,13 +37,9 @@ class CD3DResourceManager
 	IDirect3DDevice8*			m_pD3DDevice;
 	DWORD						m_dwMaxItemNum;
 	DWORD						m_dwItemNum;
+	std::map<IDirect3DResource8*, D3DRESOURCE_DESC*> _d3dr8ToResourceDesc;
 
-	QBHASH_HANDLE				m_pHashResource;
-	STMPOOL_HANDLE				m_pRCDescPool;
-
-	
-	
-	
+		
 
 public:
 	CoD3DDevice*				GetRenderer() {return m_pRenderer;}

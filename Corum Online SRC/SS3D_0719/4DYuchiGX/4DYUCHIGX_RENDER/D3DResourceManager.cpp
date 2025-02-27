@@ -587,8 +587,6 @@ CD3DResourceManager::CD3DResourceManager()
 {
 	m_pD3DDevice = NULL;
 	m_dwItemNum = 0;
-	m_pHashResource = NULL;
-	m_pRCDescPool = NULL;
 
 }
 BOOL CD3DResourceManager::Initialize(CoD3DDevice* pRenderer,IDirect3DDevice8* pDevice,DWORD dwMaxItemNum)
@@ -596,15 +594,6 @@ BOOL CD3DResourceManager::Initialize(CoD3DDevice* pRenderer,IDirect3DDevice8* pD
 	m_pRenderer = pRenderer,
 	m_pD3DDevice = pDevice;
 	m_dwMaxItemNum = dwMaxItemNum;
-
-	m_pRCDescPool = CreateStaticMemoryPool();
-	InitializeStaticMemoryPool(m_pRCDescPool,sizeof(D3DRESOURCE_DESC),DEFAULT_D3DRESOURCE_NUM,m_dwMaxItemNum);
-
-	m_pHashResource = QBHCreate();
-	QBHInitialize(m_pHashResource,64,m_dwMaxItemNum);
-
-	
-
 
 	return TRUE;
 }
@@ -621,16 +610,20 @@ HRESULT	CD3DResourceManager::Release(IUnknown* pResource)
 		
 	}
 #endif
-	void*	pHashHandle;
-	if (!QBHSelect(m_pHashResource,&pHashHandle,(DWORD*)&pDesc,1,(DWORD)pResource))
+	//void*	pHashHandle;
+	//if (!QBHSelect(m_pHashResource,&pHashHandle,(DWORD*)&pDesc,1,(DWORD)pResource))
+	auto key = (IDirect3DResource8*)pResource;
+	if (_d3dr8ToResourceDesc.find(key) == _d3dr8ToResourceDesc.end())
 	{
 		DWORD	dwAddr;
 		GetEIP(&dwAddr);
 		g_pErrorHandleFunc(ERROR_TYPE_ENGINE_CODE,0,(void*)dwAddr,"CD3DResourceManager::Release() Specify Resource not exist");
+		return S_FALSE;
 	}
 
 
-	QBHDelete(m_pHashResource,pDesc->pHashHandle);
+	//QBHDelete(m_pHashResource,pDesc->pHashHandle);
+	_d3dr8ToResourceDesc.erase(key);
 	delete pDesc;
 	
 	m_dwItemNum--;
@@ -662,15 +655,16 @@ HRESULT CD3DResourceManager::CreateVertexBuffer(
 	pDesc->pool = Pool;
 	pDesc->pResource = *ppVertexBuffer;
 	pDesc->type = D3DRESOURCE_TYPE_VERTEXBUFFER;
-	pDesc->pHashHandle = QBHInsert(m_pHashResource,(DWORD)pDesc,(DWORD)pDesc->pResource);
-	if (!pDesc->pHashHandle)
+	_d3dr8ToResourceDesc.insert({ pDesc->pResource, pDesc });
+	
+	/*if (!pDesc->pHashHandle)
 	{
 		DWORD	dwAddr;
 		GetEIP(&dwAddr);
 		g_pErrorHandleFunc(ERROR_TYPE_ENGINE_CODE,0,(void*)dwAddr,"CD3DResourceManager::CreateVertexBuffer() Fail to QBHInsert");
 		
 	}
-
+	*/
 	m_dwItemNum++;
 
 lb_return:
@@ -703,13 +697,14 @@ HRESULT CD3DResourceManager::CreateIndexBuffer(
 	pDesc->pool = Pool;
 	pDesc->pResource = *ppIndexBuffer;
 	pDesc->type = D3DRESOURCE_TYPE_INDEXBUFFER;
-	pDesc->pHashHandle = QBHInsert(m_pHashResource,(DWORD)pDesc,(DWORD)pDesc->pResource);
-	if (!pDesc->pHashHandle)
+	_d3dr8ToResourceDesc.insert({pDesc->pResource, pDesc});
+	/*if (!pDesc->pHashHandle)
 	{
 		DWORD	dwAddr;
 		GetEIP(&dwAddr);
 		g_pErrorHandleFunc(ERROR_TYPE_ENGINE_CODE,0,(void*)dwAddr,"CD3DResourceManager::CreateIndexBuffer() Fail to QBHInsert");
 	}
+	*/
 
 	m_dwItemNum++;
 
@@ -757,15 +752,15 @@ HRESULT CD3DResourceManager::CreateTexture(
 	pDesc->pool = Pool;
 	pDesc->pResource = *ppTexture;
 	pDesc->type = D3DRESOURCE_TYPE_TEXTURE;
-	pDesc->pHashHandle = QBHInsert(m_pHashResource, (DWORD)pDesc, (DWORD)pDesc->pResource);
-	if (!pDesc->pHashHandle)
-	{
-#ifdef _DEBUG
-		DWORD	dwAddr;
-		GetEIP(&dwAddr);
-		g_pErrorHandleFunc(ERROR_TYPE_ENGINE_CODE,0,(void*)dwAddr,"CD3DResourceManager::CreateTexture() Fail to QBHInsert");
-#endif
-	}
+	_d3dr8ToResourceDesc.insert({ pDesc->pResource, pDesc });
+//	if (!pDesc->pHashHandle)
+//	{
+//#ifdef _DEBUG
+//		DWORD	dwAddr;
+//		GetEIP(&dwAddr);
+//		g_pErrorHandleFunc(ERROR_TYPE_ENGINE_CODE,0,(void*)dwAddr,"CD3DResourceManager::CreateTexture() Fail to QBHInsert");
+//#endif
+//	}
 
 	m_dwItemNum++;
 
@@ -795,15 +790,15 @@ HRESULT CD3DResourceManager::CreateFont(
 	pDesc->pool = D3DPOOL_SYSTEMMEM;
 	pDesc->pResource = *(IDirect3DResource8**)ppFont;			// 이 부분은 예외처리를 해야한다.FONT는 따로 처리.
 	pDesc->type = D3DRESOURCE_TYPE_D3DXFONT;
-	pDesc->pHashHandle = QBHInsert(m_pHashResource,(DWORD)pDesc,(DWORD)pDesc->pResource);
-	if (!pDesc->pHashHandle)
-	{
-#ifdef _DEBUG
-		DWORD	dwAddr;
-		GetEIP(&dwAddr);
-		g_pErrorHandleFunc(ERROR_TYPE_ENGINE_CODE,0,(void*)dwAddr,"CD3DResourceManager::CreateD3DXFont() Fail to QBHInsert");
-#endif
-	}
+	_d3dr8ToResourceDesc.insert({ pDesc->pResource, pDesc });
+//	if (!pDesc->pHashHandle)
+//	{
+//#ifdef _DEBUG
+//		DWORD	dwAddr;
+//		GetEIP(&dwAddr);
+//		g_pErrorHandleFunc(ERROR_TYPE_ENGINE_CODE,0,(void*)dwAddr,"CD3DResourceManager::CreateD3DXFont() Fail to QBHInsert");
+//#endif
+//	}
 
 	m_dwItemNum++;
 
@@ -812,9 +807,7 @@ lb_return:
 }
 void CD3DResourceManager::OnLostFont()
 {
-	DWORD	dwNum;
-	D3DRESOURCE_DESC**	ppRestoreItem = new D3DRESOURCE_DESC*[m_dwMaxItemNum];
-	dwNum = QBHGetAllItem(m_pHashResource,(DWORD*)ppRestoreItem,m_dwMaxItemNum);
+	DWORD dwNum = _d3dr8ToResourceDesc.size();
 
 #ifdef _DEBUG
 	if (m_dwItemNum != dwNum)
@@ -826,23 +819,19 @@ void CD3DResourceManager::OnLostFont()
 #endif
 
 	ID3DXFont*	pFont;
-	for (DWORD i=0; i<dwNum; i++)
+	for (auto const& item: _d3dr8ToResourceDesc)
 	{
-		if (ppRestoreItem[i]->type == D3DRESOURCE_TYPE_D3DXFONT)
+		if (item.second->type == D3DRESOURCE_TYPE_D3DXFONT)
 		{
-			pFont = (ID3DXFont*)ppRestoreItem[i]->pResource;
+			pFont = (ID3DXFont*)item.second->pResource;
 			pFont->OnLostDevice();
 		}
 	}
-	delete [] ppRestoreItem;
-
 }
 
 void CD3DResourceManager::OnResetFont()
 {
-	DWORD	dwNum;
-	D3DRESOURCE_DESC**	ppRestoreItem = new D3DRESOURCE_DESC*[m_dwMaxItemNum];
-	dwNum = QBHGetAllItem(m_pHashResource,(DWORD*)ppRestoreItem,m_dwMaxItemNum);
+	const DWORD dwNum = _d3dr8ToResourceDesc.size();
 
 #ifdef _DEBUG
 	if (m_dwItemNum != dwNum)
@@ -854,25 +843,20 @@ void CD3DResourceManager::OnResetFont()
 #endif
 
 	ID3DXFont*	pFont;
-	for (DWORD i=0; i<dwNum; i++)
+	for (auto const& item: _d3dr8ToResourceDesc)
 	{
-		if (ppRestoreItem[i]->type == D3DRESOURCE_TYPE_D3DXFONT)
+		if (item.second->type == D3DRESOURCE_TYPE_D3DXFONT)
 		{
-			pFont = (ID3DXFont*)ppRestoreItem[i]->pResource;
+			pFont = (ID3DXFont*)item.second->pResource;
 			pFont->OnResetDevice();
 		}
 	}
-	delete [] ppRestoreItem;
-
 }
 
 #ifdef _DEBUG
 void CD3DResourceManager::Check()
 {
-	DWORD	dwNum;
-	D3DRESOURCE_DESC**	ppRestoreItem = new D3DRESOURCE_DESC*[m_dwMaxItemNum];
-	dwNum = QBHGetAllItem(m_pHashResource,(DWORD*)ppRestoreItem,m_dwMaxItemNum);
-
+	const DWORD dwNum = _d3dr8ToResourceDesc.size();
 	if (m_dwItemNum != dwNum)
 	{
 		DWORD	dwAddr;
@@ -881,9 +865,9 @@ void CD3DResourceManager::Check()
 	}
 
 
-	for (DWORD i=0; i<dwNum; i++)
+	for (auto const& item: _d3dr8ToResourceDesc)
 	{
-		if (ppRestoreItem[i]->pool == D3DPOOL_DEFAULT)
+		if (item.second->pool == D3DPOOL_DEFAULT)
 		{		
 			DWORD	dwAddr;
 			GetEIP(&dwAddr);
@@ -891,7 +875,6 @@ void CD3DResourceManager::Check()
 	//		ppRestoreItem[i]->pResource->Restore();
 		}
 	}
-	delete [] ppRestoreItem;
 }
 #endif
 
@@ -1410,44 +1393,44 @@ lb_return:
 
 BOOL CD3DResourceManager::IsValid(IUnknown* pResource)
 {
-	D3DRESOURCE_DESC*	pDesc;
-	BOOL				bResult;
-	void*				pHashHandle;
+	return _d3dr8ToResourceDesc.find((IDirect3DResource8*)pResource) != _d3dr8ToResourceDesc.end();
+	//D3DRESOURCE_DESC*	pDesc;
+	//BOOL				bResult;
+	//void*				pHashHandle;
 
-	if (QBHSelect(m_pHashResource,&pHashHandle,(DWORD*)&pDesc,1,(DWORD)pResource))
-		bResult = TRUE;
-	else 
-		bResult = FALSE;
+	//if (QBHSelect(m_pHashResource,&pHashHandle,(DWORD*)&pDesc,1,(DWORD)pResource))
+	//	bResult = TRUE;
+	//else 
+	//	bResult = FALSE;
 
-	return bResult;
+	//return bResult;
 }
 CD3DResourceManager::~CD3DResourceManager()
 {
 #ifdef	_DEBUG
 	if (m_dwItemNum)
 	{
-		D3DRESOURCE_DESC*	pDescList[4096];
-		DWORD dwNum = QBHGetAllItem(m_pHashResource,(DWORD*)&pDescList,4096);
+		const DWORD dwNum = _d3dr8ToResourceDesc.size();
 
 		char	txt[512];
 		char	rctype[32];
-		for (DWORD i=0; i<dwNum; i++)
+		for (auto const& item: _d3dr8ToResourceDesc)
 		{
 			memset(txt,0,512);
 			memset(rctype,0,32);
-			if (pDescList[i]->type == D3DRESOURCE_TYPE_TEXTURE)
+			if (item.second->type == D3DRESOURCE_TYPE_TEXTURE)
 			{
 				wsprintf(rctype,"TEXTURE");
 			}
-			else if (pDescList[i]->type == D3DRESOURCE_TYPE_VERTEXBUFFER)
+			else if (item.second->type == D3DRESOURCE_TYPE_VERTEXBUFFER)
 			{
 				wsprintf(rctype,"VERTEXBUFFER");
 			}
-			else if (pDescList[i]->type == D3DRESOURCE_TYPE_INDEXBUFFER)
+			else if (item.second->type == D3DRESOURCE_TYPE_INDEXBUFFER)
 			{
 				wsprintf(rctype,"INDEXBUFFER");
 			}
-			else if (pDescList[i]->type == D3DRESOURCE_TYPE_D3DXFONT)
+			else if (item.second->type == D3DRESOURCE_TYPE_D3DXFONT)
 			{
 				wsprintf(rctype,"D3DXFONT");
 			}
@@ -1460,16 +1443,5 @@ CD3DResourceManager::~CD3DResourceManager()
 		g_pErrorHandleFunc(ERROR_TYPE_RESOURCE_LEAK,0,(void*)dwAddr,"CD3DResourceManager::CD3DResourceManager() ResourceLeak!!!");
 	}
 #endif
-	if (m_pHashResource)
-	{
-		QBHRelease(m_pHashResource);
-		m_pHashResource = NULL;
-	}
-	if (m_pRCDescPool)
-	{
-		ReleaseStaticMemoryPool(m_pRCDescPool);
-		m_pRCDescPool = NULL;
-	}
-
 }
 
