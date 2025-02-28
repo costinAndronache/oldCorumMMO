@@ -12,6 +12,7 @@
 #include "../4DyuchiGXGFunc/global.h"
 #include "renderer_typedef.h"
 #include "CTexture.h"
+#include <map>
 
 class CoD3DDevice;
 
@@ -33,7 +34,7 @@ struct DIMATERIAL
 struct MTL_HANDLE
 {
 	DWORD					dwRefCount;
-	void*					pSearchHandle;
+	void*					pSearchHandle; // DO NOT USE, BUT DO NOT DELETE
 	DWORD					dwIndex;
 	DIMATERIAL				mtlData;
 	
@@ -48,8 +49,9 @@ struct MATERIAL_SET
 class CMaterialManager  
 {
 	CoD3DDevice*			m_pRenderer;
-	STMPOOL_HANDLE			m_pMtlMemoryPool;
-	VBHASH_HANDLE			m_pMtlHash;
+	std::map<MATERIAL*, DWORD>* _materialPtrToSearchIndex;
+	std::map<DWORD, MTL_HANDLE*>* _searchIndexToMtlHandlePtr;
+
 	INDEXCR_HANDLE			m_pICMtl;
 	INDEXCR_HANDLE			m_pICMtlSet;
 

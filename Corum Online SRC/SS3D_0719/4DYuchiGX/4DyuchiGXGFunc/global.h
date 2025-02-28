@@ -152,14 +152,6 @@ GLOBAL_FUNC_DLL STMPOOL_HANDLE	 	CreateStaticMemoryPool();
 GLOBAL_FUNC_DLL void			 	ReleaseStaticMemoryPool(STMPOOL_HANDLE pool);
 GLOBAL_FUNC_DLL BOOL			 	InitializeStaticMemoryPool(STMPOOL_HANDLE pool,DWORD dwUnitSize,DWORD dwDefaultCommitNum,DWORD dwMaxNum);
 // Various Bytes HashTable
-GLOBAL_FUNC_DLL DWORD			 	VBHGetAllItem(VBHASH_HANDLE pHash,DWORD* pdwItemList,DWORD dwMaxItemNum);
-
-//VBHSelect == 
-GLOBAL_FUNC_DLL	DWORD			 	VBHSelect(VBHASH_HANDLE pHash,DWORD OUT* pItems,DWORD dwMaxItemNum,void* pKeyData,DWORD dwSize);
-GLOBAL_FUNC_DLL	void*			 	VBHInsert(VBHASH_HANDLE pHash,DWORD dwItem,void* pKeyData,DWORD dwSize);
-GLOBAL_FUNC_DLL	BOOL			 	VBHDelete(VBHASH_HANDLE pHash,void* pBucket);
-typedef void (*DelFunc)(void* pVoid);
-GLOBAL_FUNC_DLL DWORD			 	VBHDeleteWithKey(VBHASH_HANDLE pHash,void* pKeyData,DWORD dwSize,DelFunc pDelFunc);
 
 
 

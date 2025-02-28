@@ -12,6 +12,8 @@
 #include "GXDecal.h"
 #include "4DyuchiGRX_myself97/MClipper.h"
 
+#include <map>
+#include <string>
 
 struct MODEL_FILE_DESC
 {
@@ -19,8 +21,7 @@ struct MODEL_FILE_DESC
 	void*			pSearchHandle;
 	CoGXObject*		pGXObject;
 	char			szFileName[MAX_NAME_LEN];
-
-
+	std::string key;
 };
 
 class CoGXObject;
@@ -66,9 +67,8 @@ class CoExecutive : public I4DyuchiGXExecutive
 	ITEMTABLE_HANDLE			m_pIndexItemTableGXTrigger;
 	ITEMTABLE_HANDLE			m_pIndexItemTableGXDecal;
 	
-		
-	QBHASH_HANDLE				m_pIDHash;
-	VBHASH_HANDLE				m_pFileNameHash;
+	std::map<std::string, MODEL_FILE_DESC*> _modelFileDescPerFilename;
+	std::map<DWORD, GXMAP_OBJECT_HANDLE> _gxMapObjectPerID;
 
 	I3DModel*					m_pModelList[SYMBOL_TYPE_NUM];
 
@@ -147,7 +147,7 @@ public:
 
 	I3DModel*					GetSymbolModel(SYMBOL_TYPE type) {return m_pModelList[type];}
 
-	QBHASH_HANDLE				GetIDHash()	{return m_pIDHash;}
+	std::map<DWORD, GXMAP_OBJECT_HANDLE>* gxMapObjectPerID() { return &_gxMapObjectPerID; }
 	void						DeleteModelFileDesc(MODEL_FILE_DESC* pModelFileDesc);
 //	CoGXObject*					GetTracedGXObject() {return m_pTracedGXObject;}
 

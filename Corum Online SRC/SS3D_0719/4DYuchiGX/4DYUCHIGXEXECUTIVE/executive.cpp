@@ -420,16 +420,10 @@ BOOL CoExecutive::Initialize(I4DyuchiGXGeometry* pGeometry,I4DyuchiGXRenderer* p
 	m_ppGXLightList = new CoGXLight*[dwMaxLightNum];
 	memset(m_ppGXLightList,0,sizeof(CoGXLight*)*dwMaxLightNum);
 
-
-	m_pIDHash = QBHCreate();
-	QBHInitialize(m_pIDHash,1024,dwMaxObjectNum+dwMaxLightNum);
-
 	m_pDPCQ = DPCQCreate();
 	DPCQInitialize(m_pDPCQ,8192*4);
 
 
-	m_pFileNameHash = VBHCreate();
-	VBHInitialize(m_pFileNameHash,128,MAX_NAME_LEN,dwMaxObjectNum);
 //	m_pStaticPoolFileItem = CreateStaticMemoryPool();
 //	InitializeStaticMemoryPool(m_pStaticPoolFileItem,sizeof(FILE_ITEM),dwMaxObjectNum / 8,dwMaxObjectNum);
 	
@@ -938,10 +932,11 @@ void  CoExecutive::DisableSendShadow(GXMAP_OBJECT_HANDLE gxh)
 GXMAP_OBJECT_HANDLE  CoExecutive::GetGXMapObjectWithID(DWORD dwID)
 {
 	//	QBHSelect(QBHASH_HANDLE pHash,DWORD OUT* pItems,DWORD dwMaxItemNum,DWORD dwKeyData);
-	CGXMapObject*	pObj = NULL;
-	void*	pSearchHandle;
-	QBHSelect(m_pIDHash,&pSearchHandle,(DWORD*)&pObj,1,dwID);
-	return pObj;
+	const auto found = _gxMapObjectPerID.find(dwID);
+	if (found != _gxMapObjectPerID.end()) {
+		return found->second;
+	}
+	return NULL;
 }
 
 DWORD CoExecutive::GXOGetMotionNum(GXOBJECT_HANDLE gxh,DWORD dwModelIndex)
@@ -1175,23 +1170,24 @@ GXOBJECT_HANDLE CoExecutive::CreateGXObject(char* szFileName,GXSchedulePROC pPro
 
 	DWORD			dwSearchNameLen = lstrlen(szSearchFileName);
 	CharToSmallASCII(szSearchFileName,szSearchFileName,dwSearchNameLen);
+	std::string key(szSearchFileName);
 
 	DWORD			dwModelNum = 0;
 	MODEL_HANDLE	modelHandle[MAX_MODEL_NUM_PER_GXOBJECT];
 	DWORD			i;
 
-	DWORD				dwItem;
 	MODEL_FILE_DESC*	pModDesc = NULL;
 	
-	
+	const auto& found = _modelFileDescPerFilename.find(key);
+
 	if (GXOBJECT_CREATE_TYPE_NOT_USE_MODEL & dwFlag)
 	{
 		goto lb_add_gxo;
 	}
 
-	if (VBHSelect(m_pFileNameHash,&dwItem,1,szSearchFileName,dwSearchNameLen))
+	if (found != _modelFileDescPerFilename.end())
 	{
-		pModDesc = (MODEL_FILE_DESC*)dwItem;
+		pModDesc = found->second;
 		
 		dwModelNum = pModDesc->pGXObject->DuplicateModelHandle(modelHandle);
 		if (!dwModelNum)
@@ -1212,14 +1208,8 @@ GXOBJECT_HANDLE CoExecutive::CreateGXObject(char* szFileName,GXSchedulePROC pPro
 	pModDesc->dwRefCount = 1;
 	memcpy(pModDesc->szFileName,szSearchFileName,dwSearchNameLen);
 
-	pModDesc->pSearchHandle = VBHInsert(m_pFileNameHash,(DWORD)pModDesc,szSearchFileName,dwSearchNameLen);
-	if (!pModDesc->pSearchHandle)
-	{
-		delete pModDesc;
-		pModDesc = NULL;
-		goto lb_return;
-	}
-
+	pModDesc->key = key; 
+	_modelFileDescPerFilename.insert({ key, pModDesc });
 	
 lb_add_gxo:
 	gxh = AddGXObject(modelHandle,dwModelNum,pProc,dwFlag);
@@ -1265,7 +1255,7 @@ void CoExecutive::DeleteModelFileDesc(MODEL_FILE_DESC* pModelFileDesc)
 		pModelFileDesc->dwRefCount--;
 		if (!pModelFileDesc->dwRefCount)
 		{
-			VBHDelete(m_pFileNameHash,pModelFileDesc->pSearchHandle);
+			_modelFileDescPerFilename.erase(pModelFileDesc->key);
 			delete pModelFileDesc;
 		}
 	}
@@ -2861,11 +2851,6 @@ CoExecutive::~CoExecutive()
 		m_pStaticPoolGXDecal = NULL;
 
 	}
-	if (m_pFileNameHash)
-	{
-		VBHRelease(m_pFileNameHash);
-		m_pFileNameHash = NULL;
-	}
 
 	
 	if (m_pRenderer)
@@ -2884,11 +2869,6 @@ CoExecutive::~CoExecutive()
 	{
 		delete [] m_ppGXLightList;
 		m_ppGXLightList = NULL;
-	}
-	if (m_pIDHash)
-	{
-		QBHRelease(m_pIDHash);
-		m_pIDHash = NULL;
 	}
 
 	if (m_pIndexItemTableGXObject)

@@ -3,6 +3,7 @@
 #include <d3d8.h>
 #include "renderer_typedef.h"
 #include "../4DyuchiGRX_common/typedef.h"
+#include <string>
 
 class CTextureManager;
 /*
@@ -43,12 +44,13 @@ protected:
 	
 	DWORD						m_dwRefCount;
 	DWORD						m_dwTexFlag;
-	void*						m_pSearchHandle;
 
 	DWORD						m_dwPageFlag;
 	
 
 public:
+	std::string					key;
+
 	BOOL						SwapToSystemMemory();
 	BOOL						SwapToDriverMemory();
 	CTextureManager*			GetTextureManager() {return m_pTextureManager;}

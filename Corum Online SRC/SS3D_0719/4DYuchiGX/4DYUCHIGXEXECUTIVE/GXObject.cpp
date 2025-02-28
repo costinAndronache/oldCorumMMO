@@ -107,7 +107,6 @@ BOOL CoGXObject::Initialize(CoExecutive* pExecutive,MODEL_HANDLE* pModelHandle,D
 	m_dwRenderFlag = RENDER_TYPE_SEND_SHADOW | RENDER_TYPE_RECV_SHADOW | RENDER_TYPE_UPDATE_SHADING;// | RENDER_TYPE_SELF_ILLUNUM;
 	m_dwAlphaFlag = 0x000000ff;
 	m_dwID = 0xfffffff0;
-	m_pHashHandle = NULL;
 
 	if (dwFlag & GXOBJECT_CREATE_TYPE_EFFECT)
 	{

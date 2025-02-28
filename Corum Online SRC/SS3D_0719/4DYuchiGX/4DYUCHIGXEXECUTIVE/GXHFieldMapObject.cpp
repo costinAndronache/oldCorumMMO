@@ -14,7 +14,6 @@ BOOL CGXHFieldMapObject::Initialize(CoExecutive* pExecutive,CGXMap* pMap,DWORD /
 	m_pExecutive = pExecutive;
 	m_dwAlphaFlag = 0x000000ff;
 	m_dwID = 0xfffffff2;
-	m_pHashHandle = NULL;
 
 	return TRUE;
 }

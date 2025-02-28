@@ -7,10 +7,10 @@
 #include "CoD3DDevice.h"
 #include "global_variable.h"
 
-CMaterialManager::CMaterialManager()
-{
+CMaterialManager::CMaterialManager() {
 	memset(this,0,sizeof(CMaterialManager));
-
+	_materialPtrToSearchIndex = new std::map<MATERIAL*, DWORD>();
+	_searchIndexToMtlHandlePtr = new std::map<DWORD, MTL_HANDLE*>();
 }
 
 
@@ -28,12 +28,6 @@ BOOL CMaterialManager::Initialize(CoD3DDevice* pRenderer,DWORD dwMaxMtlNum,DWORD
 
 	m_pMtlSetList = new MATERIAL_SET[dwMaxMtlSetNum+1];
 	memset(m_pMtlSetList,0,sizeof(MATERIAL_SET)*(dwMaxMtlSetNum+1));
-
-	m_pMtlHash = VBHCreate();
-	VBHInitialize(m_pMtlHash,1024,sizeof(MATERIAL),dwMaxMtlNum);
-
-	m_pMtlMemoryPool = CreateStaticMemoryPool();
-	InitializeStaticMemoryPool(m_pMtlMemoryPool,sizeof(MTL_HANDLE),64,dwMaxMtlNum);
 
 	m_pICMtl = ICCreate();
 	ICInitialize(m_pICMtl,dwMaxMtlNum);
@@ -62,15 +56,14 @@ BOOL CMaterialManager::Initialize(CoD3DDevice* pRenderer,DWORD dwMaxMtlNum,DWORD
 
 MTL_HANDLE* CMaterialManager::Add(DWORD* pdwIndexResult,MATERIAL* pMtl,DWORD /*dwFlag*/)
 {
-	DWORD	dwItem;
 	DWORD	dwIndex = 0xffffffff;
-	void*	pSearchHandle;
 	MTL_HANDLE*	pMtlHandle = NULL;
+	auto found = _materialPtrToSearchIndex->find(pMtl);
 
-	if (VBHSelect(m_pMtlHash,&dwItem,1,pMtl,sizeof(MATERIAL)))
+	if (found != _materialPtrToSearchIndex->end())
 	{
-		*pdwIndexResult = dwItem;
-		pMtlHandle = m_ppMtlHandleList[dwItem];
+		*pdwIndexResult = found->second;
+		pMtlHandle = m_ppMtlHandleList[found->second];
 		goto lb_return;
 	}
 
@@ -82,41 +75,15 @@ MTL_HANDLE* CMaterialManager::Add(DWORD* pdwIndexResult,MATERIAL* pMtl,DWORD /*d
 	}
 	
 	pMtlHandle = new MTL_HANDLE;
-
-	if (!pMtlHandle)
-	{
-#ifdef _DEBUG
-		char	txt[512];
-		DWORD	dwAddr;
-		memset(txt,0,512);
-		wsprintf(txt,"CMaterialManager::Add(), Fail to LALAlloc(), File:%s , Line:%d \n",__FILE__,__LINE__);
-		GetEIP(&dwAddr);
-		g_pErrorHandleFunc(ERROR_TYPE_ENGINE_CODE,0,(void*)dwAddr,txt);
-#endif
-		goto lb_return;
-	}
-
 	pMtlHandle->dwIndex = dwIndex;
 	
 	pMtlHandle->dwRefCount = 0;
 	SetMaterial(&pMtlHandle->mtlData,pMtl);
+	
 	m_ppMtlHandleList[dwIndex] = pMtlHandle;
 	
-	pSearchHandle = VBHInsert(m_pMtlHash,dwIndex,pMtl,sizeof(MATERIAL));
+	_materialPtrToSearchIndex->insert({ pMtl, dwIndex });
 
-	if (!pSearchHandle)
-	{
-#ifdef _DEBUG
-		char	txt[512];
-		DWORD	dwAddr;
-		memset(txt,0,512);
-		GetEIP(&dwAddr);
-		wsprintf(txt,"CMaterialManager::Add(), Fail to VBHInsert(),File : %s , Line : %d \n",__FILE__,__LINE__);
-		g_pErrorHandleFunc(ERROR_TYPE_ENGINE_CODE,0,(void*)dwAddr,txt);
-#endif
-		goto lb_return;
-	}
-	pMtlHandle->pSearchHandle = pSearchHandle;
 	*pdwIndexResult = dwIndex;
 	
 	m_dwMtlNum++;
@@ -126,26 +93,25 @@ lb_return:
 DIMATERIAL* CMaterialManager::Alloc(MATERIAL* pMtl,DWORD* pdwWidth,DWORD* pdwHeight,DWORD dwFlag)
 {
 	DIMATERIAL*	pResult = NULL;
-	
-	if (!pMtl)
-	{
+	if (!pMtl) {
 		// 디폴트 매터리얼 할당..
 		pResult = &m_defaultMtlHandle.mtlData;
-		goto lb_return;
-		
+		return pResult;
 	}
 	
-
 	DWORD	dwIndex;
-	
 	MTL_HANDLE*	pMtlHandle;
-
-	if (!VBHSelect(m_pMtlHash,&dwIndex,1,pMtl,sizeof(MATERIAL)))
+	auto found = _materialPtrToSearchIndex->find(pMtl);
+	if (found == _materialPtrToSearchIndex->end())
 	{
 		pMtlHandle = Add(&dwIndex,pMtl,dwFlag);
 		if (!pMtlHandle)
 			goto lb_return;
 	}
+	else {
+		dwIndex = found->second;
+	}
+
 	pMtlHandle = m_ppMtlHandleList[dwIndex];
 	pMtlHandle->dwRefCount++;
 
@@ -182,17 +148,21 @@ void CMaterialManager::Free(DIMATERIAL* pMtl)
 	MTL_HANDLE*	pMtlHandle = (MTL_HANDLE*)( (char*)pMtl - DIMATERIAL_OFFSET );
 
 	// 해쉬핸들이 NULL이면 삭제대상에서 제외한다..디폴트 매터리얼 및 예외사항을 위해서..
-	if (!pMtlHandle->pSearchHandle)
-	{
-		return;
-	}
+	auto found = std::find_if(_materialPtrToSearchIndex->begin(),
+		_materialPtrToSearchIndex->end(),
+		[pMtlHandle](const std::map<MATERIAL*, DWORD>::value_type& item) {
+			return item.second == pMtlHandle->dwIndex;
+		});
 
 	pMtlHandle->dwRefCount--;
 	if (!pMtlHandle->dwRefCount)
 	{
 		m_ppMtlHandleList[pMtlHandle->dwIndex] = NULL;
 		ICFreeIndex(m_pICMtl,pMtlHandle->dwIndex);
-		VBHDelete(m_pMtlHash,pMtlHandle->pSearchHandle);
+
+		if (found != _materialPtrToSearchIndex->end()) {
+			_materialPtrToSearchIndex->erase(found->first);
+		}
 
 		pMtlHandle->mtlData.TextureDiffuse.Release();
 		pMtlHandle->mtlData.TextureReflect.Release();
@@ -403,24 +373,11 @@ CMaterialManager::~CMaterialManager()
 		ICRelease(m_pICMtlSet);
 		m_pICMtlSet = NULL;
 	}
-	if (m_pMtlHash)
-	{
-		VBHRelease(m_pMtlHash);
-		m_pMtlHash = NULL;
 
-	}
-
-	if (m_pMtlMemoryPool)
-	{
-		ReleaseStaticMemoryPool(m_pMtlMemoryPool);
-		m_pMtlMemoryPool = NULL;
-	}
 	if (m_ppMtlHandleList)
 	{
 		delete [] m_ppMtlHandleList;
 		m_ppMtlHandleList = NULL;
 	}
 
-
-	
 }

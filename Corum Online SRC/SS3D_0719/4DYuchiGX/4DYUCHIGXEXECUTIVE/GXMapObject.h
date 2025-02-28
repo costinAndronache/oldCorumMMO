@@ -18,7 +18,6 @@ protected:
 	DWORD					m_dwPropertyFlag;
 	CoExecutive*			m_pExecutive;
 	
-	void*					m_pHashHandle;
 	DWORD					m_dwIndex;	
 	DWORD					m_dwIndexInInitialTable;
 	DWORD					m_dwRenderFrameCount;
@@ -29,6 +28,7 @@ protected:
 	
 
 public:
+	CGXMapObject();
 	void				SetIndexInIntialTable(DWORD dwIndex) {m_dwIndexInInitialTable = dwIndex;}
 
 	DWORD				GetRenderFrameCount() {return m_dwRenderFrameCount;}

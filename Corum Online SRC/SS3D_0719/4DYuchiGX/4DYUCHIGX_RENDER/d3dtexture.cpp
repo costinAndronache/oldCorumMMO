@@ -13,7 +13,6 @@ CBaseTextureContainer::CBaseTextureContainer()
 	m_dwRefCount = 0;
 	m_dwTexFlag = 0;
 	m_bFromFile = FALSE;
-	m_pSearchHandle = NULL;
 	m_ImageHeader.dwWidth = 0;
 	m_ImageHeader.dwHeight = 0;
 	m_ImageHeader.dwBPS = 0;

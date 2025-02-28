@@ -22,7 +22,6 @@ BOOL CGXStaticMapObject::Initialize(CoExecutive* pExecutive,CGXMap* pMap,DWORD d
 	m_pExecutive = pExecutive;
 	m_dwAlphaFlag = 0x000000ff;
 	m_dwID = 0xfffffff1;
-	m_pHashHandle = NULL;
 
 	m_pTree		=	0;
 

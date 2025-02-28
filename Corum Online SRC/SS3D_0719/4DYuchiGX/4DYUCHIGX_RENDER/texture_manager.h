@@ -5,7 +5,8 @@
 #include "../4DyuchiGXGFunc/global.h"
 
 #include "CTexture.h"
-
+#include <map>
+#include <string>
 
 class CD3DResourceManager;
 class CoD3DDevice;
@@ -17,8 +18,8 @@ class CTextureManager
 {
 	CoD3DDevice*					m_pRenderer;
 	CD3DResourceManager*			m_pResourceManager;
-	
-	VBHASH_HANDLE					m_pFileNameHash;
+	std::map<std::string, CTextureContainer*> _containerPerFilename;
+
 	DWORD							m_dwMaxTextureNum;
 	DWORD							m_dwTextureNum;
 	DWORD							m_dwFileTextureNum;

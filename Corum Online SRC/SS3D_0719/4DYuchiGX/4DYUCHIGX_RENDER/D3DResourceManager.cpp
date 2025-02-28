@@ -599,7 +599,6 @@ BOOL CD3DResourceManager::Initialize(CoD3DDevice* pRenderer,IDirect3DDevice8* pD
 }
 HRESULT	CD3DResourceManager::Release(IUnknown* pResource)
 {
-	D3DRESOURCE_DESC*	pDesc;
 
 #ifdef _DEBUG
 	if (!m_dwItemNum)
@@ -613,7 +612,8 @@ HRESULT	CD3DResourceManager::Release(IUnknown* pResource)
 	//void*	pHashHandle;
 	//if (!QBHSelect(m_pHashResource,&pHashHandle,(DWORD*)&pDesc,1,(DWORD)pResource))
 	auto key = (IDirect3DResource8*)pResource;
-	if (_d3dr8ToResourceDesc.find(key) == _d3dr8ToResourceDesc.end())
+	auto found = _d3dr8ToResourceDesc.find(key);
+	if ( found == _d3dr8ToResourceDesc.end())
 	{
 		DWORD	dwAddr;
 		GetEIP(&dwAddr);
@@ -623,8 +623,8 @@ HRESULT	CD3DResourceManager::Release(IUnknown* pResource)
 
 
 	//QBHDelete(m_pHashResource,pDesc->pHashHandle);
+	delete found->second;
 	_d3dr8ToResourceDesc.erase(key);
-	delete pDesc;
 	
 	m_dwItemNum--;
 	

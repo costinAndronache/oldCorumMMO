@@ -7,11 +7,15 @@
 //	GLOBAL_FUNC_DLL DWORD				QBHSelect(QBHASH_HANDLE pHash,DWORD OUT* pItems,DWORD dwMaxItemNum,DWORD dwKeyData);
 //GLOBAL_FUNC_DLL void*				QBHInsert(QBHASH_HANDLE pHash,DWORD dwItem,DWORD dwKeyData);
 
+#define INVALID_ID 0xffffffff
+
+CGXMapObject::CGXMapObject() {
+	m_dwID = INVALID_ID;
+}
 
 void CGXMapObject::Cleanup()
 {
 	m_dwIndex = 0xffffffff;
-	m_pHashHandle = NULL;
 	m_dwClipperIndex = 0xffffffff;
 	m_dwRenderFrameCount = 0xffffffff;
 	m_dwPickTypeFlag = PICK_TYPE_DEFAULT;
@@ -21,36 +25,26 @@ void CGXMapObject::Cleanup()
 
 BOOL CGXMapObject::SetID(DWORD dwID)	
 {
-	QBHASH_HANDLE	pHash = m_pExecutive->GetIDHash();
-	DWORD	dwItem;
-
+	auto pHash = m_pExecutive->gxMapObjectPerID();
 	BOOL	bResult = FALSE;
 
-
-	if (dwID == m_dwID)
-		goto lb_true;
+	if (dwID == m_dwID) {
+		return TRUE;
+	}
 	
-	if (dwID >= 0xfffffff0)
-		goto lb_return;
+	if (dwID >= 0xfffffff0) {
+		return FALSE;
+	}
 
-	void* pSearchHandle;
-	if (QBHSelect(pHash,&pSearchHandle,&dwItem,1,dwID))
+	const auto found = pHash->find(dwID);
+	if (found != pHash->end())
 	{
 		MessageBox(NULL,"conflict of GXObject's UID","Error",MB_OK);
 		goto lb_return;
 	}
 
-	pSearchHandle = QBHInsert(pHash,(DWORD)this,dwID);
-	if (!pSearchHandle)
-		goto lb_return;
+	pHash->insert({ dwID, this });
 
-
-	if (m_pHashHandle)
-	{	// 아이디를 이미 가지고 있으면 반납하고..
-		QBHDelete(pHash,m_pHashHandle);
-		m_pHashHandle = NULL;
-	}
-	m_pHashHandle = pSearchHandle;
 	m_dwID = dwID;
 
 lb_true:
@@ -74,13 +68,9 @@ lb_return:
 }
 void CGXMapObject::ReleaseID()
 {
-	if (m_pHashHandle)
-	{
-		QBHASH_HANDLE	pHash = m_pExecutive->GetIDHash();
- 		QBHDelete(pHash,m_pHashHandle);
-		m_dwID = 0xffffffff;
-		m_pHashHandle = NULL;
-	}
+	auto pHash = m_pExecutive->gxMapObjectPerID();
+	pHash->erase(m_dwID);
+	m_dwID = INVALID_ID;
 }
 
 

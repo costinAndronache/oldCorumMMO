@@ -244,22 +244,6 @@ GLOBAL_FUNC_DLL BOOL  VBHDelete(VBHASH_HANDLE pHash,void* pBucket)
 		
 	return TRUE;
 }
-GLOBAL_FUNC_DLL DWORD 	VBHDeleteWithKey(VBHASH_HANDLE pHash,void* pKeyData,DWORD dwSize,DelFunc pDelFunc)
-{
-	DWORD dwItem;
-
-	VB_BUCKET*	pBucket;
-	DWORD	dwDelCount = 0;
-	while(pBucket = (VB_BUCKET*)VBHGetSearchHandle(pHash,pKeyData,dwSize))
-	{
-		if (pDelFunc)
-			pDelFunc( (void*)pBucket->m_dwItem);
-		
-		VBHDelete(pHash,pBucket);
-		dwDelCount++;
-	}
-	return dwDelCount;
-}
 
 GLOBAL_FUNC_DLL void*  VBHGetSearchHandle(VBHASH_HANDLE pHash,void* pKeyData,DWORD dwSize)
 {

@@ -22,7 +22,6 @@ BOOL CoGXEventTrigger::Initialize(CoExecutive* pExecutive,GXSchedulePROC pProc,D
 	BuildMesh();
 
 	m_dwID = 0xfffffff4;
-	m_pHashHandle = NULL;
 	m_dwPropertyFlag = dwFlag;
 	m_dwObjectType = GX_MAP_OBJECT_TYPE_TRIGGER;
 

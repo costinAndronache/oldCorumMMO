@@ -77,7 +77,6 @@ BOOL CoGXLight::Initialize(CoExecutive* pExecutive,LIGHT_DESC* pDesc,MATERIAL* p
 	m_dwRenderFlag = RENDER_TYPE_DISABLE_ZCLIP;
 	m_dwObjectType = GX_MAP_OBJECT_TYPE_LIGHT;
 	m_dwID = 0xfffffff3;
-	m_pHashHandle = NULL;
 
 	MATRIX4	matTransform;
 	SetIdentityMatrix(&matTransform);

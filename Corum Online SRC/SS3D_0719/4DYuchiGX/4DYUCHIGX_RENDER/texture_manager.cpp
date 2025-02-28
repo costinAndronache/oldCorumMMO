@@ -12,7 +12,6 @@ CTextureManager::CTextureManager()
 {
 	m_pRenderer = NULL;
 	m_pResourceManager = NULL;
-	m_pFileNameHash = NULL;
 	m_pDefaulTexContainer = NULL;
 //	m_pTexContainerSortTable = NULL;
 //	m_dwCommitedTextureNum = 0;
@@ -29,8 +28,6 @@ BOOL CTextureManager::Initialize(CoD3DDevice* pRenderer,CD3DResourceManager* pRe
 {
 	m_pRenderer = pRenderer;
 	m_dwMaxTextureNum = dwMaxTexNum;
-	m_pFileNameHash = VBHCreate();
-	VBHInitialize(m_pFileNameHash,dwMaxBucketNum,MAX_NAME_LEN,dwMaxTexNum);
 	m_pResourceManager = pResourceManager;
 
 
@@ -145,23 +142,18 @@ lb_return:
 }
 BOOL CTextureManager::AllocTexture(CTexture* pTextureHandle,char* szFileName,DWORD dwWidthHeight,BOOL bUseMipmap,BOOL bCompress)
 {
-
-	char	txt[4] = {0,0,0,0};
-//	D3DPOOL		pool = D3DPOOL_DEFAULT;
-	D3DPOOL		pool = D3DPOOL_MANAGED;
-	
-	
-
 	CTextureContainer* pResult = NULL;
-
-	DWORD			dwIndexOut;
 	BOOL			bResult = FALSE;
 
+	char	txt[4] = {0,0,0,0};
+	D3DPOOL		pool = D3DPOOL_MANAGED;
+	
 //	if (!szFileName)
 //		szFileName = "psteam.tga";
 		
-	if (0==lstrlen(szFileName))
-		goto lb_return;
+	if (0 == lstrlen(szFileName)) {
+		return FALSE;
+	}
 	
 
 	char		szSearchFileName[256];
@@ -170,10 +162,12 @@ BOOL CTextureManager::AllocTexture(CTexture* pTextureHandle,char* szFileName,DWO
 	DWORD			dwSearchNameLen;
 	dwSearchNameLen = lstrlen(szSearchFileName);
 	CharToSmallASCII(szSearchFileName,szSearchFileName,dwSearchNameLen);
+	std::string key(szSearchFileName);
 
-	if (VBHSelect(m_pFileNameHash,&dwIndexOut,1,szSearchFileName,dwSearchNameLen))
+	auto found = _containerPerFilename.find(key);
+	if (found != _containerPerFilename.end())
 	{
-		pResult = (CTextureContainer*)dwIndexOut;
+		pResult = found->second;
 		goto lb_set_result;
 	}
 
@@ -182,8 +176,6 @@ BOOL CTextureManager::AllocTexture(CTexture* pTextureHandle,char* szFileName,DWO
 lb_set_result:
 	if (!pResult)
 	{
-
-
 		bResult = FALSE;
 		goto lb_return;
 	}
@@ -199,7 +191,7 @@ void CTextureManager::FreeTexture(CBaseTextureContainer* pTexContainer)
 {
 	if (pTexContainer->IsFromFile())
 	{
-		VBHDelete(m_pFileNameHash,pTexContainer->m_pSearchHandle);
+		_containerPerFilename.erase(pTexContainer->key);
 	}
 /*
 	m_dwCommitedTextureNum--;
@@ -220,7 +212,7 @@ CTextureContainer* CTextureManager::AddTexture(char* szFileName,DWORD dwUsage,D3
 	DWORD	dwTexFlag = 0;
 	DWORD	dwWidth;
 	DWORD	dwHeight;
-
+	std::string key;
 
 	LPDIRECT3DTEXTURE8		pTex = NULL;
 	IMAGE_HEADER			imgHeader;;
@@ -343,17 +335,17 @@ lb_success:
 	DWORD			dwSearchNameLen;
 	dwSearchNameLen = lstrlen(szSearchFileName);
 	CharToSmallASCII(szSearchFileName,szSearchFileName,dwSearchNameLen);
+	key = szSearchFileName;
 
 	pTexContainer = new CTextureContainer;
 	pTexContainer->SetFileName(szSearchFileName);
 	
 	pTexContainer->SetTextureImage(pTex,&imgHeader);
 
-	
-
-	
 	pTexContainer->m_dwTexFlag |= dwTexFlag;
-	pTexContainer->m_pSearchHandle = VBHInsert(m_pFileNameHash,(DWORD)pTexContainer,szSearchFileName,dwSearchNameLen);
+	_containerPerFilename.insert({ key, pTexContainer });
+	pTexContainer->key = key;
+
 	pTexContainer->m_pTextureManager = this;
 
 //	m_pTexContainerSortTable[m_dwTextureNum].pItem = (void*)pTexContainer;
@@ -431,16 +423,16 @@ void CTextureManager::ResourceCheck()
 	CTextureContainer*	pTexList[2048];
 	memset(pTexList,0,sizeof(pTexList));
 
-	DWORD	dwNum = VBHGetAllItem(m_pFileNameHash,(DWORD*)pTexList,2048);
+	DWORD	dwNum = _containerPerFilename.size();
 	if (dwNum)
 	{
 		char	txt[512];
 		wsprintf(txt,"\n\n\n%s\n","Texture Resource Leak!! Look the VC++'s Output Window");
 		OutputDebugString(txt);
-		for (DWORD i=0; i<dwNum; i++)
+		for (const auto& item: _containerPerFilename)
 		{
 			memset(txt,0,sizeof(txt));
-			wsprintf(txt,"Resource Leak!!!!! --- Texture %s is not Freed \n",pTexList[i]->m_szFileName);
+			wsprintf(txt,"Resource Leak!!!!! --- Texture %s is not Freed \n",item.second->m_szFileName);
 			OutputDebugString(txt);
 		}
 		DWORD	dwAddr;
@@ -458,9 +450,4 @@ CTextureManager::~CTextureManager()
 //	}
 	m_DefaultTexture.Release();
 	ResourceCheck();
-	if (m_pFileNameHash)
-	{
-		VBHRelease(m_pFileNameHash);
-		m_pFileNameHash = NULL;
-	}
 }
