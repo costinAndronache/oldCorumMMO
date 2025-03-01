@@ -13,6 +13,7 @@ COPY /Y /B "..\Corum Online SRC\centralizedOutput\4DyuchiGXExecutive.pdb" "..\Co
 COPY /Y /B "..\Corum Online SRC\centralizedOutput\4DyuchiGXGFunc.pdb" "..\Corum Online SRC\Installed Client\4DyuchiGXGFunc.pdb"
 COPY /Y /B "..\Corum Online SRC\centralizedOutput\4DyuchiFileStorage.pdb" "..\Corum Online SRC\Installed Client\4DyuchiFileStorage.pdb"
 COPY /Y /B "..\Corum Online SRC\centralizedOutput\4DyuchiGX_Render.pdb" "..\Corum Online SRC\Installed Client\4DyuchiGX_Render.pdb"
+COPY /Y /B "..\Corum Online SRC\centralizedOutput\4DyuchiGXGeometry.pdb" "..\Corum Online SRC\Installed Client\4DyuchiGXGeometry.pdb"
 
 COPY /Y /B "..\Corum Online SRC\centralizedOutput\LoginAgentResult.exe" "..\Corum Online SRC\INNER\1_LoginAgent Configurations_INNER\LoginAgentResult.exe"
 COPY /Y /B "..\Corum Online SRC\centralizedOutput\WorldServerResult.exe" "..\Corum Online SRC\INNER\2_WorldServer Configurations\WorldServerResult.exe"

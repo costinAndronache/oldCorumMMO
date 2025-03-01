@@ -25,11 +25,11 @@
 #include "StaticIBPool.h"
 
 
-I4DyuchiFileStorage*			g_pFileStorage = NULL;
+static I4DyuchiFileStorage*			g_pFileStorage = NULL;
 
 
 MATRIX4 CoD3DDevice::m_matIdentity;
-ErrorHandleProc		g_pErrorHandleFunc = NULL;
+static ErrorHandleProc		g_pErrorHandleFunc = NULL;
 DWORD DefaultErrorHandleProc(
 									   ERROR_TYPE /*type*/,
 									   DWORD dwErrorPriority,
@@ -1122,8 +1122,8 @@ BOOL __stdcall CoD3DDevice::RenderSprite(IDISpriteObject* pSprite,VECTOR2* pv2Sc
 		memset(txt,0,512);
 		wsprintf(txt,"Fail to RenderSprite(), Sprite is NULL!!\n");
 		DWORD	dwAddr;
-		GetEIP(&dwAddr);
-		g_pErrorHandleFunc(ERROR_TYPE_PARAMETER_INVALID,0,(void*)dwAddr,txt);
+		//GetEIP(&dwAddr);
+		//g_pErrorHandleFunc(ERROR_TYPE_PARAMETER_INVALID,0,(void*)dwAddr,txt);
 	}
 #endif
 
@@ -1143,36 +1143,36 @@ BOOL __stdcall CoD3DDevice::RenderFont(IDIFontObject* pFont,TCHAR* str,DWORD dwL
 	{
 		memset(txt,0,sizeof(txt));
 		wsprintf(txt,"Fail to RenderFont(), string has CR or LF or HT!! %s\n",str);
-		GetEIP(&dwAddr);
-		g_pErrorHandleFunc(ERROR_TYPE_PARAMETER_INVALID,1,(void*)dwAddr,txt);
+		//GetEIP(&dwAddr);
+		//g_pErrorHandleFunc(ERROR_TYPE_PARAMETER_INVALID,1,(void*)dwAddr,txt);
 	}
 	if (0 == pRect->right - pRect->left)
 	{
 		memset(txt,0,sizeof(txt));
 		wsprintf(txt,"Fail to RenderFont(), rect's width zero!! %s\n",str);
-		GetEIP(&dwAddr);
-		g_pErrorHandleFunc(ERROR_TYPE_PARAMETER_INVALID,0,(void*)dwAddr,txt);
+		//GetEIP(&dwAddr);
+		//g_pErrorHandleFunc(ERROR_TYPE_PARAMETER_INVALID,0,(void*)dwAddr,txt);
 	}
 	if (0 == pRect->bottom - pRect->top)
 	{
 		memset(txt,0,sizeof(txt));
 		wsprintf(txt,"Fail to RenderFont(), rect's height zero!! %s\n",str);
-		GetEIP(&dwAddr);
-		g_pErrorHandleFunc(ERROR_TYPE_PARAMETER_INVALID,0,(void*)dwAddr,txt);
+		//GetEIP(&dwAddr);
+		//g_pErrorHandleFunc(ERROR_TYPE_PARAMETER_INVALID,0,(void*)dwAddr,txt);
 	}
 	if (pRect->right - pRect->left > m_pFontCache->GetMaxWidth())
 	{
 		memset(txt,0,sizeof(txt));
 		wsprintf(txt,"Fail to RenderFont(), rect's width too large!!%s\n",str);
-		GetEIP(&dwAddr);
-		g_pErrorHandleFunc(ERROR_TYPE_PARAMETER_INVALID,0,(void*)dwAddr,txt);
+		//GetEIP(&dwAddr);
+		//g_pErrorHandleFunc(ERROR_TYPE_PARAMETER_INVALID,0,(void*)dwAddr,txt);
 	}
 	if (pRect->bottom - pRect->top > m_pFontCache->GetMaxWidth())
 	{
 		memset(txt,0,sizeof(txt));
 		wsprintf(txt,"Fail to RenderFont(), rect's height too large!!%s\n",str);
-		GetEIP(&dwAddr);
-		g_pErrorHandleFunc(ERROR_TYPE_PARAMETER_INVALID,0,(void*)dwAddr,txt);
+		//GetEIP(&dwAddr);
+		//g_pErrorHandleFunc(ERROR_TYPE_PARAMETER_INVALID,0,(void*)dwAddr,txt);
 	}
 #endif
 

@@ -9,7 +9,7 @@
 CMotion::CMotion()
 {
 	memset((char*)this+4,0,sizeof(CMotion)-4);
-
+	_motionObjectForName = new std::map<std::string, CMotionObject*>();
 }
 
 STDMETHODIMP_(ULONG) CMotion::AddRef(void)
@@ -67,8 +67,8 @@ BOOL CMotion::ReadFile(char* szFileName)
 	{
 		// FILE_NOT_FOUND /////////////////////////////////////////////////////////
 		DWORD	dwAddr;
-		GetEIP(&dwAddr);
-		g_pErrorHandleFunc(ERROR_TYPE_FILE_NOT_FOUND,1,(void*)dwAddr,szFileName);
+		//GetEIP(&dwAddr);
+		//g_pErrorHandleFunc(ERROR_TYPE_FILE_NOT_FOUND,1,(void*)dwAddr,szFileName);
 		///////////////////////////////////////////////////////////////////////////
 
 		goto lb_return;
@@ -107,28 +107,12 @@ BOOL CMotion::ReadFile(char* szFileName)
 	}
 
 	g_pFileStorage->FSCloseFile(pFP);
-
-
-
-	m_pHashObjName = VBHCreate();
-	VBHInitialize(m_pHashObjName,m_dwMotionObjectNum,m_dwMaxNameLen,m_dwMotionObjectNum+1);
 	
 	pMotObj = m_pBaseMotionObject;
-	void*	pHashHandle;
 	while(pMotObj)
 	{
-		pHashHandle = VBHInsert(m_pHashObjName,(DWORD)pMotObj,pMotObj->GetObjectName(),pMotObj->GetNameLen());
-#ifdef _DEBUG
-		if (!pHashHandle)
-		{
-			char	txt[512];
-			memset(txt,0,512);
-			wsprintf(txt,"CMotion::ReadFile(), if (!pHashHandle), File:%s , Line:%d \n",__FILE__,__LINE__);
-			DWORD	dwAddr;
-			GetEIP(&dwAddr);
-			g_pErrorHandleFunc(ERROR_TYPE_ENGINE_CODE,0,(void*)dwAddr,txt);
-		}
-#endif
+		const std::string key(pMotObj->GetObjectName());
+		_motionObjectForName->insert({ key, pMotObj });
 
 		pMotObj = pMotObj->m_pNextMotionObject;
 	}
@@ -140,15 +124,14 @@ lb_return:
 
 CMotionObject* CMotion::GetMotionObject(char* szObjName,DWORD dwSize)
 {
-	DWORD	dwResult = 0;
-	CMotionObject*	pMotObj = NULL;
-	
- 	dwResult = VBHSelect(m_pHashObjName,(DWORD*)&pMotObj,1,szObjName,dwSize);
-
-	return pMotObj;
-
-
+	const std::string key(szObjName);
+	const auto found = _motionObjectForName->find(key);
+	if (found != _motionObjectForName->end()) {
+		return found->second;
+	}
+	return nullptr;
 }
+
 BOOL CMotion::Unload()
 {
 	BOOL	bResult = FALSE;
@@ -189,9 +172,6 @@ CMotion::~CMotion()
 			m_pGeometry->INL_GetRenderer()->ClearCacheWithMotionUID(this);
 	}
 	
-	if (m_pHashObjName)
-		VBHRelease(m_pHashObjName);
-
 	ReleaseObjects();
 	if (m_dwIndexInGeometry)
 		m_pGeometry->DeleteFileItem(m_dwIndexInGeometry);

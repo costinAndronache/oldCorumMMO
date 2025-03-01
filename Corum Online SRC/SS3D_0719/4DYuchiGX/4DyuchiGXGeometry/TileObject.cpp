@@ -69,7 +69,7 @@ void CTileObject::CleanupAlphaMapWithTileBufferDesc(TILE_BUFFER_DESC* pTileBuffe
 	if (pTileBufferDesc->alphaMapDesc.pAlphaMapBits)
 	{
 		
-		CHFieldObject* pHFieldObj = GetHFieldObject();
+		CHFieldObjectGeometry* pHFieldObj = GetHFieldObject();
 		pHFieldObj->GetHFieldControlObject()->CleanupAlphaMap();
 		pHFieldObj->GetHField(this)->GetHFieldTools()->FreeAlphaMap(pTileBufferDesc->alphaMapDesc.pAlphaMapBits);
 		pTileBufferDesc->alphaMapDesc.pAlphaMapBits = NULL;
@@ -94,7 +94,7 @@ BOOL CTileObject::UpdateTileInfo(HFIELD_DESC* pHFDesc)
 {
 
 
-	CHFieldObject*	pHFieldObj;
+	CHFieldObjectGeometry*	pHFieldObj;
 	pHFieldObj = NULL;
 	
 	CHFieldTools* pAlphaMapManager;
@@ -302,7 +302,7 @@ BOOL CTileObject::UpdateExtTileInfo(HFIELD_DESC* pHFDesc,WORD wTileIndex,BOOL bS
 	if (!pHFDesc->bBlendEnable)
 		return FALSE;
 	
-	CHFieldObject*	pHFieldObj;
+	CHFieldObjectGeometry*	pHFieldObj;
 	pHFieldObj = NULL;
 	
 	CHFieldTools* pHFieldTools;
@@ -461,7 +461,7 @@ void CTileObject::SetTile(DWORD dwPosXinObj,DWORD dwPosZinObj,WORD* pWorldTileTa
 
 TILE_BUFFER_DESC* CTileObject::SetAlphaTexel(
 	CHFieldTools* pAlphaMapManager,
-	CHFieldObject* pHFieldObject,
+	CHFieldObjectGeometry* pHFieldObject,
 	WORD wTileTexIndex,
 	DWORD dwActionFlag,
 	DWORD dwCenterX,
@@ -485,7 +485,7 @@ TILE_BUFFER_DESC* CTileObject::SetAlphaTexel(
 	goto lb_return;
 lb_set:
 
-	CHFieldObject*	pHFieldObj;
+	CHFieldObjectGeometry*	pHFieldObj;
 	pHFieldObj = NULL;
 	
 	CHFieldTools* pTemp;
@@ -600,12 +600,12 @@ lb_return:
 	return wTileIndex;
 }
 	
-CHFieldObject* CTileObject::GetHFieldObject()
+CHFieldObjectGeometry* CTileObject::GetHFieldObject()
 {
-	CHFieldObject*	pHFieldObj = NULL;
+	CHFieldObjectGeometry*	pHFieldObj = NULL;
 	DWORD	dwOffset = (DWORD)(&pHFieldObj->m_TileObject);
 
-	pHFieldObj = (CHFieldObject*)((DWORD)this - dwOffset);
+	pHFieldObj = (CHFieldObjectGeometry*)((DWORD)this - dwOffset);
 
 	return pHFieldObj;
 }

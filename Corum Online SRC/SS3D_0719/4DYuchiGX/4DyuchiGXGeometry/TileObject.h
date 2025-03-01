@@ -4,7 +4,7 @@
 #include "../4DyuchiGRX_Common/typedef.h"
 
 class CHFieldTools;
-class CHFieldObject;
+class CHFieldObjectGeometry;
 
 struct ALPHA_MAP_FILE_HEADER
 {
@@ -35,7 +35,7 @@ public:
 	void				CleanupAlphaMap();
 	void				CleanupAlphaMapWithTileIndex(WORD wTileIndex);
 
-	CHFieldObject*		GetHFieldObject();
+	CHFieldObjectGeometry*		GetHFieldObject();
 	void				GetTileBuffer(TILE_BUFFER_DESC** ppTileBufferDesc,DWORD* pdwTileBufferDescNum)
 	{
 		*ppTileBufferDesc = m_pTileBufferDesc;
@@ -54,7 +54,7 @@ public:
 	
 	TILE_BUFFER_DESC*	SetAlphaTexel(
 										CHFieldTools*	pAlphaMapManager,
-										CHFieldObject* pHFieldObject,
+										CHFieldObjectGeometry* pHFieldObject,
 										WORD  wTileTexIndex,
 										DWORD dwActionFlag,
 										DWORD dwCenterX,

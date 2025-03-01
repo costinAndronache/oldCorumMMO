@@ -1102,8 +1102,8 @@ BOOL __stdcall CoStaticModel::ReadFile(char* szFileName,LOAD_CALLBACK_DESC* pCal
 	{
 		// FILE_NOT_FOUND /////////////////////////////////////////////////////////
 		DWORD	dwAddr;
-		GetEIP(&dwAddr);
-		g_pErrorHandleFunc(ERROR_TYPE_FILE_NOT_FOUND,1,(void*)dwAddr,szFileName);
+		//GetEIP(&dwAddr);
+		//g_pErrorHandleFunc(ERROR_TYPE_FILE_NOT_FOUND,1,(void*)dwAddr,szFileName);
 		///////////////////////////////////////////////////////////////////////////
 		goto lb_return;
 	}
@@ -1119,8 +1119,8 @@ BOOL __stdcall CoStaticModel::ReadFile(char* szFileName,LOAD_CALLBACK_DESC* pCal
 		memset(txt,0,512);
 		wsprintf(txt,"CoModel::ReadFile(), if (!dwVersion || dwVersion > 0x00000010), File:%s , Line:%d \n",__FILE__,__LINE__);
 		DWORD	dwAddr;
-		GetEIP(&dwAddr);
-		g_pErrorHandleFunc(ERROR_TYPE_ENGINE_CODE,0,(void*)dwAddr,txt);
+		//GetEIP(&dwAddr);
+		//g_pErrorHandleFunc(ERROR_TYPE_ENGINE_CODE,0,(void*)dwAddr,txt);
 	}
 #endif
 	if (pCallbackDesc)

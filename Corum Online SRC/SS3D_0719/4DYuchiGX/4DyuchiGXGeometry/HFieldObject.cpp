@@ -6,28 +6,28 @@
 #include "CoGeometry.h"
 #include "global_variable.h"
 
-CHFieldObject::CHFieldObject()
+CHFieldObjectGeometry::CHFieldObjectGeometry()
 {
-	memset((char*)this+4,0,sizeof(CHFieldObject)-4);
+	memset((char*)this+4,0,sizeof(CHFieldObjectGeometry)-4);
 //	memset(m_pSideObj,0xcccccccc,sizeof(m_pSideObj));
 	m_fDistanceFromViewPoint = 900000.0f;
 	m_bRenderEnable = TRUE;
 
 }
 
-BOOL __stdcall CHFieldObject::IsIncludeViewVolume()
+BOOL __stdcall CHFieldObjectGeometry::IsIncludeViewVolume()
 {
 	return ClipRenderObjectWithViewVolume(
 		m_pHField->GetGeometry()->INL_GetViewvolume(),
 		m_pColMeshObjDesc,
 		0);
 }
-BOOL __stdcall CHFieldObject::OnOut()
+BOOL __stdcall CHFieldObjectGeometry::OnOut()
 {
 //	m_TileObject.Cleanup();
 	return TRUE;
 }
-BOOL __stdcall CHFieldObject::OnFault()
+BOOL __stdcall CHFieldObjectGeometry::OnFault()
 {
 	HFIELD_DESC	hfDesc;
 	m_pHField->GetHFieldDesc(&hfDesc);
@@ -46,7 +46,7 @@ BOOL __stdcall CHFieldObject::OnFault()
 	return TRUE;
 }
 
-BOOL CHFieldObject::Initialize(CoHeightField* pHField,HFIELD_OBJECT_DESC* pHFObjDesc,DWORD dwFlag)
+BOOL CHFieldObjectGeometry::Initialize(CoHeightField* pHField,HFIELD_OBJECT_DESC* pHFObjDesc,DWORD dwFlag)
 {
 	
 
@@ -100,7 +100,7 @@ BOOL CHFieldObject::Initialize(CoHeightField* pHField,HFIELD_OBJECT_DESC* pHFObj
 	return TRUE;
 }
 
-BOOL CHFieldObject::BuildAllToIDIMeshObject()
+BOOL CHFieldObjectGeometry::BuildAllToIDIMeshObject()
 {
 	BOOL	bResult = FALSE;
 
@@ -149,7 +149,7 @@ lb_return:
 	return bResult;
 }
 
-BOOL CHFieldObject::UpdateTile()
+BOOL CHFieldObjectGeometry::UpdateTile()
 {
 	BOOL	bResult = FALSE;
 
@@ -167,7 +167,7 @@ BOOL CHFieldObject::UpdateTile()
 lb_return:
 	return bResult;
 }
-BOOL CHFieldObject::UpdateIDIMeshObject()
+BOOL CHFieldObjectGeometry::UpdateIDIMeshObject()
 {
 	BOOL	bResult = FALSE;
 
@@ -182,7 +182,7 @@ lb_return:
 }
 	
 
-BOOL CHFieldObject::UpdateVertexPos()
+BOOL CHFieldObjectGeometry::UpdateVertexPos()
 {
 	HFIELD_DESC	hfDesc;
 	m_pHField->GetHFieldDesc(&hfDesc);
@@ -190,7 +190,7 @@ BOOL CHFieldObject::UpdateVertexPos()
 	m_pHFieldControlObject->SetYFactor(m_pHField->GetFacesNumPerObjAxis()+1,&hfDesc);
 	return TRUE;
 }
-void CHFieldObject::SetDetailLevel(DWORD dwDetailLevel)
+void CHFieldObjectGeometry::SetDetailLevel(DWORD dwDetailLevel)
 {
 	if (!m_bRenderEnable)
 		return;
@@ -204,7 +204,7 @@ void CHFieldObject::SetDetailLevel(DWORD dwDetailLevel)
 	m_dwDetailLevel = dwDetailLevel;
 	m_pHFieldControlObject->SetDetailLevel(dwDetailLevel);
 }
-void CHFieldObject::SetDistanceFromViewPoint(float fDistance)
+void CHFieldObjectGeometry::SetDistanceFromViewPoint(float fDistance)
 {
 	m_fDistanceFromViewPoint = fDistance;
 	
@@ -212,7 +212,7 @@ void CHFieldObject::SetDistanceFromViewPoint(float fDistance)
 		m_pHFieldControlObject->SetDistanceFromViewPoint(fDistance);
 
 }
-void CHFieldObject::SetPositionMask()
+void CHFieldObjectGeometry::SetPositionMask()
 {
 
 	DWORD		dwPosMask = 0;
@@ -230,7 +230,7 @@ void CHFieldObject::SetPositionMask()
 
 }
 
-BOOL CHFieldObject::ResetCollisionMesh()
+BOOL CHFieldObjectGeometry::ResetCollisionMesh()
 {
 	CMeshFlag	flag;
 	
@@ -272,7 +272,7 @@ BOOL CHFieldObject::ResetCollisionMesh()
 }
 
 
-BOOL CHFieldObject::BeginShadeVertexColor(DWORD dwColor)
+BOOL CHFieldObjectGeometry::BeginShadeVertexColor(DWORD dwColor)
 {
 	HFIELD_DESC	hfdesc;
 	m_pHField->GetHFieldDesc(&hfdesc);
@@ -300,7 +300,7 @@ BOOL CHFieldObject::BeginShadeVertexColor(DWORD dwColor)
 	}
 	return TRUE;
 }
-BOOL CHFieldObject::ShadeVertexColor(VECTOR3* pv3,DWORD dwFacesNum,LIGHT_DESC* pLight,DWORD /*dwFlag*/,SHADE_FUNC pFunc)
+BOOL CHFieldObjectGeometry::ShadeVertexColor(VECTOR3* pv3,DWORD dwFacesNum,LIGHT_DESC* pLight,DWORD /*dwFlag*/,SHADE_FUNC pFunc)
 {
 	HFIELD_DESC	hfdesc;
 	m_pHField->GetHFieldDesc(&hfdesc);
@@ -310,7 +310,7 @@ BOOL CHFieldObject::ShadeVertexColor(VECTOR3* pv3,DWORD dwFacesNum,LIGHT_DESC* p
 	return FALSE;
 }
 
-void CHFieldObject::ReleaseVertexColor()
+void CHFieldObjectGeometry::ReleaseVertexColor()
 {
 	if (m_pdwVertexColor)
 	{
@@ -318,11 +318,11 @@ void CHFieldObject::ReleaseVertexColor()
 		m_pdwVertexColor = NULL;
 	}
 }
-void CHFieldObject::Optimize()
+void CHFieldObjectGeometry::Optimize()
 {
 //	ReleaseVertexColor();
 }
-void CHFieldObject::EndShadeVertexColor(FILE* fp)
+void CHFieldObjectGeometry::EndShadeVertexColor(FILE* fp)
 {
 	HFIELD_DESC	hfdesc;
 	m_pHField->GetHFieldDesc(&hfdesc);
@@ -346,13 +346,13 @@ void CHFieldObject::EndShadeVertexColor(FILE* fp)
 		m_pv3Point = NULL;
 	}
 }
-void CHFieldObject::SetVertexColor(DWORD dwColor)
+void CHFieldObjectGeometry::SetVertexColor(DWORD dwColor)
 {
 	if (m_bRenderEnable)
 		m_pHFieldControlObject->SetVertexColorAll(dwColor);
 }
 
-BOOL CHFieldObject::SetAlphaTexel(VECTOR3* pv3IntersectPoint,float fRs,DWORD dwTexWidthHeight,DWORD dwTileIndex,DWORD dwActionFlag)
+BOOL CHFieldObjectGeometry::SetAlphaTexel(VECTOR3* pv3IntersectPoint,float fRs,DWORD dwTexWidthHeight,DWORD dwTileIndex,DWORD dwActionFlag)
 {
 	BOOL	bResult = FALSE;
 	DWORD	dwRS = 1;
@@ -380,7 +380,7 @@ lb_return:
 }
 
 
-BOOL CHFieldObject::SetLightVertexel(HFIELD_POS* pPos,DWORD dwHFPosNum,DWORD dwColor)
+BOOL CHFieldObjectGeometry::SetLightVertexel(HFIELD_POS* pPos,DWORD dwHFPosNum,DWORD dwColor)
 {
 	BOOL	bResult = FALSE;
 	
@@ -427,7 +427,7 @@ lb_return:
 	return bResult;
 }
 
-BOOL CHFieldObject::GetLightVertexel(DWORD* pdwColor,HFIELD_POS* pPos)
+BOOL CHFieldObjectGeometry::GetLightVertexel(DWORD* pdwColor,HFIELD_POS* pPos)
 {
 	BOOL	bResult = FALSE;
 	
@@ -459,7 +459,7 @@ lb_return:
 }
 
 
-DWORD CHFieldObject::ReadVertexColor(void* pFP)
+DWORD CHFieldObjectGeometry::ReadVertexColor(void* pFP)
 {
 	DWORD	dwLen = 0;
 	
@@ -474,21 +474,21 @@ DWORD CHFieldObject::ReadVertexColor(void* pFP)
 	return dwLen;
 }
 
-void __stdcall CHFieldObject::GetTileBuffer(TILE_BUFFER_DESC** ppTileBufferDesc,DWORD* pdwTileBufferDescNum)
+void __stdcall CHFieldObjectGeometry::GetTileBuffer(TILE_BUFFER_DESC** ppTileBufferDesc,DWORD* pdwTileBufferDescNum)
 {
 	m_TileObject.GetTileBuffer(ppTileBufferDesc,pdwTileBufferDescNum);
 }
-DWORD __stdcall	CHFieldObject::GetTileBufferDescNum()
+DWORD __stdcall	CHFieldObjectGeometry::GetTileBufferDescNum()
 {
 	return m_TileObject.GetTileBufferDescNum();
 }
-TILE_BUFFER_DESC* __stdcall	CHFieldObject::GetTileBufferDesc(DWORD dwIndex)
+TILE_BUFFER_DESC* __stdcall	CHFieldObjectGeometry::GetTileBufferDesc(DWORD dwIndex)
 {
 	return m_TileObject.GetTileBufferDesc(dwIndex);
 }
 
 
-CoHeightField* CHFieldObject::GetHField(CTileObject* pTileObject)
+CoHeightField* CHFieldObjectGeometry::GetHField(CTileObject* pTileObject)
 {
 	/*
 	CTileObject					m_TileObject;
@@ -498,13 +498,13 @@ CoHeightField* CHFieldObject::GetHField(CTileObject* pTileObject)
 	CoHeightField*				m_pHField;
 	*/
 
-	CHFieldObject*	pHFieldObject = NULL;
+	CHFieldObjectGeometry*	pHFieldObject = NULL;
 	DWORD dwOffset = (DWORD)&pHFieldObject->m_pHField - (DWORD)&pHFieldObject->m_TileObject;
 	CoHeightField* pHField = *(CoHeightField**)( (DWORD)pTileObject + dwOffset );
 	return pHField;
 }
 
-CHFieldObject::~CHFieldObject()
+CHFieldObjectGeometry::~CHFieldObjectGeometry()
 {
 	ReleaseVertexColor();
 

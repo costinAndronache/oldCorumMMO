@@ -4,6 +4,8 @@
 #include "motion_obj.h"
 #include "../4DyuchiGRX_common/typedef.h"
 #include "../4DyuchiGXGFunc/global.h"
+#include <string>
+#include <map>
 
 class CoGeometry;
 
@@ -35,9 +37,7 @@ class CMotion : public IUnknown
 	CoGeometry*				m_pGeometry;
 	DWORD					m_dwIndexInGeometry;
 	DWORD					m_dwMaxNameLen;
-
-	// Various Bytes HashTable
-	VBHASH_HANDLE			m_pHashObjName;
+	std::map<std::string, CMotionObject*>* _motionObjectForName;
 	
 
 	CMotionObject*			AllocMotionObject();

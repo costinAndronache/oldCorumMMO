@@ -1977,8 +1977,8 @@ BOOL CoModel::ReadFile(char* szFileName,DWORD dwFlag)
 	{
 		// FILE_NOT_FOUND /////////////////////////////////////////////////////////
 		DWORD	dwAddr;
-		GetEIP(&dwAddr);
-		g_pErrorHandleFunc(ERROR_TYPE_FILE_NOT_FOUND,1,(void*)dwAddr,szFileName);
+		////GetEIP(&dwAddr);
+		////g_pErrorHandleFunc(ERROR_TYPE_FILE_NOT_FOUND,1,(void*)dwAddr,szFileName);
 		///////////////////////////////////////////////////////////////////////////
 
 		return FALSE;
@@ -2030,8 +2030,8 @@ BOOL CoModel::ReadFile(char* szFileName,DWORD dwFlag)
 			memset(txt,0,512);
 			wsprintf(txt,"CoModel::ReadFile(), if (!m_MaterialList.SetMaterial()), File:%s , Line:%d \n",__FILE__,__LINE__);
 			DWORD	dwAddr;
-			GetEIP(&dwAddr);
-			g_pErrorHandleFunc(ERROR_TYPE_ENGINE_CODE,0,(void*)dwAddr,txt);
+			////GetEIP(&dwAddr);
+			////g_pErrorHandleFunc(ERROR_TYPE_ENGINE_CODE,0,(void*)dwAddr,txt);
 		}
 #endif
 
@@ -2095,8 +2095,8 @@ BOOL CoModel::ReadFile(char* szFileName,DWORD dwFlag)
 			memset(txt,0,512);
 			wsprintf(txt,"CoModel::ReadFile(), if (pObject->GetIndex() >= m_dwObjectNum), File:%s , Line:%d \n",__FILE__,__LINE__);
 			DWORD	dwAddr;
-			GetEIP(&dwAddr);
-			g_pErrorHandleFunc(ERROR_TYPE_ENGINE_CODE,0,(void*)dwAddr,txt);
+			////GetEIP(&dwAddr);
+			////g_pErrorHandleFunc(ERROR_TYPE_ENGINE_CODE,0,(void*)dwAddr,txt);
 		}
 #endif
 	}
@@ -2261,7 +2261,7 @@ DWORD CoModel::CreateIVertexList(IVERTEX** ppVertex,DWORD dwRefIndex,MATRIX4* pP
 	IVERTEX*		pv = new IVERTEX[dwTotalFacesNum*3];
 	IVERTEX*		pEntry = pv;
 
-	for (i=0; i<m_dwMeshObjectNum; i++)
+	for (int i=0; i<m_dwMeshObjectNum; i++)
 	{
 		if (m_pMeshObjectList[i].GetMeshFlag().GetTransformType() == TRANSFORM_TYPE_ALIGN_VIEW)
 		{

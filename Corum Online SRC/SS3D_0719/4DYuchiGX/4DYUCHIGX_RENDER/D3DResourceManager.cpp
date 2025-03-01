@@ -604,8 +604,8 @@ HRESULT	CD3DResourceManager::Release(IUnknown* pResource)
 	if (!m_dwItemNum)
 	{
 		DWORD	dwAddr;
-		GetEIP(&dwAddr);
-		g_pErrorHandleFunc(ERROR_TYPE_ENGINE_CODE,0,(void*)dwAddr,"CD3DResourceManager::Release() m_dwItemNum=0");
+		//GetEIP(&dwAddr);
+		//g_pErrorHandleFunc(ERROR_TYPE_ENGINE_CODE,0,(void*)dwAddr,"CD3DResourceManager::Release() m_dwItemNum=0");
 		
 	}
 #endif
@@ -616,8 +616,8 @@ HRESULT	CD3DResourceManager::Release(IUnknown* pResource)
 	if ( found == _d3dr8ToResourceDesc.end())
 	{
 		DWORD	dwAddr;
-		GetEIP(&dwAddr);
-		g_pErrorHandleFunc(ERROR_TYPE_ENGINE_CODE,0,(void*)dwAddr,"CD3DResourceManager::Release() Specify Resource not exist");
+		//GetEIP(&dwAddr);
+		//g_pErrorHandleFunc(ERROR_TYPE_ENGINE_CODE,0,(void*)dwAddr,"CD3DResourceManager::Release() Specify Resource not exist");
 		return S_FALSE;
 	}
 
@@ -660,8 +660,8 @@ HRESULT CD3DResourceManager::CreateVertexBuffer(
 	/*if (!pDesc->pHashHandle)
 	{
 		DWORD	dwAddr;
-		GetEIP(&dwAddr);
-		g_pErrorHandleFunc(ERROR_TYPE_ENGINE_CODE,0,(void*)dwAddr,"CD3DResourceManager::CreateVertexBuffer() Fail to QBHInsert");
+		//GetEIP(&dwAddr);
+		//g_pErrorHandleFunc(ERROR_TYPE_ENGINE_CODE,0,(void*)dwAddr,"CD3DResourceManager::CreateVertexBuffer() Fail to QBHInsert");
 		
 	}
 	*/
@@ -701,8 +701,8 @@ HRESULT CD3DResourceManager::CreateIndexBuffer(
 	/*if (!pDesc->pHashHandle)
 	{
 		DWORD	dwAddr;
-		GetEIP(&dwAddr);
-		g_pErrorHandleFunc(ERROR_TYPE_ENGINE_CODE,0,(void*)dwAddr,"CD3DResourceManager::CreateIndexBuffer() Fail to QBHInsert");
+		//GetEIP(&dwAddr);
+		//g_pErrorHandleFunc(ERROR_TYPE_ENGINE_CODE,0,(void*)dwAddr,"CD3DResourceManager::CreateIndexBuffer() Fail to QBHInsert");
 	}
 	*/
 
@@ -741,8 +741,8 @@ HRESULT CD3DResourceManager::CreateTexture(
 #ifdef _DEBUG
 
 		DWORD	dwAddr;
-		GetEIP(&dwAddr);
-		g_pErrorHandleFunc(ERROR_TYPE_ENGINE_CODE,0,(void*)dwAddr,"CD3DResourceManager::CreateTexture() Fail to LALAlloc");
+		//GetEIP(&dwAddr);
+		//g_pErrorHandleFunc(ERROR_TYPE_ENGINE_CODE,0,(void*)dwAddr,"CD3DResourceManager::CreateTexture() Fail to LALAlloc");
 #endif
 
 		goto lb_return;
@@ -757,8 +757,8 @@ HRESULT CD3DResourceManager::CreateTexture(
 //	{
 //#ifdef _DEBUG
 //		DWORD	dwAddr;
-//		GetEIP(&dwAddr);
-//		g_pErrorHandleFunc(ERROR_TYPE_ENGINE_CODE,0,(void*)dwAddr,"CD3DResourceManager::CreateTexture() Fail to QBHInsert");
+//		//GetEIP(&dwAddr);
+//		//g_pErrorHandleFunc(ERROR_TYPE_ENGINE_CODE,0,(void*)dwAddr,"CD3DResourceManager::CreateTexture() Fail to QBHInsert");
 //#endif
 //	}
 
@@ -795,8 +795,8 @@ HRESULT CD3DResourceManager::CreateFont(
 //	{
 //#ifdef _DEBUG
 //		DWORD	dwAddr;
-//		GetEIP(&dwAddr);
-//		g_pErrorHandleFunc(ERROR_TYPE_ENGINE_CODE,0,(void*)dwAddr,"CD3DResourceManager::CreateD3DXFont() Fail to QBHInsert");
+//		//GetEIP(&dwAddr);
+//		//g_pErrorHandleFunc(ERROR_TYPE_ENGINE_CODE,0,(void*)dwAddr,"CD3DResourceManager::CreateD3DXFont() Fail to QBHInsert");
 //#endif
 //	}
 
@@ -813,8 +813,8 @@ void CD3DResourceManager::OnLostFont()
 	if (m_dwItemNum != dwNum)
 	{
 		DWORD	dwAddr;
-		GetEIP(&dwAddr);
-		g_pErrorHandleFunc(ERROR_TYPE_ENGINE_CODE,0,(void*)dwAddr,"CD3DResourceManager::OnLostFont() m_dwItemNum != dwNum");
+		//GetEIP(&dwAddr);
+		//g_pErrorHandleFunc(ERROR_TYPE_ENGINE_CODE,0,(void*)dwAddr,"CD3DResourceManager::OnLostFont() m_dwItemNum != dwNum");
 	}
 #endif
 
@@ -837,8 +837,8 @@ void CD3DResourceManager::OnResetFont()
 	if (m_dwItemNum != dwNum)
 	{
 		DWORD	dwAddr;
-		GetEIP(&dwAddr);
-		g_pErrorHandleFunc(ERROR_TYPE_ENGINE_CODE,0,(void*)dwAddr,"CD3DResourceManager::OnResetFont() m_dwItemNum!=dwItem");
+		//GetEIP(&dwAddr);
+		//g_pErrorHandleFunc(ERROR_TYPE_ENGINE_CODE,0,(void*)dwAddr,"CD3DResourceManager::OnResetFont() m_dwItemNum!=dwItem");
 	}
 #endif
 
@@ -860,8 +860,8 @@ void CD3DResourceManager::Check()
 	if (m_dwItemNum != dwNum)
 	{
 		DWORD	dwAddr;
-		GetEIP(&dwAddr);
-		g_pErrorHandleFunc(ERROR_TYPE_ENGINE_CODE,0,(void*)dwAddr,"CD3DResourceManager::Check() m_dwItemNum != dwItemNum");
+		//GetEIP(&dwAddr);
+		//g_pErrorHandleFunc(ERROR_TYPE_ENGINE_CODE,0,(void*)dwAddr,"CD3DResourceManager::Check() m_dwItemNum != dwItemNum");
 	}
 
 
@@ -870,8 +870,8 @@ void CD3DResourceManager::Check()
 		if (item.second->pool == D3DPOOL_DEFAULT)
 		{		
 			DWORD	dwAddr;
-			GetEIP(&dwAddr);
-			g_pErrorHandleFunc(ERROR_TYPE_ENGINE_CODE,0,(void*)dwAddr,"CD3DResourceManager::Check() pool==D3DPOOL_DEFAULT");
+			//GetEIP(&dwAddr);
+			//g_pErrorHandleFunc(ERROR_TYPE_ENGINE_CODE,0,(void*)dwAddr,"CD3DResourceManager::Check() pool==D3DPOOL_DEFAULT");
 	//		ppRestoreItem[i]->pResource->Restore();
 		}
 	}
@@ -1035,8 +1035,8 @@ BOOL CD3DResourceManager::CreateTextureWithDDS(IDirect3DTexture8** ppTexture,cha
 		(*ppTexture)->Release();
 		
 		DWORD	dwAddr;
-		GetEIP(&dwAddr);
-		g_pErrorHandleFunc(ERROR_TYPE_ENGINE_CODE,0,(void*)dwAddr,"CD3DResourceManager::CreateTextureWithDDS() Fail to LALAlloc()");
+		//GetEIP(&dwAddr);
+		//g_pErrorHandleFunc(ERROR_TYPE_ENGINE_CODE,0,(void*)dwAddr,"CD3DResourceManager::CreateTextureWithDDS() Fail to LALAlloc()");
 		goto lb_return;
 	}
 	
@@ -1049,8 +1049,8 @@ BOOL CD3DResourceManager::CreateTextureWithDDS(IDirect3DTexture8** ppTexture,cha
 	if (!pDesc->pHashHandle)
 	{
 		DWORD	dwAddr;
-		GetEIP(&dwAddr);
-		g_pErrorHandleFunc(ERROR_TYPE_ENGINE_CODE,0,(void*)dwAddr,"CD3DResourceManager::CreateTextureWithDDS() Fail to QBHInsert");
+		//GetEIP(&dwAddr);
+		//g_pErrorHandleFunc(ERROR_TYPE_ENGINE_CODE,0,(void*)dwAddr,"CD3DResourceManager::CreateTextureWithDDS() Fail to QBHInsert");
 
 	}
 
@@ -1316,8 +1316,8 @@ BOOL CD3DResourceManager::ConvertCompressedTexture(char* szFileName,DWORD /*dwFl
 	{
 
 		DWORD	dwAddr;
-		GetEIP(&dwAddr);
-		g_pErrorHandleFunc(ERROR_TYPE_D3D_ERROR,2,(void*)dwAddr,"Fail to D3DXSaveTextureToFile()");
+		//GetEIP(&dwAddr);
+		//g_pErrorHandleFunc(ERROR_TYPE_D3D_ERROR,2,(void*)dwAddr,"Fail to D3DXSaveTextureToFile()");
 		goto lb_return;
 	}
 
@@ -1439,8 +1439,8 @@ CD3DResourceManager::~CD3DResourceManager()
 			OutputDebugString(txt);
 		}
 		DWORD	dwAddr;
-		GetEIP(&dwAddr);
-		g_pErrorHandleFunc(ERROR_TYPE_RESOURCE_LEAK,0,(void*)dwAddr,"CD3DResourceManager::CD3DResourceManager() ResourceLeak!!!");
+		//GetEIP(&dwAddr);
+		//g_pErrorHandleFunc(ERROR_TYPE_RESOURCE_LEAK,0,(void*)dwAddr,"CD3DResourceManager::CD3DResourceManager() ResourceLeak!!!");
 	}
 #endif
 }

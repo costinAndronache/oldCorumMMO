@@ -548,8 +548,8 @@ void OutputErrorMsg(
 	wsprintf(txt,"%s - %s",szMsg,pRet);
 	MessageBox(NULL,txt,"Error",MB_OK);
 	DWORD	dwAddr;
-	GetEIP(&dwAddr);
-	g_pErrorHandleFunc(ERROR_TYPE_DEVICE_NOT_SUPPROT,0,(void*)dwAddr,txt);
+	//GetEIP(&dwAddr);
+	//g_pErrorHandleFunc(ERROR_TYPE_DEVICE_NOT_SUPPROT,0,(void*)dwAddr,txt);
 }
 
 

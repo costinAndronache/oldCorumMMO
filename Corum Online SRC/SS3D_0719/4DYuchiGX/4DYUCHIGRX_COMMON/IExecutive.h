@@ -16,7 +16,7 @@ interface I4DyuchiGXExecutive : public IUnknown
 	virtual HRESULT					GetGeometry(I4DyuchiGXGeometry** ppGeometry) = 0;		// Release필요함
 	virtual	HRESULT					GetFileStorage(I4DyuchiFileStorage** ppFileStorage) = 0;	// Release필요함
 
-	virtual BOOL					InitializeWithoutRegistry(char* szGeometryFileName,HWND hWnd,DISPLAY_INFO* pInfo,DWORD dwMaxObjectNum,DWORD dwMaxLightNum,DWORD dwMaxTriggerNum,DWORD dwViewportNum, DWORD dwMaxDecalNum,ErrorHandleProc pErrorHandleFunc) = 0;
+	virtual BOOL					InitializeWithoutRegistry(HWND hWnd,DISPLAY_INFO* pInfo,DWORD dwMaxObjectNum,DWORD dwMaxLightNum,DWORD dwMaxTriggerNum,DWORD dwViewportNum, DWORD dwMaxDecalNum,ErrorHandleProc pErrorHandleFunc) = 0;
 	virtual BOOL					Initialize(HWND hWnd,DISPLAY_INFO* pInfo,DWORD dwMaxObjectNum,DWORD dwMaxLightNum,DWORD dwMaxTriggerNum,DWORD dwViewportNum, DWORD dwMaxDecalNum,ErrorHandleProc pErrorHandleFunc) = 0;
 	virtual BOOL					InitializeFileStorageWithoutRegistry(DWORD dwMaxFileNum,DWORD dwMaxFileHandleNumAtSameTime,DWORD dwMaxFileNameLen,FILE_ACCESS_METHOD accessMethod,PACKFILE_NAME_TABLE* pPackFileList,DWORD dwNum) = 0;
 	virtual BOOL					InitializeFileStorage(DWORD dwMaxFileNum,DWORD dwMaxFileHandleNumAtSameTime,DWORD dwMaxFileNameLen,FILE_ACCESS_METHOD accessMethod,PACKFILE_NAME_TABLE* pPackFileList,DWORD dwNum) = 0;

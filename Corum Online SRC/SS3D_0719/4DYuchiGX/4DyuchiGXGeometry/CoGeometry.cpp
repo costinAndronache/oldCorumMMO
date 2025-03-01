@@ -8,10 +8,10 @@
 
 
 MATRIX4 CoGeometry::m_matIdentity;
-ErrorHandleProc		g_pErrorHandleFunc = NULL;
-I4DyuchiFileStorage*	g_pFileStorage = NULL;
+static ErrorHandleProc		g_pErrorHandleFunc = NULL;
+static I4DyuchiFileStorage*	g_pFileStorage = NULL;
 
-DWORD __stdcall DefaultErrorHandleProc(ERROR_TYPE type,DWORD dwErrorPriority,void* /*pCodeAddress*/,char* szStr)
+DWORD DefaultErrorHandleProc(ERROR_TYPE type,DWORD dwErrorPriority,void* /*pCodeAddress*/,char* szStr)
 {
 	/*
 	char szFileName[] = __FILE__;
@@ -174,6 +174,7 @@ CoGeometry::CoGeometry()
 {
 	memset((char*)this+4,0,sizeof(CoGeometry)-4);
 	m_dwLightFlag = 1;
+	_filehandleIndexForFilename = new std::map<std::string, DWORD>();
 	
 #ifdef _DEBUG
 	int	flag = _CRTDBG_ALLOC_MEM_DF |_CRTDBG_LEAK_CHECK_DF;
@@ -839,17 +840,8 @@ BOOL __stdcall CoGeometry::Initialize(I4DyuchiGXRenderer* pRenderer,I4DyuchiFile
 	}
 
 
-
-	
-
-	m_pFileNameHash = VBHCreate();
-	VBHInitialize(m_pFileNameHash,dwMaxBucketNum,MAX_NAME_LEN,dwMaxFileNum);
-
 	m_pFileList = new FILE_HANDLE[dwMaxFileNum];
-	memset(m_pFileList,0,sizeof(FILE_HANDLE)*dwMaxFileNum);
 	m_dwMaxFileNum = dwMaxFileNum;
-
-	
 
 	m_pIC = ICCreate();
 
@@ -891,12 +883,14 @@ ULONG __stdcall CoGeometry::CreateStaticModel(I3DStaticModel** ppStaticModel,DWO
 	if (!dwItemIndex)
 	{
 		DWORD	dwAddr;
-		GetEIP(&dwAddr);
+		//GetEIP(&dwAddr);
 		wsprintf(txt,"Fail to CreateStaticModel, Fail to ICAllocIndex\n");
-		g_pErrorHandleFunc(ERROR_TYPE_ENGINE_CODE,0,(void*)dwAddr,txt);
+		//g_pErrorHandleFunc(ERROR_TYPE_ENGINE_CODE,0,(void*)dwAddr,txt);
 	}
 #endif
-	m_pFileList[dwItemIndex].pSearchHandle = VBHInsert(m_pFileNameHash,dwItemIndex,"STM",lstrlen("STM"));
+	const std::string key("STM");
+	_filehandleIndexForFilename->insert({ key, dwItemIndex });
+	m_pFileList[dwItemIndex].key = key;
 	m_pFileList[dwItemIndex].pFileItem = (void*)pStaticModel;
 	m_pFileList[dwItemIndex].type = FILE_ITEM_TYPE_STATIC_MODEL;
 	pStaticModel->SetIndexInGeometry(dwItemIndex);
@@ -907,45 +901,39 @@ ULONG __stdcall CoGeometry::CreateStaticModel(I3DStaticModel** ppStaticModel,DWO
 }
 BOOL __stdcall CoGeometry::DisableUnloadPreLoadedResource(char* szFileName)
 {
-	BOOL	bResult = FALSE;
-
-	DWORD	dwIndexOut;
-	
 	char		szSearchFileName[256];
 	GetNameRemovePath(szSearchFileName,szFileName);
 
 	DWORD			dwSearchNameLen = lstrlen(szSearchFileName);
 	CharToSmallASCII(szSearchFileName,szSearchFileName,dwSearchNameLen);
+	std::string key(szSearchFileName);
+	const auto found = _filehandleIndexForFilename->find(key);
 
-	if (!VBHSelect(m_pFileNameHash,&dwIndexOut,1,szSearchFileName,dwSearchNameLen))
-		goto lb_return;
+	if (found == _filehandleIndexForFilename->end()) {
+		return FALSE;
+	}
 
-	bResult = DisableUnloadPreLoadedResource(dwIndexOut);
-
-lb_return:
-	return bResult;
+	return DisableUnloadPreLoadedResource(found->second);
 }
 
 
 BOOL __stdcall CoGeometry::EnableUnloadPreLoadedResource(char* szFileName)
-{
-	BOOL	bResult = FALSE;
-
-	DWORD	dwIndexOut;
-	
+{	
 	char		szSearchFileName[256];
 	GetNameRemovePath(szSearchFileName,szFileName);
 
 	DWORD			dwSearchNameLen = lstrlen(szSearchFileName);
 	CharToSmallASCII(szSearchFileName,szSearchFileName,dwSearchNameLen);
+	std::string key(szSearchFileName);
+	const auto found = _filehandleIndexForFilename->find(key);
 
-	if (!VBHSelect(m_pFileNameHash,&dwIndexOut,1,szSearchFileName,dwSearchNameLen))
-		goto lb_return;
+	if (found == _filehandleIndexForFilename->end()) {
+		return FALSE;
+	}
 
-	bResult = EnableUnloadPreLoadedResource(dwIndexOut);
-lb_return:
-	return bResult;
+	return EnableUnloadPreLoadedResource(found->second);
 }
+
 BOOL CoGeometry::DisableUnloadPreLoadedResource(DWORD dwIndex)
 {
 	BOOL	bResult = FALSE;
@@ -973,9 +961,6 @@ lb_return:
 
 BOOL __stdcall CoGeometry::IsLoadedModel(I3DModel** ppModel,char* szFileName)
 {
-	BOOL	bResult = FALSE;
-
-	DWORD	dwIndexOut;
 	*ppModel = NULL;
 
 	char		szSearchFileName[256];
@@ -983,14 +968,16 @@ BOOL __stdcall CoGeometry::IsLoadedModel(I3DModel** ppModel,char* szFileName)
 
 	DWORD			dwSearchNameLen = lstrlen(szSearchFileName);
 	CharToSmallASCII(szSearchFileName,szSearchFileName,dwSearchNameLen);
+	const std::string key(szSearchFileName);
+	const auto found = _filehandleIndexForFilename->find(key);
 
-	if (VBHSelect(m_pFileNameHash,&dwIndexOut,1,szSearchFileName,dwSearchNameLen))
+	if (found != _filehandleIndexForFilename->end())
 	{
-		*ppModel = (I3DModel*)m_pFileList[dwIndexOut].pFileItem;
-		bResult = TRUE;
+		*ppModel = (I3DModel*)m_pFileList[found->second].pFileItem;
+		return TRUE;
 	}
-	
-	return bResult;
+
+	return FALSE;
 }
 
 
@@ -998,14 +985,15 @@ ULONG __stdcall CoGeometry::LoadModel(I3DModel** ppModel,char* szFileName,DWORD 
 {
 	
 	ULONG		ulResult = 0xffffffff;
-
 	CoModel*	pModel = NULL;
 
-	DWORD		dwIndexOut;
 	DWORD		dwItemIndex;
 
-	if (m_dwFileNum >= m_dwMaxFileNum)
-		goto lb_return;
+	if (m_dwFileNum >= m_dwMaxFileNum) {
+		*ppModel = nullptr;
+		return ulResult;
+	}
+
 
 	char		szSearchFileName[256];
 	GetNameRemovePath(szSearchFileName,szFileName);
@@ -1013,19 +1001,20 @@ ULONG __stdcall CoGeometry::LoadModel(I3DModel** ppModel,char* szFileName,DWORD 
 	DWORD	dwSearchNameLen;
 	dwSearchNameLen = lstrlen(szSearchFileName);
 	CharToSmallASCII(szSearchFileName,szSearchFileName,dwSearchNameLen);
-#ifdef _DEBUG
-	char txt[512];
-#endif
+	const std::string key(szSearchFileName);
+	const auto found = _filehandleIndexForFilename->find(key);
 
-	if (VBHSelect(m_pFileNameHash,&dwIndexOut,1,szSearchFileName,dwSearchNameLen))
+	if (found != _filehandleIndexForFilename->end())
 	{
-		pModel = (CoModel*)m_pFileList[dwIndexOut].pFileItem;
+		pModel = (CoModel*)m_pFileList[found->second].pFileItem;
 #ifdef _DEBUG
+		char txt[512];
 		wsprintf(txt,"Load from Memory, %s\n",szFileName);
 		OutputDebugString(txt);
 #endif
 		goto lb_success;
 	}
+
 	pModel = new CoModel;
 	pModel->SetGeometry(this);
 	if (!pModel->ReadFile(szFileName,dwFlag))
@@ -1041,13 +1030,15 @@ ULONG __stdcall CoGeometry::LoadModel(I3DModel** ppModel,char* szFileName,DWORD 
 	if (!dwItemIndex)
 	{
 		DWORD	dwAddr;
-		GetEIP(&dwAddr);
+		//GetEIP(&dwAddr);
+		char txt[512];
 		wsprintf(txt,"Fail to LoadModel %s,Fail to ICAllocIndex\n",szFileName);
-		g_pErrorHandleFunc(ERROR_TYPE_ENGINE_CODE,0,(void*)dwAddr,txt);
+		//g_pErrorHandleFunc(ERROR_TYPE_ENGINE_CODE,0,(void*)dwAddr,txt);
 	}
 #endif
 
-	m_pFileList[dwItemIndex].pSearchHandle = VBHInsert(m_pFileNameHash,dwItemIndex,szSearchFileName,dwSearchNameLen);
+	_filehandleIndexForFilename->insert({ key, dwItemIndex });
+	m_pFileList[dwItemIndex].key = key;
 	m_pFileList[dwItemIndex].pFileItem = (void*)pModel;
 	m_pFileList[dwItemIndex].type = FILE_ITEM_TYPE_MODEL;
 	
@@ -1064,7 +1055,6 @@ lb_success:
 lb_return:
 	*ppModel = pModel;
 	return ulResult;
-
 }
 
 CMotion* CoGeometry::LoadMotion(char* szFileName)
@@ -1080,10 +1070,12 @@ CMotion* CoGeometry::LoadMotion(char* szFileName)
 	DWORD dwSearchNameLen;
 	dwSearchNameLen = lstrlen(szSearchFileName);
 	CharToSmallASCII(szSearchFileName,szSearchFileName,dwSearchNameLen);
+	const std::string key(szSearchFileName);
+	const auto found = _filehandleIndexForFilename->find(key);
 
-	if (VBHSelect(m_pFileNameHash,&dwIndexOut,1,szSearchFileName,dwSearchNameLen))
+	if (found != _filehandleIndexForFilename->end())
 	{
-		pMotion = (CMotion*)m_pFileList[dwIndexOut].pFileItem;
+		pMotion = (CMotion*)m_pFileList[found->second].pFileItem;
 		/*
 #ifdef _DEBUG
 		char txt[512];
@@ -1101,8 +1093,8 @@ CMotion* CoGeometry::LoadMotion(char* szFileName)
 		goto lb_return;
 	}
 	dwItemIndex = ICAllocIndex(m_pIC);
-		
-	m_pFileList[dwItemIndex].pSearchHandle = VBHInsert(m_pFileNameHash,dwItemIndex,szSearchFileName,dwSearchNameLen);
+	_filehandleIndexForFilename->insert({ key, dwItemIndex });
+	m_pFileList[dwItemIndex].key = key;
 	m_pFileList[dwItemIndex].pFileItem = (void*)pMotion;
 	m_pFileList[dwItemIndex].type = FILE_ITEM_TYPE_MOTION;
 
@@ -1120,62 +1112,54 @@ lb_return:
 
 BOOL CoGeometry::IsLoadedMotion(CMotion** ppMotion,char* szFileName)
 {
-	BOOL	bResult = FALSE;
-
-	DWORD	dwIndexOut;
 
 	char		szSearchFileName[256];
 	GetNameRemovePath(szSearchFileName,szFileName);
 
 	DWORD			dwSearchNameLen = lstrlen(szSearchFileName);
 	CharToSmallASCII(szSearchFileName,szSearchFileName,dwSearchNameLen);
+	const std::string key(szSearchFileName);
+	const auto found = _filehandleIndexForFilename->find(key);
+	if (found == _filehandleIndexForFilename->end()) {
+		return FALSE;
+	}
 
-	if (!VBHSelect(m_pFileNameHash,&dwIndexOut,1,szSearchFileName,dwSearchNameLen))
-		goto lb_return;
-
-	*ppMotion = (CMotion*)m_pFileList[dwIndexOut].pFileItem;
-	bResult = TRUE;
-
-lb_return:
-	return bResult;
+	*ppMotion = (CMotion*)m_pFileList[found->second].pFileItem;
+	return TRUE;
 }
 
 BOOL CoGeometry::IsLoadedMaterial(CMaterialLib** ppMtlLib,char* szFileName)
-{
-	BOOL	bResult = FALSE;
-
-	DWORD	dwIndexOut;
-	
+{	
 	char		szSearchFileName[256];
 	GetNameRemovePath(szSearchFileName,szFileName);
 
 	DWORD			dwSearchNameLen = lstrlen(szSearchFileName);
 	CharToSmallASCII(szSearchFileName,szSearchFileName,dwSearchNameLen);
+	const std::string key(szSearchFileName);
+	const auto found = _filehandleIndexForFilename->find(key);
 
-	if (!VBHSelect(m_pFileNameHash,&dwIndexOut,1,szSearchFileName,dwSearchNameLen))
-		goto lb_return;
+	if (found == _filehandleIndexForFilename->end()) {
+		return FALSE;
+	}
 
-	*ppMtlLib = (CMaterialLib*)m_pFileList[dwIndexOut].pFileItem;
-	bResult = TRUE;
-
-lb_return:
-	return bResult;
+	*ppMtlLib = (CMaterialLib*)m_pFileList[found->second].pFileItem;
+	return TRUE;
 }
 
 
 BOOL CoGeometry::DeleteFileItem(DWORD dwIndex)
 {
-	BOOL bResult;
 	m_dwFileNum--;
 	
 	ICFreeIndex(m_pIC,dwIndex);
-	bResult = VBHDelete(m_pFileNameHash,m_pFileList[dwIndex].pSearchHandle);
+	_filehandleIndexForFilename->erase(m_pFileList[dwIndex].key);
+	m_pFileList[dwIndex].key = "";
 	m_pFileList[dwIndex].pFileItem = NULL;
-	m_pFileList[dwIndex].pSearchHandle = NULL;
 	m_pFileList[dwIndex].dwFlag = 0;
 	
-	return bResult;
+	return TRUE;
 }
+
 BOOL CoGeometry::UnloadPreLoadedItem(DWORD dwIndex)
 {
 	BOOL bResult = FALSE;
@@ -1196,7 +1180,6 @@ CMaterialLib* CoGeometry::LoadMaterial(char* szFileName)
 
 	CMaterialLib*		pMtlLib;
 
-	DWORD	dwIndexOut;
 	DWORD	dwItemIndex;
 	
 	char		szSearchFileName[256];
@@ -1204,10 +1187,12 @@ CMaterialLib* CoGeometry::LoadMaterial(char* szFileName)
 
 	DWORD			dwSearchNameLen = lstrlen(szSearchFileName);
 	CharToSmallASCII(szSearchFileName,szSearchFileName,dwSearchNameLen);
+	const std::string key(szSearchFileName);
+	const auto found = _filehandleIndexForFilename->find(key);
 
-	if (VBHSelect(m_pFileNameHash,&dwIndexOut,1,szSearchFileName,dwSearchNameLen))
+	if (found != _filehandleIndexForFilename->end())
 	{
-		pMtlLib = (CMaterialLib*)m_pFileList[dwIndexOut].pFileItem;
+		pMtlLib = (CMaterialLib*)m_pFileList[found->second].pFileItem;
 		goto	lb_success;
 	}
 	pMtlLib = new CMaterialLib;
@@ -1218,8 +1203,8 @@ CMaterialLib* CoGeometry::LoadMaterial(char* szFileName)
 		goto lb_return;
 	}
 	dwItemIndex = ICAllocIndex(m_pIC);
-		
-	m_pFileList[dwItemIndex].pSearchHandle = VBHInsert(m_pFileNameHash,dwItemIndex,szSearchFileName,dwSearchNameLen);
+	_filehandleIndexForFilename->insert({ key, dwItemIndex });
+	m_pFileList[dwItemIndex].key = key;
 	m_pFileList[dwItemIndex].pFileItem = (void*)pMtlLib;
 	m_pFileList[dwItemIndex].type = FILE_ITEM_TYPE_MTL;
 
@@ -1262,7 +1247,7 @@ lb_return:
 ULONG __stdcall CoGeometry::CreateHeightField(IHeightField** ppHeightField,DWORD /*dwFlag*/)
 {
 	ULONG	ulResult = 0xffffffff;
-
+	const std::string key("HFL");
 	CoHeightField* pHField = new CoHeightField;
 	pHField->AddRef();
 	pHField->SetGeometry(this);
@@ -1282,12 +1267,13 @@ ULONG __stdcall CoGeometry::CreateHeightField(IHeightField** ppHeightField,DWORD
 	if (!dwItemIndex)
 	{
 		DWORD	dwAddr;
-		GetEIP(&dwAddr);
+		//GetEIP(&dwAddr);
 		wsprintf(txt,"Fail to CreateHeightField, Fail to ICAllocIndex\n");
-		g_pErrorHandleFunc(ERROR_TYPE_ENGINE_CODE,0,(void*)dwAddr,txt);
+		//g_pErrorHandleFunc(ERROR_TYPE_ENGINE_CODE,0,(void*)dwAddr,txt);
 	}
 #endif
-	m_pFileList[dwItemIndex].pSearchHandle = VBHInsert(m_pFileNameHash,dwItemIndex,"HFL",lstrlen("HFL"));
+	_filehandleIndexForFilename->insert({ key, dwItemIndex });
+	m_pFileList[dwItemIndex].key = key;
 	m_pFileList[dwItemIndex].pFileItem = (void*)pHField;
 	m_pFileList[dwItemIndex].type = FILE_ITEM_TYPE_HFIELD;
 	pHField->SetIndexInGeometry(dwItemIndex);
@@ -2006,10 +1992,10 @@ BOOL __stdcall CoGeometry::PreLoadModel(char* szFileName)
 	{
 #ifdef _DEBUG
 		DWORD	dwAddr;
-		GetEIP(&dwAddr);
+		////GetEIP(&dwAddr);
 		char txt[512];
 		wsprintf(txt,"Fail to PreLoadModel %s,Alreay loaded\n",szFileName);
-		g_pErrorHandleFunc(ERROR_TYPE_PARAMETER_INVALID,1,(void*)dwAddr,txt);
+		////g_pErrorHandleFunc(ERROR_TYPE_PARAMETER_INVALID,1,(void*)dwAddr,txt);
 #endif
 		bResult = FALSE;
 		goto lb_return;
@@ -2043,10 +2029,10 @@ BOOL __stdcall CoGeometry::PreLoadMotion(char* szFileName)
 	{
 #ifdef _DEBUG
 		DWORD	dwAddr;
-		GetEIP(&dwAddr);
+		//GetEIP(&dwAddr);
 		char txt[512];
 		wsprintf(txt,"Fail to PreLoadMotion %s,Alreay loaded\n",szFileName);
-		g_pErrorHandleFunc(ERROR_TYPE_PARAMETER_INVALID,1,(void*)dwAddr,txt);
+		//g_pErrorHandleFunc(ERROR_TYPE_PARAMETER_INVALID,1,(void*)dwAddr,txt);
 #endif
 		bResult = FALSE;
 		goto lb_return;
@@ -2072,10 +2058,10 @@ BOOL __stdcall CoGeometry::PreLoadMaterial(char* szFileName)
 	{
 #ifdef _DEBUG
 		DWORD	dwAddr;
-		GetEIP(&dwAddr);
+		//GetEIP(&dwAddr);
 		char txt[512];
 		wsprintf(txt,"Fail to PreLoadMaterial %s,Alreay loaded\n",szFileName);
-		g_pErrorHandleFunc(ERROR_TYPE_PARAMETER_INVALID,1,(void*)dwAddr,txt);
+		//g_pErrorHandleFunc(ERROR_TYPE_PARAMETER_INVALID,1,(void*)dwAddr,txt);
 #endif
 		bResult = FALSE;
 		goto lb_return;
@@ -2151,15 +2137,16 @@ void CoGeometry::ResourceCheck()
 	memset(dwIndexList,0,sizeof(DWORD));
 
 
-	DWORD	dwNum = VBHGetAllItem(m_pFileNameHash,dwIndexList,2048);
+	const DWORD	dwNum = _filehandleIndexForFilename->size();
 	if (dwNum)
 	{
 		char	txt[512];
 		wsprintf(txt,"\n\n\n%s\n","Geometry Resource Leak!! Look the VC++'s Output Window");
 		OutputDebugString(txt);
-		for (DWORD i=0; i<dwNum; i++)
+		for (const auto& item: *_filehandleIndexForFilename)
 		{
 			memset(txt,0,sizeof(txt));
+			const auto i = item.second;
 			if (m_pFileList[dwIndexList[i]].type == FILE_ITEM_TYPE_MODEL)
 			{
 				CoModel* pModel = (CoModel*)m_pFileList[dwIndexList[i]].pFileItem;
@@ -2190,8 +2177,8 @@ void CoGeometry::ResourceCheck()
 			OutputDebugString(txt);
 		}
 		DWORD	dwAddr;
-		GetEIP(&dwAddr);
-		g_pErrorHandleFunc(ERROR_TYPE_RESOURCE_LEAK,0,(void*)dwAddr,txt);
+		//GetEIP(&dwAddr);
+		//g_pErrorHandleFunc(ERROR_TYPE_RESOURCE_LEAK,0,(void*)dwAddr,txt);
 	}
 #endif 
 }
@@ -2218,11 +2205,6 @@ CoGeometry::~CoGeometry()
 	{
 		delete [] m_pFileList;
 		m_pFileList = NULL;
-	}
-	if (m_pFileNameHash)
-	{
-		VBHRelease(m_pFileNameHash);
-		m_pFileNameHash = NULL;
 	}
 
 	if (m_pRenderer)

@@ -3,9 +3,10 @@
 
 #include "material.h"
 #include "../4DyuchiGXGFunc/global.h"
+#include <string>
+#include <map>
 
-
-struct MTL_HANDLE
+struct MTL_HANDLE_GXGEOMETRY
 {
 	CMaterial	Mtl;
 };
@@ -14,8 +15,8 @@ class CMaterialList
 {
 	DWORD				m_dwMtlNum;
 	DWORD				m_dwMaxMtlNum;
-	MTL_HANDLE*			m_pMtlList;
-	VBHASH_HANDLE		m_pHashMtl;
+	MTL_HANDLE_GXGEOMETRY*			m_pMtlList;
+	std::map<MATERIAL*, DWORD>* _indexForMaterialPtr;
 
 public:
 	void				SetMaterialNum(DWORD dwNum) {m_dwMtlNum = dwNum;}

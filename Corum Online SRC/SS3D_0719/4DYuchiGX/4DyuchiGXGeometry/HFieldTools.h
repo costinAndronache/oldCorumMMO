@@ -12,11 +12,11 @@
 #include "../4DyuchiGXGFunc/global.h"
 
 
-class CHFieldObject;
+class CHFieldObjectGeometry;
 struct TILE_BUFFER_DESC_KEY
 {
 	DWORD					dwTileTexIndex;
-	CHFieldObject*			pHFieldObject;
+	CHFieldObjectGeometry*			pHFieldObject;
 };
 
 struct INDEXED_8BITS_PIXEL
@@ -56,7 +56,6 @@ class CHFieldTools
 	IMAGE_BRUSH				m_imgBrush[4];
 
 	HFIELD_DESC*			m_pHFieldDesc;
-	STMPOOL_HANDLE			m_pAlphaMapPoolForDynamic;
 	char*					m_pAlphaMapPoolForStatic;
 	BOOL					m_bEnableDrawAlphaMap;
 	INDEXED_8BITS_PIXEL*	m_pIndexedBitsBrush;
@@ -94,8 +93,8 @@ public:
 	DWORD					GetAlphaMapWidthHeight() {return m_dwAlphaMapWidthHeight;}
 	void					GetResource(INDEX_POS** ppIndexPosPoolPerObject,INDEX_POS** ppIndexPosPoolPerTile,BYTE** ppTableBoundary,BYTE** ppTableInnfer,DWORD* pdwBufferWidthHeight);
 	void					ClearBuffers();
-	void					SaveAlphaMapTemporary(CHFieldObject* pHFieldObj,TILE_BUFFER_DESC* pTileBufferDesc,DWORD dwTileBufferDescNum);
-	BOOL					LoadAlphaMapTemporary(CHFieldObject* pHFieldObj,TILE_BUFFER_DESC* pTileBufferDesc,DWORD dwTileBufferDescNum);
+	void					SaveAlphaMapTemporary(CHFieldObjectGeometry* pHFieldObj,TILE_BUFFER_DESC* pTileBufferDesc,DWORD dwTileBufferDescNum);
+	BOOL					LoadAlphaMapTemporary(CHFieldObjectGeometry* pHFieldObj,TILE_BUFFER_DESC* pTileBufferDesc,DWORD dwTileBufferDescNum);
 
 	IMAGE_BRUSH*			GetImageBrush(DWORD dwBrightness);
 	void					CreateBrushes(DWORD dwBrushSize);
@@ -106,8 +105,8 @@ public:
 	char*					AllocAlphaMap();
 	void					FreeAlphaMap(char* pBits);
 
-	DWORD					ReadAlphaMap(char* szFileName,CHFieldObject* pHFObjList,DWORD dwObjNum);
-	DWORD					WriteAlphaMap(char* szFileName,CHFieldObject* pHFObjList,DWORD dwObjNum);
+	DWORD					ReadAlphaMap(char* szFileName,CHFieldObjectGeometry* pHFObjList,DWORD dwObjNum);
+	DWORD					WriteAlphaMap(char* szFileName,CHFieldObjectGeometry* pHFObjList,DWORD dwObjNum);
 	
 	CHFieldTools();
 	~CHFieldTools();

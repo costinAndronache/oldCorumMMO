@@ -298,7 +298,7 @@ void				LoadLevelExp();
 void				LoadHelpInfo();
 char*				ReturnKey(int nKey);
 IDIFontObject*		GetFont();
-DWORD __stdcall		DefaultErrorHandleProc(ERROR_TYPE type,DWORD dwErrorPriority,void* pCodeAddress,char* szStr);
+DWORD 				DefaultErrorHandleProc(ERROR_TYPE type,DWORD dwErrorPriority,void* pCodeAddress,char* szStr);
 BOOL				IsCompressedTextureFormatOk();	
 HWND				InitInstance(HINSTANCE hInstance, int nCmdShow);
 ATOM				RegisterWindowClass(HINSTANCE hInstance);

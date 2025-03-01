@@ -126,12 +126,10 @@ BOOL CTiff::LoadTIFF(char *filename)
 		}
 	}
 	
-	MemSize = 0;
-	for(i=0;i<StripInfoCount;i++)
-	{
-		MemSize += pStripInfo[i].StripByteCounts;
-	}
-	pImageData = new unsigned char[MemSize];
+	const size_t tiffSize = 1024 * 768 * 4;
+	pImageData = new unsigned char[tiffSize];
+	memset(pImageData, 0, tiffSize);
+
 	unsigned char *DumpPoint = pImageData;			// Same Pointer
 
 	for(i=0;i<StripInfoCount;i++)

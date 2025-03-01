@@ -530,8 +530,8 @@ BOOL CMeshObject::Initialize(CMaterialList* pMtlList,CoModel* pModel,CoGeometry*
 			memset(txt,0,512);
 			wsprintf(txt,"CMeshObject::Initialize(), if (m_dwFaceGroupNum != 1), File:%s , Line:%d \n",__FILE__,__LINE__);
 			DWORD	dwAddr;
-			GetEIP(&dwAddr);
-			g_pErrorHandleFunc(ERROR_TYPE_ENGINE_CODE,0,(void*)dwAddr,txt);
+			//GetEIP(&dwAddr);
+			//g_pErrorHandleFunc(ERROR_TYPE_ENGINE_CODE,0,(void*)dwAddr,txt);
 		}
 
 		if (m_pFaceGroup[0].GetFacesNum() > 2)
@@ -540,8 +540,8 @@ BOOL CMeshObject::Initialize(CMaterialList* pMtlList,CoModel* pModel,CoGeometry*
 			memset(txt,0,512);
 			wsprintf(txt,"CMeshObject::Initialize(), if (m_pFaceGroup[0].GetFacesNum() > 2), File:%s , Line:%d \n",__FILE__,__LINE__);
 			DWORD	dwAddr;
-			GetEIP(&dwAddr);
-			g_pErrorHandleFunc(ERROR_TYPE_ENGINE_CODE,0,(void*)dwAddr,txt);
+			//GetEIP(&dwAddr);
+			//g_pErrorHandleFunc(ERROR_TYPE_ENGINE_CODE,0,(void*)dwAddr,txt);
 		}
 #endif
 	}

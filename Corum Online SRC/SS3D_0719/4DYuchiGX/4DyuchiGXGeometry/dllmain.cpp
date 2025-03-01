@@ -293,7 +293,7 @@ STDAPI DllRegisterServer(void)
   TCHAR    szID[GUID_SIZE+1];
   TCHAR    szCLSID[GUID_SIZE+32];
   TCHAR    szModulePath[MAX_PATH];
-  WORD		wszID[GUID_SIZE+1];
+  wchar_t		wszID[GUID_SIZE+1];
 
  // DWORD		size = sizeof(TCHAR);
   // Obtain the path to this module's executable file for later use.
@@ -389,7 +389,7 @@ STDAPI DllUnregisterServer(void)
   TCHAR    szID[GUID_SIZE+1];
   TCHAR    szCLSID[GUID_SIZE+32];
   TCHAR    szTemp[MAX_PATH+GUID_SIZE];
-	WORD	wszID[GUID_SIZE+1];
+  wchar_t	wszID[GUID_SIZE+1];
 
 
    //Create some base key strings.

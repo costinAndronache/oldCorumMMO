@@ -199,8 +199,8 @@ BOOL CModelRefManager::DuplicateStatus(DWORD dwDestRefIndex,DWORD dwSrcRefIndex)
 		memset(txt,0,512);
 		wsprintf(txt,"CModelRefManager::DuplicateStatus(), if (!GetModelRefData()), File:%s , Line:%d \n",__FILE__,__LINE__);
 		DWORD	dwAddr;
-		GetEIP(&dwAddr);
-		g_pErrorHandleFunc(ERROR_TYPE_ENGINE_CODE,0,(void*)dwAddr,txt);
+		//GetEIP(&dwAddr);
+		//g_pErrorHandleFunc(ERROR_TYPE_ENGINE_CODE,0,(void*)dwAddr,txt);
 #endif
 		goto lb_return;
 	}
@@ -212,8 +212,8 @@ BOOL CModelRefManager::DuplicateStatus(DWORD dwDestRefIndex,DWORD dwSrcRefIndex)
 		memset(txt,0,512);
 		wsprintf(txt,"CModelRefManager::DuplicateStatus(), if (!GetModelRefData()), File:%s , Line:%d \n",__FILE__,__LINE__);
 		DWORD	dwAddr;
-		GetEIP(&dwAddr);
-		g_pErrorHandleFunc(ERROR_TYPE_ENGINE_CODE,0,(void*)dwAddr,txt);
+		//GetEIP(&dwAddr);
+		//g_pErrorHandleFunc(ERROR_TYPE_ENGINE_CODE,0,(void*)dwAddr,txt);
 #endif
 		goto lb_return;
 	}
@@ -225,8 +225,8 @@ BOOL CModelRefManager::DuplicateStatus(DWORD dwDestRefIndex,DWORD dwSrcRefIndex)
 		memset(txt,0,512);
 		wsprintf(txt,"CModelRefManager::DuplicateStatus(), if (dwSrcSize != dwDestSize), File:%s , Line:%d \n",__FILE__,__LINE__);
 		DWORD	dwAddr;
-		GetEIP(&dwAddr);
-		g_pErrorHandleFunc(ERROR_TYPE_ENGINE_CODE,0,(void*)dwAddr,txt);
+		//GetEIP(&dwAddr);
+		//g_pErrorHandleFunc(ERROR_TYPE_ENGINE_CODE,0,(void*)dwAddr,txt);
 #endif
 		goto lb_return;
 	}
@@ -251,8 +251,8 @@ void CModelRefManager::FreeRefMemory(DWORD dwRefIndex)
 		memset(txt,0,512);
 		wsprintf(txt,"CModelRefManager::FreeRefMemory(), if (!pEntry), File:%s , Line:%d \n",__FILE__,__LINE__);
 		DWORD	dwAddr;
-		GetEIP(&dwAddr);
-		g_pErrorHandleFunc(ERROR_TYPE_ENGINE_CODE,0,(void*)dwAddr,txt);
+		//GetEIP(&dwAddr);
+		//g_pErrorHandleFunc(ERROR_TYPE_ENGINE_CODE,0,(void*)dwAddr,txt);
 	}
 #endif
 	if (m_ppModelRefDescList[dwRefIndex]->pIllusionDesc)
@@ -294,8 +294,8 @@ lb_return:
 		memset(txt,0,512);
 		wsprintf(txt,"CModelRefManager::IsValidRefIndex(), if (!bResult), File:%s , Line:%d \n",__FILE__,__LINE__);
 		DWORD	dwAddr;
-		GetEIP(&dwAddr);
-		g_pErrorHandleFunc(ERROR_TYPE_ENGINE_CODE,0,(void*)dwAddr,txt);
+		//GetEIP(&dwAddr);
+		//g_pErrorHandleFunc(ERROR_TYPE_ENGINE_CODE,0,(void*)dwAddr,txt);
 	}
 #endif
 	return bResult;

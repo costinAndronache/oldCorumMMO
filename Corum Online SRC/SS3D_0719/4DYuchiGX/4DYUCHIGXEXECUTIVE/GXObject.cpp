@@ -372,8 +372,8 @@ lb_attach:
 			memset(txt,0,512);
 			wsprintf(txt,"Already Attached GXObjectHandle  : %x\n",pFromObj);
 			DWORD	dwAddr;
-			GetEIP(&dwAddr);
-			g_pErrorHandleFunc(ERROR_TYPE_PARAMETER_INVALID,0,(void*)dwAddr,txt);
+			//GetEIP(&dwAddr);
+			//g_pErrorHandleFunc(ERROR_TYPE_PARAMETER_INVALID,0,(void*)dwAddr,txt);
 		}
 	}
 #endif
@@ -860,8 +860,8 @@ lb_attach:
 			char	txt[512];
 			wsprintf(txt,"Already Attached GXLightHandle  : %x\n",pLight);
 			DWORD	dwAddr;
-			GetEIP(&dwAddr);
-			g_pErrorHandleFunc(ERROR_TYPE_PARAMETER_INVALID,0,(void*)dwAddr,txt);
+			//GetEIP(&dwAddr);
+			//g_pErrorHandleFunc(ERROR_TYPE_PARAMETER_INVALID,0,(void*)dwAddr,txt);
 		}
 	}
 #endif
@@ -951,8 +951,8 @@ void CoGXObject::InitializeCollisionMesh()
 			memset(txt,0,512);
 			wsprintf(txt,"CoGXObject::InitializeCollisionMesh(), if (!bColModel), File:%s , Line:%d \n",__FILE__,__LINE__);
 			DWORD	dwAddr;
-			GetEIP(&dwAddr);
-			g_pErrorHandleFunc(ERROR_TYPE_ENGINE_CODE,0,(void*)dwAddr,txt);
+			//GetEIP(&dwAddr);
+			//g_pErrorHandleFunc(ERROR_TYPE_ENGINE_CODE,0,(void*)dwAddr,txt);
 		}
 #endif 
 		pColMeshObjDesc = &colModelDesc.colMeshModel;
@@ -1195,8 +1195,8 @@ void CoGXObject::SetBoundingVolume( BOUNDING_VOLUME* pBV)
 		memset(txt,0,128);
 		wsprintf(txt,"Fail to CoGXObject::SetBoundingVolume()\n");
 		DWORD	dwAddr;
-		GetEIP(&dwAddr);
-		g_pErrorHandleFunc(ERROR_TYPE_PARAMETER_INVALID,0,(void*)dwAddr,txt);
+		//GetEIP(&dwAddr);
+		//g_pErrorHandleFunc(ERROR_TYPE_PARAMETER_INVALID,0,(void*)dwAddr,txt);
 #endif
 		break;
 	}

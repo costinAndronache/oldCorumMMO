@@ -205,7 +205,7 @@ void CRenderTriBuffer::FreeBuffer(IVERTEX_TRI_ITEM* pItem)
 	VHPFree(m_pVertexHeap,pItem->pIVList);
 #endif
 
-	delete pItem;
+	
 
 	m_dwCurrentItemNum--;
 
@@ -213,7 +213,7 @@ void CRenderTriBuffer::FreeBuffer(IVERTEX_TRI_ITEM* pItem)
 	if (pItem->pNext == pItem)
 		__asm int 3
 #endif
-
+	delete pItem;
 }
 
 void CRenderTriBuffer::Process()

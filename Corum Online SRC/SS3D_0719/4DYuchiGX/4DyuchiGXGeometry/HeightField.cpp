@@ -493,9 +493,9 @@ void CoHeightField::CreateYFList()
 void CoHeightField::CreateHFObjectList()
 {
 	m_dwObjNum = m_hfDesc.dwObjNumX*m_hfDesc.dwObjNumZ;
-	m_pHFieldObjectList = new CHFieldObject[m_dwObjNum];
+	m_pHFieldObjectList = new CHFieldObjectGeometry[m_dwObjNum];
 
-	CHFieldObject*	pSideObj;
+	CHFieldObjectGeometry*	pSideObj;
 	// 가운데 알맹이들
 	for (int z=0; z<(int)m_hfDesc.dwObjNumZ; z++)
 	{
@@ -541,8 +541,8 @@ BOOL __stdcall CoHeightField::ReadFile(char* szFileName,DWORD dwIndexBufferNumLV
 	{
 		// FILE_NOT_FOUND /////////////////////////////////////////////////////////
 		DWORD	dwAddr;
-		GetEIP(&dwAddr);
-		g_pErrorHandleFunc(ERROR_TYPE_FILE_NOT_FOUND,1,(void*)dwAddr,szFileName);
+		//GetEIP(&dwAddr);
+		//g_pErrorHandleFunc(ERROR_TYPE_FILE_NOT_FOUND,1,(void*)dwAddr,szFileName);
 		///////////////////////////////////////////////////////////////////////////
 
 		goto lb_return;
@@ -557,8 +557,8 @@ BOOL __stdcall CoHeightField::ReadFile(char* szFileName,DWORD dwIndexBufferNumLV
 		memset(txt,0,512);
 		wsprintf(txt,"CoModel::ReadFile(), if (dwVersion > 0x00000010 || !dwVersion, File:%s , Line:%d \n",__FILE__,__LINE__);
 		DWORD	dwAddr;
-		GetEIP(&dwAddr);
-		g_pErrorHandleFunc(ERROR_TYPE_ENGINE_CODE,0,(void*)dwAddr,txt);
+		//GetEIP(&dwAddr);
+		//g_pErrorHandleFunc(ERROR_TYPE_ENGINE_CODE,0,(void*)dwAddr,txt);
 	}
 #endif
 
@@ -1267,7 +1267,7 @@ void __stdcall CoHeightField::ResetHeight(float h)
 	{
 		m_hfDesc.pyfList[i] = h;
 	}
-	for (i=0; i<m_dwObjNum; i++)
+	for (int i=0; i<m_dwObjNum; i++)
 	{
 		m_pHFieldObjectList[i].UpdateVertexPos();
 	}
@@ -1512,7 +1512,7 @@ DWORD __stdcall CoHeightField::GetTileListWithScreenCoord(HFIELD_POS* pTileList,
 	m_pGeometry->CalcViewVolume(&vv,pRect,dwViewportIndex);
 
 
-	CHFieldObject* pHFieldObj[512];
+	CHFieldObjectGeometry* pHFieldObj[512];
 	DWORD			dwSelectedObjNum;
 	dwSelectedObjNum = 0;
 
@@ -1535,8 +1535,8 @@ DWORD __stdcall CoHeightField::GetTileListWithScreenCoord(HFIELD_POS* pTileList,
 				memset(txt,0,512);
 				wsprintf(txt,"CoHeightField::GetTileListWithScreenCoord(), dwSelectedObjNum>=512, File:%s , Line:%d \n",__FILE__,__LINE__);
 				DWORD	dwAddr;
-				GetEIP(&dwAddr);
-				g_pErrorHandleFunc(ERROR_TYPE_ENGINE_CODE,0,(void*)dwAddr,txt);
+				//GetEIP(&dwAddr);
+				//g_pErrorHandleFunc(ERROR_TYPE_ENGINE_CODE,0,(void*)dwAddr,txt);
 				
 			}
 #endif
@@ -1616,7 +1616,7 @@ DWORD CoHeightField::GetVertexListWithScreenCoord(HFIELD_POS* pVertexList,DWORD 
 	m_pGeometry->CalcViewVolume(&vv,pRect,dwViewportIndex);
 
 
-	CHFieldObject* pHFieldObj[512];
+	CHFieldObjectGeometry* pHFieldObj[512];
 	DWORD			dwSelectedObjNum;
 	dwSelectedObjNum = 0;
 
@@ -1636,8 +1636,8 @@ DWORD CoHeightField::GetVertexListWithScreenCoord(HFIELD_POS* pVertexList,DWORD 
 				memset(txt,0,512);
 				wsprintf(txt,"CoHeightField::GetVertexListWithScreenCoord(), dwSelectedObjNum>=512, File:%s , Line:%d \n",__FILE__,__LINE__);
 				DWORD	dwAddr;
-				GetEIP(&dwAddr);
-				g_pErrorHandleFunc(ERROR_TYPE_ENGINE_CODE,0,(void*)dwAddr,txt);
+				//GetEIP(&dwAddr);
+				//g_pErrorHandleFunc(ERROR_TYPE_ENGINE_CODE,0,(void*)dwAddr,txt);
 			}
 #endif
 
@@ -1686,7 +1686,7 @@ BOOL __stdcall CoHeightField::AdjustHeight(HFIELD_POS* pVertexList,DWORD dwVerte
 {
 	BOOL		bResult = FALSE;
 
-	CHFieldObject*	pHFieldObj[128];
+	CHFieldObjectGeometry*	pHFieldObj[128];
 	DWORD			dwUpdateObjNum;
 
 	for (DWORD i=0; i<dwVertexNum; i++)
@@ -1708,7 +1708,7 @@ BOOL __stdcall CoHeightField::AdjustHeight(HFIELD_POS* pVertexList,DWORD dwVerte
 	}
 	dwUpdateObjNum = GetIncludeVertexObjectList(pHFieldObj,128,pVertexList,dwVertexNum);
 
-	for (i=0; i<dwUpdateObjNum; i++)
+	for (int i=0; i<dwUpdateObjNum; i++)
 	{
 		pHFieldObj[i]->UpdateVertexPos();
 	}
@@ -1733,16 +1733,16 @@ BOOL CoHeightField::IsValideObjIndex(DWORD dwObjX,DWORD dwObjZ)
 lb_return:
 	return bResult;
 }
-DWORD CoHeightField::GetIncludeVertexObjectList(CHFieldObject** ppHFieldObj,DWORD dwMaxObjNum,HFIELD_POS* pVertexList,DWORD dwVertexNum)
+DWORD CoHeightField::GetIncludeVertexObjectList(CHFieldObjectGeometry** ppHFieldObj,DWORD dwMaxObjNum,HFIELD_POS* pVertexList,DWORD dwVertexNum)
 {
 	// 점 리스트가 포함되는 하이트필드 오브젝트를 골라준다.주로 업데이트할때 쓴다.
 	DWORD	dwObjX,dwObjZ;
 	BOOL	bExtX,bExtZ;
 	
-	CHFieldObject*	pHFObjUpdate[1024];
+	CHFieldObjectGeometry*	pHFObjUpdate[1024];
 	DWORD			dwUpdateObjNum = 0;
 
-	CHFieldObject* pHFObjFind[4];		// 업데이트후보오브젝트 ..
+	CHFieldObjectGeometry* pHFObjFind[4];		// 업데이트후보오브젝트 ..
 	DWORD			dwFindObjNum;
 
 	for (DWORD i=0; i<dwVertexNum; i++)
@@ -1817,8 +1817,8 @@ DWORD CoHeightField::GetIncludeVertexObjectList(CHFieldObject** ppHFieldObj,DWOR
 				memset(txt,0,512);
 				wsprintf(txt,"CoHeightField::GetIncludeVertexObjectList(), dwUpdateObjNum>=1024, File:%s , Line:%d \n",__FILE__,__LINE__);
 				DWORD	dwAddr;
-				GetEIP(&dwAddr);
-				g_pErrorHandleFunc(ERROR_TYPE_ENGINE_CODE,0,(void*)dwAddr,txt);
+				//GetEIP(&dwAddr);
+				//g_pErrorHandleFunc(ERROR_TYPE_ENGINE_CODE,0,(void*)dwAddr,txt);
 			}
 #endif
 
@@ -1832,7 +1832,7 @@ lb_skip:
 		dwUpdateObjNum = dwMaxObjNum;
 
 	if (dwUpdateObjNum)
-		memcpy(ppHFieldObj,pHFObjUpdate,sizeof(CHFieldObject**)*dwUpdateObjNum);
+		memcpy(ppHFieldObj,pHFObjUpdate,sizeof(CHFieldObjectGeometry**)*dwUpdateObjNum);
 
 	return dwUpdateObjNum;
 }
@@ -1909,7 +1909,7 @@ BOOL __stdcall CoHeightField::SetTileList(HFIELD_POS* phfStart,HFIELD_POS* pTile
 {
 	BOOL		bResult = FALSE;
 	DWORD		dwTilePosX,dwTilePosZ;
-	CHFieldObject*	pHFObjUpdate[128];
+	CHFieldObjectGeometry*	pHFObjUpdate[128];
 	DWORD			dwUpdateObjNum = 0;
 
 	for (DWORD i=0; i<dwTileNum; i++)
@@ -1945,8 +1945,8 @@ BOOL __stdcall CoHeightField::SetTileList(HFIELD_POS* phfStart,HFIELD_POS* pTile
 			memset(txt,0,512);
 			wsprintf(txt,"CoHeightField::SetTileList(), dwUpdateObjNum>=128, File:%s , Line:%d \n",__FILE__,__LINE__);
 			DWORD	dwAddr;
-			GetEIP(&dwAddr);
-			g_pErrorHandleFunc(ERROR_TYPE_ENGINE_CODE,0,(void*)dwAddr,txt);
+			//GetEIP(&dwAddr);
+			//g_pErrorHandleFunc(ERROR_TYPE_ENGINE_CODE,0,(void*)dwAddr,txt);
 		}
 #endif
 
@@ -1961,7 +1961,7 @@ lb_skip:
 	hfPosStart.dwZ = phfStart->dwZ + pTileList[0].dwZ;
 
 
-	for (i=0; i<dwUpdateObjNum; i++)
+	for (int i=0; i<dwUpdateObjNum; i++)
 	{
 		pHFObjUpdate[i]->UpdateTile();
 	}
@@ -2145,7 +2145,7 @@ BOOL __stdcall CoHeightField::SetLightVertexel(
 		goto lb_return;
 
 	DWORD	dwObjNum;
-	CHFieldObject* pHFieldObj[64];
+	CHFieldObjectGeometry* pHFieldObj[64];
 	dwObjNum = GetIncludeVertexObjectList(pHFieldObj,64,pos,dwHFPosNum);
 
 	DWORD	i;
@@ -2174,7 +2174,7 @@ BOOL __stdcall CoHeightField::GetLightVertexel(
 		goto lb_return;
 
 	DWORD	dwObjNum;
-	CHFieldObject* pHFieldObj[4];
+	CHFieldObjectGeometry* pHFieldObj[4];
 	dwObjNum = GetIncludeVertexObjectList(pHFieldObj,4,&pos,1);
 
 

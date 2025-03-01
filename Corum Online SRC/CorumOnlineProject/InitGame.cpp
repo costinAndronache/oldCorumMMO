@@ -1570,15 +1570,10 @@ BOOL InitCOMObject()
 	dispInfo.dispType			= WINDOW_WITH_BLT;	
 #endif	
 
-#ifdef __PACKAGE_MODE__
 	PACKFILE_NAME_TABLE sPackFileNameTable[256];
 	int iPackCount = LoadPakList("Paklist.sin", sPackFileNameTable, 256);
-	g_pExecutive->InitializeFileStorageWithoutRegistry(12000, 4096, 64, FILE_ACCESS_METHOD_FILE_OR_PACK,	sPackFileNameTable, iPackCount);
-	g_pExecutive->InitializeWithoutRegistry("SS3DGeometryForCorum.dll", g_hMainWnd, &dispInfo, 10000, 1024, 512, 32, 32, NULL);
-#else
-	g_pExecutive->InitializeFileStorageWithoutRegistry("SS3DFileStorage.dll", 0, 4096, 0, FILE_ACCESS_METHOD_ONLY_FILE,	NULL, 0);	
-	g_pExecutive->InitializeWithoutRegistry("SS3DGeometryForCorum.dll", "SS3DRendererForCorum.dll",	g_hMainWnd,	&dispInfo, 10000, 1024,	512, 32, 32, NULL);
-#endif
+	g_pExecutive->InitializeFileStorageWithoutRegistry(12000, 4096, 64, FILE_ACCESS_METHOD_ONLY_FILE, sPackFileNameTable, iPackCount);
+	g_pExecutive->InitializeWithoutRegistry(g_hMainWnd, &dispInfo, 10000, 1024, 512, 32, 32, NULL);
 
 	g_pGeometry = g_pExecutive->GetGeometry();
 	g_pRenderer = g_pExecutive->GetRenderer();
@@ -1629,7 +1624,7 @@ BOOL InitCOMObject()
 }
 
 
-DWORD __stdcall DefaultErrorHandleProc(ERROR_TYPE type,DWORD dwErrorPriority,void* pCodeAddress,char* szStr)
+DWORD DefaultErrorHandleProc(ERROR_TYPE type,DWORD dwErrorPriority,void* pCodeAddress,char* szStr)
 {
 	char	txt[512] = {0,};
 	memset(txt,0,512);

@@ -9,6 +9,8 @@
 #include "HeightField.h"
 #include "ModelRefManager.h"
 #include "MaterialLib.h"
+#include <string>
+#include <map>
 
 class CoHeightField;
 enum FILE_ITEM_TYPE
@@ -29,10 +31,11 @@ enum FILE_HANDLE_FLAG
 };
 struct FILE_HANDLE
 {
-	void*				pSearchHandle;
+	std::string key;
 	void*				pFileItem;
 	DWORD				dwFlag;
 	FILE_ITEM_TYPE		type;
+	FILE_HANDLE(): pFileItem(nullptr), dwFlag(0), type(FILE_ITEM_TYPE_MODEL) { }
 };
 
 #define MAX_SENDER_POINT_PER_SHADOWLIGHT 32
@@ -48,7 +51,7 @@ struct SHADOW_SENDER
 
 class CoGeometry : public I4DyuchiGXGeometry
 {
-	VBHASH_HANDLE				m_pFileNameHash;
+	std::map<std::string, DWORD>* _filehandleIndexForFilename;
 	FILE_HANDLE*				m_pFileList;
 	CSimpleMemoryPool			m_LightIndexPool;
 	CSimpleMemoryPool			m_MatrixPool;

@@ -236,8 +236,8 @@ lb_alloc:
 		memset(txt,0,512);
 		wsprintf(txt,"Fail toCD3DResourceBufferHeap::AllocVB() (p - m_pMassMemory) is not aligned, File : %s , Line : %d \n",__FILE__,__LINE__);
 		DWORD	dwAddr;
-		GetEIP(&dwAddr);
-		g_pErrorHandleFunc(ERROR_TYPE_ENGINE_CODE,0,(void*)dwAddr,txt);
+		//GetEIP(&dwAddr);
+		//g_pErrorHandleFunc(ERROR_TYPE_ENGINE_CODE,0,(void*)dwAddr,txt);
 	}
 #endif
 
@@ -312,7 +312,6 @@ void CD3DResourceBufferHeap::ReleaseBuffer(void* pHandle)
 	}
 //	Unlink...
 	UnLinkFromSortLink(&m_pSortLinkHead,&m_pSortLinkTail,&pHeapItemDesc->sortLink);
-	delete pHeapItemDesc;
 
 
 #ifdef _DEBUG
@@ -322,7 +321,7 @@ void CD3DResourceBufferHeap::ReleaseBuffer(void* pHandle)
 #endif
 	
 	pHeapItemDesc->pMem = (char*)0xcccccccc;
-
+	delete pHeapItemDesc;
 	m_dwAllocatedItemNum--;
 }
 

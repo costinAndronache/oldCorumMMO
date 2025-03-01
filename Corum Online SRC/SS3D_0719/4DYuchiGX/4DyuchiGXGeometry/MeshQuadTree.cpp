@@ -123,8 +123,8 @@ MESHNODE* CMeshQuadTree::AllocNode()
 		memset(txt,0,512);
 		wsprintf(txt,"CMeshQuadTree::AllocNode(), if (m_dwAllocNodeNum >= m_dwMaxNodeNum), File:%s , Line:%d \n",__FILE__,__LINE__);
 		DWORD	dwAddr;
-		GetEIP(&dwAddr);
-		g_pErrorHandleFunc(ERROR_TYPE_ENGINE_CODE,0,(void*)dwAddr,txt);
+		//GetEIP(&dwAddr);
+		//g_pErrorHandleFunc(ERROR_TYPE_ENGINE_CODE,0,(void*)dwAddr,txt);
 #endif
 		goto lb_return;
 	}

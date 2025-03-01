@@ -97,7 +97,6 @@ void CIndexBuffer::Cleanup()
 	{
 		m_pIBManager->ReleaseIB(m_pIBHandle);
 
-
 	}
 	else
 	{

@@ -1070,8 +1070,6 @@ lb_return:
 int  CoStorage::FSScanf(void* pFP,char* szFormat, ...)
 {
 
-
-
 	int iResult = EOF;
 	FSFILE_POINTER*	pScanFP = (FSFILE_POINTER*)pFP;
 

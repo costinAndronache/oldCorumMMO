@@ -135,8 +135,8 @@ VBCACHE_ITEM* CVBCache::AllocVBCacheItem(VBCACHE_KEY* pKey,DWORD dwVerticesNum)
 		char	txt[512];
 		wsprintf(txt,"Fail to CVBCache::AllocVBCacheItem() !pVBItem->VB.GetVerticesNum(), File : %s , Line : %d \n",__FILE__,__LINE__);
 		DWORD	dwAddr;
-		GetEIP(&dwAddr);
-		g_pErrorHandleFunc(ERROR_TYPE_ENGINE_CODE,0,(void*)dwAddr,txt);
+		//GetEIP(&dwAddr);
+		//g_pErrorHandleFunc(ERROR_TYPE_ENGINE_CODE,0,(void*)dwAddr,txt);
 	}
 #endif
 
@@ -173,8 +173,8 @@ void CVBCache::FreeVBCacheItem(DWORD dwNum)
 			memset(txt,0,512);
 			wsprintf(txt,"Fail toCVBCache::FreeVBCacheItem() !pDelItem->pSearchHandle, File : %s , Line : %d \n",__FILE__,__LINE__);
 			DWORD	dwAddr;
-			GetEIP(&dwAddr);
-			g_pErrorHandleFunc(ERROR_TYPE_ENGINE_CODE,0,(void*)dwAddr,txt);
+			//GetEIP(&dwAddr);
+			//g_pErrorHandleFunc(ERROR_TYPE_ENGINE_CODE,0,(void*)dwAddr,txt);
 			
 		}
 #endif
@@ -235,8 +235,8 @@ lb_search:
 			memset(txt,0,512);
 			wsprintf(txt,"Fail toCVBCache::ClearCacheWithIDIMeshObject() !pDelItem->pSearchHandle, File : %s , Line : %d \n",__FILE__,__LINE__);
 			DWORD	dwAddr;
-			GetEIP(&dwAddr);
-			g_pErrorHandleFunc(ERROR_TYPE_ENGINE_CODE,0,(void*)dwAddr,txt);
+			//GetEIP(&dwAddr);
+			//g_pErrorHandleFunc(ERROR_TYPE_ENGINE_CODE,0,(void*)dwAddr,txt);
 			
 		}
 #endif
@@ -281,8 +281,8 @@ lb_return:
 		if (!m_ppVBCacheItemAllocated[i])
 		{
 			wsprintf(txt,"Fail toCVBCache::ClearCacheWithIDIMeshObject() !m_ppVBCacheItemAllocated[i], File : %s , Line : %d \n",__FILE__,__LINE__);
-			GetEIP(&dwAddr);
-			g_pErrorHandleFunc(ERROR_TYPE_ENGINE_CODE,0,(void*)dwAddr,txt);
+			//GetEIP(&dwAddr);
+			//g_pErrorHandleFunc(ERROR_TYPE_ENGINE_CODE,0,(void*)dwAddr,txt);
 		}
 	}
 	for (i=0; i<m_dwReservedVBCacheItemNum; i++)
@@ -290,8 +290,8 @@ lb_return:
 		if (!m_ppVBCacheItemReserved[i])
 		{
 			wsprintf(txt,"Fail toCVBCache::ClearCacheWithIDIMeshObject() !m_ppVBCacheItemReserved[i], File : %s , Line : %d \n",__FILE__,__LINE__);
-			GetEIP(&dwAddr);
-			g_pErrorHandleFunc(ERROR_TYPE_ENGINE_CODE,0,(void*)dwAddr,txt);
+			//GetEIP(&dwAddr);
+			//g_pErrorHandleFunc(ERROR_TYPE_ENGINE_CODE,0,(void*)dwAddr,txt);
 		}
 	}
 	for (i=0; i<m_dwAllocatedVBCacheItemNum; i++)
@@ -299,8 +299,8 @@ lb_return:
 		if (m_ppVBCacheItemAllocated[i]->key.pObject == pObject)
 		{
 			wsprintf(txt,"Fail toCVBCache::ClearCacheWithIDIMeshObject() m_ppVBCacheItemAllocated[i]->key.pObject == pObject, File : %s , Line : %d \n",__FILE__,__LINE__);
-			GetEIP(&dwAddr);
-			g_pErrorHandleFunc(ERROR_TYPE_ENGINE_CODE,0,(void*)dwAddr,txt);
+			//GetEIP(&dwAddr);
+			//g_pErrorHandleFunc(ERROR_TYPE_ENGINE_CODE,0,(void*)dwAddr,txt);
 		}
 	}
 
@@ -333,8 +333,8 @@ lb_search:
 			memset(txt,0,512);
 			wsprintf(txt,"Fail toCVBCache::ClearCacheWithMotionUID() !pDelItem->pSearchHandle, File : %s , Line : %d \n",__FILE__,__LINE__);
 			DWORD	dwAddr;
-			GetEIP(&dwAddr);
-			g_pErrorHandleFunc(ERROR_TYPE_ENGINE_CODE,0,(void*)dwAddr,txt);
+			//GetEIP(&dwAddr);
+			//g_pErrorHandleFunc(ERROR_TYPE_ENGINE_CODE,0,(void*)dwAddr,txt);
 			
 		}
 #endif
@@ -379,8 +379,8 @@ lb_return:
 		if (!m_ppVBCacheItemAllocated[i])
 		{
 			wsprintf(txt,"Fail toCVBCache::ClearCacheWithMotionUID() !m_ppVBCacheItemAllocated[i], File : %s , Line : %d \n",__FILE__,__LINE__);
-			GetEIP(&dwAddr);
-			g_pErrorHandleFunc(ERROR_TYPE_ENGINE_CODE,0,(void*)dwAddr,txt);
+			//GetEIP(&dwAddr);
+			//g_pErrorHandleFunc(ERROR_TYPE_ENGINE_CODE,0,(void*)dwAddr,txt);
 		}
 	}
 	for (i=0; i<m_dwReservedVBCacheItemNum; i++)
@@ -388,8 +388,8 @@ lb_return:
 		if (!m_ppVBCacheItemReserved[i])
 		{
 			wsprintf(txt,"Fail toCVBCache::ClearCacheWithMotionUID() !m_ppVBCacheItemReserved[i], File : %s , Line : %d \n",__FILE__,__LINE__);
-			GetEIP(&dwAddr);
-			g_pErrorHandleFunc(ERROR_TYPE_ENGINE_CODE,0,(void*)dwAddr,txt);
+			//GetEIP(&dwAddr);
+			//g_pErrorHandleFunc(ERROR_TYPE_ENGINE_CODE,0,(void*)dwAddr,txt);
 		}
 	}
 	for (i=0; i<m_dwAllocatedVBCacheItemNum; i++)
@@ -397,8 +397,8 @@ lb_return:
 		if (m_ppVBCacheItemAllocated[i]->key.pMotionUID == pMotionUID)
 		{
 			wsprintf(txt,"Fail toCVBCache::ClearCacheWithMotionUID() m_ppVBCacheItemAllocated[i]->key.pMotionUID == pMotionUID, File : %s , Line : %d \n",__FILE__,__LINE__);
-			GetEIP(&dwAddr);
-			g_pErrorHandleFunc(ERROR_TYPE_ENGINE_CODE,0,(void*)dwAddr,txt);
+			//GetEIP(&dwAddr);
+			//g_pErrorHandleFunc(ERROR_TYPE_ENGINE_CODE,0,(void*)dwAddr,txt);
 		}
 	}
 
@@ -432,8 +432,8 @@ lb_public_vb:
 			memset(txt,0,512);
 			wsprintf(txt,"Fail to CVBCache::GetVB() dwVertexNum != pVBItem->VB.GetVerticesNum(), File : %s , Line : %d \n",__FILE__,__LINE__);
 			DWORD	dwAddr;
-			GetEIP(&dwAddr);
-			g_pErrorHandleFunc(ERROR_TYPE_ENGINE_CODE,0,(void*)dwAddr,txt);
+			//GetEIP(&dwAddr);
+			//g_pErrorHandleFunc(ERROR_TYPE_ENGINE_CODE,0,(void*)dwAddr,txt);
 		}
 #endif
 

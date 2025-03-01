@@ -89,37 +89,37 @@ INT __stdcall CFontObject::DrawText(TCHAR* str,DWORD dwLen,RECT* pRect,DWORD dwC
 	{
 		memset(txt,0,sizeof(txt));
 		wsprintf(txt,"Fail to RenderFont(), string has CR or LF or HT!! %s\n",str);
-		GetEIP(&dwAddr);
-		g_pErrorHandleFunc(ERROR_TYPE_PARAMETER_INVALID,1,(void*)dwAddr,txt);
+		//GetEIP(&dwAddr);
+		//g_pErrorHandleFunc(ERROR_TYPE_PARAMETER_INVALID,1,(void*)dwAddr,txt);
 	}
 	
 	if (0 == pRect->right - pRect->left)
 	{
 		memset(txt,0,sizeof(txt));
 		wsprintf(txt,"Fail to RenderFont(), rect's width zero!! %s\n",str);
-		GetEIP(&dwAddr);
-		g_pErrorHandleFunc(ERROR_TYPE_PARAMETER_INVALID,0,(void*)dwAddr,txt);
+		//GetEIP(&dwAddr);
+		//g_pErrorHandleFunc(ERROR_TYPE_PARAMETER_INVALID,0,(void*)dwAddr,txt);
 	}
 	if (0 == pRect->bottom - pRect->top)
 	{
 		memset(txt,0,sizeof(txt));
 		wsprintf(txt,"Fail to RenderFont(), rect's height zero!! %s\n",str);
-		GetEIP(&dwAddr);
-		g_pErrorHandleFunc(ERROR_TYPE_PARAMETER_INVALID,0,(void*)dwAddr,txt);
+		//GetEIP(&dwAddr);
+		//g_pErrorHandleFunc(ERROR_TYPE_PARAMETER_INVALID,0,(void*)dwAddr,txt);
 	}
 	if (pRect->right - pRect->left > m_pFontCache->GetMaxWidth())
 	{
 		memset(txt,0,sizeof(txt));
 		wsprintf(txt,"Fail to RenderFont(), rect's width too large!! %s\n",str);
-		GetEIP(&dwAddr);
-		g_pErrorHandleFunc(ERROR_TYPE_PARAMETER_INVALID,0,(void*)dwAddr,txt);
+		//GetEIP(&dwAddr);
+		//g_pErrorHandleFunc(ERROR_TYPE_PARAMETER_INVALID,0,(void*)dwAddr,txt);
 	}
 	if (pRect->bottom - pRect->top > m_pFontCache->GetMaxWidth())
 	{
 		memset(txt,0,sizeof(txt));
 		wsprintf(txt,"Fail to RenderFont(), rect's height too large!! %s\n",str);
-		GetEIP(&dwAddr);
-		g_pErrorHandleFunc(ERROR_TYPE_PARAMETER_INVALID,0,(void*)dwAddr,txt);
+		//GetEIP(&dwAddr);
+		//g_pErrorHandleFunc(ERROR_TYPE_PARAMETER_INVALID,0,(void*)dwAddr,txt);
 	}
 #endif
 

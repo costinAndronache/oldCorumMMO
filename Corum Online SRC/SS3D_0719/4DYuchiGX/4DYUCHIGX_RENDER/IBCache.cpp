@@ -128,8 +128,8 @@ IBCACHE_ITEM* CIBCache::AllocIBCacheItem(int** ppiCountVariable,DWORD dwIndicesN
 		char	txt[512];
 		wsprintf(txt,"Fail to CIBCache::AlloCIBCacheItem() !pIBItem->IB.GetIndicesNum(), File : %s , Line : %d \n",__FILE__,__LINE__);
 		DWORD	dwAddr;
-		GetEIP(&dwAddr);
-		g_pErrorHandleFunc(ERROR_TYPE_ENGINE_CODE,0,(void*)dwAddr,txt);
+		//GetEIP(&dwAddr);
+		//g_pErrorHandleFunc(ERROR_TYPE_ENGINE_CODE,0,(void*)dwAddr,txt);
 	}
 #endif
 

@@ -21,7 +21,6 @@ CHFieldTools::CHFieldTools()
 	m_dwMaxAlphaMapNum = 0;
 	m_dwAllocatedAlphaMapNum = 0;
 
-	m_pAlphaMapPoolForDynamic = NULL;
 	m_pAlphaMapPoolForStatic = NULL;
 	memset(m_imgBrush,0,sizeof(m_imgBrush));
 
@@ -57,8 +56,6 @@ BOOL CHFieldTools::Initialize(HFIELD_DESC* pHFDesc,BOOL bEnableDrawAlphaMap,DWOR
 		m_dwTotalAlphaMapSize = m_dwAlphaMapSize * m_dwMaxAlphaMapNum;
 
 		m_bEnableDrawAlphaMap = TRUE;
-		m_pAlphaMapPoolForDynamic = CreateStaticMemoryPool();
-		InitializeStaticMemoryPool(m_pAlphaMapPoolForDynamic,m_dwAlphaMapSize,m_dwMaxAlphaMapNum/8+1,m_dwMaxAlphaMapNum);
 
 		CreateTempAlphaMap(MAX_TEMP_ALPHAMAP_INDEX);
 
@@ -152,7 +149,7 @@ char* CHFieldTools::AllocAlphaMap()
 
 	if (m_bEnableDrawAlphaMap)
 	{
-		p = (char*)LALAlloc(m_pAlphaMapPoolForDynamic);
+		p = (char*)malloc(m_dwAlphaMapSize);
 	}
 	else
 	{
@@ -169,11 +166,8 @@ void CHFieldTools::FreeAlphaMap(char* pBits)
 {
 	if (m_bEnableDrawAlphaMap)
 	{
-		LALFree(m_pAlphaMapPoolForDynamic,pBits);
+		free(pBits);
 		m_dwAllocatedAlphaMapNum--;
-	}
-	else
-	{
 	}
 	m_dwAllocatedAlphaMapMemSize = m_dwAllocatedAlphaMapNum*m_dwAlphaMapSize;
 }
@@ -227,11 +221,6 @@ IMAGE_BRUSH* CHFieldTools::GetImageBrush(DWORD dwBrightness)
 
 CHFieldTools::~CHFieldTools()
 {
-	if (m_pAlphaMapPoolForDynamic)
-	{
-		ReleaseStaticMemoryPool(m_pAlphaMapPoolForDynamic);
-		m_pAlphaMapPoolForDynamic = NULL;
-	}
 	if (m_pAlphaMapPoolForStatic)
 	{
 		delete [] m_pAlphaMapPoolForStatic;
@@ -242,7 +231,7 @@ CHFieldTools::~CHFieldTools()
 	ReleaseTileOutLineEditResource();
 }
 
-void CHFieldTools::SaveAlphaMapTemporary(CHFieldObject* pHFieldObj,TILE_BUFFER_DESC* pTileBufferDesc,DWORD dwTileBufferDescNum)
+void CHFieldTools::SaveAlphaMapTemporary(CHFieldObjectGeometry* pHFieldObj,TILE_BUFFER_DESC* pTileBufferDesc,DWORD dwTileBufferDescNum)
 {
 
 	if (pTileBufferDesc)
@@ -266,7 +255,7 @@ void CHFieldTools::SaveAlphaMapTemporary(CHFieldObject* pHFieldObj,TILE_BUFFER_D
 		}
 	}
 }
-BOOL CHFieldTools::LoadAlphaMapTemporary(CHFieldObject* pHFieldObj,TILE_BUFFER_DESC* pTileBufferDesc,DWORD dwTileBufferDescNum)
+BOOL CHFieldTools::LoadAlphaMapTemporary(CHFieldObjectGeometry* pHFieldObj,TILE_BUFFER_DESC* pTileBufferDesc,DWORD dwTileBufferDescNum)
 {
 	BOOL	bResult = FALSE;
 	if (m_dwTempAlphaMapNum)
@@ -283,7 +272,7 @@ BOOL CHFieldTools::LoadAlphaMapTemporary(CHFieldObject* pHFieldObj,TILE_BUFFER_D
 			}
 		}
 
-		for (i=0; i<m_dwTempAlphaMapNum; i++)
+		for (int i=0; i<m_dwTempAlphaMapNum; i++)
 		{
 			if (m_ppTempAlphaMapIndexList[i]->pAlphaMapBits)
 			{
@@ -356,7 +345,7 @@ DWORD CHFieldTools::Create8BitsAttenuationMap(INDEXED_8BITS_PIXEL* pIndexedBits,
 }
 
 
-DWORD CHFieldTools::WriteAlphaMap(char* szFileName,CHFieldObject* pHFObjList,DWORD dwObjNum)
+DWORD CHFieldTools::WriteAlphaMap(char* szFileName,CHFieldObjectGeometry* pHFObjList,DWORD dwObjNum)
 {	
 	FILE* fp = fopen(szFileName,"wb");
 	if (!fp)
@@ -415,7 +404,7 @@ lb_return:
 }
 
 
-DWORD CHFieldTools::ReadAlphaMap(char* szFileName,CHFieldObject* pHFObjList,DWORD dwObjNum)
+DWORD CHFieldTools::ReadAlphaMap(char* szFileName,CHFieldObjectGeometry* pHFObjList,DWORD dwObjNum)
 {
 	DWORD	dwLen = 0;
 	void*	pFP = g_pFileStorage->FSOpenFile(szFileName,FSFILE_ACCESSMODE_BINARY);

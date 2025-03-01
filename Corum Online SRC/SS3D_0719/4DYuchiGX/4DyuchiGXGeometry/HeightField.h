@@ -6,7 +6,7 @@
 #include "../4DyuchiGRX_common/IRenderer.h"
 #include "../4DyuchiGXGFunc/global.h"
 
-class CHFieldObject;
+class CHFieldObjectGeometry;
 class CoGeometry;
 class CHFieldTools;
 class CHFieldEditHelper;
@@ -45,7 +45,7 @@ class CoHeightField : public IHeightField
 		
 	COLLISION_MESH_OBJECT_DESC*		m_pColMeshObjDescList;
 	COLLISION_MESH_OBJECT_DESC		m_colWolrdBoundingMesh;
-	CHFieldObject*			m_pHFieldObjectList;
+	CHFieldObjectGeometry*			m_pHFieldObjectList;
 
 	// for tool...
 	BOOL					m_bEnableAlphaMap;
@@ -86,7 +86,7 @@ class CoHeightField : public IHeightField
 	void					GetVertexPosRect(DWORD_RECT* pRect,DWORD dwCenterVertexX,DWORD dwCenterVertexZ,float fRadius);
 	BOOL					IsIntersectPoint(VECTOR3* pv3IntersectPoint,float* pfDist,VECTOR3* pv3Orig,VECTOR3* pv3Dir,DWORD dwPosX,DWORD dwPosZ);
 
-	DWORD					GetIncludeVertexObjectList(CHFieldObject** ppHFieldObj,DWORD dwMaxObjNum,HFIELD_POS* pVertexList,DWORD dwVertexNum);
+	DWORD					GetIncludeVertexObjectList(CHFieldObjectGeometry** ppHFieldObj,DWORD dwMaxObjNum,HFIELD_POS* pVertexList,DWORD dwVertexNum);
 	DWORD					GetIncludeVertexTileList(DWORD* pdwTileList,DWORD dwMaxTile,HFIELD_POS* pVertexList,DWORD dwVertexNum);
 
 	DWORD					GetVertexListWithScreenCoord(HFIELD_POS* pVertexList,DWORD dwMaxVertexNum,RECT* pRect,DWORD dwVertexOffset,DWORD dwViewportIndex);

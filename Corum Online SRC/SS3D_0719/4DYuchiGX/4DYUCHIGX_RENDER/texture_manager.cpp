@@ -367,8 +367,8 @@ lb_file_not_found:
 #endif
 	// FILE_NOT_FOUND /////////////////////////////////////////////////////////
 	DWORD	dwAddr;
-	GetEIP(&dwAddr);
-	g_pErrorHandleFunc(ERROR_TYPE_FILE_NOT_FOUND,1,(void*)dwAddr,szFileName);
+	//GetEIP(&dwAddr);
+	//g_pErrorHandleFunc(ERROR_TYPE_FILE_NOT_FOUND,1,(void*)dwAddr,szFileName);
 	///////////////////////////////////////////////////////////////////////////
 	
 lb_return:
@@ -436,8 +436,8 @@ void CTextureManager::ResourceCheck()
 			OutputDebugString(txt);
 		}
 		DWORD	dwAddr;
-		GetEIP(&dwAddr);
-		g_pErrorHandleFunc(ERROR_TYPE_RESOURCE_LEAK,0,(void*)dwAddr,"CTextureManager::ResourceCheck() ResourceLeak!!!");
+		//GetEIP(&dwAddr);
+		//g_pErrorHandleFunc(ERROR_TYPE_RESOURCE_LEAK,0,(void*)dwAddr,"CTextureManager::ResourceCheck() ResourceLeak!!!");
 	}
 #endif 
 }

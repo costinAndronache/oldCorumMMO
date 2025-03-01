@@ -18,7 +18,7 @@ enum HFOBJ_RENDER_TYPE
 #define HFOBJ_RENDER_TYPE_DETAIL_FIX_MASK_INVERSE	0xfffffffe
 #define HFOBJ_RENDER_TYPE_INVISIBLE_MASK_INVERSE	0xfffffffd
 
-class CHFieldObject : public IGeometryControllerStatic
+class CHFieldObjectGeometry : public IGeometryControllerStatic
 {
 	friend class	CTileObject;
 	CTileObject					m_TileObject;
@@ -28,7 +28,7 @@ class CHFieldObject : public IGeometryControllerStatic
 	COLLISION_MESH_OBJECT_DESC*	m_pColMeshObjDesc;
 	CoHeightField*				m_pHField;
 	DWORD						m_dwDetailLevel;
-	CHFieldObject*				m_pSideObj[4];
+	CHFieldObjectGeometry*				m_pSideObj[4];
 	VECTOR3						m_v3Rect[4];		// 네 귀퉁이의 버텍스 포지션.
 	DWORD						m_dwPosX;			// 버텍스인덱스 기준으로 x좌표
 	DWORD						m_dwPosZ;			// 버텍스인덱스 기준으로 z좌표
@@ -75,7 +75,7 @@ public:
 	COLLISION_MESH_OBJECT_DESC*			GetColMeshDesc() {return m_pColMeshObjDesc;}
 	VECTOR3*			GetRect() {return m_v3Rect;}
 	DWORD				GetDetailLevel()	{return m_dwDetailLevel;}
-	void				SetSideObject(CHFieldObject* pObj,DWORD dwIndex) { m_pSideObj[dwIndex] = pObj;}
+	void				SetSideObject(CHFieldObjectGeometry* pObj,DWORD dwIndex) { m_pSideObj[dwIndex] = pObj;}
 	void				SetColMeshDesc(COLLISION_MESH_OBJECT_DESC* pDesc) {m_pColMeshObjDesc = pDesc;}
 	void				SetDetailLevel(DWORD dwDetailLevel);	
 	void				SetDistanceFromViewPoint(float fDistance);
@@ -112,8 +112,8 @@ public:
 
 	IDIMeshObject*		GetDeviceObject()	{return m_pDeviceObject;}
 	BOOL				Initialize(CoHeightField* pHField,HFIELD_OBJECT_DESC* pHFObjDesc,DWORD dwFlag);
-	CHFieldObject();
-	~CHFieldObject();
+	CHFieldObjectGeometry();
+	~CHFieldObjectGeometry();
 };
 
 #endif

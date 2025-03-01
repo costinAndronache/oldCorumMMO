@@ -781,7 +781,7 @@
     <ClCompile>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_FOR_CORUM;__PACKAGE_MODE__;DEVELOP_MODE;SS3D_TEST;ENGLISH_LOCALIZNG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <BasicRuntimeChecks>UninitializedLocalUsageCheck</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <PrecompiledHeader />
       <PrecompiledHeaderOutputFile>.\Debug/CorumOnlineProject.pch</PrecompiledHeaderOutputFile>
@@ -795,7 +795,7 @@
       <LanguageStandard>stdcpp14</LanguageStandard>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>legacy_stdio_definitions.lib;odbc32.lib;odbccp32.lib;imm32.lib;Winmm.lib;WS2_32.lib;mss32.lib;version.lib;d3d8.lib;d3dx8.lib;CommonServer.lib;4DyuchiGXGFunc.lib;4DyuchiFileStorage.lib;4DyuchiGX_Render.lib;4DyuchiGXExecutive.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>legacy_stdio_definitions.lib;odbc32.lib;odbccp32.lib;imm32.lib;Winmm.lib;WS2_32.lib;mss32.lib;version.lib;d3d8.lib;d3dx8.lib;CommonServer.lib;4DyuchiGXGFunc.lib;4DyuchiFileStorage.lib;4DyuchiGXGeometry.lib;4DyuchiGX_Render.lib;4DyuchiGXExecutive.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>.\Debug\CorumOnlineResult.exe</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <IgnoreSpecificDefaultLibraries>LIBC.lib;LIBCI.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>

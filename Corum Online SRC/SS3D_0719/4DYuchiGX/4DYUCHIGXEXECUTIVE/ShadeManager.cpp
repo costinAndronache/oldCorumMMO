@@ -50,8 +50,8 @@ BOOL CShadeManager::InsertShadeItem(CGXMapObject* pMapObj,VECTOR3* pv3,DWORD dwT
 		memset(txt,0,512);
 		wsprintf(txt,"CShadeManager::InsertShadeItem(), if (dwIndex == 0xffffffff), File:%s , Line:%d \n",__FILE__,__LINE__);
 		DWORD	dwAddr;
-		GetEIP(&dwAddr);
-		g_pErrorHandleFunc(ERROR_TYPE_ENGINE_CODE,0,(void*)dwAddr,txt);
+		//GetEIP(&dwAddr);
+		//g_pErrorHandleFunc(ERROR_TYPE_ENGINE_CODE,0,(void*)dwAddr,txt);
 	}
 #endif
 

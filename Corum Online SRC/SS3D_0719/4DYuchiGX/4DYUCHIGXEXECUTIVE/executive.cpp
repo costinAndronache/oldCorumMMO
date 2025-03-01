@@ -7,6 +7,7 @@
 #include "4DyuchiGRX_myself97/CheckClock.h"
 #include "../4DyuchiFileStorage/CoStorage.h"
 #include "../4DYUCHIGX_RENDER/CoD3DDevice.h"
+#include "../4DyuchiGXGeometry/CoGeometry.h"
 #include <crtdbg.h>
 #include "GXDefault.h"
 
@@ -177,7 +178,9 @@ STDMETHODIMP_(ULONG) CoExecutive::Release(void)
 CoExecutive::CoExecutive()
 {
 	memset((char*)this+4,0,sizeof(CoExecutive)-4);
-	
+	_gxMapObjectPerID = new std::map<DWORD, GXMAP_OBJECT_HANDLE>();
+	_modelFileDescPerFilename = new std::map<std::string, MODEL_FILE_DESC*>();
+
 	m_dwGameFPS = 30;
 	SetFramePerSec(m_dwGameFPS);
 	m_pDummyGXObject = new CoGXObject;
@@ -319,7 +322,7 @@ lb_return:
 
 
 
-BOOL  CoExecutive::InitializeWithoutRegistry(char* szGeometryFileName,HWND hWnd,DISPLAY_INFO* pInfo,DWORD dwMaxObjectNum,DWORD dwMaxLightNum,DWORD dwMaxTriggerNum,DWORD dwViewportNum, DWORD dwMaxDecalNum,ErrorHandleProc pErrorHandleFunc)
+BOOL  CoExecutive::InitializeWithoutRegistry(HWND hWnd,DISPLAY_INFO* pInfo,DWORD dwMaxObjectNum,DWORD dwMaxLightNum,DWORD dwMaxTriggerNum,DWORD dwViewportNum, DWORD dwMaxDecalNum,ErrorHandleProc pErrorHandleFunc)
 {
 	I4DyuchiGXGeometry*		pGeometry = NULL;
 	I4DyuchiGXRenderer*		pRenderer = NULL;
@@ -334,19 +337,8 @@ BOOL  CoExecutive::InitializeWithoutRegistry(char* szGeometryFileName,HWND hWnd,
 		pRenderer = new CoD3DDevice();
 	}
 
-	m_hGeometry = LoadLibrary(szGeometryFileName);
-	if (!m_hGeometry)
-		goto lb_fail_geometry;
+	pGeometry = new CoGeometry();
 
-	pFunc = (CREATE_INSTANCE_FUNC)GetProcAddress(m_hGeometry,"DllCreateInstance");
-	hr = pFunc((void**)&pGeometry);
-
-	if (hr != S_OK)
-	{
-lb_fail_geometry:
-		MessageBox(NULL,"Fail to Create 4DyuchiGXGeometry","Error",MB_OK);
-		goto lb_return;
-	}
 	bResult = Initialize(pGeometry,pRenderer,hWnd,pInfo,dwMaxObjectNum,dwMaxLightNum,dwMaxTriggerNum,dwViewportNum,dwMaxDecalNum,pErrorHandleFunc);
 
 lb_return:
@@ -932,8 +924,8 @@ void  CoExecutive::DisableSendShadow(GXMAP_OBJECT_HANDLE gxh)
 GXMAP_OBJECT_HANDLE  CoExecutive::GetGXMapObjectWithID(DWORD dwID)
 {
 	//	QBHSelect(QBHASH_HANDLE pHash,DWORD OUT* pItems,DWORD dwMaxItemNum,DWORD dwKeyData);
-	const auto found = _gxMapObjectPerID.find(dwID);
-	if (found != _gxMapObjectPerID.end()) {
+	const auto found = _gxMapObjectPerID->find(dwID);
+	if (found != _gxMapObjectPerID->end()) {
 		return found->second;
 	}
 	return NULL;
@@ -1178,14 +1170,14 @@ GXOBJECT_HANDLE CoExecutive::CreateGXObject(char* szFileName,GXSchedulePROC pPro
 
 	MODEL_FILE_DESC*	pModDesc = NULL;
 	
-	const auto& found = _modelFileDescPerFilename.find(key);
+	const auto& found = _modelFileDescPerFilename->find(key);
 
 	if (GXOBJECT_CREATE_TYPE_NOT_USE_MODEL & dwFlag)
 	{
 		goto lb_add_gxo;
 	}
 
-	if (found != _modelFileDescPerFilename.end())
+	if (found != _modelFileDescPerFilename->end())
 	{
 		pModDesc = found->second;
 		
@@ -1209,7 +1201,7 @@ GXOBJECT_HANDLE CoExecutive::CreateGXObject(char* szFileName,GXSchedulePROC pPro
 	memcpy(pModDesc->szFileName,szSearchFileName,dwSearchNameLen);
 
 	pModDesc->key = key; 
-	_modelFileDescPerFilename.insert({ key, pModDesc });
+	_modelFileDescPerFilename->insert({ key, pModDesc });
 	
 lb_add_gxo:
 	gxh = AddGXObject(modelHandle,dwModelNum,pProc,dwFlag);
@@ -1255,7 +1247,7 @@ void CoExecutive::DeleteModelFileDesc(MODEL_FILE_DESC* pModelFileDesc)
 		pModelFileDesc->dwRefCount--;
 		if (!pModelFileDesc->dwRefCount)
 		{
-			_modelFileDescPerFilename.erase(pModelFileDesc->key);
+			_modelFileDescPerFilename->erase(pModelFileDesc->key);
 			delete pModelFileDesc;
 		}
 	}
@@ -1311,8 +1303,8 @@ BOOL  CoExecutive::PreCreateLight(char* szFileName,DWORD /*dwFlag*/)
 	{
 		// FILE_NOT_FOUND /////////////////////////////////////////////////////////
 		DWORD	dwAddr;
-		GetEIP(&dwAddr);
-		g_pErrorHandleFunc(ERROR_TYPE_FILE_NOT_FOUND,1,(void*)dwAddr,szFileName);
+		//GetEIP(&dwAddr);
+		//g_pErrorHandleFunc(ERROR_TYPE_FILE_NOT_FOUND,1,(void*)dwAddr,szFileName);
 		///////////////////////////////////////////////////////////////////////////
 
 		goto lb_return;
@@ -1389,8 +1381,8 @@ DWORD CoExecutive::LoadGXObject(MODEL_HANDLE* pModelHandle,DWORD dwMaxModelNum,c
 		{
 			// FILE_NOT_FOUND /////////////////////////////////////////////////////////
 			DWORD	dwAddr;
-			GetEIP(&dwAddr);
-			g_pErrorHandleFunc(ERROR_TYPE_FILE_NOT_FOUND,1,(void*)dwAddr,szFileName);
+			//GetEIP(&dwAddr);
+			//g_pErrorHandleFunc(ERROR_TYPE_FILE_NOT_FOUND,1,(void*)dwAddr,szFileName);
 			///////////////////////////////////////////////////////////////////////////
 			goto lb_return;
 		}
@@ -1413,8 +1405,8 @@ DWORD CoExecutive::LoadGXObject(MODEL_HANDLE* pModelHandle,DWORD dwMaxModelNum,c
 		{
 			// FILE_NOT_FOUND /////////////////////////////////////////////////////////
 			DWORD	dwAddr;
-			GetEIP(&dwAddr);
-			g_pErrorHandleFunc(ERROR_TYPE_FILE_NOT_FOUND,1,(void*)dwAddr,szFileName);
+			//GetEIP(&dwAddr);
+			//g_pErrorHandleFunc(ERROR_TYPE_FILE_NOT_FOUND,1,(void*)dwAddr,szFileName);
 			///////////////////////////////////////////////////////////////////////////
 			goto lb_return;
 		}
@@ -1562,8 +1554,8 @@ DWORD CoExecutive::PreLoadGXObject(char* szFileName)
 		{
 			// FILE_NOT_FOUND /////////////////////////////////////////////////////////
 			DWORD	dwAddr;
-			GetEIP(&dwAddr);
-			g_pErrorHandleFunc(ERROR_TYPE_FILE_NOT_FOUND,1,(void*)dwAddr,szFileName);
+			//GetEIP(&dwAddr);
+			//g_pErrorHandleFunc(ERROR_TYPE_FILE_NOT_FOUND,1,(void*)dwAddr,szFileName);
 			///////////////////////////////////////////////////////////////////////////
 			goto lb_return;
 		}
@@ -1587,8 +1579,8 @@ DWORD CoExecutive::PreLoadGXObject(char* szFileName)
 		{
 			// FILE_NOT_FOUND /////////////////////////////////////////////////////////
 			DWORD	dwAddr;
-			GetEIP(&dwAddr);
-			g_pErrorHandleFunc(ERROR_TYPE_FILE_NOT_FOUND,1,(void*)dwAddr,szFileName);
+			//GetEIP(&dwAddr);
+			//g_pErrorHandleFunc(ERROR_TYPE_FILE_NOT_FOUND,1,(void*)dwAddr,szFileName);
 			///////////////////////////////////////////////////////////////////////////
 
 			goto lb_return;
@@ -2730,8 +2722,8 @@ void CoExecutive::ResourceCheck()
 			memset(txt,0,512);
 			wsprintf(txt,"CoExecutive::ResourceCheck(), File:%s , Line:%d \n",__FILE__,__LINE__);
 			DWORD	dwAddr;
-			GetEIP(&dwAddr);
-			g_pErrorHandleFunc(ERROR_TYPE_RESOURCE_LEAK,0,(void*)dwAddr,txt);
+			//GetEIP(&dwAddr);
+			//g_pErrorHandleFunc(ERROR_TYPE_RESOURCE_LEAK,0,(void*)dwAddr,txt);
 		}
 	}
 
@@ -2752,8 +2744,8 @@ void CoExecutive::ResourceCheck()
 			memset(txt,0,512);
 			wsprintf(txt,"CoExecutive::ResourceCheck(), File:%s , Line:%d \n",__FILE__,__LINE__);
 			DWORD	dwAddr;
-			GetEIP(&dwAddr);
-			g_pErrorHandleFunc(ERROR_TYPE_RESOURCE_LEAK,0,(void*)dwAddr,txt);
+			//GetEIP(&dwAddr);
+			//g_pErrorHandleFunc(ERROR_TYPE_RESOURCE_LEAK,0,(void*)dwAddr,txt);
 		}
 	}
 	if (m_pIndexItemTableGXTrigger)
@@ -2773,8 +2765,8 @@ void CoExecutive::ResourceCheck()
 			memset(txt,0,512);
 			wsprintf(txt,"CoExecutive::ResourceCheck(), File:%s , Line:%d \n",__FILE__,__LINE__);
 			DWORD	dwAddr;
-			GetEIP(&dwAddr);
-			g_pErrorHandleFunc(ERROR_TYPE_RESOURCE_LEAK,0,(void*)dwAddr,txt);
+			//GetEIP(&dwAddr);
+			//g_pErrorHandleFunc(ERROR_TYPE_RESOURCE_LEAK,0,(void*)dwAddr,txt);
 		}
 	}
 	if (m_pIndexItemTableGXDecal)
@@ -2795,8 +2787,8 @@ void CoExecutive::ResourceCheck()
 			memset(txt,0,512);
 			wsprintf(txt,"CoExecutive::ResourceCheck(), File:%s , Line:%d \n",__FILE__,__LINE__);
 			DWORD	dwAddr;
-			GetEIP(&dwAddr);
-			g_pErrorHandleFunc(ERROR_TYPE_RESOURCE_LEAK,0,(void*)dwAddr,txt);
+			//GetEIP(&dwAddr);
+			//g_pErrorHandleFunc(ERROR_TYPE_RESOURCE_LEAK,0,(void*)dwAddr,txt);
 		}
 	}
 #endif 
@@ -3020,8 +3012,8 @@ BOOL  CoExecutive::LoadMapScript(char* szFileName,LOAD_CALLBACK_FUNC pFunc,DWORD
 	{
 		// FILE_NOT_FOUND /////////////////////////////////////////////////////////
 		DWORD	dwAddr;
-		GetEIP(&dwAddr);
-		g_pErrorHandleFunc(ERROR_TYPE_FILE_NOT_FOUND,1,(void*)dwAddr,szFileName);
+		//GetEIP(&dwAddr);
+		//g_pErrorHandleFunc(ERROR_TYPE_FILE_NOT_FOUND,1,(void*)dwAddr,szFileName);
 		///////////////////////////////////////////////////////////////////////////
 
 		return FALSE;
@@ -3178,8 +3170,8 @@ lb_set_proc_exit:
 					memset(txt,0,512);
 					wsprintf(txt,"CoExecutive::LoadMapScript(), Fail to CreateGXObject,File:%s , Line:%d \n",__FILE__,__LINE__);
 					DWORD	dwAddr;
-					GetEIP(&dwAddr);
-					g_pErrorHandleFunc(ERROR_TYPE_PARAMETER_INVALID,0,(void*)dwAddr,txt);
+					//GetEIP(&dwAddr);
+					//g_pErrorHandleFunc(ERROR_TYPE_PARAMETER_INVALID,0,(void*)dwAddr,txt);
 				}
 #endif 
 			}
@@ -3222,8 +3214,8 @@ lb_set_proc_exit:
 					memset(txt,0,512);
 					wsprintf(txt,"CoExecutive::LoadMapScript(), Fail to CreateGXLight, File:%s , Line:%d \n",__FILE__,__LINE__);
 					DWORD	dwAddr;
-					GetEIP(&dwAddr);
-					g_pErrorHandleFunc(ERROR_TYPE_PARAMETER_INVALID,0,(void*)dwAddr,txt);
+					//GetEIP(&dwAddr);
+					//g_pErrorHandleFunc(ERROR_TYPE_PARAMETER_INVALID,0,(void*)dwAddr,txt);
 				}
 #endif
 
@@ -3272,8 +3264,8 @@ lb_set_proc_exit:
 					memset(txt,0,512);
 					wsprintf(txt,"CoExecutive::LoadMapScript(), Fail to CreateGXEventTrigger, File:%s , Line:%d \n",__FILE__,__LINE__);
 					DWORD	dwAddr;
-					GetEIP(&dwAddr);
-					g_pErrorHandleFunc(ERROR_TYPE_PARAMETER_INVALID,0,(void*)dwAddr,txt);
+					//GetEIP(&dwAddr);
+					//g_pErrorHandleFunc(ERROR_TYPE_PARAMETER_INVALID,0,(void*)dwAddr,txt);
 				}
 #endif
 			}
@@ -3878,8 +3870,8 @@ BOOL  CoExecutive::DefDeleteGXObject(GXOBJECT_HANDLE gxh)
 		memset(txt,0,512);
 		wsprintf(txt,"Fail to DeleteGXObject,DPCQ Overflow : %x\n",gxh);
 		DWORD	dwAddr;
-		GetEIP(&dwAddr);
-		g_pErrorHandleFunc(ERROR_TYPE_ENGINE_CODE,0,(void*)dwAddr,txt);
+		//GetEIP(&dwAddr);
+		//g_pErrorHandleFunc(ERROR_TYPE_ENGINE_CODE,0,(void*)dwAddr,txt);
 
 	}
 #endif
@@ -3899,8 +3891,8 @@ BOOL  CoExecutive::DefDeleteGXLight(GXLIGHT_HANDLE gxh)
 		memset(txt,0,512);
 		wsprintf(txt,"Fail to DeleteGXLight,DPCQ Overflow : %x\n",gxh);
 		DWORD	dwAddr;
-		GetEIP(&dwAddr);
-		g_pErrorHandleFunc(ERROR_TYPE_ENGINE_CODE,0,(void*)dwAddr,txt);
+		//GetEIP(&dwAddr);
+		//g_pErrorHandleFunc(ERROR_TYPE_ENGINE_CODE,0,(void*)dwAddr,txt);
 	}
 #endif
 	return bResult;
@@ -3919,8 +3911,8 @@ BOOL  CoExecutive::DefDeleteGXEventTrigger(GXTRIGGER_HANDLE gxh)
 		memset(txt,0,512);
 		wsprintf(txt,"Fail to DeleteGXEventTrigger,DPCQ Overflow : %x\n",gxh);
 		DWORD	dwAddr;
-		GetEIP(&dwAddr);
-		g_pErrorHandleFunc(ERROR_TYPE_ENGINE_CODE,0,(void*)dwAddr,txt);
+		//GetEIP(&dwAddr);
+		//g_pErrorHandleFunc(ERROR_TYPE_ENGINE_CODE,0,(void*)dwAddr,txt);
 	}
 #endif
 	return bResult;
@@ -4348,8 +4340,8 @@ BOOL  CoExecutive::DefDeleteGXDecal(GXTRIGGER_HANDLE gxh)
 		memset(txt,0,512);
 		wsprintf(txt,"Fail to DeleteGXDecal,DPCQ Overflow : %x\n",gxh);
 		DWORD	dwAddr;
-		GetEIP(&dwAddr);
-		g_pErrorHandleFunc(ERROR_TYPE_ENGINE_CODE,0,(void*)dwAddr,txt);
+		//GetEIP(&dwAddr);
+		//g_pErrorHandleFunc(ERROR_TYPE_ENGINE_CODE,0,(void*)dwAddr,txt);
 	}
 #endif
 	return bResult;

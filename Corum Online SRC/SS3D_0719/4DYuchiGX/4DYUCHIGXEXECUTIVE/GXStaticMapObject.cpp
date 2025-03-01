@@ -130,8 +130,8 @@ void	CGXStaticMapObject::BuildBSPTree()
 		memset(txt,0,512);
 		wsprintf(txt,"CGXStaticMapObject::BuildBSPTree(), if( this->m_pTree), File:%s , Line:%d \n",__FILE__,__LINE__);
 		DWORD	dwAddr;
-		GetEIP(&dwAddr);
-		g_pErrorHandleFunc(ERROR_TYPE_ENGINE_CODE,0,(void*)dwAddr,txt);
+		//GetEIP(&dwAddr);
+		//g_pErrorHandleFunc(ERROR_TYPE_ENGINE_CODE,0,(void*)dwAddr,txt);
 #else
 		__asm int 3;
 #endif

@@ -188,8 +188,8 @@ BOOL CFontCache::GetResource(LPDIRECT3DTEXTURE8* ppTex,CVertexBuffer** ppVB,CInd
 	if (!pProperty->dwStrLen)
 	{
 		DWORD	dwAddr;
-		GetEIP(&dwAddr);
-		g_pErrorHandleFunc(ERROR_TYPE_PARAMETER_INVALID,0,(void*)dwAddr,"string length is zero");
+		//GetEIP(&dwAddr);
+		//g_pErrorHandleFunc(ERROR_TYPE_PARAMETER_INVALID,0,(void*)dwAddr,"string length is zero");
 	}
 #endif
 

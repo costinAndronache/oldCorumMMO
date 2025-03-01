@@ -190,8 +190,8 @@ BOOL CGXMap::CreateInitialGXObjectList(DWORD dwNum)
 		memset(txt,0,512);
 		wsprintf(txt,"CGXMap::CreateGXObjectList(), Already GXObject Created, File:%s , Line:%d \n",__FILE__,__LINE__);
 		DWORD	dwAddr;
-		GetEIP(&dwAddr);
-		g_pErrorHandleFunc(ERROR_TYPE_ENGINE_CODE,0,(void*)dwAddr,txt);
+		//GetEIP(&dwAddr);
+		//g_pErrorHandleFunc(ERROR_TYPE_ENGINE_CODE,0,(void*)dwAddr,txt);
 
 	}
 #endif
@@ -233,8 +233,8 @@ BOOL CGXMap::CreateInitialGXLightList(DWORD dwNum)
 		memset(txt,0,512);
 		wsprintf(txt,"CGXMap::CreateGXLightList(), Already GXLight Created, File:%s , Line:%d \n",__FILE__,__LINE__);
 		DWORD	dwAddr;
-		GetEIP(&dwAddr);
-		g_pErrorHandleFunc(ERROR_TYPE_ENGINE_CODE,0,(void*)dwAddr,txt);
+		//GetEIP(&dwAddr);
+		//g_pErrorHandleFunc(ERROR_TYPE_ENGINE_CODE,0,(void*)dwAddr,txt);
 	}
 #endif
 
@@ -276,8 +276,8 @@ BOOL CGXMap::CreateInitialGXTriggerList(DWORD dwNum)
 		memset(txt,0,512);
 		wsprintf(txt,"CGXMap::CreateGXTriggerList(), Already GXTrigger Created, File:%s , Line:%d \n",__FILE__,__LINE__);
 		DWORD	dwAddr;
-		GetEIP(&dwAddr);
-		g_pErrorHandleFunc(ERROR_TYPE_ENGINE_CODE,0,(void*)dwAddr,txt);
+		//GetEIP(&dwAddr);
+		//g_pErrorHandleFunc(ERROR_TYPE_ENGINE_CODE,0,(void*)dwAddr,txt);
 	}
 #endif
 
@@ -541,8 +541,8 @@ DWORD CGXMap::GetAllInitialGXObjects(GXOBJECT_HANDLE* pObjArray,DWORD dwMaxNum)
 			memset(txt,0,512);
 			wsprintf(txt,"CGXMap::GetAllInitialGXObjects(), if (!m_ppInitialGXObjectList[i]), File:%s , Line:%d \n",__FILE__,__LINE__);
 			DWORD	dwAddr;
-			GetEIP(&dwAddr);
-			g_pErrorHandleFunc(ERROR_TYPE_ENGINE_CODE,0,(void*)dwAddr,txt);
+			//GetEIP(&dwAddr);
+			//g_pErrorHandleFunc(ERROR_TYPE_ENGINE_CODE,0,(void*)dwAddr,txt);
 		}
 
 		if(m_pExecutive->IsValidHandle(m_ppInitialGXObjectList[i]) == GX_MAP_OBJECT_TYPE_INVALID)
@@ -550,8 +550,8 @@ DWORD CGXMap::GetAllInitialGXObjects(GXOBJECT_HANDLE* pObjArray,DWORD dwMaxNum)
 			memset(txt,0,512);
 			wsprintf(txt,"CGXMap::GetAllInitialGXObjects(), if(IsValidHandle(m_ppInitialGXObjectList[i])==GX_MAP_OBJECT_TYPE_INVALID), File:%s , Line:%d \n",__FILE__,__LINE__);
 			DWORD	dwAddr;
-			GetEIP(&dwAddr);
-			g_pErrorHandleFunc(ERROR_TYPE_ENGINE_CODE,0,(void*)dwAddr,txt);
+			//GetEIP(&dwAddr);
+			//g_pErrorHandleFunc(ERROR_TYPE_ENGINE_CODE,0,(void*)dwAddr,txt);
 		}
 #endif
 		if (dwCount >= dwMaxNum)
@@ -580,8 +580,8 @@ void CGXMap::DeleteAllInitialObjects()
 				memset(txt,0,512);
 				wsprintf(txt,"CGXMap::DeleteAllInitialObjects(), if (!m_ppInitialGXObjectList[i]), File:%s , Line:%d \n",__FILE__,__LINE__);
 				DWORD	dwAddr;
-				GetEIP(&dwAddr);
-				g_pErrorHandleFunc(ERROR_TYPE_ENGINE_CODE,0,(void*)dwAddr,txt);
+				//GetEIP(&dwAddr);
+				//g_pErrorHandleFunc(ERROR_TYPE_ENGINE_CODE,0,(void*)dwAddr,txt);
 			}
 
 			if(m_pExecutive->IsValidHandle(m_ppInitialGXObjectList[i]) == GX_MAP_OBJECT_TYPE_INVALID)
@@ -589,8 +589,8 @@ void CGXMap::DeleteAllInitialObjects()
 				memset(txt,0,512);
 				wsprintf(txt,"CGXMap::DeleteAllInitialObjects(), if(IsValidHandle(m_ppInitialGXObjectList[i])==GX_MAP_OBJECT_TYPE_INVALID), File:%s , Line:%d \n",__FILE__,__LINE__);
 				DWORD	dwAddr;
-				GetEIP(&dwAddr);
-				g_pErrorHandleFunc(ERROR_TYPE_ENGINE_CODE,0,(void*)dwAddr,txt);
+				//GetEIP(&dwAddr);
+				//g_pErrorHandleFunc(ERROR_TYPE_ENGINE_CODE,0,(void*)dwAddr,txt);
 			}
 #endif
 			m_pExecutive->ImmDeleteGXObject(m_ppInitialGXObjectList[i]);
@@ -610,16 +610,16 @@ void CGXMap::DeleteAllInitialObjects()
 				memset(txt,0,512);
 				wsprintf(txt,"CGXMap::DeleteAllInitialObjects(), if (!m_ppInitialGXLightList[i]), File:%s , Line:%d \n",__FILE__,__LINE__);
 				DWORD	dwAddr;
-				GetEIP(&dwAddr);
-				g_pErrorHandleFunc(ERROR_TYPE_ENGINE_CODE,0,(void*)dwAddr,txt);
+				//GetEIP(&dwAddr);
+				//g_pErrorHandleFunc(ERROR_TYPE_ENGINE_CODE,0,(void*)dwAddr,txt);
 			}
 
 			if(m_pExecutive->IsValidHandle(m_ppInitialGXLightList[i]) == GX_MAP_OBJECT_TYPE_INVALID)
 			{
 				wsprintf(txt,"CGXMap::DeleteAllInitialObjects(), if(IsValidHandle(m_ppInitialGXLightList[i])==GX_MAP_OBJECT_TYPE_INVALID, File:%s , Line:%d \n",__FILE__,__LINE__);
 				DWORD	dwAddr;
-				GetEIP(&dwAddr);
-				g_pErrorHandleFunc(ERROR_TYPE_ENGINE_CODE,0,(void*)dwAddr,txt);
+				//GetEIP(&dwAddr);
+				//g_pErrorHandleFunc(ERROR_TYPE_ENGINE_CODE,0,(void*)dwAddr,txt);
 			}
 #endif
 			m_pExecutive->ImmDeleteGXLight(m_ppInitialGXLightList[i]);
@@ -640,16 +640,16 @@ void CGXMap::DeleteAllInitialObjects()
 				memset(txt,0,512);
 				wsprintf(txt,"CGXMap::DeleteAllInitialObjects(), if (!m_ppInitialGXTriggerList[i]), File:%s , Line:%d \n",__FILE__,__LINE__);
 				DWORD	dwAddr;
-				GetEIP(&dwAddr);
-				g_pErrorHandleFunc(ERROR_TYPE_ENGINE_CODE,0,(void*)dwAddr,txt);
+				//GetEIP(&dwAddr);
+				//g_pErrorHandleFunc(ERROR_TYPE_ENGINE_CODE,0,(void*)dwAddr,txt);
 			}
 
 			if(m_pExecutive->IsValidHandle(m_ppInitialGXTriggerList[i]) == GX_MAP_OBJECT_TYPE_INVALID)
 			{
 				wsprintf(txt,"CGXMap::DeleteAllInitialObjects(), if (IsValidHandle(m_ppInitialGXTriggerList[i])==GX_MAP_OBJECT_TYPE_INVALID, File:%s , Line:%d \n",__FILE__,__LINE__);
 				DWORD	dwAddr;
-				GetEIP(&dwAddr);
-				g_pErrorHandleFunc(ERROR_TYPE_ENGINE_CODE,0,(void*)dwAddr,txt);
+				//GetEIP(&dwAddr);
+				//g_pErrorHandleFunc(ERROR_TYPE_ENGINE_CODE,0,(void*)dwAddr,txt);
 			}
 #endif
 			m_pExecutive->ImmDeleteGXEventTrigger(m_ppInitialGXTriggerList[i]);

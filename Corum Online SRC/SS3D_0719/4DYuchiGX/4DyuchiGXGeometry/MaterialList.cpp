@@ -6,6 +6,7 @@
 CMaterialList::CMaterialList()
 {
 	memset(this,0,sizeof(CMaterialList));
+	_indexForMaterialPtr = new std::map<MATERIAL*, DWORD>();
 }
 
 
@@ -14,18 +15,15 @@ BOOL CMaterialList::Initialize(DWORD dwMtlNum)
 	m_dwMaxMtlNum = dwMtlNum;
 	dwMtlNum++;
 
-	DWORD	dwSize = sizeof(MTL_HANDLE)*dwMtlNum;
+	DWORD	dwSize = sizeof(MTL_HANDLE_GXGEOMETRY)*dwMtlNum;
 
-	m_pMtlList = new MTL_HANDLE[dwMtlNum];
-	memset(m_pMtlList,0,sizeof(MTL_HANDLE)*dwMtlNum);
+	m_pMtlList = new MTL_HANDLE_GXGEOMETRY[dwMtlNum];
+	memset(m_pMtlList,0,sizeof(MTL_HANDLE_GXGEOMETRY)*dwMtlNum);
 
 	return TRUE;
 }
 BOOL CMaterialList::BeginBulidMaterialList(DWORD dwMaxMtlNum)
 {
-	m_pHashMtl = VBHCreate();
-	VBHInitialize(m_pHashMtl,40,sizeof(CMaterial),dwMaxMtlNum);
-
 	return TRUE;
 }
 
@@ -45,24 +43,26 @@ lb_return:
 }
 DWORD CMaterialList::AddMaterial(MATERIAL* pMtl)
 {
-	DWORD		dwMtlIndex = 0xffffffff;
+	const DWORD N_A = 0xffffffff;
+	const auto found = _indexForMaterialPtr->find(pMtl);
 
-	if (!VBHSelect(m_pHashMtl,&dwMtlIndex,1,(void*)pMtl,sizeof(MATERIAL)))
+	if (found == _indexForMaterialPtr->end())
 	{
-		if (m_dwMtlNum >= m_dwMaxMtlNum)
-			goto lb_return;
+		if (m_dwMtlNum >= m_dwMaxMtlNum) {
+			return N_A;
+		}
 
-		m_pMtlList[m_dwMtlNum].Mtl.SetMateiralInfo(pMtl);
+		const auto dwMtlIndex = m_dwMtlNum;
+		m_pMtlList[dwMtlIndex].Mtl.SetMateiralInfo(pMtl);
 		
-		dwMtlIndex = m_dwMtlNum;
-		m_pMtlList[m_dwMtlNum].Mtl.SetIndex(dwMtlIndex);
-		
-		VBHInsert(m_pHashMtl,dwMtlIndex,pMtl,sizeof(MATERIAL));
+		_indexForMaterialPtr->insert({ pMtl, dwMtlIndex });
+		m_pMtlList[dwMtlIndex].Mtl.SetIndex(dwMtlIndex);
 		m_dwMtlNum++;
-	}	
 
-lb_return:
-	return dwMtlIndex;
+		return dwMtlIndex;
+	}
+
+	return N_A;
 }
 CMaterial* CMaterialList::GetMaterial(DWORD dwMtlIndex)
 {
@@ -93,8 +93,8 @@ DWORD CMaterialList::CreateMaterialTable(MATERIAL_TABLE** ppMtlTableList)
 				memset(txt,0,512);
 				wsprintf(txt,"CMaterialList::CreateMaterialTable(), if (dwNum >= m_dwMtlNum), File:%s , Line:%d \n",__FILE__,__LINE__);
 				DWORD	dwAddr;
-				GetEIP(&dwAddr);
-				g_pErrorHandleFunc(ERROR_TYPE_ENGINE_CODE,0,(void*)dwAddr,txt);
+				//GetEIP(&dwAddr);
+				//g_pErrorHandleFunc(ERROR_TYPE_ENGINE_CODE,0,(void*)dwAddr,txt);
 			}
 #endif
 
@@ -115,14 +115,6 @@ void CMaterialList::ReleaseMaterialTable(MATERIAL_TABLE* pMtlTableList)
 
 void CMaterialList::Release()
 {
-	
-
-	if (m_pHashMtl)
-	{
-		VBHRelease(m_pHashMtl);
-		m_pHashMtl = NULL;
-	}
-
 	if (m_pMtlList)
 	{
 		delete [] m_pMtlList;

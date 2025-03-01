@@ -67,8 +67,8 @@ class CoExecutive : public I4DyuchiGXExecutive
 	ITEMTABLE_HANDLE			m_pIndexItemTableGXTrigger;
 	ITEMTABLE_HANDLE			m_pIndexItemTableGXDecal;
 	
-	std::map<std::string, MODEL_FILE_DESC*> _modelFileDescPerFilename;
-	std::map<DWORD, GXMAP_OBJECT_HANDLE> _gxMapObjectPerID;
+	std::map<std::string, MODEL_FILE_DESC*>* _modelFileDescPerFilename;
+	std::map<DWORD, GXMAP_OBJECT_HANDLE>* _gxMapObjectPerID;
 
 	I3DModel*					m_pModelList[SYMBOL_TYPE_NUM];
 
@@ -147,7 +147,7 @@ public:
 
 	I3DModel*					GetSymbolModel(SYMBOL_TYPE type) {return m_pModelList[type];}
 
-	std::map<DWORD, GXMAP_OBJECT_HANDLE>* gxMapObjectPerID() { return &_gxMapObjectPerID; }
+	std::map<DWORD, GXMAP_OBJECT_HANDLE>* gxMapObjectPerID() { return _gxMapObjectPerID; }
 	void						DeleteModelFileDesc(MODEL_FILE_DESC* pModelFileDesc);
 //	CoGXObject*					GetTracedGXObject() {return m_pTracedGXObject;}
 
@@ -163,7 +163,7 @@ public:
 	HRESULT					GetGeometry(I4DyuchiGXGeometry** ppGeometry);		// Release« ø‰«‘
 	HRESULT					GetFileStorage(I4DyuchiFileStorage** ppFileStorage);
 		
-	BOOL					InitializeWithoutRegistry(char* szGeometryFileName,HWND hWnd,DISPLAY_INFO* pInfo,DWORD dwMaxObjectNum,DWORD dwMaxLightNum,DWORD dwMaxTriggerNum,DWORD dwViewportNum, DWORD dwMaxDecalNum,ErrorHandleProc pErrorHandleFunc);
+	BOOL					InitializeWithoutRegistry(HWND hWnd,DISPLAY_INFO* pInfo,DWORD dwMaxObjectNum,DWORD dwMaxLightNum,DWORD dwMaxTriggerNum,DWORD dwViewportNum, DWORD dwMaxDecalNum,ErrorHandleProc pErrorHandleFunc);
 	BOOL					Initialize(HWND hWnd,DISPLAY_INFO* pInfo,DWORD dwMaxObjectNum,DWORD dwMaxLightNum,DWORD dwMaxTriggerNum,DWORD dwViewportNum, DWORD dwMaxDecalNum,ErrorHandleProc pErrorHandleFunc);
 	BOOL					InitializeFileStorageWithoutRegistry(DWORD dwMaxFileNum,DWORD dwMaxFileHandleNumAtSameTime,DWORD dwMaxFileNameLen,FILE_ACCESS_METHOD accessMethod,PACKFILE_NAME_TABLE* pPackFileList,DWORD dwNum);
 	BOOL					InitializeFileStorage(DWORD dwMaxFileNum,DWORD dwMaxFileHandleNumAtSameTime,DWORD dwMaxFileNameLen,FILE_ACCESS_METHOD accessMethod,PACKFILE_NAME_TABLE* pPackFileList,DWORD dwNum);
