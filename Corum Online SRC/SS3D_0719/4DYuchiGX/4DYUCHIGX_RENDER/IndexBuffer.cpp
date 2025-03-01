@@ -116,5 +116,7 @@ void CIndexBuffer::Cleanup()
 }
 CIndexBuffer::~CIndexBuffer()
 {
+	return;
+
 	Cleanup();
 }

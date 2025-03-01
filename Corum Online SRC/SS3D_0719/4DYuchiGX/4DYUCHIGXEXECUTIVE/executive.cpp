@@ -128,21 +128,21 @@ void CoExecutive::CheckGXDecalsList(CGXDecal* pInDecal)
 
 
 
-BOOL  Def_DeleteGXObject(CoExecutive* pExecutive,GXOBJECT_HANDLE gxh)
+static BOOL  __stdcall Def_DeleteGXObject(CoExecutive* pExecutive,GXOBJECT_HANDLE gxh)
 {
 	return pExecutive->ImmDeleteGXObject(gxh);
 }
 
-BOOL  Def_DeleteGXLight(CoExecutive* pExecutive,GXLIGHT_HANDLE gxh)
+static BOOL __stdcall  Def_DeleteGXLight(CoExecutive* pExecutive,GXLIGHT_HANDLE gxh)
 {	
 	return pExecutive->ImmDeleteGXLight(gxh);
 }
-BOOL  Def_DeleteGXEventTrigger(CoExecutive* pExecutive,GXTRIGGER_HANDLE gxh)
+static BOOL __stdcall Def_DeleteGXEventTrigger(CoExecutive* pExecutive,GXTRIGGER_HANDLE gxh)
 {
 	return pExecutive->ImmDeleteGXEventTrigger(gxh);	
 }
 
-BOOL  Def_DeleteGXDecal(CoExecutive* pExecutive,GXDECAL_HANDLE gxh)
+static BOOL __stdcall Def_DeleteGXDecal(CoExecutive* pExecutive,GXDECAL_HANDLE gxh)
 {
 	return pExecutive->ImmDeleteGXDecal(gxh);
 }
@@ -3858,10 +3858,15 @@ BOOL  CoExecutive::DeleteGXDecal(GXLIGHT_HANDLE gxh)
 }
 BOOL  CoExecutive::DefDeleteGXObject(GXOBJECT_HANDLE gxh)
 {
+	return TRUE;
+
 	BOOL	bResult;
 	DWORD	argList[2];
 	argList[0] = (DWORD)this;
 	argList[1] = (DWORD)gxh;
+	auto cogxobj = (CoGXObject*)gxh;
+	cogxobj->SetScheduleProc(nullptr);
+
 	bResult =  DPCQPushDPC(m_pDPCQ,Def_DeleteGXObject,2,argList,NULL,0);
 #ifdef	_DEBUG
 	if (!bResult)

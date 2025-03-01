@@ -60,7 +60,15 @@ void __stdcall CIBHeap::Release()
 BOOL __stdcall CIBHeap::AllocIB(DWORD* pdwErrorCode,CIndexBuffer* pIndexBuffer,DWORD dwIndicesNum,DWORD* pdwSize,BOOL* pbEnable,IResourceController* pResourceController)
 {
 	BOOL	bResult;
-	bResult = m_D3DRCBufferHeap.AllocBuffer(pdwErrorCode,(IDirect3DResource8**)&pIndexBuffer->m_pIB,&pIndexBuffer->m_pIBHandle,&pIndexBuffer->m_dwStartIndex,NULL,dwIndicesNum,pbEnable,pResourceController);
+	bResult = m_D3DRCBufferHeap.AllocBuffer(
+		pdwErrorCode,
+		(IDirect3DResource8**)&pIndexBuffer->m_pIB,
+		&pIndexBuffer->m_pIBHandle,
+		&pIndexBuffer->m_dwStartIndex,
+		NULL,
+		dwIndicesNum,
+		pbEnable,
+		pResourceController);
 	if (!bResult)
 		goto lb_return;
 

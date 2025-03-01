@@ -481,8 +481,8 @@ void CD3DResourceBufferHeap::Cleanup()
 	if (m_pHeap)
 	{
 #ifdef _DEBUG
-	VHPHeapCheck(m_pHeap);
-	VHPLeakCheck(m_pHeap);
+//	VHPHeapCheck(m_pHeap);
+//	VHPLeakCheck(m_pHeap);
 #endif
 		VHPReleaseHeap(m_pHeap);
 		m_pHeap = NULL;

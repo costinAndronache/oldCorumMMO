@@ -69,7 +69,6 @@ class CoGXObject : public CGXMapObject
 	void SetOldPosition( VECTOR3* pPos);
 
 public:
-	bool IsCrashSource();
 	MATRIX4*			GetParentMatrix() {return m_pParentMatrix;}
 	void GetLastVelocityAfterCollisionTest( VECTOR3* pLastVelocity);
 //	void GetVelocity( VECTOR3* pOutVelocity);

@@ -1425,21 +1425,24 @@ BOOL LoadWorldMapScript(char* szMapFile, DWORD dwFlag)
 				fscanf(fp,"%x",&dwFlag);
 				
 
-				g_pGVWorld->hMapObjHandle[ g_pGVWorld->wMapObjectNum ] = CreateHandleObject(GetFile(buf, DATA_TYPE_MAP),NULL,NULL,GXOBJECT_CREATE_TYPE_DEFAULT_PROC);
-				g_pExecutive->DisableSendShadow(g_pGVWorld->hMapObjHandle[ g_pGVWorld->wMapObjectNum ]);
-				
-				
-				g_pExecutive->SetID(g_pGVWorld->hMapObjHandle[ g_pGVWorld->wMapObjectNum ],dwID);
-				//물은 Picking 안되게 
-				if(dwID == WORLD_OBJECT_WATER)
-					g_pExecutive->DisablePick(g_pGVWorld->hMapObjHandle[ g_pGVWorld->wMapObjectNum ]);
+				const auto handle = CreateHandleObject(GetFile(buf, DATA_TYPE_MAP),NULL,NULL,GXOBJECT_CREATE_TYPE_DEFAULT_PROC);
+				if (handle) {
+					g_pGVWorld->hMapObjHandle[g_pGVWorld->wMapObjectNum] = handle;
+					g_pExecutive->DisableSendShadow(handle);
 
-				// 일단 스케일은 무시..
-				GXSetPosition(g_pGVWorld->hMapObjHandle[ g_pGVWorld->wMapObjectNum ],&v3Pos, FALSE);
-				g_pExecutive->GXOSetDirection(g_pGVWorld->hMapObjHandle[ g_pGVWorld->wMapObjectNum ],&v3Axis,fRad);
-				SetBoundingVolume(g_pGVWorld->hMapObjHandle[ g_pGVWorld->wMapObjectNum ], 40.0f);
+					g_pExecutive->SetID(g_pGVWorld->hMapObjHandle[g_pGVWorld->wMapObjectNum], dwID);
+					//물은 Picking 안되게 
+					if (dwID == WORLD_OBJECT_WATER)
+						g_pExecutive->DisablePick(g_pGVWorld->hMapObjHandle[g_pGVWorld->wMapObjectNum]);
 
-				g_pGVWorld->wMapObjectNum++;
+					// 일단 스케일은 무시..
+					GXSetPosition(g_pGVWorld->hMapObjHandle[g_pGVWorld->wMapObjectNum], &v3Pos, FALSE);
+					g_pExecutive->GXOSetDirection(g_pGVWorld->hMapObjHandle[g_pGVWorld->wMapObjectNum], &v3Axis, fRad);
+					SetBoundingVolume(g_pGVWorld->hMapObjHandle[g_pGVWorld->wMapObjectNum], 40.0f);
+
+					g_pGVWorld->wMapObjectNum++;
+				}
+
 			}
 
 			fscanf(fp,"%s",buf);		

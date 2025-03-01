@@ -21,8 +21,9 @@ STDMETHODIMP_(ULONG) C3DSprite::AddRef(void)
 STDMETHODIMP_(ULONG) C3DSprite::Release(void)
 {
 	m_dwRefCount--;
-	if (!m_dwRefCount)
+	if (!m_dwRefCount) {
 		delete this;
+	}
 
 	return 0;
 }

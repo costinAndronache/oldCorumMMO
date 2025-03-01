@@ -707,14 +707,7 @@ lb_return:
 
 	return bResult;
 }
-bool CoGXObject::IsCrashSource() {
-	if (m_pModelFileItem) {
-		if (strcmp("e0708000.chr", m_pModelFileItem->szFileName) == 0) {
-			return true;
-		}
-	}
-	return false;
-}
+
 void CoGXObject::SetAlphaFlag(DWORD dwFlag)
 {
 	m_dwAlphaFlag = dwFlag;
