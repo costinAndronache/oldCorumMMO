@@ -477,5 +477,6 @@ void CVertexBuffer::Cleanup()
 }
 CVertexBuffer::~CVertexBuffer()
 {
+	return;
 	Cleanup();
 }

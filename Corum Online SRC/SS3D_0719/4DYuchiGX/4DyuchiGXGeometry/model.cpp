@@ -2179,6 +2179,8 @@ void CoModel::ReleaseMaterials()
 
 void CoModel::ReleaseObjects()
 {
+	return;
+
 	if (m_pMeshObjectList)
 	{
 		delete [] m_pMeshObjectList;

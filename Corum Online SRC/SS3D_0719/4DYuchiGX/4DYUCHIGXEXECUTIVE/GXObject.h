@@ -67,9 +67,8 @@ class CoGXObject : public CGXMapObject
 
 	//	2004/01/08	보간을 위해 추가.
 	void SetOldPosition( VECTOR3* pPos);
-
 public:
-	bool IsCrashSource();
+	~CoGXObject();
 	MATRIX4*			GetParentMatrix() {return m_pParentMatrix;}
 	void GetLastVelocityAfterCollisionTest( VECTOR3* pLastVelocity);
 //	void GetVelocity( VECTOR3* pOutVelocity);

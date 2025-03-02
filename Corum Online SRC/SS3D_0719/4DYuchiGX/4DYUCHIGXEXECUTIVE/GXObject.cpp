@@ -583,6 +583,10 @@ lb_return:
 }
 DWORD g_dwPrvTick = 0;
 
+CoGXObject::~CoGXObject() {
+	printf("deleted");
+}
+
 DWORD CoGXObject::OnFrame(I4DyuchiGXExecutive* pExecutive,DWORD msg,int arg1,int arg2)
 {
 	SetOldPosition( &m_v3Pos);
@@ -599,8 +603,10 @@ DWORD CoGXObject::OnFrame(I4DyuchiGXExecutive* pExecutive,DWORD msg,int arg1,int
 		__asm nop
 	}
 */
-	if (m_pProc)
-		m_pProc(pExecutive,this,msg,arg1,arg2,m_pData);
+	const auto proc = m_pProc;
+	if (proc) { 
+		proc(pExecutive, this, msg, arg1, arg2, m_pData);
+	}
 
 //	if( m_bApplyVelocity)
 //		OnFrameApplyVelocity();
@@ -707,14 +713,7 @@ lb_return:
 
 	return bResult;
 }
-bool CoGXObject::IsCrashSource() {
-	if (m_pModelFileItem) {
-		if (strcmp("e0708000.chr", m_pModelFileItem->szFileName) == 0) {
-			return true;
-		}
-	}
-	return false;
-}
+
 void CoGXObject::SetAlphaFlag(DWORD dwFlag)
 {
 	m_dwAlphaFlag = dwFlag;

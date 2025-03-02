@@ -187,8 +187,6 @@ interface I4DyuchiGXExecutive : public IUnknown
 	
 	virtual	BOOL					SetSymbol(SYMBOL_TYPE type,char* szFileName) = 0;
 	virtual	void					SetRenderMode(DWORD dwRenderMode) = 0;
-	virtual	DWORD					GetGXObjectsNum() = 0;
-	virtual	GXOBJECT_HANDLE			GetGXObjectWithSeqIndex(DWORD dwIndex) = 0;
 
 	virtual DWORD					GetGXLightsNum() = 0;
 	virtual GXLIGHT_HANDLE			GetGXLightWithSeqIndex(DWORD dwIndex) = 0;

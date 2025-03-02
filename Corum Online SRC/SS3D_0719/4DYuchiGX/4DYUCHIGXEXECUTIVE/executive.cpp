@@ -128,21 +128,21 @@ void CoExecutive::CheckGXDecalsList(CGXDecal* pInDecal)
 
 
 
-BOOL  Def_DeleteGXObject(CoExecutive* pExecutive,GXOBJECT_HANDLE gxh)
+BOOL __stdcall  Def_DeleteGXObject(CoExecutive* pExecutive,GXOBJECT_HANDLE gxh)
 {
 	return pExecutive->ImmDeleteGXObject(gxh);
 }
 
-BOOL  Def_DeleteGXLight(CoExecutive* pExecutive,GXLIGHT_HANDLE gxh)
+BOOL __stdcall  Def_DeleteGXLight(CoExecutive* pExecutive,GXLIGHT_HANDLE gxh)
 {	
 	return pExecutive->ImmDeleteGXLight(gxh);
 }
-BOOL  Def_DeleteGXEventTrigger(CoExecutive* pExecutive,GXTRIGGER_HANDLE gxh)
+BOOL __stdcall  Def_DeleteGXEventTrigger(CoExecutive* pExecutive,GXTRIGGER_HANDLE gxh)
 {
 	return pExecutive->ImmDeleteGXEventTrigger(gxh);	
 }
 
-BOOL  Def_DeleteGXDecal(CoExecutive* pExecutive,GXDECAL_HANDLE gxh)
+BOOL __stdcall  Def_DeleteGXDecal(CoExecutive* pExecutive,GXDECAL_HANDLE gxh)
 {
 	return pExecutive->ImmDeleteGXDecal(gxh);
 }

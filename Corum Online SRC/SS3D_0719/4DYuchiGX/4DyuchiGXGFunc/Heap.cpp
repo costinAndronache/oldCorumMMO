@@ -80,7 +80,7 @@ void CHeap::FreeMemoryStatusDesc(MEMORY_STATUS_DESC_LINK* pDesc)
 	pPrv->pNext = pNext;
 	pNext->pPrv = pPrv;
 
-	delete m_pStatusDescLinkPool;
+	//delete m_pStatusDescLinkPool;
 }
 
 CHeap::CHeap()
