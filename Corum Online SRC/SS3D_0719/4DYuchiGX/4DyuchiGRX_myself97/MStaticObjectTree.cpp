@@ -1,7 +1,6 @@
 // MStaticObjectTree.cpp: implementation of the MStaticObjectTree class.
 //
 //////////////////////////////////////////////////////////////////////
-#include "StdAfx.h"
 #include "MStaticObjectTree.h"
 #include	"myself97Common.h"
 #include	"../4DyuchiGXGFunc/global.h"

@@ -950,7 +950,7 @@ void CoGXObject::InitializeCollisionMesh()
 	
 	MATRIX4		matTransform = m_matTransform;
 
-	for (i=0; i<m_dwModelNum; i++)
+	for (int i=0; i<m_dwModelNum; i++)
 	{
 		m_ModelList[i].pModel->UpdateColMeshDesc(m_ModelList[i].dwRefIndex,m_pParentMatrix,&m_matTransform,m_dwCurrentFrame,m_dwCurrentMotionIndex,m_dwRenderFlag | RENDER_TYPE_UPDATE_COLLISION_BONEMESH_DESC);
 	}

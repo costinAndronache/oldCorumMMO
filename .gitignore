@@ -53,3 +53,6 @@ SS3DRendererForCorum.lib
 SS3DGeometryForCorum.lib
 SS3DRendererForCorum.dll
 SS3DGeometryForCorum.dll
+SS3DExecutiveForCorum.dll
+SS3DExecutiveForCorum.lib
+SizeReporter.txt
