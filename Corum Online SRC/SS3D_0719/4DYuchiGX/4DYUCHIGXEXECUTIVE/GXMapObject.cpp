@@ -36,7 +36,7 @@ BOOL CGXMapObject::SetID(DWORD dwID)
 	void* pSearchHandle;
 	if (QBHSelect(pHash,&pSearchHandle,&dwItem,1,dwID))
 	{
-		MessageBox(NULL,"conflict of GXObject's UID","Error",MB_OK);
+		//MessageBox(NULL,"conflict of GXObject's UID","Error",MB_OK);
 		goto lb_return;
 	}
 
