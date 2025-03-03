@@ -4,7 +4,7 @@
 #ifdef SS3D_TEST
 #include "./../SS3D_0719/4dyuchigx/4DYUCHIGRX_COMMON/math.inl"
 #else
-#include "./../4DYUCHIGRX_COMMON/math.inl"
+#include "./../SS3D_0719/4dyuchigx/4DYUCHIGRX_COMMON/math.inl"
 #endif
 #include "ProtocolDefinition.h"
 #include "Item.h"

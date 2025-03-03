@@ -1,8 +1,12 @@
 chdir %~dp0
-echo "Begin copying 4DyuchiGXGFunc artifacts"
+call .\setDirectoryVariables.bat
 
-XCOPY /Y /B "..\Corum Online SRC\SS3D_0719\4DYuchiGX\4DyuchiFileStorage\Debug\4DyuchiFileStorage.lib" "..\Corum Online SRC\centralizedOutput\4DyuchiFileStorage.lib*"
-XCOPY /Y /B "..\Corum Online SRC\SS3D_0719\4DYuchiGX\4DyuchiFileStorage\Debug\4DyuchiFileStorage.pdb" "..\Corum Online SRC\centralizedOutput\4DyuchiFileStorage.pdb*"
+echo "Begin copying 4DyuchiFileStorage artifacts"
+
+
+XCOPY /Y /B "..\Corum Online SRC\SS3D_0719\4DYuchiGX\4DyuchiFileStorage\Debug\SS3DFileStorage.lib" "%CENTRALIZED_OUTPUT_DIR%\SS3DFileStorage.lib*"
+XCOPY /Y /B "..\Corum Online SRC\SS3D_0719\4DYuchiGX\4DyuchiFileStorage\Debug\SS3DFileStorage.pdb" "%CENTRALIZED_OUTPUT_DIR%\SS3DFileStorage.pdb*"
+XCOPY /Y /B "..\Corum Online SRC\SS3D_0719\4DYuchiGX\4DyuchiFileStorage\Debug\SS3DFileStorage.dll" "%CENTRALIZED_OUTPUT_DIR%\SS3DFileStorage.dll*"
 
 echo "copying done"
 

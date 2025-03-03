@@ -1,7 +1,7 @@
 #pragma once
 
 
-#include "..\\4DyuchiGXGFunc\\type.h"
+#include "../SS3D_0719/4DYUCHIGX/4DyuchiGXGFunc/type.h"
 
 
 struct	DBRECEIVEDATA;

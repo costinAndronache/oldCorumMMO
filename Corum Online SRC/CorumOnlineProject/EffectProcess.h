@@ -1,6 +1,6 @@
 #pragma once
 
-//#include "../4DyuchiGRX_Common/typedef.h"
+//#include "../SS3D_0719/4DYUCHIGX/4DyuchiGRX_common/typedef.h"
 #include "ObjectDefine.h"
 class CMonster;
 class EffectDesc;

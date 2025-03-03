@@ -1,25 +1,67 @@
 chdir %~dp0
+
+call .\setDirectoryVariables.bat
+
 echo "Begin installing products executables & libraries from centralizedOutput"
 
-COPY /Y /B "..\Corum Online SRC\centralizedOutput\CommonServer.dll" "..\Corum Online SRC\Installed Client\CommonServer.dll"
-COPY /Y /B "..\Corum Online SRC\centralizedOutput\CommonServer.dll" "..\Corum Online SRC\INNER\1_LoginAgent Configurations_INNER\CommonServer.dll"
-COPY /Y /B "..\Corum Online SRC\centralizedOutput\CommonServer.dll" "..\Corum Online SRC\INNER\2_WorldServer Configurations\CommonServer.dll"
-COPY /Y /B "..\Corum Online SRC\centralizedOutput\CommonServer.dll" "..\Corum Online SRC\INNER\3_DungeonServer Configurations_Beyonde\CommonServer.dll"
-COPY /Y /B "..\Corum Online SRC\centralizedOutput\CommonServer.dll" "..\Corum Online SRC\INNER\3_DungeonServer Configurations_Ludilos\CommonServer.dll"
+echo "COPY IN ALL PLACES COMMONServer.dll"
+echo CENTRALIZED_OUTPUT_DIR is "%CENTRALIZED_OUTPUT_DIR%"
 
-COPY /Y /B "..\Corum Online SRC\centralizedOutput\CommonServer.dll" "..\Corum Online SRC\Installed Client\CommonServer.dll"
+call :COPY_IN_ALL_PLACES CommonServer.dll
+call :COPY_IN_ALL_PLACES CommonServer.lib
 
-COPY /Y /B "..\Corum Online SRC\centralizedOutput\4DyuchiGXExecutive.pdb" "..\Corum Online SRC\Installed Client\4DyuchiGXExecutive.pdb"
-COPY /Y /B "..\Corum Online SRC\centralizedOutput\4DyuchiGXGFunc.pdb" "..\Corum Online SRC\Installed Client\4DyuchiGXGFunc.pdb"
-COPY /Y /B "..\Corum Online SRC\centralizedOutput\4DyuchiFileStorage.pdb" "..\Corum Online SRC\Installed Client\4DyuchiFileStorage.pdb"
-COPY /Y /B "..\Corum Online SRC\centralizedOutput\4DyuchiGX_Render.pdb" "..\Corum Online SRC\Installed Client\4DyuchiGX_Render.pdb"
-COPY /Y /B "..\Corum Online SRC\centralizedOutput\4DyuchiGXGeometry.pdb" "..\Corum Online SRC\Installed Client\4DyuchiGXGeometry.pdb"
+call :COPY_IN_ALL_PLACES BaseLibrary.lib
 
-COPY /Y /B "..\Corum Online SRC\centralizedOutput\LoginAgentResult.exe" "..\Corum Online SRC\INNER\1_LoginAgent Configurations_INNER\LoginAgentResult.exe"
-COPY /Y /B "..\Corum Online SRC\centralizedOutput\WorldServerResult.exe" "..\Corum Online SRC\INNER\2_WorldServer Configurations\WorldServerResult.exe"
-COPY /Y /B "..\Corum Online SRC\centralizedOutput\DungeonServerResult.exe" "..\Corum Online SRC\INNER\3_DungeonServer Configurations_Beyonde\DungeonServerResult.exe"
-COPY /Y /B "..\Corum Online SRC\centralizedOutput\DungeonServerResult.exe" "..\Corum Online SRC\INNER\3_DungeonServer Configurations_Ludilos\DungeonServerResult.exe"
-COPY /Y /B "..\Corum Online SRC\centralizedOutput\CorumOnlineResult.exe" "..\Corum Online SRC\Installed Client\CorumOnlineResult.exe"
+call :COPY_IN_ALL_PLACES I4DyuchiNET.lib
+
+call :COPY_IN_ALL_PLACES SS3DGFunc.pdb
+call :COPY_IN_ALL_PLACES SS3DGFunc.lib
+call :COPY_IN_ALL_PLACES SS3DGFunc.pdb
+
+
+call :COPY_IN_ALL_PLACES SS3DFileStorage.pdb
+call :COPY_IN_ALL_PLACES SS3DFileStorage.lib
+call :COPY_IN_ALL_PLACES SS3DFileStorage.dll
+
+call :CENTRALIZED_TO_LOGINSERVER LoginAgentResult.exe
+call :CENTRALIZED_TO_WORLDSERVER WorldServerResult.exe
+call :CENTRALIZED_TO_BEYONDE DungeonServerResult.exe
+call :CENTRALIZED_TO_LUDILOR DungeonServerResult.exe
+call :CENTRALIZED_TO_INSTALLED CorumOnlineResult.exe
 
 echo "copying done"
 pause
+
+:CENTRALIZED_TO_INSTALLED
+COPY /Y /B "%CENTRALIZED_OUTPUT_DIR%%~1" "%INSTALLED_CLIENT_DIR%%~1"
+GOTO:EOF
+
+:CENTRALIZED_TO_WORLDSERVER
+COPY /Y /B "%CENTRALIZED_OUTPUT_DIR%%~1" "%WORLDSERVER_DIR%%~1"
+GOTO:EOF
+
+
+:CENTRALIZED_TO_LOGINSERVER
+COPY /Y /B "%CENTRALIZED_OUTPUT_DIR%%~1" "%LOGINSERVER_DIR%%~1"
+GOTO:EOF
+
+:CENTRALIZED_TO_BEYONDE
+COPY /Y /B "%CENTRALIZED_OUTPUT_DIR%%~1" "%DUNGEONSERVER_BEYONDE_DIR%%~1" 
+GOTO:EOF 
+
+:CENTRALIZED_TO_LUDILOR
+COPY /Y /B "%CENTRALIZED_OUTPUT_DIR%%~1" "%DUNGEONSERVER_LUDILOS_DIR%%~1"
+GOTO:EOF
+
+:CENTRALIZED_TO_CORUMONLINEPROJECT
+COPY /Y /B "%CENTRALIZED_OUTPUT_DIR%%~1" %CORUMONLINEPROJECT_DIR%%~1"
+GOTO:EOF
+
+:COPY_IN_ALL_PLACES
+call :CENTRALIZED_TO_INSTALLED %~1
+call :CENTRALIZED_TO_WORLDSERVER %~1
+call :CENTRALIZED_TO_LOGINSERVER %~1
+call :CENTRALIZED_TO_BEYONDE %~1
+call :CENTRALIZED_TO_LUDILOR %~1
+call :CENTRALIZED_TO_CORUMONLINEPROJECT %~1
+GOTO:EOF

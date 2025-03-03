@@ -3,7 +3,7 @@
 #ifdef SS3D_TEST
 #include "./../SS3D_0719/4dyuchigx/4dyuchiGRX_common/IExecutive.h"
 #else
-#include "./../4dyuchiGRX_common/IExecutive.h"
+#include "./../SS3D_0719/4dyuchigx/4DYUCHIGRX_COMMON/IExecutive.h"
 #endif
 
 

@@ -6,7 +6,7 @@
 #ifdef SS3D_TEST
 #include "./../SS3D_0719/4dyuchigx/4DyuchiGRX_Common/typedef.h"
 #else
-#include "./../4DyuchiGRX_Common/typedef.h"
+#include "./../SS3D_0719/4dyuchigx/4DYUCHIGRX_COMMON/typedef.h"
 #endif
 #pragma once
 

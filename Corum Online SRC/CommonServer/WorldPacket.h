@@ -6,7 +6,7 @@
 #ifdef SS3D_TEST
 #include "./../SS3D_0719/4dyuchigx/4DyuchiGRX_common\\math.inl"
 #else
-#include "./../4DyuchiGRX_common\\math.inl"
+#include "./../SS3D_0719/4dyuchigx/4DYUCHIGRX_COMMON\\math.inl"
 #endif
 #include "GM_Command.h"
 #include "Item.h"

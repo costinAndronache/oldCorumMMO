@@ -23,7 +23,7 @@
 #ifdef SS3D_TEST
 #include "./../SS3D_0719/4dyuchigx/4DyuchiGRX_common/typedef.h"
 #else
-#include "./../4DyuchiGRX_common/typedef.h"
+#include "./../SS3D_0719/4dyuchigx/4DYUCHIGRX_COMMON/typedef.h"
 #endif
 
 

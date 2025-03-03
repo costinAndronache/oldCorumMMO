@@ -139,7 +139,44 @@ lb_return:
 	return bResult;
 
 }
+GLOBAL_FUNC_DLL void* __stdcall LALAlloc(STMPOOL_HANDLE pool)
+{
+	void*		pMem;
+	__asm
+	{
+		
+lb_begin:
+		mov			ebx,dword ptr[pool]
+		mov			edx,dword ptr[ebx]			; m_pBaseDesc
 
+		or			edx,edx						; 여분 메모리 블럭이 없는 경우 추가할당.
+		jnz			lb_step_1
+		
+		; reinitialize memory pool since nothing avaliable memory block
+		push		ebx
+		call		ReInitialize
+		pop			ebx
+
+		or			eax,eax
+		jnz			lb_begin
+		
+		xor			eax,eax
+		jmp			lb_return
+
+lb_step_1:
+		inc			dword ptr[ebx+20]
+		mov			eax,dword ptr[edx]		; m_pBaseDesc->m_pAddr
+		mov			esi,dword ptr[edx+4]	; m_pBaseDesc->m_pNext
+		add			eax,4					; result
+		mov			dword ptr[ebx],esi
+
+lb_return:
+
+		mov			dword ptr[pMem],eax
+	}
+
+	return pMem;
+}
 void BlockCheck(CLookAsideList* pList,char* pMemory)
 {
 	pMemory-=4;
@@ -159,6 +196,30 @@ void BlockCheck(CLookAsideList* pList,char* pMemory)
 		pCur = pCur->m_pNext;
 	}
 	
+}
+GLOBAL_FUNC_DLL void __stdcall LALFree(STMPOOL_HANDLE pool,void* pMemory)
+{
+	if (((CLookAsideList*)pool)->m_bBugCheck)
+		BlockCheck((CLookAsideList*)pool,(char*)pMemory);
+
+
+	__asm 
+	{	
+		mov			ebx,dword ptr[pool]
+		mov			eax,dword ptr[pMemory]
+
+
+		or			eax,eax
+		jz			lb_return;
+
+		mov			edx,dword ptr[eax-4]	; pDesc
+		mov			eax,dword ptr[ebx]		; m_pBaseDesc
+		
+		dec			dword ptr[ebx+20]
+		mov			dword ptr[edx+4],eax	; pDesc->m_pNext = m_pBaseDesc
+		mov			dword ptr[ebx],edx
+lb_return:
+	}
 }
 
 GLOBAL_FUNC_DLL void __stdcall LALEnableBlockCheck(STMPOOL_HANDLE pool,BOOL bSwitch)

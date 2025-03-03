@@ -1,9 +1,9 @@
-#include "../../4DYUCHIGRX_COMMON/StdAfx.h"
+#include "../../SS3D_0719/4dyuchigx/4DYUCHIGRX_COMMON/StdAfx.h"
 
 #include	"../../4DyuchiGXExecutive/GXObject.h"
 #include	"../myself97common.h"
 #include	"../CheckClock.h"
-#include	"../../4DyuchiGXGFunc/global.h"
+#include	"../../SS3D_0719/4dyuchigx/4DyuchiGXGFunc/global.h"
 #include	"../../4DyuchiGXExecutive/GXEventTriggerObject.h"
 
 #include	"CollisionTestMovingEllipsoidMeetTriangle.h"
