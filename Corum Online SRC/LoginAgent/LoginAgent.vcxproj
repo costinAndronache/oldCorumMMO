@@ -165,7 +165,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <GenerateManifest>false</GenerateManifest>
-    <IncludePath>$(IncludePath);..\I4DyuchiNET\include;</IncludePath>
+    <IncludePath>$(IncludePath);..\I4DyuchiNET</IncludePath>
     <OutDir>.\Debug\</OutDir>
     <TargetName>LoginAgentResult</TargetName>
     <IntDir>.\Debug\</IntDir>

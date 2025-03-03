@@ -165,7 +165,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <TargetName>DungeonServerResult</TargetName>
-    <IncludePath>..\staticLibsOutput\I4DyuchiNET\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(IncludePath);..\I4DyuchiNET</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug_with_New_Command|Win32'">
     <ClCompile>
