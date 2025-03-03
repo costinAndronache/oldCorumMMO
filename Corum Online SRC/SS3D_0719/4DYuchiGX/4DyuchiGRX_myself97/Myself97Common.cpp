@@ -1,4 +1,4 @@
-#include "./../4DYUCHIGRX_COMMON/stdafx.h"
+#include "./../SS3D_0719/4dyuchigx/4DYUCHIGRX_COMMON/stdafx.h"
 #include <math.H>
 #include "../4DYuchiGXGFunc/global.h"
 #include "myself97Common.h"

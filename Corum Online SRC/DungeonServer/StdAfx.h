@@ -33,7 +33,7 @@
 #pragma warning(disable : 4244)	// 타입 불일치 경고... 절대 disable 하지 말고 일일히 확인하고 캐스트해라!!
 #pragma warning(disable : 4127)
 
-#include "../4DyuchiGXGFunc/global.h"
+#include "../SS3D_0719/4DYUCHIGX/4DyuchiGXGFunc/global.h"
 #include "../CommonServer/CommonAccessory.h"
 #include "../CommonServer/ComInterface.h"
 #include "../CommonServer/GamePacket.h"

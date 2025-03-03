@@ -32,16 +32,19 @@ Corum Online SRC/CorumOnlineProject/CorumOnlineProject___Win32_dev/*
 *.bsc
 *.bsc
 Corum Online SRC/[Lib]INetwork-[RaGEZONE]/.vs
-Corum Online SRC/[Lib]INetwork-[RaGEZONE]/Debug
-Corum Online SRC/[Lib]INetwork-[RaGEZONE]/Debug
-Corum Online SRC/BaseLibrary/Debug.NET
-Corum Online SRC/DungeonServer/Debug
-Corum Online SRC/[Lib]INetwork-[RaGEZONE]/Debug
-Corum Online SRC/LoginAgent/Debug
-Corum Online SRC/WorldServer/Debug
-Corum Online SRC/[Lib]INetwork-[RaGEZONE]/Debug
 solutionEnvironment.bat
 Corum Online SRC/centralizedOutput
-Corum Online SRC/BaseLibrary/Debug
-Corum Online SRC/SS3D_0719/4DYuchiGX/4DyuchiGXGFunc/Debug
-Corum Online SRC/I4DyuchiNET/Debug
+
+WorldServerResult.exe
+BaseLibrary.lib
+CommonServer.dll
+CommonServer.lib
+I4DyuchiNET.lib
+LoginAgentResult.exe
+CorumOnlineResult.exe
+Debug
+
+SS3DGFunc.lib
+SS3DGFunc.dll
+SS3DFileStorage.dll
+SS3DFileStorage.lib

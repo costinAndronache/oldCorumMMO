@@ -1,9 +1,11 @@
 chdir %~dp0
+
+call .\setDirectoryVariables.bat
+
+
 echo "Begin copying client executable"
 
-XCOPY /Y /B "..\Corum Online SRC\CorumOnlineProject\Debug\CorumOnlineResult.exe" "..\Corum Online SRC\Installed Client\CorumOnlineResult.exe*"
-
-XCOPY /Y /B "..\Corum Online SRC\CorumOnlineProject\Debug\CorumOnlineResult.exe" "..\Corum Online SRC\centralizedOutput\CorumOnlineResult.exe*"
+XCOPY /Y /B "..\Corum Online SRC\CorumOnlineProject\Debug\CorumOnlineResult.exe" "%CENTRALIZED_OUTPUT_DIR%\CorumOnlineResult.exe*"
 
 echo "copying done"
 

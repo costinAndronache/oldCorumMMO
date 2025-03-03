@@ -1,6 +1,6 @@
 #pragma once
 #include "linkedlist.h"
-#include "../4DyuchiGXGFunc/global.h"
+#include "../SS3D_0719/4DYUCHIGX/4DyuchiGXGFunc/global.h"
 
 
 

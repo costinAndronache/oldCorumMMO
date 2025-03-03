@@ -1,7 +1,9 @@
 chdir %~dp0
-echo "Begin copying WorldServer executable"
 
-XCOPY /Y /B "..\Corum Online SRC\WorldServer\Debug\WorldServerResult.exe" "..\Corum Online SRC\centralizedOutput\WorldServerResult.exe*"
+call .\setDirectoryVariables.bat
+
+echo "Begin copying WorldServer executable"
+XCOPY /Y /B "..\Corum Online SRC\WorldServer\Debug\WorldServerResult.exe" "%CENTRALIZED_OUTPUT_DIR%\WorldServerResult.exe*"
 
 echo "copying done"
 

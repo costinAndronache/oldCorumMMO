@@ -5,7 +5,7 @@
 #pragma once
 
 
-#include "../4DyuchiGXGFunc/global.h"
+#include "../SS3D_0719/4DYUCHIGX/4DyuchiGXGFunc/global.h"
 #include "LinkedListEx.h"
 
 

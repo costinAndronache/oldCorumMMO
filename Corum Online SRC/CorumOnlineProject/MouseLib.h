@@ -6,7 +6,7 @@
 #ifdef SS3D_TEST
 #include "./../SS3D_0719/4dyuchigx/4DyuchiGRX_common/IGeometry.h"
 #else
-#include "./../4DyuchiGRX_common/IGeometry.h"
+#include "./../SS3D_0719/4dyuchigx/4DYUCHIGRX_COMMON/IGeometry.h"
 #endif
 
 // 스크린상의 x,y좌표를 실제 좌표의 x,0,z로 바꾼다. y는 언제나 0

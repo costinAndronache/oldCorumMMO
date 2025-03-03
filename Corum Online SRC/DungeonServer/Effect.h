@@ -5,7 +5,7 @@
 //		skill.iti 파일을 던전 데이타폴더에 넣어 둔다.
 /////////////////////////////////////
 #pragma once
-#include "..\\4DyuchiGRX_common\\math.inl"
+#include "../SS3D_0719/4DYUCHIGX/4DyuchiGRX_common/math.inl"
 #define     MAX_SKILL					151
 #define MAX_SKILL_COUNT					200		// 버퍼를 위해서.
 #define MAX_SKILL_LEVEL				50

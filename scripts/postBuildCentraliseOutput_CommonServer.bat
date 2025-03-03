@@ -1,8 +1,11 @@
 chdir %~dp0
+
+call .\setDirectoryVariables.bat
+
+
 echo "Begin copying CommonServer library"
-dir 
-XCOPY /Y /B "..\Corum Online SRC\CommonServer\Debug\CommonServer.dll" "..\Corum Online SRC\centralizedOutput\CommonServer.dll*"
-XCOPY /Y /B "..\Corum Online SRC\CommonServer\Debug\CommonServer.lib" "..\Corum Online SRC\centralizedOutput\CommonServer.lib*"
+XCOPY /Y /B "..\Corum Online SRC\CommonServer\Debug\CommonServer.dll" "%CENTRALIZED_OUTPUT_DIR%\CommonServer.dll*"
+XCOPY /Y /B "..\Corum Online SRC\CommonServer\Debug\CommonServer.lib" "%CENTRALIZED_OUTPUT_DIR%\CommonServer.lib*"
 echo "copying done"
 
 .\installProducts.bat

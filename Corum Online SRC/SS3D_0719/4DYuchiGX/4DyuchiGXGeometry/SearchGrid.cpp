@@ -1,7 +1,7 @@
 // SearchGrid.cpp: implementation of the CSearchGrid class.
 //
 //////////////////////////////////////////////////////////////////////
-#include "./../4DYUCHIGRX_COMMON/stdafx.h"
+#include "./../SS3D_0719/4dyuchigx/4DYUCHIGRX_COMMON/stdafx.h"
 #include "SearchGrid.h"
 
 //////////////////////////////////////////////////////////////////////

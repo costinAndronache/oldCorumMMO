@@ -1,0 +1,346 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{fab16e0f-b89b-41b8-8efd-9d546daabb99}</UniqueIdentifier>
+      <Extensions>cpp;c;cxx;rc;def;r;odl;idl;hpj;bat</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{2b561408-a229-4ed7-bf85-0acb2046f630}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl</Extensions>
+    </Filter>
+    <Filter Include="BaseObjects">
+      <UniqueIdentifier>{bf7bfd62-d278-4985-ad93-ea13f73fc68b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="misc">
+      <UniqueIdentifier>{3f7ae1a6-d3fb-4fcc-8eed-4ac0d6c47bda}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GeometryManager">
+      <UniqueIdentifier>{a4d7437c-7baa-401b-99d8-79ff85d6d27b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="COM Interface">
+      <UniqueIdentifier>{cb843d36-717b-4b24-9141-4d15c88bf95a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SkyMesh">
+      <UniqueIdentifier>{d2a4baf0-db55-460b-8edd-b47b4ed67141}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base component">
+      <UniqueIdentifier>{ab3ea43b-d71f-47eb-811e-07bc51ae2bf1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base component\StaticModel">
+      <UniqueIdentifier>{3ea4a60a-0f35-41d0-9923-bebc0d935161}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base component\HeightField">
+      <UniqueIdentifier>{b2f25995-7d79-4684-b753-1d9256739609}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base component\motion">
+      <UniqueIdentifier>{b94747ca-7c72-4ddb-992f-7e00b468f08d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base component\model">
+      <UniqueIdentifier>{42f98db9-326a-400d-a166-d3c5177286f4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base component\MaterialLib">
+      <UniqueIdentifier>{e1f88efd-1712-4fba-b101-f9c73bd3824a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base component\CollisionStaticModel">
+      <UniqueIdentifier>{b058d90b-f355-4cfe-ba0e-e61939096d8e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base component\CollisionStaticModel\충돌">
+      <UniqueIdentifier>{fadbb336-498d-4a45-980d-ffbf5910451e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{a2fbf974-5436-4657-ab22-09031d5b6f4d}</UniqueIdentifier>
+      <Extensions>ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="4DyuchiGXGEOMETRY.def">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="..\4DyuchiGRX_common\math.inl">
+      <Filter>misc</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="dllmain.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="factory.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="geometry_global.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bone_object.cpp">
+      <Filter>BaseObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="camera_obj.cpp">
+      <Filter>BaseObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="face_group.cpp">
+      <Filter>BaseObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="geom_obj.cpp">
+      <Filter>BaseObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="light_obj.cpp">
+      <Filter>BaseObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="LightTexture.cpp">
+      <Filter>BaseObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="material.cpp">
+      <Filter>BaseObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="MaterialList.cpp">
+      <Filter>BaseObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="object.cpp">
+      <Filter>BaseObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="Physique.cpp">
+      <Filter>BaseObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="bintree.cpp">
+      <Filter>misc</Filter>
+    </ClCompile>
+    <ClCompile Include="SimpleMemoryPool.cpp">
+      <Filter>misc</Filter>
+    </ClCompile>
+    <ClCompile Include="CoGeometry.cpp">
+      <Filter>GeometryManager</Filter>
+    </ClCompile>
+    <ClCompile Include="ModelRefManager.cpp">
+      <Filter>GeometryManager</Filter>
+    </ClCompile>
+    <ClCompile Include="SkyMesh.cpp">
+      <Filter>SkyMesh</Filter>
+    </ClCompile>
+    <ClCompile Include="CoStaticModel.cpp">
+      <Filter>base component\StaticModel</Filter>
+    </ClCompile>
+    <ClCompile Include="HeightField.cpp">
+      <Filter>base component\HeightField</Filter>
+    </ClCompile>
+    <ClCompile Include="HFieldObject.cpp">
+      <Filter>base component\HeightField</Filter>
+    </ClCompile>
+    <ClCompile Include="HFieldTools.cpp">
+      <Filter>base component\HeightField</Filter>
+    </ClCompile>
+    <ClCompile Include="MeshQuadTree.cpp">
+      <Filter>base component\HeightField</Filter>
+    </ClCompile>
+    <ClCompile Include="TileObject.cpp">
+      <Filter>base component\HeightField</Filter>
+    </ClCompile>
+    <ClCompile Include="MOTION.CPP">
+      <Filter>base component\motion</Filter>
+    </ClCompile>
+    <ClCompile Include="motion_obj.cpp">
+      <Filter>base component\motion</Filter>
+    </ClCompile>
+    <ClCompile Include="model.cpp">
+      <Filter>base component\model</Filter>
+    </ClCompile>
+    <ClCompile Include="MaterialLib.cpp">
+      <Filter>base component\MaterialLib</Filter>
+    </ClCompile>
+    <ClCompile Include="CollisionMeshObjectTree.cpp">
+      <Filter>base component\CollisionStaticModel</Filter>
+    </ClCompile>
+    <ClCompile Include="CollisionStaticModel.cpp">
+      <Filter>base component\CollisionStaticModel</Filter>
+    </ClCompile>
+    <ClCompile Include="colmeshobj.cpp">
+      <Filter>base component\CollisionStaticModel</Filter>
+    </ClCompile>
+    <ClCompile Include="SearchGrid.cpp">
+      <Filter>base component\CollisionStaticModel</Filter>
+    </ClCompile>
+    <ClCompile Include="SearchGridTree.cpp">
+      <Filter>base component\CollisionStaticModel</Filter>
+    </ClCompile>
+    <ClCompile Include="..\4DYUCHIGRX_MYSELF97\CheckClock.cpp">
+      <Filter>base component\CollisionStaticModel\충돌</Filter>
+    </ClCompile>
+    <ClCompile Include="..\4DyuchiGRX_myself97\CollisionTest\CollisionTestMovingEllipsoidMeetTriangle.cpp">
+      <Filter>base component\CollisionStaticModel\충돌</Filter>
+    </ClCompile>
+    <ClCompile Include="..\4DyuchiGRX_myself97\CollisionTest\CollisionTestMovingSphereMeetTriangle.cpp">
+      <Filter>base component\CollisionStaticModel\충돌</Filter>
+    </ClCompile>
+    <ClCompile Include="..\4DyuchiGRX_myself97\Myself97Common.cpp">
+      <Filter>base component\CollisionStaticModel\충돌</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Script1.rc">
+      <Filter>Source Files</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="factory.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="geometry_global.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="global_variable.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\4DyuchiGRX_common\StdAfx.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="bone_object.h">
+      <Filter>BaseObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="camera_obj.h">
+      <Filter>BaseObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="face_group.h">
+      <Filter>BaseObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="geom_obj.h">
+      <Filter>BaseObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="light_obj.h">
+      <Filter>BaseObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="LightTexture.h">
+      <Filter>BaseObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="material.h">
+      <Filter>BaseObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="MaterialList.h">
+      <Filter>BaseObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="object.h">
+      <Filter>BaseObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="Physique.h">
+      <Filter>BaseObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="bintree.h">
+      <Filter>misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\4DyuchiGXGFunc\global.h">
+      <Filter>misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\4DyuchiGRX_common\mesh_flag.h">
+      <Filter>misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\4DyuchiGRX_common\motion_flag.h">
+      <Filter>misc</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderType.h">
+      <Filter>misc</Filter>
+    </ClInclude>
+    <ClInclude Include="SImpleMemoryPool.h">
+      <Filter>misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\4DyuchiGRX_common\typedef.h">
+      <Filter>misc</Filter>
+    </ClInclude>
+    <ClInclude Include="CoGeometry.h">
+      <Filter>GeometryManager</Filter>
+    </ClInclude>
+    <ClInclude Include="ModelRefManager.h">
+      <Filter>GeometryManager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\4DyuchiGRX_common\FileStorage_typedef.h">
+      <Filter>COM Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="..\4DyuchiGRX_common\IExecutive.h">
+      <Filter>COM Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="..\4DyuchiGRX_common\IExecutive_GUID.h">
+      <Filter>COM Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="..\4DyuchiGRX_common\IFileStorage.h">
+      <Filter>COM Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="..\4DyuchiGRX_common\IFileStorage_GUID.h">
+      <Filter>COM Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="..\4DyuchiGRX_common\IGeometry.h">
+      <Filter>COM Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="..\4DyuchiGRX_common\IGeometry_GUID.h">
+      <Filter>COM Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="..\4DyuchiGRX_common\IRenderer.h">
+      <Filter>COM Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="..\4DyuchiGRX_common\IRenderer_GUID.h">
+      <Filter>COM Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="SkyMesh.h">
+      <Filter>SkyMesh</Filter>
+    </ClInclude>
+    <ClInclude Include="CoStaticModel.h">
+      <Filter>base component\StaticModel</Filter>
+    </ClInclude>
+    <ClInclude Include="HeightField.h">
+      <Filter>base component\HeightField</Filter>
+    </ClInclude>
+    <ClInclude Include="HFieldObject.h">
+      <Filter>base component\HeightField</Filter>
+    </ClInclude>
+    <ClInclude Include="HFieldTools.h">
+      <Filter>base component\HeightField</Filter>
+    </ClInclude>
+    <ClInclude Include="MeshQuadTree.h">
+      <Filter>base component\HeightField</Filter>
+    </ClInclude>
+    <ClInclude Include="TileObject.h">
+      <Filter>base component\HeightField</Filter>
+    </ClInclude>
+    <ClInclude Include="MOTION.H">
+      <Filter>base component\motion</Filter>
+    </ClInclude>
+    <ClInclude Include="motion_obj.h">
+      <Filter>base component\motion</Filter>
+    </ClInclude>
+    <ClInclude Include="model.h">
+      <Filter>base component\model</Filter>
+    </ClInclude>
+    <ClInclude Include="MaterialLib.h">
+      <Filter>base component\MaterialLib</Filter>
+    </ClInclude>
+    <ClInclude Include="CollisionMeshObjectTree.h">
+      <Filter>base component\CollisionStaticModel</Filter>
+    </ClInclude>
+    <ClInclude Include="CollisionStaticModel.h">
+      <Filter>base component\CollisionStaticModel</Filter>
+    </ClInclude>
+    <ClInclude Include="colmeshobj.h">
+      <Filter>base component\CollisionStaticModel</Filter>
+    </ClInclude>
+    <ClInclude Include="SearchGrid.h">
+      <Filter>base component\CollisionStaticModel</Filter>
+    </ClInclude>
+    <ClInclude Include="SearchGridTree.h">
+      <Filter>base component\CollisionStaticModel</Filter>
+    </ClInclude>
+    <ClInclude Include="..\4DYUCHIGRX_MYSELF97\CheckClock.h">
+      <Filter>base component\CollisionStaticModel\충돌</Filter>
+    </ClInclude>
+    <ClInclude Include="..\4DyuchiGRX_myself97\CollisionTest\CollisionTestMovingEllipsoidMeetTriangle.h">
+      <Filter>base component\CollisionStaticModel\충돌</Filter>
+    </ClInclude>
+    <ClInclude Include="..\4DyuchiGRX_myself97\CollisionTest\CollisionTestMovingSphereMeetTriangle.h">
+      <Filter>base component\CollisionStaticModel\충돌</Filter>
+    </ClInclude>
+    <ClInclude Include="..\4DyuchiGRX_myself97\Myself97Common.h">
+      <Filter>base component\CollisionStaticModel\충돌</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
