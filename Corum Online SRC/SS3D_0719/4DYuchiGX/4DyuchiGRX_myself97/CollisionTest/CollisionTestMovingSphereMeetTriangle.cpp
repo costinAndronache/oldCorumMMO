@@ -1,6 +1,6 @@
-#include "../../SS3D_0719/4dyuchigx/4DYUCHIGRX_COMMON/stdafx.h"
+#include "../../4DYUCHIGRX_COMMON/stdafx.h"
 #include "CollisionTestMovingSphereMeetTriangle.h"
-#include	"../../SS3D_0719/4dyuchigx/4DyuchiGXGFunc/global.h"
+#include	"../../4DyuchiGXGFunc/global.h"
 
 const	float	fTestValue	=	-0.001f;			// 일단 최적?
 

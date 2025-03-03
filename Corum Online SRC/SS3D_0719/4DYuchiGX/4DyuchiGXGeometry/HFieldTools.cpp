@@ -283,7 +283,7 @@ BOOL CHFieldTools::LoadAlphaMapTemporary(CHFieldObject* pHFieldObj,TILE_BUFFER_D
 			}
 		}
 
-		for (i=0; i<m_dwTempAlphaMapNum; i++)
+		for (int i=0; i<m_dwTempAlphaMapNum; i++)
 		{
 			if (m_ppTempAlphaMapIndexList[i]->pAlphaMapBits)
 			{

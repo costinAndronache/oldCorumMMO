@@ -5,7 +5,8 @@ set UCRTSDKDIR_LIB=C:\Program Files (x86)\Windows Kits\10\Lib\10.0.26100.0\ucrt\
 set SOLUTION_PLATFORM_TOOLSET=v143
 
 set DX8INCLUDEDIR=%DX8SDKDIR%\include
+set DX8LIBDIR=%DX8SDKDIR%\lib
 set SOLUTION_INCLUDES=%WINSDKDIR%\include;%VSSDKDIR%\include;%VSSDKDIR%\atlmfc\include;%DX8INCLUDEDIR%;
-set SOLUTION_LIBS=%WINSDKDIR%\Lib;%DX8SDKDIR%\lib;%VSSDKDIR%\lib\x86;%VSSDKDIR%\atlmfc\lib\x86;%WINSDKDIR%\lib;%UCRTSDKDIR_LIB%;
+set SOLUTION_LIBS=%WINSDKDIR%\Lib;%DX8LIBDIR%;%VSSDKDIR%\lib\x86;%VSSDKDIR%\atlmfc\lib\x86;%WINSDKDIR%\lib;%UCRTSDKDIR_LIB%;
 
 :: DirectX8.1 SDK needed; https://archive.org/details/dx81sdk_full

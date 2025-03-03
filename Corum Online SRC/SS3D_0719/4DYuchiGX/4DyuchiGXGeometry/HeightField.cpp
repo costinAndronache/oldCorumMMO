@@ -1267,7 +1267,7 @@ void __stdcall CoHeightField::ResetHeight(float h)
 	{
 		m_hfDesc.pyfList[i] = h;
 	}
-	for (i=0; i<m_dwObjNum; i++)
+	for (int i=0; i<m_dwObjNum; i++)
 	{
 		m_pHFieldObjectList[i].UpdateVertexPos();
 	}
@@ -1708,7 +1708,7 @@ BOOL __stdcall CoHeightField::AdjustHeight(HFIELD_POS* pVertexList,DWORD dwVerte
 	}
 	dwUpdateObjNum = GetIncludeVertexObjectList(pHFieldObj,128,pVertexList,dwVertexNum);
 
-	for (i=0; i<dwUpdateObjNum; i++)
+	for (int i=0; i<dwUpdateObjNum; i++)
 	{
 		pHFieldObj[i]->UpdateVertexPos();
 	}
@@ -1961,7 +1961,7 @@ lb_skip:
 	hfPosStart.dwZ = phfStart->dwZ + pTileList[0].dwZ;
 
 
-	for (i=0; i<dwUpdateObjNum; i++)
+	for (int i=0; i<dwUpdateObjNum; i++)
 	{
 		pHFObjUpdate[i]->UpdateTile();
 	}

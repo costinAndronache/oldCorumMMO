@@ -48,3 +48,8 @@ SS3DGFunc.lib
 SS3DGFunc.dll
 SS3DFileStorage.dll
 SS3DFileStorage.lib
+SS3DRendererForCorum.dll
+SS3DRendererForCorum.lib
+SS3DGeometryForCorum.lib
+SS3DRendererForCorum.dll
+SS3DGeometryForCorum.dll
