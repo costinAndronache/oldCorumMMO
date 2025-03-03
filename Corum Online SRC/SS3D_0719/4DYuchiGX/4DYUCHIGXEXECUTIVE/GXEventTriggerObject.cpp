@@ -1,7 +1,7 @@
 #include "StdAfx.h"
 #include "GXEventTriggerObject.h"
 
-#include "4DYUCHIGRX_MYSELF97/Myself97Common.h"
+#include "../4DYUCHIGRX_MYSELF97/Myself97Common.h"
 
 CoGXEventTrigger::CoGXEventTrigger()
 {

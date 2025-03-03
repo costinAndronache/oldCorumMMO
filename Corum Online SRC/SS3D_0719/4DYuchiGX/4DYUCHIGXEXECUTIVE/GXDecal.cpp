@@ -3,9 +3,9 @@
 //////////////////////////////////////////////////////////////////////
 #include "StdAfx.h"
 #include "GXDecal.h"
-#include "./4DYuchiGRX_myself97/TriangleLib.h"
-#include "./4DYuchiGRX_myself97/CheckClock.h"
-#include "./4DyuchiGRX_myself97/myself97common.h"
+#include "../4DYuchiGRX_myself97/TriangleLib.h"
+#include "../4DYuchiGRX_myself97/CheckClock.h"
+#include "../4DyuchiGRX_myself97/myself97common.h"
 #include "../4DYuchiGXGFunc/global.h"
 #include "Executive.h"
 #include "GXDefault.h"
@@ -220,7 +220,7 @@ DWORD CGXDecal::ClipPolygonWithPlane( VECTOR3* pOutPoly, VECTOR3* pInPoly, DWORD
 
 BOOL  CGXDecal::Render()
 {
-	DWORD	dwRenderClock	=	GetLowClock();
+	DWORD	dwRenderClock	=	(DWORD)GetLowClock();
 
 	I4DyuchiGXRenderer*	pRenderer	=	m_pExecutive->GetRenderer();
 

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "GXMapObject.h"
-#include "./4DyuchiGRX_myself97/MStaticObjectTree.h"
+#include "../4DyuchiGRX_myself97/MStaticObjectTree.h"
 
 class CGXMap;
 

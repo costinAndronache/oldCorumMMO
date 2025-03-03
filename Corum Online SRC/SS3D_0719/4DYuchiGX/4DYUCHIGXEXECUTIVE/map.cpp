@@ -5,10 +5,10 @@
 #include "GXEventTriggerObject.h"
 #include "executive.h"
 #include "../4DyuchiGXGFunc/global.h"
-#include "4DyuchiGRX_myself97/MClipper.h"
+#include "../4DyuchiGRX_myself97/MClipper.h"
 #include "global_variable.h"
 #include "ShadeManager.h"
-#include "4DyuchiGRX_myself97/myself97common.h"
+#include "../4DyuchiGRX_myself97/myself97common.h"
 
 CGXMap::CGXMap()
 {

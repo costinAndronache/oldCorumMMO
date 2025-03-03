@@ -3,12 +3,12 @@
 #include "../4DyuchiGXGFunc/global.h"
 #include "GXDefault.h"
 #include "GXLight.h"
-#include "4DyuchiGRX_myself97/myself97common.h"
-#include "4DyuchiGRX_myself97/CheckClock.h"
+#include "../4DyuchiGRX_myself97/myself97common.h"
+#include "../4DyuchiGRX_myself97/CheckClock.h"
 //#include "../4DyuchiGRX_myself97/MBSPTree.h"
-#include "4DyuchiGRX_myself97/CollisionTest/DummyCollisionTest.h"
-#include "4DyuchiGRX_myself97/CollisionTest/SphereCollisionTest.h"
-#include "4DyuchiGRX_myself97/CollisionTest/AAEllipsoidCollisionTest.h"
+#include "../4DyuchiGRX_myself97/CollisionTest/DummyCollisionTest.h"
+#include "../4DyuchiGRX_myself97/CollisionTest/SphereCollisionTest.h"
+#include "../4DyuchiGRX_myself97/CollisionTest/AAEllipsoidCollisionTest.h"
 
 #include "global_variable.h"
 

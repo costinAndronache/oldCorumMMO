@@ -10,7 +10,7 @@
 #include "GxLight.h"
 #include "map.h"
 #include "GXDecal.h"
-#include "4DyuchiGRX_myself97/MClipper.h"
+#include "../4DyuchiGRX_myself97/MClipper.h"
 
 #include <map>
 #include <string>

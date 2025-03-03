@@ -2,7 +2,7 @@
 
 #include "GXStaticMapObject.h"
 #include "GXHFieldMapObject.h"
-#include "4DyuchiGRX_myself97/MClipper.h"
+#include "../4DyuchiGRX_myself97/MClipper.h"
 
 class CoGXObject;
 class CoGXLight;
