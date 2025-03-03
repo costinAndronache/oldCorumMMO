@@ -16,12 +16,17 @@ call :COPY_IN_ALL_PLACES I4DyuchiNET.lib
 
 call :COPY_IN_ALL_PLACES SS3DGFunc.pdb
 call :COPY_IN_ALL_PLACES SS3DGFunc.lib
-call :COPY_IN_ALL_PLACES SS3DGFunc.pdb
+call :COPY_IN_ALL_PLACES SS3DGFunc.dll
 
 
 call :COPY_IN_ALL_PLACES SS3DFileStorage.pdb
 call :COPY_IN_ALL_PLACES SS3DFileStorage.lib
 call :COPY_IN_ALL_PLACES SS3DFileStorage.dll
+
+
+call :COPY_IN_ALL_PLACES SS3DRendererForCorum.pdb
+call :COPY_IN_ALL_PLACES SS3DRendererForCorum.lib
+call :COPY_IN_ALL_PLACES SS3DRendererForCorum.dll
 
 call :CENTRALIZED_TO_LOGINSERVER LoginAgentResult.exe
 call :CENTRALIZED_TO_WORLDSERVER WorldServerResult.exe

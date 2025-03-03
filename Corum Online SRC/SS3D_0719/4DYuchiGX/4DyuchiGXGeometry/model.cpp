@@ -2261,7 +2261,7 @@ DWORD CoModel::CreateIVertexList(IVERTEX** ppVertex,DWORD dwRefIndex,MATRIX4* pP
 	IVERTEX*		pv = new IVERTEX[dwTotalFacesNum*3];
 	IVERTEX*		pEntry = pv;
 
-	for (i=0; i<m_dwMeshObjectNum; i++)
+	for (int i=0; i<m_dwMeshObjectNum; i++)
 	{
 		if (m_pMeshObjectList[i].GetMeshFlag().GetTransformType() == TRANSFORM_TYPE_ALIGN_VIEW)
 		{

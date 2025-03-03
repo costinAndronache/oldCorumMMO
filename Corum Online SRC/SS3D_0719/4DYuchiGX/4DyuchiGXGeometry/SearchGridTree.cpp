@@ -1,7 +1,7 @@
 // SearchGridTree.cpp: implementation of the CSearchGridTree class.
 //
 //////////////////////////////////////////////////////////////////////
-#include "./../SS3D_0719/4dyuchigx/4DYUCHIGRX_COMMON/stdafx.h"
+#include "../4DYUCHIGRX_COMMON/stdafx.h"
 #include "SearchGridTree.h"
 
 //////////////////////////////////////////////////////////////////////

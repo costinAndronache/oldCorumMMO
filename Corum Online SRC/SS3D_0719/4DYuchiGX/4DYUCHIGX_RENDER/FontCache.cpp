@@ -667,7 +667,7 @@ HBITMAP	CFontCache::CreateBitmapFromText(int* piWidth,int* piHeight,HFONT hFont,
 
 
 	if (type == CHAR_CODE_TYPE_UNICODE)
-		DrawTextW(m_hMemDC,(WORD*)szString,dwLen,&rect,DT_NOPREFIX);
+		DrawTextW(m_hMemDC,(LPCWSTR)szString,dwLen,&rect,DT_NOPREFIX);
 	else
 		DrawTextA(m_hMemDC,szString,dwLen,&rect,DT_NOPREFIX);
 
