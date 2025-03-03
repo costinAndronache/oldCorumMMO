@@ -166,7 +166,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <GenerateManifest>false</GenerateManifest>
-    <IncludePath>..\staticLibsOutput\I4DyuchiNET\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(IncludePath);..\I4DyuchiNET</IncludePath>
     <TargetName>WorldServerResult</TargetName>
     <LibraryPath>$(LibraryPath)</LibraryPath>
   </PropertyGroup>
