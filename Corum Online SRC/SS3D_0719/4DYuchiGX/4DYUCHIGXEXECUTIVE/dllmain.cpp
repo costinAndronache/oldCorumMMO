@@ -39,7 +39,6 @@ BOOL WINAPI DllMain(
   	case DLL_PROCESS_ATTACH:
 
 		g_hDllInst = hDllInst;
-		XRTrace0( "Executive DLL Attached!" );
 		
 
 		// The DLL is being loaded for the first time by a given process.
@@ -52,7 +51,6 @@ BOOL WINAPI DllMain(
     	// per-process clean up here, such as undoing what was done in
     	// DLL_PROCESS_ATTACH.  The return value is ignored.
 
-		XRTrace0( "Executive DLL Deattached!" );
 		break;
 
     case DLL_THREAD_ATTACH:
@@ -60,14 +58,12 @@ BOOL WINAPI DllMain(
       	// this DLL.  Perform any per-thread initialization here.  The
       	// return value is ignored.
 
-		XRTrace0( "Thread Attached!" );
 		break;
 
     case DLL_THREAD_DETACH:
  		// A thread is exiting cleanly in a process that has already
 		// loaded this DLL.  Perform any per-thread clean up here.  The
     	// return value is ignored.
-		XRTrace0( "Thread Deattached!" );
     	break;
 	default:
 		break;
@@ -297,7 +293,7 @@ STDAPI DllRegisterServer(void)
   TCHAR    szID[GUID_SIZE+1];
   TCHAR    szCLSID[GUID_SIZE+32];
   TCHAR    szModulePath[MAX_PATH];
-  WORD		wszID[GUID_SIZE+1];
+  WCHAR		wszID[GUID_SIZE+1];
 
 
   // Obtain the path to this module's executable file for later use.
@@ -392,7 +388,7 @@ STDAPI DllUnregisterServer(void)
   TCHAR		szID[GUID_SIZE+1];
   TCHAR		szCLSID[GUID_SIZE+32];
   TCHAR		szTemp[MAX_PATH+GUID_SIZE];
-  WORD		wszID[GUID_SIZE+1];
+  WCHAR		wszID[GUID_SIZE+1];
 
 
    //Create some base key strings.

@@ -1,9 +1,8 @@
-#include "StdAfx.h"
 //#include	"../../4DyuchiGXExecutive/GXObject.h"
 #include	"../myself97common.h"
 #include	"../CheckClock.h"
 #include	"SphereCollisionTest.h"
-#include	"../../SS3D_0719/4dyuchigx/4DyuchiGXGFunc/global.h"
+#include	"../../4DyuchiGXGFunc/global.h"
 #include	"../../4DyuchiGXExecutive/GXEventTriggerObject.h"
 
 // 面倒 贸府侩 傈开甸.

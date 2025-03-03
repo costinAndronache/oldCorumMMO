@@ -9,10 +9,13 @@ echo CENTRALIZED_OUTPUT_DIR is "%CENTRALIZED_OUTPUT_DIR%"
 
 call :COPY_IN_ALL_PLACES CommonServer.dll
 call :COPY_IN_ALL_PLACES CommonServer.lib
+call :COPY_IN_ALL_PLACES CommonServer.pdb
 
 call :COPY_IN_ALL_PLACES BaseLibrary.lib
+call :COPY_IN_ALL_PLACES BaseLibrary.pdb
 
 call :COPY_IN_ALL_PLACES I4DyuchiNET.lib
+call :COPY_IN_ALL_PLACES I4DyuchiNET.pdb
 
 call :COPY_IN_ALL_PLACES SS3DGFunc.pdb
 call :COPY_IN_ALL_PLACES SS3DGFunc.lib
@@ -27,6 +30,15 @@ call :COPY_IN_ALL_PLACES SS3DFileStorage.dll
 call :COPY_IN_ALL_PLACES SS3DRendererForCorum.pdb
 call :COPY_IN_ALL_PLACES SS3DRendererForCorum.lib
 call :COPY_IN_ALL_PLACES SS3DRendererForCorum.dll
+
+call :COPY_IN_ALL_PLACES SS3DGeometryForCorum.pdb
+call :COPY_IN_ALL_PLACES SS3DGeometryForCorum.lib
+call :COPY_IN_ALL_PLACES SS3DGeometryForCorum.dll
+
+
+call :COPY_IN_ALL_PLACES SS3DExecutiveForCorum.pdb
+call :COPY_IN_ALL_PLACES SS3DExecutiveForCorum.lib
+call :COPY_IN_ALL_PLACES SS3DExecutiveForCorum.dll
 
 call :CENTRALIZED_TO_LOGINSERVER LoginAgentResult.exe
 call :CENTRALIZED_TO_WORLDSERVER WorldServerResult.exe

@@ -1,4 +1,3 @@
-#include "StdAfx.h"
 #include	"DummyCollisionTest.h"
 
 void	DummyCollisionTest( CoExecutive* /*pExecutive*/, CoGXObject* /*pThis*/, COLLISION_TEST_RESULT* pCollTestResult, VECTOR3* pTo, DWORD dwBufferIndex)

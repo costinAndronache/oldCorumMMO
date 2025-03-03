@@ -2982,7 +2982,7 @@ CoExecutive::~CoExecutive()
 		m_hRenderer = NULL;
 	}
 
-	for (i=0; i<m_dwPackFilesNum; i++)
+	for (int i=0; i<m_dwPackFilesNum; i++)
 	{
 		if (m_pPackFileHandleList[i])
 		{
