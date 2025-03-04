@@ -5081,6 +5081,7 @@ void MonsterMoveFunc(GXOBJECT_HANDLE handle, LPObjectDesc pData, DWORD dwCurFram
 //-----------------------------------------------------------------------------
 void EffectOnceAndNormal( GXOBJECT_HANDLE handle, LPObjectDesc pData, DWORD dwCurFrame, BYTE bFrameFlag )
 {
+	printf("Begin EffectOnceAndNormal for %p\n", handle);
 	LPObjectDesc pObjDesc	= (LPObjectDesc)pData;
 	EffectDesc*	pEffectDesc = (EffectDesc*)pObjDesc->pInfo;
 	if (pEffectDesc->m_sLightDescEx.LightFunc)

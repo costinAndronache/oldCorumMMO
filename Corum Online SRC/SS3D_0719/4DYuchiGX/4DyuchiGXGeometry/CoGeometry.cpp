@@ -32,8 +32,10 @@ DWORD __stdcall DefaultErrorHandleProc(ERROR_TYPE type,DWORD dwErrorPriority,voi
 
 	OutputDebugString(pMsg);
 
-	if (!dwErrorPriority)
-		__asm int 3
+	if (!dwErrorPriority) {
+		//__asm int 3;
+	}
+
 
 	return 0;
 }

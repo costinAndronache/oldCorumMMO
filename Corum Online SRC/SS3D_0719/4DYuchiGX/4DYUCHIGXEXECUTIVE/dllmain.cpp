@@ -39,7 +39,8 @@ BOOL WINAPI DllMain(
   	case DLL_PROCESS_ATTACH:
 
 		g_hDllInst = hDllInst;
-		
+        AllocConsole();
+        freopen("CONOUT$", "w", stdout);
 
 		// The DLL is being loaded for the first time by a given process.
       	// Perform per-process initialization here.  If the initialization

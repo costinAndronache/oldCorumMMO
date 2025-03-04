@@ -32,9 +32,54 @@
 #include "SoundControl.h"
 #include "special_effect.h"
 
+float	g_fWind = 0.0f;
 
-float	g_fWind	= 0.0f;
+extern void PathFindMoveFunc(GXOBJECT_HANDLE handle, LPObjectDesc pData, DWORD dwCurFrame, BYTE bFrameFlag);
+extern void PlayerMoveFunc(GXOBJECT_HANDLE handle, LPObjectDesc pData, DWORD dwCurFrame, BYTE bFrameFlag);
+extern void DamageNumberFunc(GXOBJECT_HANDLE handle, LPObjectDesc pData, DWORD dwCurFrame, BYTE bFrameFlag);
 
+static void printfn(char* const name, void (*ObjectFunc)(GXOBJECT_HANDLE, OBJECT_DESC*, DWORD, BYTE)) {
+	printf("%p ==> %s\n\n", ObjectFunc, name);
+}
+
+void debugPrintObjectFuncs() {
+	printf("============== OBJECT FUNCS =================\n\n");
+	printfn("PathFindMoveFunc", PathFindMoveFunc);
+	printfn("PlayerMoveFunc", PlayerMoveFunc);
+	printfn("DamageNumberFunc", DamageNumberFunc);
+	printfn("PlayerAttackFunc", PlayerAttackFunc);
+	printfn("PlayerDamageFunc", PlayerDamageFunc);
+	printfn("PlayerSkillFunc", PlayerSkillFunc);
+	printfn("PlayerKillFunc", PlayerKillFunc);
+	printfn("MonsterSkillFunc", MonsterSkillFunc);
+	printfn("MonsterMoveFunc", MonsterMoveFunc);
+	printfn("MonsterAttackFunc", MonsterAttackFunc);
+	printfn("MonsterDamageFunc", MonsterDamageFunc);
+	printfn("MonsterKillFunc", MonsterKillFunc);
+	printfn("MonsterDisappear", MonsterDisappear);
+	printfn("EffectOnceAndNormal", EffectOnceAndNormal);
+	printfn("EffectOnceAndHideFunc", EffectOnceAndHideFunc);
+	printfn("EffectOnceAndRemoveFunc", EffectOnceAndRemoveFunc);
+	printfn("EffectEventDungeonFunc", EffectEventDungeonFunc);
+	printfn("EffectGuardianKillFunc", EffectGuardianKillFunc);
+	printfn("EffectChainAttackerFunc", EffectChainAttackerFunc);
+	printfn("EffectSkillUserAroundRemoveFunc", EffectSkillUserAroundRemoveFunc);
+	printfn("EffectPotionAroundRemoveFunc", EffectPotionAroundRemoveFunc);
+	printfn("EffectSkillUserStatusTopFunc", EffectSkillUserStatusTopFunc);
+	printfn("EffectSkillUserStatusCenterFunc", EffectSkillUserStatusCenterFunc);
+	printfn("EffectSkillUserStatusBottomFunc", EffectSkillUserStatusBottomFunc);
+	printfn("EffectSkillMonsterStatusTopFunc", EffectSkillMonsterStatusTopFunc);
+	printfn("EffectSkillMonsterStatusCenterFunc", EffectSkillMonsterStatusCenterFunc);
+	printfn("EffectSkillMonsterStatusBottomFunc", EffectSkillMonsterStatusBottomFunc);
+	printfn("EffectAlphaFunc", EffectAlphaFunc);
+	printfn("EffectSnowFunc", EffectSnowFunc);
+	printfn("EffectSkillAroundFunc", EffectSkillAroundFunc);
+	printfn("EffectWall", EffectWall);
+	printfn("EffectBlastQuake", EffectBlastQuake);
+	printfn("SkillDamageFunc1", SkillDamageFunc1);
+	printf("============== OBJECT FUNCS =================\n\n");
+
+}
 
 void CreateDamageEffect( BYTE bObjectType, DWORD dwIndex )
 {	
@@ -1341,6 +1386,7 @@ void MonsterDisappear( GXOBJECT_HANDLE handle, LPObjectDesc pData, DWORD dwCurFr
 
 void MonsterKillFunc( GXOBJECT_HANDLE handle, LPObjectDesc pData, DWORD dwCurFrame, BYTE bFrameFlag )
 {
+	printf("Begin MonsterKillFunc for %p\n", handle);
 	CMonster* pMonster = (CMonster*)pData->pInfo;
 
 #if !defined(SOUND_NEW)	

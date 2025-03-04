@@ -11,6 +11,8 @@ static DWORD g_dwFrame = 0;
 // 플레이어의 애니메이션 프레임 관리 프로시져.
 DWORD __stdcall GXPlayerPROC(I4DyuchiGXExecutive* pExecutive, GXOBJECT_HANDLE gxh, DWORD msg, int arg1, int arg2, void* pData)
 {	
+	printf("Begin GXPlayerPROC on: %p\n", gxh);
+
 	LPObjectDesc pObjDesc = (LPObjectDesc)pData;
 	DWORD	dwMotionIndex = pExecutive->GXOGetCurrentMotionIndex(gxh);
 	
@@ -43,8 +45,11 @@ DWORD __stdcall GXPlayerPROC(I4DyuchiGXExecutive* pExecutive, GXOBJECT_HANDLE gx
 		dwSync = 1;					// 스킵하지 않는다.
 	}
 
+	printf("dwSync: %lu\n", dwSync);
+
 	for(int f = 0; (DWORD)f < dwSync ; f++)
 	{
+		printf("iter: %d\n", f);
 		dwFrame			= pObjDesc->nCurFrame;	// 현재 찍어야 할 프레임 넘버.	
 		
 		// 충돌처리.----------
@@ -55,10 +60,12 @@ DWORD __stdcall GXPlayerPROC(I4DyuchiGXExecutive* pExecutive, GXOBJECT_HANDLE gx
 
 			if(pDesc->CrashFunc)
 			{
+				printf(" result:: proc_msg_collision with crash func\n");
 				(*pDesc->CrashFunc)(gxh, pDesc, pArg);
 				return 0;	
 			}
-		
+
+			printf(" result:: proc_msg_collision NO CRASH FUNC\n");
 			return	GXSCHEDULE_PROC_MSG_COLLISION_RETURN_STOP;
 		}
 		//-------------------
@@ -69,10 +76,12 @@ DWORD __stdcall GXPlayerPROC(I4DyuchiGXExecutive* pExecutive, GXOBJECT_HANDLE gx
 
 		if(bMotion)
 		{
+			printf("hasMotion\n");
 			switch((int)pObjDesc->bActionFlag)
 			{
 			case ACTION_ONCE:
 				{
+				printf("  ACTION_ONCE\n");
 					if(dwFrame < MotionDesc.dwLastFrame)
 					{
 						pExecutive->GXOSetCurrentFrame(gxh, dwFrame);
@@ -87,6 +96,7 @@ DWORD __stdcall GXPlayerPROC(I4DyuchiGXExecutive* pExecutive, GXOBJECT_HANDLE gx
 
 			case ACTION_ONCE_HIDE:
 				{
+				printf("  ACTION_ONCE_HIDE\n");
 					if(dwFrame < MotionDesc.dwLastFrame)
 					{
 						pExecutive->GXOSetCurrentFrame(gxh, dwFrame);
@@ -101,6 +111,7 @@ DWORD __stdcall GXPlayerPROC(I4DyuchiGXExecutive* pExecutive, GXOBJECT_HANDLE gx
 
 			case ACTION_LOOP:
 				{
+				printf("  ACTION_LOOP\n");
 					if(dwFrame < MotionDesc.dwLastFrame)
 					{
 						pExecutive->GXOSetCurrentFrame(gxh,dwFrame);	
@@ -124,6 +135,7 @@ DWORD __stdcall GXPlayerPROC(I4DyuchiGXExecutive* pExecutive, GXOBJECT_HANDLE gx
 
 			case ACTION_NEXT:
 				{
+				printf("  ACTION_NEXT\n");
 					if(dwFrame < MotionDesc.dwLastFrame)
 					{
 						pExecutive->GXOSetCurrentFrame(gxh, dwFrame);
@@ -155,14 +167,20 @@ DWORD __stdcall GXPlayerPROC(I4DyuchiGXExecutive* pExecutive, GXOBJECT_HANDLE gx
 				break;
 			}
 	
-			if(pObjDesc->ObjectFunc)
+			if (pObjDesc->ObjectFunc) {
+				printf("  begin executing ObjectFunc:: %p  \n", *(pObjDesc->ObjectFunc));
 				(*pObjDesc->ObjectFunc)(gxh, pObjDesc, dwFrame, bFrameFlag);
+				printf("  end executing ObjectFunc\n");
+			}
+
 
 			g_SoundEffectBasketCase.UpdateToClean(); 
 			
 			// 막 프레임이면 스킵을 다시 활성화 해준다.
-			if( bFrameFlag == FRAME_FLAG_CHANGE_NEXT || bFrameFlag == FRAME_FLAG_FINISHED )
+			if (bFrameFlag == FRAME_FLAG_CHANGE_NEXT || bFrameFlag == FRAME_FLAG_FINISHED) {
 				pObjDesc->bSkip = TRUE;
+			}
+
 
 			ObjectSoundPlay(pObjDesc, dwMotionIndex, (BYTE)dwFrame);
 		}

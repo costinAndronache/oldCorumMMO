@@ -589,8 +589,11 @@ DWORD CoGXObject::OnFrame(I4DyuchiGXExecutive* pExecutive,DWORD msg,int arg1,int
 		__asm nop
 	}
 */
-	if (m_pProc)
-		m_pProc(pExecutive,this,msg,arg1,arg2,m_pData);
+	if (m_pProc) {
+		printf("Begin mproc for gxobject (index: %lu, id: %lu)\n", GetIndex(), GetID());
+		m_pProc(pExecutive, this, msg, arg1, arg2, m_pData);
+		printf("End mproc for gxobject (index: %lu, id: %lu)\n\n", GetIndex(), GetID());
+	}
 
 //	if( m_bApplyVelocity)
 //		OnFrameApplyVelocity();

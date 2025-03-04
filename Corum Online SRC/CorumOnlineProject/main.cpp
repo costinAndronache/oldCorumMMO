@@ -33,6 +33,8 @@ void message(char* const info) {
 	MessageBox(g_hMainWnd, info, "CorumOnlineProject", MB_OK);
 }
 
+extern void debugPrintObjectFuncs();
+
 int APIENTRY WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nShowCmd )
 {
 
@@ -56,7 +58,10 @@ int APIENTRY WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdL
 		MessageBox(g_hMainWnd,"You must install the latest version of DirectX from 8.1 Version", "CorumOnlineProject", MB_OK);	
 		return FALSE;
 	}
-				
+	AllocConsole();
+	freopen("CONOUT$", "w", stdout);
+	debugPrintObjectFuncs();
+
 #if IS_KOREA_LOCALIZING()
 	{
 		// 로그인 결정 ? 본섭 : 넷마블 
