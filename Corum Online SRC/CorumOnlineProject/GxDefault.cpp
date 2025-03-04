@@ -43,6 +43,10 @@ DWORD __stdcall GXPlayerPROC(I4DyuchiGXExecutive* pExecutive, GXOBJECT_HANDLE gx
 		dwSync = 1;					// 스킵하지 않는다.
 	}
 
+	// CRASH :: pObjDesc->ObjectFunc can result in its pObjDesc being deleted!!
+	// HACKFIX :: just force one frame pass
+	dwSync = 1;
+
 	for(int f = 0; (DWORD)f < dwSync ; f++)
 	{
 		dwFrame			= pObjDesc->nCurFrame;	// 현재 찍어야 할 프레임 넘버.	
