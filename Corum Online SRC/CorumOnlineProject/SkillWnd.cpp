@@ -794,8 +794,8 @@ void CSkillWnd::SetRenderSkillInfo(LP_SKILL_RESOURCE_EX lpSkillResourceEx, int n
 	if(pEffect->bID==0)
 		return;
 		
-	lstrcpy(szInfo, pEffect->szName);
-		
+	wsprintf(szInfo, "%s(id=%d)", pEffect->szName, nSkillId);
+	
 	nLen = lstrlen(szInfo);
 	RenderFont(szInfo, g_Mouse.MousePos.x, g_Mouse.MousePos.x+nLen*7, g_Mouse.MousePos.y+(byIndex*15)-7, g_Mouse.MousePos.y+(byIndex*15)+7, __ORDER_ITEM_DESC__+2, 0xffc8c8c8);	
 	byIndex += 2;		
