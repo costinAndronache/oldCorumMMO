@@ -436,29 +436,29 @@ int	CUserInterface::GetChk()
 	CSkillWnd* pSkillWnd = CSkillWnd::GetInstance();
 	CMonster *pGuardian = g_pMainPlayer->m_pGuardian[0];
 
-	if(pSkillWnd->m_bySkillIndex!=0)
+	if(pSkillWnd->activeSkillSelectionWindowType != SkillSelectionWindow::none)
 	{		
 		if(	g_Mouse.MousePos.x>=116 &&
 			g_Mouse.MousePos.x<=116+32 &&
 			g_Mouse.MousePos.y>=646 &&
 			g_Mouse.MousePos.y<=646+32)
 		{
-			switch(pSkillWnd->m_bySkillIndex)
+			switch(pSkillWnd->activeSkillSelectionWindowType)
 			{
-			case 1:
+			case SkillSelectionWindow::leftSkills:
 				return 11;
 				break;
-			case 2:
+			case SkillSelectionWindow::rightSkills:
 				return 12;
 				break;
-			case 3:
+			case SkillSelectionWindow::guardianSkills:
 				return 22;
 				break;
 			}
 		}
 		else
 		{
-			if(pSkillWnd->m_bySkillIndex==1)
+			if(pSkillWnd->activeSkillSelectionWindowType == SkillSelectionWindow::leftSkills)
 			{
 				int nCount = 1;
 
@@ -481,7 +481,7 @@ int	CUserInterface::GetChk()
 					}
 				}
 			}
-			else if(pSkillWnd->m_bySkillIndex==2)
+			else if(pSkillWnd->activeSkillSelectionWindowType == SkillSelectionWindow::rightSkills)
 			{
 				int nCount = 0;
 
@@ -502,7 +502,7 @@ int	CUserInterface::GetChk()
 					}					
 				}
 			}
-			else if(pGuardian && pSkillWnd->m_bySkillIndex==3)
+			else if(pGuardian && pSkillWnd->activeSkillSelectionWindowType == SkillSelectionWindow::guardianSkills)
 			{
 				int nCount = 1;
 
@@ -1036,11 +1036,11 @@ int CUserInterface::CheckInterface()
 			CSkillWnd* pSkillWnd = CSkillWnd::GetInstance();
 			
 			if(nRt==9)
-				pSkillWnd->m_bySkillIndex = 1;
+				pSkillWnd->activeSkillSelectionWindowType = SkillSelectionWindow::leftSkills;
 			else if(nRt==10)
-				pSkillWnd->m_bySkillIndex = 2;
+				pSkillWnd->activeSkillSelectionWindowType = SkillSelectionWindow::rightSkills;
 			else if(nRt==21)
-				pSkillWnd->m_bySkillIndex = 3;
+				pSkillWnd->activeSkillSelectionWindowType = SkillSelectionWindow::guardianSkills;
 			
 			SetPointer(__MOUSE_POINTER_BUTTONCLICK__);
 		}			
@@ -1061,16 +1061,16 @@ int CUserInterface::CheckInterface()
 							g_pMainPlayer->SetSkillChangeLR(__SKILL_NONE_SELECT__, BYTE(i));
 					}
 									
-					if(pSkillWnd->m_bySkillIndex==1)
+					if(pSkillWnd->activeSkillSelectionWindowType == SkillSelectionWindow::leftSkills)
 						g_pMainPlayer->SetSkillChangeLR(__SKILL_ATTACK__, 0);										
-					if(pSkillWnd->m_bySkillIndex==2)
+					if(pSkillWnd->activeSkillSelectionWindowType == SkillSelectionWindow::rightSkills)
 						g_pMainPlayer->SetSkillChangeLR(__SKILL_ATTACK__, 1);
 
-					pSkillWnd->m_bySkillIndex = 0;					
+					pSkillWnd->activeSkillSelectionWindowType = SkillSelectionWindow::none;					
 				}
 				else
 				{
-					if(pSkillWnd->m_bySkillIndex==1)
+					if(pSkillWnd->activeSkillSelectionWindowType == SkillSelectionWindow::leftSkills)
 					{
 						int nCount = 1;
 
@@ -1092,7 +1092,7 @@ int CUserInterface::CheckInterface()
 											g_pMainPlayer->SetSkillChangeLR(__SKILL_NONE_SELECT__, BYTE(j));
 									}
 									g_pMainPlayer->SetSkillChangeLR(g_sSkillListManager.byLeftSkill[i], 0);
-									pSkillWnd->m_bySkillIndex = 0;								
+									pSkillWnd->activeSkillSelectionWindowType = SkillSelectionWindow::none;								
 									break;
 								}
 								nCount++;
@@ -1120,7 +1120,7 @@ int CUserInterface::CheckInterface()
 				}
 				else*/
 				{
-					if(pSkillWnd->m_bySkillIndex==2)
+					if(pSkillWnd->activeSkillSelectionWindowType == SkillSelectionWindow::rightSkills)
 					{
 						int nCount = 0;
 
@@ -1142,7 +1142,7 @@ int CUserInterface::CheckInterface()
 											g_pMainPlayer->SetSkillChangeLR(__SKILL_NONE_SELECT__, BYTE(j));
 									}										
 									g_pMainPlayer->SetSkillChangeLR(g_sSkillListManager.byRightSkill[i], 1);										
-									pSkillWnd->m_bySkillIndex = 0;
+									pSkillWnd->activeSkillSelectionWindowType = SkillSelectionWindow::none;
 									break;
 								}
 								nCount++;
@@ -1158,7 +1158,7 @@ int CUserInterface::CheckInterface()
 			CSkillWnd* pSkillWnd = CSkillWnd::GetInstance();
 			CMonster *pGuardian = g_pMainPlayer->m_pGuardian[0];
 			
-			if(pGuardian && pSkillWnd->m_bySkillIndex==3)
+			if(pGuardian && pSkillWnd->activeSkillSelectionWindowType == SkillSelectionWindow::guardianSkills)
 			{
 				int nCount = 1;
 
@@ -1168,7 +1168,7 @@ int CUserInterface::CheckInterface()
 					g_Mouse.MousePos.y<=646+32)
 				{
 					pGuardian->SetSelectedSkill(0);
-					pSkillWnd->m_bySkillIndex = 0;
+					pSkillWnd->activeSkillSelectionWindowType = SkillSelectionWindow::none;
 				}
 
 				for(int i = 0; i < MAX_GUARDIAN_USE_SKILL; i++)
@@ -1184,7 +1184,7 @@ int CUserInterface::CheckInterface()
 							g_Mouse.MousePos.y<=nPosY+32)
 						{										
 							pGuardian->SetSelectedSkill(pGuardian->m_Skill[i].wSkill);
-							pSkillWnd->m_bySkillIndex = 0;
+							pSkillWnd->activeSkillSelectionWindowType = SkillSelectionWindow::none;
 							break;
 						}
 						nCount++;
@@ -1478,7 +1478,7 @@ void CUserInterface::RenderText()
 		}
 	}
 
-	if(CSkillWnd::GetInstance()->m_bySkillIndex==0)
+	if(CSkillWnd::GetInstance()->activeSkillSelectionWindowType == SkillSelectionWindow::none)
 	{				
 		if(g_Mouse.MousePos.x>=132 && g_Mouse.MousePos.x<=132+32 && g_Mouse.MousePos.y>=733 && g_Mouse.MousePos.y<=733+32)
 		{			
@@ -1574,7 +1574,7 @@ void CUserInterface::RenderText()
 			return;
 		}		
 
-		if((nY*5+nX==0) && (CSkillWnd::GetInstance()->m_bySkillIndex==1))
+		if((nY*5+nX==0) && (CSkillWnd::GetInstance()->activeSkillSelectionWindowType == SkillSelectionWindow::leftSkills))
 		{
 			RenderFont(g_Message[ETC_MESSAGE377].szMessage, g_Mouse.MousePos.x-12, g_Mouse.MousePos.x+100, g_Mouse.MousePos.y-10, g_Mouse.MousePos.y+4, __ORDER_ITEM_DESC__+2);
 
@@ -1582,7 +1582,7 @@ void CUserInterface::RenderText()
 			return;
 		}
 		
-		if(CSkillWnd::GetInstance()->m_bySkillIndex==1)
+		if(CSkillWnd::GetInstance()->activeSkillSelectionWindowType == SkillSelectionWindow::rightSkills)
 		{		
 			BYTE	bySkillValue	= 0;
 			int		nCount			= 0;
@@ -1609,7 +1609,7 @@ void CUserInterface::RenderText()
 				return;
 			}			
 		}
-		else if(CSkillWnd::GetInstance()->m_bySkillIndex==2)
+		else if(CSkillWnd::GetInstance()->activeSkillSelectionWindowType == SkillSelectionWindow::rightSkills)
 		{
 			BYTE	bySkillValue	= 1;
 			int		nCount			= 0;
@@ -1640,7 +1640,7 @@ void CUserInterface::RenderText()
 				return;
 			}		
 		}
-		else if(CSkillWnd::GetInstance()->m_bySkillIndex==3 && g_pMainPlayer->m_pGuardian[0])
+		else if(CSkillWnd::GetInstance()->activeSkillSelectionWindowType == SkillSelectionWindow::guardianSkills && g_pMainPlayer->m_pGuardian[0])
 		{
 			CMonster *pGuardian = g_pMainPlayer->m_pGuardian[0];
 			BYTE	bySkillValue	= 0;

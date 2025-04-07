@@ -23,7 +23,7 @@ CSkillWnd* CSkillWnd::c_pThis = NULL;
 CSkillWnd::CSkillWnd()
 { 	
 	m_byBitClassType	= 0;
-	m_bySkillIndex		= 0;
+	activeSkillSelectionWindowType		= SkillSelectionWindow::none;
 	m_bySkillType		= CLASS_TYPE_WARRIOR;		
 	m_bBtnChk[0]		= FALSE;
 	m_bBtnChk[1]		= FALSE;
@@ -500,7 +500,7 @@ void CSkillWnd::RenderSkillIcon()
 		}
 	}
 
-	if(m_bySkillIndex==1)
+	if(activeSkillSelectionWindowType == SkillSelectionWindow::leftSkills)
 	{
 		int nCount = 1;
 
@@ -519,7 +519,7 @@ void CSkillWnd::RenderSkillIcon()
 			}
 		}		
 	}
-	else if(m_bySkillIndex==2)
+	else if(activeSkillSelectionWindowType == SkillSelectionWindow::rightSkills)
 	{
 		int nCount = 0;
 
@@ -539,7 +539,7 @@ void CSkillWnd::RenderSkillIcon()
 		}
 	}
 	// 가디언 스킬 선택 : 최덕석 2005.3.3
-	else if(pGuardian && m_bySkillIndex == 3)
+	else if(pGuardian && activeSkillSelectionWindowType == SkillSelectionWindow::guardianSkills)
 	{
 		int nCount = 1;
 

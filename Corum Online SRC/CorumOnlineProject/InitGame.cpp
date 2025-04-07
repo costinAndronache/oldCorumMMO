@@ -730,7 +730,7 @@ BOOL InitGame()
 
 	//
 
-	LoadSkillresourceTable();	
+		
 	LoadItemResourceTable();
 	LoadBaseItemTable();
 	LoadItemTable();	
@@ -753,6 +753,7 @@ BOOL InitGame()
 	g_pMonsterManager	= new CMonsterManager;
 
 	LoadPreLoadInfo();
+	LoadSkillresourceTable();
 
 	g_pExecutive->GetRenderer()->CreateEffectShaderPaletteFromFile(GetFile("special_effect.efs", DATA_TYPE_UI));
 
@@ -1955,16 +1956,28 @@ void LoadSkillresourceTable()
 		lpSkillResourceEx->wIndex		= sSkillResource[i].wIndex;
 		lpSkillResourceEx->wIndexAct	= sSkillResource[i].wIndexAct;		
 
+		auto effect = g_pEffectLayer->GetEffectInfo(lpSkillResourceEx->wId);
+		char name[200] = { 0 };
+		if (effect) {
+			wsprintf(name, "%s", effect->szName);
+		}
+		else {
+			wsprintf(name, "[unknown]");
+		}
+		printf("Skill:(\nname: %s,\nfilenameAct: %s,\n[id: %d, pos: %d])\n",
+			name, lpSkillResourceEx->szFileNameAct,
+			lpSkillResourceEx->wId, lpSkillResourceEx->byTypePos);
+
 		if(lpSkillResourceEx->byTypePos==2)
 		{
-			g_sSkillListManager.byLeftSkill[nLeftIndex] = BYTE(lpSkillResourceEx->wId);
-			g_sSkillListManager.byRightSkill[nRightIndex] = BYTE(lpSkillResourceEx->wId);
+			g_sSkillListManager.byLeftSkill[nLeftIndex] = (lpSkillResourceEx->wId);
+			g_sSkillListManager.byRightSkill[nRightIndex] = (lpSkillResourceEx->wId);
 			nLeftIndex++;
 			nRightIndex++;			
 		}
 		else if(lpSkillResourceEx->byTypePos==1)
 		{
-			g_sSkillListManager.byRightSkill[nRightIndex] = BYTE(lpSkillResourceEx->wId);
+			g_sSkillListManager.byRightSkill[nRightIndex] = 105;
 			nRightIndex++;
 		}
 

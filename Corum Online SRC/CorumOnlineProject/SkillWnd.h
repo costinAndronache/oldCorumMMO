@@ -79,6 +79,9 @@
 
 #define SKILL_ICON_SIZE					32
 
+
+enum class SkillSelectionWindow { none, leftSkills, rightSkills, guardianSkills};
+
 class CSkillWnd : public CMenu
 {
 public:
@@ -86,7 +89,7 @@ public:
 	BYTE				m_byBitClassType;
 
 	BYTE				m_bySkillType;
-	BYTE				m_bySkillIndex;
+	SkillSelectionWindow activeSkillSelectionWindowType;
 	BYTE				m_bClassType[5];
 	
 	BOOL				m_bMoveChk;		

@@ -2056,9 +2056,9 @@ BOOL OnLButtonDownInterfaceDungeon()
 		
 	if(pInterface->InterfaceCheck() == -1)
 	{
-		if(pSkillWnd->m_bySkillIndex != 0)
+		if(pSkillWnd->activeSkillSelectionWindowType != SkillSelectionWindow::none)
 		{
-			pSkillWnd->m_bySkillIndex = 0;
+			pSkillWnd->activeSkillSelectionWindowType = SkillSelectionWindow::none;
 		}
 		if(pItemShopWnd->GetActive()==TRUE)
 		{			
@@ -5513,7 +5513,7 @@ void SkillRender()
 	CMonster *pGuardian = g_pMainPlayer->m_pGuardian[0];
 	
 	// Skill ÀÛ¾÷ //
-	if(pSkillWnd->m_bySkillIndex==1)
+	if(pSkillWnd->activeSkillSelectionWindowType == SkillSelectionWindow::leftSkills)
 	{
 		for(int i = 0; i < 16; i++)
 		{
@@ -5561,7 +5561,7 @@ void SkillRender()
 			}
 		}
 	}
-	else if(pSkillWnd->m_bySkillIndex==2)
+	else if(pSkillWnd->activeSkillSelectionWindowType == SkillSelectionWindow::rightSkills)
 	{		
 //		Effect* pEffect;
 
@@ -6191,7 +6191,7 @@ void SetKey(int nKey)
 					{
 						int nSkill_Idx = 1;
 
-						if(pSkillWnd->m_bySkillIndex==0)
+						if(pSkillWnd->activeSkillSelectionWindowType == SkillSelectionWindow::none)
 						{
 							if(g_pMainPlayer->m_nSkillKey[i]!=-1)
 							{
@@ -6201,7 +6201,7 @@ void SetKey(int nKey)
 									g_pMainPlayer->SetSkillChangeLR((BYTE)g_pMainPlayer->m_nSkillKey[i], 1);																								
 							}
 						}
-						else if(pSkillWnd->m_bySkillIndex==1)
+						else if(pSkillWnd->activeSkillSelectionWindowType == SkillSelectionWindow::leftSkills)
 						{
 							if(g_Mouse.MousePos.x>=116 && g_Mouse.MousePos.x<=116+32 &&
 								g_Mouse.MousePos.y>=646 && g_Mouse.MousePos.y<=646+32)
@@ -6239,7 +6239,7 @@ void SetKey(int nKey)
 								}
 							}							
 						}
-						else if(pSkillWnd->m_bySkillIndex==2)
+						else if(pSkillWnd->activeSkillSelectionWindowType == SkillSelectionWindow::rightSkills)
 						{			
 							nSkill_Idx = 0;
 							
@@ -6267,7 +6267,7 @@ void SetKey(int nKey)
 							}
 						}															
 						// Key //
-						if(pSkillWnd->m_bySkillIndex!=0)
+						if(pSkillWnd->activeSkillSelectionWindowType != SkillSelectionWindow::none)
 						{
 							CTWS_SKILL_KEY pPacket;
 

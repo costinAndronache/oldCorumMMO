@@ -437,8 +437,8 @@ typedef struct __tag_skill_list_manager__
 
 	BYTE byLeftSkillCnt;
 	BYTE byRightSkillCnt;
-	BYTE byLeftSkill[MAX_SKILL];
-	BYTE byRightSkill[MAX_SKILL];	
+	WORD byLeftSkill[MAX_SKILL];
+	WORD byRightSkill[MAX_SKILL];	
 
 	IDISpriteObject* pSpr[MAX_SKILL];
 
