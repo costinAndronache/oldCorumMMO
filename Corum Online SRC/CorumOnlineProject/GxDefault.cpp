@@ -21,7 +21,8 @@ DWORD __stdcall GXPlayerPROC(I4DyuchiGXExecutive* pExecutive, GXOBJECT_HANDLE gx
 	
 	if( pObjDesc->bSkip	)			// 프레임 스킵을 시행한다.
 	{
-		if( DWORD( pObjDesc->nCurFrame + arg1 ) >= MotionDesc.dwLastFrame )
+		const auto framesToProcess = arg1;
+		if( DWORD( pObjDesc->nCurFrame + framesToProcess ) >= MotionDesc.dwLastFrame )
 		{
 			if( DWORD(pObjDesc->nCurFrame) >= MotionDesc.dwLastFrame ) 
 			{
@@ -35,7 +36,7 @@ DWORD __stdcall GXPlayerPROC(I4DyuchiGXExecutive* pExecutive, GXOBJECT_HANDLE gx
 		}
 		else 
 		{
-			dwSync = arg1;
+			dwSync = framesToProcess;
 		}
 	}
 	else

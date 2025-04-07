@@ -5,6 +5,8 @@ namespace ItemPickupFiltering {
 	enum ActionCode {
 		ActionCodeDroppedItemsTooltipRendering,
 		ActionCodePickupFiltering,
+		ActionCodeIncreaseFPS,
+		ActionCodeDecreaseFPS,
 		ActionCodeUnknown
 	};
 

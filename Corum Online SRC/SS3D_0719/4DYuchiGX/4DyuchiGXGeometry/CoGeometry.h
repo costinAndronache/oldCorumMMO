@@ -96,7 +96,6 @@ class CoGeometry : public I4DyuchiGXGeometry
 	VIEWPORT*					m_pViewport;
 	DWORD						m_dwViewportNum;
 	
-	DWORD						m_dwTickCount;		// 단위는 초
 	BOOL						m_bGameFrame;
 	DWORD						m_dwCurrentViewportIndex;
 	float						m_fRSForLoadResource;

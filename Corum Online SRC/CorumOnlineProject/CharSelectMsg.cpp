@@ -73,7 +73,8 @@ void CmdWorldUserInfo( char* pMsg, DWORD dwLen )
 	
 	if(g_Dev.bBeginType == DEVELOP_START_WORLD)
 	{
-		g_pExecutive->SetFramePerSec(25);
+		g_pExecutive->SetLogicFPS(25);
+		g_pExecutive->SetRenderFPS(25);
 		g_pSprManager->GetSprite(SPR_LOADING_BACK)->ShowSprite(TRUE);	
 		SetGameStatus(UPDATE_GAME_WORLD);
 		InitGameWorld();
@@ -84,7 +85,8 @@ void CmdWorldUserInfo( char* pMsg, DWORD dwLen )
 		g_pSprManager->GetSprite(SPR_LOADING_BACK)->ShowSprite(TRUE);	
 		LoadTotalDungeonInfo();	//DungeonTable Ã¤¿ì°í 
 		g_pGeometry->SetShadowFlag(ENABLE_PROJECTION_SHADOW |	ENABLE_PROJECTION_TEXMAP);
-		g_pExecutive->SetFramePerSec(25);
+		g_pExecutive->SetLogicFPS(25);
+		g_pExecutive->SetRenderFPS(60);
 		
 		CTWS_TRY_TO_JOIN_DUNGEON packet;
 		packet.wDungeonID = g_Dev.wBeginMapID;

@@ -573,7 +573,7 @@ lb_return:
 }
 DWORD g_dwPrvTick = 0;
 
-DWORD CoGXObject::OnFrame(I4DyuchiGXExecutive* pExecutive,DWORD msg,int arg1,int arg2)
+DWORD CoGXObject::OnFrame(I4DyuchiGXExecutive* pExecutive,DWORD msg,int framesToProcess,int arg2)
 {
 	SetOldPosition( &m_v3Pos);
 /*	if (m_pChildGXObject[0])
@@ -590,7 +590,7 @@ DWORD CoGXObject::OnFrame(I4DyuchiGXExecutive* pExecutive,DWORD msg,int arg1,int
 	}
 */
 	if (m_pProc)
-		m_pProc(pExecutive,this,msg,arg1,arg2,m_pData);
+		m_pProc(pExecutive,this,msg,framesToProcess,arg2,m_pData);
 
 //	if( m_bApplyVelocity)
 //		OnFrameApplyVelocity();
@@ -599,7 +599,7 @@ DWORD CoGXObject::OnFrame(I4DyuchiGXExecutive* pExecutive,DWORD msg,int arg1,int
 //	DefaultProc();
 	for (DWORD i=0; i<m_dwChildGXObjectNum; i++)
 	{
-		m_pChildGXObject[i]->OnFrame(pExecutive,msg,arg1,arg2);
+		m_pChildGXObject[i]->OnFrame(pExecutive,msg,framesToProcess,arg2);
 	}
 
 	return 0;

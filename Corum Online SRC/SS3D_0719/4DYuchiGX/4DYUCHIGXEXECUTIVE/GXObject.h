@@ -184,7 +184,7 @@ public:
 
 	
 	COLLISION_MESH_OBJECT_DESC*	__stdcall	GetCollisionMeshObjectDesc();
-	DWORD						__stdcall	OnFrame(I4DyuchiGXExecutive* pExecutive,DWORD msg,int arg1,int arg2);
+	DWORD						__stdcall	OnFrame(I4DyuchiGXExecutive* pExecutive,DWORD msg,int framesToProcess,int arg2);
 	DWORD						__stdcall	GetObjectIndexInModel();
 	BOOL						__stdcall	Render();
 	DWORD						__stdcall	CreateIVertexList(IVERTEX** ppVertex);

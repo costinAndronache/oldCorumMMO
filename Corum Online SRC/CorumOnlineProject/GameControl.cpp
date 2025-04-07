@@ -416,8 +416,10 @@ void RenderMultiple()
 		g_pRenderer->BeginPerformanceAnalyze();
 	
 	g_dwCurTick = timeGetTime();	
-	DWORD	dwGameFrameProcess	=	g_pExecutive->Process();
-	if( dwGameFrameProcess)
+	int processedFrames = 0;
+	int lostMilliseconds = 0;
+	g_pExecutive->LogicPass(g_dwCurTick, 1000 / 30, &processedFrames, &lostMilliseconds);
+	if( processedFrames)
 	{
 		if( g_bPause ) return;	
 		(*UpdateGameProcess[ GetGameStatus() ])();
@@ -427,7 +429,7 @@ void RenderMultiple()
 	if(BeforeRender[ GetGameStatus()])
 		(*BeforeRender[ GetGameStatus() ])();
 
-	g_pExecutive->Render();
+	g_pExecutive->Render(0, 1000 / 60);
 
 	if(AfterRender[ GetGameStatus()])
 		(*AfterRender[ GetGameStatus() ])();
@@ -1508,7 +1510,7 @@ BOOL LoadWorldMapScript(char* szMapFile, DWORD dwFlag)
 	} 
 
 	fclose(fp);
-	g_pExecutive->Render();
+	g_pExecutive->Render(0, 1000 / 60);
 	return TRUE;
 }
 

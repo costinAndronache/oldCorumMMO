@@ -32,8 +32,9 @@ DWORD __stdcall DefaultErrorHandleProc(ERROR_TYPE type,DWORD dwErrorPriority,voi
 
 	OutputDebugString(pMsg);
 
-	if (!dwErrorPriority)
-		__asm int 3
+	if (!dwErrorPriority) {
+		//__asm int 3
+	}
 
 	return 0;
 }
@@ -1730,7 +1731,6 @@ void __stdcall CoGeometry::GetSystemStatus(SYSTEM_STATUS* pStatus)
 
 void __stdcall CoGeometry::SetTickCount(DWORD dwTickCount,BOOL bGameFrame)
 {
-	m_dwTickCount = dwTickCount;
 	m_bGameFrame = bGameFrame;
 	if (m_pRenderer)
 		m_pRenderer->SetTickCount(dwTickCount,bGameFrame);
