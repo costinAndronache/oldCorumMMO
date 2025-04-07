@@ -168,7 +168,7 @@
     <GenerateManifest>false</GenerateManifest>
     <IncludePath>$(IncludePath);..\I4DyuchiNET</IncludePath>
     <TargetName>WorldServerResult</TargetName>
-    <LibraryPath>$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(LibraryPath);;../centralizedOutput;</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='JAPAN_LOCALIZING|Win32'">
     <ClCompile>
@@ -308,7 +308,7 @@
       <LanguageStandard>stdcpp14</LanguageStandard>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>odbc32.lib;odbccp32.lib;WS2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>odbc32.lib;odbccp32.lib;WS2_32.lib;%(AdditionalDependencies);CommonServer.lib;</AdditionalDependencies>
       <OutputFile>.\Debug\WorldServerResult.exe</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <GenerateDebugInformation>true</GenerateDebugInformation>

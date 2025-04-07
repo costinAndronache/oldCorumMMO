@@ -50,7 +50,7 @@
     <IntDir>.\Debug\</IntDir>
     <LinkIncremental>true</LinkIncremental>
     <IncludePath>$(IncludePath);$(DX8INCLUDEDIR);</IncludePath>
-    <LibraryPath>$(LibraryPath);$(DX8LIBDIR);</LibraryPath>
+    <LibraryPath>$(LibraryPath);$(DX8LIBDIR);;..\..\..\centralizedOutput;</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>./../../4DYuchiDLL\</OutDir>
@@ -77,7 +77,7 @@
     </ClCompile>
     <Link>
       <RegisterOutput>false</RegisterOutput>
-      <AdditionalDependencies>legacy_stdio_definitions.lib;d3dx8.lib;d3d8.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>legacy_stdio_definitions.lib;d3dx8.lib;d3d8.lib;SS3DGFunc.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ShowProgress>LinkVerboseLib</ShowProgress>
       <OutputFile>$(OutDir)SS3DRendererForCorum.dll</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>

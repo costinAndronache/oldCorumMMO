@@ -23,8 +23,6 @@
 #include "factory.h"
 #include "CoStorage.h"
 
-#pragma comment(lib, "./../../4dyuchidll/SS3DGFunc.lib")
-
 HINSTANCE g_hDllInst = NULL;
 
 // 베이스 네트웍 소스에서 차용.

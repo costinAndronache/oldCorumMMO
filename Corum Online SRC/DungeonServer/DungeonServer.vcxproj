@@ -166,6 +166,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <TargetName>DungeonServerResult</TargetName>
     <IncludePath>$(IncludePath);..\I4DyuchiNET</IncludePath>
+    <LibraryPath>$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);../centralizedOutput;</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug_with_New_Command|Win32'">
     <ClCompile>

@@ -24,9 +24,6 @@
 #include "CoD3DDevice.h"
 
 
-#pragma comment(lib, "./../../4DYuchiDLL/SS3DGFunc.lib")
-
-
 HINSTANCE g_hDllInst = NULL;
 
 BOOL WINAPI DllMain(

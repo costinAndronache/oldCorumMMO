@@ -265,7 +265,7 @@
     <IntDir>.\Debug\</IntDir>
     <LinkIncremental>true</LinkIncremental>
     <IncludePath>$(SOLUTION_INCLUDES);$(IncludePath)</IncludePath>
-    <LibraryPath>$(SOLUTION_LIBS)</LibraryPath>
+    <LibraryPath>$(SOLUTION_LIBS);../centralizedOutput;</LibraryPath>
     <TargetName>CorumOnlineResult</TargetName>
     <GenerateManifest>false</GenerateManifest>
     <CustomBuildAfterTargets>

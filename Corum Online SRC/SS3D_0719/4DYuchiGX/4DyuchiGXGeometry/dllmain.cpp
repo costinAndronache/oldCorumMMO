@@ -22,8 +22,6 @@
 #include "factory.h"
 #include "CoGeometry.h"
 
-#pragma comment(lib, "./../../4DYuchiDLL/SS3DGFunc.lib")
-
 HINSTANCE g_hDllInst = NULL;
 
 BOOL WINAPI DllMain(
