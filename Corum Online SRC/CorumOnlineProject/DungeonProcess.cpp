@@ -105,6 +105,8 @@ using namespace ItemPickupFiltering;
 
 char globalDebugLine[255];
 
+static int _renderFPS = 30;
+
 DWORD						g_dwMileHandleRefs	= 0;
 LPGlobalVariable_Dungeon	g_pGVDungeon		= NULL;
 SDGCHATMSG					g_sDgChatMsg[__MAX_QUEUE__];
@@ -154,8 +156,8 @@ DWORD __stdcall AfterInterpolation(AFTER_INTERPOLATION_CALL_BACK_ARG* pArg)
 		{
 			VECTOR3 v3Tmp = 
 			{
-				g_pMainPlayer->m_v3CurPos.x + g_Camera.fCameraDistance_x + 300,
-				g_pMainPlayer->m_v3CurPos.y + g_Camera.fCameraDistance_y + 150,
+				g_pMainPlayer->m_v3CurPos.x + g_Camera.fCameraDistance_x,
+				g_pMainPlayer->m_v3CurPos.y + g_Camera.fCameraDistance_y,
 				g_pMainPlayer->m_v3CurPos.z + g_Camera.fCameraDistance_z
 			};
 
@@ -208,7 +210,8 @@ BOOL InitGameDungeon()
 	g_pExecutive->SetAfterInterpolation(AfterInterpolation);
 	SetRenderMode(RENDER_MODE_NORMAL);
 	
-	g_pExecutive->SetFramePerSec(20);
+	g_pExecutive->SetLogicFPS(30);
+	g_pExecutive->SetRenderFPS(20);
 	
 	srand( g_dwCurTick );
 	
@@ -1546,6 +1549,7 @@ DWORD __stdcall AfterRenderGameDungeon()
 	sprintf(szTempEx, "%ld, %ld,", g_Mouse.MousePos.x, g_Mouse.MousePos.y);
 	//RenderFont(szTempEx, 500, 1200, 50, 90, 0);
 
+	sprintf(globalDebugLine, "FPS:: %d", _renderFPS);
 	RenderFont((char*)globalDebugLine, 500, 1200, 50, 90, 0);
 
 	if (pTile)
@@ -1991,6 +1995,14 @@ void OnKeyUpDungeon(WPARAM wParam, LPARAM lParam)
 			break;
 		case ActionCode::ActionCodePickupFiltering:
 			ItemPickupFilteringSystem::sharedInstance()->setViewActive(!ItemPickupFilteringSystem::sharedInstance()->isViewActive());
+			break;
+		case ActionCode::ActionCodeIncreaseFPS:
+			_renderFPS = min(60, _renderFPS + 10);
+			g_pExecutive->SetRenderFPS(_renderFPS);
+			break;
+		case ActionCode::ActionCodeDecreaseFPS:
+			_renderFPS = max(10, _renderFPS - 10);
+			g_pExecutive->SetRenderFPS(_renderFPS);
 			break;
 		}
 	}

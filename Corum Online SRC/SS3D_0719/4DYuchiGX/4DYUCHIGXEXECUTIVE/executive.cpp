@@ -176,8 +176,6 @@ CoExecutive::CoExecutive()
 {
 	memset((char*)this+4,0,sizeof(CoExecutive)-4);
 	
-	m_dwGameFPS = 30;
-	SetFramePerSec(m_dwGameFPS);
 	m_pDummyGXObject = new CoGXObject;
 	m_pDummyGXLight = new CoGXLight;
 	m_pDummyGXDecal = new CGXDecal;
@@ -191,40 +189,27 @@ CoExecutive::CoExecutive()
 	_CrtSetDbgFlag(flag);
 #endif
 	
-
-
-//	m_Collision.Init();		// 2002/05/29
+	SetLogicFPS(30);
+	SetRenderFPS(30);
 }
-void CoExecutive::SetFramePerSec(DWORD dwFrame)
-{
 
-	DWORD	dwCurFrameCount;
-	DWORD	dwCurrentTick;
-
-	if (dwFrame > 1000)
-		goto lb_return;
-	
-	if (!dwFrame)
-		goto lb_return;
-
-	dwCurrentTick = GetTickCount();
-	
-	m_dwGameFPS = dwFrame;
-	m_dwTicksPerFrame = 1000 / m_dwGameFPS;
-	
-	m_dwInitialTick = dwCurrentTick;
-	dwCurFrameCount = (dwCurrentTick - m_dwInitialTick) / m_dwTicksPerFrame;
-	m_dwPrvFrameCount = dwCurFrameCount;
-
-
-lb_return:
-	return;
-
+void __stdcall CoExecutive::SetLogicFPS(DWORD fps) {
+	m_dwGameLogicFPS = fps;
+	m_msForOneLogicFrame = 1000 / fps;
+	SetT0Now();
 }
-DWORD CoExecutive::GetFramePerSec()
-{
-	return m_dwGameFPS;
-	
+
+void __stdcall CoExecutive::SetRenderFPS(DWORD fps) {
+	m_dwGameRenderFPS = fps;
+	m_msForOneRenderFrame = 1000 / fps;
+	SetT0Now();
+}
+
+void __stdcall CoExecutive::SetT0Now() {
+	const auto dwCurrentTick = GetTickCount();
+	m_tickCountAtT0 = dwCurrentTick;
+
+	_previousLogicFrameIndex = _previousRenderFrameIndex = 0;
 }
 
 void __stdcall CoExecutive::SetViewport(DWORD dwViewportIndex)
@@ -486,7 +471,7 @@ BOOL CoExecutive::Initialize(I4DyuchiGXGeometry* pGeometry,I4DyuchiGXRenderer* p
 //	m_pStaticPoolFileItem = CreateStaticMemoryPool();
 //	InitializeStaticMemoryPool(m_pStaticPoolFileItem,sizeof(FILE_ITEM),dwMaxObjectNum / 8,dwMaxObjectNum);
 	
-	m_dwInitialTick = GetTickCount();
+	m_tickCountAtT0 = GetTickCount();
 
 	bResult = TRUE;
 
@@ -852,7 +837,7 @@ BOOL __stdcall CoExecutive::IsInViewVolume(GXMAP_OBJECT_HANDLE gxh)
 	CheckHandle(gxh);
 #endif
 	BOOL	bResult = FALSE;
-	if ( ((CGXMapObject*)gxh)->GetRenderFrameCount() == m_dwRenderFrameCount)
+	if ( ((CGXMapObject*)gxh)->GetRenderFrameCount() == _previousLogicFrameIndex)
 		bResult = TRUE;
 
 	return bResult;
@@ -3448,17 +3433,31 @@ BOOL __stdcall CoExecutive::SetCameraFitGXObject(GXOBJECT_HANDLE gxo,float fNear
 	return TRUE;
 }
 
-DWORD __stdcall CoExecutive::Run(DWORD dwBackColor,GX_FUNC pfBeforeRenderFunc,GX_FUNC pfAfterRenderFunc,DWORD dwFlag)
+DWORD __stdcall CoExecutive::Run(DWORD dwBackColor, GX_FUNC pfBeforeRenderFunc, GX_FUNC pfAfterRenderFunc, DWORD dwFlag)
 {
-	DWORD		dwResult;
+	const auto dwCurrentTick = GetTickCount();
 
-	dwResult = Process();
+	int logicFramesProcessed = 0;
+	int lostLogicMilliseconds = 0;
+	LogicPass(dwCurrentTick, m_msForOneLogicFrame, &logicFramesProcessed, &lostLogicMilliseconds);
 
-	m_pGeometry->BeginRender(m_dwViewportIndex,dwBackColor,dwFlag | BEGIN_RENDER_FLAG_USE_RENDER_TEXTURE);
+	const auto delta = (dwCurrentTick - m_tickCountAtT0);
+	const auto currentRenderFrameIndex = delta / m_msForOneRenderFrame;
+	const auto lostRenderMilliseconds = delta % m_msForOneRenderFrame;
+
+	if (currentRenderFrameIndex <= _previousRenderFrameIndex) {
+		return logicFramesProcessed;
+	}
+
+	_previousRenderFrameIndex = currentRenderFrameIndex;
+
+	m_pGeometry->SetTickCount(dwCurrentTick, TRUE);
+
+	m_pGeometry->BeginRender(m_dwViewportIndex, dwBackColor, dwFlag | BEGIN_RENDER_FLAG_USE_RENDER_TEXTURE);
 	if (pfBeforeRenderFunc)
 		pfBeforeRenderFunc();
 
-	Render();
+	Render(lostRenderMilliseconds, m_msForOneRenderFrame);
 
 	if (pfAfterRenderFunc)
 		pfAfterRenderFunc();
@@ -3466,9 +3465,14 @@ DWORD __stdcall CoExecutive::Run(DWORD dwBackColor,GX_FUNC pfBeforeRenderFunc,GX
 	RenderCameraFrontObject(m_fDistCameraFront);
 	m_pGeometry->EndRender();
 
-lb_return:
-	return dwResult;
+	
+	return logicFramesProcessed;
 }
+
+void __stdcall CoExecutive::RenderPass(DWORD currentTick, DWORD millisecondsForOneFrame) {
+	
+}
+
 BOOL __stdcall CoExecutive::RenderCameraFrontObject(float fDist)
 {
 	BOOL	bResult = FALSE;
@@ -3487,49 +3491,25 @@ lb_return:
 	return bResult;
 }
 
-DWORD __stdcall CoExecutive::Process()
+DWORD __stdcall CoExecutive::LogicPass(DWORD dwCurrentTick,
+									   DWORD millisecondsForOneFrame,
+									   OUT int* logicFramesProcessed,
+									   OUT int* lostMillisecondsFromLastFrame
+									   )
 {
-	DWORD		i;
+	const auto _usedMillisecondsForCurrentFrame	=	(dwCurrentTick - m_tickCountAtT0) % millisecondsForOneFrame;
 
-	CoGXObject*	pGXO;
-	CoGXLight*	pGXL;
-	CGXDecal*	pGXD;
+	const DWORD	currentFrameIndex = (dwCurrentTick - m_tickCountAtT0) / millisecondsForOneFrame;
+	const auto framesToProcess = currentFrameIndex - _previousLogicFrameIndex;
+	*logicFramesProcessed = framesToProcess;
+	*lostMillisecondsFromLastFrame = _usedMillisecondsForCurrentFrame;
 
-	DWORD		dwGXONum;
-	DWORD		dwGXLNum;
-	DWORD		dwGXDNum;
-	DWORD		dwResult = 0;
-
-	
-	int			frame_inc;
-	DWORD		dwCurrentTick = GetTickCount();
-	BOOL		bGameFrame;
-
-	
-	
-	/*
-	frame_inc = (dwCurrentTick - m_dwPrvTick) / m_dwTicksPerFrame;
-	if (!frame_inc)
-		goto lb_return;
-*/
-
-	// 랜더링 프레임 틱 증가분.
-	m_dwTickIncrease	=	(dwCurrentTick - m_dwInitialTick) % m_dwTicksPerFrame;
-
-	if( m_dwTickIncrease >= 2)
-	{
-//		_asm int 3;
+	if (framesToProcess <= 0) {
+		return framesToProcess;
 	}
 
-	frame_inc	=	0;
-	DWORD	dwCurFrameCount = (dwCurrentTick - m_dwInitialTick) / m_dwTicksPerFrame;
-	if (dwCurFrameCount <= m_dwPrvFrameCount)
-	{
-		bGameFrame = FALSE;
-		goto lb_return;
-	}
-
-
+	_previousLogicFrameIndex = currentFrameIndex;
+	m_dwFrameCount += framesToProcess;
 
 	if (m_pgxMap)
 	{
@@ -3539,54 +3519,39 @@ DWORD __stdcall CoExecutive::Process()
 			pStaticModel->RunManageResource(m_dwViewportIndex);
 	}
 
-	
-	
-
-	bGameFrame = TRUE;
-	
-	frame_inc = dwCurFrameCount - m_dwPrvFrameCount;
-
-	m_dwPrvFrameCount = dwCurFrameCount;
-	m_dwFrameCount += frame_inc;
-
-
 	SetCannotDelete();
-	dwGXONum = ITGetItemNum(m_pIndexItemTableGXObject);
-	for (i=0; i<dwGXONum; i++)
+	const auto dwGXONum = ITGetItemNum(m_pIndexItemTableGXObject);
+	for (auto i=0; i<dwGXONum; i++)
 	{
-		pGXO = (CoGXObject*)ITGetItemSequential(m_pIndexItemTableGXObject,i);
+		auto pGXO = (CoGXObject*)ITGetItemSequential(m_pIndexItemTableGXObject,i);
 		if (!(pGXO->GetScheduleFlag() & SCHEDULE_FLAG_NOT_SCHEDULE))
 		{
-			pGXO->OnFrame(this,0,frame_inc,0);
+			pGXO->OnFrame(this,0,framesToProcess,0);
 		}
 			
 	}
 	
-	
-	dwGXLNum = ITGetItemNum(m_pIndexItemTableGXLight);
-	for (i=0; i<dwGXLNum; i++)
+	const auto dwGXLNum = ITGetItemNum(m_pIndexItemTableGXLight);
+	for (auto i=0; i<dwGXLNum; i++)
 	{
-		pGXL = (CoGXLight*)ITGetItemSequential(m_pIndexItemTableGXLight,i);
+		auto pGXL = (CoGXLight*)ITGetItemSequential(m_pIndexItemTableGXLight,i);
 			if (!(pGXL->GetScheduleFlag() & SCHEDULE_FLAG_NOT_SCHEDULE))
-				pGXL->OnFrame(this,0,frame_inc,0);
+				pGXL->OnFrame(this,0,framesToProcess,0);
 	}
 	
-	dwGXDNum = ITGetItemNum(m_pIndexItemTableGXDecal);
-	for (i=0; i<dwGXDNum; i++)
+	const auto dwGXDNum = ITGetItemNum(m_pIndexItemTableGXDecal);
+	for (auto i=0; i<dwGXDNum; i++)
 	{
-		pGXD = (CGXDecal*)ITGetItemSequential(m_pIndexItemTableGXDecal,i);
+		auto pGXD = (CGXDecal*)ITGetItemSequential(m_pIndexItemTableGXDecal,i);
 			if (!(pGXD->GetScheduleFlag() & SCHEDULE_FLAG_NOT_SCHEDULE))
-			pGXD->OnFrame(this,0,frame_inc,0);
+			pGXD->OnFrame(this,0,framesToProcess,0);
 	}
+
 	SetCanDelete();
-//	bResult = TRUE;
 	DPCQProcess(m_pDPCQ);			// dpcq에 들어있던거 한방에 처리.
 	DPCQClear(m_pDPCQ);
-//	m_pRenderer->UpdateProcess();
-
-lb_return:	
-	m_pGeometry->SetTickCount(dwCurrentTick, bGameFrame);
-	return frame_inc;
+	
+	return framesToProcess;
 }
 
 
@@ -3663,15 +3628,9 @@ DWORD __stdcall CoExecutive::IsValidHandle(GXMAP_OBJECT_HANDLE gxh)
 lb_return:
 	return dwResult;
 }
-void __stdcall CoExecutive::Render()
+void __stdcall CoExecutive::Render(float usedMillisecondsForCurrentFrame, float millisecondsForOneFrame)
 {
-	m_dwRenderFrameCount++;
-
-	DWORD				i;
-	CGXMapObject**		ppGXMapObjList;
-	int					iObjNum;
-
-	CoGXLight*			pGXL;
+	DWORD iObjNum = 0;
 	LIGHT_DESC			lightDesc;
 	BOUNDING_SPHERE		lightSphere;
 	DWORD				dwLightNum;
@@ -3679,21 +3638,17 @@ void __stdcall CoExecutive::Render()
 	VIEW_VOLUME			vv;
 
 	// 위치보간용 시간.
-	DWORD		dwTickIncrease		=	m_dwTickIncrease;
-	DWORD		dwTickPerFrame		=	m_dwTicksPerFrame;
-	float		fTimeScale	=	float( dwTickIncrease)	/	float(dwTickPerFrame);
-	if( fTimeScale > 1.0f || fTimeScale < 0.0f)
-		_asm int 3;
-
-
-	
+	float	fTimeScale	=	float(usedMillisecondsForCurrentFrame)	/ millisecondsForOneFrame;
+	if (fTimeScale > 1.0f || fTimeScale < 0.0f) {
+		//_asm int 3;
+	}
 
 	if (!m_pgxMap)
 	{
 		dwLightNum = ITGetItemNum(m_pIndexItemTableGXLight);
-		for (i=0; i<dwLightNum; i++)
+		for (auto i=0; i<dwLightNum; i++)
 		{
-			pGXL = (CoGXLight*)ITGetItemSequential(m_pIndexItemTableGXLight,i);
+			auto pGXL = (CoGXLight*)ITGetItemSequential(m_pIndexItemTableGXLight,i);
 			if (!pGXL->IsEnableDynamicLight())
 				continue;
 
@@ -3717,11 +3672,11 @@ void __stdcall CoExecutive::Render()
 		DWORD dwGXONum = ITGetItemNum(m_pIndexItemTableGXObject);
 
 		// 랜더링 위치보간.
-		for (i=0; i<dwGXONum; i++)
+		for (auto i=0; i<dwGXONum; i++)
 		{
 			CoGXObject* pGXO = (CoGXObject*)ITGetItemSequential(m_pIndexItemTableGXObject,i);		
 
-			pGXO->SetRenderFrameCount(m_dwRenderFrameCount);
+			pGXO->SetRenderFrameCount(_previousLogicFrameIndex);
 			if(pGXO->GetScheduleFlag() & SCHEDULE_FLAG_NOT_RENDER)
 				continue;
 
@@ -3729,11 +3684,11 @@ void __stdcall CoExecutive::Render()
 		}
 
 
-		for (i=0; i<dwGXONum; i++)
+		for (auto i=0; i<dwGXONum; i++)
 		{
 			CoGXObject* pGXO = (CoGXObject*)ITGetItemSequential(m_pIndexItemTableGXObject,i);		
 
-			pGXO->SetRenderFrameCount(m_dwRenderFrameCount);
+			pGXO->SetRenderFrameCount(_previousLogicFrameIndex);
 			if(pGXO->GetScheduleFlag() & SCHEDULE_FLAG_NOT_RENDER)
 				continue;
 
@@ -3765,13 +3720,14 @@ void __stdcall CoExecutive::Render()
 //	#define GX_MAP_OBJECT_RENDER_END_INDEX		5
 
 	// 먼저 라이트를 골라내서 geometry에 넣는다.
+	CGXMapObject** ppGXMapObjList = nullptr;
 	iObjNum		=	m_pgxMap->GetRenderTargetBuffer(&ppGXMapObjList,GX_MAP_OBJECT_TYPE_LIGHT);
 
 	DWORD	dwIncLightNum;
 	dwIncLightNum = 0;
-	for (i=0; i<iObjNum; i++)
+	for (auto i=0; i<iObjNum; i++)
 	{
-		pGXL = (CoGXLight*)ppGXMapObjList[i];
+		auto pGXL = (CoGXLight*)ppGXMapObjList[i];
 		if (pGXL->GetScheduleFlag() & SCHEDULE_FLAG_NOT_RENDER)
 			continue;
 
@@ -3817,16 +3773,16 @@ void __stdcall CoExecutive::Render()
 	if(m_pfAfterInterpolationCallBack)
 	{
 		AFTER_INTERPOLATION_CALL_BACK_ARG	CallbackArg;
-		CallbackArg.dwIncreasedTick	=	m_dwTickIncrease;
-		CallbackArg.dwTickPerFrame	=	m_dwTicksPerFrame;
+		CallbackArg.dwIncreasedTick	=	usedMillisecondsForCurrentFrame;
+		CallbackArg.dwTickPerFrame	=	millisecondsForOneFrame;
 		m_pfAfterInterpolationCallBack( &CallbackArg);
 	}
 
 	// 게임에서 렌더링할 오브젝트를 골라내서 렌더링한다.
 //	int		j;
-	for( i = GX_MAP_OBJECT_RENDER_START_INDEX; i <= GX_MAP_OBJECT_RENDER_END_INDEX; i++)
+	for( auto i = GX_MAP_OBJECT_RENDER_START_INDEX; i <= GX_MAP_OBJECT_RENDER_END_INDEX; i++)
 	{
-		iObjNum		=	m_pgxMap->GetRenderTargetBuffer(&ppGXMapObjList, i);
+		const auto iObjNum		=	m_pgxMap->GetRenderTargetBuffer(&ppGXMapObjList, i);
 
 //		if( i == GX_MAP_OBJECT_TYPE_DECAL)		// 데칼은 화면에 그리는 문제때문에 제일 나중에 랜더링 한다. (지금은 run()에 가있다.)
 //			continue;
@@ -3834,7 +3790,7 @@ void __stdcall CoExecutive::Render()
 		for( j = 0; j < iObjNum; j++)
 		{
 			
-			ppGXMapObjList[j]->SetRenderFrameCount(m_dwRenderFrameCount);
+			ppGXMapObjList[j]->SetRenderFrameCount(_previousLogicFrameIndex);
 			if( ppGXMapObjList[j]->GetScheduleFlag() & SCHEDULE_FLAG_NOT_RENDER)
 				continue;
 			
@@ -3847,9 +3803,9 @@ void __stdcall CoExecutive::Render()
 	// 툴에서 렌더링할 개체들..
 	if (m_dwRenderMode & RENDER_MODE_TOOL)
 	{
-		for( i = GX_MAP_OBJECT_RENDER_START_INDEX_TOOL; i <= GX_MAP_OBJECT_RENDER_END_INDEX_TOOL; i++)
+		for( auto i = GX_MAP_OBJECT_RENDER_START_INDEX_TOOL; i <= GX_MAP_OBJECT_RENDER_END_INDEX_TOOL; i++)
 		{
-			iObjNum		=	m_pgxMap->GetRenderTargetBuffer(&ppGXMapObjList, i);
+			const auto iObjNum		=	m_pgxMap->GetRenderTargetBuffer(&ppGXMapObjList, i);
 
 
 
@@ -3858,7 +3814,7 @@ void __stdcall CoExecutive::Render()
 				if (ppGXMapObjList[j]->GetPropertyFlag() & GXLIGHT_TYPE_DISABLE_NOT_RENDER_MODEL_IN_TOOL)
 					continue;
 
-				ppGXMapObjList[j]->SetRenderFrameCount(m_dwRenderFrameCount);
+				ppGXMapObjList[j]->SetRenderFrameCount(_previousLogicFrameIndex);
 				ppGXMapObjList[j]->Render();
 			}
 		}

@@ -152,8 +152,9 @@ interface I4DyuchiGXExecutive : public IUnknown
 	virtual BOOL				__stdcall	DeleteGXLight(GXLIGHT_HANDLE gxh) = 0;
 	virtual BOOL				__stdcall	DeleteGXEventTrigger(GXTRIGGER_HANDLE gxh) = 0;
 
-	virtual DWORD				__stdcall	GetFramePerSec() = 0;
-	virtual	void				__stdcall	SetFramePerSec(DWORD dwFrame) = 0;
+	virtual	void				__stdcall	SetLogicFPS(DWORD dwFrame) = 0;
+	virtual void				__stdcall	SetRenderFPS(DWORD dwFrame) = 0;
+	virtual void				__stdcall	SetT0Now() = 0;
 	
 	virtual	void				__stdcall	GXLSetLightDesc(GXLIGHT_HANDLE gxh,LIGHT_DESC* pLightDesc) = 0;
 	virtual	void				__stdcall	GXLGetLightDesc(GXLIGHT_HANDLE gxh,LIGHT_DESC* pLightDesc) = 0;
@@ -198,15 +199,19 @@ interface I4DyuchiGXExecutive : public IUnknown
 	virtual BOOL				__stdcall	LoadMapScript(char* szFileName,LOAD_CALLBACK_FUNC pFunc,DWORD dwFlag) = 0;
 	virtual void				__stdcall	DeleteAllGXMapObjectsWitLoadMapScript() = 0;
 	
-	virtual void				__stdcall	Render() = 0;
+	virtual void				__stdcall	Render(float usedMillisecondsForCurrentFrame, float millisecondsForOneFrame) = 0;
 	virtual BOOL				__stdcall	RenderCameraFrontObject(float fDist) = 0;
 	// 랜더링을 건다.
 	// 이 함수는 Process()와 짝을 이루어서 쓰는것이 좋다. Run()과는 배타적.
-	virtual DWORD				__stdcall	Process() = 0;
+	virtual DWORD				__stdcall	LogicPass(DWORD dwCurrentTick,
+		DWORD millisecondsForOneFrame,
+		OUT int* logicFramesProcessed,
+		OUT int* lostMillisecondsFromLastFrame
+	) = 0;
 	// 게임 프레임을 테스트 해서 증가시키고, 조건이 만족되면 GXObject의 프로시저를 순회한다.
 	// 리턴값은 프레임 증가량이다.
 	
-	virtual DWORD				__stdcall	Run(DWORD dwBackColor,GX_FUNC pfBeforeRenderFunc,GX_FUNC pfAfterRenderFunc,DWORD dwFlag) = 0;
+	virtual DWORD	__stdcall	Run(DWORD dwBackColor, GX_FUNC pfBeforeRenderFunc, GX_FUNC pfAfterRenderFunc, DWORD dwFlag) = 0;
 	// 게임 프로시저를 돌리고 랜더링을 건다.
 	// 내부적으로 Process()와 Render()를 돌릴 뿐이다.
 	// 게임에서 이 함수를 쓸 경우, Render()와 Process()를 직접 호출 해서는 안된다.

@@ -2,7 +2,7 @@
 #include "GXDefault.h"
 #include "executive.h"
 
-DWORD __stdcall GXDefaultSchedulePROC(I4DyuchiGXExecutive* pExecutive,GXOBJECT_HANDLE gxh,DWORD msg,int arg1,int arg2,void* pData)
+DWORD __stdcall GXDefaultSchedulePROC(I4DyuchiGXExecutive* pExecutive,GXOBJECT_HANDLE gxh,DWORD msg,int framesToProcess,int arg2,void* pData)
 {
 	
 	DWORD	dwMotionIndex = pExecutive->GXOGetCurrentMotionIndex(gxh);
@@ -31,7 +31,7 @@ DWORD __stdcall GXDefaultSchedulePROC(I4DyuchiGXExecutive* pExecutive,GXOBJECT_H
 
 	if (bHasMotion)
 	{
-		pExecutive->GXOSetCurrentFrame(gxh,dwFrame+arg1);
+		pExecutive->GXOSetCurrentFrame(gxh,dwFrame+framesToProcess);
 	
 		if (motionDesc.dwLastFrame <= dwFrame)
 			pExecutive->GXOSetCurrentFrame(gxh,0);

@@ -34,13 +34,17 @@ class CoExecutive : public I4DyuchiGXExecutive
 	
 	DWORD						m_dwViewportIndex;
 
-	DWORD						m_dwInitialTick;
-	DWORD						m_dwPrvFrameCount;
-	DWORD						m_dwFrameCount;
-	DWORD						m_dwTicksPerFrame;
-	DWORD						m_dwGameFPS;
+	DWORD						m_tickCountAtT0;
 
-	DWORD						m_dwTickIncrease;			// 최근 게임프레임에서 다음게임프레임 전까지 경과한 틱, 0에서 m_dwTicksPerFrame 사이값이 들어있어야 한다. Process에서 갱신.
+	DWORD						m_dwFrameCount;
+
+	DWORD						m_msForOneLogicFrame;
+	DWORD						m_dwGameLogicFPS;
+	DWORD						_previousLogicFrameIndex;
+
+	DWORD						m_msForOneRenderFrame;
+	DWORD						m_dwGameRenderFPS;
+	DWORD						_previousRenderFrameIndex;
 
 	BOOL						m_bCanDeleteObject;
 
@@ -122,9 +126,6 @@ class CoExecutive : public I4DyuchiGXExecutive
 //	int*						m_pDecalClipperIndexBuff;
 	DWORD						m_dwCurrentDecalCount;
 	
-	DWORD						m_dwRenderFrameCount;
-	
-
 	AfterInterpolationCallBack	m_pfAfterInterpolationCallBack;
 
 //	void						RenderDecal();
@@ -315,9 +316,10 @@ public:
 	
 	
 	
-	DWORD				__stdcall	GetFramePerSec();
-	void				__stdcall	SetFramePerSec(DWORD dwFrame);
-	
+	void				__stdcall	SetLogicFPS(DWORD dwFrame);
+	void				__stdcall	SetRenderFPS(DWORD dwFrame);
+	void				__stdcall	SetT0Now();
+
 	void				__stdcall	GXLSetLightDesc(GXLIGHT_HANDLE gxh,LIGHT_DESC* pLightDesc);
 	void				__stdcall	GXLGetLightDesc(GXLIGHT_HANDLE gxh,LIGHT_DESC* pLightDesc);
 	void				__stdcall	GXLSetPosition(GXLIGHT_HANDLE gxh,VECTOR3* pv3Pos);
@@ -370,12 +372,18 @@ public:
 	void				__stdcall	DeleteAllGXMapObjectsWitLoadMapScript();
 
 
-	void				__stdcall	Render();
+	void				__stdcall	Render(float usedMillisecondsForCurrentFrame, float millisecondsForOneFrame);
 	BOOL				__stdcall	RenderCameraFrontObject(float fDist);
-	DWORD				__stdcall	Process();
+	DWORD				__stdcall	LogicPass(DWORD dwCurrentTick,
+		DWORD millisecondsForOneFrame,
+		OUT int* logicFramesProcessed,
+		OUT int* lostMillisecondsFromLastFrame
+	);
+
+	void				__stdcall RenderPass(DWORD currentTick, DWORD millisecondsForOneFrame);
 	
 
-	DWORD				__stdcall	Run(DWORD dwBackColor,GX_FUNC pfBeforeRenderFunc,GX_FUNC pfAfterRenderFunc,DWORD dwFlag);
+	DWORD				__stdcall	Run(DWORD dwBackColor, GX_FUNC pfBeforeRenderFunc, GX_FUNC pfAfterRenderFunc, DWORD dwFlag);
 	BOOL				__stdcall	SetCameraFitGXObject(GXOBJECT_HANDLE gxo,float fNear,float fFar,float fFov,DWORD dwViewportIndex);
 	void				__stdcall	SetHFieldDetail(DWORD dwDetail);
 
