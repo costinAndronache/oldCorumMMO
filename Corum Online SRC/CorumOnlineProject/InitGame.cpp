@@ -1977,7 +1977,7 @@ void LoadSkillresourceTable()
 		}
 		else if(lpSkillResourceEx->byTypePos==1)
 		{
-			g_sSkillListManager.byRightSkill[nRightIndex] = 105;
+			g_sSkillListManager.byRightSkill[nRightIndex] = lpSkillResourceEx->wId;
 			nRightIndex++;
 		}
 
