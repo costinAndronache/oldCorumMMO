@@ -1587,7 +1587,7 @@ BOOL InitCOMObject()
 
 #ifdef __PACKAGE_MODE__
 	PACKFILE_NAME_TABLE sPackFileNameTable[256];
-	int iPackCount = LoadPakList("Paklist.sin", sPackFileNameTable, 256);
+	int iPackCount = LoadPakList("Data\\Paklist.sin", sPackFileNameTable, 256);
 	g_pExecutive->InitializeFileStorageWithoutRegistry("SS3DFileStorage.dll", 12000, 4096, 64, FILE_ACCESS_METHOD_FILE_OR_PACK,	sPackFileNameTable, iPackCount);
 	g_pExecutive->InitializeWithoutRegistry("SS3DGeometryForCorum.dll", "SS3DRendererForCorum.dll", g_hMainWnd, &dispInfo, 10000, 1024, 512, 32, 32, NULL);
 #else
@@ -1964,8 +1964,8 @@ void LoadSkillresourceTable()
 		else {
 			wsprintf(name, "[unknown]");
 		}
-		printf("Skill:(\nname: %s,\nfilenameAct: %s,\n[id: %d, pos: %d])\n",
-			name, lpSkillResourceEx->szFileNameAct,
+		printf("Skill:(\nname: %s,\nskillType: %d,\n[id: %d, pos: %d])\n",
+			name, lpSkillResourceEx->bySkillType,
 			lpSkillResourceEx->wId, lpSkillResourceEx->byTypePos);
 
 		if(lpSkillResourceEx->byTypePos==2)
