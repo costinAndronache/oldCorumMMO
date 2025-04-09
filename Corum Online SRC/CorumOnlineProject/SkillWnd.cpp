@@ -93,7 +93,7 @@ BOOL CSkillWnd::Init()
 	//	int nOrder = GetStartOrder();	Disabled by minjin. for Removing Unrefferneced Variable
 
 	// Skill Icon Loading
-	for(int i = 0; i < 5; i++)
+	for(int i = SkillType::fighter; i <= SkillType::sorceress; i++)
 	{
 		CreateSkillResourceSpr( g_sSkillListManager.pSkillList[i].pActiveList );		// Active Skill
 		CreateSkillResourceSpr( g_sSkillListManager.pSkillList[i].pMasteryList );		// Mastery Skill
@@ -529,11 +529,14 @@ void CSkillWnd::RenderSkillIcon()
 		
 		for(int i = 0; i < g_sSkillListManager.byRightSkillCnt; i++)
 		{
-			if(g_pMainPlayer->GetSkillLevel(g_sSkillListManager.byRightSkill[i])>0)
+			const auto skillID = g_sSkillListManager.byRightSkill[i];
+			const auto level = g_pMainPlayer->GetSkillLevel(skillID);
+			const auto sprite = g_sSkillListManager.pSpr[skillID];
+			if( level > 0)
 			{
 				vPos.x	= 116+32*(nCount%5);
 				vPos.y	= 640-32*(nCount/5);
-				g_pRenderer->RenderSprite(g_sSkillListManager.pSpr[g_sSkillListManager.byRightSkill[i]], NULL, 0.0f, &vPos, NULL, 0xffffffff, nOrder, RENDER_TYPE_DISABLE_TEX_FILTERING);
+				g_pRenderer->RenderSprite(sprite, NULL, 0.0f, &vPos, NULL, 0xffffffff, nOrder, RENDER_TYPE_DISABLE_TEX_FILTERING);
 				nCount++;
 			}
 		}
@@ -649,39 +652,10 @@ BOOL CSkillWnd::CheckSkillIfno(int nIndex, int nPosX, int nPosY, int nPosX2, int
 
 void CSkillWnd::RenderSkillInfo()
 {
-	BYTE bySkillIndex = 0; 
+	const auto bySkillIndex = m_bySkillType;
 	
 	if(g_Mouse.bLDown)
 		return;
-	
-	if ( m_bySkillType >=0 || m_bySkillType <= 5)
-	{
-		bySkillIndex = m_bySkillType % 5;
-	}
-	else
-	{
-		// "Invalid Skill Type"		by minjin.
-		_asm int 3
-	}
-/*	for more simple code
-	switch(m_bySkillType)
-	{
-	case CLASS_TYPE_WARRIOR:
-		bySkillIndex = 1;
-		break;
-	case CLASS_TYPE_PRIEST:
-		bySkillIndex = 2;
-		break;
-	case CLASS_TYPE_SUMMONER:						
-		bySkillIndex = 3;
-		break;
-	case CLASS_TYPE_HUNTER:
-		bySkillIndex = 4;
-		break;
-	case CLASS_TYPE_WIZARD:
-		bySkillIndex = 0;
-		break;
-	}							//*/
 	
 	// 스킬 정보 //		
 	if(g_Mouse.MousePos.x>=m_fPosX+28 && g_Mouse.MousePos.x<=m_fPosX+60 && g_Mouse.MousePos.y>=m_fPosZ+30 && g_Mouse.MousePos.y<=m_fPosZ+62)
@@ -1011,37 +985,8 @@ void CSkillWnd::RenderSkill()
 	v2Scaling.x	= 1.0f;
 	v2Scaling.y	= 1.0f;
 		
-	BYTE bySkillIndex = 0; 
+	const auto bySkillIndex = m_bySkillType;
 	
-	if ( m_bySkillType >=0 || m_bySkillType <= 5)
-	{
-		bySkillIndex = m_bySkillType % 5;
-	}
-	else
-	{
-		// "Invalid Skill Type"		by minjin.
-		_asm int 3
-	}
-/*	for more simple code
-	switch(m_bySkillType)
-	{
-	case CLASS_TYPE_WARRIOR:
-		byIndex = 1;
-		break;
-	case CLASS_TYPE_PRIEST:
-		byIndex = 2;
-		break;
-	case CLASS_TYPE_SUMMONER:						
-		byIndex = 3;
-		break;
-	case CLASS_TYPE_HUNTER:
-		byIndex = 4;
-		break;
-	case CLASS_TYPE_WIZARD:
-		byIndex = 0;
-		break;
-	}		//*/
-		
 	// Active //
 	POSITION_ pos = g_sSkillListManager.pSkillList[bySkillIndex].pActiveList->GetHeadPosition();	
 
@@ -1237,38 +1182,8 @@ void CSkillWnd::SetSkillUpBtn()
 
 	if(g_pMainPlayer->m_wPointSkill>0)
 	{
-		BYTE bySkillIndex = 0; 
-	
-		if ( m_bySkillType >=0 || m_bySkillType <= 5)
-		{
-			bySkillIndex = m_bySkillType % 5;
-		}
-		else
-		{
-			// "Invalid Skill Type"		by minjin.
-			_asm int 3
-		}
-	/*	for more simple code
-		switch(m_bySkillType)
-		{
-		case CLASS_TYPE_WARRIOR:
-			byIndex = 1;
-			break;
-		case CLASS_TYPE_PRIEST:
-			byIndex = 2;
-			break;
-		case CLASS_TYPE_SUMMONER:						
-			byIndex = 3;
-			break;
-		case CLASS_TYPE_HUNTER:
-			byIndex = 4;
-			break;
-		case CLASS_TYPE_WIZARD:
-			byIndex = 0;
-			break;
-		}		//*/
+		const auto bySkillIndex = m_bySkillType; 
 
-		
 		POSITION_ pos;
 #ifdef __SKILL_MASTERY_ENABLE
 		// 마스터리 //
@@ -1503,37 +1418,8 @@ int CSkillWnd::CheckInterface()
 
 			if(eMouseCheck==MOUSE_UP)
 			{
-				BYTE byIndex = 0; 
-	
-				if ( m_bySkillType >=0 || m_bySkillType <= 5)
-				{
-					byIndex = m_bySkillType % 5;
-				}
-				else
-				{
-					// "Invalid Skill Type"		by minjin.
-					_asm int 3
-				}
-			/*	for more simple code
-				switch(m_bySkillType)
-				{
-				case CLASS_TYPE_WARRIOR:
-					byIndex = 1;
-					break;
-				case CLASS_TYPE_PRIEST:
-					byIndex = 2;
-					break;
-				case CLASS_TYPE_SUMMONER:						
-					byIndex = 3;
-					break;
-				case CLASS_TYPE_HUNTER:
-					byIndex = 4;
-					break;
-				case CLASS_TYPE_WIZARD:
-					byIndex = 0;
-					break;
-				}		//*/
-
+				
+				const auto byIndex = m_bySkillType;
 
 				if(nRt==9)
 				{

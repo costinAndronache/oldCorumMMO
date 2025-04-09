@@ -445,12 +445,21 @@ typedef struct __tag_skill_list_manager__
 
 }SSKILL_LIST_MANAGER, *LP_SKILL_LIST_MANAGER;
 
+enum SkillType : BYTE {
+	arcusUnsupported = 0,
+	fighter,
+	priest,
+	summoner,
+	ranger,
+	sorceress
+};
 
 typedef struct __tag_skill_resource__
 {
 	WORD	wId;
-	
-	BYTE	bySkillType;
+			// arcus=0, unsupported for now
+			// fighter=1, priest, summoner, ranger, sorceress=5
+	SkillType	bySkillType;
 	
 	char	szFileName[20];
 
@@ -479,8 +488,8 @@ typedef struct __tag_pre_load
 typedef struct __tag_skill_resourceex__
 {
 	WORD	wId;
-	
-	BYTE	bySkillType;
+			
+	SkillType	bySkillType;
 	
 	char	szFileName[20];
 
