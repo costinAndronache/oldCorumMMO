@@ -283,7 +283,6 @@ enum DUNGEON_JOIN_FAIL
 #define	__MAX_QUEUE__				(__MIN_QUEUE__ * 3)
 
 #define	__MAX_CHAT_LIST_QUEUE__		256
-#define	MAX_SKILL					400
 
 #define	__MAX_PLAYERSHOP_MEMO__		30
 

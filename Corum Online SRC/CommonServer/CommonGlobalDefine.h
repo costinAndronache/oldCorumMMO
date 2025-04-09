@@ -223,7 +223,7 @@ struct PARTY_FRIEND
 #define MAX_CP_COOKIE_LENGTH				1024 * 2
 #define MAX_EQUIP_POOL						21
 #define	MAX_USER_GUARDIAN					5
-#define MAX_SKILL							151
+#define MAX_SKILL							200
 #define	MAX_PLAYER_SHOP_INV					10
 #define MAX_ID_LENGTH						20
 #define MAX_PASSWORD_LENGTH					20

@@ -424,7 +424,7 @@ extern BASE_CLASS_INFO				g_pBaseRaceInfo[MAX_RACE+1];
 extern BASE_CLASS_INFO				g_pMonsterBaseClassInfo[MAX_CLASS+1];
 extern Character_Propensity			g_pCharacter_Propensity[MAX_CHARACTER_PROPENSITY];
 extern DUNGEONPRODUCTIONITEMMINMAX	g_DungeonProductionItemMinMax[MAX_DUNGEON_PROPERTY];
-extern NPC_TABLE					g_NPCTable[MAX_NPC_NUM_PER_VILLAGE];
+extern NPC_TABLE					*g_NPCTable;
 extern CPTable						g_pCPTable[MAX_CP_TABLE];
 
 extern ITEM_OPTION_SERVER*			g_pItemOptionTable;

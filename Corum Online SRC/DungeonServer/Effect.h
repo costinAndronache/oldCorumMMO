@@ -6,7 +6,6 @@
 /////////////////////////////////////
 #pragma once
 #include "../SS3D_0719/4DYUCHIGX/4DyuchiGRX_common/math.inl"
-#define     MAX_SKILL					151
 #define MAX_SKILL_COUNT					200		// 버퍼를 위해서.
 #define MAX_SKILL_LEVEL				50
 #define ITI_TYPE_BASESKILL			3000

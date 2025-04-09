@@ -1577,6 +1577,7 @@ BOOL LoadDungeonServerData()
 	g_pItemAttrLayer->QueryItemAttr();
 	CHECK_MEMORY();
 	
+	g_NPCTable = (NPC_TABLE*)malloc(MAX_NPC_NUM_PER_VILLAGE * sizeof(NPC_TABLE));
 	memset(g_NPCTable,0,sizeof(NPC_TABLE));
 	if(	g_pDb->OpenRecord("Select [ID],[Type] From NPCTable ORDER BY ID", g_NPCTable, MAX_NPC_NUM_PER_VILLAGE, GAME_DB) < 0 ) 
 		return FALSE;
