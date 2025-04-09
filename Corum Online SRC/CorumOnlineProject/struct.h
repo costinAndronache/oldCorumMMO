@@ -635,7 +635,7 @@ struct NPC_TABLE
 	char  szMsg[ 3 ][ MAX_NPC_MSG_LENGTH ];
 };
 
-extern NPC_TABLE g_NPCTable[MAX_NPC_NUM_PER_VILLAGE];
+extern NPC_TABLE *g_NPCTable;
 
 
 #pragma pack(pop)

@@ -62,7 +62,7 @@ BASE_CLASS_INFO				g_pBaseRaceInfo[MAX_RACE+1];
 ITEM_OPTION_SERVER*			g_pItemOptionTable				= NULL;
 CItemAttrLayer*				g_pItemAttrLayer				= NULL;
 ITEM_UPGRADE*				g_pItemUpgradeTable[ MAX_ITEM_UPGRADE_LEVEL + 1 ];
-NPC_TABLE					g_NPCTable[MAX_NPC_NUM_PER_VILLAGE];
+NPC_TABLE					*g_NPCTable;
 
 DUNGEONPRODUCTIONITEMMINMAX g_DungeonProductionItemMinMax[MAX_DUNGEON_PROPERTY];
 

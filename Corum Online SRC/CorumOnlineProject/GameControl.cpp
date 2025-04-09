@@ -2413,7 +2413,7 @@ DecodeCDBDataResult DecodeCDBData(char* szLoadFile, char* szDecodeKey, int nDeco
 	FILE* fp;	
 	DWORD	dwCur = 0;
 	DWORD   dwTotalLen = 0;
-	BOOL bRet = TRUE;
+	BOOL allGood = TRUE;
 	
 	fp = fopen( szLoadFile, "rb" );
 	if (!fp) {
@@ -2429,15 +2429,16 @@ DecodeCDBDataResult DecodeCDBData(char* szLoadFile, char* szDecodeKey, int nDeco
 	result.buffer = malloc(dwTotalLen);
 	result.size = dwTotalLen;
 
-	int nRemain;
-	while( bRet )
+	while( allGood )
 	{
-		if(!fread((char*)result.buffer + dwCur, nKeyLen, 1, fp ))
-			bRet = FALSE;
+		auto readCount = fread((char*)result.buffer + dwCur, nKeyLen, 1, fp);
+		if (!readCount) {
+			allGood = FALSE;
+		}
+		auto errors = ferror(fp);
+		auto eof = feof(fp);
 
-		 nRemain = nKeyLen;
-		if(!bRet)
-			nRemain = dwTotalLen - dwCur;
+		auto nRemain = allGood ? nKeyLen : dwTotalLen - dwCur;
 
 		for(int k=0; k<nRemain; k++ )
 			((char*)result.buffer)[ dwCur + k ] ^= (szDecodeKey[k] + nDecodeSubKey);
@@ -2445,9 +2446,7 @@ DecodeCDBDataResult DecodeCDBData(char* szLoadFile, char* szDecodeKey, int nDeco
 		dwCur += nRemain;
 	}
 	
-
 	fclose(fp);
-
 	return result;	//총 읽어드린 바이트수를 리
 }
 

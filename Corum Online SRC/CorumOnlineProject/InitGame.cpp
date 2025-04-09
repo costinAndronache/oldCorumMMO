@@ -119,7 +119,7 @@ HMODULE						g_hBaseNetworkHandle	= NULL;
 HCURSOR						g_hCursor[__MAX_MOUSE_POINTER__];
 
 DUNGEONPRODUCTIONITEMMINMAX	*g_DungeonProductionItemMinMax;
-NPC_TABLE					g_NPCTable[MAX_NPC_NUM_PER_VILLAGE];
+NPC_TABLE					*g_NPCTable;
 BASE_CLASS_INFO* g_sBaseClassInfo;
 SSKILL_DPINFO				g_sSkillInfoDP[MAX_SKILL];
 SLEVEL_EXP					g_sLevelExp[MAX_LEVEL+1];
