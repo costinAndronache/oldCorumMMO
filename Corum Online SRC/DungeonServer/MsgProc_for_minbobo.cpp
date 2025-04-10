@@ -140,7 +140,7 @@ void CmdPartyPortal( DWORD dwConnectionIndex, char* pMsg, DWORD dwLength )
 
 	if(pUser)
 	{
-		if( pUser->IsCurDungeonSiege() && pUser->GetAttackMode() != ATTACK_MODE_DEFENCE )
+		if( pUser->IsCurDungeonSiege() && pUser->GetAttackMode() != ATTACK_MODE_DEFENSE )
 		{
 			// 공성중일때는 방어자만 이동가능하다.
 			DSTC_PARTY_PORTALFAIL pFailPacket;

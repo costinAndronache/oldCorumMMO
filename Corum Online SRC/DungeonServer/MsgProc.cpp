@@ -334,7 +334,7 @@ void CmdRequestSectionInfoForPortal( DWORD dwConnectionIndex, char* pMsg, DWORD 
 
 	if (pUser->GetCurLayerIndex()	&&
 		pUser->IsCurDungeonSiege()	&&
-		pUser->GetAttackMode() != ATTACK_MODE_DEFENCE &&
+		pUser->GetAttackMode() != ATTACK_MODE_DEFENSE &&
 		!pUser->m_dwTemp[USER_TEMP_FLAG_LOBBY])
 	{	
 		pUser->GetCurDungeon()->GotoLobbyUser(pUser);

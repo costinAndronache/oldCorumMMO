@@ -487,7 +487,7 @@ BOOL CMainUser::IsAttack(CUser* pUser, BOOL bAuto)
 #endif
 
 	BOOL bCheck = FALSE;
-	if(!( g_pMainPlayer->GetSkillKind(0) == __SKILL_ATTACK__ && (g_Mouse.bLDown == true || bAuto) ))
+	if(!( g_pMainPlayer->GetSkillKind(SELECT_ATTACK_TYPE_LBUTTON) == __SKILL_ATTACK__ && (g_Mouse.bLDown == true || bAuto) ))
 	{
 		return FALSE;
 	}
@@ -565,7 +565,7 @@ BOOL CMainUser::IsAttack(CMonster* pMonster, BOOL bAuto)
 	}
 #endif
 
-	if(!( g_pMainPlayer->GetSkillKind(0) == __SKILL_ATTACK__  && (g_Mouse.bLDown == true || bAuto) ))
+	if(!( g_pMainPlayer->GetSkillKind(SELECT_ATTACK_TYPE_LBUTTON) == __SKILL_ATTACK__  && (g_Mouse.bLDown == true || bAuto) ))
 	{
 		return FALSE;
 	}
@@ -1434,8 +1434,8 @@ void CMainUser::SetSkillChangeLR(BYTE bySkillKind, BYTE byLR)
 	m_bySkill[byLR]	= bySkillKind;
 
 	CTDS_DUNGEON_CHANGE_LRSKILLKIND packet;
-	packet.bySelectSkillKind[1] = GetSkillKind(1);
-	packet.bySelectSkillKind[0] = GetSkillKind(0);
+	packet.bySelectSkillKind[1] = GetSkillKind(SELECT_ATTACK_TYPE_RBUTTON);
+	packet.bySelectSkillKind[0] = GetSkillKind(SELECT_ATTACK_TYPE_LBUTTON);
 	g_pNet->SendMsg((char*)&packet, packet.GetPacketSize(), SERVER_INDEX_ZONE);
 }
 
@@ -1535,7 +1535,7 @@ void CMainUser::GetAttackDamage_L(WORD& wAttackDamageMin, WORD& wAttackDamageMax
 		// 레인저는 mp 양에 따라 데미지가 변한다.
 		if (m_pwAttackDamage_L[0])
 		{
-			if (GetSkillKind(0) == __SKILL_ATTACK__)
+			if (GetSkillKind(SELECT_ATTACK_TYPE_LBUTTON) == __SKILL_ATTACK__)
 			{
 				wAttackDamageMin = WORD(m_pwAttackDamage_L[0] + m_wMP/30);
 				wAttackDamageMax = WORD(m_pwAttackDamage_L[1] + m_wMP/30);
@@ -1567,7 +1567,7 @@ void CMainUser::GetAttackDamage_R(WORD& wAttackDamageMin, WORD& wAttackDamageMax
 		// 레인저는 mp 양에 따라 데미지가 변한다.
 		if (m_pwAttackDamage_R[0])
 		{
-			if (GetSkillKind(1) == __SKILL_ATTACK__)
+			if (GetSkillKind(SELECT_ATTACK_TYPE_RBUTTON) == __SKILL_ATTACK__)
 			{
 				wAttackDamageMin = WORD(m_pwAttackDamage_R[0] + m_wMP/30);
 				wAttackDamageMax = WORD(m_pwAttackDamage_R[1] + m_wMP/30);

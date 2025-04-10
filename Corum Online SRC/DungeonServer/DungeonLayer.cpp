@@ -1335,7 +1335,7 @@ void CDungeonLayer::__ProcessSiege()
 				{
 					// cp에 user가 서있군.
 					CUser* pCP_User = (CUser*)pCPDesc->pTile->pData;
-					if (pCP_User->GetAttackMode() == ATTACK_MODE_DEFENCE)
+					if (pCP_User->GetAttackMode() == ATTACK_MODE_DEFENSE)
 						continue;// 방어자는 풀지 못한다.
 					
 					if (!pCPDesc->dwStartTick)	

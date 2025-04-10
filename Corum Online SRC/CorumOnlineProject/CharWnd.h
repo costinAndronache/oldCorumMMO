@@ -6,6 +6,7 @@
 #define		__CHAR_WINDOW_INC__
 
 #include	"Menu.h"
+#include	"../CommonServer/CommonClientDungeon.h"
 
 #define SPR_OBJ_CHAR_WINDOWS1		0
 #define SPR_OBJ_CHAR_WINDOWS2		1
@@ -40,16 +41,6 @@ enum ENUM_TAB_TYPE
 {
 	ENUM_TAB_TYPE_CHARACTERINFO = 1,
 	ENUM_TAB_TYPE_GUARDIANINFO = 2,
-};
-
-enum STATUS_POINT_KIND
-{
-	STATUS_POINT_KIND_EGO = 0,
-	STATUS_POINT_KIND_STR = 1,
-	STATUS_POINT_KIND_INT = 2,
-	STATUS_POINT_KIND_DEX = 3,
-	STATUS_POINT_KIND_VIT = 4, 
-	STATUS_POINT_KIND_MAX,
 };
 
 class CMonster;

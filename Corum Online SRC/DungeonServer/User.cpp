@@ -4618,7 +4618,7 @@ BOOL CUser::IsAlliance(const CMonster* pMonster)
 	}
 
 	BOOL bAlliance = (pMonster->GetLord() == this) ||
-		(GetAttackMode() == ATTACK_MODE_DEFENCE && pMonster->GetRace() == OBJECT_TYPE_GUARDIAN 	&& !pMonster->GetLord());
+		(GetAttackMode() == ATTACK_MODE_DEFENSE && pMonster->GetRace() == OBJECT_TYPE_GUARDIAN 	&& !pMonster->GetLord());
 
 	if (!bAlliance)
 	{
@@ -4636,7 +4636,7 @@ BOOL CUser::IsAlliance(const CMonster* pMonster)
 void CUser::SetAttackMode(BYTE bAttackMode)
 {
 	// 공격자로 변했을때 1층으로 튕기기 위한 처리.
-	if (bAttackMode == ATTACK_MODE_DEFENCE)
+	if (bAttackMode == ATTACK_MODE_DEFENSE)
 		m_dwTemp[USER_TEMP_FLAG_LOBBY] = 0;
 
 	if (GetAttackMode() != bAttackMode)
