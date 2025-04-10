@@ -25,20 +25,6 @@
 #define		USER_TEMP_LASTATTACKTICK			15		// AttackWaiting.
 #define		USER_TEMP_SKILL_POISON_RESIST		16		// 중독 저항력
 
-enum USER_TYPE
-{
-	USER_TYPE_NORMAL = 0,
-	USER_TYPE_GM,
-	USER_TYPE_PC_ROOM,
-};
-
-enum PORTAL_TYPE
-{
-	Portal_Type_General,		// 일반 아템 사용 
-	Portal_Type_NPC,			// NPC 에 의해  
-	Portal_Type_GM,				// GM 에 의해 
-};
-
 
 struct CTDS_SKILL;
 class CMonster;

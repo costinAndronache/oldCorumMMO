@@ -105,22 +105,6 @@ enum USER_TEMP
 	MAX_USER_TEMP				
 };
 
-enum USER_TYPE
-{
-	USER_TYPE_NORMAL = 0,
-	USER_TYPE_GM,
-	USER_TYPE_PC_ROOM,
-};
-
-
-enum PORTAL_TYPE
-{
-	Portal_Type_General,		// 일반 아템 사용 
-	Portal_Type_NPC,			// NPC 에 의해  
-	Portal_Type_GM,				// GM 에 의해 
-};
-
-
 // 1:1 대결시 발생하는 각종 문제 
 enum MATCH_STATUS
 {

@@ -114,3 +114,17 @@ enum ENUM_SKILL_CASTING_FAIL_REASON
 	SKILL_CASTING_FAIL_NONE_REASEON = 4,	// 실패하긴 했지만 이유가 없다.
 	SKILL_CASTING_FAIL_REASON_OVER_RANGE = 5,	// 사정거리를 넘겼군.
 };
+
+enum USER_TYPE
+{
+	USER_TYPE_NORMAL = 0,
+	USER_TYPE_GM,
+	USER_TYPE_PC_ROOM,
+};
+
+enum PORTAL_TYPE
+{
+	Portal_Type_General,		// 일반 아템 사용 
+	Portal_Type_NPC,			// NPC 에 의해  
+	Portal_Type_GM,				// GM 에 의해 
+};
