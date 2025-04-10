@@ -63,12 +63,6 @@ public:
 
 	BOOL				m_bCollision;
 
-	enum MATCH_STATUS
-	{
-		MATCH_STATUS_USER_REQUEST_AFTER_USER_GOTO_WORLD = 10,	// 유저가 대결 신청하고 월드로 나가버렸네 쓰글..
-		MATCH_STATUS_USER_REQUEST_AFTER_EXIT_GAME		= 11,	// 유저가 대결 신청하고 게임 종료 했네 둑일넘..
-	};
-
 	BOOL				m_bIsRequestedMatch;
 	DWORD				m_dwMatchUserIndex;		// 대결중 상대편 
 		

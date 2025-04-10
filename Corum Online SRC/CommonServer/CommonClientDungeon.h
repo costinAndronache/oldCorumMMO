@@ -128,3 +128,9 @@ enum PORTAL_TYPE
 	Portal_Type_NPC,			// NPC 에 의해  
 	Portal_Type_GM,				// GM 에 의해 
 };
+
+enum MATCH_STATUS
+{
+	MATCH_STATUS_USER_REQUEST_AFTER_USER_GOTO_WORLD = 10,	// 유저가 대결 신청하고 월드로 나가버렸네 쓰글..
+	MATCH_STATUS_USER_REQUEST_AFTER_EXIT_GAME = 11,	// 유저가 대결 신청하고 게임 종료 했네 둑일넘..
+};
