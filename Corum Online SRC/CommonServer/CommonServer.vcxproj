@@ -816,6 +816,7 @@
     <ClInclude Include="ClassSupport.h" />
     <ClInclude Include="ComInterface.h" />
     <ClInclude Include="CommonAccessory.h" />
+    <ClInclude Include="CommonClientDungeon.h" />
     <ClInclude Include="CommonDungeon.h" />
     <ClInclude Include="CommonGlobalDefine.h" />
     <ClInclude Include="CommonHash.h" />
