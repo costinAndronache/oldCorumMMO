@@ -549,6 +549,7 @@
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="CommonClientDungeon.cpp" />
     <ClCompile Include="CommonDungeon.cpp" />
     <ClCompile Include="CommonServer.cpp">
       <Optimization Condition="'$(Configuration)|$(Platform)'=='CHINA_LOCALIZING_DBG|Win32'">Disabled</Optimization>
@@ -811,6 +812,7 @@
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='dev|Win32'">WIN32;_DEBUG;_WINDOWS;_MBCS;_USRDLL;COMMONSERVER_EXPORTS;DEV_MODE;NEW_COMMAND</PreprocessorDefinitions>
       <BasicRuntimeChecks Condition="'$(Configuration)|$(Platform)'=='dev|Win32'">EnableFastChecks</BasicRuntimeChecks>
     </ClCompile>
+    <ClCompile Include="Utils.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ClassSupport.h" />
@@ -823,6 +825,7 @@
     <ClInclude Include="CommonHeader.h" />
     <ClInclude Include="CommonPacket.h" />
     <ClInclude Include="CommonServer.h" />
+    <ClInclude Include="CommonServerExports.h" />
     <ClInclude Include="HS_HASH.h" />
     <ClInclude Include="HS_LIST.h" />
     <ClInclude Include="NTAes.h" />
@@ -844,6 +847,7 @@
     <ClInclude Include="ProtocolDefinition.h" />
     <ClInclude Include="RivalGuildWarPacket.h" />
     <ClInclude Include="ServerPacket.h" />
+    <ClInclude Include="Utils.h" />
     <ClInclude Include="WorldPacket.h" />
     <ClInclude Include="AbyssHash.h" />
     <ClInclude Include="AbyssHash64.h" />

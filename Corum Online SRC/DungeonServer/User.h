@@ -106,11 +106,7 @@ enum USER_TEMP
 };
 
 // 1:1 대결시 발생하는 각종 문제 
-enum MATCH_STATUS
-{
-	MATCH_STATUS_USER_REQUEST_AFTER_USER_GOTO_WORLD = 10,	// 유저가 대결 신청하고 월드로 나가버렸네 쓰글..
-	MATCH_STATUS_USER_REQUEST_AFTER_EXIT_GAME		= 11,	// 유저가 대결 신청하고 게임 종료 했네 둑일넘..
-};
+
 
 
 struct GUARDIAN_EGG_GROWDESC

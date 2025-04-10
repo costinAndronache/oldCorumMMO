@@ -1,5 +1,5 @@
 #pragma once
-
+#include "CommonServerExports.h"
 
 #ifdef SS3D_TEST
 #include "./../SS3D_0719/4dyuchigx/4DYUCHIGRX_COMMON/math.inl"

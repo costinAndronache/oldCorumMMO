@@ -1,5 +1,7 @@
 #pragma once
 
+#include "CommonServerExports.h"
+
 enum USER_PROPERTY_CODE {
 	USER_MAXHP = 1,
 	USER_MAXMP = 2,
