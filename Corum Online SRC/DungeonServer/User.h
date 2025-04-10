@@ -49,11 +49,6 @@ enum	ITEM_NATIVE_TYPE;
 #define		__MAX_MONEY__				4200000000
 #define		MAX_USER_GUARDIAN			5
 
-#define		WEIGTH_100PER_OVER			101
-#define		WEIGTH_80PER_OVER			81
-
-
-
 enum EN_ReLive_Flag
 {
 	USER_RELIVE_MODE_WITH_HP	= 0,

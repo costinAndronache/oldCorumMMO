@@ -101,3 +101,6 @@ enum ATTACK_MODE {
 	ATTACK_MODE_OFFENSE = 1,		// 공격자
 	ATTACK_MODE_DEFENSE = 2,		// 방어자
 };
+
+#define		WEIGTH_100PER_OVER					101		// 소지품 무게가 100 퍼 이상인경우 
+#define		WEIGTH_80PER_OVER					81		// 소지품 무게가 80 퍼 이상인경우 
