@@ -14,7 +14,6 @@
 #define MAX_USER_PER_GIRD				30	//Added by KBS 030107
 #define MAX_MOVE_SPOT_NUM				10
 #define GM_ARMOR					1142
-#define	MAX_LEVEL					255
 #define	MAX_MESSENGER_USER			32
 #define MAX_ID_LENGTH					20
 #define MAX_PASSWORD_LENGTH				20

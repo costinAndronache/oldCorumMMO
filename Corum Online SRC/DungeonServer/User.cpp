@@ -2389,6 +2389,8 @@ void CUser::SetAttackTypeAndFrame( const CUnit* pUnit, DWORD dwType )
 
 void CUser::AddExp(int iExp, BOOL bAlphaExp)
 {
+	if (GetLevel() >= MAX_ALLOWED_LEVELUP) { return;  }
+
 	if( iExp <= 0 )								return;
 	if (GetUnitStatus() == UNIT_STATUS_DEAD)	return;
 	if( GetLevel() == 255 )						return;
@@ -2419,7 +2421,7 @@ void CUser::AddExp(int iExp, BOOL bAlphaExp)
 	UserStatus.pStatus[0].dwMin		= m_dwExp;
 	NetSendToUser( m_dwConnectionIndex, (char*)&UserStatus, UserStatus.GetPacketSize() , FLAG_SEND_NOT_ENCRYPTION);
 	
-	while( m_dwExp >= GetExpTableOfLevel(OBJECT_TYPE_PLAYER, GetLevel() + 1) )		// Level Up^^
+	while( m_dwExp >= GetExpTableOfLevel(OBJECT_TYPE_PLAYER, GetLevel() + 1) && GetLevel() < MAX_ALLOWED_LEVELUP)		// Level Up^^
 	{
 		LevelUP();
 	}

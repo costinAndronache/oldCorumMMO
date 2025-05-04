@@ -212,6 +212,10 @@ struct PARTY_FRIEND
 	char szCharacterName[20];
 };
 
+#define MAX_LEVEL 255 // must be this value for whatever fucking reason, otherwise
+// calls into gResNameResolver crash
+
+#define MAX_ALLOWED_LEVELUP 180
 #define MAX_CHARACTER_NAME_LENGTH			20
 #define MAX_CHARACTER_REAL_LENGTH			16
 #define	MAX_CP								20
