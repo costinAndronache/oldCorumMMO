@@ -295,7 +295,6 @@ BOOL CInterface::InitInterface(BYTE byServer)
 	m_pMenu[GUILDWAR_FINALSETTING_WND] = CGuildWarFinalSettingWnd::GetInstance();		
 	m_pMenu[GUILDWAR_INVITE_WND] = CGuildWarInvite::GetInstance();
 	// Menu »ý¼º //
-	m_pMenu[EXIT_WND]->CreateMenu("EXIT", EXITWND_SIZE_X, EXITWND_SIZE_Y, __MENU_TYPE_WORLD__, EXIT_WND);
 	//LoadInterfaceFrameInfoCDB("InterfaceFrameInfo.cdb"); bad data in that file
 	float genericWidth = 200.f;
 	float genericHeight = 100.f;
@@ -366,7 +365,13 @@ BOOL CInterface::InitInterface(BYTE byServer)
 	m_pMenu[ITEMMAKINGSUB_WND]->CreateMenu("ITEMMAKINGSUB", genericWidth, genericHeight, __MENU_TYPE_DEFAULT__, ITEMMAKINGSUB_WND);
 	m_pMenu[ITEMMAKINGHELP_WND]->CreateMenu("ITEMMAKINGHELP", genericWidth, genericHeight, __MENU_TYPE_DEFAULT__, ITEMMAKINGHELP_WND);
 	m_pMenu[TOPDUNGEONHELP_WND]->CreateMenu("TOPDUNGEONHELP", genericWidth, genericHeight, __MENU_TYPE_DEFAULT__, TOPDUNGEONHELP_WND);
-	
+	m_pMenu[GUARDIAN_WND]->CreateMenu("TOPDUNGEONHELP", genericWidth, genericHeight, __MENU_TYPE_DEFAULT__, GUARDIAN_WND);
+	m_pMenu[PARTYMATCHING_WND]->CreateMenu("PARTYMATCHING_WND", genericWidth, genericHeight, __MENU_TYPE_DEFAULT__, PARTYMATCHING_WND);
+	m_pMenu[GUILDWAR_REQUEST_WND]->CreateMenu("GUILDWAR_REQUEST_WND", genericWidth, genericHeight, __MENU_TYPE_DEFAULT__, GUILDWAR_REQUEST_WND);
+	m_pMenu[GUILDWAR_FINALSETTING_WND]->CreateMenu("GUILDWAR_FINALSETTING_WND", genericWidth, genericHeight, __MENU_TYPE_DEFAULT__, GUILDWAR_FINALSETTING_WND);
+	m_pMenu[GUILDWAR_INVITE_WND]->CreateMenu("GUILDWAR_INVITE_WND", genericWidth, genericHeight, __MENU_TYPE_DEFAULT__, GUILDWAR_INVITE_WND);
+	m_pMenu[EXIT_WND]->CreateMenu("EXIT", EXITWND_SIZE_X, EXITWND_SIZE_Y, __MENU_TYPE_WORLD__, EXIT_WND);
+
 	m_byServer	= byServer;	
 
 	if(byServer==__MENU_TYPE_WORLD__ || byServer==__MENU_TYPE_CHARACTER__)

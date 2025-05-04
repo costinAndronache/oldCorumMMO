@@ -230,12 +230,13 @@ void CSkillWnd::ReleaseSkillResourceSpr( COnlyList* pSkillList )
 	{
 		LP_SKILL_RESOURCE_EX lpSkillResourceNode = (LP_SKILL_RESOURCE_EX)pSkillList->GetNext(pos);
 				
-		if(lpSkillResourceNode->pSpr)
+		if(lpSkillResourceNode != NULL && lpSkillResourceNode->pSpr != NULL)
 		{
 			lpSkillResourceNode->pSpr->Release();
 			lpSkillResourceNode->pSpr = NULL;
 		}
-		if(lpSkillResourceNode->pSprAct)
+
+		if(lpSkillResourceNode != NULL && lpSkillResourceNode->pSprAct != NULL)
 		{
 			lpSkillResourceNode->pSprAct->Release();
 			lpSkillResourceNode->pSprAct = NULL;
@@ -339,88 +340,6 @@ void CSkillWnd::Remove()
 		m_pAttackSpr = NULL;
 	}
 	
-	
-	for(int i = 0; i < 5; i++)
-	{
-		ReleaseSkillResourceSpr( g_sSkillListManager.pSkillList[i].pActiveList );		// Active Skill
-		ReleaseSkillResourceSpr( g_sSkillListManager.pSkillList[i].pMasteryList );		// Mastery Skill
-		ReleaseSkillResourceSpr( g_sSkillListManager.pSkillList[i].pPassiveList );		// Passive Skill
-		ReleaseSkillResourceSpr( g_sSkillListManager.pSkillList[i].pOverDriveList );	// OverDrive Skill
-		
-/*		// modified by minjin. for more simple sentense
-		// Active //
-		POSITION_ pos = g_sSkillListManager.pSkillList[i].pActiveList->GetHeadPosition();	
-
-		while(pos)
-		{
-			LP_SKILL_RESOURCE_EX lpSkillResourceNode = (LP_SKILL_RESOURCE_EX)g_sSkillListManager.pSkillList[i].pActiveList->GetNext(pos);
-					
-			if(lpSkillResourceNode->pSpr)
-			{
-				lpSkillResourceNode->pSpr->Release();
-				lpSkillResourceNode->pSpr = NULL;
-			}
-			if(lpSkillResourceNode->pSprAct)
-			{
-				lpSkillResourceNode->pSprAct->Release();
-				lpSkillResourceNode->pSprAct = NULL;
-			}
-		}
-		// Mastery //
-		pos = g_sSkillListManager.pSkillList[i].pMasteryList->GetHeadPosition();	
-
-		while(pos)
-		{
-			LP_SKILL_RESOURCE_EX lpSkillResourceNode = (LP_SKILL_RESOURCE_EX)g_sSkillListManager.pSkillList[i].pMasteryList->GetNext(pos);
-					
-			if(lpSkillResourceNode->pSpr)
-			{
-				lpSkillResourceNode->pSpr->Release();
-				lpSkillResourceNode->pSpr = NULL;
-			}
-			if(lpSkillResourceNode->pSprAct)
-			{
-				lpSkillResourceNode->pSprAct->Release();
-				lpSkillResourceNode->pSprAct = NULL;
-			}
-		}
-		// Passive //
-		pos = g_sSkillListManager.pSkillList[i].pPassiveList->GetHeadPosition();	
-
-		while(pos)
-		{
-			LP_SKILL_RESOURCE_EX lpSkillResourceNode = (LP_SKILL_RESOURCE_EX)g_sSkillListManager.pSkillList[i].pPassiveList->GetNext(pos);
-
-			if(lpSkillResourceNode->pSpr)
-			{
-				lpSkillResourceNode->pSpr->Release();
-				lpSkillResourceNode->pSpr = NULL;
-			}
-			if(lpSkillResourceNode->pSprAct)
-			{
-				lpSkillResourceNode->pSprAct->Release();
-				lpSkillResourceNode->pSprAct = NULL;
-			}
-		}
-		// OverDrive //
-		pos = g_sSkillListManager.pSkillList[i].pOverDriveList->GetHeadPosition();	
-
-		while(pos)
-		{
-			LP_SKILL_RESOURCE_EX lpSkillResourceNode = (LP_SKILL_RESOURCE_EX)g_sSkillListManager.pSkillList[i].pOverDriveList->GetNext(pos);					
-
-			if(lpSkillResourceNode->pSpr)
-			{
-				lpSkillResourceNode->pSpr->Release();
-				lpSkillResourceNode->pSpr = NULL;
-			}
-			if(lpSkillResourceNode->pSprAct)
-			{
-				lpSkillResourceNode->pSprAct->Release();
-				lpSkillResourceNode->pSprAct = NULL;
-			}
-		}	//*/
-	}
 	
 	m_bActive	= FALSE;
 	m_bInit		= FALSE;
