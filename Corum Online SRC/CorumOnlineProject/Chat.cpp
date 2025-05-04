@@ -462,7 +462,7 @@ void RemoveChat(POSITION_ pos, BYTE byType)
 
 	if(lpChatMsg)
 	{
-		delete g_pChatPool;
+		delete lpChatMsg;
 		lpChatMsg = NULL;
 	}
 }
@@ -502,7 +502,7 @@ void AddChat(char* pszText, DWORD dwColor, BYTE byType, int nSize)
 		{
 			if(lpChatMsg)
 			{
-				delete g_pChatPool;
+				delete lpChatMsg;
 				lpChatMsg = NULL;
 			}
 		}
