@@ -56,13 +56,6 @@
 #include "IMEEdit.h"
 #endif 
 
-
-#pragma comment(lib, ".\\CResNameResolver.lib")
-#pragma comment(lib, ".\\SS3DGFunc.lib")
-#pragma comment(lib, ".\\soundlib.lib")
-#pragma comment(lib, ".\\CommonServer.lib")
-
-
 extern int windowWidth();
 extern int windowHeight();
 

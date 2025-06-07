@@ -12,11 +12,6 @@
 #include "Filter.h"
 
 
-#pragma comment(lib, "SS3DGFunc.lib")// 특정 패스로 지정되어 있었던 이유가 뭔지 ;;;; 김영대 2004-12-30
-#pragma comment(lib, "CPSSOLib.lib")
-#pragma comment(lib, "CommonServer.lib")
-
-
 CNTNetWork			*g_pNet				= NULL;
 IOleDBThread		*g_pDb				= NULL;
 IOleDBThread		*g_pBillDb			= NULL;		

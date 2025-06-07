@@ -16,11 +16,6 @@
 
 #define CONSOLE_TITLE	"World Server - [Corum Online]"
 
-
-#pragma comment(lib, "SS3DGFunc.lib")
-#pragma comment(lib, "CommonServer.lib")
-
-
 #ifdef DOUBLE_DB_CONNECTION	
 DWORD				GAME_DB1 = 0;
 DWORD				GAME_DB2 = 0;

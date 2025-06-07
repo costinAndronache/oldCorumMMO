@@ -21,10 +21,6 @@
 #include "TrafficLog.h"
 
 
-#pragma comment(lib, "SS3DGFunc.lib")
-#pragma comment(lib, "CommonServer.lib")
-
-
 #pragma warning(disable : 4100) // 사용되지 않은 함수 인자 경고
 #pragma warning(disable : 4706)	// 비교 구문 내에서 값 대입 경고
 #pragma warning(disable : 4710)	// 릴리즈 빌드 시, inline 되지 않음 경고

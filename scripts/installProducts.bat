@@ -41,10 +41,16 @@ call :COPY_IN_ALL_PLACES SS3DExecutiveForCorum.lib
 call :COPY_IN_ALL_PLACES SS3DExecutiveForCorum.dll
 
 call :CENTRALIZED_TO_LOGINSERVER LoginAgentResult.exe
+call :CENTRALIZED_TO_LOGINSERVER libcomservice2.dll
+
 call :CENTRALIZED_TO_WORLDSERVER WorldServerResult.exe
+
 call :CENTRALIZED_TO_BEYONDE DungeonServerResult.exe
 call :CENTRALIZED_TO_LUDILOR DungeonServerResult.exe
+
 call :CENTRALIZED_TO_INSTALLED CorumOnlineResult.exe
+call :CENTRALIZED_TO_INSTALLED mss32.dll
+call :CENTRALIZED_TO_INSTALLED SoundLib.dll
 
 echo "copying done"
 pause

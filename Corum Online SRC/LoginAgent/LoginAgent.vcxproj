@@ -169,7 +169,7 @@
     <OutDir>.\Debug\</OutDir>
     <TargetName>LoginAgentResult</TargetName>
     <IntDir>.\Debug\</IntDir>
-    <LibraryPath>$(LibraryPath);..\centralizedOutput</LibraryPath>
+    <LibraryPath>$(LibraryPath);..\centralizedOutput;./Libraries;</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='JAPAN|Win32'">
     <ClCompile>
@@ -231,7 +231,7 @@
       <LanguageStandard>stdcpp14</LanguageStandard>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>WS2_32.lib;odbc32.lib;odbccp32.lib;cpssolib.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>WS2_32.lib;odbc32.lib;odbccp32.lib;CommonServer.lib;SS3DGFunc.lib;cpssolib.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <ProgramDatabaseFile>$(OutDir)LoginAgent.pdb</ProgramDatabaseFile>

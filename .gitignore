@@ -60,3 +60,28 @@ Corum Online SRC/Installed Client/Interface.ini
 TrafficLog.txt
 Corum Online SRC/Installed Client/Data_gpotato_main
 Corum Online SRC/Installed Client/Data_sagacity_NOTCOMPATIBLE
+Corum Online SRC/INNER/*/*.dll
+Corum Online SRC/INNER/*/*.lib
+Corum Online SRC/INNER/*/*.exe
+Corum Online SRC/INNER/*/*.pdb
+Corum Online SRC/INNER/*/*.log
+Corum Online SRC/INNER/3_DungeonServer Configurations_Ludilos/DungeonServerResult.exe
+Corum Online SRC/INNER/3_DungeonServer Configurations_Ludilos/CommonServer.dll
+Corum Online SRC/INNER/3_DungeonServer Configurations_Ludilos/DungeonServerResult.exe
+Corum Online SRC/INNER/3_DungeonServer Configurations_Ludilos/SS3DGFunc.dll
+Corum Online SRC/INNER/3_DungeonServer Configurations_Beyonde/SS3DGFunc.dll
+Corum Online SRC/INNER/3_DungeonServer Configurations_Beyonde/DungeonServerResult.exe
+Corum Online SRC/INNER/3_DungeonServer Configurations_Beyonde/libcomservice2.dll
+Corum Online SRC/INNER/3_DungeonServer Configurations_Beyonde/CommonServer.dll
+Corum Online SRC/INNER/3_DungeonServer Configurations_Beyonde/CPSSOLib.h
+Corum Online SRC/INNER/3_DungeonServer Configurations_Beyonde/CPSSOLib.lib
+Corum Online SRC/INNER/2_WorldServer Configurations/WorldServer.exe
+Corum Online SRC/INNER/2_WorldServer Configurations/SS3DGFunc.dll
+Corum Online SRC/INNER/2_WorldServer Configurations/libcomservice2.dll
+Corum Online SRC/INNER/2_WorldServer Configurations/CPSSOLib.lib
+Corum Online SRC/INNER/2_WorldServer Configurations/CPSSOLib.h
+Corum Online SRC/INNER/1_LoginAgent Configurations_INNER/SS3DGFunc.dll
+Corum Online SRC/INNER/1_LoginAgent Configurations_INNER/LoginAgent.exe
+Corum Online SRC/INNER/1_LoginAgent Configurations_INNER/CPSSOLib.lib
+Corum Online SRC/INNER/1_LoginAgent Configurations_INNER/CPSSOLib.h
+Corum Online SRC/INNER/1_LoginAgent Configurations_INNER/CommonServer.dll

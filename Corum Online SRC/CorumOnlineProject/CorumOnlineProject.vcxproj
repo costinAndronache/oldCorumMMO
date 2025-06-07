@@ -265,7 +265,7 @@
     <IntDir>.\Debug\</IntDir>
     <LinkIncremental>true</LinkIncremental>
     <IncludePath>$(SOLUTION_INCLUDES);$(IncludePath)</IncludePath>
-    <LibraryPath>$(SOLUTION_LIBS);../centralizedOutput;</LibraryPath>
+    <LibraryPath>$(SOLUTION_LIBS);../centralizedOutput;../Libraries;</LibraryPath>
     <TargetName>CorumOnlineResult</TargetName>
     <GenerateManifest>false</GenerateManifest>
     <CustomBuildAfterTargets>
@@ -795,7 +795,7 @@
       <LanguageStandard>stdcpp14</LanguageStandard>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>legacy_stdio_definitions.lib;odbc32.lib;odbccp32.lib;imm32.lib;Winmm.lib;WS2_32.lib;d3d8.lib;mss32.lib;version.lib;gdiplus.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>legacy_stdio_definitions.lib;odbc32.lib;odbccp32.lib;imm32.lib;Winmm.lib;WS2_32.lib;d3d8.lib;mss32.lib;version.lib;gdiplus.lib;SS3DGFunc.lib;CResNameResolver.lib;SoundLib.lib;CommonServer.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>.\Debug\CorumOnlineResult.exe</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <IgnoreSpecificDefaultLibraries>LIBC.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
