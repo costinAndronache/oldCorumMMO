@@ -10,10 +10,6 @@
 #define UM_SERVER_RUNNING			WM_USER + 802
 
 
-#define SCREEN_TEXT_SIZE_X			100
-#define SCREEN_TEXT_SIZE_Y			100
-
-
 #define BILLING_PROCESS_CHECK_TICK	60000		// 1Ка  
 #define BILLING_CHECK_USER			300000		// 5Ка 
 

@@ -1,5 +1,9 @@
 #pragma once
 
+#include "../CommonServer/CommonClientDungeon.h"
+#include "../CommonServer/CommonGlobalDefine.h"
+#include "../CommonServer/ItemManagerDefine.h"
+
 #define OBJECT_CRASH_CHECK
 //#define SOUND_NEW
 //#define SYNC_FRAME
@@ -30,31 +34,6 @@
 #define MAX_MONSTER_KIND			15000		//최대 몬스터 종류.
 #define MAX_EFFECT_KIND				255			//최대 이펙트 종류.
 
-//캐릭터 상태 
-enum
-{
-	UNIT_STATUS_NORMAL		=	10,
-	UNIT_STATUS_WALKING		=	11,
-	UNIT_STATUS_RUNNING		=	12,
-	UNIT_STATUS_ATTACKING		=	13,
-	UNIT_STATUS_DAMAGING		=	14,
-	UNIT_STATUS_SKILL			=	15,
-	UNIT_STATUS_CASTING		=	16,			
-	UNIT_STATUS_WAITING		=	17,			
-	UNIT_STATUS_DEAD			=	18,
-	UNIT_STATUS_READY			=	19,
-	UNIT_STATUS_PORTAL_MOVING	=	20,
-	UNIT_STATUS_PLAYER_SHOP	=	21,
-	UNIT_STATUS_PLAYER_REST	=	22,
-	UNIT_STATUS_DELAYTIME = 23,
-	UNIT_STATUS_WORLD				=	128,
-	UNIT_STATUS_RIDE_AIRPLANE		=	130,
-	UNIT_STATUS_RIDE_AIRPLANE_DOWN	=	131,
-	UNIT_STATUS_AIRPLANE_DOWNING	=	134,
-	UNIT_STATUS_AIRPLANE_FLOATING	=	135,
-	UNIT_STATUS_AWAIT_DUNGEON_RESPONSE=	136,	//던전에 조인하기 위해 던전(월드)서버의 응답을 기다리는중 
-
-};
 
 //타일 속성의 uOccupied 타입 
 #define TILE_EMPTY					0
@@ -68,18 +47,6 @@ enum
 #define		ITEM_UPGRADE_ZODIAC		1
 #define		ITEM_UPGRADE_JEWEL		2
 #define		ITEM_UPGRDAE_ELIXIR		3
-
-
-#define		ITEM_UPGRADE_WEAPON		0		// 아이템 업그레이드 배열 인덱스
-#define		ITEM_UPGRADE_UPGRADE	1
-#define		ITEM_UPGRADE_LIQUID		2
-#define		ITEM_UPGRDAE_EDITION	3
-
-
-#define		ITEM_MAKING_RESULT		0
-#define		ITEM_MAKING_MATERIALS1	1 
-#define		ITEM_MAKING_MATERIALS2	2
-#define		ITEM_MAKING_ZODIAC		3
 
 
 #define PC_RALLY_POINT_X			1250
@@ -149,8 +116,6 @@ enum
 #define	DATA_TYPE_ITEM			12
 #define DATA_TYPE_DAMAGENUMBER	13
 #define DATA_TYPE_CDT			14
-
-#define MAX_SKILL_COUNT				255
 
 #define ITEM_KARZ_ID			25000
 
@@ -318,17 +283,11 @@ enum PCROOM_BILLING_FLAG
 
 //=============================================================
 // DefineZ
-#define		ATTACK_MODE_DEFENSE	2		// 방어자
-#define		ATTACK_MODE_OFFENSE	1		// 공격자
 
 #define		CRIMINAL_LEVEL_1	-18000		
 #define		CRIMINAL_LEVEL_2	-27000		
 #define		CRIMINAL_LEVEL_3	-32767
 
-#define MAX_BELT_POOL					8
-#define MAX_EQUIP_POOL					21
-#define MAX_INV_LARGE_POOL				21
-#define MAX_INV_SMALL_POOL				42
 #define	MAX_TRADE_POOL					14
 #define MAX_UPGRADE_POOL				4
 #define MAX_MAKING_POOL					4
@@ -336,29 +295,6 @@ enum PCROOM_BILLING_FLAG
 #define	MAX_BANK_SMALL_POOL				70
 #define MAX_INV_GUARDIAN_POOL			5
 #define MAX_PLAYERSHOP_POOL				10
-
-
-#define EQUIP_TYPE_RHAND1			0
-#define EQUIP_TYPE_RHAND2			1
-#define EQUIP_TYPE_RIDE				2		//탈것.. 비공정자리 	
-#define EQUIP_TYPE_HELMET			3
-#define EQUIP_TYPE_BAG				4
-#define EQUIP_TYPE_LHAND1			5
-#define EQUIP_TYPE_LHAND2			6
-#define EQUIP_TYPE_RGLOVE			7
-#define EQUIP_TYPE_ARMOR			8
-#define EQUIP_TYPE_AMULE1			9
-#define EQUIP_TYPE_AMULE2			10
-#define EQUIP_TYPE_AMULE3			11
-#define EQUIP_TYPE_BELT				12
-#define EQUIP_TYPE_LGLOVE			13
-#define EQUIP_TYPE_RRING1			14
-#define EQUIP_TYPE_RRING2			15
-#define EQUIP_TYPE_RRING3			16
-#define EQUIP_TYPE_BOOTS			17
-#define EQUIP_TYPE_LRING1			18
-#define EQUIP_TYPE_LRING2			19
-#define EQUIP_TYPE_LRING3			20
 
 
 enum

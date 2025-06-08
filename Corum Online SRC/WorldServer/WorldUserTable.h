@@ -4,48 +4,12 @@
 #pragma once
 
 #include "../SS3D_0719/4DYUCHIGX/4DyuchiGXGFunc/global.h"
+#include "../CommonServer/CommonAllServers.h"
+#include "../CommonServer/CommonClientDungeonLoginWorld.h"
 
 #include "OnlyList.h"
 #include "WorldUser.h"
 #include "NameSearchTable.h"
-
-#define MAX_CLASS		5
-
-typedef struct BASE_CLASS_INFO
-{
-	int		iEGO;
-	int		iSTR;
-	int		iINT;
-	int		iDEX;
-	int		iVIT;
-	int		iBHP;
-	int		iBMP;
-	int		iLHP;
-	int		iLMP;
-	int		iHP;
-	int		iMP;
-	int		iAA;
-	int		iAD;
-	int		iMD;
-	int		iDP;
-	int		iBR;
-	int		iDR;
-	int		iHR;
-	int		iMS;
-	int		iAS;
-	int		iCS;
-	int		iRFire;
-	int		iRIce;
-	int		iRLighting;
-	int		iRPhisics;
-	int		iRPoison;
-	int		iMax_Aura;
-	int		Max_Magic;
-	int		Max_Divine;
-	int		Max_Chakra;
-	int		Max_Summon;
-}* LPBASE_CLASS_INFO;
-
 
 
 class CWorldUserTable

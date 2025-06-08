@@ -1597,7 +1597,7 @@ BOOL CItemUsedManager::Value_ItemUsedNative_PersonalRecall(DWORD dwConnectionInd
 		pItemUsedResult->bErrorCode = IS_NOT_PARTY_LEADER;
 		return FALSE;
 	}
-	else if( pUser->IsCurDungeonSiege() && pUser->GetAttackMode() != ATTACK_MODE_DEFENCE )
+	else if( pUser->IsCurDungeonSiege() && pUser->GetAttackMode() != ATTACK_MODE_DEFENSE )
 	{
 		// 공성중일때는 방어자만 파티 퍼스널 리콜 가능하다.
 		pItemUsedResult->bErrorCode = UNIT_STATUS_IN_SIEGE;
@@ -1652,7 +1652,7 @@ BOOL CItemUsedManager::Value_ItemUsedNative_AllPartyRecall(DWORD dwConnectionInd
 		pItemUsedResult->bErrorCode = IS_NOT_PARTY_LEADER;
 		return FALSE;
 	}
-	else if( pUser->IsCurDungeonSiege() && pUser->GetAttackMode() != ATTACK_MODE_DEFENCE )
+	else if( pUser->IsCurDungeonSiege() && pUser->GetAttackMode() != ATTACK_MODE_DEFENSE )
 	{
 		// 공성중일때는 방어자만 파티 전원 리콜가능하다.
 		pItemUsedResult->bErrorCode = UNIT_STATUS_IN_SIEGE;

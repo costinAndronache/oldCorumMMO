@@ -237,10 +237,12 @@ struct PARTY_FRIEND
 #define MAX_BILLING_ORDER_COUNT				8
 #define MAX_DUNGEON_MEMO_LENGTH				32
 #define MAX_CHARACTER_NAME_REAL_LENGTH		16
+
 #define MAX_EQUIP							21
 #define MAX_BELT_POOL						8
 #define MAX_INV_LARGE_POOL					21
 #define MAX_INV_SMALL_POOL					42
+
 #define	MAX_TRADE_POOL						14
 #define MAX_UPGRADE_POOL					4
 #define MAX_MAKING_POOL						4
@@ -325,6 +327,11 @@ struct PARTY_FRIEND
 #	define	MAX_PLAYER_SHOP_TITLE			40
 #endif
 
+#define	MAX_PARTY						10
+#define		MAX_GUILD					200
+#define		MAX_GUILD_FILENAME_LENGTH	50
+#define MAX_GUILD_NAME_LENGTH			20
+#define MAX_GUILD_NAME_REAL_LENGTH		10
 
 #define START	__asm	rdtsc			\
 				__asm	push	eax		\

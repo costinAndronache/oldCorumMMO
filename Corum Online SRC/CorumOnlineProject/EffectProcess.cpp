@@ -120,7 +120,7 @@ void EffectSkillStartFunc(GXOBJECT_HANDLE handle, LPObjectDesc pData, DWORD dwCu
 		case __SKILL_DETONATION__:
 			
 		case __SKILL_ICEMISSILE__:
-		case __SKILL_SOULBLASTER:
+		case __SKILL_SOULBLASTER__:
 		case __SKILL_ROUNDRANGE__:
 		case __SKILL_FLASHSHOCK__:
 		//±è¿µ´ë ¹ß»ê 
@@ -729,7 +729,7 @@ void EffectOnceAndRemoveFunc( GXOBJECT_HANDLE handle, LPObjectDesc pData, DWORD 
 	case __SKILL_DETONATION__:
 	case __SKILL_ICEMISSILE__:
 	case __SKILL_FLASHSHOCK__:
-	case __SKILL_SOULBLASTER:
+	case __SKILL_SOULBLASTER__:
 	// ±è¿µ´ë ¹ß»ê 
 	//case __SKILL_POSIONCLOUD__:
 		{

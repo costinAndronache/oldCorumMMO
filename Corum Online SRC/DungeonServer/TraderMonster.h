@@ -10,17 +10,13 @@
 #endif // _MSC_VER > 1000
 #include "Monster.h"
 #include "../CommonServer/CommonHeader.h"
+#include "../CommonServer/CommonClientDungeon.h"
 class CClassMemoryPool;
 class CItemNativeManager;
 
 
 #define MAX_TRADERMONSTER_INV_SMALL (7*9*4)
 #define MAX_TRADERMONSTER_INV_LARGE (7*4*7)
-
-
-#define	STORE_TYPE_SUSPZO				1
-#define	STORE_TYPE_WEAPON				2
-#define	STORE_TYPE_ARMOR				3
 
 
 class CTraderMonster  : public CMonster

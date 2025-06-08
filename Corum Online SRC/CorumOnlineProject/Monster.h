@@ -27,11 +27,6 @@ class CUser;
 #define		MONSTER_TEMP_DAMAGE_TYPE				28		// 미스인지 블록인지 성공인지
 #define		MONSTER_TEMP_DAMAGE						29		// 데미지값								
 
-#define		MONSTER_MAXHP			1
-#define		MONSTER_MAXMP			2
-#define		MONSTER_HP				3
-#define		MONSTER_MP				4
-#define		MONSTER_EXP				5
 
 #define		MAX_GUARDIAN_USE_SKILL	5
 

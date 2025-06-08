@@ -227,7 +227,7 @@ void CmdSkill( char* pMsg, DWORD dwLen )
 	case __SKILL_FIREMISSILE__:
 	case __SKILL_DETONATION__:
 	case __SKILL_ICEMISSILE__:
-	case __SKILL_SOULBLASTER:
+	case __SKILL_SOULBLASTER__:
 	case __SKILL_ROUNDRANGE__:
 	case __SKILL_FLASHSHOCK__:
 	//±è¿µ´ë ¹ß»ê 

@@ -729,7 +729,7 @@ void QueryTypeChrSelectInfo(DBRECEIVEDATA* pResult)
 		packet.Character[i].wRHandID	= EnumChar[i].Equip[ byRHand ].m_wItemID;			//¿À¸¥¼Õ ¹«±â
 		packet.Character[i].wHelmetID	= EnumChar[i].Equip[ EQUIP_TYPE_HELMET ].m_wItemID;	//Çï¸ä
 		packet.Character[i].wMailID		= EnumChar[i].Equip[ EQUIP_TYPE_ARMOR ].m_wItemID;	//°©¿Ê
-		packet.Character[i].wMantleID	= EnumChar[i].Equip[ EQUIP_TYPE_MANTLE ].m_wItemID;	//¸Á¶Ç
+		packet.Character[i].wMantleID	= EnumChar[i].Equip[ EQUIP_TYPE_BAG ].m_wItemID;	//¸Á¶Ç
 	}
 
 	SendToUser(pUser, (char*)&packet, packet.GetPacketSize(), FLAG_SEND_NOT_ENCRYPTION);

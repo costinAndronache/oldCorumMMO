@@ -2017,7 +2017,7 @@ BOOL CheckEquip(BYTE byValue, BYTE byEquipCode)
 		case EQUIP_TYPE_HELMET:
 			if(byValue==10)
 				return TRUE;
-		case EQUIP_TYPE_MAIL:
+		case EQUIP_TYPE_ARMOR:
 			if(byValue==11)
 				return TRUE;
 		case EQUIP_TYPE_AMULE2:

@@ -6,6 +6,7 @@
 #define		__PARTYENTRY_WND_INC__
 
 #include	"Menu.h"
+#include	"../CommonServer/CommonGlobalDefine.h"
 
 #define		PARTYENTRY_INPUT			0
 #define		PARTYENTRY_RESULT			1
@@ -24,8 +25,6 @@
 /*#define		SPR_OBJ_PARTYENTRY_FIRST1	11
 #define		SPR_OBJ_PARTYENTRY_FIRST2	12
 #define		SPR_OBJ_PARTYENTRY_FIRST3	13*/
-
-#define		MAX_PARTYENTRY_TEXT			32
 
 class CPartyEntryWnd : public CMenu
 {

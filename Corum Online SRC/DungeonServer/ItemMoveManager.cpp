@@ -303,7 +303,7 @@ BOOL CItemMoveManager::IsDestNativeToCorrectType(CUser* const pUser, ITEM_NATIVE
 				if(byWeaponKind == ITEM_CLASS_BELT)
 					return TRUE;
 				break;
-			case EQUIP_TYPE_MAIL:
+			case EQUIP_TYPE_ARMOR:
 				if(byWeaponKind == ITEM_CLASS_ARMOR)
 					return TRUE;
 				break;
@@ -2319,7 +2319,7 @@ void CItemMoveManager::PutOnOffItemNativeResult(CUser* const pUser, CDungeonLaye
 	else if( byWeaponKind == ITEM_CLASS_ARMOR )
 	{
 		const CItem* pItemArmor = NULL; 
-		ItemNativeInfoMod.bySlotIndex = EQUIP_TYPE_MAIL;
+		ItemNativeInfoMod.bySlotIndex = EQUIP_TYPE_ARMOR;
 		pItemArmor = GetItemNative(pLayer, &ItemNativeInfoMod);
 		ItemArmorMod(pUser, pItemArmor->GetID());
 	}

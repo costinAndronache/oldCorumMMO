@@ -21,7 +21,7 @@
 #include "MsgProc_for_jjw6263.h"
 #include "EventDungeonManager.h"
 #include "ItemAttrLayer.h"
-
+#include "../CommonServer/Utils.h"
 
 CUser::CUser()
 {
@@ -1950,58 +1950,46 @@ void CUser::SendAllStatus()
 
 	Status.pStatus[Status.bStatusMany].dwCode	= USER_MAXHP;
 	Status.pStatus[Status.bStatusMany++].dwMin	= GetMaxHP(); 
-	Log(LOG_IMPORTANT, "@ STATUS UPDATE:: max hp == %d", GetMaxHP());
 
 
 	Status.pStatus[Status.bStatusMany].dwCode	= USER_HP;
 	Status.pStatus[Status.bStatusMany++].dwMin	= GetHP();
-	Log(LOG_IMPORTANT, "@ STATUS UPDATE:: current hp == %d", GetHP());
 
 	Status.pStatus[Status.bStatusMany].dwCode	= USER_MAXMP;
 	Status.pStatus[Status.bStatusMany++].dwMin	= GetMaxSP(); 
-	Log(LOG_IMPORTANT, "@ STATUS UPDATE:: max sp == %d", GetMaxSP());
 
 	Status.pStatus[Status.bStatusMany].dwCode	= USER_MP;
 	Status.pStatus[Status.bStatusMany++].dwMin	= GetSP(); 
-	Log(LOG_IMPORTANT, "@ STATUS UPDATE:: current sp == %d", GetSP());
 
 	Status.pStatus[Status.bStatusMany].dwCode	= USER_HONOR;
 	Status.pStatus[Status.bStatusMany++].dwMin	= m_dwHonor;
 
 	Status.pStatus[Status.bStatusMany].dwCode	= USER_EGO;			
 	Status.pStatus[Status.bStatusMany++].dwMin	= GetNewestEgo();
-	Log(LOG_IMPORTANT, "@ STATUS UPDATE:: ego == %d", GetNewestEgo());
 
 
 	Status.pStatus[Status.bStatusMany].dwCode	= USER_STR;			
 	Status.pStatus[Status.bStatusMany++].dwMin	= GetNewestStr();
-	Log(LOG_IMPORTANT, "@ STATUS UPDATE:: str == %d", GetNewestStr());
 
 	Status.pStatus[Status.bStatusMany].dwCode	= USER_INT;			
 	Status.pStatus[Status.bStatusMany++].dwMin	= GetNewestInt();
-	Log(LOG_IMPORTANT, "@ STATUS UPDATE:: int == %d", GetNewestInt());
 
 	Status.pStatus[Status.bStatusMany].dwCode	= USER_DEX;			
 	Status.pStatus[Status.bStatusMany++].dwMin	= GetNewestDex();
-	Log(LOG_IMPORTANT, "@ STATUS UPDATE:: dex == %d", GetNewestDex());
 
 	Status.pStatus[Status.bStatusMany].dwCode	= USER_VIT;			
 	Status.pStatus[Status.bStatusMany++].dwMin	= GetNewestVit();
-	Log(LOG_IMPORTANT, "@ STATUS UPDATE:: vit == %d", GetNewestVit());
 
 	Status.pStatus[Status.bStatusMany].dwCode	= USER_LUCK;			
 	Status.pStatus[Status.bStatusMany++].dwMin	= m_dwLuck; 
-	Log(LOG_IMPORTANT, "@ STATUS UPDATE:: luck == %d", m_dwLuck);
 
 	Status.pStatus[Status.bStatusMany].dwCode	= USER_ATTACK_R;		
 	Status.pStatus[Status.bStatusMany].dwMin	= GetAttackDamageMin_R();
 	Status.pStatus[Status.bStatusMany++].dwMax	= GetAttackDamageMax_R();
-	Log(LOG_IMPORTANT, "@ STATUS UPDATE:: ATTACK R: == (%d, %d)", GetAttackDamageMin_R(), GetAttackDamageMax_R());
 
 	Status.pStatus[Status.bStatusMany].dwCode	= USER_ATTACK_L;		
 	Status.pStatus[Status.bStatusMany].dwMin	= GetAttackDamageMin_L();
 	Status.pStatus[Status.bStatusMany++].dwMax	= GetAttackDamageMax_L();
-	Log(LOG_IMPORTANT, "@ STATUS UPDATE:: ATTACK L: == (%d, %d)", GetAttackDamageMin_L(), GetAttackDamageMax_L());
 
 	Status.pStatus[Status.bStatusMany].dwCode	= USER_AA;				
 	Status.pStatus[Status.bStatusMany++].dwMin	= m_wAttackAcuracy; 
@@ -2087,6 +2075,9 @@ void CUser::SendAllStatus()
 	Status.pStatus[Status.bStatusMany++].dwMin	= m_wAttackSpeed;	
 	
 	NetSendToUser( m_dwConnectionIndex, (char*)&Status, Status.GetPacketSize() , FLAG_SEND_NOT_ENCRYPTION);
+
+	printf("\nSTATUS UPDATE:\n");
+	printUserStatusList(Status.pStatus, Status.bStatusMany);
 
 	SendAllUserSkillLevel();
 }
@@ -4620,7 +4611,7 @@ BOOL CUser::IsAlliance(const CMonster* pMonster)
 	}
 
 	BOOL bAlliance = (pMonster->GetLord() == this) ||
-		(GetAttackMode() == ATTACK_MODE_DEFENCE && pMonster->GetRace() == OBJECT_TYPE_GUARDIAN 	&& !pMonster->GetLord());
+		(GetAttackMode() == ATTACK_MODE_DEFENSE && pMonster->GetRace() == OBJECT_TYPE_GUARDIAN 	&& !pMonster->GetLord());
 
 	if (!bAlliance)
 	{
@@ -4638,7 +4629,7 @@ BOOL CUser::IsAlliance(const CMonster* pMonster)
 void CUser::SetAttackMode(BYTE bAttackMode)
 {
 	// 공격자로 변했을때 1층으로 튕기기 위한 처리.
-	if (bAttackMode == ATTACK_MODE_DEFENCE)
+	if (bAttackMode == ATTACK_MODE_DEFENSE)
 		m_dwTemp[USER_TEMP_FLAG_LOBBY] = 0;
 
 	if (GetAttackMode() != bAttackMode)
@@ -5539,7 +5530,7 @@ void CUser::PKDropItem( CUser * pOffense )
 		}
 		else if(nValue==11)
 		{
-			ItemArmorMod(this, m_pEquip[EQUIP_TYPE_MAIL].m_wItemID);
+			ItemArmorMod(this, m_pEquip[EQUIP_TYPE_ARMOR].m_wItemID);
 		}
 		else if(nValue==10)
 		{

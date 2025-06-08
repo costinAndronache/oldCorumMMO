@@ -68,9 +68,9 @@ struct BLOCK_TITLE
 struct INIT_BINARY_VALUE
 {
 	CItem			m_pEquip[ MAX_EQUIP ];
-	CItem			m_pInv_Large[ MAX_INV_LARGE ];
-	CItem			m_pInv_Small[ MAX_INV_SMALL ];
-	CItem			m_pBelt[ MAX_BELT ];
+	CItem			m_pInv_Large[ MAX_INV_LARGE_POOL ];
+	CItem			m_pInv_Small[ MAX_INV_SMALL_POOL ];
+	CItem			m_pBelt[ MAX_BELT_POOL ];
 	BYTE			m_pwSkillLevel[ MAX_SKILL ];
 	DWORD			dwMoney;
 };

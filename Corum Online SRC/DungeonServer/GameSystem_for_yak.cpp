@@ -1559,7 +1559,7 @@ void MakeAppearUser(DSTC_APPEAR* pAppear, CUser* pUser, BYTE bPortal)
 	pAppear->v2CurPos		= *pUser->GetCurPosition();
 	pAppear->wHead			= pUser->GetHeadModelNo();
 	pAppear->wClass			= pUser->GetClass();
-	pAppear->wArmor			= pUser->m_pEquip[EQUIP_TYPE_MAIL].m_wItemID;
+	pAppear->wArmor			= pUser->m_pEquip[EQUIP_TYPE_ARMOR].m_wItemID;
 	pAppear->wHelmet		= pUser->m_pEquip[EQUIP_TYPE_HELMET].m_wItemID;
 	pAppear->v2Direction	= *pUser->GetCurDirection();
 		

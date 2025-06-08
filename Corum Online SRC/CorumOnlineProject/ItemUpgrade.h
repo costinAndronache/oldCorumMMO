@@ -3,12 +3,6 @@
 #include	"Menu.h"
 
 #define	MAX_ITEM_UPGRADE	4
-#define	ITEM_UPGRADE_SUCCESS_TYPE_AD	1	// 공격력 성공
-#define	ITEM_UPGRADE_SUCCESS_TYPE_DP	2	// 방어력 성공
-#define	ITEM_UPGRADE_SUCCESS_TYPE_OP	4	// 옵션 성공
-#define	ITEM_UPGRADE_SUCCESS_TYPE_SL	8	// 슬롯증가 성공
-#define	ITEM_UPGRADE_WAITING			127	// 업그레이드 결과 기다리는중
-#define	ITEM_UPGRADE_FAIL				128	// 실패
 #define ITEM_UPGRADE_FAIL_INSURANCE		129	// 실패 하지만 아이템 보험 처리 
 
 #define SPR_OBJ_ITEMUPGRADEWND			0

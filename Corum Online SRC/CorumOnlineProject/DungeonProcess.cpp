@@ -100,6 +100,7 @@
 #include "GuildWarFinalSettingWnd.h"
 #include "GuildWarStatusWnd.h"
 #include "ItemPickupFiltering/ItemPickupFiltering.h"
+#include "../CommonServer/ItemManagerDefine.h"
 
 using namespace ItemPickupFiltering;
 
@@ -3625,7 +3626,7 @@ lb_move:
 
 	// 마우스의 어떤것도 안눌린 상태이다.
 	// 오토 타켓팅된 것을 검사해본다.
-	if( g_pMainPlayer->GetSkillKind(0) != __SKILL_ATTACK__ )		// 만약 공격이 아니라면 취소한다.
+	if( g_pMainPlayer->GetSkillKind(SELECT_ATTACK_TYPE_LBUTTON) != __SKILL_ATTACK__ )		// 만약 공격이 아니라면 취소한다.
 	{
 		g_pMainPlayer->m_dwTemp[ USER_TEMP_AUTO_TARGET_TYPE ]	= 0;
 		g_pMainPlayer->m_dwTemp[ USER_TEMP_AUTO_TARGET_INDEX ]	= 0; 

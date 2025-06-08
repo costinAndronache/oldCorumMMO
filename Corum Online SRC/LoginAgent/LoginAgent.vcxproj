@@ -169,7 +169,7 @@
     <OutDir>.\Debug\</OutDir>
     <TargetName>LoginAgentResult</TargetName>
     <IntDir>.\Debug\</IntDir>
-    <LibraryPath>$(LibraryPath);..\centralizedOutput;./Libraries;</LibraryPath>
+    <LibraryPath>$(LibraryPath);..\centralizedOutput;..\Libraries;</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='JAPAN|Win32'">
     <ClCompile>

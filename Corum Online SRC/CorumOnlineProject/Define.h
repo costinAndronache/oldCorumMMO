@@ -2,7 +2,8 @@
 
 #include "Localizing.h"
 #include <crtdbg.h>
-
+#include "../CommonServer/CommonClientDungeon.h"
+#include "../CommonServer/CommonGlobalDefine.h"
 
 #define _CAMERA_ACCEL_MOVE_X_ 0.2f 
 #define _CAMERA_ACCEL_MOVE_Y_ 0.2f
@@ -22,8 +23,6 @@
 #define MAX_CHARACTER_NAME_REAL_LENGTH  16
 #define MAX_ID_REAL_LENGTH				16
 #define MAX_PASSWORD_REAL_LENGTH2		16
-#define MAX_GUILD_NAME_LENGTH			20
-#define MAX_GUILD_NAME_REAL_LENGTH		10
 #define MAX_DUNGEON_MEMO_LENGTH			32
 #define MAX_DUNGEON_NAME_LENGTH			32
 #define MAX_RANK_REAL_NAME				8
@@ -32,7 +31,7 @@
 	#undef	MAX_PASSWORD_REAL_LENGTH
 	#define	MAX_PASSWORD_REAL_LENGTH			20
 #endif
-#define	MAX_MONEY_PLAYERSHOP			4000000000
+
 
 /*
 enum DUNGEON_JOIN_FAIL
@@ -226,8 +225,6 @@ enum DUNGEON_JOIN_FAIL
 #define MAX_NPC_NAME_LENGTH			32
 #define MAX_NPC_MSG_LENGTH			256
 #define MAX_NPC_NUM_PER_MAP			12
-#define MAX_NPC_NUM_PER_VILLAGE		120
-
 
 
 #define MAX_SKILL_NODE				100
@@ -891,14 +888,11 @@ extern int windowHeight();
 #define	__MAX_SKILL_UP__				25
 #define	__MAX_MASTERYSKILL_UP__			255
 
-#define __GCTYPE_NONE__					0
-#define __GCTYPE_GUILD__				1
-#define __GCTYPE_CLEN__					2
+
 #define MAX_GUILD_FILENAME_LENGTH		50
 
 //#define	MAX_GUILD_USER					200
 
-#define	__MAX_MONEY__					4200000000
 
 #define	__PK_NONEMODE__					0
 #define	__PK_MODE__						1
@@ -935,7 +929,6 @@ extern int windowHeight();
 
 
 #define	__MAX_VIEW_GUILD_USER__			8
-#define	__MAX_GUILD_USER__				100
 
 #define	__DG_IB_RANK1__					8
 #define	__DG_IB_RANK2__					9
@@ -944,21 +937,11 @@ extern int windowHeight();
 #define	__DG_IB_NICKNAME__				12
 
 #define	__MAX_RANK_SIZE__				8
-#define	__MAX_GUILD_USER__				100
-#define	__MAX_PARTY_UER__				8
 
 #define	__GUILDINFO_MSG_NICKNAME__		1
 #define	__GUILDINFO_MSG_RANK__			2
 #define	__GUILDINFO_MSG_NICKNAMERANK__	3
 
-
-#define	MAX_PARTY						10
-#define	MAX_PARTY_USER					8
-
-#define	STORE_TYPE_WEAPON				1
-#define	STORE_TYPE_ARMOR				2
-#define	STORE_TYPE_SUSPZO				3
-#define STORE_TYPE_BAG					4
 
 #define	STORE_MAX_ITEM_COUNT			56
 #define	STORE_MAX_ITEM_COUNT2			28
@@ -998,18 +981,7 @@ extern int windowHeight();
 
 
 //-------------------------------------------------------------------------------------------//
-#define		MAX_USER_GUARDIAN	5
-#define	MAX_PLAYER_SHOP_INV			10
 
-#if IS_JAPAN_LOCALIZING()
-#define	MAX_PLAYER_SHOP_TITLE		30
-#elif IS_CHINA_LOCALIZING()
-#define	MAX_PLAYER_SHOP_TITLE		28
-#else
-#define	MAX_PLAYER_SHOP_TITLE		40
-#endif
-
-#define	MAX_REAL_PLAYER_SHOP_TITLE	30
 
 #define	MAX_PLAYER_SHOP_DESCRIPTION	50
 

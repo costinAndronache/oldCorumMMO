@@ -5,6 +5,10 @@
 #include "../CommonServer/CommonHeader.h"
 #include "../CommonServer/AbyssHash64.h"
 #include "../CommonServer/ComInterface.h"
+#include "../CommonServer/CommonClientDungeon.h"
+#include "../CommonServer/CommonAllServers.h"
+#include "../CommonServer/CommonClientDungeonLoginWorld.h"
+
 #include "ItemMoveManager.h"
 #include "ItemUsedManager.h"
 #include "GlobalDefine.h"
@@ -119,22 +123,6 @@ public:
 #define		GM_COMMAND_USERPOTAL	6 
 
 
-#define		MAX_LEVEL					255
-#define		MAX_CLASS					5
-#define		MAX_RACE					5
-#define		MAX_STATUS					5
-#define		MAX_ITEM_UPGRADE_LEVEL		6
-#define		MAX_CHARACTER_PROPENSITY	10
-
-
-#define		CRIMINAL_BLUE_LEVEL_2	1	//	18000 ~ 32767
-#define		CRIMINAL_BLUE_LEVEL_1	2	//	0	~	17999
-#define		CRIMINAL_RED_LEVEL_1	3	//	-17999 ~ -1	
-#define		CRIMINAL_RED_LEVEL_2	4	//	-26999 ~ -18000
-#define		CRIMINAL_RED_LEVEL_3	5	//	-32766 ~ -27000
-#define		CRIMINAL_RED_LEVEL_4	6	//	-32767 ~ -32767
-
-
 #define		CRIMINAL_USER_ATTACK			1	// PK할때
 #define		CRIMINAL_ATTACK_SUMMON_BY_USER	2	// 소환물을 공격할때
 #define		CRIMINAL_ATTACK_USER_BY_SUMMON	3	// 소환물을 이용해 공격할때
@@ -143,55 +131,14 @@ public:
 #define		CRIMINAL_MONSTER_KILL			7	// 몬스터를 죽일때.
 
 
-#define		__STATUS_EGO__					0
-#define		__STATUS_STR__					1
-#define		__STATUS_INT__					2
-#define		__STATUS_DEX__					3
-#define		__STATUS_VIT__					4
-
-
-#define		SIEGEINFOWND_TYPE_SIEGE				0
-#define		SIEGEINFOWND_TYPE_EVENT_TRAINING	1
-#define		SIEGEINFOWND_TYPE_EVENT_SURVIVAL	2
-
-
-#define		MONSTER_MAXHP			1
-#define		MONSTER_MAXMP			2
-#define		MONSTER_HP				3
-#define		MONSTER_MP				4
-#define		MONSTER_EXP				5
-
-
 #define		MAX_ITEM_OWNER_FRAME	10		// 아이템의 소유권 시간.
-#define		ITEM_CASTING_TIME		1000	// 물약등의 사후 케스팅 시간.
-
-
-#define		ITEM_UPGRADE_WEAPON		0		// 아이템 업그레이드 배열 인덱스
-#define		ITEM_UPGRADE_UPGRADE	1
-#define		ITEM_UPGRADE_LIQUID		2
-#define		ITEM_UPGRDAE_EDITION	3
-
-
-#define		ITEM_MAKING_RESULT		0
-#define		ITEM_MAKING_MATERIALS1	1 
-#define		ITEM_MAKING_MATERIALS2	2
-#define		ITEM_MAKING_ZODIAC		3
 
 
 #define		ITEM_DUNGEONMANAGER_MATERIALS	0
 #define		ITEM_DUNGEONMANAGER_GUARDIAN	1
 
 
-#define		ITEM_UPGRADE_SUCCESS_TYPE_AD	1		// 공격력 성공
-#define		ITEM_UPGRADE_SUCCESS_TYPE_DP	2		// 방어력 성공
-#define		ITEM_UPGRADE_SUCCESS_TYPE_OP	4		// 옵션 성공
-#define		ITEM_UPGRADE_SUCCESS_TYPE_SL	8		// 슬롯증가 성공
-#define		ITEM_UPGRADE_WAITING			127		// 업그레이드 결과 기다리는중
-#define		ITEM_UPGRADE_FAIL				128		// 실패
-
-
 #define		MAX_DUNGEON_PROPERTY			5		// 던전 속성
-#define		MAX_NPC_NUM_PER_VILLAGE			50
 
 
 #define		ITEM_LOG_PICKUP					1		// 아이템을 줍다.
@@ -269,73 +216,6 @@ struct PARAM_TARGETCOUNT
 	BYTE				bSkillLevel;	
 };
 
-
-#pragma pack(push,1)
-typedef struct BASE_CLASS_INFO
-{
-	int		iType;
-	int		iEGO;
-	int		iSTR;
-	int		iINT;
-	int		iDEX;
-	int		iVIT;
-	int		iBHP;
-	int		iBMP;
-	int		iLHP;
-	int		iLMP;
-	int		iHP;
-	int		iMP;
-	int		iHPR;
-	int		iSPR;
-	int		iAA;
-	int		iAD;
-	int		iMD;
-	int		iDP;
-	int		iBR;
-	int		iDR;
-	int		iHR;
-	int		iMS;
-	int		iAS;
-	int		iCS;
-	int		iRFire;
-	int		iRIce;
-	int		iRLighting;
-	int		iRPhisics;
-	int		iRPoison;
-	int		iMax_Aura;
-	int		iMax_Magic;
-	int		iMax_Divine;
-	int		iMax_Chakra;
-	int		iMax_Summon;
-	WORD	wPotion_Recovery;
-	WORD	wPotion_Delay;
-	BYTE	byItem_Efficiency;
-}* LPBASE_CLASS_INFO;
-
-struct DUNGEONPRODUCTIONITEMMINMAX
-{
-	BYTE	byID;
-	WORD	wItemIDMin;
-	WORD	wItemIDMax;
-	WORD	wItemIDDefault;
-};
-
-struct CPTable_Value
-{
-	WORD	wID;
-	WORD	wValue;
-};
-
-struct CPTable
-{
-	WORD	wID;
-	BYTE	bClass;
-	WORD	wRate;
-	WORD	wApply_Time;
-	BYTE	bPartyUse;
-	CPTable_Value	sCPTable_Value[5];
-};
-
 struct Character_Propensity
 {
 	DWORD	dwID;
@@ -362,7 +242,6 @@ struct NPC_TABLE
 	DWORD dwID;
 	DWORD dwType;	
 };
-#pragma pack(pop)
 
 
 extern STMPOOL_HANDLE				g_pItemPool;		

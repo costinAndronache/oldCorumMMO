@@ -7,6 +7,7 @@
 #include "ObjectDefine.h"
 #include "SpriteManager.h"	
 #include "../CommonServer/CommonHeader.h"
+#include "../CommonServer/CommonClientDungeon.h"
 #include "Effect.h"
 
 
@@ -23,94 +24,6 @@
 #define     USER_TEMP_AUTO_TARGET_INDEX			14		// 자동 타겟의 인덱스.
 #define		USER_TEMP_LASTATTACKTICK			15		// AttackWaiting.
 #define		USER_TEMP_SKILL_POISON_RESIST		16		// 중독 저항력
-
-#define		WEIGTH_100PER_OVER					101		// 소지품 무게가 100 퍼 이상인경우 
-#define		WEIGTH_80PER_OVER					81		// 소지품 무게가 80 퍼 이상인경우 
-
-
-enum USER_PROPERTY_CODE
-{	
-	USER_MAXHP	=			1,
-	USER_MAXMP	=			2,
-	USER_HONOR	=			3,
-	USER_EGO	=			4,
-	USER_STR	=			5,
-	USER_INT	=			6,
-	USER_DEX	=			7,
-	USER_VIT	=			8,
-	USER_LUCK	=			9,
-	USER_ATTACK_R	=		10,
-	USER_ATTACK_L	=		11,
-	USER_AA			=		12,
-	USER_AVOID		=		13,
-	USER_BLOCKRATE	=		14,
-	USER_FIRE_RESIST=		15,
-	USER_ICE_RESIST	=		16,
-	USER_LIGHT_RESIST=		17,
-	USER_POI_RESIST	=		18,
-	USER_PHY_RESIST	=		19,
-	USER_MOVESPEED	=		20,
-	USER_EXP		=		21,
-	USER_HP			=		22,
-	USER_MP			=		23,
-	USER_CASTINGTIME=		24,
-	USER_COOLTIME	=		25,
-	USER_ATTACKRATE_PERCENT	=26,
-	USER_ATTACKACURACY_PERCENT	=27,
-	USER_OVERDRIVE_DELAY=	28,
-	USER_HEALHPSPEED	=	29,
-	USER_HEALMPSPEED	=	30,
-	USER_POISONING		=	31,
-	USER_DEC_SKILLLEVEL	=	32,
-	USER_SKILLATTACK_R_PERCENT	=	33,
-	USER_SKILLATTACK_L_PERCENT	=	34,
-	USER_CTTIME		=		35,
-	USER_ALL_RESIST	=		36,
-	USER_MAX_RESIST	=		37,
-	USER_MOVESPEED_PERCENT	=38,
-	USER_HEALHPSPEED_PERCENT=	39,
-	USER_PHY_RESIST_PERCENT=	40,
-	USER_MP_PERCENT		=	41,
-	USER_MAXHP_PERCENT	=	42,
-	USER_ATTACK_R_PERCENT=	43,
-	USER_BLOCKRATE_PERCENT=	44,
-	USER_AVOID_PERCENT=		45,
-	USER_HP_PERCENT	=		46,
-	USER_POI_RESIST_PERCENT	=47,
-	USER_ITEM_ATTACK		=48,
-	USER_ITEM_DEFENSE		=49,
-	USER_BLIND				=50,
-	USER_MAXMP_PERCENT		=51,
-	USER_ATTACK_L_PERCENT	=52,
-	USER_DETECTION			=53,
-	USER_MAX_STATUS
-};
-
-
-enum ENUM_SKILL_CASTING_FAIL_REASON
-{
-	SKILL_CASTING_FAIL_REASON_LOW = 0,
-	SKILL_CASTING_FAIL_REASON_GET_SLAPPED = 1,			// 캐스팅중 얻어 맞았다.
-	SKILL_CASTING_FAIL_REASON_LACK_SP = 2,				// SP 부족
-	SKILL_CASTING_FAIL_REASON_LACK_ZODIAC_ITEM = 3,		// 황소 카드 부족
-	SKILL_CASTING_FAIL_NONE_REASEON = 4,				// 실패하긴 했지만 이유가 없다.
-	SKILL_CASTING_FAIL_REASON_OVER_RANGE = 5,			// 사정거리를 넘겼군.
-};
-
-
-enum USER_TYPE
-{
-	USER_TYPE_NORMAL = 0,
-	USER_TYPE_GM,
-	USER_TYPE_PC_ROOM,
-};
-
-enum PORTAL_TYPE
-{
-	Portal_Type_General,		// 일반 아템 사용 
-	Portal_Type_NPC,			// NPC 에 의해  
-	Portal_Type_GM,				// GM 에 의해 
-};
 
 
 struct CTDS_SKILL;
@@ -149,12 +62,6 @@ public:
 	WORD				m_wCurSectionNum;	// 서버의 PrevSectionNum과 같은 변수.
 
 	BOOL				m_bCollision;
-
-	enum MATCH_STATUS
-	{
-		MATCH_STATUS_USER_REQUEST_AFTER_USER_GOTO_WORLD = 10,	// 유저가 대결 신청하고 월드로 나가버렸네 쓰글..
-		MATCH_STATUS_USER_REQUEST_AFTER_EXIT_GAME		= 11,	// 유저가 대결 신청하고 게임 종료 했네 둑일넘..
-	};
 
 	BOOL				m_bIsRequestedMatch;
 	DWORD				m_dwMatchUserIndex;		// 대결중 상대편 

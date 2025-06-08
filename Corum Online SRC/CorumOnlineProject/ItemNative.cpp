@@ -91,11 +91,8 @@
 #include "EventDungeonProcess.h"
 #include "TopDungeonHelpWnd.h"
 #include "MinboboWork.h"
-
-
-#define ITEM_SKILL_BOOK_START	20519
-#define ITEM_SKILL_BOOK_END		20578
-
+#include "../CommonServer/CommonClientDungeon.h"
+#include "../CommonServer/ItemManagerDefine.h"
 
 extern BYTE g_bKeyItem_Large[MAX_INV_LARGE_POOL];
 
