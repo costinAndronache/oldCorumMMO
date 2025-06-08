@@ -21,6 +21,7 @@
 #include "ItemMove.h"
 #include "Interface.h"
 #include "SkillWnd.h"
+#include "../CommonServer/CommonClientDungeon.h"
 
 
 void InitPacketProcDungeonYak()

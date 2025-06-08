@@ -198,7 +198,7 @@ void CmdDungeonReplyMatchM2M(char* pMsg, DWORD dwLen)
 		}
 		break;
 
-	case CUser::MATCH_STATUS_USER_REQUEST_AFTER_USER_GOTO_WORLD:
+	case MATCH_STATUS_USER_REQUEST_AFTER_USER_GOTO_WORLD:
 	default: // 정해지지 않은 에러
 		{
 			char	szMsg[255] = {0,};

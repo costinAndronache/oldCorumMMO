@@ -4,6 +4,9 @@
 #pragma once
 
 #include "../CommonServer/CommonHeader.h"
+#include "../CommonServer/CommonGlobalDefine.h"
+#include "../CommonServer/ItemManagerDefine.h"
+
 #include "Linkedlist.h"
 
 #include "ChinaBillingPacket.h"
@@ -14,34 +17,10 @@
 #endif
 
 
-#define MAX_INV_GUARDIAN			5				
-#define MAX_BELT					8
-#define MAX_INV_LARGE				21
-#define MAX_INV_SMALL				42		
+#define MAX_INV_GUARDIAN			5	
+
 #define	MAX_BANK_SMALL				70
 #define	MAX_BANK_LARGE				63
-
-#define EQUIP_TYPE_RHAND1			0		//
-#define EQUIP_TYPE_RHAND2			1		
-#define EQUIP_TYPE_RIDE				2		//탈것.. 비공정자리 
-#define EQUIP_TYPE_HELMET			3		//
-#define EQUIP_TYPE_MANTLE			4		//망또
-#define EQUIP_TYPE_LHAND1			5		//
-#define EQUIP_TYPE_LHAND2			6		
-#define EQUIP_TYPE_RGLOVE			7			
-#define EQUIP_TYPE_ARMOR			8		//갑옷
-#define EQUIP_TYPE_AMULE1			9
-#define EQUIP_TYPE_AMULE2			10
-#define EQUIP_TYPE_AMULE3			11
-#define EQUIP_TYPE_BELT				12
-#define EQUIP_TYPE_LGLOVE			13
-#define EQUIP_TYPE_RRING1			14
-#define EQUIP_TYPE_RRING2			15
-#define EQUIP_TYPE_RRING3			16
-#define EQUIP_TYPE_BOOTS			17
-#define EQUIP_TYPE_LRING1			18
-#define EQUIP_TYPE_LRING2			19
-#define EQUIP_TYPE_LRING3			20
 
 
 #define EVENT_NUM_RECOM_ADD_ITEM	1	//2003년 10월 28일부터 시작되는 이벤트 추천받아 생성된 캐릭터에는 기본 아이템 몇개를 더 넣어줌 

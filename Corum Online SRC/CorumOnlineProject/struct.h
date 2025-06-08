@@ -4,6 +4,7 @@
 #include "stdafx.h"
 #include "../CommonServer/AbyssHash64.h"
 #include "../CommonServer/CommonHeader.h"
+#include "../CommonServer/CommonClientDungeon.h"
 #include "ItemMove.h"
 #include "OnlyList.h"
 #include "Define.h"
@@ -600,36 +601,6 @@ struct PLAYERSHOPINFO
 	DWORD		m_dwCustomSellPrice[MAX_PLAYER_SHOP_INV];		// 노점상 만들때 팔 가격을 조정한다.
 	
 	CItem		cItem[MAX_PLAYER_SHOP_INV];						// 노점상 아이템목록
-};
-
-struct DUNGEONPRODUCTIONITEMMINMAX
-{
-	BYTE	byID;
-	WORD	wItemIDMin;
-	WORD	wItemIDMax;
-	WORD	wItemIDDefault;
-};
-
-struct CPTable_Value
-{
-	WORD	wID;
-	WORD	wValue;
-};
-struct CPTable	// 써버랑 클라이언트랑 구조체가 틀리다. 주의해라.
-{
-	WORD	wID;
-	char	szKorName[50];
-	char	szEngName[35];
-	char	szDescription[128];
-	BYTE	bClass;
-	WORD	wRate;
-	WORD	wAni1;
-	WORD	wAni2;
-	WORD	wSound1;
-	WORD	wSound2;
-	WORD	wApply_Time;
-	BYTE	bPartyUse;
-	CPTable_Value	sCPTable_Value[5];
 };
 
 

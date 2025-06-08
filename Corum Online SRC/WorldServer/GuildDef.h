@@ -2,10 +2,9 @@
 #define __GUILD_DEF_H__
 
 #pragma once
+#include "../CommonServer/CommonGlobalDefine.h"
 
-#define		MAX_GUILD					200
-#define		MAX_GUILD_USER				100
-#define		MAX_GUILD_FILENAME_LENGTH	50
+
 
 #ifdef JAPAN_LOCALIZING
 #	define	GUILDWAR_TIME				24

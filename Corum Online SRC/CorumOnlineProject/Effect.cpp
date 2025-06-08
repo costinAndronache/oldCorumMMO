@@ -62,7 +62,7 @@ void EffectLayer::LoadScript(BOOL bChk)
 		case __SKILL_ICEMISSILE__:
 		case __SKILL_FIREMISSILE__:
 		case __SKILL_DETONATION__:
-		case __SKILL_SOULBLASTER:
+		case __SKILL_SOULBLASTER__:
 		case __SKILL_ROUNDRANGE__:
 		case __SKILL_FLASHSHOCK__:
 		//±è¿µ´ë ¹ß»ê
@@ -122,7 +122,7 @@ void EffectLayer::LoadScript(BOOL bChk)
 			}break;
 		case __SKILL_FIREMISSILE__:
 		case __SKILL_ICEMISSILE__:
-		case __SKILL_SOULBLASTER:
+		case __SKILL_SOULBLASTER__:
 		case __SKILL_FLASHSHOCK__:
 		case __SKILL_POSIONCLOUD__:
 		case __SKILL_DETONATION__:

@@ -26,12 +26,7 @@
 #include "MsgProc_for_Yak.h"
 #include "MsgProc_for_Y2jin.h"
 #include "ItemAttrLayer.h"
-
-#define ITEM_SKILL_BOOK_START	20519
-#define ITEM_SKILL_BOOK_END		20578
-
-#define BAG_ITEM_NUM_FRIST	3600
-#define BAG_ITEM_NUM_LAST	3700
+#include "../CommonServer/CommonClientDungeon.h"
 
 
 #define FAIL_VALUE(x1,x2)	{ x1 = x2; __leave; }
@@ -334,7 +329,7 @@ void CmdRequestSectionInfoForPortal( DWORD dwConnectionIndex, char* pMsg, DWORD 
 
 	if (pUser->GetCurLayerIndex()	&&
 		pUser->IsCurDungeonSiege()	&&
-		pUser->GetAttackMode() != ATTACK_MODE_DEFENCE &&
+		pUser->GetAttackMode() != ATTACK_MODE_DEFENSE &&
 		!pUser->m_dwTemp[USER_TEMP_FLAG_LOBBY])
 	{	
 		pUser->GetCurDungeon()->GotoLobbyUser(pUser);
@@ -1063,7 +1058,7 @@ void CmdPickupItem( DWORD dwConnectionIndex, char* pMsg, DWORD dwLength )
 			}
 			else if((PickupItem.Item.m_wItemID/ITEM_DISTRIBUTE)==11)
 			{
-				ItemArmorMod(pUser, pUser->m_pEquip[EQUIP_TYPE_MAIL].m_wItemID);
+				ItemArmorMod(pUser, pUser->m_pEquip[EQUIP_TYPE_ARMOR].m_wItemID);
 			}
 			else if((PickupItem.Item.m_wItemID/ITEM_DISTRIBUTE)==10)
 			{
@@ -1459,7 +1454,7 @@ void CmdPickupItem( DWORD dwConnectionIndex, char* pMsg, DWORD dwLength )
 			}
 			else if((PickupItem.Item.m_wItemID/ITEM_DISTRIBUTE)==11)
 			{
-				ItemArmorMod(pUser, pUser->m_pEquip[EQUIP_TYPE_MAIL].m_wItemID);
+				ItemArmorMod(pUser, pUser->m_pEquip[EQUIP_TYPE_ARMOR].m_wItemID);
 			}
 			else if((PickupItem.Item.m_wItemID/ITEM_DISTRIBUTE)==10)
 			{
@@ -1543,7 +1538,7 @@ void CmdPickupItem( DWORD dwConnectionIndex, char* pMsg, DWORD dwLength )
 					ItemHandMod(pUser, pUser->m_pEquip[EQUIP_TYPE_RHAND2].m_wItemID, pUser->m_pEquip[EQUIP_TYPE_LHAND2].m_wItemID);
 			}
 			else if(nValue==11)
-				ItemArmorMod(pUser, pUser->m_pEquip[EQUIP_TYPE_MAIL].m_wItemID);
+				ItemArmorMod(pUser, pUser->m_pEquip[EQUIP_TYPE_ARMOR].m_wItemID);
 			else if(nValue==10)
 				ItemHelmetMod(pUser, pUser->m_pEquip[EQUIP_TYPE_HELMET].m_wItemID);
 

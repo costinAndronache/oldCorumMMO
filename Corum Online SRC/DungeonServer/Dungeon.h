@@ -1,10 +1,8 @@
 #pragma once
 #include "Linkedlist.h"
 #include "User.h"
-
-
-#define TILE_SIZE				(float)125.0f
-#define MAX_EVENT_DUNGEON_KIND	16
+#include "../CommonServer/CommonClientDungeonWorld.h"
+#include "../CommonServer/CommonDungeon.h"
 
 struct DB_CHANGE_DUNGEON;
 class CMonster;

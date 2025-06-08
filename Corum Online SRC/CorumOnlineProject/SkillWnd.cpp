@@ -355,8 +355,8 @@ void CSkillWnd::RenderSkillIcon()
 	
 	VECTOR2	vPos;					
 		
-	BYTE nLeft	= g_pMainPlayer->GetSkillKind(0);
-	BYTE nRight	= g_pMainPlayer->GetSkillKind(1);
+	BYTE nLeft	= g_pMainPlayer->GetSkillKind(SELECT_ATTACK_TYPE_LBUTTON);
+	BYTE nRight	= g_pMainPlayer->GetSkillKind(SELECT_ATTACK_TYPE_RBUTTON);
 
 	BYTE nGuardianSkill = -1;
 	

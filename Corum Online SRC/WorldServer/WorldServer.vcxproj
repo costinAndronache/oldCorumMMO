@@ -168,7 +168,7 @@
     <GenerateManifest>false</GenerateManifest>
     <IncludePath>$(IncludePath);..\I4DyuchiNET</IncludePath>
     <TargetName>WorldServerResult</TargetName>
-    <LibraryPath>$(LibraryPath);;../centralizedOutput;./Libraries;</LibraryPath>
+    <LibraryPath>$(LibraryPath);;../centralizedOutput;..\Libraries;</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='JAPAN_LOCALIZING|Win32'">
     <ClCompile>

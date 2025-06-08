@@ -91,11 +91,7 @@
 #include "GuildWarFinalSettingWnd.h"
 #include "GuildWarStatusWnd.h"
 #include "GuildWarInvite.h"
-
-
-#define BAG_ITEM_NUM_FRIST	3600
-#define BAG_ITEM_NUM_LAST	3700
-
+#include "../CommonServer/CommonClientDungeon.h"
 
 
 CInterface* CInterface::c_pThis = NULL;

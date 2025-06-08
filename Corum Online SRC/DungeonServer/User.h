@@ -1,6 +1,7 @@
 #pragma once
 
-
+#include "../CommonServer/CommonGlobalDefine.h"
+#include "../CommonServer/CommonClientDungeon.h"
 #include "../CommonServer/CommonHeader.h"
 #include "../CommonServer/AbyssHash64.h"
 #include "Effect.h"
@@ -20,39 +21,17 @@ class	CVirtualLinkItemNativeHash;
 enum	ITEM_NATIVE_TYPE;
 
 
-#define		MAX_BASICSKILL_LEVEL		25
-#define		MAX_MASTERYSKILL_LEVEL		50
-#define		MAX_PLAYER_SHOP_INV			10
-#define		MAX_MONEY_PLAYERSHOP		4000000000 // 40억
-
-#ifdef JAPAN_LOCALIZING
-#define		MAX_PLAYER_SHOP_TITLE		30
-#elif defined CHINA_LOCALIZING
-#define		MAX_PLAYER_SHOP_TITLE		28
-#else
-#define		MAX_PLAYER_SHOP_TITLE		40
-#endif
-
 #define		ITEM_MAGICARRAY_DESC_TEMP_STARTTICK		0				// 아이템 적용 시간. 
-#define		MAX_REAL_PLAYER_SHOP_TITLE	30
+
 #define		MAX_USE_MAGIC_ARRAY			10
-#define		MAX_USE_MAGICFIELD_ARRAY	10
+
 #define		ITEM_SKILL_ATTACK			7			// 공격할때 나가는 스킬
 #define		ITEM_SKILL_DEFENSE			8			// 방어할때 나가는 스킬
 #define		ITEM_SKILL_DIE				9			// 죽을때 나가는 스킬
-#define		__GCTYPE_NONE__				0
-#define		__GCTYPE_GUILD__			1
-#define		__GCTYPE_CLEN__				2
+
 #define		MAX_ITEMPRESENT				100
 #define		MAX_ITEMPRESENT_RATE		100
 #define		BASE_ITEMPRESENT_INDEX		12402
-#define		__MAX_MONEY__				4200000000
-#define		MAX_USER_GUARDIAN			5
-
-#define		WEIGTH_100PER_OVER			101
-#define		WEIGTH_80PER_OVER			81
-
-
 
 enum EN_ReLive_Flag
 {
@@ -110,40 +89,8 @@ enum USER_TEMP
 	MAX_USER_TEMP				
 };
 
-
-enum ENUM_SKILL_CASTING_FAIL_REASON
-{
-	SKILL_CASTING_FAIL_REASON_LOW				= 0,
-	SKILL_CASTING_FAIL_REASON_GET_SLAPPED		= 1,	// 캐스팅중 얻어 맞았다.
-	SKILL_CASTING_FAIL_REASON_LACK_SP			= 2,	// SP 부족
-	SKILL_CASTING_FAIL_REASON_LACK_ZODIAC_ITEM	= 3,	// 황소 카드 부족
-	SKILL_CASTING_FAIL_NONE_REASEON				= 4,	// 실패하긴 했지만 이유가 없다.
-	SKILL_CASTING_FAIL_REASON_OVER_RANGE		= 5,	// 사정거리를 넘겼군.
-};
-
-
-enum USER_TYPE
-{
-	USER_TYPE_NORMAL = 0,
-	USER_TYPE_GM,
-	USER_TYPE_PC_ROOM,
-};
-
-
-enum PORTAL_TYPE
-{
-	Portal_Type_General,		// 일반 아템 사용 
-	Portal_Type_NPC,			// NPC 에 의해  
-	Portal_Type_GM,				// GM 에 의해 
-};
-
-
 // 1:1 대결시 발생하는 각종 문제 
-enum MATCH_STATUS
-{
-	MATCH_STATUS_USER_REQUEST_AFTER_USER_GOTO_WORLD = 10,	// 유저가 대결 신청하고 월드로 나가버렸네 쓰글..
-	MATCH_STATUS_USER_REQUEST_AFTER_EXIT_GAME		= 11,	// 유저가 대결 신청하고 게임 종료 했네 둑일넘..
-};
+
 
 
 struct GUARDIAN_EGG_GROWDESC

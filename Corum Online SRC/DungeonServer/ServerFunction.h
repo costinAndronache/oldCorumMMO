@@ -8,8 +8,6 @@ class CDungeon;
 #define UM_LISTEN_FOR_SERVERSIDE	WM_USER + 801
 #define UM_SERVER_RUNNING			WM_USER + 802
 
-#define SCREEN_TEXT_SIZE_X			100
-#define SCREEN_TEXT_SIZE_Y			100
 
 #define MAX_LOG_LENGTH				512
 #define NUM_OF_LOG_TYPE				7

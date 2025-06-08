@@ -16,7 +16,8 @@
 #include "ItemWnd.h"
 #include "BankWnd.h"
 #include "QuantityWnd.h"
-
+#include "../CommonServer/CommonClientDungeon.h"
+#include "../CommonServer/ItemManagerDefine.h"
 
 CItemMoveManager::CItemMoveManager()
 {

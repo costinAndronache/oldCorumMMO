@@ -10,11 +10,6 @@
 #define GUARDIAN_TYPE_NORMAL		1		// 유저가 소환한
 #define GUARDIAN_TYPE_DUNGEON		2		// 던전을 수호하기 위한.
 
-#define MONSTER_CLASS_BEAST			1
-#define MONSTER_CLASS_UNDEAD		2
-#define MONSTER_CLASS_DEMON			3
-#define MONSTER_CLASS_PLANT			4
-#define MONSTER_CLASS_ELEMENTAL		5
 #define MONSTER_RACE_BOSS			7
 #define	MONSTER_RANK_DRAGON			9
 

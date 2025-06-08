@@ -511,7 +511,7 @@ DUNGEON_JOIN_FAIL CDungeon::JoinUser(CUser* pUser, BYTE bLayerIndex, VECTOR2 *pv
 		pUser->SetAttackMode(GetAttackMode(pUser));			
 	}
 
-	if (pUser->GetCurLayerIndex() && pUser->IsCurDungeonSiege() && pUser->GetAttackMode() != ATTACK_MODE_DEFENCE &&
+	if (pUser->GetCurLayerIndex() && pUser->IsCurDungeonSiege() && pUser->GetAttackMode() != ATTACK_MODE_DEFENSE &&
 		!pUser->m_dwTemp[USER_TEMP_FLAG_LOBBY])
 	{
 		pUser->GetCurDungeon()->GotoLobbyUser(pUser);
@@ -640,12 +640,12 @@ BYTE CDungeon::GetAttackMode(CUser* pUser) const
 	if (m_pInfo->m_dwOwnerGuildNum && pUser->m_dwGuildId == m_pInfo->m_dwOwnerGuildNum)
 	{
 		// 던전 주인과 같은 길드원은 방어자.
-		return ATTACK_MODE_DEFENCE;
+		return ATTACK_MODE_DEFENSE;
 	}
 	else if (m_pInfo->IsDungeonOwner(pUser))
 	{
 		// 던전 주인은 방어자
-		return ATTACK_MODE_DEFENCE;
+		return ATTACK_MODE_DEFENSE;
 	}
 	else
 	{
@@ -658,7 +658,7 @@ BYTE CDungeon::GetAttackMode(CUser* pUser) const
 
 			if (*pdwPartyID == pUser->m_dwPartyId)
 			{
-				bAttackMode = ATTACK_MODE_DEFENCE;
+				bAttackMode = ATTACK_MODE_DEFENSE;
 				break;
 			}			
 		}		
@@ -940,7 +940,7 @@ void CDungeon::ChangeLayerUser( CUser* pUser, BYTE byCurLayerIndex, int nDestLay
 	pUser->ChangeGodMode(GODMODE_STATUS_MAPLOADING);
 
 	if(	byCurLayerIndex && pUser->IsCurDungeonSiege() &&
-		pUser->GetAttackMode() != ATTACK_MODE_DEFENCE &&
+		pUser->GetAttackMode() != ATTACK_MODE_DEFENSE &&
 		!pUser->m_dwTemp[USER_TEMP_FLAG_LOBBY])
 	{
 		pUser->GetCurDungeon()->GotoLobbyUser(pUser);

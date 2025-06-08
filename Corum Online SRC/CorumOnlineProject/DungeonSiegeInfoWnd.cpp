@@ -12,7 +12,7 @@
 #include "InitGame.h"
 #include "CodeFun.h"
 #include "Interface.h"
-
+#include "../CommonServer/CommonClientDungeon.h"
 
 CDungeonSiegeInfoWnd* CDungeonSiegeInfoWnd::c_pThis = NULL;
 

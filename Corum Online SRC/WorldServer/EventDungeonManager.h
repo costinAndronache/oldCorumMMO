@@ -6,13 +6,9 @@
 
 
 #include "DUNGEON_DATA_EX.h"
+#include "../CommonServer/CommonDungeon.h"
 
 
-#define EVENT_DUNGEON_POS_TYPE_NORMAL	0
-#define EVENT_DUNGEON_POS_TYPE_SPECIAL	1
-#define MAX_EVENT_DUNGEON_NUMBER		16
-#define MAX_EVENT_POS_NUMBER			128
-#define MAX_EVENT_DUNGEON_KIND			16
 
 class DUNGEON_DATA_EX;
 

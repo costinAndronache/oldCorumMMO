@@ -9,171 +9,15 @@
 #include "Define.h"
 #include "SoundLib.h"
 #include "GameDefine.h"
+#include "../CommonServer/CommonClientDungeon.h"
+
 extern DWORD	g_dwCurTick;
-#define MAX_SKILL_LEVEL				50
-#define ITI_TYPE_BASESKILL			3000
-#define MAX_KIND_OF_CLASS_EX		MAX_KIND_OF_CLASS + 2	// 클레스에 속하지 않는 이펙트가 필요 해서.
-#define MAX_STATUS_SKILLVALUE		5		// 상태스킬에 의한 변화할수 있는값.
-
-#define TARGETTYPE_NONE		0
-#define TARGETTYPE_TILE		1
-#define TARGETTYPE_ENEMY_MONSTER  2	// 대상이 몬스터
-#define TARGETTYPE_FRIEND_MONSTER  4	// 대상이 몬스터
-#define	TARGETTYPE_ENEMY_PLAYER	8		// 대상이 플레이어
-#define	TARGETTYPE_FRIEND_PLAYER	16		// 대상이 플레이어
-
-#define TARGETTYPE_OBJECT	100		// 개체
-#define	TARGETTYPE_LINE		110		// 직선
-#define	TARGETTYPE_CIRCLE	120		// 원안에 있는 놈들
-#define	TARGETTYPE_X		130		// X 모양에 있는놈들
-#define TARGETTYPE_BOX		 140	// 박스
-#define TARGETTYPE_MULTICOLLITION 150	// 3중 충돌
-#define TARGETTYPE_TIMEZEROTILE 160	// 타일에다가 지뢰를 박는다. 시간제한.
-#define TARGETTYPE_SUMMONTILE	170 // 타일에다가 소환을 한다.
-#define	TARGETTYPE_ARC		180		// 부채꼴
-
-#define	TYPE_ACTIVE		1
-#define	TYPE_DRIVE		2
-#define	TYPE_PASSIVE	3
-#define TYPE_TIMEZERO	4
 
 #define	NONE			0
 #define CRIME_APPLY_ENEMY		1	// 스킬사용될때 적용되는 대상이 적군에게
 #define CRIME_APPLY_FRIENDLY	2	// 스킬사용될때 적용되는 대상이 아군에게
 #define CRIME_APPLY_ENEMY_FRIENDLY_MONSTER 3 // 스킬사용될때 적용되는 공격스킬이지만 나가 소환한 몬스터에게만 사용할수 있게 한다.
 											// 물론 PK일때는 전부다 적용시킬수 있다.
-// 마법 계열
-#define	__SKILL_MANAMASTERY__			1
-#define	__SKILL_FIREMISSILE__			2
-#define	__SKILL_FIREBLAZE__				3
-#define	__SKILL_MAGMAWALL__				4
-#define	__SKILL_ICEMISSILE__			5
-#define	__SKILL_ICEWAVE__				6
-#define	__SKILL_ICEWALL__				7
-	
-#define	__SKILL_EARTHQUAKE__			9
-#define	__SKILL_METEOR__				10
-#define	__SKILL_LIGHTNING__				11
-#define	__SKILL_AIREALCOAT__			12
-#define	__SKILL_THUNDERSTORM__			13
-#define	__SKILL_MANAEXPAND__			14
-#define	__SKILL_SPEEDCASTING__			15
-#define	__SKILL_EXPLOSION__				16
-#define	__SKILL_MEDITETION__			17
-#define	__SKILL_MULTICASTING__			18
-#define	__SKILL_CONCENTRATION__			19
-#define __SKILL_BLASTING__				20
-#define __SKILL_FREEZING__				21
-#define __SKILL_FLASHSHOCK__			22
-#define __SKILL_DISPEL__				23
-#define __SKILL_FIREMASTERY__			24
-#define __SKILL_ICEMASTERY__			25
-#define __SKILL_LIGHTMASTERY__			26
-#define __SKILL_DRAGONICFIREBLAST__		28
-#define __SKILL_DRAGONICVIBRATION__		29
-// 오라 계열
-#define	__SKILL_AURAMASTERY__			31
-#define	__SKILL_AURARECHARGE__			32
-#define	__SKILL_ZEAL__					33
-#define	__SKILL_BASH__					34
-#define __SKILL_LIGHTFLING				35
-#define	__SKILL_RAGINGSWORD__			36
-#define __SKILL_LIFEBALANCE__			37
-#define	__SKILL_LIGHTNINGBREAK__		38
-#define	__SKILL_SILENTBRANDYSHIP__		39
-#define	__SKILL_ANTAGONIZE__			41
-#define	__SKILL_AURABATTLER__			42
-#define	__SKILL_LIFEFORCE__				43
-#define	__SKILL_REGENERATION__			44
-#define	__SKILL_WEAPONMASTERY__			45
-#define	__SKILL_DEFENSEMASTERY__		46
-#define __SKILL_SWORDMASTERY__			47
-#define __SKILL_BLUNTWEAPON_FIGTER_MASTERY__	48
-#define __SKILL_SPEARMASTERY__			49
-#define __SKILL_INFULX__				50
-#define __SKILL_AMPLIFY__				51
-#define __SKILL_BERSERKER__				52
-
-// 디바인 계열
-#define	__SKILL_DIVINEMASTERY__			61
-#define	__SKILL_HEAL__					62
-#define	__SKILL_PRAY__					63
-#define	__SKILL_BLESSING__				64
-#define	__SKILL_WINDTALES__				65
-#define	__SKILL_HOLDSHIELD__			66
-#define	__SKILL_WINDFORCE__				67
-#define	__SKILL_TREEAGION__				68
-#define	__SKILL_AMFLEAFIRE__			69
-#define	__SKILL_HOLYPRESSURE__			70
-#define	__SKILL_APSOLUTMAGICBARRIER__	71
-#define	__SKILL_SPELLBINDING__			72
-#define	__SKILL_DETECT__				73
-#define	__SKILL_AROSE__					74
-#define	__SKILL_HOLYDIVINE__			75
-#define __SKILL_ORDRISING__				77
-#define __SKILL_SUITRISING__			78
-#define __SKILL_ORDSLUM__				79
-#define __SKILL_SUITSLUM__				80
-#define __SKILL_REMEDY__				81
-#define __SKILL_PROTECTSHIELD__			82
-#define __SKILL_FRAIL__					83
-#define __SKILL_DETECTION__				84
-#define __SKILL_ROUNDRANGE__			85
-#define __SKILL_BLUNTWEAPON_PREST_MASTERY__	86
-#define __SKILL_HOLYBRAIN				87
-#define __SKILL_INCREASING				88
-#define	__SKILL_LANDINGSUPPORT__		89
-// 서몬 계열
-#define	__SKILL_SUMMONMASTERY__			91
-#define	__SKILL_CALMDOWN__				92
-#define	__SKILL_SLEEP__					93
-#define	__SKILL_CONFUSE__				94
-#define	__SKILL_MINDCONTROL__			95
-#define	__SKILL_RAGE__					96
-#define	__SKILL_REDELEMENTAL__			97
-#define __SKILL_SOULBLASTER				98
-#define	__SKILL_MINDEXPLOSION__			99
-#define	__SKILL_SOULETER__				100
-#define	__SKILL_SUMMONACCELERATOR__		101
-#define	__SKILL_DOMENATION__			102
-#define	__SKILL_TAMINGMASTERY__			103
-#define	__SKILL_BEYONDLIMIT__			104
-#define __SKILL_BLUEELEMENTAL__			105
-#define __SKILL_GREENELEMENTAL__		106
-#define __SKILL_MIRACULOUSHEART__		107
-#define __SKILL_ARCANUMSKIN__			108
-#define __SKILL_FRENZY__				109
-#define __SKILL_DETONATION__			110
-#define __SKILL_TURNOVER__				111
-#define __SKILL_DETONATION_MONSTER__	112
-
-// 차크라 계열
-#define	__SKILL_CHAKRAMASTERY__			121
-#define	__SKILL_POISONING__				123
-#define	__SKILL_CHAINATTACKER__			124
-#define	__SKILL_IRONSKIN__				125
-#define	__SKILL_SNIPING__				126
-#define	__SKILL_SHADOWSQUARE__			127
-#define	__SKILL_HIDING__				128
-#define	__SKILL_SPELLTRAP__				129
-#define	__SKILL_PRESSURE__				130
-#define	__SKILL_SYLPHID__				131
-#define	__SKILL_SHAUT__					132
-#define	__SKILL_BERSERK__				133
-#define	__SKILL_SPEEDOVER__				134
-#define	__SKILL_DODGE__					135
-#define	__SKILL_TRAINING__				136
-#define	__SKILL_BLASTQUAKE__			137
-#define	__SKILL_LIFEEXPLOSION__			138
-#define __SKILL_DEATHBLOW__				139
-#define __SKILL_VAMPIRE__				140
-#define __SKILL_POSIONCLOUD__			141
-#define __SKILL_FORTIFICATIONMASTERY__	144
-#define __SKILL_AMPLIFICATIONMASTERY__	145
-#define __SKILL_POISONMASTERY__			146
-#define __SKILL_EXTREMESPEAR__			147
-#define __SKILL_ATTACK__				151
-#define __SKILL_NONE_SELECT__			255
 
 #define __CHR_EFFECT_NONE__				(__SKILL_ATTACK__+1)
 #define	__CHR_EFFECT_GUARDIAN_DYING__	(__CHR_EFFECT_NONE__+1)
@@ -198,20 +42,7 @@ interface ISoundEffect;
 //--> 스크립트 구조들
 #pragma pack( push, 1 )
 
-struct VALUE
-{
-	int		nMin;
-	int		nMax;
-	int		nMana;
-	int		nCompass;
-	int		nDuration;
-	int		nProbability;
-};
-struct STATUSVALUE
-{
-	WORD			wStatusID;	// 상태마법을 썻을때 변화되는 필드 플래그.
-	BYTE			bFormula;	// 식에 의한 값을 계산하기 위해서.
-};
+
 typedef struct BASESKILL
 {
 	BYTE			bID;		// 아이디.

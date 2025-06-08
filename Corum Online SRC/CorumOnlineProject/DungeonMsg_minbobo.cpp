@@ -31,7 +31,7 @@
 #include "Filter.h"
 #include "ItemNative.h"
 #include "RivalGuildWar.h"
-
+#include "../CommonServer/ItemManagerDefine.h"
 
 void InitPacketProcDungeonMinbobo()
 {

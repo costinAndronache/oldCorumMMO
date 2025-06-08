@@ -10,35 +10,8 @@
 #include "ChinaBillingProc.h"
 #include "../CommonServer/Item.h"
 #include "../CommonServer/CommonPacket.h"
-
-
-#define MAX_BELT					8
-#define MAX_EQUIP					21
-#define MAX_INV_LARGE				21
-#define MAX_INV_SMALL				42				
-
-
-#define EQUIP_TYPE_RHAND1			0		//
-#define EQUIP_TYPE_RHAND2			1		
-#define EQUIP_TYPE_RIDE				2		//Å»°Í.. ºñ°øÁ¤ÀÚ¸® 
-#define EQUIP_TYPE_HELMET			3		//
-#define EQUIP_TYPE_MANTLE			4		//¸Á¶Ç
-#define EQUIP_TYPE_LHAND1			5		//
-#define EQUIP_TYPE_LHAND2			6		
-#define EQUIP_TYPE_RGLOVE			7			
-#define EQUIP_TYPE_ARMOR			8		//°©¿Ê
-#define EQUIP_TYPE_AMULE1			9
-#define EQUIP_TYPE_AMULE2			10
-#define EQUIP_TYPE_AMULE3			11
-#define EQUIP_TYPE_BELT				12
-#define EQUIP_TYPE_LGLOVE			13
-#define EQUIP_TYPE_RRING1			14
-#define EQUIP_TYPE_RRING2			15
-#define EQUIP_TYPE_RRING3			16
-#define EQUIP_TYPE_BOOTS			17
-#define EQUIP_TYPE_LRING1			18
-#define EQUIP_TYPE_LRING2			19
-#define EQUIP_TYPE_LRING3			20
+#include "../CommonServer/CommonGlobalDefine.h"
+#include "../CommonServer/ItemManagerDefine.h"
 
 
 #define USER_TYPE_GM				1

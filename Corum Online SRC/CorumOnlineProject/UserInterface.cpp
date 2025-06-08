@@ -1485,28 +1485,28 @@ void CUserInterface::RenderText()
 			if(InterfaceCollision(INTERFACE_USER, 132, 164, 733, 765)==FALSE)
 				return;
 							
-			if(g_pMainPlayer->GetSkillKind(0)==__SKILL_ATTACK__)
+			if(g_pMainPlayer->GetSkillKind(SELECT_ATTACK_TYPE_LBUTTON)==__SKILL_ATTACK__)
 			{
 				RenderFont(g_Message[ETC_MESSAGE377].szMessage, g_Mouse.MousePos.x-15, g_Mouse.MousePos.x+100, g_Mouse.MousePos.y-10, g_Mouse.MousePos.y+4, __ORDER_ITEM_DESC__+2);
 				
 				CInterface::GetInstance()->RenderInfoBox(float(g_Mouse.MousePos.x-22-5), float(g_Mouse.MousePos.y-16), 44+10, 24, __ORDER_ITEM_DESC__);
 			}
-			else if(g_pMainPlayer->GetSkillKind(0)!=__SKILL_NONE_SELECT__)
+			else if(g_pMainPlayer->GetSkillKind(SELECT_ATTACK_TYPE_LBUTTON)!=__SKILL_NONE_SELECT__)
 			{				
-				if(g_pEffectLayer->m_Effect[g_pMainPlayer->GetSkillKind(0)].wProperty!=0)
+				if(g_pEffectLayer->m_Effect[g_pMainPlayer->GetSkillKind(SELECT_ATTACK_TYPE_LBUTTON)].wProperty!=0)
 				{				
-					if(g_pEffectLayer->m_Effect[g_pMainPlayer->GetSkillKind(0)].bSkillType!=0)
+					if(g_pEffectLayer->m_Effect[g_pMainPlayer->GetSkillKind(SELECT_ATTACK_TYPE_LBUTTON)].bSkillType!=0)
 					{
-						if(!IsEmptyString(g_pEffectLayer->m_Effect[g_pMainPlayer->GetSkillKind(0)].szName))
+						if(!IsEmptyString(g_pEffectLayer->m_Effect[g_pMainPlayer->GetSkillKind(SELECT_ATTACK_TYPE_LBUTTON)].szName))
 						{
-							RenderFont(g_pEffectLayer->m_Effect[g_pMainPlayer->GetSkillKind(0)].szName, 
-								g_Mouse.MousePos.x-g_pEffectLayer->m_nEffectSize[g_pMainPlayer->GetSkillKind(0)]/2*6, 
+							RenderFont(g_pEffectLayer->m_Effect[g_pMainPlayer->GetSkillKind(SELECT_ATTACK_TYPE_LBUTTON)].szName, 
+								g_Mouse.MousePos.x-g_pEffectLayer->m_nEffectSize[g_pMainPlayer->GetSkillKind(SELECT_ATTACK_TYPE_LBUTTON)]/2*6, 
 								g_Mouse.MousePos.x+100, 
 								g_Mouse.MousePos.y-10, 
 								g_Mouse.MousePos.y+4, 
 								__ORDER_ITEM_DESC__+2);
 
-							CInterface::GetInstance()->RenderInfoBox(float(g_Mouse.MousePos.x-g_pEffectLayer->m_nEffectSize[g_pMainPlayer->GetSkillKind(0)]/2*7-5), float(g_Mouse.MousePos.y-16), float(g_pEffectLayer->m_nEffectSize[g_pMainPlayer->GetSkillKind(0)]/2*8*2+10), 24, __ORDER_ITEM_DESC__);
+							CInterface::GetInstance()->RenderInfoBox(float(g_Mouse.MousePos.x-g_pEffectLayer->m_nEffectSize[g_pMainPlayer->GetSkillKind(SELECT_ATTACK_TYPE_LBUTTON)]/2*7-5), float(g_Mouse.MousePos.y-16), float(g_pEffectLayer->m_nEffectSize[g_pMainPlayer->GetSkillKind(SELECT_ATTACK_TYPE_LBUTTON)]/2*8*2+10), 24, __ORDER_ITEM_DESC__);
 						}												
 					}
 				}								
@@ -1517,27 +1517,27 @@ void CUserInterface::RenderText()
 			if(InterfaceCollision(INTERFACE_USER, 245, 277, 733, 765)==FALSE)
 				return;
 
-			if(g_pMainPlayer->GetSkillKind(1)==__SKILL_ATTACK__)
+			if(g_pMainPlayer->GetSkillKind(SELECT_ATTACK_TYPE_RBUTTON)==__SKILL_ATTACK__)
 			{
 				RenderFont(g_Message[ETC_MESSAGE377].szMessage, g_Mouse.MousePos.x-12, g_Mouse.MousePos.x+100, g_Mouse.MousePos.y-10, g_Mouse.MousePos.y+4, __ORDER_ITEM_DESC__+2);
 				
 				CInterface::GetInstance()->RenderInfoBox(float(g_Mouse.MousePos.x-22-5), float(g_Mouse.MousePos.y-16), 44+10, 24, __ORDER_ITEM_DESC__);								
 			}			
-			else if(g_pMainPlayer->GetSkillKind(1)!=__SKILL_NONE_SELECT__)
+			else if(g_pMainPlayer->GetSkillKind(SELECT_ATTACK_TYPE_RBUTTON)!=__SKILL_NONE_SELECT__)
 			{
-				if(g_pEffectLayer->m_Effect[g_pMainPlayer->GetSkillKind(1)].wProperty!=0)
+				if(g_pEffectLayer->m_Effect[g_pMainPlayer->GetSkillKind(SELECT_ATTACK_TYPE_RBUTTON)].wProperty!=0)
 				{				
-					if(g_pEffectLayer->m_Effect[g_pMainPlayer->GetSkillKind(1)].bSkillType!=0)
+					if(g_pEffectLayer->m_Effect[g_pMainPlayer->GetSkillKind(SELECT_ATTACK_TYPE_RBUTTON)].bSkillType!=0)
 					{
-						if(!IsEmptyString(g_pEffectLayer->m_Effect[g_pMainPlayer->GetSkillKind(1)].szName))
+						if(!IsEmptyString(g_pEffectLayer->m_Effect[g_pMainPlayer->GetSkillKind(SELECT_ATTACK_TYPE_RBUTTON)].szName))
 						{						
-							RenderFont(g_pEffectLayer->m_Effect[g_pMainPlayer->GetSkillKind(1)].szName, 
-								g_Mouse.MousePos.x-g_pEffectLayer->m_nEffectSize[g_pMainPlayer->GetSkillKind(1)]/2*6, 
+							RenderFont(g_pEffectLayer->m_Effect[g_pMainPlayer->GetSkillKind(SELECT_ATTACK_TYPE_RBUTTON)].szName, 
+								g_Mouse.MousePos.x-g_pEffectLayer->m_nEffectSize[g_pMainPlayer->GetSkillKind(SELECT_ATTACK_TYPE_RBUTTON)]/2*6, 
 								g_Mouse.MousePos.x+100, 
 								g_Mouse.MousePos.y-10, 
 								g_Mouse.MousePos.y+4, __ORDER_ITEM_DESC__+2);
 							
-							CInterface::GetInstance()->RenderInfoBox(float(g_Mouse.MousePos.x-g_pEffectLayer->m_nEffectSize[g_pMainPlayer->GetSkillKind(1)]/2*7-5), float(g_Mouse.MousePos.y-16), float(g_pEffectLayer->m_nEffectSize[g_pMainPlayer->GetSkillKind(1)]/2*8*2+10), 24, __ORDER_ITEM_DESC__);
+							CInterface::GetInstance()->RenderInfoBox(float(g_Mouse.MousePos.x-g_pEffectLayer->m_nEffectSize[g_pMainPlayer->GetSkillKind(SELECT_ATTACK_TYPE_RBUTTON)]/2*7-5), float(g_Mouse.MousePos.y-16), float(g_pEffectLayer->m_nEffectSize[g_pMainPlayer->GetSkillKind(SELECT_ATTACK_TYPE_RBUTTON)]/2*8*2+10), 24, __ORDER_ITEM_DESC__);
 						}																		
 					}
 				}				

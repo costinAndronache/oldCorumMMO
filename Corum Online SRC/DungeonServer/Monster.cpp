@@ -239,7 +239,7 @@ void CMonster::SetTargetAI(const CUnit* pUnit)
 	{
 		// 공성중에는 일반몹들은 방어자 편이 되므로. 인식하지 마라.
 		// 추후 수정되야 한다.
-		if (!GetLord() && pUnit->GetAttackMode() == ATTACK_MODE_DEFENCE )
+		if (!GetLord() && pUnit->GetAttackMode() == ATTACK_MODE_DEFENSE )
 			return;
 	}
 	// sung-han 2005-01-13 서머너 스킬 컨퓨즈 비정상 작동하는 부분 수정
@@ -4934,10 +4934,10 @@ BOOL CMonster::IsAlliance(const CMonster* pMonster)
 	return (this == pMonster)
 		|| (GetLord() == pMonster->GetLord() && pMonster->GetTemp(NPC_TEMP_TARGET) == 0)	// 같은 종족도 컨퓨즈 걸린 놈은 적으로 : 최덕석 2005.1.21
 		|| (GetLord() 
-			&& GetLord()->GetAttackMode() == ATTACK_MODE_DEFENCE 
+			&& GetLord()->GetAttackMode() == ATTACK_MODE_DEFENSE 
 			&& pMonster->IsGuardian() == GUARDIAN_TYPE_DUNGEON)
 		|| (pMonster->GetLord()																// 수성 유저 소환물은 적으로 인식하지 않음 : 최덕석 2005.2.28
-			&& pMonster->GetLord()->GetAttackMode() == ATTACK_MODE_DEFENCE)
+			&& pMonster->GetLord()->GetAttackMode() == ATTACK_MODE_DEFENSE)
 		|| (pMonster->GetLord() && pMonster->GetLord() == this)
 		|| (GetLord() && GetLord() == pMonster);
 
@@ -4956,7 +4956,7 @@ BOOL CMonster::IsAlliance(const CUser* pUser)
 	return (GetLord() 
 			&& GetLord()->IsAlliance((CUnit*)pUser)) 
 		|| (IsGuardian() == GUARDIAN_TYPE_DUNGEON 
-			&& pUser->GetAttackMode() == ATTACK_MODE_DEFENCE);
+			&& pUser->GetAttackMode() == ATTACK_MODE_DEFENSE);
 }
 
 BOOL CMonster::IsNormalMonster() const

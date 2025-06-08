@@ -441,7 +441,7 @@ void CUser::InitUserItemAll()
 		case EQUIP_TYPE_LHAND2:
 		case EQUIP_TYPE_HELMET:
 		case EQUIP_TYPE_RGLOVE:			
-		case EQUIP_TYPE_MAIL:						
+		case EQUIP_TYPE_ARMOR:						
 		case EQUIP_TYPE_AMULE2:					
 		case EQUIP_TYPE_BELT:				
 		case EQUIP_TYPE_LGLOVE:			
@@ -888,7 +888,7 @@ void CUser::InitUserItemAll()
 				}
 			}
 		}
-		else if(i==EQUIP_TYPE_HELMET || i==EQUIP_TYPE_RGLOVE || i==EQUIP_TYPE_MAIL || i==EQUIP_TYPE_BELT || i==EQUIP_TYPE_LGLOVE || i==EQUIP_TYPE_BOOTS)
+		else if(i==EQUIP_TYPE_HELMET || i==EQUIP_TYPE_RGLOVE || i==EQUIP_TYPE_ARMOR || i==EQUIP_TYPE_BELT || i==EQUIP_TYPE_LGLOVE || i==EQUIP_TYPE_BOOTS)
 		{
 			if(CheckItem(&m_pEquip[i]))
 			{
@@ -1136,7 +1136,7 @@ BOOL CUser::SetEquipItem( USER_STATUS_ARRAY* pUserStatus, BYTE bEquipNum )
 	
 	case EQUIP_TYPE_HELMET:
 	case EQUIP_TYPE_RGLOVE:			
-	case EQUIP_TYPE_MAIL:				
+	case EQUIP_TYPE_ARMOR:				
 	case EQUIP_TYPE_AMULE2:				
 	case EQUIP_TYPE_BELT:				
 	case EQUIP_TYPE_LGLOVE:			

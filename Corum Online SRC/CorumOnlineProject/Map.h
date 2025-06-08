@@ -10,24 +10,7 @@
 #endif
 #pragma once
 
-#define	TILE_SIZE		125.0f
-#define TILE_SIZE_WORLD	80.0f
-#define	TILE_HEIGHT	125.0f
-#define	TILE_WIDTH	125.0f
-//#define GRID_WIDTH		1500.0f		
-//#define GRID_HEIGHT		1500.0f		
-
-#define GRID_WIDTH		1250.0f		
-#define GRID_HEIGHT		1250.0f		
-
-
-#define TILE_X(X)	(float)( X * TILE_WIDTH + (TILE_WIDTH * 0.5f ) )
-#define TILE_Z(Z)	(float)( Z * TILE_HEIGHT + (TILE_HEIGHT * 0.5f ) )
-
-#define WORLDTILE_X(X)	(float)( X * TILE_SIZE_WORLD + (TILE_SIZE_WORLD * 0.5f ) )
-#define WORLDTILE_Z(Z)	(float)( Z * TILE_SIZE_WORLD + (TILE_SIZE_WORLD * 0.5f ) )
-
-
+#include "../CommonServer/CommonClientDungeonWorld.h"
 
 
 #pragma pack( push, 1 )
@@ -39,25 +22,7 @@
 class EffectDesc;
 class CVoidList;
 struct V2_SPRITE;
-struct TILE_ATTR
-{
-	WORD uAttr		: 4;		//  0 ~ 15
-	WORD uOccupied	: 4;		//	0 ~ 15
-	WORD uSection	: 8;		//  0 ~ 255
-};
 
-struct MAP_TILE
-{
-	float	x;
-	float	z;
-	WORD	wIndex_X;	//배열 Index값 
-	WORD	wIndex_Z;
-	
-//	void*	pOccupiedObj;	//점유하고 있는 Object Pointer
-	void*	pData;
-
-	TILE_ATTR wAttr;
-};
 
 struct Section_Link_Info
 {
