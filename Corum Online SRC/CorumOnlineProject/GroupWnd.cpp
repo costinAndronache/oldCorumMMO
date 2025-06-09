@@ -8930,9 +8930,9 @@ void CGroupWnd::RenderPartyInfo()
 		int nSize = lstrlen(m_szInfo[0]);
 		RenderFont(m_szInfo[0], m_fPosX+50, m_fPosX+50+(nSize*7), m_fPosZ+108, m_fPosZ+122, GetStartOrder()+4, dwColor);
 		
-		dwLev += g_pMainPlayer->m_dwLevel;
+		dwLev += g_pMainPlayer->currentLevel();
 
-		wsprintf(m_szInfo[0], "%u", g_pMainPlayer->m_dwLevel);
+		wsprintf(m_szInfo[0], "%u", g_pMainPlayer->currentLevel());
 		
 		nSize = lstrlen(m_szInfo[0]);
 		RenderFont(m_szInfo[0], m_fPosX+116-(nSize*1), m_fPosX+116+(nSize*7), m_fPosZ+108, m_fPosZ+122, GetStartOrder()+4, dwColor);		
@@ -9907,7 +9907,7 @@ void CGroupWnd::RenderGuildInfo()
 				nLen = lstrlen(m_szInfo[0]);	
 				RenderFont(m_szInfo[0], m_fPosX+50, m_fPosX+50+(nLen*7), m_fPosZ+102, m_fPosZ+116, GetStartOrder()+4, dwColor);
 
-				wsprintf(m_szInfo[0], "%u", g_pMainPlayer->m_dwLevel);
+				wsprintf(m_szInfo[0], "%u", g_pMainPlayer->currentLevel());
 				
 				nLen = lstrlen(m_szInfo[0]);
 				RenderFont(m_szInfo[0], m_fPosX+116-(nLen*1), m_fPosX+116+(nLen*7), m_fPosZ+102, m_fPosZ+116, GetStartOrder()+4, dwColor);
@@ -10707,7 +10707,7 @@ void CGroupWnd::RenderGuildWarInfoNew()
 			ZeroMemory(szGuildWarTemp, sizeof(szGuildWarTemp));
 			
 			//각 제목들..
-			if( g_pMainPlayer->m_dwLevel <= 55 )
+			if( g_pMainPlayer->currentLevel() <= 55 )
 				wsprintf(szGuildWarTemp, g_Message[ETC_MESSAGE1356].szMessage);//등   급    Junior(Lv55이하)
 			else
 				wsprintf(szGuildWarTemp, g_Message[ETC_MESSAGE1357].szMessage);//등   급    Senior(Lv56이상)

@@ -20,7 +20,7 @@
 #include "map.h"
 #include "Parsing.h"
 #include "CodeFun.h"
-
+#include "UserInterface.h"
 
 void EffectLayer::Init(BOOL bChk)
 {
@@ -444,7 +444,7 @@ BOOL EffectLayer::IsEffectUse(BYTE bSkillKind, VECTOR3* vecTarget, DWORD dwStart
 		return FALSE;
 	}
 	
-	int nMana = g_pMainPlayer->m_wMP - pEffect->Value[bSkillLevel].nMana;	
+	int nMana = g_pMainPlayer->currentSP() - pEffect->Value[bSkillLevel].nMana;
 	if(nMana<0)
 	{
 		DisplayMessageAdd(g_Message[ETC_MESSAGE148].szMessage, 0xFFFFC309);		// MSG_ID : 148 ; 마나가 없습니다.
@@ -452,9 +452,10 @@ BOOL EffectLayer::IsEffectUse(BYTE bSkillKind, VECTOR3* vecTarget, DWORD dwStart
 		return FALSE;
 	}
 		
-	if (g_dwCurTick - dwStartSkillTick < pEffect->dwCoolTime)
+	if (g_dwCurTick - dwStartSkillTick < pEffect->dwCoolTime  || TRUE)
 	{
-		int nCool = int(g_pMainPlayer->m_fCurCoolPoint*1000-pEffect->dwCoolTime);
+		int nCool = int(g_pMainPlayer->currentCoolPoints()*1000 - 
+			pEffect->dwCoolTime);
 	
 		if(nCool<0)
 		{
@@ -463,7 +464,6 @@ BOOL EffectLayer::IsEffectUse(BYTE bSkillKind, VECTOR3* vecTarget, DWORD dwStart
 			return FALSE;
 		}
 		
-		g_pMainPlayer->m_fCurCoolPoint = (float)max(nCool/1000.f, 0.1);		
 	}
 	
 	return TRUE;

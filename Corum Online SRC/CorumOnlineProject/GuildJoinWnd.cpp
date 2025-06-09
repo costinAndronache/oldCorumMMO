@@ -178,7 +178,7 @@ int CGuildJoinWnd::CheckInterface()
 				memset(pGuildJoinPacket.szGuildName, 0, sizeof(pGuildJoinPacket.szGuildName));
 				pGuildJoinPacket.dwUserIndex	= m_dwUserIndex;
 				pGuildJoinPacket.bGuildType		= m_bGuildType;
-				pGuildJoinPacket.dwLev			= g_pMainPlayer->m_dwLevel;
+				pGuildJoinPacket.dwLev			= g_pMainPlayer->currentLevel();
 				pGuildJoinPacket.wClass			= g_pMainPlayer->m_wClass;
 				pGuildJoinPacket.bResult		= TRUE;				
 				__lstrcpyn(pGuildJoinPacket.szGuildName, m_szGuildName, MAX_GUILD_NAME_REAL_LENGTH);

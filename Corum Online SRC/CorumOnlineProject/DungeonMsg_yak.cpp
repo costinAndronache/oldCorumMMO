@@ -921,39 +921,39 @@ void CmdUserStatus( char* pMsg, DWORD dwLen )
 		switch( pUserStatus->pStatus[i].dwCode )
 		{
 		case USER_MAXHP:
-			g_pMainPlayer->m_wMaxHP	= (DWORD)pUserStatus->pStatus[i].dwMin;
+			g_pMainPlayer->updateMaxHP(pUserStatus->pStatus[i].dwMin);
 			break;
 		
 		case USER_MAXMP:
-			g_pMainPlayer->m_wMaxMP = (DWORD)pUserStatus->pStatus[i].dwMin;
+			g_pMainPlayer->updateMaxSP(pUserStatus->pStatus[i].dwMin);
 			break;
 		
 		case USER_HONOR:
-			g_pMainPlayer->m_dwHonor	= pUserStatus->pStatus[i].dwMin;
+			g_pMainPlayer->updateCurrentHonor(pUserStatus->pStatus[i].dwMin);
 			break;
 		
 		case USER_EGO:
-			g_pMainPlayer->m_dwEgo	= pUserStatus->pStatus[i].dwMin;
+			g_pMainPlayer->updateCurrentEGO(pUserStatus->pStatus[i].dwMin);
 			break;
 		
 		case USER_STR:
-			g_pMainPlayer->m_dwStr	= pUserStatus->pStatus[i].dwMin;
+			g_pMainPlayer->updateCurrentSTR(pUserStatus->pStatus[i].dwMin);
 			break;
 		
 		case USER_INT:
-			g_pMainPlayer->m_dwInt	= pUserStatus->pStatus[i].dwMin;
+			g_pMainPlayer->updateCurrentINT(pUserStatus->pStatus[i].dwMin);
 			break;
 		
 		case USER_DEX:
-			g_pMainPlayer->m_dwDex	= pUserStatus->pStatus[i].dwMin;
+			g_pMainPlayer->updateCurrentDEX(pUserStatus->pStatus[i].dwMin);
 			break;
 		
 		case USER_VIT:
-			g_pMainPlayer->m_dwVit	= pUserStatus->pStatus[i].dwMin;
+			g_pMainPlayer->updateCurrentVIT(pUserStatus->pStatus[i].dwMin);
 			break;
 		
 		case USER_LUCK:
-			g_pMainPlayer->m_dwLuck	= pUserStatus->pStatus[i].dwMin;
+			g_pMainPlayer->updateCurrentLUCK(pUserStatus->pStatus[i].dwMin);
 			break;
 		
 		case USER_ATTACK_R:
@@ -1005,22 +1005,22 @@ void CmdUserStatus( char* pMsg, DWORD dwLen )
 			{
 				CGameMenuWnd* pGameMenuWnd = CGameMenuWnd::GetInstance();
 
-				if (pUserStatus->pStatus[i].dwMin > g_pMainPlayer->m_dwExp)
+				if (pUserStatus->pStatus[i].dwMin > g_pMainPlayer->currentEXP())
 				{
 					// MSG_ID : 91 ; %u 의 경험치를 획득하였습니다
 					wsprintf(szInfo, g_Message[ETC_MESSAGE91].szMessage
-						, pUserStatus->pStatus[i].dwMin-g_pMainPlayer->m_dwExp); 
+						, pUserStatus->pStatus[i].dwMin-g_pMainPlayer->currentEXP()); 
 				}
-				else if (pUserStatus->pStatus[i].dwMin < g_pMainPlayer->m_dwExp)
+				else if (pUserStatus->pStatus[i].dwMin < g_pMainPlayer->currentEXP())
 				{
 					// "%u 의 경험치를 잃었습니다"
 					wsprintf(szInfo, g_Message[ETC_MESSAGE851].szMessage
-						, g_pMainPlayer->m_dwExp-pUserStatus->pStatus[i].dwMin); 
+						, g_pMainPlayer->currentEXP() - pUserStatus->pStatus[i].dwMin);
 				}
 
 				DisplayMessageAdd(szInfo, 0xFFFF2CFF, pGameMenuWnd->m_bSystemMsgFlag);
 
-				g_pMainPlayer->m_dwExp = pUserStatus->pStatus[i].dwMin;				
+				g_pMainPlayer->updateCurrentEXP(pUserStatus->pStatus[i].dwMin);
 
 				pUserInterface->SetDengeonExpDefInc();			
 			}

@@ -290,7 +290,7 @@ int CGuildExWnd::CheckInterface()
 					}
 
 					pPacket.bType	= m_byGuildType;
-					pPacket.dwLev	= g_pMainPlayer->m_dwLevel;
+					pPacket.dwLev	= g_pMainPlayer->currentLevel();
 					pPacket.wClass	= g_pMainPlayer->m_wClass;
 					__lstrcpyn(pPacket.szGuildName, g_pInputManager->GetInputBuffer(INPUT_BUFFER_7), MAX_GUILD_NAME_REAL_LENGTH);
 					g_pNet->SendMsg((char*)&pPacket, pPacket.GetPacketSize(), SERVER_INDEX_WORLD);
@@ -463,7 +463,7 @@ void CGuildExWnd::GuildMsg()
 		}
 		memset(pPacket.szGuildName, 0, sizeof(pPacket.szGuildName));
 		pPacket.bType	= m_byGuildType;
-		pPacket.dwLev	= g_pMainPlayer->m_dwLevel;
+		pPacket.dwLev	= g_pMainPlayer->currentLevel();
 		pPacket.wClass	= g_pMainPlayer->m_wClass;
 		__lstrcpyn(pPacket.szGuildName, g_pInputManager->GetInputBuffer(INPUT_BUFFER_7), MAX_GUILD_NAME_REAL_LENGTH);
 		g_pNet->SendMsg((char*)&pPacket, pPacket.GetPacketSize(), SERVER_INDEX_WORLD);

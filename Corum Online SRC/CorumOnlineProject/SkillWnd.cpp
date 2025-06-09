@@ -536,9 +536,9 @@ void CSkillWnd::RenderText()
 	RenderSkillInfo();
 	
 	// 스킬포인트 //
-	if(g_pMainPlayer->m_wPointSkill>0)
+	if(g_pMainPlayer->currentSkillPoints() > 0)
 	{
-		wsprintf(szInfo, "%u", g_pMainPlayer->m_wPointSkill);
+		wsprintf(szInfo, "%u", g_pMainPlayer->currentSkillPoints());
 		
 		int nSize = lstrlen(szInfo);
 
@@ -1099,7 +1099,7 @@ void CSkillWnd::SetSkillUpBtn()
 		SetRender(SPR_OBJ_SKILL_UP1+i*2+1, FALSE);
 	}
 
-	if(g_pMainPlayer->m_wPointSkill>0)
+	if(g_pMainPlayer->currentSkillPoints() > 0)
 	{
 		const auto bySkillIndex = m_bySkillType; 
 
@@ -1409,7 +1409,7 @@ int CSkillWnd::CheckInterface()
 
 										if(nMaxLevel>=(int)pEffect->dwMinMastery)
 										{
-											if(g_pMainPlayer->m_wPointSkill>0)
+											if(g_pMainPlayer->currentSkillPoints() > 0)
 											{
 												SetRender(SPR_OBJ_SKILL_UP1+2+lpSkillResourceEx->byTypeIndex*2, TRUE);
 												SetRender(SPR_OBJ_SKILL_UP1+3+lpSkillResourceEx->byTypeIndex*2, FALSE);
@@ -1463,7 +1463,7 @@ int CSkillWnd::CheckInterface()
 										
 										if(nMaxLevel>=(int)pEffect->dwMinMastery)
 										{
-											if(g_pMainPlayer->m_wPointSkill>0)
+											if(g_pMainPlayer->currentSkillPoints() > 0)
 											{
 												SetRender(SPR_OBJ_SKILL_UP1+30+lpSkillResourceEx->byTypeIndex*2, TRUE);
 												SetRender(SPR_OBJ_SKILL_UP1+31+lpSkillResourceEx->byTypeIndex*2, FALSE);
@@ -1517,7 +1517,7 @@ int CSkillWnd::CheckInterface()
 
 										if(nMaxLevel>=(int)pEffect->dwMinMastery)
 										{
-											if(g_pMainPlayer->m_wPointSkill>0)
+											if(g_pMainPlayer->currentSkillPoints() > 0)
 											{
 												SetRender(SPR_OBJ_SKILL_UP1+44+lpSkillResourceEx->byTypeIndex*2, TRUE);
 												SetRender(SPR_OBJ_SKILL_UP1+45+lpSkillResourceEx->byTypeIndex*2, FALSE);
@@ -1638,7 +1638,7 @@ int CSkillWnd::CheckInterface()
 
 										if(nMaxLevel>=(int)pEffect->dwMinMastery)
 										{
-											if(g_pMainPlayer->m_wPointSkill>0)
+											if(g_pMainPlayer->currentSkillPoints() > 0)
 											{
 												SetRender(SPR_OBJ_SKILL_UP1+2+lpSkillResourceEx->byTypeIndex*2, FALSE);
 												SetRender(SPR_OBJ_SKILL_UP1+3+lpSkillResourceEx->byTypeIndex*2, TRUE);												
@@ -1694,7 +1694,7 @@ int CSkillWnd::CheckInterface()
 										
 										if(nMaxLevel>=(int)pEffect->dwMinMastery)
 										{
-											if(g_pMainPlayer->m_wPointSkill>0)
+											if(g_pMainPlayer->currentSkillPoints() > 0)
 											{
 												SetRender(SPR_OBJ_SKILL_UP1+30+lpSkillResourceEx->byTypeIndex*2, FALSE);
 												SetRender(SPR_OBJ_SKILL_UP1+31+lpSkillResourceEx->byTypeIndex*2, TRUE);												
@@ -1750,7 +1750,7 @@ int CSkillWnd::CheckInterface()
 
 										if(nMaxLevel>=(int)pEffect->dwMinMastery)
 										{
-											if(g_pMainPlayer->m_wPointSkill>0)
+											if(g_pMainPlayer->currentSkillPoints() > 0)
 											{
 												SetRender(SPR_OBJ_SKILL_UP1+44+lpSkillResourceEx->byTypeIndex*2, FALSE);
 												SetRender(SPR_OBJ_SKILL_UP1+45+lpSkillResourceEx->byTypeIndex*2, TRUE);
@@ -1865,7 +1865,7 @@ int CSkillWnd::CheckInterface()
 
 										if(nMaxLevel>=(int)pEffect->dwMinMastery)
 										{
-											if(g_pMainPlayer->m_wPointSkill<=0)												
+											if(g_pMainPlayer->currentSkillPoints() <= 0)												
 												byMousePosChk = __MOUSE_POINTER_DEFAULT__;
 										}
 										else
@@ -1914,7 +1914,7 @@ int CSkillWnd::CheckInterface()
 										
 										if(byLevel>=(int)pEffect->dwMinMastery)
 										{		
-											if(g_pMainPlayer->m_wPointSkill>0)
+											if(g_pMainPlayer->currentSkillPoints() > 0)
 												CUserInterface::GetInstance()->SetPointer(__MOUSE_POINTER_BUTTON__);
 											else
 												byMousePosChk = __MOUSE_POINTER_DEFAULT__;
@@ -1965,7 +1965,7 @@ int CSkillWnd::CheckInterface()
 
 										if(nMaxLevel>=(int)pEffect->dwMinMastery)
 										{
-											if(g_pMainPlayer->m_wPointSkill<=0)												
+											if(g_pMainPlayer->currentSkillPoints() <= 0)
 												byMousePosChk = __MOUSE_POINTER_DEFAULT__;
 										}
 										else

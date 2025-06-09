@@ -451,7 +451,7 @@ void CEventNPCSubWnd::PortalProcess(void)
 		return;
 	}
 
-	if ((int)g_pMainPlayer->m_dwLevel > m_aMoveDungeonInfo[m_iSelectedIndex].iLevelMax)
+	if ((int)g_pMainPlayer->currentLevel() > m_aMoveDungeonInfo[m_iSelectedIndex].iLevelMax)
 	{
 		SetText(EVENTNPC_LEVEL_HIGH);
 		m_iSelectedIndex = -1;
@@ -459,7 +459,7 @@ void CEventNPCSubWnd::PortalProcess(void)
 		return;
 	}		
 		
-	if ((int)g_pMainPlayer->m_dwLevel < m_aMoveDungeonInfo[m_iSelectedIndex].iLevelMin)
+	if ((int)g_pMainPlayer->currentLevel() < m_aMoveDungeonInfo[m_iSelectedIndex].iLevelMin)
 	{
 		SetText(EVENTNPC_LEVEL_LOW);
 		m_iSelectedIndex = -1;

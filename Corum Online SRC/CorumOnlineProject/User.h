@@ -9,7 +9,7 @@
 #include "../CommonServer/CommonHeader.h"
 #include "../CommonServer/CommonClientDungeon.h"
 #include "Effect.h"
-
+#include <vector>
 
 #define		USER_TEMP_DAMAGE_TYPE				0		// 미스인지 블록인지 성공인지
 #define		USER_TEMP_DAMAGE					1		// 데미지 값
@@ -182,19 +182,28 @@ public:
 };
 
 
+class CMainUserUpdateInterested {
+public:
+	virtual void updatedCurrentHP(DWORD) = 0;
+	virtual void updatedCurrentSP(DWORD) = 0;
+	virtual void updatedMAXHP(DWORD) = 0;
+	virtual void updatedMAXSP(DWORD) = 0;
+	virtual void updatedEXP(DWORD) = 0;
+};
+typedef std::weak_ptr<CMainUserUpdateInterested> CMainUserUpdateInterestedWeakRef;
+typedef std::shared_ptr<CMainUserUpdateInterested> CMainUserUpdateInterestedSharedRef;
+
 class CMainUser : public CUser
 {
+private:
+	std::vector<CMainUserUpdateInterestedWeakRef> updateListeners;
 
-public:
-	
-	DWORD			m_wRace;
-	DWORD			m_wGrade;
-	DWORD			m_wHP;					
-	DWORD			m_wMP;
-	DWORD			m_wMaxHP;
-	DWORD			m_wMaxMP;
-	DWORD			m_wPoint;				// 레벨업시 발생하는 보너스 포인트.
-	DWORD			m_wPointSkill;
+	DWORD			m_dwHP;
+	DWORD			m_dwMP;
+	DWORD			m_dwMaxHP;
+	DWORD			m_dwMaxMP;
+	DWORD			m_dwPoint;				// 레벨업시 발생하는 보너스 포인트.
+	DWORD			m_dwPointSkill;
 
 	DWORD			m_dwExp;
 	DWORD			m_dwLevel;
@@ -205,7 +214,76 @@ public:
 	DWORD			m_dwDex;
 	DWORD			m_dwVit;
 	DWORD			m_dwLuck;
-	
+
+	float			m_fMaxCoolPoint;
+	float			m_fCurCoolPoint;
+
+public:
+	void			addUpdateListener(CMainUserUpdateInterestedWeakRef);
+
+	float			percentageHP() const;
+	float			percentageMP() const; 
+	float			percentageCoolPoints() const;
+
+	float			coolPointsChargeStep() const;
+	float			currentCoolPoints() const;
+	void			updateCurrentCoolPoints(float);
+
+	float			maxCoolPoints() const;
+	void			updateMaxCoolPoints(float);
+
+	DWORD			currentHP() const;
+	void			updateCurrentHP(DWORD hp);
+
+	DWORD			currentSP() const;
+	void			updateCurrentSP(DWORD sp);
+
+	DWORD			maxHP() const;
+	void			updateMaxHP(DWORD);
+
+	DWORD			maxSP() const;
+	void			updateMaxSP(DWORD);
+
+
+	DWORD			currentStatPoints() const;
+	void			updateCurrentStatPoints(DWORD);
+
+	DWORD			currentSkillPoints() const;
+	void			updateCurrentSkillPoints(DWORD);
+
+	DWORD			currentEXP() const;
+	void			updateCurrentEXP(DWORD);
+
+	DWORD			currentLevel() const;
+	void			updateCurrentLevel(DWORD);
+
+	DWORD			currentHonor() const;
+	void			updateCurrentHonor(DWORD);
+
+
+	DWORD			currentEGO() const;
+	void			updateCurrentEGO(DWORD);
+
+	DWORD			currentSTR() const;
+	void			updateCurrentSTR(DWORD);
+
+	DWORD			currentINT() const;
+	void			updateCurrentINT(DWORD);
+
+	DWORD			currentDEX() const;
+	void			updateCurrentDEX(DWORD);
+
+	DWORD			currentVIT() const;
+	void			updateCurrentVIT(DWORD);
+
+	DWORD			currentLUCK() const;
+	void			updateCurrentLUCK(DWORD);
+
+	//
+
+	DWORD			m_wRace;
+	DWORD			m_wGrade;
+
 	CItem			m_pEquip[ MAX_EQUIP_POOL ];
 	CItem			m_pInv_Large[ MAX_INV_LARGE_POOL ];
 	CItem			m_pInv_Small[ MAX_INV_SMALL_POOL ];
@@ -242,9 +320,6 @@ public:
 	DWORD			m_wPoiResist;
 	DWORD			m_wPhyResist;
 	DWORD			m_bMaxResist;
-	
-	float			m_fMaxCoolPoint;
-	float			m_fCurCoolPoint;
 	
 	BYTE			m_byPKCount;
 	BYTE			m_byPKRepeatCount;
@@ -320,7 +395,7 @@ public:
 	void			GetAttackDamage_L(WORD& wAttackDamageMin, WORD& wAttackDamageMax);
 	void			GetAttackDamage_R(WORD& wAttackDamageMin, WORD& wAttackDamageMax);
 	BYTE			GetSkillLevel(BYTE bSkillKind);
-	BOOL			IsSkilling();	// 현재 스킬쏘려는중인가? 마우스 다운은 했는데 업을 안했다는 소리다.
+	BOOL			IsCastingContinousSkill();	// 현재 스킬쏘려는중인가? 마우스 다운은 했는데 업을 안했다는 소리다.
 	void			SendSkill();	// 셋팅한 스킬을 보내라.
 	void			SendCasting();
 	void			SetActionDummy();	// 멍청히 있으면 서있기로 변신.
@@ -330,7 +405,7 @@ public:
 	void			SetSkillChangeLR(BYTE bySkillKind, BYTE byLR);//left = 0, right = 1
 	BOOL			CheckItem(CItem* pItem);
 	BYTE			GetSkillKind(BYTE byLR);
-	float			GetODC();
+	float			GetODC() const;
 	BOOL			IsAlliance(CUser* pUser);
 	BOOL			IsAlliance(CMonster* pMonster);
 	BOOL			IsMatching() const;

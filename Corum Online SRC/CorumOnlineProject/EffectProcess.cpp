@@ -1578,8 +1578,8 @@ void EffectSkillUserStatusCenterFunc( GXOBJECT_HANDLE handle, LPObjectDesc pData
 			int  nDamage = pEffectDesc->dwTemp[SKILL_TEMP_POSONING];
 			if (pUser == g_pMainPlayer)
 			{				
-				if (g_pMainPlayer->m_wHP-nDamage >= 1)
-					CUserInterface::GetInstance()->SetDengeonHp(g_pMainPlayer->m_wHP-nDamage);
+				if (g_pMainPlayer->currentHP() - nDamage >= 1)
+					CUserInterface::GetInstance()->SetDengeonHp(g_pMainPlayer->currentHP() - nDamage);
 				else
 					CUserInterface::GetInstance()->SetDengeonHp(1);				
 			}

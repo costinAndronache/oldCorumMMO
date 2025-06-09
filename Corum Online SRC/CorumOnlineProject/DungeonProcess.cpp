@@ -936,17 +936,22 @@ DWORD __stdcall BeforeRenderGameDungeon()
 	if (g_dwCurTick-g_pMainPlayer->m_dwTemp[USER_TEMP_100MILLI] >= 100) 
 	{
 		// 쿨타임포인터 올리기.
-		g_pMainPlayer->m_fCurCoolPoint = 
-			(float)min(g_pMainPlayer->m_fMaxCoolPoint, g_pMainPlayer->m_fCurCoolPoint+g_pMainPlayer->m_fMaxCoolPoint/g_pMainPlayer->GetODC()/30*0.1);
-
-		if (g_pMainPlayer->IsSkilling())
+		g_pMainPlayer->updateCurrentCoolPoints(
+			min(g_pMainPlayer->maxCoolPoints(), 
+			    g_pMainPlayer->currentCoolPoints() + g_pMainPlayer->coolPointsChargeStep()
+			)
+		);
+		if (g_pMainPlayer->IsCastingContinousSkill())
 		{
 			Effect* pEffect = g_pEffectLayer->GetEffectInfo(g_pMainPlayer->m_bSkillTmp);
 			BYTE bSkillLevel = g_pMainPlayer->GetSkillLevel(pEffect->bID);
 			if (bSkillLevel)
 			{
+				const auto overdriveSurcharge = 0.1 * 0.1 * g_pMainPlayer->maxSP();
 				if (pEffect->bType == TYPE_DRIVE) // 마우스 누르고 있는 만큼만 마나 빼라.
-					pUserInterface->SetDengeonMp((WORD)max(0, g_pMainPlayer->m_wMP - g_pMainPlayer->m_wMaxMP*0.1*0.1 ));
+					pUserInterface->SetDengeonMp(
+						max(0, g_pMainPlayer->currentSP() - overdriveSurcharge)
+					);
 			}
 		}
 
@@ -1002,14 +1007,17 @@ DWORD __stdcall BeforeRenderGameDungeon()
 		if (g_pMainPlayer->m_wClass == CLASS_TYPE_WARRIOR)
 		{
 			// 전사만 쓸수 있다.		
-			if (g_pMainPlayer->IsSkilling())
+			if (g_pMainPlayer->IsCastingContinousSkill())
 			{
 				Effect* pEffect = g_pEffectLayer->GetEffectInfo(g_pMainPlayer->m_bSkillTmp);
 				BYTE bSkillLevel = g_pMainPlayer->GetSkillLevel(pEffect->bID);
 				if (bSkillLevel)
 				{
-					if (pEffect->bID ==__SKILL_AURARECHARGE__) // 마우스 누르고 있는 만큼만 마나 더해라.
-						pUserInterface->SetDengeonMp((WORD)min(g_pMainPlayer->m_wMaxMP, g_pMainPlayer->m_wMP + pEffect->Value[bSkillLevel-1].nMin ));
+					if (pEffect->bID == __SKILL_AURARECHARGE__) {
+						const auto auraRechargeValue = pEffect->Value[bSkillLevel - 1].nMin;
+						pUserInterface->SetDengeonMp(min(g_pMainPlayer->maxSP(),
+							g_pMainPlayer->currentSP() + auraRechargeValue));
+					}
 				}
 			}
 		}
@@ -1030,11 +1038,11 @@ DWORD __stdcall BeforeRenderGameDungeon()
 
 			if(fPerWeight < WEIGTH_80PER_OVER)
 			{
-				pUserInterface->SetDengeonHp(min(g_pMainPlayer->m_wMaxHP, g_pMainPlayer->m_wHP));
+				pUserInterface->SetDengeonHp(min(g_pMainPlayer->maxHP(), g_pMainPlayer->currentHP()));
 				
 				if (g_pMainPlayer->m_wClass != CLASS_TYPE_WARRIOR) {
-					const DWORD maxMP = g_pMainPlayer->m_wMaxMP;
-					const DWORD currentMP = g_pMainPlayer->m_wMP;
+					const DWORD maxMP = g_pMainPlayer->maxSP();
+					const DWORD currentMP = g_pMainPlayer->currentSP();
 
 					pUserInterface->SetDengeonMp(min(maxMP, currentMP));
 
@@ -1108,10 +1116,10 @@ DWORD __stdcall AfterRenderGameDungeon()
 	if( !g_pThisDungeon->IsStadium() || (g_pMainPlayer->m_dwGuildWarFlag != G_W_F_OBSERVER) )
 	{
 		// Hp, Sp //	
-		wsprintf(szInfo, g_Message[ETC_MESSAGE864].szMessage, g_pMainPlayer->m_wHP, g_pMainPlayer->m_wMaxHP);//"Hp:%d/%d"	
+		wsprintf(szInfo, g_Message[ETC_MESSAGE864].szMessage, g_pMainPlayer->currentHP(), g_pMainPlayer->maxHP());//"Hp:%d/%d"	
 		RenderFont(szInfo, 5, 100, 740, 752, 1);
 
-		wsprintf(szInfo, g_Message[ETC_MESSAGE865].szMessage, g_pMainPlayer->m_wMP, g_pMainPlayer->m_wMaxMP);//"Sp:%d/%d"
+		wsprintf(szInfo, g_Message[ETC_MESSAGE865].szMessage, g_pMainPlayer->currentSP(), g_pMainPlayer->maxSP());//"Sp:%d/%d"
 		RenderFont(szInfo, 5, 100, 755, 777, 1);	
 	}
 		

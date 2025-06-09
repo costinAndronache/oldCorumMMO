@@ -1925,7 +1925,7 @@ void CInterface::ItemInfoRender_Default(char szItemInfo[100][255], int* iInfoRow
 	if ( (pItem->m_wItemID >= BAG_ITEM_NUM_FRIST && pItem->m_wItemID <= BAG_ITEM_NUM_LAST) )
 	{
 		wsprintf( szItemInfo[*iInfoRow], g_Message[ETC_MESSAGE347].szMessage,  pItemInfo->BaseItem_Bag.wMin_Lev ); 
-		if (g_pMainPlayer && g_pMainPlayer->m_dwLevel < pItemInfo->BaseItem_Bag.wMin_Lev)	pdwTextColor[*iInfoRow] = TEXT_COLOR_RED;
+		if (g_pMainPlayer && g_pMainPlayer->currentLevel() < pItemInfo->BaseItem_Bag.wMin_Lev)	pdwTextColor[*iInfoRow] = TEXT_COLOR_RED;
 		*iInfoRow += 1;
 		nSize = lstrlen(szItemInfo[*iInfoRow]);
 		if(*nMaxSize < nSize)	*nMaxSize = nSize;

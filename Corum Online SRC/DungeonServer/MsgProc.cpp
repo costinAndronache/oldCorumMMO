@@ -6854,7 +6854,6 @@ void CmdSkillLevelUp( DWORD dwConnectionIndex, char* pMsg, DWORD dwLength )
 				pSendPacket.bSkillInfo		= TRUE;
 				pSendPacket.bySkillIndex	= (BYTE)pPacket->nSkillIndex;
 				
-				pUser->SendAllStatus();	// 모든 상태를 갱신해서 보낸다.					
 			}
 		}				
 	}
@@ -6865,6 +6864,9 @@ void CmdSkillLevelUp( DWORD dwConnectionIndex, char* pMsg, DWORD dwLength )
 	}
 
 	NetSendToUser(dwConnectionIndex, (char*)&pSendPacket, pSendPacket.GetPacketSize(), FLAG_SEND_NOT_ENCRYPTION);
+
+	pUser->SendAllStatus();	// 모든 상태를 갱신해서 보낸다.					
+
 }
 
 

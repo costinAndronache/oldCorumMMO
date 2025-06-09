@@ -2440,28 +2440,29 @@ void CmdJoinDungeon( char* pMsg, DWORD dwLen )
 	g_pMainPlayer->m_nItemSelect	= 0;
 	g_pMainPlayer->m_nInterfaceChk	= 0;
 	g_pMainPlayer->m_dwMoney		= pJoin->dwMoney;
-	g_pMainPlayer->m_wPointSkill	= pJoin->wPointSkill;		
-	g_pMainPlayer->m_wPoint			= pJoin->wPoint;
-	g_pMainPlayer->m_wMaxHP			= pJoin->wMaxHP;	
-	g_pMainPlayer->m_wMaxMP			= pJoin->wMaxMP;		
-	g_pMainPlayer->m_wMP			= pJoin->wMP;
-	g_pMainPlayer->m_wHP			= pJoin->wHP;		
-	g_pMainPlayer->m_dwLevel		= pJoin->dwLevel;
+
+	g_pMainPlayer->updateCurrentSkillPoints(pJoin->wPointSkill);
+	g_pMainPlayer->updateCurrentStatPoints(pJoin->wPoint);
+	g_pMainPlayer->updateMaxHP(pJoin->wMaxHP);
+	g_pMainPlayer->updateMaxSP(pJoin->wMaxMP);
+	g_pMainPlayer->updateCurrentSP(pJoin->wMP);
+	g_pMainPlayer->updateCurrentHP(pJoin->wHP);
+	g_pMainPlayer->updateCurrentLevel(pJoin->dwLevel);
 	g_pMainPlayer->m_wFireResist	= pJoin->wFireResist;
 	g_pMainPlayer->m_wIceResist		= pJoin->wIceResist;
 	g_pMainPlayer->m_wLightResist	= pJoin->wLightResist;
 	g_pMainPlayer->m_wPoiResist		= pJoin->wPoiResist;
 	g_pMainPlayer->m_wPhyResist		= pJoin->wPhyResist;	
-	g_pMainPlayer->m_dwExp			= pJoin->dwExp;
-	g_pMainPlayer->m_dwEgo			= pJoin->dwEgo;
-	g_pMainPlayer->m_dwDex			= pJoin->dwDex;
-	g_pMainPlayer->m_dwInt			= pJoin->dwInt;
-	g_pMainPlayer->m_dwVit			= pJoin->dwVit;
-	g_pMainPlayer->m_dwStr			= pJoin->dwStr;
+	g_pMainPlayer->updateCurrentEXP(pJoin->dwExp);
+	g_pMainPlayer->updateCurrentEGO(pJoin->dwEgo);
+	g_pMainPlayer->updateCurrentDEX(pJoin->dwDex);
+	g_pMainPlayer->updateCurrentINT(pJoin->dwInt);
+	g_pMainPlayer->updateCurrentVIT(pJoin->dwVit);
+	g_pMainPlayer->updateCurrentSTR(pJoin->dwStr);
 	g_pMainPlayer->m_wRace			= pJoin->wRace;	
-	g_pMainPlayer->m_dwHonor		= pJoin->dwHonor;	
+	g_pMainPlayer->updateCurrentHonor(pJoin->dwHonor);
 	g_pMainPlayer->m_wGrade			= pJoin->wGrade;	
-	g_pMainPlayer->m_dwLuck			= pJoin->dwLuck;	
+	g_pMainPlayer->updateCurrentLUCK(pJoin->dwLuck);
 	g_pMainPlayer->m_wAttackAcuracy	= pJoin->wAttackAcuracy;	
 	g_pMainPlayer->m_wAvoid			= pJoin->wAvoid;
 	g_pMainPlayer->m_wBlockRate		= pJoin->wBlockRate;
@@ -2580,8 +2581,9 @@ void CmdJoinDungeon( char* pMsg, DWORD dwLen )
 	pMiniMapWnd->CreateMap();
 			
 	g_pMainPlayer->m_wClassRank		= pJoin->wClassRank;
-	g_pMainPlayer->m_fMaxCoolPoint	= float(g_pMainPlayer->m_dwEgo*(100 + 5 * g_pMainPlayer->m_wClassRank) / 1000.);
-	g_pMainPlayer->m_fCurCoolPoint	= g_pMainPlayer->m_fMaxCoolPoint;
+	g_pMainPlayer->updateMaxCoolPoints(float(g_pMainPlayer->currentEGO() * (100 + 5 * g_pMainPlayer->m_wClassRank) / 1000.));
+
+	g_pMainPlayer->updateCurrentCoolPoints(g_pMainPlayer->maxCoolPoints());
 	pUserInterface->SetCool();	
 	
 	memset(g_pMainPlayer->m_szClassName, 0, sizeof(g_pMainPlayer->m_szClassName));
@@ -2659,7 +2661,7 @@ void CmdJoinDungeon( char* pMsg, DWORD dwLen )
 		else
 		{		
 			// 마을 처음 접속이 아닐때 //
-			if(g_pMainPlayer->m_dwLevel<=3)
+			if(g_pMainPlayer->currentLevel() <= 3)
 			{
 				// 레벨이 3이하일때 //
 				if(g_pMainPlayer->m_byHelp[0]<6)
@@ -2999,9 +3001,7 @@ void CmdLevelUP( char* pMsg, DWORD dwLen )
 
 	if(pUser->m_dwUserIndex==g_pMainPlayer->m_dwUserIndex)
 	{		
-		g_pMainPlayer->m_wPointSkill++;				
-		g_pMainPlayer->m_wPoint			+= pLevelUP->byStatPoint;
-		
+
 		CSkillWnd*		pSkillWnd		= CSkillWnd::GetInstance();
 		CCharWnd*		pCharWnd		= CCharWnd::GetInstance();
 		CUserInterface*	pUserInterface	= CUserInterface::GetInstance();
@@ -3011,7 +3011,7 @@ void CmdLevelUP( char* pMsg, DWORD dwLen )
 			pSkillWnd->SetSkillUpBtn();
 			pSkillWnd->SetSkillButtonPos();
 		}
-		g_pMainPlayer->m_dwLevel	= pLevelUP->dwLevel;
+		
 		pUserInterface->SetDengeonExpDefInc();
 
 		if(pCharWnd->GetActive()==TRUE)
@@ -3019,7 +3019,7 @@ void CmdLevelUP( char* pMsg, DWORD dwLen )
 			
 		char szInfo[0xff] = {0,};
 		// MSG_ID : 78 ;%s 님이 레벨업 했습니다. 현재 레벨은 %d 입니다.
-		wsprintf(szInfo, g_Message[ETC_MESSAGE78].szMessage, g_pMainPlayer->m_szName, g_pMainPlayer->m_dwLevel);		
+		wsprintf(szInfo, g_Message[ETC_MESSAGE78].szMessage, g_pMainPlayer->m_szName, pLevelUP->dwLevel);		
 		DisplayMessageAdd(szInfo, 0xFFFF2CFF);
 	}
 

@@ -319,7 +319,7 @@ void CmdSkillInit( char* pMsg, DWORD dwLen )
 	g_pMainPlayer->SetSkillChangeLR(__SKILL_ATTACK__, 0);
 	g_pMainPlayer->SetSkillChangeLR(__SKILL_NONE_SELECT__, 1);
 		
-	g_pMainPlayer->m_wPointSkill	= pPacket->wPoint;
+	g_pMainPlayer->updateCurrentSkillPoints(pPacket->wPoint);
 
 	CSkillWnd* pSkillWnd = CSkillWnd::GetInstance();
 	
@@ -335,7 +335,7 @@ void CmdStatusInit( char* pMsg, DWORD dwLen )
 {
 	DSTC_STATUS_INIT* pPacket = (DSTC_STATUS_INIT*)pMsg;
 	
-	g_pMainPlayer->m_wPoint	= pPacket->wPoint;
+	g_pMainPlayer->updateCurrentStatPoints(pPacket->wPoint);
 
 	// "초기화에 성공하였습니다."
 	DisplayMessageAdd(g_Message[ETC_MESSAGE157].szMessage, 0xffff0000); 
@@ -530,28 +530,10 @@ void CmdStatusInfo(char* pMsg, DWORD dwLen)
 		{
 		case OBJECT_TYPE_PLAYER:
 			{			
-				switch(pPacket->byStatusType)
-				{
-				case 0:
-					g_pMainPlayer->m_dwEgo += 1;
-					break;
-				case 1:
-					g_pMainPlayer->m_dwStr += 1;	
-					break;
-				case 2:
-					g_pMainPlayer->m_dwInt += 1;	
-					break;
-				case 3:
-					g_pMainPlayer->m_dwDex += 1;	
-					break;
-				case 4:
-					g_pMainPlayer->m_dwVit += 1;
-					break;
-				}
-				g_pMainPlayer->m_wPoint -= 1;
-				
-				if(g_pMainPlayer->m_wPoint==0)
+				if (g_pMainPlayer->currentStatPoints() == 0) {
 					pCharWnd->HideAllStatButton();
+				}
+
 			}break;
 		
 		case OBJECT_TYPE_MONSTER:
@@ -611,9 +593,12 @@ void CmdSkillInfo(char* pMsg, DWORD dwLen)
 	DSTC_SKILL_INFO*	pPacket		= (DSTC_SKILL_INFO*)pMsg;
 	CSkillWnd*			pSkillWnd	= CSkillWnd::GetInstance();
 	
-	if(pPacket->bSkillInfo==TRUE)
-	{		
-		g_pMainPlayer->m_wPointSkill -= 1;		
+	if(pPacket->bSkillInfo == TRUE) {		
+		// all good, that skill level up is succesful
+		// an all status packet should follow		
+	}
+	else {
+		// display an error or something
 	}
 
 	if(g_pMainPlayer->m_byHelp[1]==11)

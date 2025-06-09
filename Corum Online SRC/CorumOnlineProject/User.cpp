@@ -26,6 +26,194 @@
 #include "RivalGuildWar.h"
 #include "../CommonServer/ItemManagerDefine.h"
 
+
+void listenersUpdate(const std::vector<CMainUserUpdateInterestedWeakRef>& listeners, 
+					std::function<void(CMainUserUpdateInterestedSharedRef)> f) {
+	std::for_each(listeners.begin(), listeners.end(), [&f](CMainUserUpdateInterestedWeakRef ref) {
+		auto listener = ref.lock();
+		if (listener) {
+			f(listener);
+		}
+	});
+}
+
+float			CMainUser::percentageHP() const {
+	return (float)currentHP() / (maxHP() ? maxHP() : 0.01);
+}
+
+float			CMainUser::percentageMP() const {
+	return (float)currentSP() / (maxSP() ? maxSP() : 0.01);
+}
+
+float			CMainUser::percentageCoolPoints() const {
+	return currentCoolPoints() / (maxCoolPoints() ? maxCoolPoints() : 0.01);
+}
+
+float			CMainUser::coolPointsChargeStep() const {
+	return (float)maxCoolPoints() / GetODC() / 30 * 0.1;
+}
+
+float			CMainUser::currentCoolPoints() const {
+	return m_fCurCoolPoint;
+}
+
+void			CMainUser::updateCurrentCoolPoints(float points) {
+	m_fCurCoolPoint = points;
+}
+
+float			CMainUser::maxCoolPoints() const {
+	return m_fMaxCoolPoint;
+}
+
+void			CMainUser::updateMaxCoolPoints(float points) {
+	m_fMaxCoolPoint += points;
+}
+
+//
+void			CMainUser::addUpdateListener(CMainUserUpdateInterestedWeakRef ref) {
+	updateListeners.push_back(ref);
+}
+
+DWORD			CMainUser::currentHP() const {
+	return m_dwHP;
+}
+
+void			CMainUser::updateCurrentHP(DWORD hp) {
+	m_dwHP = hp;
+	listenersUpdate(updateListeners, [hp](CMainUserUpdateInterestedSharedRef listener) {
+		listener->updatedCurrentHP(hp);
+	});
+}
+
+DWORD			CMainUser::currentSP() const {
+	return m_dwMP;
+}
+
+void			CMainUser::updateCurrentSP(DWORD sp) {
+	m_dwMP = sp;
+	listenersUpdate(updateListeners, [sp](CMainUserUpdateInterestedSharedRef listener) {
+		listener->updatedCurrentSP(sp);
+	});
+}
+
+DWORD			CMainUser::maxHP() const {
+	return m_dwMaxHP;
+}
+
+void			CMainUser::updateMaxHP(DWORD maxHP) {
+	m_dwMaxHP = maxHP;
+	listenersUpdate(updateListeners, [maxHP](CMainUserUpdateInterestedSharedRef listener) {
+		listener->updatedMAXHP(maxHP);
+	});
+}
+
+DWORD			CMainUser::maxSP() const {
+	return m_dwMaxMP;
+}
+
+void			CMainUser::updateMaxSP(DWORD maxSP) {
+	m_dwMaxMP = maxSP;
+	listenersUpdate(updateListeners, [maxSP](CMainUserUpdateInterestedSharedRef listener) {
+		listener->updatedMAXSP(maxSP);
+	});
+}
+
+DWORD			CMainUser::currentStatPoints() const {
+	return m_dwPoint;
+}
+
+void			CMainUser::updateCurrentStatPoints(DWORD points) {
+	m_dwPoint = points;
+}
+
+
+DWORD			CMainUser::currentSkillPoints() const {
+	return m_dwPointSkill;
+}
+
+void			CMainUser::updateCurrentSkillPoints(DWORD skillPoints) {
+	m_dwPointSkill = skillPoints;
+}
+
+DWORD			CMainUser::currentEXP() const {
+	return m_dwExp;
+}
+
+void			CMainUser::updateCurrentEXP(DWORD exp) {
+	m_dwExp = exp;
+	listenersUpdate(updateListeners, [exp](CMainUserUpdateInterestedSharedRef listener) {
+		listener->updatedEXP(exp);
+	});
+}
+
+DWORD			CMainUser::currentLevel() const {
+	return m_dwLevel;
+}
+
+void			CMainUser::updateCurrentLevel(DWORD level) {
+	m_dwLevel = level;
+}
+
+DWORD			CMainUser::currentHonor() const {
+	return m_dwHonor;
+}
+
+void			CMainUser::updateCurrentHonor(DWORD honor) {
+	m_dwHonor = honor;
+}
+
+
+DWORD			CMainUser::currentEGO() const {
+	return m_dwEgo;
+}
+
+void			CMainUser::updateCurrentEGO(DWORD ego) {
+	m_dwEgo = ego;
+}
+
+DWORD			CMainUser::currentSTR() const {
+	return m_dwStr;
+}
+
+void			CMainUser::updateCurrentSTR(DWORD str) {
+	m_dwStr = str;
+}
+
+DWORD			CMainUser::currentINT() const {
+	return m_dwInt;
+}
+
+void			CMainUser::updateCurrentINT(DWORD intP) {
+	m_dwInt = intP;
+}
+
+DWORD			CMainUser::currentDEX() const {
+	return m_dwDex;
+}
+
+void			CMainUser::updateCurrentDEX(DWORD dex) {
+	m_dwDex = dex;
+}
+
+DWORD			CMainUser::currentVIT() const {
+	return m_dwVit;
+}
+
+void			CMainUser::updateCurrentVIT(DWORD vit) {
+	m_dwVit = vit;
+}
+
+DWORD			CMainUser::currentLUCK() const {
+	return m_dwLuck;
+}
+
+void			CMainUser::updateCurrentLUCK(DWORD luck) {
+	m_dwLuck = luck;
+}
+
+//
+
+
 CMainUser::CMainUser()
 {
 	memset(this, 0, sizeof(CMainUser));
@@ -821,7 +1009,7 @@ void CUser::SetActionCasting(BYTE bSkillKind, VECTOR3 &vecTarget, BOOL bDirectio
 	if (m_pEffectMagicArray == NULL)
 		m_pEffectMagicArray = g_pEffectLayer->CreateMagicArray(bSkillKind, &m_v3CurPos, g_pMainPlayer == this);	
 	
-//	m_hCastingSoundHandle = _PlaySound(bSkillKind, SOUND_EFFECT_CASTING1,1);
+	_PlaySound(bSkillKind, SOUND_EFFECT_CASTING1,1, m_v3CurPos, false);
 }
 
 void CUser::SetActionSkill(BYTE bSkillKind)
@@ -1445,7 +1633,7 @@ BYTE CMainUser::GetSkillKind(BYTE byLR)
 	return m_bySkill[byLR];
 }
 
-float CMainUser::GetODC()
+float CMainUser::GetODC() const
 {
 	return (float)max((m_dwEgo*2 / m_dwLevel) * (100 + 5 * m_wClassRank) / 100., 0.5);
 }
@@ -1463,19 +1651,20 @@ void CMainUser::SendCasting()
 	g_pNet->SendMsg( (char*)&packet, packet.GetPacketSize(), SERVER_INDEX_ZONE );
 
 	m_dwCastingTick = 0;	
-	SetStatus(UNIT_STATUS_CASTING);	// 캐스팅은 끝났으나 아직 스킬 메시지가 날라오질 않았따.	
+	SetStatus(UNIT_STATUS_CASTING);	// 캐스팅은 끝났으나 아직 스킬 메시지가 날라오질 않았따.
+	updateCurrentCoolPoints(0.1 * maxCoolPoints());
 }
 
 void CMainUser::SendSkill()
 {
-	if (IsSkilling())
+	if (IsCastingContinousSkill())
 	{
 		g_pNet->SendMsg( (char*)m_pSkillPacket, m_pSkillPacket->GetPacketSize(), SERVER_INDEX_ZONE );
 		m_pSkillPacket->bStatus = 0;
 	}
 }
 
-BOOL CMainUser::IsSkilling()
+BOOL CMainUser::IsCastingContinousSkill()
 {
 	if (m_pSkillPacket == NULL) { return FALSE; }
 	Effect* pEffect = g_pEffectLayer->GetEffectInfo(m_bSkillTmp);
@@ -1538,8 +1727,8 @@ void CMainUser::GetAttackDamage_L(WORD& wAttackDamageMin, WORD& wAttackDamageMax
 		{
 			if (GetSkillKind(SELECT_ATTACK_TYPE_LBUTTON) == __SKILL_ATTACK__)
 			{
-				wAttackDamageMin = WORD(m_pwAttackDamage_L[0] + m_wMP/30);
-				wAttackDamageMax = WORD(m_pwAttackDamage_L[1] + m_wMP/30);
+				wAttackDamageMin = WORD(m_pwAttackDamage_L[0] + m_dwMP/30);
+				wAttackDamageMax = WORD(m_pwAttackDamage_L[1] + m_dwMP/30);
 			}
 			else
 			{
@@ -1570,8 +1759,8 @@ void CMainUser::GetAttackDamage_R(WORD& wAttackDamageMin, WORD& wAttackDamageMax
 		{
 			if (GetSkillKind(SELECT_ATTACK_TYPE_RBUTTON) == __SKILL_ATTACK__)
 			{
-				wAttackDamageMin = WORD(m_pwAttackDamage_R[0] + m_wMP/30);
-				wAttackDamageMax = WORD(m_pwAttackDamage_R[1] + m_wMP/30);
+				wAttackDamageMin = WORD(m_pwAttackDamage_R[0] + m_dwMP/30);
+				wAttackDamageMax = WORD(m_pwAttackDamage_R[1] + m_dwMP/30);
 			}
 			else
 			{
@@ -1597,7 +1786,7 @@ short CMainUser::GetPhyResist()
 	if (m_wClass == CLASS_TYPE_HUNTER)
 	{
 		// 레인저는 mp 양에 따라 데미지가 변한다.
-		return short(min(m_wPhyResist + max(int(m_wMP/20 - (73+22*m_dwLevel)/35), 0), 75));
+		return short(min(m_wPhyResist + max(int(m_dwMP/20 - (73+22*m_dwLevel)/35), 0), 75));
 	}
 	else
 	{
