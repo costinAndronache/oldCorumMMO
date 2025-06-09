@@ -34,9 +34,6 @@
     <Filter Include="EventDungeon">
       <UniqueIdentifier>{42ee1022-aa72-4a31-932a-51655bdb0c78}</UniqueIdentifier>
     </Filter>
-    <Filter Include="CommonServer">
-      <UniqueIdentifier>{0fdebf92-a732-41b7-95fe-8252413c1b71}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Unit">
       <UniqueIdentifier>{d999d540-0a3a-43c6-8dcb-7f64b5673324}</UniqueIdentifier>
     </Filter>
@@ -227,9 +224,6 @@
     <Library Include="IndexCreator.lib">
       <Filter>Source Files</Filter>
     </Library>
-    <Library Include="CommonServer.lib">
-      <Filter>CommonServer</Filter>
-    </Library>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AcceptTable.h">
@@ -416,9 +410,6 @@
   <ItemGroup>
     <None Include="cursor1.cur">
       <Filter>Resource Files</Filter>
-    </None>
-    <None Include="CommonServer.dll">
-      <Filter>CommonServer</Filter>
     </None>
     <None Include="DungeonConfig.ini" />
     <None Include="DungeonServer.dsp" />

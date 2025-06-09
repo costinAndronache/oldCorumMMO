@@ -267,7 +267,7 @@
       <LanguageStandard>stdcpp14</LanguageStandard>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>CommonServer.lib;odbc32.lib;odbccp32.lib;WS2_32.lib;SS3DGFunc.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>odbc32.lib;odbccp32.lib;WS2_32.lib;SS3DGFunc.lib;BaseLibrary.lib;CommonServer.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>.\Debug\DungeonServerResult.exe</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -294,6 +294,10 @@
     <PostBuildEvent>
       <Command>..\..\scripts\postBuildCentraliseOutput_DungeonServer.bat</Command>
     </PostBuildEvent>
+    <PreBuildEvent>
+      <Command>
+      </Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Dev|Win32'">
     <ClCompile>
@@ -1294,7 +1298,6 @@
   </ItemGroup>
   <ItemGroup>
     <Library Include="IndexCreator.lib" />
-    <Library Include="CommonServer.lib" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AcceptTable.h" />
@@ -1360,16 +1363,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="cursor1.cur" />
-    <None Include="CommonServer.dll" />
     <None Include="DungeonConfig.ini" />
     <None Include="DungeonServer.dsp" />
     <None Include="ReadMe.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\BaseLibrary\BaseLibrary.vcxproj">
-      <Project>{f8a9e857-2c61-41e5-bf83-158caaf1d702}</Project>
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
