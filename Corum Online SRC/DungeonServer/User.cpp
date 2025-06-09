@@ -602,6 +602,7 @@ void CUser::Recover5SecPer()
 					SetSP(WORD(GetSP()+m_dwHealMPSec));
 				}
 			}
+			SendAllStatus();
 		}
 	}
 }

@@ -1029,13 +1029,14 @@ void CmdUserStatus( char* pMsg, DWORD dwLen )
 			//_PlaySound(0, SOUND_TYPE_SYSTEM, SOUND_SYSTEM_HPRECOVER, g_pMainPlayer->m_v3CurPos, FALSE);
 			// comment by minjin. 2004. 10. 29.
 			// 소리는, 포션 썼을때 내자.
-			pUserInterface->SetDengeonHp(DWORD(pUserStatus->pStatus[i].dwMin));
+			pUserInterface->SetDengeonHp((pUserStatus->pStatus[i].dwMin));
 			break;		
 		case USER_MP:
 			//_PlaySound(0, SOUND_TYPE_SYSTEM, SOUND_SYSTEM_HPRECOVER, g_pMainPlayer->m_v3CurPos, FALSE);
 			// comment by minjin. 2004. 10. 29.
 			// 소리는, 포션 썼을때 내자.
-			pUserInterface->SetDengeonMp(WORD(pUserStatus->pStatus[i].dwMin));
+
+			pUserInterface->SetDengeonMp((pUserStatus->pStatus[i].dwMin));
 			break;
 		case USER_HEALHPSPEED:
 			g_pMainPlayer->m_dwHealHPSec = pUserStatus->pStatus[i].dwMin;

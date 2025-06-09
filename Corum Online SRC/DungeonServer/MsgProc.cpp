@@ -5987,7 +5987,7 @@ void CmdItemUsed( DWORD dwConnectionIndex, char* pMsg, DWORD dwLength )
 			fPer = FLOAT(g_pBaseClassInfo[ pUser->GetClass() ].wPotion_Recovery 
 				+ g_pBaseRaceInfo[ pUser->GetClass() ].wPotion_Recovery);
 
-			if( pBaseItem->BaseItem_Supplies.bType == 1 )		
+			if( pBaseItem->BaseItem_Supplies.bType == ITEM_SUPPLY_TYPE_PERCENT_HP_POTION )		
 			{
 				// HP
 				dwRand	= ( rand()%(pBaseItem->BaseItem_Supplies.wMax - pBaseItem->BaseItem_Supplies.wMin+1) )
@@ -6000,7 +6000,7 @@ void CmdItemUsed( DWORD dwConnectionIndex, char* pMsg, DWORD dwLength )
 				UserStatus.pStatus[0].dwCode	= USER_HP;
 				UserStatus.pStatus[0].dwMin		= pUser->GetHP();
 			}
-			else if( pBaseItem->BaseItem_Supplies.bType == 2 )	
+			else if( pBaseItem->BaseItem_Supplies.bType == ITEM_SUPPLY_TYPE_PERCENT_SP_POTION )	
 			{
 				// MP
 				dwRand = ( rand()%(pBaseItem->BaseItem_Supplies.wMax - pBaseItem->BaseItem_Supplies.wMin+1) ) 
@@ -6012,7 +6012,7 @@ void CmdItemUsed( DWORD dwConnectionIndex, char* pMsg, DWORD dwLength )
 				UserStatus.pStatus[0].dwCode	= USER_MP;
 				UserStatus.pStatus[0].dwMin		= pUser->GetSP();
 			}
-			else if( pBaseItem->BaseItem_Supplies.bType == 3 ) 
+			else if( pBaseItem->BaseItem_Supplies.bType == ITEM_SUPPLY_TYPE_FIXED_HP_POTION ) 
 			{
 				// HP POINT
 				dwRand = ( rand()%(pBaseItem->BaseItem_Supplies.wMax - pBaseItem->BaseItem_Supplies.wMin+1) )
@@ -6028,7 +6028,7 @@ void CmdItemUsed( DWORD dwConnectionIndex, char* pMsg, DWORD dwLength )
 				UserStatus.pStatus[0].dwCode	= USER_HP;
 				UserStatus.pStatus[0].dwMin		= pUser->GetHP();
 			}
-			else if( pBaseItem->BaseItem_Supplies.bType == 4 ) 
+			else if( pBaseItem->BaseItem_Supplies.bType == ITEM_SUPPLY_TYPE_FIXED_SP_POTION ) 
 			{
 				// sp, hp POINT
 				dwRand = ( rand()%(pBaseItem->BaseItem_Supplies.wMax - pBaseItem->BaseItem_Supplies.wMin+1) )

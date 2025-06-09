@@ -1030,15 +1030,13 @@ DWORD __stdcall BeforeRenderGameDungeon()
 
 			if(fPerWeight < WEIGTH_80PER_OVER)
 			{
-				pUserInterface->SetDengeonHp(min(g_pMainPlayer->m_wMaxHP, g_pMainPlayer->m_wHP+g_pMainPlayer->m_dwHealHPSec));
+				pUserInterface->SetDengeonHp(min(g_pMainPlayer->m_wMaxHP, g_pMainPlayer->m_wHP));
 				
 				if (g_pMainPlayer->m_wClass != CLASS_TYPE_WARRIOR) {
 					const DWORD maxMP = g_pMainPlayer->m_wMaxMP;
 					const DWORD currentMP = g_pMainPlayer->m_wMP;
-					const DWORD mpRegen = g_pMainPlayer->m_dwHealMPSec;
 
-					sprintf(globalDebugLine, "SetDengeonMP:: max: %d, current: %d, mpRegen: %d", maxMP, currentMP, mpRegen);
-					pUserInterface->SetDengeonMp(min(maxMP, currentMP + mpRegen));
+					pUserInterface->SetDengeonMp(min(maxMP, currentMP));
 
 				}// 전사는 오라리차지로 올려야 한다. ㅡ.ㅡ
 			}	

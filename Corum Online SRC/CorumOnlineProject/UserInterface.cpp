@@ -1876,7 +1876,7 @@ void CUserInterface::DengeonManaDec()
 {
 	if(m_bManaDec)
 	{	
-		const float currentMana = g_pMainPlayer->m_wMP / 2;
+		const float currentMana = g_pMainPlayer->m_wMP;
 		const float maxMana = g_pMainPlayer->m_wMaxMP;
 		float fSize = (currentMana > maxMana) ?
 			1.0f : currentMana / maxMana;
@@ -1908,7 +1908,7 @@ void CUserInterface::DengeonManaInc()
 {
 	if(m_bManaInc)
 	{	
-		const float currentMana = g_pMainPlayer->m_wMP / 2;
+		const float currentMana = g_pMainPlayer->m_wMP;
 		const float maxMana = g_pMainPlayer->m_wMaxMP;
 		float fSize = (currentMana > maxMana) ?
 			1.0f : currentMana/maxMana;
@@ -1979,39 +1979,26 @@ void CUserInterface::DengeonExpDefInc()
 
 void CUserInterface::SetDengeonHp(DWORD wHp)
 {
+	const auto max = g_pMainPlayer->m_wMaxHP;
+
 	if(g_pMainPlayer->m_wHP>wHp)
 		SetDengeonHpDec();
 	else
 		SetDengeonHpInc();
 
-	if(wHp>g_pMainPlayer->m_wMaxHP)	
-		g_pMainPlayer->m_wHP = g_pMainPlayer->m_wMaxHP;
-	else if(wHp<0)
-		g_pMainPlayer->m_wHP = 0;
-	else
-		g_pMainPlayer->m_wHP = wHp;
+	g_pMainPlayer->m_wHP = min(wHp, max);
 }
 
 void CUserInterface::SetDengeonMp(DWORD wMp)
 {
+	const auto max = g_pMainPlayer->m_wMaxMP;
+
 	if(g_pMainPlayer->m_wMP>wMp)
 		SetDengeonManaDec();
 	else
 		SetDengeonManaInc();
 
-	const int inputMp = wMp;
-	const int testMp = g_pMainPlayer->m_wMaxMP;
-
-	sprintf(globalDebugLine, "SetDengeonMP:: input: %d, max: %d", inputMp, testMp);
-	if (inputMp <= testMp) {
-		g_pMainPlayer->m_wMP = g_pMainPlayer->m_wMaxMP;
-	}
-	else if (wMp < 0) {
-		g_pMainPlayer->m_wMP = 0;
-	}
-	else {
-		g_pMainPlayer->m_wMP = wMp;
-	}
+	g_pMainPlayer->m_wMP = min(max, wMp);
 }
 
 void CUserInterface::SetDengeonExpDefInc()
