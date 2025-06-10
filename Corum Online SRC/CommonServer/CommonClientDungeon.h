@@ -3,6 +3,7 @@
 #include <windows.h>
 #include <windowsx.h>
 
+#include "CommonAllServers.h"
 #include "CommonServerExports.h"
 
 struct CPTable_Value
@@ -87,6 +88,8 @@ enum USER_PROPERTY_CODE {
 	USER_MAXMP_PERCENT = 51,
 	USER_ATTACK_L_PERCENT = 52,
 	USER_DETECTION = 53,
+	USER_AVAILABLE_STATUS_POINTS = 54,
+	USER_AVAILABLE_SKILL_POINTS = 55,
 	USER_MAX_STATUS
 };
 
@@ -406,5 +409,10 @@ enum ITEM_SUPPLY_TYPE {
 	ITEM_SUPPLY_TYPE_PERCENT_SP_POTION = 2,
 	ITEM_SUPPLY_TYPE_FIXED_HP_POTION = 3,
 	ITEM_SUPPLY_TYPE_FIXED_SP_POTION = 4
-
 };
+
+
+/// DO NOT CHANGE THE CONTENTS of (expPerLevel) between different calls
+//  internal caches are created based on their values
+DWORD DECLSPECIFIER cumulatedExperienceAtLevel(DWORD level, const DWORD (&expPerLevel)[MAX_LEVEL + 1]);
+DWORD DECLSPECIFIER levelForCumulatedExperience(DWORD exp, const DWORD (&expPerLevel)[MAX_LEVEL + 1]);

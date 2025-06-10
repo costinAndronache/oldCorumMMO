@@ -408,7 +408,7 @@ EffectDesc* EffectLayer::CreateGXObject(char *szFile, BOOL bOwn, WORD wChrNum)
 	return pEffectDesc;
 }
 
-BOOL EffectLayer::IsEffectUse(BYTE bSkillKind, VECTOR3* vecTarget, DWORD dwStartSkillTick)
+BOOL EffectLayer::IsEffectUse(BYTE bSkillKind, VECTOR3* vecTarget)
 {
 	if (g_pThisDungeon->GetDungeonType() == DUNGEON_TYPE_VILLAGE 
 		&& !g_pMainPlayer->m_bCurLayer )
@@ -451,21 +451,16 @@ BOOL EffectLayer::IsEffectUse(BYTE bSkillKind, VECTOR3* vecTarget, DWORD dwStart
 		_PlaySound(0, SOUND_TYPE_SYSTEM, SOUND_SYSTEM_ERRORMSG, g_v3InterfaceSoundPos, FALSE);
 		return FALSE;
 	}
-		
-	if (g_dwCurTick - dwStartSkillTick < pEffect->dwCoolTime  || TRUE)
-	{
-		int nCool = int(g_pMainPlayer->currentCoolPoints()*1000 - 
-			pEffect->dwCoolTime);
+
 	
-		if(nCool<0)
-		{
-			DisplayMessageAdd(g_Message[ETC_MESSAGE149].szMessage, 0xFFFFC309);	// MSG_ID : 149 ; 쿨게이지가 부족합니다.
-			_PlaySound(0, SOUND_TYPE_SYSTEM, SOUND_SYSTEM_ERRORMSG, g_v3InterfaceSoundPos, FALSE);
-			return FALSE;
-		}
-		
+	const auto cost = g_pMainPlayer->costForSkillCast(bSkillKind);
+	const float diff = g_pMainPlayer->currentCoolPoints() - cost;
+	if (diff < 0) {
+		DisplayMessageAdd(g_Message[ETC_MESSAGE149].szMessage, 0xFFFFC309);	// MSG_ID : 149 ; 쿨게이지가 부족합니다.
+		_PlaySound(0, SOUND_TYPE_SYSTEM, SOUND_SYSTEM_ERRORMSG, g_v3InterfaceSoundPos, FALSE);
+		return FALSE;
 	}
-	
+
 	return TRUE;
 }
 

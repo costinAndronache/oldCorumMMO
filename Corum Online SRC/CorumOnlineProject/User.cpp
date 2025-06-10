@@ -37,6 +37,18 @@ void listenersUpdate(const std::vector<CMainUserUpdateInterestedWeakRef>& listen
 	});
 }
 
+float			CMainUser::costForSkillCast(BYTE skill) {
+	const auto lastCastTime = m_dwStartSkillTick[skill];
+	auto pEffect = g_pEffectLayer->GetEffectInfo(skill);
+
+	float cost = ((float)pEffect->dwCastingTimeMilliseconds / 1000);
+	if (g_dwCurTick - lastCastTime < pEffect->dwCoolTimeMilliseconds) {
+		cost += (float)(g_dwCurTick - lastCastTime) / 1000;
+	}
+
+	return cost;
+}
+
 float			CMainUser::percentageHP() const {
 	return (float)currentHP() / (maxHP() ? maxHP() : 0.01);
 }
@@ -49,8 +61,8 @@ float			CMainUser::percentageCoolPoints() const {
 	return currentCoolPoints() / (maxCoolPoints() ? maxCoolPoints() : 0.01);
 }
 
-float			CMainUser::coolPointsChargeStep() const {
-	return (float)maxCoolPoints() / GetODC() / 30 * 0.1;
+float			CMainUser::coolPointsChargeStepPer100Milliseconds() const {
+	return (float)maxCoolPoints() * 0.05;
 }
 
 float			CMainUser::currentCoolPoints() const {
@@ -1588,7 +1600,7 @@ void CMainUser::SetPacketSkillMonster(CMonster* pTargetMonster, BYTE bSkillKindL
 	SendCasting();	
 }
 
-void CMainUser::SetPacketSkillTile(WORD wTileIndexX, WORD wTileIndexZ,  BYTE bSkillKindLR)
+void CMainUser::SetPacketSkillTile(WORD wTileIndexX, WORD wTileIndexZ,  BYTE bSkillKindLR, BYTE skillKind)
 {
 	m_pSkillPacket->bStatus = UPDATE_GAME_PLAY;
 	m_pSkillPacket->bHeader = Protocol_CTS::CMD_SKILL;
@@ -1603,7 +1615,9 @@ void CMainUser::SetPacketSkillTile(WORD wTileIndexX, WORD wTileIndexZ,  BYTE bSk
 
 	m_bSkillTmp = GetSkillKind(bSkillKindLR);
 
-	SendCasting();	
+	SendCasting();
+	const auto cost = costForSkillCast(skillKind);
+	updateCurrentCoolPoints(currentCoolPoints() - cost);
 }
 
 void CMainUser::SetSkillChangeLR(BYTE bySkillKind, BYTE byLR)
@@ -1652,7 +1666,6 @@ void CMainUser::SendCasting()
 
 	m_dwCastingTick = 0;	
 	SetStatus(UNIT_STATUS_CASTING);	// 캐스팅은 끝났으나 아직 스킬 메시지가 날라오질 않았따.
-	updateCurrentCoolPoints(0.1 * maxCoolPoints());
 }
 
 void CMainUser::SendSkill()

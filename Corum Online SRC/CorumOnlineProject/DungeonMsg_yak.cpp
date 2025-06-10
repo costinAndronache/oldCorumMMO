@@ -920,6 +920,14 @@ void CmdUserStatus( char* pMsg, DWORD dwLen )
 	{
 		switch( pUserStatus->pStatus[i].dwCode )
 		{
+		case USER_AVAILABLE_STATUS_POINTS:
+			g_pMainPlayer->updateCurrentStatPoints(pUserStatus->pStatus[i].dwMin);
+			break;
+
+		case USER_AVAILABLE_SKILL_POINTS:
+			g_pMainPlayer->updateCurrentSkillPoints(pUserStatus->pStatus[i].dwMin);
+			break;
+
 		case USER_MAXHP:
 			g_pMainPlayer->updateMaxHP(pUserStatus->pStatus[i].dwMin);
 			break;
@@ -1020,7 +1028,9 @@ void CmdUserStatus( char* pMsg, DWORD dwLen )
 
 				DisplayMessageAdd(szInfo, 0xFFFF2CFF, pGameMenuWnd->m_bSystemMsgFlag);
 
-				g_pMainPlayer->updateCurrentEXP(pUserStatus->pStatus[i].dwMin);
+				const auto value = pUserStatus->pStatus[i].dwMin;
+				printf("\nUSER_STATUS EXP: ( %d )", value);
+				g_pMainPlayer->updateCurrentEXP(value);
 
 				pUserInterface->SetDengeonExpDefInc();			
 			}

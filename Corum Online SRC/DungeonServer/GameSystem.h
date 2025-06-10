@@ -364,6 +364,8 @@ void	MatchWinCount(CUser * pUser);
 void	MatchLoseCount(CUser * pUser);
 void	SetBadAction(CUnit* pOffense, CUnit* pDefense);
 DWORD	GetExpTableOfLevel(GAME_OBJECT_TYPE eObjectType, DWORD dwLevel);
+DWORD	GetCumulatedExpByLevel(GAME_OBJECT_TYPE eObjectType, DWORD dwLevel);
+DWORD	GetLevelForCumulatedExp(GAME_OBJECT_TYPE eObjectType, DWORD cumulatedExp);
 BYTE	GetStatPointByLevel(GAME_OBJECT_TYPE eObjectType, DWORD dwLevel);
 BOOL	IsValidUnit(const CUnit* pUnit);
 void	SendPortalFailMessage(CUser* pUser, WORD wToDungeonID, BYTE bErrorCode, WORD wPortalItemID);

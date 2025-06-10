@@ -3026,6 +3026,7 @@ void CmdLevelUP( char* pMsg, DWORD dwLen )
 	// Ã³À½ ·¹º©¾÷ 	
 	if(pUser->m_dwUserIndex==g_pMainPlayer->m_dwUserIndex)
 	{
+		g_pMainPlayer->updateCurrentLevel(pLevelUP->dwLevel);
 		if(g_pThisDungeon->IsVillage()==FALSE)
 		{		
 			if(pLevelUP->dwLevel==2)

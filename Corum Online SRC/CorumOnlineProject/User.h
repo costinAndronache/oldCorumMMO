@@ -221,11 +221,13 @@ private:
 public:
 	void			addUpdateListener(CMainUserUpdateInterestedWeakRef);
 
+	float			costForSkillCast(BYTE skill);
+
 	float			percentageHP() const;
 	float			percentageMP() const; 
 	float			percentageCoolPoints() const;
 
-	float			coolPointsChargeStep() const;
+	float			coolPointsChargeStepPer100Milliseconds() const;
 	float			currentCoolPoints() const;
 	void			updateCurrentCoolPoints(float);
 
@@ -401,7 +403,7 @@ public:
 	void			SetActionDummy();	// 멍청히 있으면 서있기로 변신.
 	void			SetPacketSkillMonster(CMonster* pTargetMonster, BYTE bSkillKindLR);//몬스터에게 보낼 스킬을 셋팅할.
 	void			SetPacketSkillUser(CUser* pTargetUser,  BYTE bSkillKindLR);//플레이어에게 보낼 스킬을 셋팅하라.
-	void			SetPacketSkillTile(WORD wTileIndexX, WORD wTileIndexZ,  BYTE bSkillKindLR);//타일에게 보낼 스킬을 셋팅하라.
+	void			SetPacketSkillTile(WORD wTileIndexX, WORD wTileIndexZ,  BYTE bSkillKindLR, BYTE skillKind);//타일에게 보낼 스킬을 셋팅하라.
 	void			SetSkillChangeLR(BYTE bySkillKind, BYTE byLR);//left = 0, right = 1
 	BOOL			CheckItem(CItem* pItem);
 	BYTE			GetSkillKind(BYTE byLR);

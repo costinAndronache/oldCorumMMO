@@ -402,6 +402,30 @@ DWORD GetExpTableOfLevel(GAME_OBJECT_TYPE eObjectType, DWORD dwLevel)
 	return 0;
 }
 
+DWORD	GetCumulatedExpByLevel(GAME_OBJECT_TYPE eObjectType, DWORD dwLevel) {
+	switch (eObjectType)
+	{
+	case OBJECT_TYPE_PLAYER:
+		return cumulatedExperienceAtLevel(dwLevel, g_sLevelExp);
+	case OBJECT_TYPE_MONSTER:
+		return cumulatedExperienceAtLevel(dwLevel, g_sGuardianLevelExp);
+	}
+
+	return 0;
+}
+
+DWORD	GetLevelForCumulatedExp(GAME_OBJECT_TYPE eObjectType, DWORD cumulatedExp) {
+	switch (eObjectType)
+	{
+	case OBJECT_TYPE_PLAYER:
+		return levelForCumulatedExperience(cumulatedExp, g_sLevelExp);
+	case OBJECT_TYPE_MONSTER:
+		return levelForCumulatedExperience(cumulatedExp, g_sGuardianLevelExp);
+	}
+
+	return 0;
+}
+
 
 DWORD GetGuardianItemLevel(DWORD dwExp)
 {	

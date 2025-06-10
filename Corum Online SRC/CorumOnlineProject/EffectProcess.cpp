@@ -2914,8 +2914,7 @@ BOOL SkillEvent(BYTE bLR)
 				if (pEffect->dwRange == 0)
 				{// 자기 자신으로 부터 나가야 해.
 					if ( g_pEffectLayer->IsEffectUse(bSkillKind
-							, &g_pMainPlayer->m_v3CurPos 
-							, g_pMainPlayer->m_dwStartSkillTick[bSkillKind]) )
+							, &g_pMainPlayer->m_v3CurPos))
 					{
 						vecStart = pUser->m_v3CurPos;
 						goto lbl_skill_to_tile;
@@ -2963,8 +2962,7 @@ BOOL SkillEvent(BYTE bLR)
 						else
 						{
 							if (g_pEffectLayer->IsEffectUse(bSkillKind, 
-								&pUser->m_v3CurPos, 
-								g_pMainPlayer->m_dwStartSkillTick[bSkillKind]))
+								&pUser->m_v3CurPos))
 							{
 								g_pMainPlayer->SetPacketSkillUser(pUser, bLR);
 								bSkill = TRUE;
@@ -2982,7 +2980,7 @@ BOOL SkillEvent(BYTE bLR)
 
 				if (pEffect->dwRange == 0)
 				{// 자기 자신으로 부터 나가야 해.
-					if (g_pEffectLayer->IsEffectUse(bSkillKind, &g_pMainPlayer->m_v3CurPos, g_pMainPlayer->m_dwStartSkillTick[bSkillKind]))
+					if (g_pEffectLayer->IsEffectUse(bSkillKind, &g_pMainPlayer->m_v3CurPos))
 					{
 						vecStart = pMonster->m_v3CurPos;
 						goto lbl_skill_to_tile;
@@ -3003,7 +3001,7 @@ BOOL SkillEvent(BYTE bLR)
 						}
 						else 
 						{
-							if (g_pEffectLayer->IsEffectUse(bSkillKind, &pMonster->m_v3CurPos, g_pMainPlayer->m_dwStartSkillTick[bSkillKind]))
+							if (g_pEffectLayer->IsEffectUse(bSkillKind, &pMonster->m_v3CurPos))
 							{
 								g_pMainPlayer->SetPacketSkillMonster(pMonster, bLR);
 								bSkill = TRUE;
@@ -3017,7 +3015,7 @@ BOOL SkillEvent(BYTE bLR)
 		{
 			if (pEffect->dwRange == 0)
 			{// 자기 자신으로 부터 나가야 해.
-				if (g_pEffectLayer->IsEffectUse(bSkillKind, &g_pMainPlayer->m_v3CurPos, g_pMainPlayer->m_dwStartSkillTick[bSkillKind]))
+				if (g_pEffectLayer->IsEffectUse(bSkillKind, &g_pMainPlayer->m_v3CurPos))
 				{
 					vecStart.x = DWORD(g_Mouse.v3Mouse.x/TILE_WIDTH)*TILE_WIDTH+TILE_WIDTH/2;
 					vecStart.z = DWORD(g_Mouse.v3Mouse.z/TILE_WIDTH)*TILE_WIDTH+TILE_WIDTH/2;
@@ -3033,11 +3031,9 @@ BOOL SkillEvent(BYTE bLR)
 				}
 lbl_skill_to_tile:
 					
-				if (g_pEffectLayer->IsEffectUse(bSkillKind, 
-						&vecStart, 
-						g_pMainPlayer->m_dwStartSkillTick[bSkillKind]))
+				if (g_pEffectLayer->IsEffectUse(bSkillKind, &vecStart))
 				{
-					g_pMainPlayer->SetPacketSkillTile(vecStart.x/TILE_WIDTH, vecStart.z/TILE_WIDTH, bLR);
+					g_pMainPlayer->SetPacketSkillTile(vecStart.x/TILE_WIDTH, vecStart.z/TILE_WIDTH, bLR, bSkillKind);
 					bSkill = TRUE;
 				}
 			}

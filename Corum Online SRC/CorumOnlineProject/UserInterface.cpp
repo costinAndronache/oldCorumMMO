@@ -1952,11 +1952,12 @@ void CUserInterface::DengeonExpDefInc()
 	if(m_bExpIncDef)
 	{
 		const auto level = g_pMainPlayer->currentLevel();
-		const auto expBarrierAtCurrentLevel = GetExpTableOfLevel(OBJECT_TYPE_PLAYER, level);
-		const auto expBarrierAtNextLevel = GetExpTableOfLevel(OBJECT_TYPE_PLAYER, level + 1);
-		const auto toGather = expBarrierAtNextLevel - expBarrierAtCurrentLevel;
-		const auto gatheredSoFar = g_pMainPlayer->currentEXP() - expBarrierAtCurrentLevel;
-		const auto scale = gatheredSoFar / toGather;
+		const auto cumulatedEXP = g_pMainPlayer->currentEXP();
+		const auto cumulatedExpForCurrentLevel = GetCumulatedExpByLevel(OBJECT_TYPE_PLAYER, level);
+		const auto cumulatedExpForNextLevel = GetCumulatedExpByLevel(OBJECT_TYPE_PLAYER, level + 1);
+		const auto toGather = cumulatedExpForNextLevel - cumulatedExpForCurrentLevel;
+		const DWORD gatheredSoFar = cumulatedEXP - cumulatedExpForCurrentLevel;
+		const auto scale = (float)gatheredSoFar / toGather;
 	
 		SetScalingObj(SPR_OBJ_EXP, scale * 300/2, 1.0);
 		SetRender(SPR_OBJ_EXP, TRUE);

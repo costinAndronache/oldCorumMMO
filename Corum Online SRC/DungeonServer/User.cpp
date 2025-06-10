@@ -2075,10 +2075,13 @@ void CUser::SendAllStatus()
 	Status.pStatus[Status.bStatusMany].dwCode	= USER_ATTACKRATE_PERCENT;
 	Status.pStatus[Status.bStatusMany++].dwMin	= m_wAttackSpeed;	
 	
-	NetSendToUser( m_dwConnectionIndex, (char*)&Status, Status.GetPacketSize() , FLAG_SEND_NOT_ENCRYPTION);
+	Status.pStatus[Status.bStatusMany].dwCode = USER_AVAILABLE_STATUS_POINTS;
+	Status.pStatus[Status.bStatusMany++].dwMin = GetNotUseStatPoint();
 
-	printf("\nSTATUS UPDATE:\n");
-	printUserStatusList(Status.pStatus, Status.bStatusMany);
+	Status.pStatus[Status.bStatusMany].dwCode = USER_AVAILABLE_SKILL_POINTS;
+	Status.pStatus[Status.bStatusMany++].dwMin = m_wPointSkill;
+
+	NetSendToUser( m_dwConnectionIndex, (char*)&Status, Status.GetPacketSize() , FLAG_SEND_NOT_ENCRYPTION);
 
 	SendAllUserSkillLevel();
 }
@@ -2413,8 +2416,12 @@ void CUser::AddExp(int iExp, BOOL bAlphaExp)
 	UserStatus.pStatus[0].dwMin		= m_dwExp;
 	NetSendToUser( m_dwConnectionIndex, (char*)&UserStatus, UserStatus.GetPacketSize() , FLAG_SEND_NOT_ENCRYPTION);
 	
-	while( m_dwExp >= GetExpTableOfLevel(OBJECT_TYPE_PLAYER, GetLevel() + 1) && GetLevel() < MAX_ALLOWED_LEVELUP)		// Level Up^^
-	{
+	const auto levelForCurrentCumulated = GetLevelForCumulatedExp(OBJECT_TYPE_PLAYER, m_dwExp);
+	const auto levelDiff = levelForCurrentCumulated - GetLevel();
+
+	printf("\nUSER ADD EXP: + %d = %d, level for it: %d, levelDiff: %d\n", iExp, m_dwExp, levelForCurrentCumulated, levelDiff);
+
+	for(int i=1; i <= levelDiff; i++) {
 		LevelUP();
 	}
 }
@@ -2517,6 +2524,8 @@ void CUser::LevelUP()
 	LevelUP.dwUserIndex = GetID();
 	LevelUP.dwLevel		= GetLevel();
 	LevelUP.byStatPoint	= GetStatPointByLevel(GetObjectType(), GetLevel()-2);
+
+	printf("\nDSTC_LEVELUP: %d\n", LevelUP.dwLevel);
 
 	pLayer->BroadCastSectionMsg( (char*)&LevelUP, LevelUP.GetPacketSize(), GetPrevSectionNum() );
 

@@ -58,8 +58,8 @@ typedef struct BASESKILL
 	BYTE			bSkillType; // none : 0, player : 1, monster : 2, object : 100, 2 직선 : 110, 원 : 120, X범위 : 130, 직교 : 140, 3중충돌 : 150, 타일셋 : 160
 	DWORD			dwRange;
 	DWORD			dwMinMastery;	// 최소 마스터리
-	DWORD			dwCastingTime;
-	DWORD			dwCoolTime;
+	DWORD			dwCastingTimeMilliseconds;
+	DWORD			dwCoolTimeMilliseconds;
 	DWORD			dwEffectPosition; // none : 0, 머리위 : 1, 몸통 : 2, 바닥 : 4
 	BYTE			bJointEffect;
 	BYTE			bFormula;		// 공식 
@@ -171,7 +171,7 @@ public:
 	EffectDesc*				CreateMagicArray(BYTE bSkillKind, VECTOR3* vecStart, BOOL bOwn);	// 마법을 사용할때 마법원 그리기.
 	void					SetSkillStatusUserUser(CUser* pTargetUser, BYTE bSkillKind);
 	void					SendSkillStatusUserUser();
-	BOOL					IsEffectUse(BYTE bSkillKind, VECTOR3* vecTarget, DWORD dwStartSkillTick);
+	BOOL					IsEffectUse(BYTE bSkillKind, VECTOR3* vecTarget);
 	EffectDesc*				CreateGXObject(char *szFile, BOOL bOwn, WORD wChrNum);
 	EffectDesc*				CreateStatusEffect(BYTE bSkillKind, BYTE bJoint, BOOL bOwn);
 	void					SetSkillStatusUserMon(CMonster* pMonster, BYTE bSkillKind);

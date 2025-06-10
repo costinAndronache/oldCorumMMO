@@ -938,7 +938,7 @@ DWORD __stdcall BeforeRenderGameDungeon()
 		// 쿨타임포인터 올리기.
 		g_pMainPlayer->updateCurrentCoolPoints(
 			min(g_pMainPlayer->maxCoolPoints(), 
-			    g_pMainPlayer->currentCoolPoints() + g_pMainPlayer->coolPointsChargeStep()
+			    g_pMainPlayer->currentCoolPoints() + g_pMainPlayer->coolPointsChargeStepPer100Milliseconds()
 			)
 		);
 		if (g_pMainPlayer->IsCastingContinousSkill())
