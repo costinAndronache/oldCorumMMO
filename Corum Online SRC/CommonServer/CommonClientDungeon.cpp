@@ -50,3 +50,16 @@ DWORD DECLSPECIFIER levelForCumulatedExperience(DWORD exp, const DWORD (&expToGa
 
 	return MAX_LEVEL;
 }
+
+void AttackResult::applyFor(std::function<void(DWORD)> hpApply, std::function<void(DWORD)> spApply) {
+	if (bStatusKind == USER_HP) {
+		hpApply(dwCurUserHP);
+	} else if (bStatusKind == USER_MP) {
+		hpApply(dwCurUserHP >> 16);
+		spApply(dwCurUserHP & 0xffff);
+	}
+}
+
+AttackResult::~AttackResult() {
+	// without this being declared it will crash when destroyed within the client code ????
+}

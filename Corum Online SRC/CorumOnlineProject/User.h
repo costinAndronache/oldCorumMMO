@@ -10,6 +10,7 @@
 #include "../CommonServer/CommonClientDungeon.h"
 #include "Effect.h"
 #include <vector>
+#include "CMainUserUpdateInterested.h"
 
 #define		USER_TEMP_DAMAGE_TYPE				0		// 미스인지 블록인지 성공인지
 #define		USER_TEMP_DAMAGE					1		// 데미지 값
@@ -181,17 +182,6 @@ public:
 	~CUser();
 };
 
-
-class CMainUserUpdateInterested {
-public:
-	virtual void updatedCurrentHP(DWORD) = 0;
-	virtual void updatedCurrentSP(DWORD) = 0;
-	virtual void updatedMAXHP(DWORD) = 0;
-	virtual void updatedMAXSP(DWORD) = 0;
-	virtual void updatedEXP(DWORD) = 0;
-};
-typedef std::weak_ptr<CMainUserUpdateInterested> CMainUserUpdateInterestedWeakRef;
-typedef std::shared_ptr<CMainUserUpdateInterested> CMainUserUpdateInterestedSharedRef;
 
 class CMainUser : public CUser
 {

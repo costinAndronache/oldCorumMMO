@@ -5,7 +5,8 @@
 
 #include "CommonAllServers.h"
 #include "CommonServerExports.h"
-
+#include "DungeonPacket.h"
+#include <functional>
 struct CPTable_Value
 {
 	WORD	wID;
@@ -416,3 +417,16 @@ enum ITEM_SUPPLY_TYPE {
 //  internal caches are created based on their values
 DWORD DECLSPECIFIER cumulatedExperienceAtLevel(DWORD level, const DWORD (&expPerLevel)[MAX_LEVEL + 1]);
 DWORD DECLSPECIFIER levelForCumulatedExperience(DWORD exp, const DWORD (&expPerLevel)[MAX_LEVEL + 1]);
+
+struct DECLSPECIFIER AttackResult {
+private:
+	BYTE	bStatusKind;
+	DWORD	dwCurUserHP;
+public:
+	AttackResult(BYTE statusKind, DWORD curUserHP): bStatusKind(statusKind), dwCurUserHP(curUserHP) { }
+	AttackResult(const DSTC_ATTACK_MON_USER& attack): bStatusKind(attack.bStatusKind), dwCurUserHP(attack.dwCurUserHP) { }
+	AttackResult(const DSTC_ATTACK_USER_USER& attack): bStatusKind(attack.bStatusKind), dwCurUserHP(attack.dwCurDefenseUserHP) { }
+	void applyFor(std::function<void(DWORD)> hpApply, std::function<void(DWORD)> spApply);
+
+	~AttackResult();
+};

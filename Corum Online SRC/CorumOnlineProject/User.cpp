@@ -70,7 +70,11 @@ float			CMainUser::currentCoolPoints() const {
 }
 
 void			CMainUser::updateCurrentCoolPoints(float points) {
+	const auto oldValue = m_fCurCoolPoint;
 	m_fCurCoolPoint = points;
+	listenersUpdate(updateListeners, [this, oldValue, points](CMainUserUpdateInterestedSharedRef listener) {
+		listener->updatedCoolPoints(this, oldValue, points);
+	});
 }
 
 float			CMainUser::maxCoolPoints() const {
@@ -91,9 +95,11 @@ DWORD			CMainUser::currentHP() const {
 }
 
 void			CMainUser::updateCurrentHP(DWORD hp) {
+	const auto oldValue = m_dwHP;
 	m_dwHP = hp;
-	listenersUpdate(updateListeners, [hp](CMainUserUpdateInterestedSharedRef listener) {
-		listener->updatedCurrentHP(hp);
+
+	listenersUpdate(updateListeners, [this, oldValue, hp](CMainUserUpdateInterestedSharedRef listener) {
+		listener->updatedCurrentHP(this, oldValue, hp);
 	});
 }
 
@@ -102,9 +108,10 @@ DWORD			CMainUser::currentSP() const {
 }
 
 void			CMainUser::updateCurrentSP(DWORD sp) {
+	const auto oldValue = m_dwMP;
 	m_dwMP = sp;
-	listenersUpdate(updateListeners, [sp](CMainUserUpdateInterestedSharedRef listener) {
-		listener->updatedCurrentSP(sp);
+	listenersUpdate(updateListeners, [this, oldValue, sp](CMainUserUpdateInterestedSharedRef listener) {
+		listener->updatedCurrentSP(this, oldValue, sp);
 	});
 }
 
@@ -113,9 +120,10 @@ DWORD			CMainUser::maxHP() const {
 }
 
 void			CMainUser::updateMaxHP(DWORD maxHP) {
+	const auto oldValue = m_dwMaxHP;
 	m_dwMaxHP = maxHP;
-	listenersUpdate(updateListeners, [maxHP](CMainUserUpdateInterestedSharedRef listener) {
-		listener->updatedMAXHP(maxHP);
+	listenersUpdate(updateListeners, [this, oldValue, maxHP](CMainUserUpdateInterestedSharedRef listener) {
+		listener->updatedMAXHP(this, oldValue, maxHP);
 	});
 }
 
@@ -124,9 +132,10 @@ DWORD			CMainUser::maxSP() const {
 }
 
 void			CMainUser::updateMaxSP(DWORD maxSP) {
+	const auto oldValue = m_dwMaxMP;
 	m_dwMaxMP = maxSP;
-	listenersUpdate(updateListeners, [maxSP](CMainUserUpdateInterestedSharedRef listener) {
-		listener->updatedMAXSP(maxSP);
+	listenersUpdate(updateListeners, [this, oldValue, maxSP](CMainUserUpdateInterestedSharedRef listener) {
+		listener->updatedMAXSP(this, oldValue, maxSP);
 	});
 }
 
@@ -135,7 +144,11 @@ DWORD			CMainUser::currentStatPoints() const {
 }
 
 void			CMainUser::updateCurrentStatPoints(DWORD points) {
+	const auto oldValue = m_dwPoint;
 	m_dwPoint = points;
+	listenersUpdate(updateListeners, [this, oldValue, points](CMainUserUpdateInterestedSharedRef listener) {
+		listener->updatedStatPoints(this, oldValue, points);
+	});
 }
 
 
@@ -144,7 +157,11 @@ DWORD			CMainUser::currentSkillPoints() const {
 }
 
 void			CMainUser::updateCurrentSkillPoints(DWORD skillPoints) {
+	const auto oldValue = m_dwPointSkill;
 	m_dwPointSkill = skillPoints;
+	listenersUpdate(updateListeners, [this, oldValue, skillPoints](CMainUserUpdateInterestedSharedRef listener) {
+		listener->updatedSkillPoints(this, oldValue, skillPoints);
+	});
 }
 
 DWORD			CMainUser::currentEXP() const {
@@ -152,9 +169,10 @@ DWORD			CMainUser::currentEXP() const {
 }
 
 void			CMainUser::updateCurrentEXP(DWORD exp) {
+	const auto oldValue = m_dwExp;
 	m_dwExp = exp;
-	listenersUpdate(updateListeners, [exp](CMainUserUpdateInterestedSharedRef listener) {
-		listener->updatedEXP(exp);
+	listenersUpdate(updateListeners, [this, oldValue, exp](CMainUserUpdateInterestedSharedRef listener) {
+		listener->updatedEXP(this, oldValue, exp);
 	});
 }
 
@@ -163,7 +181,11 @@ DWORD			CMainUser::currentLevel() const {
 }
 
 void			CMainUser::updateCurrentLevel(DWORD level) {
+	const auto oldValue = m_dwLevel;
 	m_dwLevel = level;
+	listenersUpdate(updateListeners, [this, oldValue, level](CMainUserUpdateInterestedSharedRef listener) {
+		listener->updatedLevel(this, oldValue, level);
+	});
 }
 
 DWORD			CMainUser::currentHonor() const {

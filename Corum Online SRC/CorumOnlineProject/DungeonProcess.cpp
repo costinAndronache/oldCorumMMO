@@ -949,7 +949,7 @@ DWORD __stdcall BeforeRenderGameDungeon()
 			{
 				const auto overdriveSurcharge = 0.1 * 0.1 * g_pMainPlayer->maxSP();
 				if (pEffect->bType == TYPE_DRIVE) // 마우스 누르고 있는 만큼만 마나 빼라.
-					pUserInterface->SetDengeonMp(
+					g_pMainPlayer->updateCurrentSP(
 						max(0, g_pMainPlayer->currentSP() - overdriveSurcharge)
 					);
 			}
@@ -1015,7 +1015,7 @@ DWORD __stdcall BeforeRenderGameDungeon()
 				{
 					if (pEffect->bID == __SKILL_AURARECHARGE__) {
 						const auto auraRechargeValue = pEffect->Value[bSkillLevel - 1].nMin;
-						pUserInterface->SetDengeonMp(min(g_pMainPlayer->maxSP(),
+						g_pMainPlayer->updateCurrentSP(min(g_pMainPlayer->maxSP(),
 							g_pMainPlayer->currentSP() + auraRechargeValue));
 					}
 				}
@@ -1038,13 +1038,13 @@ DWORD __stdcall BeforeRenderGameDungeon()
 
 			if(fPerWeight < WEIGTH_80PER_OVER)
 			{
-				pUserInterface->SetDengeonHp(min(g_pMainPlayer->maxHP(), g_pMainPlayer->currentHP()));
+				g_pMainPlayer->updateCurrentHP(min(g_pMainPlayer->maxHP(), g_pMainPlayer->currentHP()));
 				
 				if (g_pMainPlayer->m_wClass != CLASS_TYPE_WARRIOR) {
 					const DWORD maxMP = g_pMainPlayer->maxSP();
 					const DWORD currentMP = g_pMainPlayer->currentSP();
 
-					pUserInterface->SetDengeonMp(min(maxMP, currentMP));
+					g_pMainPlayer->updateCurrentSP(min(maxMP, currentMP));
 
 				}// 전사는 오라리차지로 올려야 한다. ㅡ.ㅡ
 			}	

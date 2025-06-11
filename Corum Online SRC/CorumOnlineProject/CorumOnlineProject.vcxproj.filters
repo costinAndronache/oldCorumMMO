@@ -1514,6 +1514,9 @@
     <ClInclude Include="ItemPickupFiltering\ItemPickupFilteringBase.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="CMainUserUpdateInterested.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="crBaseMenu.inl">

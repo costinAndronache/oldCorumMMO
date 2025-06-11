@@ -6594,6 +6594,7 @@
     <ClInclude Include="ChinaHackToolBlock.h" />
     <ClInclude Include="ChrInfo.h" />
     <ClInclude Include="ClientTrafficLog.h" />
+    <ClInclude Include="CMainUserUpdateInterested.h" />
     <ClInclude Include="cmd_message.h" />
     <ClInclude Include="CodeFun.h" />
     <ClInclude Include="ComboBox.h" />

@@ -2584,7 +2584,7 @@ void CmdJoinDungeon( char* pMsg, DWORD dwLen )
 	g_pMainPlayer->updateMaxCoolPoints(float(g_pMainPlayer->currentEGO() * (100 + 5 * g_pMainPlayer->m_wClassRank) / 1000.));
 
 	g_pMainPlayer->updateCurrentCoolPoints(g_pMainPlayer->maxCoolPoints());
-	pUserInterface->SetCool();	
+	pUserInterface->onDungeonJoin();
 	
 	memset(g_pMainPlayer->m_szClassName, 0, sizeof(g_pMainPlayer->m_szClassName));
 	memset(g_pMainPlayer->m_szGroupName, 0, sizeof(g_pMainPlayer->m_szGroupName));
@@ -3012,10 +3012,6 @@ void CmdLevelUP( char* pMsg, DWORD dwLen )
 			pSkillWnd->SetSkillButtonPos();
 		}
 		
-		pUserInterface->SetDengeonExpDefInc();
-
-		if(pCharWnd->GetActive()==TRUE)
-			pCharWnd->SetActive();
 			
 		char szInfo[0xff] = {0,};
 		// MSG_ID : 78 ;%s 님이 레벨업 했습니다. 현재 레벨은 %d 입니다.

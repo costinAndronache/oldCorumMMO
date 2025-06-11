@@ -531,53 +531,35 @@ void CmdAttack_User_User( char* pMsg, DWORD dwLen )
 
 	if( pAttackUserUser->bType == 3 || pAttackUserUser->bType == 4 )
 	{
-		if( pAttackUserUser->bStatusKind == USER_HP )
-		{
-			if (pDefense == g_pMainPlayer)
-				CUserInterface::GetInstance()->SetDengeonHp(WORD(pAttackUserUser->dwCurDefenseUserHP));
+		AttackResult attackResult(*pAttackUserUser);
+		attackResult.applyFor(
+			[pDefense, pOffense](DWORD hp) {
+				if (pDefense == g_pMainPlayer) {
+					g_pMainPlayer->updateCurrentHP(hp);
+				}
 
-			if (pAttackUserUser->dwCurDefenseUserHP == 0  )
-			{
-				_PlaySound( CHARACTER_SOUND_DEAD, SOUND_TYPE_CHARACTER, CHARACTER_SOUND_DEAD + ( pDefense->m_wClass - 1 ) * SOUND_PER_CHARACTER
-					, pDefense->m_v3CurPos, FALSE );
+				if (hp == 0) {
+					_PlaySound(CHARACTER_SOUND_DEAD, SOUND_TYPE_CHARACTER, CHARACTER_SOUND_DEAD + (pDefense->m_wClass - 1) * SOUND_PER_CHARACTER
+						, pDefense->m_v3CurPos, FALSE);
 
-				pDefense->SetStatus(UNIT_STATUS_DEAD);	
+					pDefense->SetStatus(UNIT_STATUS_DEAD);
 
-				if (g_pThisDungeon->m_bSiege)
-					pOffense->SetSiegePKCount(pOffense->m_wSiegePKCount+1);
+					if (g_pThisDungeon->m_bSiege)
+						pOffense->SetSiegePKCount(pOffense->m_wSiegePKCount + 1);
 
-				char szTemp[0xff] = {0,};
-				// "%s´ÔÀÌ %s´ÔÀ» Á×¿´½À´Ï´Ù."
-				wsprintf(szTemp, g_Message[ETC_MESSAGE505].szMessage, pOffense->m_szName, pDefense->m_szName); 
-				DisplayMessageAdd(szTemp, 0xffFF0000);
-				
+					char szTemp[0xff] = { 0, };
+					// "%s´ÔÀÌ %s´ÔÀ» Á×¿´½À´Ï´Ù."
+					wsprintf(szTemp, g_Message[ETC_MESSAGE505].szMessage, pOffense->m_szName, pDefense->m_szName);
+					DisplayMessageAdd(szTemp, 0xffFF0000);
+				}
+
+			},
+			[pDefense](DWORD sp) {
+				if (pDefense == g_pMainPlayer) {
+					g_pMainPlayer->updateCurrentSP(sp);
+				}
 			}
-		}
-		else if( pAttackUserUser->bStatusKind == USER_MP )
-		{
-			if (pDefense == g_pMainPlayer)
-			{
-				CUserInterface::GetInstance()->SetDengeonHp(WORD(pAttackUserUser->dwCurDefenseUserHP>>16));
-				CUserInterface::GetInstance()->SetDengeonMp(WORD(pAttackUserUser->dwCurDefenseUserHP&0xffff));
-			}
-			
-			if (pAttackUserUser->dwCurDefenseUserHP>>16 == 0  )
-			{
-				
-				_PlaySound( CHARACTER_SOUND_DEAD, SOUND_TYPE_CHARACTER, CHARACTER_SOUND_DEAD + ( pDefense->m_wClass - 1 ) * SOUND_PER_CHARACTER
-					, pDefense->m_v3CurPos, FALSE );
-
-				pDefense->SetStatus(UNIT_STATUS_DEAD);	
-
-				if (g_pThisDungeon->m_bSiege)
-					pOffense->SetSiegePKCount(pOffense->m_wSiegePKCount+1);
-				
-				char szTemp[0xff] = {0,};
-				// "%s´ÔÀÌ %s´ÔÀ» Á×¿´½À´Ï´Ù."
-				wsprintf(szTemp, g_Message[ETC_MESSAGE505].szMessage, pOffense->m_szName, pDefense->m_szName); 
-				DisplayMessageAdd(szTemp, 0xffFF0000);				
-			}
-		}		
+		);	
 	}
 }
 
@@ -881,31 +863,25 @@ void CmdAttack_Mon_User( char* pMsg, DWORD dwLen )
 	
 	// ÀÎÅÍÆäÀÌ½º ÀÛ¾÷.
 	
-	if( pAttack->bStatusKind == USER_HP )
-	{
-		if (pUser == g_pMainPlayer)
-			CUserInterface::GetInstance()->SetDengeonHp(WORD(pAttack->dwCurUserHP));
-		if (pAttack->dwCurUserHP == 0  )
-		{
-			_PlaySound( CHARACTER_SOUND_DEAD, SOUND_TYPE_CHARACTER, CHARACTER_SOUND_DEAD + ( pUser->m_wClass - 1 ) * SOUND_PER_CHARACTER, pUser->m_v3CurPos, FALSE );
-			pUser->SetStatus(UNIT_STATUS_DEAD);	
-			
-		}
-	}
-	else if( pAttack->bStatusKind == USER_MP )
-	{
-		if (pUser == g_pMainPlayer)
-		{
-			CUserInterface::GetInstance()->SetDengeonHp(WORD(pAttack->dwCurUserHP>>16));
-			CUserInterface::GetInstance()->SetDengeonMp(WORD(pAttack->dwCurUserHP&0xffff));
-		}
-		if (pAttack->dwCurUserHP>>16 == 0  )
-		{
-			_PlaySound( CHARACTER_SOUND_DEAD, SOUND_TYPE_CHARACTER, CHARACTER_SOUND_DEAD + ( pUser->m_wClass - 1 ) * SOUND_PER_CHARACTER, pUser->m_v3CurPos, FALSE );
-			pUser->SetStatus(UNIT_STATUS_DEAD);	
-			
-		}
-	}
+	AttackResult attackResult(pAttack->bStatusKind, pAttack->dwCurUserHP);
+	//attackResult.applyFor(
+	//	[pUser](DWORD hp) {
+	//		if (pUser == g_pMainPlayer) {
+	//			g_pMainPlayer->updateCurrentHP(hp);
+	//		}
+	//		if (hp <= 0) {
+	//			_PlaySound(CHARACTER_SOUND_DEAD, SOUND_TYPE_CHARACTER, CHARACTER_SOUND_DEAD + (pUser->m_wClass - 1) * SOUND_PER_CHARACTER, pUser->m_v3CurPos, FALSE);
+	//			pUser->SetStatus(UNIT_STATUS_DEAD);
+	//		}
+	//	},
+	//	[pUser](DWORD sp) {
+	//		if (pUser == g_pMainPlayer) {
+	//			g_pMainPlayer->updateCurrentSP(sp);
+	//		}
+	//	}
+	//);
+
+	printf("MON_USER_ATK");
 }
 
 void CmdUserStatus( char* pMsg, DWORD dwLen )
@@ -1032,21 +1008,20 @@ void CmdUserStatus( char* pMsg, DWORD dwLen )
 				printf("\nUSER_STATUS EXP: ( %d )", value);
 				g_pMainPlayer->updateCurrentEXP(value);
 
-				pUserInterface->SetDengeonExpDefInc();			
 			}
 			break;		
 		case USER_HP:
 			//_PlaySound(0, SOUND_TYPE_SYSTEM, SOUND_SYSTEM_HPRECOVER, g_pMainPlayer->m_v3CurPos, FALSE);
 			// comment by minjin. 2004. 10. 29.
 			// ¼Ò¸®´Â, Æ÷¼Ç ½èÀ»¶§ ³»ÀÚ.
-			pUserInterface->SetDengeonHp((pUserStatus->pStatus[i].dwMin));
+			g_pMainPlayer->updateCurrentHP(pUserStatus->pStatus[i].dwMin);
 			break;		
 		case USER_MP:
 			//_PlaySound(0, SOUND_TYPE_SYSTEM, SOUND_SYSTEM_HPRECOVER, g_pMainPlayer->m_v3CurPos, FALSE);
 			// comment by minjin. 2004. 10. 29.
 			// ¼Ò¸®´Â, Æ÷¼Ç ½èÀ»¶§ ³»ÀÚ.
 
-			pUserInterface->SetDengeonMp((pUserStatus->pStatus[i].dwMin));
+			g_pMainPlayer->updateCurrentSP(pUserStatus->pStatus[i].dwMin);
 			break;
 		case USER_HEALHPSPEED:
 			g_pMainPlayer->m_dwHealHPSec = pUserStatus->pStatus[i].dwMin;

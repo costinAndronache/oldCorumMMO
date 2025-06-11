@@ -8,6 +8,7 @@
 #include	"Menu.h"
 #include	"GlobalSoundHandles.h"
 #include "GuildWarStatusWnd.h"
+#include "CMainUserUpdateInterested.h"
 
 class CMonster;
 class CUser;
@@ -70,8 +71,7 @@ class CUser;
 #define SPR_OBJ_UI_QUICKSLOT_INABLE8			55
 #define SPR_OBJ_UI_GUARDIAN_STATUS				56
 
-class CUserInterface : public CMenu
-{
+class CUserInterface : public CMenu, public CMainUserUpdateInterested {
 public:
 	
 	OBJECT_HANDLE_DESC		m_pUserClickHandle;
@@ -127,18 +127,10 @@ public:
 	float	m_fExpIndex;
 	float	m_fExpSpeed;	
 				
-	BOOL	m_bEnDec;
-	BOOL	m_bEnInc;	
+	
 	BOOL	m_bEn[2];
-	BOOL	m_bEnDef;
-
-	BOOL	m_bManaDec;
-	BOOL	m_bManaInc;	
 	BOOL	m_bMana[2];
-	BOOL	m_bManaDef;
-
-	BOOL	m_bExp;	
-	BOOL	m_bExpIncDef;
+	
 
 	BOOL	m_bMatchUserHPShowFlag;			// pvp 중인지 나타낸다
 	BOOL	m_bMatchUserHPShowEnable;		// pvp 중에 상대유저 HP바를 나타내는 플래그이다.
@@ -192,12 +184,23 @@ public:
 
 	// Singleton Patten //
 private:
-	static CUserInterface* c_pThis;
+	static shared_ptr<CUserInterface> _shared;
 
 public:
-	static CUserInterface*	GetInstance()		{ if(!c_pThis) c_pThis = new CUserInterface; return c_pThis; }
-	static void		DestroyInstance()	{ if(c_pThis) { delete c_pThis; c_pThis = NULL;} }
+	static shared_ptr<CUserInterface> getShared() {
+		if (!_shared) {
+			_shared = std::make_shared<CUserInterface>();
+		}
+		return _shared;
+	}
 
+	static CUserInterface*	GetInstance() { 	
+		return getShared().get();
+	}
+
+	static void		DestroyInstance() { 
+		_shared.reset();
+	}
 
 	// 공통 함수 //
 	BOOL	Init();	
@@ -217,46 +220,9 @@ public:
 
 	void	RenderGuardianItem();
 
-	// 던젼에 들어가면 보여지는 UI 함수 // 
 
-	void	DengeonEnStart();
-	void	DengeonExpStart();
-	void	DengeonManaStart();	
-	
-	// Hp 관련 함수 //
+	void	EnableQuickSlot(BOOL bEnAble);
 
-	void	DengeonHpDec();
-	void	DengeonHpInc();
-	void	DengeonHpDef();		
-
-	void	SetDengeonHpDec();
-	void	SetDengeonHpInc();
-	void	SetDengeonHpDef();
-	
-	// Exp 관련 함수 //
-
-	void	DengeonExpDefInc();	
-	void	SetDengeonExpDefInc();	
-
-	// Mana 관련 함수 //
-
-	void	DengeonManaDec();
-	void	DengeonManaInc();
-	void	DengeonManaDef();		
-
-	void	SetDengeonManaDec();
-	void	SetDengeonManaInc();
-	void	SetDengeonManaDef();
-	
-	// Casting 관련 함수 //
-	void	DengeonCastingDef();	
-	void	SetCool();
-
-	// QuickSlot 관련 함수
-	void	EnableQuickSlot(BOOL bEnAble);	
-	
-	void	SetDengeonHp(DWORD wHp);
-	void	SetDengeonMp(DWORD wMp);
 
 	void	SetMousePointerPos(float fPosX, float fPosZ);
 	void	SetMousePointerType(BYTE byPointerType);
@@ -318,6 +284,24 @@ private:
 	CGuildWarStatusWnd*	m_pStatusWnd;
 	BOOL				m_bPVP_Ready;	// PVP시에 로딩 완료가 되었는지의 여부
 	DWORD				m_dwPVP_Ready_Count;
+
+	// QuickSlot 관련
+	void	SetCool();
+	void	updateSPBar(float scale);
+	void	updateHPBar(float scale);
+	void	updateEXPBar(float scale);
+	void	updateCooldownBar(float scale);
+public:
+	void	onDungeonJoin();
+
+public:
+	void updatedCurrentHP(CMainUser*, DWORD oldValue, DWORD newValue) override;
+	void updatedCurrentSP(CMainUser*, DWORD oldValue, DWORD newValue) override;
+	void updatedMAXHP(CMainUser*, DWORD oldValue, DWORD newValue) override;
+	void updatedMAXSP(CMainUser*, DWORD oldValue, DWORD newValue) override;
+	void updatedEXP(CMainUser*, DWORD oldValue, DWORD newValue) override;
+	void updatedCoolPoints(CMainUser*, float oldValue, float newValue) override;
+	void updatedLevel(CMainUser*, DWORD oldValue, DWORD newValue) override;
 };
 
 #endif

@@ -306,7 +306,6 @@ struct DSTC_STOP_MON : public DUNGEON_PACKET_HEADER
 	DWORD	GetPacketSize()		{	return sizeof(DSTC_STOP_MON);	}
 };
 
-
 struct DSTC_ATTACK_MON_USER : public DUNGEON_PACKET_HEADER		
 {
 	DWORD	dwMonsterIndex;
@@ -314,6 +313,8 @@ struct DSTC_ATTACK_MON_USER : public DUNGEON_PACKET_HEADER
 	VECTOR2	v2MonsterPos;
 	BYTE	bType;
 	BYTE	bStatusKind;
+
+	// DO NOT USE IT DIRECTLY; Build an AttackResult with it
 	DWORD	dwCurUserHP;
 	DWORD	dwDamage;
     

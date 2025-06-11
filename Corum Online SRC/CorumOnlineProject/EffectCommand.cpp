@@ -572,7 +572,7 @@ void CmdSkill( char* pMsg, DWORD dwLen )
 			}
 			if (g_pMainPlayer == pTargetUser)
 			{
-				CUserInterface::GetInstance()->SetDengeonHp((WORD)pPacket->sTargetInfo[i].dwCurHP);
+				g_pMainPlayer->updateCurrentHP(pPacket->sTargetInfo[i].dwCurHP);
 			}
 
 			pTargetUser->m_dwTemp[USER_TEMP_DAMAGE_TYPE] = pPacket->sTargetInfo[i].bType;
@@ -735,8 +735,9 @@ void CmdSkillStopStatusEffect( char* pMsg, DWORD dwLen )
 		EffectDesc* pEffectDesc = pUser->m_pEffectDesc[pPacket->bSkillKind];
 		if (pEffectDesc)
 		{
-			if (pUser == g_pMainPlayer)
-				CUserInterface::GetInstance()->SetDengeonHp((WORD)pPacket->dwCurHP);
+			if (pUser == g_pMainPlayer) {
+				g_pMainPlayer->updateCurrentHP(pPacket->dwCurHP);
+			}
 			
 			if (pEffectDesc->bEffectInfoNum == __SKILL_HIDING__)
 			{

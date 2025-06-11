@@ -46,9 +46,7 @@
 #include "InterfaceProcTemp.h"
 
 
-CUserInterface* CUserInterface::c_pThis = NULL;
-
-
+std::shared_ptr<CUserInterface> CUserInterface::_shared(nullptr);
 
 void GXClickProc(GXOBJECT_HANDLE handle, LPObjectDesc pData, DWORD dwCurFrame, BYTE bFrameFlag)
 {
@@ -105,15 +103,6 @@ CUserInterface::CUserInterface()
 	m_bUserInterface	= FALSE;
 	m_bMouseIcon		= FALSE;
 	m_bSmall			= FALSE;
-	m_bManaDec			= FALSE;
-	m_bManaInc			= FALSE;
-	m_bManaDef			= FALSE;
-	m_bActive			= FALSE;
-	m_bExp				= FALSE;
-	m_bEnDec			= FALSE;
-	m_bEnInc			= FALSE;
-	m_bEnDef			= FALSE;	
-	m_bExpIncDef		= FALSE;
 	m_bClick			= FALSE;
 	m_bUp				= FALSE;
 	m_bDown				= FALSE;	
@@ -172,14 +161,6 @@ BOOL CUserInterface::Init()
 	m_fManaIncSpeed	= 0.6f;
 	m_fManaDecSpeed	= 0.6f;
 	m_fExpSpeed		= 1.3f;	
-	m_bManaDec		= FALSE;
-	m_bManaInc		= FALSE;
-	m_bManaDef		= FALSE;	
-	m_bExp			= FALSE;
-	m_bEnDec		= FALSE;
-	m_bEnInc		= FALSE;
-	m_bEnDef		= FALSE;	
-	m_bExpIncDef	= FALSE;
 	m_bGuardian		= FALSE;
 	m_dwMagicArray	= 0;
 	
@@ -1411,21 +1392,8 @@ void CUserInterface::RenderText()
 	if( g_pThisDungeon->IsStadium() && g_pMainPlayer->m_dwGuildWarFlag == G_W_F_OBSERVER )
 		return;
 
-	DengeonEnStart();
-	DengeonExpStart();
-	DengeonManaStart();
 
-	DengeonHpDec();
-	DengeonHpInc();
-	DengeonHpDef();
-
-	DengeonManaDec();
-	DengeonManaInc();
-	DengeonManaDef();
-
-	DengeonExpDefInc();
-
-	DengeonCastingDef();
+	/// should these be replaced with continous updates?
 
 	RenderMonsterBar();
 	RenderUserBar();
@@ -1678,126 +1646,51 @@ void CUserInterface::RenderText()
 	}
 }
 
-void CUserInterface::DengeonEnStart()
-{
-	for(int i = 0; i < 2; i++)
-	{
-		if(!m_bEn[i]) 
-		{	
-			float fSize = (g_pMainPlayer->currentHP() > g_pMainPlayer->maxHP()) ?
-				1.0f : (float)g_pMainPlayer->currentHP() / (float)g_pMainPlayer->maxHP();
 
-			if(m_fEnIndex[i]<fSize*300)
-			{
-				if(m_fEnIndex[i]+m_fEnSpeed[i]>fSize*300)
-					m_fEnIndex[i] = fSize*300;
-				else
-					m_fEnIndex[i] += m_fEnSpeed[i];
-				
-				if(i==0)
-					SetScalingObj(SPR_OBJ_EN1, m_fEnIndex[i]/2, 1.0);
-				else
-					SetScalingObj(SPR_OBJ_EN2, m_fEnIndex[i]/2, 1.0);
-			}
-			else
-			{
-				if(i==1)
-					m_fEnIncDec = m_fEnIndex[i];
-
-				m_bEn[i] = TRUE;
-			}
-		}
-	}
+void CUserInterface::onDungeonJoin() {
+	SetCool();
 }
 
-void CUserInterface::DengeonExpStart()
-{
-	if(!m_bExp) //kjk(41115)
-	{
-		const auto currentLevel = g_pMainPlayer->currentLevel();
-		float fMaxExp = (float)GetExpTableOfLevel(OBJECT_TYPE_PLAYER, currentLevel + 1) - 
-			(float)GetExpTableOfLevel(OBJECT_TYPE_PLAYER, currentLevel);
-		float fCurExp = (float)g_pMainPlayer->currentEXP() - (float)GetExpTableOfLevel(OBJECT_TYPE_PLAYER, currentLevel);
-		
-		if(fCurExp>fMaxExp)
-			fCurExp = fMaxExp;
-
-		if(m_fExpIndex<fCurExp/fMaxExp*300)
-		{
-			if(m_fExpIndex+m_fExpSpeed>fCurExp/fMaxExp*300)				
-				m_fExpIndex = fCurExp/fMaxExp*300;
-			else
-				m_fExpIndex += m_fExpSpeed;						
-			
-			SetScalingObj(SPR_OBJ_EXP, m_fExpIndex/2.0f, 1.0);
-		}
-		else
-		{
-			if(fCurExp/fMaxExp*300==0)
-				SetRender(SPR_OBJ_EXP, FALSE);
-
-			m_bExp = TRUE;
-		}
-	}
+void CUserInterface::updatedCurrentHP(CMainUser* player, DWORD oldValue, DWORD newValue) {
+	updateHPBar(newValue / (float)player->maxHP());
 }
 
-void CUserInterface::DengeonManaStart()
-{
-	for(int i = 0; i < 2; i++)
-	{
-		if(!m_bMana[i]) 
-		{				
-			float fSize = g_pMainPlayer->percentageMP();
-
-			if(m_fManaIndex[i]<fSize*300)
-			{
-				if(m_fManaIndex[i]+m_fManaSpeed[i]>fSize*300)
-					m_fManaIndex[i] = fSize*300;
-				else
-					m_fManaIndex[i] += m_fManaSpeed[i];
-				
-				if(i==0)
-				{
-					SetPosObjX(SPR_OBJ_MANA1, 1023-m_fManaIndex[i]);
-					SetScalingObj(SPR_OBJ_MANA1, m_fManaIndex[i]/2, 1.0);
-				}
-				else
-				{
-					SetPosObjX(SPR_OBJ_MANA2, 1023-m_fManaIndex[i]);
-					SetScalingObj(SPR_OBJ_MANA2, m_fManaIndex[i]/2, 1.0);
-				}
-			}
-			else
-			{
-				if(i==1)
-					m_fManaIncDec = m_fManaIndex[i];
-
-				m_bMana[i] = TRUE;
-			}
-		}
-	}
+void CUserInterface::updatedMAXHP(CMainUser* player, DWORD oldValue, DWORD newValue) {
+	updateHPBar(newValue / (float)player->maxHP());
 }
 
-void CUserInterface::DengeonCastingDef()
-{
-	const auto current = g_pMainPlayer->currentCoolPoints();
-	const auto maxP = g_pMainPlayer->maxCoolPoints();
-
-	const auto scaling = (float)g_pMainPlayer->percentageCoolPoints();
-	SetScalingObj(SPR_OBJ_CAST, scaling * 300 / 2, 1.0);
-	SetPosObjX(SPR_OBJ_CAST, 1023 - (float)g_pMainPlayer->percentageCoolPoints() * 300);
-	return;
-
-	if((float)g_pMainPlayer->currentCoolPoints() <= (float)g_pMainPlayer->maxCoolPoints())
-	{
-
-	}
-
-	if(g_pMainPlayer->currentCoolPoints() == 0)
-		SetRender(SPR_OBJ_CAST, FALSE);
-	else if(g_pMainPlayer->currentCoolPoints()  >= 0)
-		SetRender(SPR_OBJ_CAST, TRUE);
+void CUserInterface::updatedCurrentSP(CMainUser* player, DWORD oldValue, DWORD newValue) {
+	updateSPBar(newValue / (float)player->maxSP());
 }
+
+void CUserInterface::updatedMAXSP(CMainUser* player, DWORD oldValue, DWORD newValue) {
+	updateSPBar(newValue / (float)player->maxSP());
+}
+
+float expScale(DWORD currentLevel, DWORD currentCumulatedEXP) {
+	const auto level = currentLevel;
+	const auto cumulatedEXP = currentCumulatedEXP;
+	const auto cumulatedExpForCurrentLevel = GetCumulatedExpByLevel(OBJECT_TYPE_PLAYER, level);
+	const auto cumulatedExpForNextLevel = GetCumulatedExpByLevel(OBJECT_TYPE_PLAYER, level + 1);
+	const auto toGather = cumulatedExpForNextLevel - cumulatedExpForCurrentLevel;
+	const DWORD gatheredSoFar = cumulatedEXP - cumulatedExpForCurrentLevel;
+	const auto scale = (float)gatheredSoFar / toGather;
+
+	return scale;
+}
+
+void CUserInterface::updatedEXP(CMainUser* player, DWORD oldValue, DWORD newValue) {
+	updateEXPBar(expScale(player->currentLevel(), player->currentEXP()));
+}
+
+void CUserInterface::updatedLevel(CMainUser* player, DWORD oldValue, DWORD newValue) {
+	updateEXPBar(expScale(player->currentLevel(), player->currentEXP()));
+}
+
+void CUserInterface::updatedCoolPoints(CMainUser* player, float oldValue, float newValue) {
+	updateCooldownBar(newValue / player->maxCoolPoints());
+}
+
 
 void CUserInterface::SetCool()
 {
@@ -1807,228 +1700,41 @@ void CUserInterface::SetCool()
 	SetPosObjX(SPR_OBJ_CAST, 1023-fSize *300);
 }
 
-void CUserInterface::DengeonHpDec()
-{		
-	if(m_bEnDec)
-	{	
-		float fSize = g_pMainPlayer->percentageHP();
-
-		SetScalingObj(SPR_OBJ_EN1, fSize*300/2, 1.0);
-
-		if(m_fEnIncDec>fSize*300)
-		{
-			if(m_fEnIncDec-m_fEnDecSpeed<fSize*300)
-				m_fEnIncDec = fSize*300;
-			else
-				m_fEnIncDec -= m_fEnDecSpeed;
-
-			SetScalingObj(SPR_OBJ_EN2, m_fEnIncDec/2.0f, 1.0);
-		}
-		else
-		{
-			m_fEnIncDec	= fSize*300;
-			m_bEnDec	= FALSE;
-		}
-	}
-}
-
-void CUserInterface::DengeonHpInc()
-{
-	if(m_bEnInc)
-	{	
-		float fSize = g_pMainPlayer->percentageHP();
-
-		SetScalingObj(SPR_OBJ_EN2, fSize * 150, 1.0);
-		SetScalingObj(SPR_OBJ_EN1, fSize * 150, 1.0);
-		if(m_fEnIncDec<fSize*300)
-		{
-			if(m_fEnIncDec+m_fEnDecSpeed>fSize*300)
-				m_fEnIncDec = fSize*300;
-			else
-				m_fEnIncDec += m_fEnDecSpeed;
-
-			SetScalingObj(SPR_OBJ_EN1, 1.0, 1.0);
-		}
-		else
-		{
-			m_fEnIncDec	= fSize*300;
-			m_bEnInc	= FALSE;
-		}
-		SetRender(SPR_OBJ_EN1, TRUE);
-		SetRender(SPR_OBJ_EN2, TRUE);
-	}
-}
-
-void CUserInterface::DengeonHpDef()
-{
-	if(m_bEnDef)
-	{
-		float fSize = g_pMainPlayer->percentageHP();
-
-		SetScalingObj(SPR_OBJ_EN1, fSize*300/2, 1.0);
-		SetScalingObj(SPR_OBJ_EN2, fSize*300/2, 1.0);
-		m_fEnIncDec = fSize*300;
-		m_bEnDef	= FALSE;
-	}
-}
-
 extern char globalDebugLine[255];
 
-void CUserInterface::DengeonManaDec()
-{
-	if(m_bManaDec)
-	{	
-		float fSize = g_pMainPlayer->percentageMP();
 
-		SetScalingObj(SPR_OBJ_MANA1, fSize*300/2, 1.0);
-		SetPosObjX(SPR_OBJ_MANA1, 1023-fSize*300);
+void	CUserInterface::updateSPBar(float scale) {
+	SetScalingObj(SPR_OBJ_MANA2, scale * 300 / 2, 1.0);
+	SetPosObjX(SPR_OBJ_MANA2, 1023 - scale * 300);
 
-		if(m_fManaIncDec>fSize*300)
-		{
-			if(m_fManaIncDec-m_fManaDecSpeed<fSize*300)
-				m_fManaIncDec = fSize*300;
-			else
-				m_fManaIncDec -= m_fManaDecSpeed;
+	SetScalingObj(SPR_OBJ_MANA1, scale * 300 / 2, 1.0);
+	SetPosObjX(SPR_OBJ_MANA1, 1023 - scale * 300);
 
-			SetScalingObj(SPR_OBJ_MANA2, m_fManaIncDec/2.0f, 1.0);
-			SetPosObjX(SPR_OBJ_MANA2, 1023-m_fManaIncDec);
-		}
-		else
-		{
-			m_fManaIncDec	= fSize*300;
-			m_bManaDec		= FALSE;			
-		}
-	}
+	SetRender(SPR_OBJ_MANA1, TRUE);
+	SetRender(SPR_OBJ_MANA2, TRUE);
 }
 
-void CUserInterface::DengeonManaInc()
-{
-	if(m_bManaInc)
-	{	
-		float fSize = g_pMainPlayer->percentageMP();
+void	CUserInterface::updateHPBar(float scale) {
+	SetScalingObj(SPR_OBJ_EN1, scale * 300 / 2, 1.0);
+	SetScalingObj(SPR_OBJ_EN2, scale * 300 / 2, 1.0);
 
-		//sprintf(globalDebugLine, "CURRENT: %.1f, MAX: %.1f, fSize: %.3f", currentMana, maxMana, fSize);
-
-		SetScalingObj(SPR_OBJ_MANA2, fSize*300/2, 1.0);
-		SetPosObjX(SPR_OBJ_MANA2, 1023-fSize*300);
-
-		if(m_fManaIncDec<fSize*300)
-		{
-			if(m_fManaIncDec+m_fManaDecSpeed>fSize*300)
-				m_fManaIncDec = fSize*300;
-			else
-				m_fManaIncDec += m_fManaDecSpeed;
-
-			SetScalingObj(SPR_OBJ_MANA1, m_fManaIncDec/2.0f, 1.0);
-			SetPosObjX(SPR_OBJ_MANA1, 1023-m_fManaIncDec);
-		}
-		else
-		{
-			m_fManaIncDec	= fSize*300;
-			m_bManaInc		= FALSE;
-		}
-		SetRender(SPR_OBJ_MANA1, TRUE);
-		SetRender(SPR_OBJ_MANA2, TRUE);
-	}
+	SetRender(SPR_OBJ_EN1, TRUE);
 }
 
-void CUserInterface::DengeonManaDef()
-{
-	if(m_bManaDef)
-	{
-		float fSize = g_pMainPlayer->percentageMP();
-
-		SetScalingObj(SPR_OBJ_MANA1, fSize*300/2, 1.0);
-		SetScalingObj(SPR_OBJ_MANA2, fSize*300/2, 1.0);
-		SetPosObjX(SPR_OBJ_MANA1, 1023-fSize*300);
-		SetPosObjX(SPR_OBJ_MANA2, 1023-fSize*300);
-		m_fManaIncDec = fSize*300;
-		m_bManaDef	= FALSE;
-	}
+void	CUserInterface::updateEXPBar(float scale) {
+	SetScalingObj(SPR_OBJ_EXP, scale * 300 / 2, 1.0);
+	SetRender(SPR_OBJ_EXP, TRUE);
 }
 
-void CUserInterface::DengeonExpDefInc()
-{
-	if(m_bExpIncDef)
-	{
-		const auto level = g_pMainPlayer->currentLevel();
-		const auto cumulatedEXP = g_pMainPlayer->currentEXP();
-		const auto cumulatedExpForCurrentLevel = GetCumulatedExpByLevel(OBJECT_TYPE_PLAYER, level);
-		const auto cumulatedExpForNextLevel = GetCumulatedExpByLevel(OBJECT_TYPE_PLAYER, level + 1);
-		const auto toGather = cumulatedExpForNextLevel - cumulatedExpForCurrentLevel;
-		const DWORD gatheredSoFar = cumulatedEXP - cumulatedExpForCurrentLevel;
-		const auto scale = (float)gatheredSoFar / toGather;
-	
-		SetScalingObj(SPR_OBJ_EXP, scale * 300/2, 1.0);
-		SetRender(SPR_OBJ_EXP, TRUE);
-		m_bExpIncDef = FALSE;
-	}	
-}
-
-void CUserInterface::SetDengeonHp(DWORD wHp)
-{
-	const auto max = g_pMainPlayer->maxHP();
-
-	if(g_pMainPlayer->maxHP() > wHp)
-		SetDengeonHpDec();
-	else
-		SetDengeonHpInc();
-
-	g_pMainPlayer->updateCurrentHP(min(wHp, max));
-}
-
-void CUserInterface::SetDengeonMp(DWORD wMp)
-{
-	const auto max = g_pMainPlayer->maxSP();
-
-	if(g_pMainPlayer->currentSP()>wMp)
-		SetDengeonManaDec();
-	else
-		SetDengeonManaInc();
-
-	g_pMainPlayer->updateCurrentSP(min(max, wMp));
-}
-
-void CUserInterface::SetDengeonExpDefInc()
-{
-	m_bExpIncDef = TRUE;
-}
-
-void CUserInterface::SetDengeonHpDef()
-{
-	m_bEnDef = TRUE;
-}
-
-void CUserInterface::SetDengeonHpDec()
-{
-	m_bEnDec = TRUE;
-}
-
-void CUserInterface::SetDengeonHpInc()
-{
-	m_bEnInc = TRUE;
-}
-
-void CUserInterface::SetDengeonManaDec()
-{
-	m_bManaDec = TRUE;
-}
-
-void CUserInterface::SetDengeonManaInc()
-{
-	m_bManaInc = TRUE;
-}
-
-void CUserInterface::SetDengeonManaDef()
-{
-	m_bManaDef = TRUE;
+void	CUserInterface::updateCooldownBar(float scale) {
+	SetScalingObj(SPR_OBJ_CAST, scale * 300 / 2, 1.0);
+	SetPosObjX(SPR_OBJ_CAST, 1023 - scale * 300);
+	SetRender(SPR_OBJ_CAST, TRUE);
 }
 
 void CUserInterface::SetActive(BOOL bActive)
 {
 	m_bActive =  bActive;
-
-
 }
 
 void CUserInterface::RenderMonsterBar()
