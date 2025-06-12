@@ -30,6 +30,7 @@
 #include "Interface.h"
 #include "GroupWnd.h"
 #include "UserInterface.h"
+#include "CharWnd.h"
 #include <memory>
 
 BOOL g_bCharacterChk = FALSE;
@@ -1885,6 +1886,7 @@ BOOL CreateMainPlayer(WSTC_WORLD_USER_INFO* pInfo)
 #endif // __RANDOM_MEMORY_ALLOCATION
 
 	g_pMainPlayer->addUpdateListener(std::weak_ptr<CUserInterface>(CUserInterface::getShared()));
+	g_pMainPlayer->addUpdateListener(std::weak_ptr<CCharWnd>(CCharWnd::getShared()));
 
 	g_pMainPlayer->m_hPlayer.pHandle = pSelectChr->hHandle;				//g_pGVLogin->ChrSelectInfo[ g_pGVLogin->dwCurCharIndex ].hHandle;
 

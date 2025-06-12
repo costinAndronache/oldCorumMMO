@@ -7,6 +7,7 @@
 
 #include	"Menu.h"
 #include	"../CommonServer/CommonClientDungeon.h"
+#include	"CMainUserUpdateInterested.h"
 
 #define SPR_OBJ_CHAR_WINDOWS1		0
 #define SPR_OBJ_CHAR_WINDOWS2		1
@@ -46,8 +47,9 @@ enum ENUM_TAB_TYPE
 class CMonster;
 struct CTDS_CHAR_LEVELUP;
 
-class CCharWnd : public CMenu
-{
+class CCharWnd : public CMenu, public CMainUserUpdateInterested {
+public:
+	void updatedStatPoints(CMainUser*, DWORD oldValue, DWORD newValue) override;
 public:
 		
 	BYTE	m_byMemKey;
@@ -61,6 +63,7 @@ public:
 	
 private:
 	static CCharWnd* c_pThis;
+	static std::shared_ptr<CCharWnd> _shared;
 	ENUM_TAB_TYPE m_enCurrentTabType;
 
 	void	GuardianDisplay();
@@ -73,8 +76,9 @@ private:
 	void	SpriteStatButtonEvent(STATUS_POINT_KIND enStatusPointKind, MOUSECHECK enMouseCheck);
 	BOOL	IsStatPoint();
 public:
-	static CCharWnd*	GetInstance()		{ if(!c_pThis) c_pThis = new CCharWnd; return c_pThis; }
-	static void			DestroyInstance()	{ if(c_pThis) { delete c_pThis; c_pThis = NULL;} }
+	static std::shared_ptr<CCharWnd> getShared();
+	static CCharWnd* GetInstance() { return getShared().get(); }
+	static void			DestroyInstance() { _shared.reset(); }
 
 	void	(CCharWnd::*m_fnDisplay)();
 	void	(CCharWnd::*m_fnSendStatPoint)(STATUS_POINT_KIND enStatusPointKind);

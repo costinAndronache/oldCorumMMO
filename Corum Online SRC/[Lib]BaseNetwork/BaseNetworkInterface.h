@@ -1,13 +1,9 @@
 #pragma once
 
 #include <initguid.h>
-#include "stdafx.h"
-//#include "struct.h"
+#include <ole2.h>
 
 struct DESC_BASENETWORK;
-/*************************************************************************************/
-// 이 화일은 절대 수정되어서 안 됩니다.
-/*************************************************************************************/
 
 // {78771B7B-6E5E-4659-87E4-ABE9F0793AA1}
 DEFINE_GUID(CLSID_SC_BASENETWORK_DLL, 
@@ -29,4 +25,4 @@ interface ISC_BaseNetwork : public IUnknown
 	virtual	void	__stdcall					SocketEventProc() = 0;
 };
 
-typedef HRESULT (__stdcall *DllGetClassObject_BaseNetwork)( REFCLSID , REFIID , LPVOID*);
+typedef HRESULT(__stdcall* DllGetClassObject_BaseNetwork)(REFCLSID, REFIID, LPVOID*);

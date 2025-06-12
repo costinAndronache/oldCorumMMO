@@ -864,24 +864,22 @@ void CmdAttack_Mon_User( char* pMsg, DWORD dwLen )
 	// 인터페이스 작업.
 	
 	AttackResult attackResult(pAttack->bStatusKind, pAttack->dwCurUserHP);
-	//attackResult.applyFor(
-	//	[pUser](DWORD hp) {
-	//		if (pUser == g_pMainPlayer) {
-	//			g_pMainPlayer->updateCurrentHP(hp);
-	//		}
-	//		if (hp <= 0) {
-	//			_PlaySound(CHARACTER_SOUND_DEAD, SOUND_TYPE_CHARACTER, CHARACTER_SOUND_DEAD + (pUser->m_wClass - 1) * SOUND_PER_CHARACTER, pUser->m_v3CurPos, FALSE);
-	//			pUser->SetStatus(UNIT_STATUS_DEAD);
-	//		}
-	//	},
-	//	[pUser](DWORD sp) {
-	//		if (pUser == g_pMainPlayer) {
-	//			g_pMainPlayer->updateCurrentSP(sp);
-	//		}
-	//	}
-	//);
-
-	printf("MON_USER_ATK");
+	attackResult.applyFor(
+		[pUser](DWORD hp) {
+			if (pUser == g_pMainPlayer) {
+				g_pMainPlayer->updateCurrentHP(hp);
+			}
+			if (hp <= 0) {
+				_PlaySound(CHARACTER_SOUND_DEAD, SOUND_TYPE_CHARACTER, CHARACTER_SOUND_DEAD + (pUser->m_wClass - 1) * SOUND_PER_CHARACTER, pUser->m_v3CurPos, FALSE);
+				pUser->SetStatus(UNIT_STATUS_DEAD);
+			}
+		},
+		[pUser](DWORD sp) {
+			if (pUser == g_pMainPlayer) {
+				g_pMainPlayer->updateCurrentSP(sp);
+			}
+		}
+	);
 }
 
 void CmdUserStatus( char* pMsg, DWORD dwLen )

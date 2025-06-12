@@ -15,8 +15,19 @@
 #include "effect.h"
 #include "CodeFun.h"
 
-CSkillWnd* CSkillWnd::c_pThis = NULL;
 
+std::shared_ptr<CSkillWnd> CSkillWnd::_shared(nullptr);
+
+std::shared_ptr<CSkillWnd> CSkillWnd::getShared() {
+	if (!_shared) {
+		_shared = std::make_shared<CSkillWnd>();
+	}
+
+	return _shared;
+}
+void CSkillWnd::updatedSkillPoints(CMainUser*, DWORD oldValue, DWORD newValue) {
+
+}
 //======================================================//
 // Construction/Destrution.								//
 //======================================================//

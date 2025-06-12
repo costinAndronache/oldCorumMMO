@@ -11,7 +11,24 @@
 #include "NetworkClient.h"
 #include "CodeFun.h"
 
-CCharWnd* CCharWnd::c_pThis = NULL;
+std::shared_ptr<CCharWnd> CCharWnd::_shared(nullptr);
+
+std::shared_ptr<CCharWnd> CCharWnd::getShared() {
+	if (!_shared) {
+		_shared = std::make_shared<CCharWnd>();
+	}
+
+	return _shared;
+}
+
+void CCharWnd::updatedStatPoints(CMainUser*, DWORD oldValue, DWORD newValue) {
+	if (newValue > 0) {
+		ShowAllStatIncreseButton(TRUE);
+	}
+	else {
+		HideAllStatButton();
+	}
+}
 
 //======================================================//
 // Construction/Destrution.								//

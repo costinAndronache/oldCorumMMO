@@ -60,6 +60,4 @@ void AttackResult::applyFor(std::function<void(DWORD)> hpApply, std::function<vo
 	}
 }
 
-AttackResult::~AttackResult() {
-	// without this being declared it will crash when destroyed within the client code ????
-}
+AttackResult::~AttackResult() { }
