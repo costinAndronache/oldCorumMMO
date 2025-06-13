@@ -1791,10 +1791,6 @@ int	IsSkillUserUser(BYTE bSkillKind, CUser *pOwnUser, CUser* pTargetUser, BYTE b
 
 	Effect* pEffect = g_pEffectLayer->GetEffectInfo(bSkillKind);
 
-#ifdef JAPAN_LOCALIZING	//	일본은 배쉬 스킬 대인공격 안됨!!
-	if (pEffect->bID == __SKILL_BASH__)	// added by minjin. 2004. 10. 30.
-		return 0;
-#endif
 
 	if (!IsSkillUser(bSkillKind, pTargetUser))
 	{

@@ -37,7 +37,7 @@ void listenersUpdate(const std::vector<CMainUserUpdateInterestedWeakRef>& listen
 	});
 }
 
-float			CMainUser::costForSkillCast(BYTE skill) {
+float			CMainUser::cooldownCostForskillCast(BYTE skill) {
 	const auto lastCastTime = m_dwStartSkillTick[skill];
 	auto pEffect = g_pEffectLayer->GetEffectInfo(skill);
 
@@ -1640,7 +1640,7 @@ void CMainUser::SetPacketSkillTile(WORD wTileIndexX, WORD wTileIndexZ,  BYTE bSk
 	m_bSkillTmp = GetSkillKind(bSkillKindLR);
 
 	SendCasting();
-	const auto cost = costForSkillCast(skillKind);
+	const auto cost = cooldownCostForskillCast(skillKind);
 	updateCurrentCoolPoints(currentCoolPoints() - cost);
 }
 

@@ -2968,7 +2968,7 @@ BOOL SkillEvent(BYTE bLR)
 			{
 				CMonster*	pMonster = (CMonster*)pObjDesc->pInfo;					
 
-				if (!IsSkillUserMon(pEffect->bID, g_pMainPlayer, pMonster))
+				if (!CanUserCastSkillOnMonster(pEffect->bID, g_pMainPlayer, pMonster))
 					return FALSE;				
 
 				if (pEffect->dwRange == 0)
@@ -3256,7 +3256,7 @@ int		IsSkillUserUser(BYTE bSkillKind, CMainUser *pOwnUser, CUser* pTargetUser, B
 	return nResult;
 }
 
-int		IsSkillUserMon(BYTE bSkillKind, CMainUser *pOwnUser, CMonster* pTargetMonster)
+int		CanUserCastSkillOnMonster(BYTE bSkillKind, CMainUser *pOwnUser, CMonster* pTargetMonster)
 {
 	int nResult = 1;
 	Effect* pEffect = g_pEffectLayer->GetEffectInfo(bSkillKind);

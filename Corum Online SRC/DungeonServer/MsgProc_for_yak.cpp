@@ -313,13 +313,6 @@ void CmdSkill( DWORD dwConnectionIndex, char* pMsg, DWORD dwLength )
 	else if (NULL == pOwnUser->GetCurDungeon())
 		return;
 	
-#if defined TAIWAN_LOCALIZING
-	if (pOwnUser->GetAverageWeight() >= WEIGTH_100PER_OVER)
-	{
-		pOwnUser->SendSkillCastingFail(SKILL_CASTING_FAIL_REASON_LOW);
-		return;
-	}
-#endif
 	
 	SKILLDESC skillDesc;
 	skillDesc.bOwnType			= OBJECT_TYPE_PLAYER;

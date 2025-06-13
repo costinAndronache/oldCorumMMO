@@ -341,7 +341,7 @@ int EffectLayer::GetBaseClassSkillMax(WORD wClass, BYTE bSkillKind)
 	return nBaseClassSkillMax;
 }
 
-int EffectLayer::GetUsedSPSkill(CUser* pOwnUser, SKILLDESC* pSkillDesc)
+int EffectLayer::UserManaOffsetForSkillUsage(CUser* pOwnUser, SKILLDESC* pSkillDesc)
 {
 	int nUseMana = 0;
 	Effect* pEffect = GetEffectInfo(pSkillDesc->bSkillKind);
@@ -364,8 +364,8 @@ int EffectLayer::GetUsedSPSkill(CUser* pOwnUser, SKILLDESC* pSkillDesc)
 	}
 	else if (pEffect->bType == TYPE_DRIVE)
 	{
-		pSkillDesc->dwSkillKeepTime = g_dwTickCount - pOwnUser->m_dwTemp[USER_TEMP_CASTINGSTARTTICK];
-		nUseMana = (int)(((pOwnUser->GetMaxSP()*0.1)*(pSkillDesc->dwSkillKeepTime/1000.)));
+		const auto millisecondsSinceCastStart = g_dwTickCount - pOwnUser->m_dwTemp[USER_TEMP_CASTINGSTARTTICK];
+		nUseMana = (int)(((pOwnUser->GetMaxSP()*0.1)*(millisecondsSinceCastStart/1000.)));
 		
 		nUseMana = min((int)pOwnUser->GetSP(), nUseMana);
 		pSkillDesc->dwSkillKeepTime = 
@@ -396,7 +396,7 @@ BOOL EffectLayer::MessyProcessForSystem(CUser* pOwnUser, SKILLDESC* pSkillDesc)
 }
 
 
-BOOL EffectLayer::MessyProcessForUser(CUser* pOwnUser, SKILLDESC* pSkillDesc)
+BOOL EffectLayer::ProcessUsersSkillCast(CUser* pOwnUser, SKILLDESC* pSkillDesc)
 {
 	if (!IsUnitStatusReadySkill(pSkillDesc->bSkillKind, pOwnUser))
 		return FALSE;
@@ -415,7 +415,7 @@ BOOL EffectLayer::MessyProcessForUser(CUser* pOwnUser, SKILLDESC* pSkillDesc)
 		return FALSE;
 	}
 
-	int nMana = GetUsedSPSkill(pOwnUser, pSkillDesc);		
+	int nMana = UserManaOffsetForSkillUsage(pOwnUser, pSkillDesc);		
 	if (nMana < 0 && (INT)pOwnUser->GetSP() < -nMana)
 	{
 		pOwnUser->SendSkillCastingFail(SKILL_CASTING_FAIL_REASON_LACK_SP);
@@ -541,7 +541,7 @@ void EffectLayer::RevisionStartPositon(SKILLDESC* pSkillDesc, VECTOR2* pV2Start)
 	}
 }
 
-CUnit* EffectLayer::GetValiidUnit(SKILLDESC* pSkillDesc)
+CUnit* EffectLayer::ProcessCasterForSkillCast(SKILLDESC* pSkillDesc)
 {
 	CUnit*	pOffenseUnit = NULL;
 	
@@ -552,7 +552,7 @@ CUnit* EffectLayer::GetValiidUnit(SKILLDESC* pSkillDesc)
 	if (pSkillDesc->bOwnType == OBJECT_TYPE_PLAYER)
 	{
 		pOffenseUnit = g_pUserHash->GetData(pSkillDesc->dwOwnIndex);
-		if (!MessyProcessForUser((CUser*)pOffenseUnit, pSkillDesc))
+		if (!ProcessUsersSkillCast((CUser*)pOffenseUnit, pSkillDesc))
 			return NULL;
 	}
 	else if (pSkillDesc->bOwnType == OBJECT_TYPE_MONSTER)
@@ -906,7 +906,7 @@ void EffectLayer::AfterSkillSuccessProcess(SKILLDESC* pSkillDesc, CUnit* pOffens
 void EffectLayer::SendSkill(SKILLDESC* pSkillDesc)
 {
 	//>>> goto를 이용하기 위해선 여기에 변수를 선언해야 한다.
-	CUnit*	pOffenseUnit = GetValiidUnit(pSkillDesc);
+	CUnit*	pOffenseUnit = ProcessCasterForSkillCast(pSkillDesc);
 	if (pSkillDesc->bOwnType != OBJECT_TYPE_SKILL && !pOffenseUnit)
 		return;
 		
