@@ -109,6 +109,8 @@ DWORD			CMainUser::currentSP() const {
 
 void			CMainUser::updateCurrentSP(DWORD sp) {
 	const auto oldValue = m_dwMP;
+	const auto diff = (long)sp - (long)oldValue;
+
 	m_dwMP = sp;
 	listenersUpdate(updateListeners, [this, oldValue, sp](CMainUserUpdateInterestedSharedRef listener) {
 		listener->updatedCurrentSP(this, oldValue, sp);
@@ -1686,15 +1688,18 @@ void CMainUser::SendCasting()
 		
 	g_pNet->SendMsg( (char*)&packet, packet.GetPacketSize(), SERVER_INDEX_ZONE );
 
+	printf("\n[SendCasting] sent cast");
 	m_dwCastingTick = 0;	
 	SetStatus(UNIT_STATUS_CASTING);	// 캐스팅은 끝났으나 아직 스킬 메시지가 날라오질 않았따.
 }
 
-void CMainUser::SendSkill()
+void CMainUser::SendContinousSkillIfCasting()
 {
+	printf("\nTrying to send continous skill cast");
 	if (IsCastingContinousSkill())
 	{
 		g_pNet->SendMsg( (char*)m_pSkillPacket, m_pSkillPacket->GetPacketSize(), SERVER_INDEX_ZONE );
+		printf("\n[SENT] continous skill cast");
 		m_pSkillPacket->bStatus = 0;
 	}
 }

@@ -101,6 +101,7 @@
 #include "GuildWarStatusWnd.h"
 #include "ItemPickupFiltering/ItemPickupFiltering.h"
 #include "../CommonServer/ItemManagerDefine.h"
+#include "MouseButtonLongPressRecognizer.h"
 
 using namespace ItemPickupFiltering;
 
@@ -142,6 +143,8 @@ COnlyList*					g_pDyingMonsterList = NULL;
 GXOBJECT_HANDLE				g_TileAttr[ MAX_KIND_OF_DEBUG_TILE ][ MAX_DEBUG_TILE_NUM ];
 BYTE						g_bShowTileAttr = 0;
 #endif
+
+static std::shared_ptr<MouseButtonLongPressRecognizer> _mouseLongPressRecognizer(nullptr);
 
 DWORD __stdcall AfterInterpolation(AFTER_INTERPOLATION_CALL_BACK_ARG* pArg)
 {
@@ -203,6 +206,12 @@ void cancelTooltipRenderingForAllDropped() {
 BOOL InitGameDungeon()
 {
 	ItemPickupFilteringSystem::sharedInstance()->setViewActive(false);
+	_mouseLongPressRecognizer = std::make_shared<MouseButtonLongPressRecognizer>(WorkQueue::mainThreadQueue(), 300);
+
+	_mouseLongPressRecognizer->addRightButtonListeners({
+		[]() { printf("\nLONG MOUSE PRESS DETECTED"); },
+		[]() { printf("\nLONG MOUSE PRESS ENDED");}
+	});
 
 	CBankWnd::GetInstance()->Init();
 	// 카메라 이동에 관련된 플래그 세팅.
@@ -2108,7 +2117,10 @@ BOOL OnLButtonDownInterfaceDungeon()
 
 void OnLButtonDownDungeon(WPARAM wParam, LPARAM lParam)
 {
+	_mouseLongPressRecognizer->handleLeftButtonPress();
+
 	if (ItemPickupFilteringSystem::sharedInstance()->handleMouseDown()) {
+		printf("\nItemPickupFiltering handles it");
 		return;
 	}
 
@@ -2128,7 +2140,7 @@ void OnLButtonDownDungeon(WPARAM wParam, LPARAM lParam)
 
 	if( OnLButtonDownInterfaceDungeon() )
 	{
-		g_pMainPlayer->SendSkill();
+		g_pMainPlayer->SendContinousSkillIfCasting();
 		return;		
 	}
 
@@ -2229,6 +2241,7 @@ lb_move:
 
 void OnLButtonUpDungeon(WPARAM wParam, LPARAM lParam)
 {
+	_mouseLongPressRecognizer->handleLeftButtonRelease();
 	if (ItemPickupFilteringSystem::sharedInstance()->handleMouseUp()) {
 		return;
 	}
@@ -2359,6 +2372,8 @@ void OnLButtonUpDungeon(WPARAM wParam, LPARAM lParam)
 
 void OnRButtonDownDungeon(WPARAM wParam, LPARAM lParam)
 {	
+	_mouseLongPressRecognizer->handleRightButtonPress();
+
 	if( g_pThisDungeon->IsStadium() && g_pMainPlayer->m_dwGuildWarFlag == G_W_F_OBSERVER )
 		return;
 
@@ -2515,7 +2530,8 @@ void OnRButtonDownDungeon(WPARAM wParam, LPARAM lParam)
 
 
 void OnRButtonUpDungeon(WPARAM wParam, LPARAM lParam)
-{			
+{
+	_mouseLongPressRecognizer->handleRightButtonRelease();
 	CInterface* pInterface	= CInterface::GetInstance();
 	
 	pInterface->SetUp(FALSE);
@@ -2539,7 +2555,7 @@ void OnRButtonUpDungeon(WPARAM wParam, LPARAM lParam)
 
 	if(nChkInter==-1)
 	{
-		g_pMainPlayer->SendSkill();	
+		g_pMainPlayer->SendContinousSkillIfCasting();	
 	}
 
 	if(pItemWnd->GetActive()==TRUE)		

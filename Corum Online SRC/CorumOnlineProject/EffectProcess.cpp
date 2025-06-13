@@ -2873,16 +2873,7 @@ BOOL SkillEvent(BYTE bLR)
 		|| g_pMainPlayer->GetStatus() == UNIT_STATUS_WALKING 
 		|| g_pMainPlayer->GetStatus() == UNIT_STATUS_RUNNING )
 		&& g_pMainPlayer->GetSkillKind(bLR) < __SKILL_ATTACK__ 
-		&& g_pMainPlayer->GetSkillKind(bLR) >= __SKILL_MANAMASTERY__)
-	{		
-#if IS_TAIWAN_LOCALIZING()
-		if (g_pMainPlayer->GetAverageWeight() >= 100.f)
-		{
-			//"포화무게한도에 도달하여 달리기가 안되며, 포션의 사용 딜레이가 증가합니다."
-			DisplayMessageAdd(g_Message[ETC_MESSAGE986].szMessage, 0xffff0000);	
-			return FALSE;
-		}
-#endif		
+		&& g_pMainPlayer->GetSkillKind(bLR) >= __SKILL_MANAMASTERY__) {		
 		
 		g_Mouse.v3Mouse = GetXYZFromScreenXY( g_pGeometry, g_Mouse.MousePos.x , g_Mouse.MousePos.y
 			, g_rcScreenRect.right, g_rcScreenRect.bottom);

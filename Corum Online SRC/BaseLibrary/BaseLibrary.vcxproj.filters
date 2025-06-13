@@ -289,6 +289,8 @@
       <Filter>Definition</Filter>
     </ClInclude>
     <ClInclude Include="stdafx.h" />
+    <ClInclude Include="WorkQueue.h" />
+    <ClInclude Include="Timer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="datastructure\template.cpp">
@@ -397,5 +399,7 @@
       <Filter>File\XlReader\XlHeadLine</Filter>
     </ClCompile>
     <ClCompile Include="stdafx.cpp" />
+    <ClCompile Include="WorkQueue.cpp" />
+    <ClCompile Include="Timer.cpp" />
   </ItemGroup>
 </Project>

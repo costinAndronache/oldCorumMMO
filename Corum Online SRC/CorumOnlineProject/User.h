@@ -388,7 +388,7 @@ public:
 	void			GetAttackDamage_R(WORD& wAttackDamageMin, WORD& wAttackDamageMax);
 	BYTE			GetSkillLevel(BYTE bSkillKind);
 	BOOL			IsCastingContinousSkill();	// 현재 스킬쏘려는중인가? 마우스 다운은 했는데 업을 안했다는 소리다.
-	void			SendSkill();	// 셋팅한 스킬을 보내라.
+	void			SendContinousSkillIfCasting();	// 셋팅한 스킬을 보내라.
 	void			SendCasting();
 	void			SetActionDummy();	// 멍청히 있으면 서있기로 변신.
 	void			SetPacketSkillMonster(CMonster* pTargetMonster, BYTE bSkillKindLR);//몬스터에게 보낼 스킬을 셋팅할.

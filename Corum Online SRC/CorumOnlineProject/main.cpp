@@ -28,10 +28,13 @@
 #include <Windows.h>
 #include <GdiPlusInit.h>
 #include "CustomUiKit/PagedTableWindow/PagedTableWindow.h"
+#include "../BaseLibrary/Timer.h"
 
 void message(char* const info) {
 	MessageBox(g_hMainWnd, info, "CorumOnlineProject", MB_OK);
 }
+
+static Timer* testTimer = nullptr;
 
 int APIENTRY WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nShowCmd )
 {
@@ -167,29 +170,9 @@ lb_Process:
 
 		delete msg;
 
-#ifdef __USE_CLIENT_SPEEDHACK_CHECKER
-		if(IsSpeedHackClient()) 
-		{
-#if IS_CHINA_LOCALIZING()
-			MessageBox(NULL, _T("速度异常,强制退出游戏!"), _T("速度异常!"), MB_OK|MB_ICONWARNING);
-#else
-#ifndef DEVELOP_MODE			
-			MessageBox(NULL, _T("DON'T USE SPEEDHACK!! ErrCode: 1"), _T("SPEEDHACK!"), MB_OK|MB_ICONWARNING);
-#endif
-#endif
-			
-#ifndef DEVELOP_MODE
-			break;
-#endif
-		}
-#endif 
+		WorkQueue::mainThreadQueue()->processCurrentWorkItems();
 	}
 
-#if IS_CHINA_LOCALIZING()
-#ifndef DEVELOP_MODE	
-	OpenWebSite("http://corum.9you.com");
-#endif
-#endif
 	return 0L;
 
 	ReleaseGame();

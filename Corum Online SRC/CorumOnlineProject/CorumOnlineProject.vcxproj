@@ -270,6 +270,7 @@
     <GenerateManifest>false</GenerateManifest>
     <CustomBuildAfterTargets>
     </CustomBuildAfterTargets>
+    <CopyCppRuntimeToOutputDir>true</CopyCppRuntimeToOutputDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>.\Release\</OutDir>
@@ -795,7 +796,7 @@
       <LanguageStandard>stdcpp14</LanguageStandard>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>legacy_stdio_definitions.lib;odbc32.lib;odbccp32.lib;imm32.lib;Winmm.lib;WS2_32.lib;d3d8.lib;mss32.lib;version.lib;gdiplus.lib;SS3DGFunc.lib;CResNameResolver.lib;SoundLib.lib;CommonServer.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>legacy_stdio_definitions.lib;odbc32.lib;odbccp32.lib;imm32.lib;Winmm.lib;WS2_32.lib;d3d8.lib;mss32.lib;version.lib;gdiplus.lib;BaseLibrary.lib;SS3DGFunc.lib;CResNameResolver.lib;SoundLib.lib;CommonServer.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>.\Debug\CorumOnlineResult.exe</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <IgnoreSpecificDefaultLibraries>LIBC.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
@@ -4831,6 +4832,7 @@
       <BasicRuntimeChecks Condition="'$(Configuration)|$(Platform)'=='dev|Win32'">EnableFastChecks</BasicRuntimeChecks>
       <BrowseInformation Condition="'$(Configuration)|$(Platform)'=='dev|Win32'">true</BrowseInformation>
     </ClCompile>
+    <ClCompile Include="MouseButtonLongPressRecognizer.cpp" />
     <ClCompile Include="MouseLib.cpp">
       <BasicRuntimeChecks Condition="'$(Configuration)|$(Platform)'=='CHINA_DEV|Win32'">EnableFastChecks</BasicRuntimeChecks>
       <BrowseInformation Condition="'$(Configuration)|$(Platform)'=='CHINA_DEV|Win32'">true</BrowseInformation>
@@ -6740,6 +6742,7 @@
     <ClInclude Include="MinboboWork.h" />
     <ClInclude Include="Monster.h" />
     <ClInclude Include="MonsterManager.h" />
+    <ClInclude Include="MouseButtonLongPressRecognizer.h" />
     <ClInclude Include="MouseLib.h" />
     <ClInclude Include="MSoundControl.h" />
     <ClInclude Include="MSoundManager.h" />
