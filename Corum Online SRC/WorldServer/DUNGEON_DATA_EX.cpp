@@ -115,7 +115,7 @@ void DUNGEON_DATA_EX::SendToUsers(char* pPacket, DWORD dwSize)
 
 	while(pos)
 	{
-		CWorldUser* pUser = (CWorldUser*)m_pListSendToUser->GetNext(pos);
+		CWorldUser* pUser = (CWorldUser*)m_pListSendToUser->GetAndAdvance(pos);
 		g_pNet->SendToUser(pUser->m_dwConnectionIndex, pPacket, dwSize, FLAG_SEND_NOT_ENCRYPTION);
 	}
 }

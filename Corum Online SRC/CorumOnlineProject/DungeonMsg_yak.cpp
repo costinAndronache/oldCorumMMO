@@ -142,7 +142,7 @@ void CmdGuardianLevelUP( char* pMsg, DWORD dwLen )
 	_PlaySound(0, SOUND_TYPE_SYSTEM, SOUND_SYSTEM_LEVELUP, g_v3InterfaceSoundPos, FALSE);
 
 	// 레벨업 이펙트를 뿌림
-	EffectDesc*	pEffectDesc =  g_pEffectLayer->CreateGXObject(g_pObjManager->GetFile(SKILL_LEVELUP), TRUE, __CHR_EFFECT_NONE__);
+	AppliedSkill*	pEffectDesc =  g_pEffectLayer->CreateGXObject(g_pObjManager->GetFile(SKILL_LEVELUP), TRUE, __CHR_EFFECT_NONE__);
 	
 	pEffectDesc->byTargetObjectType[0]	= OBJECT_TYPE_MONSTER; 
 	pEffectDesc->dwTargetIndex[0]		= pMonster->m_dwMonsterIndex;
@@ -208,11 +208,11 @@ void CmdMoveDungeon( char* pMsg, DWORD dwLen )
 	switch( pMove->bMoveType )
 	{
 	case UNIT_STATUS_WALKING:
-		pUser->SetAction( MOTION_TYPE_WALK, nFrame, ACTION_LOOP );
+		pUser->SetMotion( MOTION_TYPE_WALK, nFrame, ACTION_LOOP );
 		break;
 
 	case UNIT_STATUS_RUNNING:
-		pUser->SetAction( MOTION_TYPE_RUN, nFrame, ACTION_LOOP );
+		pUser->SetMotion( MOTION_TYPE_RUN, nFrame, ACTION_LOOP );
 		// 달리기이면 이펙트도 같이 ...
 		pUser->ShowMoveStartEffect();
 		break;
@@ -265,9 +265,9 @@ void CmdStopDungeon( char* pMsg, DWORD dwLen )
 	if ( pUser->GetStatus() == UNIT_STATUS_PLAYER_REST )		return;
 
 	if (g_dwLayerID < 100 )	// 던전은 아니므로
-		pUser->SetAction( MOTION_TYPE_VILLAGESTAND, 0, ACTION_LOOP );
+		pUser->SetMotion( MOTION_TYPE_VILLAGESTAND, 0, ACTION_LOOP );
 	else
-		pUser->SetAction( MOTION_TYPE_WARSTAND, 0, ACTION_LOOP );
+		pUser->SetMotion( MOTION_TYPE_WARSTAND, 0, ACTION_LOOP );
 	
 	if( pUser->GetStatus() != UNIT_STATUS_DEAD )
 	{
@@ -373,7 +373,7 @@ void CmdAttack_User_Mon( char* pMsg, DWORD dwLen )
 
 		if (MOTION_TYPE_ATTACK3_3 < g_pMainPlayer->m_wAttackType)	asm_int3();
 
-		g_pMainPlayer->SetAction( g_pMainPlayer->m_wAttackType, 0, ACTION_ONCE );
+		g_pMainPlayer->SetMotion( g_pMainPlayer->m_wAttackType, 0, ACTION_ONCE );
 		g_pMainPlayer->SetStatus(UNIT_STATUS_ATTACKING);
 		g_pMainPlayer->m_hPlayer.pDesc->ObjectFunc	= PlayerAttackFunc;
 				
@@ -413,7 +413,7 @@ void CmdAttack_User_Mon( char* pMsg, DWORD dwLen )
 		g_pExecutive->GXOSetDirection( pUser->m_hPlayer.pHandle, &g_Camera.v3AxsiY, (float)(atan2(v3DirMon.z, v3DirMon.x) + DEG90 ) );		
 			
 		pUser->m_wAttackType	= (WORD)( MOTION_TYPE_ATTACK1_1 + ( pAttackUserMon->bAttackType * 3 + pAttackUserMon->bAttackFrame ) );
-		pUser->SetAction( pUser->m_wAttackType, 0, ACTION_ONCE );
+		pUser->SetMotion( pUser->m_wAttackType, 0, ACTION_ONCE );
 		pUser->SetStatus( UNIT_STATUS_ATTACKING );
 		pUser->m_hPlayer.pDesc->ObjectFunc	= PlayerAttackFunc;
 		
@@ -488,7 +488,7 @@ void CmdAttack_User_User( char* pMsg, DWORD dwLen )
 			g_pMainPlayer->m_dwTemp[ USER_TEMP_TARGET_INDEX ]	= pDefense->m_dwUserIndex;
 
 			g_pMainPlayer->m_wAttackType	= (WORD)( MOTION_TYPE_ATTACK1_1 + ( pAttackUserUser->bAttackType * 3 + pAttackUserUser->bAttackFrame ) );
-			g_pMainPlayer->SetAction( g_pMainPlayer->m_wAttackType, 0, ACTION_ONCE );
+			g_pMainPlayer->SetMotion( g_pMainPlayer->m_wAttackType, 0, ACTION_ONCE );
 			g_pMainPlayer->SetStatus(UNIT_STATUS_ATTACKING);
 			g_pMainPlayer->m_hPlayer.pDesc->ObjectFunc	= PlayerAttackFunc;	
 		}
@@ -509,7 +509,7 @@ void CmdAttack_User_User( char* pMsg, DWORD dwLen )
 		g_pExecutive->GXOSetDirection( pOffense->m_hPlayer.pHandle, &g_Camera.v3AxsiY, (float)(atan2(v3DirMon.z, v3DirMon.x) + DEG90 ) );
 		
 		pOffense->m_wAttackType	= (WORD)( MOTION_TYPE_ATTACK1_1 + ( pAttackUserUser->bAttackType * 3 + pAttackUserUser->bAttackFrame ) );
-		pOffense->SetAction( pOffense->m_wAttackType, 0, ACTION_ONCE );
+		pOffense->SetMotion( pOffense->m_wAttackType, 0, ACTION_ONCE );
 		pOffense->SetStatus(UNIT_STATUS_ATTACKING);
 		pOffense->m_hPlayer.pDesc->ObjectFunc	= PlayerAttackFunc;
 	}
@@ -531,53 +531,35 @@ void CmdAttack_User_User( char* pMsg, DWORD dwLen )
 
 	if( pAttackUserUser->bType == 3 || pAttackUserUser->bType == 4 )
 	{
-		if( pAttackUserUser->bStatusKind == USER_HP )
-		{
-			if (pDefense == g_pMainPlayer)
-				CUserInterface::GetInstance()->SetDengeonHp(WORD(pAttackUserUser->dwCurDefenseUserHP));
+		AttackResult attackResult(*pAttackUserUser);
+		attackResult.applyFor(
+			[pDefense, pOffense](DWORD hp) {
+				if (pDefense == g_pMainPlayer) {
+					g_pMainPlayer->updateCurrentHP(hp);
+				}
 
-			if (pAttackUserUser->dwCurDefenseUserHP == 0  )
-			{
-				_PlaySound( CHARACTER_SOUND_DEAD, SOUND_TYPE_CHARACTER, CHARACTER_SOUND_DEAD + ( pDefense->m_wClass - 1 ) * SOUND_PER_CHARACTER
-					, pDefense->m_v3CurPos, FALSE );
+				if (hp == 0) {
+					_PlaySound(CHARACTER_SOUND_DEAD, SOUND_TYPE_CHARACTER, CHARACTER_SOUND_DEAD + (pDefense->m_wClass - 1) * SOUND_PER_CHARACTER
+						, pDefense->m_v3CurPos, FALSE);
 
-				pDefense->SetStatus(UNIT_STATUS_DEAD);	
+					pDefense->SetStatus(UNIT_STATUS_DEAD);
 
-				if (g_pThisDungeon->m_bSiege)
-					pOffense->SetSiegePKCount(pOffense->m_wSiegePKCount+1);
+					if (g_pThisDungeon->m_bSiege)
+						pOffense->SetSiegePKCount(pOffense->m_wSiegePKCount + 1);
 
-				char szTemp[0xff] = {0,};
-				// "%s님이 %s님을 죽였습니다."
-				wsprintf(szTemp, g_Message[ETC_MESSAGE505].szMessage, pOffense->m_szName, pDefense->m_szName); 
-				DisplayMessageAdd(szTemp, 0xffFF0000);
-				
+					char szTemp[0xff] = { 0, };
+					// "%s님이 %s님을 죽였습니다."
+					wsprintf(szTemp, g_Message[ETC_MESSAGE505].szMessage, pOffense->m_szName, pDefense->m_szName);
+					DisplayMessageAdd(szTemp, 0xffFF0000);
+				}
+
+			},
+			[pDefense](DWORD sp) {
+				if (pDefense == g_pMainPlayer) {
+					g_pMainPlayer->updateCurrentSP(sp);
+				}
 			}
-		}
-		else if( pAttackUserUser->bStatusKind == USER_MP )
-		{
-			if (pDefense == g_pMainPlayer)
-			{
-				CUserInterface::GetInstance()->SetDengeonHp(WORD(pAttackUserUser->dwCurDefenseUserHP>>16));
-				CUserInterface::GetInstance()->SetDengeonMp(WORD(pAttackUserUser->dwCurDefenseUserHP&0xffff));
-			}
-			
-			if (pAttackUserUser->dwCurDefenseUserHP>>16 == 0  )
-			{
-				
-				_PlaySound( CHARACTER_SOUND_DEAD, SOUND_TYPE_CHARACTER, CHARACTER_SOUND_DEAD + ( pDefense->m_wClass - 1 ) * SOUND_PER_CHARACTER
-					, pDefense->m_v3CurPos, FALSE );
-
-				pDefense->SetStatus(UNIT_STATUS_DEAD);	
-
-				if (g_pThisDungeon->m_bSiege)
-					pOffense->SetSiegePKCount(pOffense->m_wSiegePKCount+1);
-				
-				char szTemp[0xff] = {0,};
-				// "%s님이 %s님을 죽였습니다."
-				wsprintf(szTemp, g_Message[ETC_MESSAGE505].szMessage, pOffense->m_szName, pDefense->m_szName); 
-				DisplayMessageAdd(szTemp, 0xffFF0000);				
-			}
-		}		
+		);	
 	}
 }
 
@@ -639,7 +621,7 @@ void CmdAttack_Mon_Mon( char* pMsg, DWORD dwLen )
  
 	if( pDefenseMon->m_dwHP == 0 )
 	{
-		CUser* pKiller = g_pUserHash->GetData(pOffenseMon->m_dwLordIndex);
+		CUser* pKiller = g_pUserHash->GetData(pOffenseMon->lordDungeonID);
 		pDefenseMon->InitDie(pKiller, FALSE, min(pAttackMonMon->dwDamage/10, 50)+GetRandom(20)
 			, g_pChrInfoMonster->GetFrameInfo(pOffenseMon->m_wModNo, 0, MON_MOTION_TYPE_ATTACK1, _CHRINFO_FRAME0) );		
 	}
@@ -728,7 +710,7 @@ void CmdDisAppearMonster( char* pMsg, DWORD dwLen )
 
 	// 나의 가디언이 없어졌다 적당한 처리를 해준다.
 	if( pMonster->m_dwMonsterKind == OBJECT_TYPE_GUARDIAN
-		&& pMonster->m_dwLordIndex == g_pMainPlayer->m_dwUserIndex )
+		&& pMonster->lordDungeonID == g_pMainPlayer->m_dwUserIndex )
 	{
 		CUserInterface::GetInstance()->CloseGuardianDescriptionWnd();
 
@@ -836,7 +818,7 @@ void CmdAttack_Mon_User( char* pMsg, DWORD dwLen )
 		pMonster->m_dwTemp[ MONSTER_TEMP_TARGET_TYPE ]	= OBJECT_TYPE_MAINPLAYER;
 		pMonster->m_dwTemp[ MONSTER_TEMP_TARGET_INDEX ]	= g_pMainPlayer->m_dwUserIndex;		
 
-		CUser* pLoader = g_pUserHash->GetData(pMonster->m_dwLordIndex);
+		CUser* pLoader = g_pUserHash->GetData(pMonster->lordDungeonID);
 		if (pLoader)
 		{
 			char szTemp[0xff] = {0,};
@@ -881,31 +863,23 @@ void CmdAttack_Mon_User( char* pMsg, DWORD dwLen )
 	
 	// 인터페이스 작업.
 	
-	if( pAttack->bStatusKind == USER_HP )
-	{
-		if (pUser == g_pMainPlayer)
-			CUserInterface::GetInstance()->SetDengeonHp(WORD(pAttack->dwCurUserHP));
-		if (pAttack->dwCurUserHP == 0  )
-		{
-			_PlaySound( CHARACTER_SOUND_DEAD, SOUND_TYPE_CHARACTER, CHARACTER_SOUND_DEAD + ( pUser->m_wClass - 1 ) * SOUND_PER_CHARACTER, pUser->m_v3CurPos, FALSE );
-			pUser->SetStatus(UNIT_STATUS_DEAD);	
-			
+	AttackResult attackResult(pAttack->bStatusKind, pAttack->dwCurUserHP);
+	attackResult.applyFor(
+		[pUser](DWORD hp) {
+			if (pUser == g_pMainPlayer) {
+				g_pMainPlayer->updateCurrentHP(hp);
+			}
+			if (hp <= 0) {
+				_PlaySound(CHARACTER_SOUND_DEAD, SOUND_TYPE_CHARACTER, CHARACTER_SOUND_DEAD + (pUser->m_wClass - 1) * SOUND_PER_CHARACTER, pUser->m_v3CurPos, FALSE);
+				pUser->SetStatus(UNIT_STATUS_DEAD);
+			}
+		},
+		[pUser](DWORD sp) {
+			if (pUser == g_pMainPlayer) {
+				g_pMainPlayer->updateCurrentSP(sp);
+			}
 		}
-	}
-	else if( pAttack->bStatusKind == USER_MP )
-	{
-		if (pUser == g_pMainPlayer)
-		{
-			CUserInterface::GetInstance()->SetDengeonHp(WORD(pAttack->dwCurUserHP>>16));
-			CUserInterface::GetInstance()->SetDengeonMp(WORD(pAttack->dwCurUserHP&0xffff));
-		}
-		if (pAttack->dwCurUserHP>>16 == 0  )
-		{
-			_PlaySound( CHARACTER_SOUND_DEAD, SOUND_TYPE_CHARACTER, CHARACTER_SOUND_DEAD + ( pUser->m_wClass - 1 ) * SOUND_PER_CHARACTER, pUser->m_v3CurPos, FALSE );
-			pUser->SetStatus(UNIT_STATUS_DEAD);	
-			
-		}
-	}
+	);
 }
 
 void CmdUserStatus( char* pMsg, DWORD dwLen )
@@ -920,40 +894,56 @@ void CmdUserStatus( char* pMsg, DWORD dwLen )
 	{
 		switch( pUserStatus->pStatus[i].dwCode )
 		{
+		case USER_COOLPOINTS:
+			g_pMainPlayer->updateCurrentCoolPoints(pUserStatus->pStatus[i].dwMin / 1000.f);
+			break;
+
+		case USER_MAXCOOLPOINTS:
+			g_pMainPlayer->updateMaxCoolPoints(pUserStatus->pStatus[i].dwMin / 1000.f);
+			break;
+
+		case USER_AVAILABLE_STATUS_POINTS:
+			g_pMainPlayer->updateCurrentStatPoints(pUserStatus->pStatus[i].dwMin);
+			break;
+
+		case USER_AVAILABLE_SKILL_POINTS:
+			g_pMainPlayer->updateCurrentSkillPoints(pUserStatus->pStatus[i].dwMin);
+			break;
+
 		case USER_MAXHP:
-			g_pMainPlayer->m_wMaxHP	= (DWORD)pUserStatus->pStatus[i].dwMin;
+			g_pMainPlayer->updateMaxHP(pUserStatus->pStatus[i].dwMin);
 			break;
 		
 		case USER_MAXMP:
-			g_pMainPlayer->m_wMaxMP = (DWORD)pUserStatus->pStatus[i].dwMin;
+			g_pMainPlayer->updateMaxSP(pUserStatus->pStatus[i].dwMin);
 			break;
 		
 		case USER_HONOR:
-			g_pMainPlayer->m_dwHonor	= pUserStatus->pStatus[i].dwMin;
+			g_pMainPlayer->updateCurrentHonor(pUserStatus->pStatus[i].dwMin);
 			break;
 		
 		case USER_EGO:
-			g_pMainPlayer->m_dwEgo	= pUserStatus->pStatus[i].dwMin;
+			g_pMainPlayer->updateCurrentEGO(pUserStatus->pStatus[i].dwMin);
 			break;
 		
 		case USER_STR:
-			g_pMainPlayer->m_dwStr	= pUserStatus->pStatus[i].dwMin;
+			g_pMainPlayer->updateCurrentSTR(pUserStatus->pStatus[i].dwMin);
 			break;
 		
 		case USER_INT:
-			g_pMainPlayer->m_dwInt	= pUserStatus->pStatus[i].dwMin;
+			g_pMainPlayer->updateCurrentINT(pUserStatus->pStatus[i].dwMin);
 			break;
 		
 		case USER_DEX:
-			g_pMainPlayer->m_dwDex	= pUserStatus->pStatus[i].dwMin;
+			g_pMainPlayer->updateCurrentDEX(pUserStatus->pStatus[i].dwMin);
 			break;
 		
 		case USER_VIT:
-			g_pMainPlayer->m_dwVit	= pUserStatus->pStatus[i].dwMin;
+			g_pMainPlayer->updateCurrentVIT(pUserStatus->pStatus[i].dwMin);
 			break;
 		
 		case USER_LUCK:
-			g_pMainPlayer->m_dwLuck	= pUserStatus->pStatus[i].dwMin;
+			g_pMainPlayer->updateCurrentLUCK(pUserStatus->pStatus[i].dwMin);
 			break;
 		
 		case USER_ATTACK_R:
@@ -1005,37 +995,39 @@ void CmdUserStatus( char* pMsg, DWORD dwLen )
 			{
 				CGameMenuWnd* pGameMenuWnd = CGameMenuWnd::GetInstance();
 
-				if (pUserStatus->pStatus[i].dwMin > g_pMainPlayer->m_dwExp)
+				if (pUserStatus->pStatus[i].dwMin > g_pMainPlayer->currentEXP())
 				{
 					// MSG_ID : 91 ; %u 의 경험치를 획득하였습니다
 					wsprintf(szInfo, g_Message[ETC_MESSAGE91].szMessage
-						, pUserStatus->pStatus[i].dwMin-g_pMainPlayer->m_dwExp); 
+						, pUserStatus->pStatus[i].dwMin-g_pMainPlayer->currentEXP()); 
 				}
-				else if (pUserStatus->pStatus[i].dwMin < g_pMainPlayer->m_dwExp)
+				else if (pUserStatus->pStatus[i].dwMin < g_pMainPlayer->currentEXP())
 				{
 					// "%u 의 경험치를 잃었습니다"
 					wsprintf(szInfo, g_Message[ETC_MESSAGE851].szMessage
-						, g_pMainPlayer->m_dwExp-pUserStatus->pStatus[i].dwMin); 
+						, g_pMainPlayer->currentEXP() - pUserStatus->pStatus[i].dwMin);
 				}
 
 				DisplayMessageAdd(szInfo, 0xFFFF2CFF, pGameMenuWnd->m_bSystemMsgFlag);
 
-				g_pMainPlayer->m_dwExp = pUserStatus->pStatus[i].dwMin;				
+				const auto value = pUserStatus->pStatus[i].dwMin;
+				printf("\nUSER_STATUS EXP: ( %d )", value);
+				g_pMainPlayer->updateCurrentEXP(value);
 
-				pUserInterface->SetDengeonExpDefInc();			
 			}
 			break;		
 		case USER_HP:
 			//_PlaySound(0, SOUND_TYPE_SYSTEM, SOUND_SYSTEM_HPRECOVER, g_pMainPlayer->m_v3CurPos, FALSE);
 			// comment by minjin. 2004. 10. 29.
 			// 소리는, 포션 썼을때 내자.
-			pUserInterface->SetDengeonHp(DWORD(pUserStatus->pStatus[i].dwMin));
+			g_pMainPlayer->updateCurrentHP(pUserStatus->pStatus[i].dwMin);
 			break;		
 		case USER_MP:
 			//_PlaySound(0, SOUND_TYPE_SYSTEM, SOUND_SYSTEM_HPRECOVER, g_pMainPlayer->m_v3CurPos, FALSE);
 			// comment by minjin. 2004. 10. 29.
 			// 소리는, 포션 썼을때 내자.
-			pUserInterface->SetDengeonMp(WORD(pUserStatus->pStatus[i].dwMin));
+
+			g_pMainPlayer->updateCurrentSP(pUserStatus->pStatus[i].dwMin);
 			break;
 		case USER_HEALHPSPEED:
 			g_pMainPlayer->m_dwHealHPSec = pUserStatus->pStatus[i].dwMin;
@@ -1134,7 +1126,7 @@ void CmdGuardianStatus( char* pMsg, DWORD dwLen )
 
 	CMonster* pMonster = g_pMonsterHash->GetData( pGuardianStatus->dwGuardianIndex );
 	if( !pMonster ) return;
-	if( pMonster->m_dwLordIndex != g_pMainPlayer->m_dwUserIndex ) return;	// 나의 가디언인가? 꼭 필요하진 않지만.
+	if( pMonster->lordDungeonID != g_pMainPlayer->m_dwUserIndex ) return;	// 나의 가디언인가? 꼭 필요하진 않지만.
 	
 	char				szInfo[0xff] = {0,};
 

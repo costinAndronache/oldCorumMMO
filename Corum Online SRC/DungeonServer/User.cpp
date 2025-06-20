@@ -166,7 +166,7 @@ void CUser::RemoveResource()
 
 		while(pos)
 		{
-			ITEM_MAGICARRAY_DESC* pItem_MagicArray_Desc = (ITEM_MAGICARRAY_DESC*)m_pUsingMagicArrayList->GetNext(pos);
+			ITEM_MAGICARRAY_DESC* pItem_MagicArray_Desc = (ITEM_MAGICARRAY_DESC*)m_pUsingMagicArrayList->GetAndAdvance(pos);
 			DetachMagicArray(pItem_MagicArray_Desc);
 		}
 
@@ -294,6 +294,12 @@ void CUser::SendStopPacket(ENUM_SEND_MODE eSendMode) const
 
 void CUser::SetStatus( BYTE bStatus, BOOL bCompulsion)
 {
+	static BYTE last = 0;
+
+
+	last = bStatus;
+
+
 	if( !GetCurDungeon() )
 		return;
 
@@ -449,7 +455,7 @@ void CUser::EffectSkillTimeProcess()
 		POSITION_ pos = GetUsingStatusEffectList()->GetHeadPosition();		
 		while(pos)
 		{
-			EffectDesc* pEffectDesc = (EffectDesc*)GetUsingStatusEffectList()->GetNext(pos);	
+			AppliedSkill* pEffectDesc = (AppliedSkill*)GetUsingStatusEffectList()->GetAndAdvance(pos);	
 			
 			switch(pEffectDesc->pEffect->bType)
 			{
@@ -464,7 +470,7 @@ void CUser::EffectSkillTimeProcess()
 					}
 
 					// 스킬을 처리한다.
-					switch( pEffectDesc->pEffect->bID )
+					switch( pEffectDesc->pEffect->skillKind )
 					{
 					case __SKILL_POSIONCLOUD__:
 					case __SKILL_POISONING__:				// 중독 처리.
@@ -499,7 +505,7 @@ void CUser::EffectSkillTimeProcess()
 		
 		while(pos)
 		{
-			ITEM_MAGICARRAY_DESC* pItemMagicArrayDesc = (ITEM_MAGICARRAY_DESC*)m_pUsingMagicArrayList->GetNext(pos);
+			ITEM_MAGICARRAY_DESC* pItemMagicArrayDesc = (ITEM_MAGICARRAY_DESC*)m_pUsingMagicArrayList->GetAndAdvance(pos);
 						
 			if (g_dwTickCount - pItemMagicArrayDesc->dwTemp[ITEM_MAGICARRAY_DESC_TEMP_STARTTICK] >=
 				pItemMagicArrayDesc->pItem->BaseItem_MagicArray.dwDur1)
@@ -539,14 +545,15 @@ void CUser::Update()
 				{
 					if (g_dwTickCount > m_dwTemp[USER_TEMP_CASTINGDESTTICK]) 	
 					{
+						printf("\nMoving user into skill execution phase");
 						CTDS_SKILL packet;
 						
-						packet.bOwnType			= m_sCastingInfo.bOwnType;
+						packet.casterType			= m_sCastingInfo.bOwnType;
 						packet.bPK				= m_sCastingInfo.bPK;
-						packet.bSkillKind		= m_sCastingInfo.bSkillKind;
+						packet.skillMouseIndex		= m_sCastingInfo.bSkillKind;
 						packet.bTargetType		= m_sCastingInfo.bTargetType;
-						packet.dwTargetIndex	= m_sCastingInfo.dwTargetIndex;
-						packet.dwTime			= g_dwTickCount-m_dwTemp[USER_TEMP_CASTINGSTARTTICK];
+						packet.targetDungeonID	= m_sCastingInfo.dwTargetIndex;
+						packet.casterLocalTime			= g_dwTickCount-m_dwTemp[USER_TEMP_CASTINGSTARTTICK];
 						packet.wTileIndex_X		= m_sCastingInfo.wTileIndex_X;
 						packet.wTileIndex_Z		= m_sCastingInfo.wTileIndex_Z;
 						CmdSkill(m_dwConnectionIndex, (char*)&packet, sizeof(packet));
@@ -557,7 +564,8 @@ void CUser::Update()
 		}		
 			
 		EffectSkillTimeProcess();
-		Recover5SecPer();		
+
+		HandleResourceRecoveries();		
 	}
 	__finally
 	{
@@ -572,12 +580,20 @@ void CUser::Update()
 	}
 }
 
+float coolPointRecoveryStepPerSecond(float maxCoolPoints) {
+	return 0.05 * maxCoolPoints;
+}
 
-void CUser::Recover5SecPer()
+void CUser::HandleResourceRecoveries()
 {
+	if (GetUnitStatus() == UNIT_STATUS_CASTING) {
+		return;
+	}
+
 	// 일정시간 단위로 HP와 MP가 회복된다. 5초 단위.
 	if( g_dwTickCount - m_dwTemp[ USER_TEMP_HEALTICKLAST ] >= 5000 )	
 	{
+		
 		if(m_wPerWeight <=  (WEIGTH_80PER_OVER - 1) )
 		{					
 			// HP
@@ -602,7 +618,16 @@ void CUser::Recover5SecPer()
 					SetSP(WORD(GetSP()+m_dwHealMPSec));
 				}
 			}
+			SendAllStatus();
 		}
+	}
+
+	if (g_dwTickCount - m_dwTemp[USER_TEMP_LAST_COOLPOINT_UPDATE_TIME_TICK] >= 500) {
+		m_dwTemp[USER_TEMP_LAST_COOLPOINT_UPDATE_TIME_TICK] = g_dwTickCount;
+		const auto recovery = 0.5 * coolPointRecoveryStepPerSecond(m_fMaxCoolPoint);
+		const auto newValue = m_fCurCoolPoint + recovery;
+		m_fCurCoolPoint = min(newValue, m_fMaxCoolPoint);
+		SendCoolpointsStatusValues();
 	}
 }
 
@@ -727,14 +752,14 @@ void CUser::Move()
 			UserPos = pSection->m_pPcList->GetHeadPosition();
 			while( UserPos )
 			{
-				pDisAppearUser = (CUser*)pSection->m_pPcList->GetNext( UserPos );
+				pDisAppearUser = (CUser*)pSection->m_pPcList->GetAndAdvance( UserPos );
 				Section.pdwDisAppearIndex[Section.bDisAppearUserCount++] = pDisAppearUser->GetID();
 			}
 
 			MonsterPos = pSection->m_pMonsterList->GetHeadPosition();
 			while( MonsterPos )
 			{
-				pDisAppearMonster = (CMonster*)pSection->m_pMonsterList->GetNext( MonsterPos );
+				pDisAppearMonster = (CMonster*)pSection->m_pMonsterList->GetAndAdvance( MonsterPos );
 				Section.pdwDisAppearIndex[Section.bDisAppearUserCount + Section.bDisAppearMonsterCount++] = pDisAppearMonster->GetID();
 			}
 		}
@@ -887,38 +912,38 @@ void CUser::GetAttackDamage(BYTE bySelectedSkill, BYTE bSkillLevel, BYTE bWeapon
 	if( bySelectedSkill != __SKILL_NONE_SELECT__ )
 	{
 		pEffect = g_pEffectLayer->GetEffectInfo( bySelectedSkill );
-		byFA = ( pEffect->bID == 0 ) ? 1 : pEffect->bFormula;
+		byFA = ( pEffect->skillKind == 0 ) ? 1 : pEffect->bFormula;
 	}
 
 	switch( byFA )
 	{
 	case 1:		// 걍 데미지 공식.
 		{
-			GetAttackDamageByFormula1(fDamageMin, fDamageMax, pEffect->bID, bWeaponKind, bLR, TRUE);
+			GetAttackDamageByFormula1(fDamageMin, fDamageMax, pEffect->skillKind, bWeaponKind, bLR, TRUE);
 		}
 		break;
 
 	case 2:		
 		{
-			GetAttackDamageByFormula2(fDamageMin, fDamageMax, pEffect->bID, GetSkillLevel(pEffect->bID), bLR, TRUE);	
+			GetAttackDamageByFormula2(fDamageMin, fDamageMax, pEffect->skillKind, GetSkillLevel(pEffect->skillKind), bLR, TRUE);	
 		}
 		break;
 		
 	case 20:
 		{
-			GetAttackDamageByFormula20(fDamageMin, fDamageMax, pEffect->bID, bLR, (WORD)GetMaxSP());			
+			GetAttackDamageByFormula20(fDamageMin, fDamageMax, pEffect->skillKind, bLR, (WORD)GetMaxSP());			
 		}
 		break;
 
 	case 21:
 		{
-			GetAttackDamageByFormula1(fDamageMin, fDamageMax, pEffect->bID, bWeaponKind, bLR, FALSE);
+			GetAttackDamageByFormula1(fDamageMin, fDamageMax, pEffect->skillKind, bWeaponKind, bLR, FALSE);
 		}
 		break;
 
 	case 22:
 		{
-			GetAttackDamageByFormula2(fDamageMin, fDamageMax, pEffect->bID, GetSkillLevel(pEffect->bID), bLR, FALSE);	
+			GetAttackDamageByFormula2(fDamageMin, fDamageMax, pEffect->skillKind, GetSkillLevel(pEffect->skillKind), bLR, FALSE);	
 		}
 		break;
 	
@@ -1301,9 +1326,9 @@ void CUser::SendItemSkill(BYTE bFlag, BYTE bObjectTargetType, void* pObjectTarte
 											wMinMax, OBJECT_TYPE_PLAYER, 
 											GetID(), (CMonster*)pObjectTartet);
 									else if ((pEffect->bCrime == CRIME_APPLY_FRIENDLY && bObjectTargetType == OBJECT_TYPE_MONSTER && IsAlliance((CMonster*)pObjectTartet) )
-										|| (pEffect->bID == __SKILL_REDELEMENTAL__
-										|| pEffect->bID == __SKILL_BLUEELEMENTAL__
-										|| pEffect->bID == __SKILL_GREENELEMENTAL__))
+										|| (pEffect->skillKind == __SKILL_REDELEMENTAL__
+										|| pEffect->skillKind == __SKILL_BLUEELEMENTAL__
+										|| pEffect->skillKind == __SKILL_GREENELEMENTAL__))
 										SystemSkillToMonster(pLayer, 
 											g_pItemAttrLayer->m_ItemAttrDefine[dwVirtualCode].bSkillID, 
 											(BYTE)shValue, 30*1000, GetCurPosition(), 
@@ -1327,7 +1352,7 @@ void CUser::SendItemSkill(BYTE bFlag, BYTE bObjectTargetType, void* pObjectTarte
 		while(pos)
 		{
 			del = pos;		
-			CItem* pItem = (CItem*)m_pUsingItemList->GetNext(pos);
+			CItem* pItem = (CItem*)m_pUsingItemList->GetAndAdvance(pos);
 			CBaseItem* pBaseItem = g_pBaseItemHash->GetData(pItem->GetID());	
 
 			if (!pBaseItem->BaseItem_Consumable.wLast_Time)
@@ -1556,7 +1581,7 @@ void CUser::UpdateFireResist()
 
 	m_wFireResist = min( m_wFireResist, WORD(75+GetAlphaStat(USER_FIRE_RESIST)));
 
-	EffectDesc* pEffedtDesc = GetEffectDesc(__SKILL_IRONSKIN__);
+	AppliedSkill* pEffedtDesc = GetEffectDesc(__SKILL_IRONSKIN__);
 	if(pEffedtDesc)//철벽 스킬일때만 85%까지
 	{
 		if( m_wFireResist > 85 )
@@ -1587,7 +1612,7 @@ void CUser::UpdateIceResist()
 
 	m_wIceResist = min(m_wIceResist, WORD(75+GetAlphaStat(USER_ICE_RESIST)));
 
-	EffectDesc* pEffedtDesc = GetEffectDesc(__SKILL_IRONSKIN__);
+	AppliedSkill* pEffedtDesc = GetEffectDesc(__SKILL_IRONSKIN__);
 	if(pEffedtDesc)//철벽 스킬일때만 85%까지
 	{
 		if( m_wIceResist > 85 )
@@ -1618,7 +1643,7 @@ void CUser::UpdateLightResist()
 
 	m_wLightResist = min(m_wLightResist, WORD(75+GetAlphaStat(USER_LIGHT_RESIST)));
 
-	EffectDesc* pEffedtDesc = GetEffectDesc(__SKILL_IRONSKIN__);
+	AppliedSkill* pEffedtDesc = GetEffectDesc(__SKILL_IRONSKIN__);
 	if(pEffedtDesc)//철벽 스킬일때만 85%까지
 	{
 		if( m_wLightResist > 85 )
@@ -1652,7 +1677,7 @@ void CUser::UpdatePoiResist()
 
 	m_wPoiResist	=	min(m_wPoiResist, WORD(75+GetAlphaStat(USER_POI_RESIST)));
 
-	EffectDesc* pEffedtDesc = GetEffectDesc(__SKILL_IRONSKIN__);
+	AppliedSkill* pEffedtDesc = GetEffectDesc(__SKILL_IRONSKIN__);
 	if(pEffedtDesc)//철벽 스킬일때만 85%까지
 	{
 		if( m_wPoiResist > 85 )
@@ -1938,15 +1963,33 @@ DUNGEON_JOIN_FAIL CUser::IsEnterDungeon()
 	return DUNGEON_JOIN_SUCCESS;
 }
 
+void CUser::SendCoolpointsStatusValues() {
+	DSTC_USER_STATUS Status;
 
+	Status.bStatusMany = 0;
+
+	Status.pStatus[Status.bStatusMany].dwCode = USER_COOLPOINTS;
+	Status.pStatus[Status.bStatusMany++].dwMin = m_fCurCoolPoint * 1000;
+
+	Status.pStatus[Status.bStatusMany].dwCode = USER_MAXCOOLPOINTS;
+	Status.pStatus[Status.bStatusMany++].dwMin = m_fMaxCoolPoint * 1000;
+
+	NetSendToUser(m_dwConnectionIndex, (char*)&Status, Status.GetPacketSize(), FLAG_SEND_NOT_ENCRYPTION);
+
+}
 // 자신의 모든 상태를 클라이언트에 보낸다.
 void CUser::SendAllStatus()
 {
 	UpdateAllStatus();	
-
 	DSTC_USER_STATUS Status;
 	
 	Status.bStatusMany = 0;
+
+	Status.pStatus[Status.bStatusMany].dwCode = USER_COOLPOINTS;
+	Status.pStatus[Status.bStatusMany++].dwMin = m_fCurCoolPoint * 1000;
+
+	Status.pStatus[Status.bStatusMany].dwCode = USER_MAXCOOLPOINTS;
+	Status.pStatus[Status.bStatusMany++].dwMin = m_fMaxCoolPoint * 1000;
 
 	Status.pStatus[Status.bStatusMany].dwCode	= USER_MAXHP;
 	Status.pStatus[Status.bStatusMany++].dwMin	= GetMaxHP(); 
@@ -2074,10 +2117,13 @@ void CUser::SendAllStatus()
 	Status.pStatus[Status.bStatusMany].dwCode	= USER_ATTACKRATE_PERCENT;
 	Status.pStatus[Status.bStatusMany++].dwMin	= m_wAttackSpeed;	
 	
-	NetSendToUser( m_dwConnectionIndex, (char*)&Status, Status.GetPacketSize() , FLAG_SEND_NOT_ENCRYPTION);
+	Status.pStatus[Status.bStatusMany].dwCode = USER_AVAILABLE_STATUS_POINTS;
+	Status.pStatus[Status.bStatusMany++].dwMin = GetNotUseStatPoint();
 
-	printf("\nSTATUS UPDATE:\n");
-	printUserStatusList(Status.pStatus, Status.bStatusMany);
+	Status.pStatus[Status.bStatusMany].dwCode = USER_AVAILABLE_SKILL_POINTS;
+	Status.pStatus[Status.bStatusMany++].dwMin = m_wPointSkill;
+
+	NetSendToUser( m_dwConnectionIndex, (char*)&Status, Status.GetPacketSize() , FLAG_SEND_NOT_ENCRYPTION);
 
 	SendAllUserSkillLevel();
 }
@@ -2230,13 +2276,13 @@ void CUser::SetDamageOver(const CUnit* pUnit, DWORD dwDamage)
 
 		for( int i=0; i<MAX_USER_GUARDIAN; i++ )
 		{
-			if( m_pMonster[i] )
+			if( servantMonsters[i] )
 			{
 				// 현재 공격중인 대상이 없다면.
-				if( (!m_pMonster[i]->GetUnitForAI()) 
+				if( (!servantMonsters[i]->GetUnitForAI()) 
 					&& !IsAlliance(pUnit))
 				{
-					m_pMonster[i]->SetTargetAI( pUnit );
+					servantMonsters[i]->SetTargetAI( pUnit );
 				}
 			}
 		}
@@ -2390,11 +2436,11 @@ void CUser::AddExp(int iExp, BOOL bAlphaExp)
 	{
 		// 기존최종획득경험치 * (100 + GLOBAL_EXP_GAIN + ITEM_ATTR_EXP_GAIN - ITEM_ATTR_EXP_LOSS) / 100
 		m_dwExp += DWORD(iExp*(1+m_bConnectToGameRoom*g_pThis->m_GLOBAL_EXP_GAIN_DOUBLE)
-			*(100+g_pThis->m_dwGLOBAL_EXP_GAIN + GetItemAttr(ITEM_ATTR_EXP_GAIN) - GetItemAttr(ITEM_ATTR_EXP_LOSS))/100.f);
+			*(100+g_pThis->m_dwGLOBAL_EXP_GAIN + GetItemAttr(ITEM_ATTR_EXP_GAIN) - GetItemAttr(ITEM_ATTR_EXP_LOSS))/100.f) * 10000;
 	}
 	else
 	{
-		m_dwExp += iExp;
+		m_dwExp += iExp * 1000;
 	}
 	
 	// 내 가디언들의 경험치를 올려준다.
@@ -2412,8 +2458,12 @@ void CUser::AddExp(int iExp, BOOL bAlphaExp)
 	UserStatus.pStatus[0].dwMin		= m_dwExp;
 	NetSendToUser( m_dwConnectionIndex, (char*)&UserStatus, UserStatus.GetPacketSize() , FLAG_SEND_NOT_ENCRYPTION);
 	
-	while( m_dwExp >= GetExpTableOfLevel(OBJECT_TYPE_PLAYER, GetLevel() + 1) && GetLevel() < MAX_ALLOWED_LEVELUP)		// Level Up^^
-	{
+	const auto levelForCurrentCumulated = GetLevelForCumulatedExp(OBJECT_TYPE_PLAYER, m_dwExp);
+	const auto levelDiff = levelForCurrentCumulated - GetLevel();
+
+	printf("\nUSER ADD EXP: + %d = %d, level for it: %d, levelDiff: %d\n", iExp, m_dwExp, levelForCurrentCumulated, levelDiff);
+
+	for(int i=1; i <= levelDiff; i++) {
 		LevelUP();
 	}
 }
@@ -2517,6 +2567,8 @@ void CUser::LevelUP()
 	LevelUP.dwLevel		= GetLevel();
 	LevelUP.byStatPoint	= GetStatPointByLevel(GetObjectType(), GetLevel()-2);
 
+	printf("\nDSTC_LEVELUP: %d\n", LevelUP.dwLevel);
+
 	pLayer->BroadCastSectionMsg( (char*)&LevelUP, LevelUP.GetPacketSize(), GetPrevSectionNum() );
 
 	SetStatPoint(WORD(GetNotUseStatPoint()+GetStatPointByLevel(GetObjectType(), GetLevel()-2)));
@@ -2602,6 +2654,7 @@ DWORD CUser::GetMoney()
 // 상태마버법이 적용되었을때의 유저의 상승값을 셋
 void CUser::SetStatusFromSkillStatusValue(BYTE bSkillKind, BYTE bSkillLevel, WORD wClass, float* pResetValue, BOOL bUserStatusSend)
 {
+	printf("\nCUser:: SetStatusFromSkillStatusValue");
 	// 유지되다 사라지는 상태마법에 의한 능력치 변환값들 계산.
 	Effect* pEffect = g_pEffectLayer->GetEffectInfo(bSkillKind);
 	if ((char*)bSkillLevel<0)	return;
@@ -2609,7 +2662,7 @@ void CUser::SetStatusFromSkillStatusValue(BYTE bSkillKind, BYTE bSkillLevel, WOR
 	int					nCount		= 0;
 	DSTC_USER_STATUS	UserStatus;
 	UserStatus.bStatusMany			= 0;
-		
+	
 	BYTE bKind = BYTE(GetCurrentWeaponID()/ITEM_DISTRIBUTE);
 		
 	for (int i = 0; i < 5; ++i )
@@ -3070,7 +3123,7 @@ void CUser::SetStatusFromSkillStatusValue(BYTE bSkillKind, BYTE bSkillLevel, WOR
 			}break;
 		}
 
-		if (pEffect->bID == __SKILL_SILENTBRANDYSHIP__ || pEffect->bType == TYPE_DRIVE || pEffect->bType == TYPE_TIMEZERO || pEffect->bType == TYPE_PASSIVE)
+		if (pEffect->skillKind == __SKILL_SILENTBRANDYSHIP__ || pEffect->bType == TYPE_DRIVE || pEffect->bType == TYPE_TIMEZERO || pEffect->bType == TYPE_PASSIVE)
 		{
 			if (pResetValue)
 				pResetValue[nCount++] = fResult;// active종류는 다시 지워질 필요 없기 때문에. 넣을 필요가 없다.
@@ -3458,8 +3511,8 @@ void CUser::AttachMagicArray(DWORD dwItemID)
 			packet.sTargetInfo[packet.bTargetCount++].bType			= 4;
 			packet.bSkillKind	= __SKILL_HIDING__;
 			packet.bSkillLevel	= (BYTE)pItem->BaseItem_MagicArray.wPoint1;
-			packet.dwOwnIndex	= GetID();
-			packet.bOwnType		= OBJECT_TYPE_PLAYER;
+			packet.casterDungeonID	= GetID();
+			packet.casterType		= OBJECT_TYPE_PLAYER;
 
 			GetCurDungeonLayer()->BroadCastSectionMsg((char*)&packet, packet.GetPacketSize(), GetPrevSectionNum() );
 		}
@@ -3517,7 +3570,7 @@ void CUser::SendToUserConsumableItemEffectListAll(CUser* pUser)
 		POSITION_ posSkill = m_pUsingItemList->GetHeadPosition();
 		while(posSkill)
 		{
-			CItem* pItem = (CItem* )m_pUsingItemList->GetNext(posSkill);
+			CItem* pItem = (CItem* )m_pUsingItemList->GetAndAdvance(posSkill);
 			pItem;
 			packet.bOriginationItemWithEffectKind[packet.bCount++] = 0;
 		}
@@ -3580,9 +3633,11 @@ void CUser::GoToWorld(WORD wMoveSpotNum, GOTOWORLD_STATUS eOutStaus)
 BOOL CUser::AttachSkill(BYTE bOwnType, DWORD dwOwnIndex, BYTE bSkillKind, BYTE bSkillLevel, WORD wClass, DWORD& dwDestTime
 						, DWORD& dwAlphaDamage)
 {
+	printf("\nUSER ATTACH SKILL %d", bSkillKind);
+
 	Effect* pEffect = g_pEffectLayer->GetEffectInfo(bSkillKind);
 
-	EffectDesc* pEffectDesc = GetEffectDesc(bSkillKind);
+	AppliedSkill* pEffectDesc = GetEffectDesc(bSkillKind);
 	if (!pEffectDesc)
 	{
 		// 새로 만들어라.
@@ -3643,13 +3698,13 @@ BOOL CUser::AttachSkill(BYTE bOwnType, DWORD dwOwnIndex, BYTE bSkillKind, BYTE b
 				POSITION_ pos = GetUsingStatusEffectList()->GetHeadPosition();
 				while(pos)
 				{
-					EffectDesc* pTempEffectDesc 
-						= (EffectDesc*)GetUsingStatusEffectList()->GetNext(pos);
+					AppliedSkill* pTempEffectDesc 
+						= (AppliedSkill*)GetUsingStatusEffectList()->GetAndAdvance(pos);
 					if (pTempEffectDesc->pEffect->bCrime == CRIME_APPLY_ENEMY)
 					{
 						//프레이 확률 * { 프레이레벨 * 2 / (프레이 레벨 + 걸려있는 스킬레벨) }
 						if (g_pEffectLayer->IsSuccessByFormula0(
-								pTempEffectDesc->pEffect->bID
+								pTempEffectDesc->pEffect->skillKind
 								, pTempEffectDesc->bSkillLevel))
 						{
 							DetachSkill( pTempEffectDesc );
@@ -3663,7 +3718,7 @@ BOOL CUser::AttachSkill(BYTE bOwnType, DWORD dwOwnIndex, BYTE bSkillKind, BYTE b
 				POSITION_ pos = GetUsingStatusEffectList()->GetHeadPosition();
 				while(pos)
 				{
-					EffectDesc* pTempEffectDesc = (EffectDesc*)GetUsingStatusEffectList()->GetNext(pos);
+					AppliedSkill* pTempEffectDesc = (AppliedSkill*)GetUsingStatusEffectList()->GetAndAdvance(pos);
 					if (pTempEffectDesc->pEffect->bType == TYPE_DRIVE)
 					{
 						DWORD dwTime = pTempEffectDesc->dwDestTick - g_dwTickCount;
@@ -3683,11 +3738,11 @@ BOOL CUser::AttachSkill(BYTE bOwnType, DWORD dwOwnIndex, BYTE bSkillKind, BYTE b
 				POSITION_ pos = GetUsingStatusEffectList()->GetHeadPosition();
 				while(pos)
 				{
-					EffectDesc* pTempEffectDesc = (EffectDesc*)GetUsingStatusEffectList()->GetNext(pos);
+					AppliedSkill* pTempEffectDesc = (AppliedSkill*)GetUsingStatusEffectList()->GetAndAdvance(pos);
 					if (pTempEffectDesc->pEffect->bType == TYPE_DRIVE)
 					{
 						
-						if (g_pEffectLayer->IsSuccessByFormula0(pEffectDesc->pEffect->bID, pEffectDesc->bSkillLevel))
+						if (g_pEffectLayer->IsSuccessByFormula0(pEffectDesc->pEffect->skillKind, pEffectDesc->bSkillLevel))
 						{
 							// 남은 초의 합을 알아내기 위함.
 							dwAlphaDamage += (pTempEffectDesc->dwDestTick-g_dwTickCount)/1000;
@@ -3712,26 +3767,30 @@ BOOL CUser::AttachSkill(BYTE bOwnType, DWORD dwOwnIndex, BYTE bSkillKind, BYTE b
 	}
 	else if (pEffect->bType == TYPE_DRIVE)
 	{
+		printf("\nAttaching overdrive skill with duration: %d", dwDestTime);
 		pEffectDesc->dwDestTick = g_dwTickCount+dwDestTime;
 	}
 	else if (pEffect->bType == TYPE_TIMEZERO)
 	{
 		dwDestTime = pEffect->Value[pEffectDesc->bSkillLevel].nDuration;
 		pEffectDesc->dwDestTick = g_dwTickCount+dwDestTime;
+
+		printf("\nAttaching timezero skill with duration: %.1f", millisecondsToSeconds(dwDestTime));
 	}		
 
 	return TRUE;
 }
 
 
-void CUser::DetachSkill(EffectDesc* pEffectDesc)
+void CUser::DetachSkill(AppliedSkill* pEffectDesc)
 {	
+	printf("\nDetach skill:: %d ", pEffectDesc->pEffect->skillKind);
 	CDungeonLayer* pLayer = GetCurDungeonLayer();
 	if( pLayer )
 	{
 		DSTC_DUNGEON_STOPSTATUSEFFECT packet;
 		packet.bTargetType	= 0;
-		packet.bSkillKind	= pEffectDesc->pEffect->bID;
+		packet.bSkillKind	= pEffectDesc->pEffect->skillKind;
 		packet.dwTargetIndex= GetID();
 		packet.dwCurHP = GetHP();
 		pLayer->BroadCastSectionMsg( (char*)&packet, packet.GetPacketSize(), GetPrevSectionNum() );		
@@ -3799,7 +3858,6 @@ void CUser::UpdateAllStatus()
 	UpdateHealSPSec();
 	UpdateMaxCoolPoint();
 	UpdateAttackSpeed();
-	m_fCurCoolPoint = m_fMaxCoolPoint;
 }
 
 
@@ -3839,7 +3897,7 @@ void CUser::GuildMemberKill(const CUser* pTargetUser)
 
 
 // 상태마법에 의해 적용되었던 능력치를 다시 빼라.
-void CUser::ReSetStatusFromSkillStatusValue(EffectDesc* pEffectDesc)
+void CUser::ReSetStatusFromSkillStatusValue(AppliedSkill* pEffectDesc)
 {
 	Effect* pEffect = pEffectDesc->pEffect;
 	BYTE bSkillLevel = pEffectDesc->bSkillLevel;
@@ -3850,6 +3908,7 @@ void CUser::ReSetStatusFromSkillStatusValue(EffectDesc* pEffectDesc)
 
 	int nCount = 0;
 	DSTC_USER_STATUS	UserStatus;
+	printf("%s", __FUNCSIG__);
 	UserStatus.bStatusMany	= 0;
 	
 	for (int i = 0; i < 5; ++i )
@@ -4091,7 +4150,7 @@ void CUser::ReSetStatusFromSkillStatusValue(EffectDesc* pEffectDesc)
 				POSITION_  pos = GetUsingStatusEffectList()->GetHeadPosition();
 				while(pos)
 				{
-					EffectDesc* pEffectDesc = (EffectDesc*)GetUsingStatusEffectList()->GetNext(pos);
+					AppliedSkill* pEffectDesc = (AppliedSkill*)GetUsingStatusEffectList()->GetAndAdvance(pos);
 					if (pEffectDesc->dwAmfleafireTime) 
 					{
 						// 증가한 시간을 다시 빼줘야지.
@@ -4134,7 +4193,7 @@ int CUser::GetSubordinateIndex() const
 
 	for(int i = 0; i < 5; ++i)
 	{
-		if (m_pMonster[i] == NULL)
+		if (servantMonsters[i] == NULL)
 		{
 			nInsertIndex = i;
 			break;
@@ -4737,7 +4796,7 @@ void CUser::SetSummonMonster(GAME_OBJECT_TYPE eObjectType, BYTE byIndex, CMonste
 {
 	if (OBJECT_TYPE_MONSTER == eObjectType)
 	{
-		m_pMonster[byIndex] = pMonster;
+		servantMonsters[byIndex] = pMonster;
 	}
 	else if(OBJECT_TYPE_GUARDIAN == eObjectType)
 	{
@@ -4751,7 +4810,7 @@ CMonster* CUser::GetSummonMonster(GAME_OBJECT_TYPE eObjectType, BYTE byIndex)
 
 	if (OBJECT_TYPE_MONSTER == eObjectType)
 	{
-		return m_pMonster[byIndex];
+		return servantMonsters[byIndex];
 	}
 	else if(OBJECT_TYPE_GUARDIAN == eObjectType)
 	{

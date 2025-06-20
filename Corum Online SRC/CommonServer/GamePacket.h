@@ -288,15 +288,15 @@ struct CTDS_GUARDIAN_SKILL_SELECT : public GAME_PACKET_HEADER
 
 struct CTDS_SKILL : public GAME_PACKET_HEADER 
 {
-	BYTE	bSkillKind;
-	BYTE	bOwnType;
+	BYTE	skillMouseIndex;
+	BYTE	casterType;
 	BYTE	bTargetType;	// OBJECT_TYPE_PLAYER, OBJECT_TYPE_MONSTER, OBJECT_TYPE_TILE
 	BYTE	bPK;			// pk 모드인지..
-	DWORD	dwOwnIndex;
-	DWORD	dwTargetIndex;
+	DWORD	casterDungeonID;
+	DWORD	targetDungeonID;
 	WORD	wTileIndex_X;	// 혹시 대상이 사라졌을때를 위해 좌표를 알아야 함..
 	WORD	wTileIndex_Z;	// 혹시 대상이 사라졌을때를 위해 좌표를 알아야 함..
-	DWORD	dwTime;			// 적용되어질 타임.
+	DWORD	casterLocalTime;			// 적용되어질 타임.
 	
 	CTDS_SKILL()	{ bStatus = UPDATE_GAME_PLAY;		bHeader = Protocol_CTS::CMD_SKILL;	}
 	DWORD	GetPacketSize()	{	return sizeof(CTDS_SKILL);	}	

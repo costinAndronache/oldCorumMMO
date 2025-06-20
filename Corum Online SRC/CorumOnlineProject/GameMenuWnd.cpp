@@ -889,7 +889,7 @@ int CGameMenuWnd::CheckInterface()
 void CGameMenuWnd::SetEffect()
 {
 	// ÀÌÆåÆ® ¸ðµÎ ²û
-	ListNode<EffectDesc> *pNode;
+	ListNode<AppliedSkill> *pNode;
 
 	pNode = g_pEffectHash->GetHead();
 	while( pNode )
@@ -915,7 +915,7 @@ void CGameMenuWnd::SetEffect()
 	case __EFFECT_OPTION__MAX__:
 		// Å¸ÀÎÀÇ ÀÌÆåÆ® ÄÔ
 		{
-			ListNode<EffectDesc>*		pNode;
+			ListNode<AppliedSkill>*		pNode;
 			pNode = g_pEffectHash->GetHead();
 			while( pNode )
 			{
@@ -942,7 +942,7 @@ void CGameMenuWnd::SetEffect()
 	case __EFFECT_OPTION__MIDIUM__:
 		// ÀÚ½ÅÀÇ ÀÌÆåÆ® ÄÔ
 		{
-			ListNode<EffectDesc>*		pNode;
+			ListNode<AppliedSkill>*		pNode;
 			pNode = g_pEffectHash->GetHead();
 			while( pNode )
 			{

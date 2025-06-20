@@ -375,7 +375,7 @@ int main(int argc, char* argv[])
 
 		while(pos)
 		{
-			CDungeon* pDungeon = (CDungeon*)g_pDungeonTable->m_pDungeonList->GetNext(pos);
+			CDungeon* pDungeon = (CDungeon*)g_pDungeonTable->m_pDungeonList->GetAndAdvance(pos);
 
 			for(int c = 0; c < pDungeon->GetTotalLayer(); ++c)
 			{

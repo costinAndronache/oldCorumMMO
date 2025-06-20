@@ -3,7 +3,13 @@
 #include <windows.h>
 #include <windowsx.h>
 
+#include "CommonAllServers.h"
 #include "CommonServerExports.h"
+#include "DungeonPacket.h"
+#include <functional>
+
+inline DWORD secondsToMilliseconds(float seconds) { return seconds * 1000; }
+inline float millisecondsToSeconds(DWORD milliseconds) { return float(milliseconds) / 1000.f; }
 
 struct CPTable_Value
 {
@@ -31,63 +37,6 @@ struct DUNGEONPRODUCTIONITEMMINMAX
 	WORD	wItemIDMin;
 	WORD	wItemIDMax;
 	WORD	wItemIDDefault;
-};
-
-enum USER_PROPERTY_CODE {
-	USER_MAXHP = 1,
-	USER_MAXMP = 2,
-	USER_HONOR = 3,
-	USER_EGO = 4,
-	USER_STR = 5,
-	USER_INT = 6,
-	USER_DEX = 7,
-	USER_VIT = 8,
-	USER_LUCK = 9,
-	USER_ATTACK_R = 10,
-	USER_ATTACK_L = 11,
-	USER_AA = 12,
-	USER_AVOID = 13,
-	USER_BLOCKRATE = 14,
-	USER_FIRE_RESIST = 15,
-	USER_ICE_RESIST = 16,
-	USER_LIGHT_RESIST = 17,
-	USER_POI_RESIST = 18,
-	USER_PHY_RESIST = 19,
-	USER_MOVESPEED = 20,
-	USER_EXP = 21,
-	USER_HP = 22,
-	USER_MP = 23,
-	USER_CASTINGTIME = 24,
-	USER_COOLTIME = 25,
-	USER_ATTACKRATE_PERCENT = 26,
-	USER_ATTACKACURACY_PERCENT = 27,
-	USER_OVERDRIVE_DELAY = 28,
-	USER_HEALHPSPEED = 29,
-	USER_HEALMPSPEED = 30,
-	USER_POISONING = 31,
-	USER_DEC_SKILLLEVEL = 32,
-	USER_SKILLATTACK_R_PERCENT = 33,
-	USER_SKILLATTACK_L_PERCENT = 34,
-	USER_CTTIME = 35,
-	USER_ALL_RESIST = 36,
-	USER_MAX_RESIST = 37,
-	USER_MOVESPEED_PERCENT = 38,
-	USER_HEALHPSPEED_PERCENT = 39,
-	USER_PHY_RESIST_PERCENT = 40,
-	USER_MP_PERCENT = 41,
-	USER_MAXHP_PERCENT = 42,
-	USER_ATTACK_R_PERCENT = 43,
-	USER_BLOCKRATE_PERCENT = 44,
-	USER_AVOID_PERCENT = 45,
-	USER_HP_PERCENT = 46,
-	USER_POI_RESIST_PERCENT = 47,
-	USER_ITEM_ATTACK = 48,
-	USER_ITEM_DEFENSE = 49,
-	USER_BLIND = 50,
-	USER_MAXMP_PERCENT = 51,
-	USER_ATTACK_L_PERCENT = 52,
-	USER_DETECTION = 53,
-	USER_MAX_STATUS
 };
 
 enum SELECT_ATTACK_TYPE {
@@ -400,3 +349,57 @@ struct STATUSVALUE
 #define		__GCTYPE_NONE__				0
 #define		__GCTYPE_GUILD__			1
 #define		__GCTYPE_CLEN__				2
+
+enum ITEM_SUPPLY_TYPE {
+	ITEM_SUPPLY_TYPE_PERCENT_HP_POTION = 1,
+	ITEM_SUPPLY_TYPE_PERCENT_SP_POTION = 2,
+	ITEM_SUPPLY_TYPE_FIXED_HP_POTION = 3,
+	ITEM_SUPPLY_TYPE_FIXED_SP_POTION = 4
+};
+
+
+/// DO NOT CHANGE THE CONTENTS of (expPerLevel) between different calls
+//  internal caches are created based on their values
+DWORD DECLSPECIFIER cumulatedExperienceAtLevel(DWORD level, const DWORD (&expPerLevel)[MAX_LEVEL + 1]);
+DWORD DECLSPECIFIER levelForCumulatedExperience(DWORD exp, const DWORD (&expPerLevel)[MAX_LEVEL + 1]);
+
+struct DECLSPECIFIER AttackResult {
+private:
+	BYTE	bStatusKind;
+	DWORD	dwCurUserHP;
+public:
+	AttackResult(BYTE statusKind, DWORD curUserHP): bStatusKind(statusKind), dwCurUserHP(curUserHP) { }
+	AttackResult(const DSTC_ATTACK_MON_USER& attack): bStatusKind(attack.bStatusKind), dwCurUserHP(attack.dwCurUserHP) { }
+	AttackResult(const DSTC_ATTACK_USER_USER& attack): bStatusKind(attack.bStatusKind), dwCurUserHP(attack.dwCurDefenseUserHP) { }
+	void applyFor(std::function<void(DWORD)> hpApply, std::function<void(DWORD)> spApply);
+
+	~AttackResult();
+};
+
+inline bool isContinousSkill(BYTE skillID) { 
+	// these really should be migrated to an enum class or a better representation
+	return (
+		skillID == __SKILL_AURARECHARGE__ ||
+		 // summoner
+		skillID == __SKILL_SUMMONACCELERATOR__ ||
+		skillID == __SKILL_SOULETER__ ||
+		skillID == __SKILL_MINDEXPLOSION__ ||
+		
+		// sorceress
+		skillID == __SKILL_EXPLOSION__ ||
+		skillID == __SKILL_SPEEDCASTING__ ||
+
+		// priest
+		skillID == __SKILL_INCREASING ||
+		skillID == __SKILL_SPELLBINDING__ ||
+
+		// ranger
+		skillID == __SKILL_SYLPHID__ ||
+		skillID == __SKILL_SHAUT__ ||
+		skillID == __SKILL_BERSERK__ ||
+
+		// figher 
+		skillID == __SKILL_LIFEFORCE__ ||
+		skillID == __SKILL_BERSERKER__
+		);
+}

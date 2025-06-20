@@ -37,7 +37,7 @@ void CWorldUser::GuildIdChange()
 	POSITION_ pos = g_pDungeonTable->m_pDungeonList->GetHeadPosition();
 	while (pos)
 	{
-		cur = (DUNGEON_DATA_EX*)g_pDungeonTable->m_pDungeonList->GetNext(pos);
+		cur = (DUNGEON_DATA_EX*)g_pDungeonTable->m_pDungeonList->GetAndAdvance(pos);
 
 		if (cur->m_dwOwnerIndex == m_dwUserIndex)
 		{

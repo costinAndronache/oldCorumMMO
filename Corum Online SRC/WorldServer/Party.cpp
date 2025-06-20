@@ -69,7 +69,7 @@ void CmdPartyUserRequest(CWorldUser* pUser, char* pMsg,DWORD dwLength)
 
 			while(pos)
 			{
-				CWorldUser* pPartyUser =  (CWorldUser*)lpPartyTable->pPartyUserList->GetNext(pos);
+				CWorldUser* pPartyUser =  (CWorldUser*)lpPartyTable->pPartyUserList->GetAndAdvance(pos);
 
 				if(pPartyUser)
 				{
@@ -125,7 +125,7 @@ void CmdPartyInfo(CWorldUser* pUser, char* pMsg,DWORD dwLength)
 
 			 while(pos)
 			 {
-				 CWorldUser* pPartyUser =  (CWorldUser*)lpPartyTable->pPartyUserList->GetNext(pos);
+				 CWorldUser* pPartyUser =  (CWorldUser*)lpPartyTable->pPartyUserList->GetAndAdvance(pos);
 
 				 if(pPartyUser)
 				 {
@@ -213,7 +213,7 @@ void CmdPartyLogOutUser(CWorldUser* pUser ,char* pMsg,DWORD dwLength)
 		{			
 			posTemp = pos;
 
-			CWorldUser* pPartyUser = (CWorldUser*)lpPartyTable->pPartyUserList->GetNext(pos);
+			CWorldUser* pPartyUser = (CWorldUser*)lpPartyTable->pPartyUserList->GetAndAdvance(pos);
 
 			if(pPartyUser)
 			{
@@ -223,7 +223,7 @@ void CmdPartyLogOutUser(CWorldUser* pUser ,char* pMsg,DWORD dwLength)
 
 					while(posDst)
 					{
-						CWorldUser* pUserRv = (CWorldUser*)lpPartyTable->pPartyUserList->GetNext(posDst);
+						CWorldUser* pUserRv = (CWorldUser*)lpPartyTable->pPartyUserList->GetAndAdvance(posDst);
 
 						if(!pUserRv)
 							continue;
@@ -283,7 +283,7 @@ void CmdPartyLogOutUser(CWorldUser* pUser ,char* pMsg,DWORD dwLength)
 
 						while(posLeader)
 						{
-							CWorldUser* pPartyUserLeader = (CWorldUser*)lpPartyTable->pPartyUserList->GetNext(posLeader);
+							CWorldUser* pPartyUserLeader = (CWorldUser*)lpPartyTable->pPartyUserList->GetAndAdvance(posLeader);
 							
 							if(!pPartyUserLeader)
 								continue;
@@ -366,7 +366,7 @@ void CmdPartyLogOutUser(CWorldUser* pUser ,char* pMsg,DWORD dwLength)
 		{			
 			posTemp = pos;
 
-			CWorldUser*	pUserRv	= (CWorldUser*)lpPartyTable->pPartyUserList->GetNext(pos);			
+			CWorldUser*	pUserRv	= (CWorldUser*)lpPartyTable->pPartyUserList->GetAndAdvance(pos);			
 
 			if(!pUserRv)
 				continue;				
@@ -412,7 +412,7 @@ void CmdPartyLogOutUser(CWorldUser* pUser ,char* pMsg,DWORD dwLength)
 			
 			while(pos)
 			{
-				DUNGEON_DATA_EX* pDungeon = (DUNGEON_DATA_EX*)g_pDungeonTable->m_pDungeonVillList->GetNext(pos);
+				DUNGEON_DATA_EX* pDungeon = (DUNGEON_DATA_EX*)g_pDungeonTable->m_pDungeonVillList->GetAndAdvance(pos);
 
 				if(pDungeon && pDungeon->m_pServer)
 				{
@@ -457,7 +457,7 @@ void CmdPartyLogoutCl(CWorldUser* pUser ,char* pMsg,DWORD dwLength)
 		{			
 			posTemp = pos;
 
-			CWorldUser* pPartyUser = (CWorldUser*)lpPartyTable->pPartyUserList->GetNext(pos);
+			CWorldUser* pPartyUser = (CWorldUser*)lpPartyTable->pPartyUserList->GetAndAdvance(pos);
 
 			if(!pPartyUser)
 				continue;
@@ -468,7 +468,7 @@ void CmdPartyLogoutCl(CWorldUser* pUser ,char* pMsg,DWORD dwLength)
 
 				while(posDst)
 				{
-					CWorldUser* pUserRv = (CWorldUser*)lpPartyTable->pPartyUserList->GetNext(posDst);
+					CWorldUser* pUserRv = (CWorldUser*)lpPartyTable->pPartyUserList->GetAndAdvance(posDst);
 
 					if(!pUserRv)
 						continue;
@@ -528,7 +528,7 @@ void CmdPartyLogoutCl(CWorldUser* pUser ,char* pMsg,DWORD dwLength)
 
 					while(posLeader)
 					{
-						CWorldUser* pUserLeader = (CWorldUser*)lpPartyTable->pPartyUserList->GetNext(posLeader);
+						CWorldUser* pUserLeader = (CWorldUser*)lpPartyTable->pPartyUserList->GetAndAdvance(posLeader);
 						
 						if(!pUserLeader)
 							continue;
@@ -608,7 +608,7 @@ void CmdPartyLogoutCl(CWorldUser* pUser ,char* pMsg,DWORD dwLength)
 		{			
 			posTemp = pos;
 
-			CWorldUser* pUserRv	= (CWorldUser*)lpPartyTable->pPartyUserList->GetNext(pos);			
+			CWorldUser* pUserRv	= (CWorldUser*)lpPartyTable->pPartyUserList->GetAndAdvance(pos);			
 
 			if(!pUserRv)
 				continue;
@@ -652,7 +652,7 @@ void CmdPartyLogoutCl(CWorldUser* pUser ,char* pMsg,DWORD dwLength)
 			
 			while(pos)
 			{
-				DUNGEON_DATA_EX* pDungeon = (DUNGEON_DATA_EX*)g_pDungeonTable->m_pDungeonVillList->GetNext(pos);
+				DUNGEON_DATA_EX* pDungeon = (DUNGEON_DATA_EX*)g_pDungeonTable->m_pDungeonVillList->GetAndAdvance(pos);
 
 				if(pDungeon && pDungeon->m_pServer)
 				{
@@ -744,7 +744,7 @@ void CmdPartyApprove(CWorldUser* pUser, char* pMsg, DWORD dwLength)
 							
 		while(pos)
 		{
-			CWorldUser* pUserNode = (CWorldUser*)lpParty->pPartyUserList->GetNext(pos);
+			CWorldUser* pUserNode = (CWorldUser*)lpParty->pPartyUserList->GetAndAdvance(pos);
 
 			if(pUser->m_dwUserIndex==pUserNode->m_dwUserIndex)
 			{
@@ -753,7 +753,7 @@ void CmdPartyApprove(CWorldUser* pUser, char* pMsg, DWORD dwLength)
 
 				while(posTemp)
 				{
-					CWorldUser* pUserTemp = (CWorldUser*)lpParty->pPartyUserList->GetNext(posTemp);
+					CWorldUser* pUserTemp = (CWorldUser*)lpParty->pPartyUserList->GetAndAdvance(posTemp);
 
 					// 자기 자신 //
 					if(pUserTemp->m_dwUserIndex==pUser->m_dwUserIndex)
@@ -1164,7 +1164,7 @@ void CmdPartyBoardDelete(CWorldUser* pUser, char* pMsg, DWORD dwLength)
 		
 		while(pos)
 		{
-			DUNGEON_DATA_EX* pDungeon = (DUNGEON_DATA_EX*)g_pDungeonTable->m_pDungeonVillList->GetNext(pos);
+			DUNGEON_DATA_EX* pDungeon = (DUNGEON_DATA_EX*)g_pDungeonTable->m_pDungeonVillList->GetAndAdvance(pos);
 
 			if(pDungeon && pDungeon->m_pServer)
 			{
@@ -1211,7 +1211,7 @@ void CmdPartyConfig(CWorldUser* pUser, char* pMsg, DWORD dwLength)
 		{
 			// 파티원이 속해있는 모든 던전에 파티 설정 갱신 통보
 			// 파티원이 월드에 있다면, 던전에 조인할 때 통보 --> CmdDungeonJoinSuccess
-			CWorldUser* pMember =  (CWorldUser*)lpPartyTable->pPartyUserList->GetNext(pos);
+			CWorldUser* pMember =  (CWorldUser*)lpPartyTable->pPartyUserList->GetAndAdvance(pos);
 
 			if(pMember)
 			{

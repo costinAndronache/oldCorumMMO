@@ -79,7 +79,7 @@ public:
 
         return pData; 
     }
-    void*    GetNext(POSITION_& rPosition) const // return *Position++
+    void*    GetAndAdvance(POSITION_& rPosition) const // return *Position++
                 { CNode* pNode = (CNode*) rPosition;
                     if (pNode == NULL) return NULL;
                     rPosition = (POSITION_) pNode->pNext;

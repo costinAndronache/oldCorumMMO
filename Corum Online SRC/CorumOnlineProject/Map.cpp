@@ -40,7 +40,7 @@ CorumCMap::~CorumCMap()
 		{
 			POSITION_ del  = pos;
 			
-			CP_DESC* pCPDesc =  (CP_DESC*)m_pCPList->GetNext(pos);
+			CP_DESC* pCPDesc =  (CP_DESC*)m_pCPList->GetAndAdvance(pos);
 			g_pSprManager->RemoveSprite(pCPDesc->pSpr_Cp_GuageBar);
 			g_pSprManager->RemoveSprite(pCPDesc->pSpr_Cp_GuageBoard);
 			g_pSprManager->RemoveSprite(pCPDesc->pSpr_Minimap_Dot);

@@ -28,10 +28,13 @@
 #include <Windows.h>
 #include <GdiPlusInit.h>
 #include "CustomUiKit/PagedTableWindow/PagedTableWindow.h"
+#include "../BaseLibrary/Timer.h"
 
 void message(char* const info) {
 	MessageBox(g_hMainWnd, info, "CorumOnlineProject", MB_OK);
 }
+
+static Timer* testTimer = nullptr;
 
 int APIENTRY WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nShowCmd )
 {
@@ -59,28 +62,6 @@ int APIENTRY WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdL
 		return FALSE;
 	}
 				
-#if IS_KOREA_LOCALIZING()
-	{
-		// 肺弊牢 搬沥 ? 夯挤 : 齿付喉 
-		if(lstrlen(lpCmdLine))
-		{
-			if(!CmdLineProcessForNetMarble(lpCmdLine))
-				return 0;
-
-			if (TRUE == g_NetMarble.bIsTryCorrectLogin)
-			{
-				g_bExecuteType = EXECUTE_TYPE_NETMARBLE;
-			}
-			else
-			{ 
-				asm_int3();
-				return 0;
-			}		
-		}
-	} 
-#endif
-
-
 
 	message("Begin client initialization");
 
@@ -114,7 +95,7 @@ int APIENTRY WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdL
 #endif
 
 #ifdef DEVELOP_MODE
-	g_Dev.bRenderFramePerSec	= TRUE;
+	g_Dev.bRenderFramePerSec	= FALSE;
 #endif
 
 #ifdef DEVELOP_MODE
@@ -167,29 +148,9 @@ lb_Process:
 
 		delete msg;
 
-#ifdef __USE_CLIENT_SPEEDHACK_CHECKER
-		if(IsSpeedHackClient()) 
-		{
-#if IS_CHINA_LOCALIZING()
-			MessageBox(NULL, _T("速度异常,强制退出游戏!"), _T("速度异常!"), MB_OK|MB_ICONWARNING);
-#else
-#ifndef DEVELOP_MODE			
-			MessageBox(NULL, _T("DON'T USE SPEEDHACK!! ErrCode: 1"), _T("SPEEDHACK!"), MB_OK|MB_ICONWARNING);
-#endif
-#endif
-			
-#ifndef DEVELOP_MODE
-			break;
-#endif
-		}
-#endif 
+		WorkQueue::mainThreadQueue()->processCurrentWorkItems();
 	}
 
-#if IS_CHINA_LOCALIZING()
-#ifndef DEVELOP_MODE	
-	OpenWebSite("http://corum.9you.com");
-#endif
-#endif
 	return 0L;
 
 	ReleaseGame();

@@ -11,7 +11,24 @@
 #include "NetworkClient.h"
 #include "CodeFun.h"
 
-CCharWnd* CCharWnd::c_pThis = NULL;
+std::shared_ptr<CCharWnd> CCharWnd::_shared(nullptr);
+
+std::shared_ptr<CCharWnd> CCharWnd::getShared() {
+	if (!_shared) {
+		_shared = std::make_shared<CCharWnd>();
+	}
+
+	return _shared;
+}
+
+void CCharWnd::updatedStatPoints(CMainUser*, DWORD oldValue, DWORD newValue) {
+	if (newValue > 0) {
+		ShowAllStatIncreseButton(TRUE);
+	}
+	else {
+		HideAllStatButton();
+	}
+}
 
 //======================================================//
 // Construction/Destrution.								//
@@ -420,7 +437,7 @@ BOOL CCharWnd::IsStatPoint()
 	switch(m_enCurrentTabType)
 	{
 	case ENUM_TAB_TYPE_CHARACTERINFO:
-		return g_pMainPlayer->m_wPoint;
+		return g_pMainPlayer->currentStatPoints();
 	case ENUM_TAB_TYPE_GUARDIANINFO:
 		{
 			CMonster* pGuardian = GetMyGuardian();
@@ -698,20 +715,20 @@ void CCharWnd::CharacterDisplay()
 		RenderFont(g_pMainPlayer->m_szGuildName, (int)(nLeft), (int)(nRight), (int)(m_fPosZ+77), (int)(m_fPosZ+91), nOrder);
 	
 	// Hp //
-	wsprintf(m_szInfo, "%d / %d", g_pMainPlayer->m_wHP, g_pMainPlayer->m_wMaxHP);
+	wsprintf(m_szInfo, "%d / %d", g_pMainPlayer->currentHP(), g_pMainPlayer->maxHP());
 	RenderFont(m_szInfo, (int)(nLeft), (int)(nRight), (int)(m_fPosZ+97), (int)(m_fPosZ+111), nOrder);
 	
 	// Sp //
-	wsprintf(m_szInfo, "%d / %d", g_pMainPlayer->m_wMP, g_pMainPlayer->m_wMaxMP);
+	wsprintf(m_szInfo, "%d / %d", g_pMainPlayer->currentSP(), g_pMainPlayer->maxSP());
 	RenderFont(m_szInfo, (int)(nLeft), (int)(nRight), (int)(m_fPosZ+112), (int)(m_fPosZ+126), nOrder);
 	
 	// Level //
-	wsprintf(m_szInfo, g_Message[ETC_MESSAGE863].szMessage, g_pMainPlayer->m_dwLevel); // "Lv %d"
+	wsprintf(m_szInfo, g_Message[ETC_MESSAGE863].szMessage, g_pMainPlayer->currentLevel()); // "Lv %d"
 	RenderFont(m_szInfo, (int)(nLeft), (int)(nRight), (int)(m_fPosZ+127), (int)(m_fPosZ+141), nOrder);
 	
 	// Exp //
 	// modified by minjin. 2004. 10. 28.
-	wsprintf(m_szInfo, "%d / %d", g_pMainPlayer->m_dwExp, GetExpTableOfLevel(OBJECT_TYPE_PLAYER, g_pMainPlayer->m_dwLevel+1));
+	wsprintf(m_szInfo, "%d / %d", g_pMainPlayer->currentEXP(), GetExpTableOfLevel(OBJECT_TYPE_PLAYER, g_pMainPlayer->currentLevel() + 1));
 //	wsprintf(m_szInfo, "%d / %d", GetExpTableOfLevel(OBJECT_TYPE_PLAYER, g_pMainPlayer->m_dwLevel), GetExpTableOfLevel(OBJECT_TYPE_PLAYER, g_pMainPlayer->m_dwLevel+1));
 	RenderFont(m_szInfo, (int)(nLeft), (int)(nRight), (int)(m_fPosZ+142), (int)(m_fPosZ+156), nOrder);
 
@@ -722,23 +739,23 @@ void CCharWnd::CharacterDisplay()
 
 
 	// EGO //		
-	nSize = wsprintf(m_szInfo, "%d", g_pMainPlayer->m_dwEgo);		
+	nSize = wsprintf(m_szInfo, "%d", g_pMainPlayer->currentEGO());		
 	RenderFont(m_szInfo, (int)(THIS_TEXT_LEFT(nLeft, nSize)), (int)(nRight), (int)(m_fPosZ+163), (int)(m_fPosZ+177), nOrder);
 
 	// STR //
-	nSize = wsprintf(m_szInfo, "%d", g_pMainPlayer->m_dwStr);
+	nSize = wsprintf(m_szInfo, "%d", g_pMainPlayer->currentSTR());
 	RenderFont(m_szInfo, (int)(THIS_TEXT_LEFT(nLeft, nSize)), (int)(nRight), (int)(m_fPosZ+178), (int)(m_fPosZ+192), nOrder);	
 	
 	// INT //	
-	nSize = wsprintf(m_szInfo, "%d", g_pMainPlayer->m_dwInt);	
+	nSize = wsprintf(m_szInfo, "%d", g_pMainPlayer->currentINT());	
 	RenderFont(m_szInfo, (int)(THIS_TEXT_LEFT(nLeft, nSize)), (int)(nRight), (int)(m_fPosZ+193), (int)(m_fPosZ+207), nOrder);	
 	
 	// Dex //	
-	nSize = wsprintf(m_szInfo, "%d", g_pMainPlayer->m_dwDex);	
+	nSize = wsprintf(m_szInfo, "%d", g_pMainPlayer->currentDEX());	
 	RenderFont(m_szInfo, (int)(THIS_TEXT_LEFT(nLeft, nSize)), (int)(nRight), (int)(m_fPosZ+208), (int)(m_fPosZ+222), nOrder);	
 	
 	// VIT //
-	nSize = wsprintf(m_szInfo, "%d", g_pMainPlayer->m_dwVit);	
+	nSize = wsprintf(m_szInfo, "%d", g_pMainPlayer->currentVIT());	
 	RenderFont(m_szInfo, (int)(THIS_TEXT_LEFT(nLeft, nSize)), (int)(nRight), (int)(m_fPosZ+223), (int)(m_fPosZ+237), nOrder);	
 
 	
@@ -768,9 +785,9 @@ void CCharWnd::CharacterDisplay()
 	RenderFont(m_szInfo, (int)(THIS_TEXT_LEFT(nLeft, nSize)), (int)(nRight), (int)(m_fPosZ+223), (int)(m_fPosZ+237), nOrder);
 
 	// Status Point //
-	if(g_pMainPlayer->m_wPoint>0)
+	if(g_pMainPlayer->currentStatPoints() > 0)
 	{
-		nSize = wsprintf(m_szInfo, "%d", g_pMainPlayer->m_wPoint);
+		nSize = wsprintf(m_szInfo, "%d", g_pMainPlayer->currentStatPoints());
 
 		switch(nSize)
 		{
@@ -841,7 +858,7 @@ void CCharWnd::SendStatPoint(GAME_OBJECT_TYPE enObjectType, STATUS_POINT_KIND en
 }
 void CCharWnd::Send_CharacterStatPoint(STATUS_POINT_KIND enStatusPointKind)
 {
-	if(g_pMainPlayer->m_wPoint>0)
+	if(g_pMainPlayer->currentStatPoints() > 0)
 	{
 		SendStatPoint(OBJECT_TYPE_PLAYER, enStatusPointKind);
 	}				

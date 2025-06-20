@@ -8,7 +8,9 @@
 #if _MSC_VER > 1000
 #pragma once
 #endif // _MSC_VER > 1000
-#include "voidlist.h"
+#include "../BaseLibrary/VoidList.h"
+#include "stdafx.h"
+
 struct COMBOBOX
 {
 	char szComboName[30];	// 콤보 리스트에 나타날 이름.

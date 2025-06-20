@@ -24,7 +24,7 @@ void CPartyTableHash::DeleteData(void* pData)
 
 			while(pos)
 			{			
-				CWorldUser* pUser = (CWorldUser*)pPartyTable->pPartyUserList->GetNext(pos);
+				CWorldUser* pUser = (CWorldUser*)pPartyTable->pPartyUserList->GetAndAdvance(pos);
 
 				if(pUser)
 					pUser->m_byLeader = 0;

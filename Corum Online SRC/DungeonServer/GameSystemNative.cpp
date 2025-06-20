@@ -702,7 +702,7 @@ int ItemUpgrade(CUser* pUser,CItem* pItem[4],BYTE* pbZipCode)
 			while(pos)
 			{
 				del						= pos;
-				CItem*		pItem		= (CItem*)pUser->m_pUsingItemList->GetNext(pos);
+				CItem*		pItem		= (CItem*)pUser->m_pUsingItemList->GetAndAdvance(pos);
 				CBaseItem*	pBaseItem	= g_pBaseItemHash->GetData(pItem->GetID());
 
 				if (!pBaseItem)
@@ -1082,7 +1082,7 @@ int ItemUpgrade_Localizing(CUser* pUser,CItem* pItem[4],BYTE* pbZipCode)
 			while(pos)
 			{
 				del						= pos;
-				CItem*		pItem		= (CItem*)pUser->m_pUsingItemList->GetNext(pos);
+				CItem*		pItem		= (CItem*)pUser->m_pUsingItemList->GetAndAdvance(pos);
 				CBaseItem*	pBaseItem	= g_pBaseItemHash->GetData(pItem->GetID());
 
 				if (!pBaseItem)

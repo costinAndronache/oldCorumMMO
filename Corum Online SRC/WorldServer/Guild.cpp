@@ -763,7 +763,7 @@ void CmdGuildJoin(CWorldUser* pUser, char* pMsg, DWORD dwLength)
 
 				if(pos)
 				{
-					LP_GUILDWAR_RANK lpGuildRank = (LP_GUILDWAR_RANK)g_pRankList->GetNext(pos);
+					LP_GUILDWAR_RANK lpGuildRank = (LP_GUILDWAR_RANK)g_pRankList->GetAndAdvance(pos);
 
 					if(lpGuildRank)
 					{
@@ -1365,7 +1365,7 @@ void CmdGuildDelete(CWorldUser* pUser, char* pMsg, DWORD dwLength)
 			{				
 				POSITION_ posTemp = pos;
 
-				LP_GUILDWAR_RANK lpGuildWarRank = (LP_GUILDWAR_RANK)g_pRankList->GetNext(pos);
+				LP_GUILDWAR_RANK lpGuildWarRank = (LP_GUILDWAR_RANK)g_pRankList->GetAndAdvance(pos);
 
 				if(lpGuildWarRank->dwGuildId==pUser->m_dwGuildId)
 				{
@@ -2890,7 +2890,7 @@ void CmdGuildWarExit(CWorldUser* pUser, char* pMsg,DWORD dwLength)
 
 									while(pos)
 									{
-										LP_GUILDWAR_RANK lpGuildWarRank = (LP_GUILDWAR_RANK)g_pRankList->GetNext(pos);
+										LP_GUILDWAR_RANK lpGuildWarRank = (LP_GUILDWAR_RANK)g_pRankList->GetAndAdvance(pos);
 
 										if(lpGuildWarRank)
 										{
@@ -2919,7 +2919,7 @@ void CmdGuildWarExit(CWorldUser* pUser, char* pMsg,DWORD dwLength)
 										POSITION_ posDelete	= posRank;
 										POSITION_ posChange	= NULL; 
 
-										LP_GUILDWAR_RANK lpGuildWarRank = (LP_GUILDWAR_RANK)g_pRankList->GetNext(posRank);
+										LP_GUILDWAR_RANK lpGuildWarRank = (LP_GUILDWAR_RANK)g_pRankList->GetAndAdvance(posRank);
 
 										if(lpGuildWarRank)
 										{
@@ -2960,7 +2960,7 @@ void CmdGuildWarExit(CWorldUser* pUser, char* pMsg,DWORD dwLength)
 
 									if(posRank)
 									{
-										LP_GUILDWAR_RANK lpGuildWarRank = (LP_GUILDWAR_RANK)g_pRankList->GetNext(posRank);
+										LP_GUILDWAR_RANK lpGuildWarRank = (LP_GUILDWAR_RANK)g_pRankList->GetAndAdvance(posRank);
 
 										if(lpGuildWarRank)
 										{
@@ -3100,7 +3100,7 @@ void CmdGuildWarExit(CWorldUser* pUser, char* pMsg,DWORD dwLength)
 									
 									while(pos)
 									{
-										DUNGEON_DATA_EX* pDungeonDataEx = (DUNGEON_DATA_EX*)g_pDungeonTable->m_pDungeonList->GetNext(pos);
+										DUNGEON_DATA_EX* pDungeonDataEx = (DUNGEON_DATA_EX*)g_pDungeonTable->m_pDungeonList->GetAndAdvance(pos);
 
 										if(pDungeonDataEx)
 										{									
@@ -3147,7 +3147,7 @@ void CmdGuildWarExit(CWorldUser* pUser, char* pMsg,DWORD dwLength)
 
 									while(pos)
 									{
-										LP_GUILDWAR_TIME lpGuildWarTime = (LP_GUILDWAR_TIME)g_pGuildWarTimeList->GetNext(pos);
+										LP_GUILDWAR_TIME lpGuildWarTime = (LP_GUILDWAR_TIME)g_pGuildWarTimeList->GetAndAdvance(pos);
 
 										if(lpGuildWarTime)
 										{
@@ -3203,7 +3203,7 @@ void CmdGuildWarRank(CWorldUser* pUser, char* pMsg,DWORD dwLength)
 
 	while(pos)
 	{
-		LP_GUILDWAR_RANK lpGuildRank = (LP_GUILDWAR_RANK)g_pRankList->GetNext(pos);
+		LP_GUILDWAR_RANK lpGuildRank = (LP_GUILDWAR_RANK)g_pRankList->GetAndAdvance(pos);
 
 		if(lpGuildRank)
 		{
@@ -3344,7 +3344,7 @@ BOOL InitGuildInformations()
 			{
 				POSITION_ posTemp = pos;
 
-				LP_GUILDWAR_RANK lpGuildWarRank = (LP_GUILDWAR_RANK)g_pRankList->GetNext(pos);
+				LP_GUILDWAR_RANK lpGuildWarRank = (LP_GUILDWAR_RANK)g_pRankList->GetAndAdvance(pos);
 
 				if(lpGuildWarRank->dwPoint<lpGuildWarRankNew->dwPoint)
 				{
@@ -3474,7 +3474,7 @@ BOOL InitGuildInformations()
 
 						while(pos)
 						{							
-							LP_GUILDWAR_TIME lpGuildWarTime = (LP_GUILDWAR_TIME)g_pGuildWarTimeList->GetNext(pos);						
+							LP_GUILDWAR_TIME lpGuildWarTime = (LP_GUILDWAR_TIME)g_pGuildWarTimeList->GetAndAdvance(pos);						
 
 							if(lpGuildWarTime)
 							{
@@ -3505,7 +3505,7 @@ BOOL InitGuildInformations()
 								{
 									POSITION_ posTemp = pos;
 
-									LP_GUILDWAR_TIME lpGuildWarTime = (LP_GUILDWAR_TIME)g_pGuildWarTimeList->GetNext(pos);
+									LP_GUILDWAR_TIME lpGuildWarTime = (LP_GUILDWAR_TIME)g_pGuildWarTimeList->GetAndAdvance(pos);
 
 									if(lpGuildWarTime->sTime<lpGuildWarTimeNew->sTime)
 									{

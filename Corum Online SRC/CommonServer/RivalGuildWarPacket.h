@@ -759,6 +759,10 @@ typedef struct tagGUILD_WAR_BBS
 }GUILD_WAR_BBS, *LPGUILD_WAR_BBS;
 
 
-#pragma pack(pop, 1)
+#pragma pack(pop)
+
+#pragma pack(show)
+
+//#pragma message("Who includes me???")
 
 #endif	//	__RIVAL_GUILD_WAR_PACKET__

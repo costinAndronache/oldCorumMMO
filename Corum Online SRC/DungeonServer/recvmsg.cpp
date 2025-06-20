@@ -309,7 +309,7 @@ void __stdcall SuccessToConnectWorldServer(DWORD dwConnectionIndex, void* pExt)
 	POSITION_ DungeonPos = g_pDungeonTable->m_pDungeonList->GetHeadPosition();
 	while( DungeonPos )
 	{
-		CDungeon* pDungeon = (CDungeon*)g_pDungeonTable->m_pDungeonList->GetNext( DungeonPos );	
+		CDungeon* pDungeon = (CDungeon*)g_pDungeonTable->m_pDungeonList->GetAndAdvance( DungeonPos );	
 
 		// 던젼 층의 처리
 		for(BYTE i = 0; i < pDungeon->GetTotalLayer(); i++ )
@@ -352,7 +352,7 @@ void __stdcall OnDisconnectServer(DWORD dwConnectionIndex)
 
 		while(pos)
 		{
-			pDungeon = (CDungeon*)g_pDungeonTable->m_pDungeonList->GetNext(pos);	
+			pDungeon = (CDungeon*)g_pDungeonTable->m_pDungeonList->GetAndAdvance(pos);	
 
 			if(pDungeon->GetDungeonDataEx()->m_bSiege)
 			{

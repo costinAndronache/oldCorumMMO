@@ -278,7 +278,7 @@ void CDungeonTable::RemoveAllSprGuildMark()
 
 		while(pos)
 		{
-			DUNGEON_DATA_EX* pInfo = (DUNGEON_DATA_EX*)m_pInfoList[i]->GetNext(pos);
+			DUNGEON_DATA_EX* pInfo = (DUNGEON_DATA_EX*)m_pInfoList[i]->GetAndAdvance(pos);
 			g_pSprManager->RemoveSprite(pInfo->pSprMark);
 		}
 	}
@@ -291,7 +291,7 @@ void CDungeonTable::AddListDungeonGroup(DUNGEON_DATA_EX *pDungeon, WORD wGroupID
 		POSITION_ pos = m_pGroupList[wGroupID]->GetHeadPosition();
 		while(pos)
 		{// 이미 추가 했다면 추가 하지 말아라.
-			DUNGEON_DATA_EX* pTempDungeon = (DUNGEON_DATA_EX*)m_pGroupList[wGroupID]->GetNext(pos);
+			DUNGEON_DATA_EX* pTempDungeon = (DUNGEON_DATA_EX*)m_pGroupList[wGroupID]->GetAndAdvance(pos);
 			if (pTempDungeon == pDungeon)
 				return;
 		}
@@ -333,7 +333,7 @@ void CDungeonTable::ShowEffectDungeonGroup(WORD wGroupID, BOOL bShow)
 	POSITION_ pos = m_pGroupList[wGroupID]->GetHeadPosition();
 	while(pos)
 	{
-		DUNGEON_DATA_EX* pTempDungeon = (DUNGEON_DATA_EX*)m_pGroupList[wGroupID]->GetNext(pos);
+		DUNGEON_DATA_EX* pTempDungeon = (DUNGEON_DATA_EX*)m_pGroupList[wGroupID]->GetAndAdvance(pos);
 		if (bShow)	ShowObject(pTempDungeon->m_hGroupDungeon);
 		else		HideObject(pTempDungeon->m_hGroupDungeon);		
 	}	
@@ -381,7 +381,7 @@ void CDungeonTable::DeleteEventDungeonResource()
 
 	while (pos)
 	{
-		pDungeon = (DUNGEON_DATA_EX*)g_pDungeonTable->m_pEventList->GetNext(pos);
+		pDungeon = (DUNGEON_DATA_EX*)g_pDungeonTable->m_pEventList->GetAndAdvance(pos);
 
 		// 이벤트 던젼 그래픽 리소스 제거.
 		if (NULL != pDungeon->m_hEventDungeonModel)

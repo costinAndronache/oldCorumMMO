@@ -106,7 +106,7 @@ void CmdRefreshEventDungeon_StartSiege(char* pMsg, DWORD dwLen)
 
 			while(pos)
 			{
-				CP_DESC* pCPDesc = (CP_DESC*)g_pMap->m_pCPList->GetNext(pos);
+				CP_DESC* pCPDesc = (CP_DESC*)g_pMap->m_pCPList->GetAndAdvance(pos);
 					
 				pCPDesc->pSpr_Minimap_Dot->ShowSprite(TRUE);
 				pCPDesc->pSpr_Cp_GuageBar->ShowSprite(FALSE);
@@ -147,7 +147,7 @@ void CmdRefreshEventDungeon_EndSiege(char* pMsg, DWORD dwLen)
 		POSITION_ pos = g_pMap->m_pCPList->GetHeadPosition();
 		while(pos)
 		{
-			CP_DESC* pCPDesc = (CP_DESC*)g_pMap->m_pCPList->GetNext(pos);
+			CP_DESC* pCPDesc = (CP_DESC*)g_pMap->m_pCPList->GetAndAdvance(pos);
 				
 			pCPDesc->pSpr_Minimap_Dot->ShowSprite(FALSE);
 			pCPDesc->pSpr_Cp_GuageBar->ShowSprite(FALSE);
@@ -167,7 +167,7 @@ void CmdRefreshEventDungeon_EndSiege(char* pMsg, DWORD dwLen)
 			{			
 				if( pNode->pData->m_bAttackMode == ATTACK_MODE_DEFENSE)
 				{
-					EffectDesc* pEffectDesc = g_pEffectLayer->CreateGXObject(g_pObjManager->GetFile(EFFECT_DUNGEON_GUARD_SUCCESS), g_pMainPlayer == pNode->pData, __CHR_EFFECT_NONE__);
+					AppliedSkill* pEffectDesc = g_pEffectLayer->CreateGXObject(g_pObjManager->GetFile(EFFECT_DUNGEON_GUARD_SUCCESS), g_pMainPlayer == pNode->pData, __CHR_EFFECT_NONE__);
 					
 					pEffectDesc->dwTargetIndex[0] = pNode->pData->m_dwUserIndex;
 					pEffectDesc->byTargetObjectType[0]	= OBJECT_TYPE_PLAYER;
@@ -183,7 +183,7 @@ void CmdRefreshEventDungeon_EndSiege(char* pMsg, DWORD dwLen)
 	else if (!g_pThisDungeon)
 	{
 		// 월드에 있을때 이펙트 보여주기.
-		EffectDesc* pEffectDesc = g_pEffectLayer->CreateGXObject(g_pObjManager->GetFile(EFFECT_DUNGEONDEFENSESUCCESS_WORLD), 1, __CHR_EFFECT_NONE__);
+		AppliedSkill* pEffectDesc = g_pEffectLayer->CreateGXObject(g_pObjManager->GetFile(EFFECT_DUNGEONDEFENSESUCCESS_WORLD), 1, __CHR_EFFECT_NONE__);
 		
 		pEffectDesc->dwTargetIndex[0] = pDungeon->m_dwID;
 		pEffectDesc->byTargetObjectType[0]	= OBJECT_TYPE_SUMMON;

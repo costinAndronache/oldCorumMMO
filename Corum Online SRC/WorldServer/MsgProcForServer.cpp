@@ -115,6 +115,7 @@ void CmdGotoWorld(SERVER_DATA* pServer, char* pMsg, DWORD dwLength)
 //=========================================================================
 void CmdUserAcceptAllowed(SERVER_DATA* pServer, char* pMsg, DWORD dwLength)
 {
+
 	DSTWS_USER_ACCEPT_ALLOWED*	pPacket = (DSTWS_USER_ACCEPT_ALLOWED*)pMsg;
 	if(pPacket->GetPacketSize() != dwLength)
 	{
@@ -139,6 +140,8 @@ void CmdUserAcceptAllowed(SERVER_DATA* pServer, char* pMsg, DWORD dwLength)
 		packet.wPort		= pServer->wPort;
 		packet.dwPartyID	= pUser->m_dwPartyId;
 		
+		printf("\nCmdUserAcceptAllowed, sending: WSTC_CONNECT_DUNGEON_SERVER id: %d", (int)packet.wDungeonID);
+
 		g_pNet->SendToUser(pUser->m_dwConnectionIndex, (char*)&packet, packet.GetPacketSize(), FLAG_SEND_NOT_ENCRYPTION);    
 
 		if(!pUser->m_dwPartyId)	return;
@@ -156,7 +159,7 @@ void CmdUserAcceptAllowed(SERVER_DATA* pServer, char* pMsg, DWORD dwLength)
 
 				 while(pos)
 				 {
-					 CWorldUser* pPartyUser =  (CWorldUser*)lpPartyTable->pPartyUserList->GetNext(pos);
+					 CWorldUser* pPartyUser =  (CWorldUser*)lpPartyTable->pPartyUserList->GetAndAdvance(pos);
 
 					 if(pPartyUser->m_dwUserIndex == pUser->m_dwUserIndex || pPartyUser->m_dwCurServerPos != POS_SERVER_WORLD)
 					 {
@@ -343,7 +346,7 @@ void CmdDungeonJoinSuccess(SERVER_DATA* pServer, char* pMsg, DWORD dwLength)
 
 				 while(pos)
 				 {
-					 CWorldUser* pPartyUser =  (CWorldUser*)lpPartyTable->pPartyUserList->GetNext(pos);
+					 CWorldUser* pPartyUser =  (CWorldUser*)lpPartyTable->pPartyUserList->GetAndAdvance(pos);
 
 					 if( pPartyUser->m_dwUserIndex==pUser->m_dwUserIndex || pPartyUser->m_dwCurServerPos != POS_SERVER_WORLD)
 					 {
@@ -497,7 +500,7 @@ void CmdServerAttach(DWORD dwConnectionIndex, char* pMsg, DWORD dwLength)
 
 	if(pos)
 	{
-		LP_GUILDWAR_RANK lpGuildWarRank = (LP_GUILDWAR_RANK)g_pRankList->GetNext(pos);
+		LP_GUILDWAR_RANK lpGuildWarRank = (LP_GUILDWAR_RANK)g_pRankList->GetAndAdvance(pos);
 
 		if(lpGuildWarRank)
 		{

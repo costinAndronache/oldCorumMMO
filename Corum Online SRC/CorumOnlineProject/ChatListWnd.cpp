@@ -108,7 +108,7 @@ void CChatListWnd::RenderText()
 
 		while(pos)
 		{
-			LP_CHAT_MSG lpChatMsg = (LP_CHAT_MSG)g_pAllChatList->GetNext(pos);
+			LP_CHAT_MSG lpChatMsg = (LP_CHAT_MSG)g_pAllChatList->GetAndAdvance(pos);
 
 			if(m_nCurScrollPos>byCurPos)
 			{
@@ -139,7 +139,7 @@ void CChatListWnd::RenderText()
 
 		while(pos)
 		{
-			LP_CHAT_MSG lpChatMsg = (LP_CHAT_MSG)g_pPartyChatList->GetNext(pos);
+			LP_CHAT_MSG lpChatMsg = (LP_CHAT_MSG)g_pPartyChatList->GetAndAdvance(pos);
 
 			if(m_nCurScrollPos>byCurPos)
 			{
@@ -164,7 +164,7 @@ void CChatListWnd::RenderText()
 
 		while(pos)
 		{
-			LP_CHAT_MSG lpChatMsg = (LP_CHAT_MSG)g_pGuildChatList->GetNext(pos);
+			LP_CHAT_MSG lpChatMsg = (LP_CHAT_MSG)g_pGuildChatList->GetAndAdvance(pos);
 
 			if(m_nCurScrollPos>byCurPos)
 			{
@@ -189,7 +189,7 @@ void CChatListWnd::RenderText()
 
 		while(pos)
 		{
-			LP_CHAT_MSG lpChatMsg = (LP_CHAT_MSG)g_pWhisperChatList->GetNext(pos);
+			LP_CHAT_MSG lpChatMsg = (LP_CHAT_MSG)g_pWhisperChatList->GetAndAdvance(pos);
 
 			if(m_nCurScrollPos>byCurPos)
 			{
@@ -214,7 +214,7 @@ void CChatListWnd::RenderText()
 
 		while(pos)
 		{
-			LP_CHAT_MSG lpChatMsg = (LP_CHAT_MSG)g_pFriendChatList->GetNext(pos);
+			LP_CHAT_MSG lpChatMsg = (LP_CHAT_MSG)g_pFriendChatList->GetAndAdvance(pos);
 
 			if(m_nCurScrollPos>byCurPos)
 			{

@@ -3,7 +3,7 @@
 
 #include "GlobalSoundHandles.h"
 #include "SoundLib.h"
-#include "VoidList.h"
+#include "../BaseLibrary/VoidList.h"
 
 class SoundEffectList : public CVoidList
 {

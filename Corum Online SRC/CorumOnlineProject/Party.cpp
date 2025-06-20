@@ -153,7 +153,7 @@ void CmdPartyPotalMove(char* pMsg, DWORD dwLen)
 {
 	DSTC_PARTY_PORTALMOVE* pPacket = (DSTC_PARTY_PORTALMOVE*)pMsg;
 	
-	g_pMainPlayer->SetAction(36);
+	g_pMainPlayer->SetMotion(36);
 	g_pMainPlayer->m_hPlayer.pDesc->ObjectFunc = NULL;	
 	SendStopPacket();
 
@@ -181,7 +181,7 @@ void CmdPartyPotalWorldMove(char* pMsg, DWORD dwLen)
 {
 	WSTC_PARTY_PORTALMOVE* pPacket = (WSTC_PARTY_PORTALMOVE*)pMsg;
 	
-	g_pMainPlayer->SetAction(36);
+	g_pMainPlayer->SetMotion(36);
 	g_pMainPlayer->m_hPlayer.pDesc->ObjectFunc = NULL;	
 	SendStopPacket();
 

@@ -214,7 +214,7 @@ BOOL ItemUsedZodiac(CItem* pItem, BYTE byZipcode, BYTE byType)
 						while(pos)
 						{
 							DUNGEON_DATA_EX* pDungeon = 
-								(DUNGEON_DATA_EX*)g_pDungeonTable->m_pReceivedDungeonList->GetNext(pos);
+								(DUNGEON_DATA_EX*)g_pDungeonTable->m_pReceivedDungeonList->GetAndAdvance(pos);
 
 							if(pDungeon)
 							{
@@ -698,7 +698,7 @@ BOOL ItemUsedSpecial(CItem* pItem, BYTE byZipcode, BYTE byType)
 						wItemId==__ITEM_SKILL_INT__ ||
 						(wItemId>=__ITEM_SKILL_INTSTART__ && wItemId<=__ITEM_SKILL_INTEND__))
 					{			
-						if(g_pMainPlayer->m_dwLevel<10)
+						if(g_pMainPlayer->currentLevel() < 10)
 						{
 							// "레벨 10 이상부터 사용할 수 있습니다."
 							DisplayMessageAdd(g_Message[ETC_MESSAGE789].szMessage, 0xffff2cff); 

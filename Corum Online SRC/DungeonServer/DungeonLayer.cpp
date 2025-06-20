@@ -259,7 +259,7 @@ DWORD CDungeonLayer::BroadCastMsg( char* pMsg, DWORD wLength ) const
 	
 	while(pos)
 	{
-		 pUser = (CUser*)m_pPcList->GetNext(pos);
+		 pUser = (CUser*)m_pPcList->GetAndAdvance(pos);
 	     NetSendToUser(pUser->m_dwConnectionIndex, pMsg, wLength, FLAG_SEND_NOT_ENCRYPTION);
 		 ++dwCounter;
 	}
@@ -279,7 +279,7 @@ DWORD CDungeonLayer::BroadCastMsgExceptSender( char* pMsg, DWORD wLength, const 
 	
 	while(pos)
 	{
-		 pUser = (CUser*)m_pPcList->GetNext(pos);
+		 pUser = (CUser*)m_pPcList->GetAndAdvance(pos);
 		 if(pUser == pSender) continue;
 	     NetSendToUser(pUser->m_dwConnectionIndex, pMsg, wLength, FLAG_SEND_NOT_ENCRYPTION);
 		 ++dwCounter;
@@ -304,7 +304,7 @@ DWORD CDungeonLayer::BroadCastSectionMsg( char* pMsg, DWORD wLength, const CUser
 
 	while(pos)
 	{
-		pUser = (CUser*)pSection->m_pPcList->GetNext(pos);
+		pUser = (CUser*)pSection->m_pPcList->GetAndAdvance(pos);
 		if(pUser == pSender ) continue;
 		NetSendToUser( pUser->m_dwConnectionIndex, pMsg, wLength, FLAG_SEND_NOT_ENCRYPTION );
 		++dwCounter;
@@ -321,7 +321,7 @@ DWORD CDungeonLayer::BroadCastSectionMsg( char* pMsg, DWORD wLength, const CUser
 		pos = pLinkSection->m_pPcList->GetHeadPosition();
 		while(pos)
 		{
-			pUser = (CUser*)pLinkSection->m_pPcList->GetNext(pos);
+			pUser = (CUser*)pLinkSection->m_pPcList->GetAndAdvance(pos);
 			NetSendToUser( pUser->m_dwConnectionIndex, pMsg, wLength, FLAG_SEND_NOT_ENCRYPTION );
 			++dwCounter;
 		}
@@ -346,7 +346,7 @@ DWORD CDungeonLayer::BroadCastSectionMsg( char* pMsg, DWORD wLength, BYTE bSecti
 	POSITION_	pos = pSection->m_pPcList->GetHeadPosition();
 	while(pos)
 	{
-		pUser = (CUser*)pSection->m_pPcList->GetNext(pos);
+		pUser = (CUser*)pSection->m_pPcList->GetAndAdvance(pos);
 		NetSendToUser( pUser->m_dwConnectionIndex, pMsg, wLength, FLAG_SEND_NOT_ENCRYPTION );
 		++dwCounter;
 	}
@@ -362,7 +362,7 @@ DWORD CDungeonLayer::BroadCastSectionMsg( char* pMsg, DWORD wLength, BYTE bSecti
 		pos = pLinkSection->m_pPcList->GetHeadPosition();
 		while(pos)
 		{
-			pUser = (CUser*)pLinkSection->m_pPcList->GetNext(pos);
+			pUser = (CUser*)pLinkSection->m_pPcList->GetAndAdvance(pos);
 			NetSendToUser( pUser->m_dwConnectionIndex, pMsg, wLength, FLAG_SEND_NOT_ENCRYPTION );
 			++dwCounter;
 		}
@@ -385,7 +385,7 @@ DWORD CDungeonLayer::BroadCastSectionMsgExceptLink( char* pMsg, DWORD wLength, B
 	POSITION_ pos = pSection->m_pPcList->GetHeadPosition();
 	while( pos )
 	{
-		pUser = (CUser*)pSection->m_pPcList->GetNext(pos);
+		pUser = (CUser*)pSection->m_pPcList->GetAndAdvance(pos);
 		NetSendToUser( pUser->m_dwConnectionIndex, pMsg, wLength, FLAG_SEND_NOT_ENCRYPTION );
 		++dwCounter;
 	}
@@ -489,7 +489,7 @@ void CDungeonLayer::SendSectionInfo( BYTE bSectionNum, CUser* pOwnUser, BYTE bPo
 	while( pos )
 	{
 		del = pos;
-		pUser = (CUser*)pSection->m_pPcList->GetNext( pos );
+		pUser = (CUser*)pSection->m_pPcList->GetAndAdvance( pos );
 		
 		if (!pUser->GetID()  || !pUser->GetClass() || !pUser->GetHeadModelNo())
 		{
@@ -543,8 +543,8 @@ void CDungeonLayer::SendSectionInfo( BYTE bSectionNum, CUser* pOwnUser, BYTE bPo
 				posSkill = pUser->GetUsingStatusEffectList()->GetHeadPosition();
 				while(posSkill)
 				{					
-					EffectDesc* pEffectDesc = (EffectDesc*)pUser->GetUsingStatusEffectList()->GetNext(posSkill);
-					g_pEffectLayer->SendSkillStatusUserUser(pOwnUser, pUser, pEffectDesc->pEffect->bID, pEffectDesc->bSkillLevel, pEffectDesc->dwDestTick-g_dwTickCount);
+					AppliedSkill* pEffectDesc = (AppliedSkill*)pUser->GetUsingStatusEffectList()->GetAndAdvance(posSkill);
+					g_pEffectLayer->SendSkillStatusUserUser(pOwnUser, pUser, pEffectDesc->pEffect->skillKind, pEffectDesc->bSkillLevel, pEffectDesc->dwDestTick-g_dwTickCount);
 				}
 			}
 			
@@ -555,8 +555,8 @@ void CDungeonLayer::SendSectionInfo( BYTE bSectionNum, CUser* pOwnUser, BYTE bPo
 		while(posSkill)
 		{
 			// 자기껄 남에게 			
-			EffectDesc* pEffectDesc = (EffectDesc*)pOwnUser->GetUsingStatusEffectList()->GetNext(posSkill);
-			g_pEffectLayer->SendSkillStatusUserUser(pUser, pOwnUser, pEffectDesc->pEffect->bID, pEffectDesc->bSkillLevel, pEffectDesc->dwDestTick-g_dwTickCount);	
+			AppliedSkill* pEffectDesc = (AppliedSkill*)pOwnUser->GetUsingStatusEffectList()->GetAndAdvance(posSkill);
+			g_pEffectLayer->SendSkillStatusUserUser(pUser, pOwnUser, pEffectDesc->pEffect->skillKind, pEffectDesc->bSkillLevel, pEffectDesc->dwDestTick-g_dwTickCount);	
 		}		
 	}
 
@@ -568,7 +568,7 @@ void CDungeonLayer::SendSectionInfo( BYTE bSectionNum, CUser* pOwnUser, BYTE bPo
 	while( pos )
 	{
 		del = pos;
-		pMonster = (CMonster*)pSection->m_pMonsterList->GetNext( pos );
+		pMonster = (CMonster*)pSection->m_pMonsterList->GetAndAdvance( pos );
 
 		if (pMonster->GetUnitStatus() == UNIT_STATUS_DEAD)
 		{			
@@ -600,8 +600,8 @@ void CDungeonLayer::SendSectionInfo( BYTE bSectionNum, CUser* pOwnUser, BYTE bPo
 			while(posSkill)
 			{
 				
-				EffectDesc* pEffectDesc = (EffectDesc*)pMonster->GetUsingStatusEffectList()->GetNext(posSkill);
-				g_pEffectLayer->SendSkillStatusUserMon(pOwnUser, pMonster, pEffectDesc->pEffect->bID, pEffectDesc->bSkillLevel, pEffectDesc->dwDestTick-g_dwTickCount);		
+				AppliedSkill* pEffectDesc = (AppliedSkill*)pMonster->GetUsingStatusEffectList()->GetAndAdvance(posSkill);
+				g_pEffectLayer->SendSkillStatusUserMon(pOwnUser, pMonster, pEffectDesc->pEffect->skillKind, pEffectDesc->bSkillLevel, pEffectDesc->dwDestTick-g_dwTickCount);		
 			}
 		}		
 	}
@@ -1144,7 +1144,7 @@ void CDungeonLayer::__ProcessDeadMonsterClear()
 		try
 		{
 			Del = MonsterPos;
-			CMonster* pMonster = (CMonster*)m_pDeadMonsterList->GetNext(MonsterPos);
+			CMonster* pMonster = (CMonster*)m_pDeadMonsterList->GetAndAdvance(MonsterPos);
 			RemoveMonster(pMonster);
 			m_pDeadMonsterList->RemoveAt(Del);
 		}
@@ -1161,12 +1161,12 @@ void CDungeonLayer::__ProcessUpdateMonster()
 	POSITION_ SectionPos = m_pActiveSectionList->GetHeadPosition();
 	while( SectionPos )
 	{
-		CSection* pSection = (CSection*)m_pActiveSectionList->GetNext( SectionPos );
+		CSection* pSection = (CSection*)m_pActiveSectionList->GetAndAdvance( SectionPos );
 
 		POSITION_ MonsterPos = pSection->m_pMonsterList->GetHeadPosition();
 		while( MonsterPos )
 		{
-			CMonster* pMonster = (CMonster*)pSection->m_pMonsterList->GetNext( MonsterPos );			
+			CMonster* pMonster = (CMonster*)pSection->m_pMonsterList->GetAndAdvance( MonsterPos );			
 			if( pMonster->GetUnitStatus() != UNIT_STATUS_DEAD )
 			{
 				try
@@ -1191,7 +1191,7 @@ void CDungeonLayer::__ProcessRespawnMonster()
 
 	while( MonsterPos )
 	{
-		CMonster* pMonster = (CMonster*)m_pResponseMonsterList->GetNext( MonsterPos );
+		CMonster* pMonster = (CMonster*)m_pResponseMonsterList->GetAndAdvance( MonsterPos );
 		ReviveMonster(pMonster);
 	}
 }
@@ -1202,7 +1202,7 @@ void CDungeonLayer::__ProcessCreateItem()
 	
 	while(ItemPos)
 	{
-		ITEM_CREATE* pCreateItem = (ITEM_CREATE*)m_pCreateItemList->GetNext( ItemPos );
+		ITEM_CREATE* pCreateItem = (ITEM_CREATE*)m_pCreateItemList->GetAndAdvance( ItemPos );
 		if(!pCreateItem)
 			continue;
 		
@@ -1322,7 +1322,7 @@ void CDungeonLayer::__ProcessSiege()
 		while(pos)
 		{
 			// cp를 검사한다.
-			CP_DESC* pCPDesc = (CP_DESC*)pCPList->GetNext(pos);
+			CP_DESC* pCPDesc = (CP_DESC*)pCPList->GetAndAdvance(pos);
 
 			if (!pCPDesc->bDestroy)
 			{	
@@ -1430,7 +1430,7 @@ void CDungeonLayer::__ProcessMatch()
 
 			while(pos)
 			{
-				CUser * pUserTemp = (CUser*) m_pPcList->GetNext(pos);
+				CUser * pUserTemp = (CUser*) m_pPcList->GetAndAdvance(pos);
 								
 				if (pUserTemp && pUserTemp->m_sMatchDescInfo.m_bMatching == TRUE)
 				{  
@@ -1467,7 +1467,7 @@ void CDungeonLayer::__ProcessMatch()
 			// 판정하기위해서 에너지 율을 계산한다.
 			while(pos)
 			{
-				CUser * pUserTemp = (CUser*) m_pPcList->GetNext(pos);
+				CUser * pUserTemp = (CUser*) m_pPcList->GetAndAdvance(pos);
 
 				if (pUserTemp->m_sMatchDescInfo.m_bMatching == TRUE)
 				{
@@ -1539,7 +1539,7 @@ void CDungeonLayer::__ProcessMatch()
 
 			while(pos)
 			{
-				CUser * pUserTemp = (CUser*) m_pPcList->GetNext(pos);
+				CUser * pUserTemp = (CUser*) m_pPcList->GetAndAdvance(pos);
 				if ( pUserTemp )
 				{	
 					if (pUserTemp->m_sMatchDescInfo.m_bMatching == TRUE)
@@ -1858,7 +1858,7 @@ CMonster* CDungeonLayer::CallMonster( CUser* pUser, DWORD dwZipCode, DWORD dwBas
 		
 	pMonster->Initialize(pBaseMonster, NULL, pUser, (BYTE)dwZipCode, pUser->GetLevel(), 0);
 	
-	((CUser*)pMonster->GetLord())->m_pMonster[ dwZipCode ]	= pMonster;
+	((CUser*)pMonster->GetLord())->servantMonsters[ dwZipCode ]	= pMonster;
 	
 	// 소환몬스터 능력치를 증가시켜라.
 	DWORD dwSummonPassiveSkill[] = {__SKILL_MIRACULOUSHEART__, __SKILL_FRENZY__, __SKILL_RAGE__};
@@ -1983,7 +1983,7 @@ void CDungeonLayer::AttachMagicArrayToParty(CUser* pUser, DWORD dwItemID)
 
 	while(pos)
 	{
-		pTargetUser = (CUser*)pSection->m_pPcList->GetNext(pos);
+		pTargetUser = (CUser*)pSection->m_pPcList->GetAndAdvance(pos);
 		
 		if(pTargetUser->m_dwPartyId && pTargetUser->m_dwPartyId == pUser->m_dwPartyId )
 		{
@@ -2008,7 +2008,7 @@ void CDungeonLayer::AttachMagicArrayToParty(CUser* pUser, DWORD dwItemID)
 
 		while(pos)
 		{
-			pTargetUser = (CUser*)pLinkSection->m_pPcList->GetNext(pos);
+			pTargetUser = (CUser*)pLinkSection->m_pPcList->GetAndAdvance(pos);
 			pTargetUser->AttachMagicArray(dwItemID);			
 		}
 	}
@@ -2110,7 +2110,7 @@ void CDungeonLayer::ResetMonster(BOOL bCreateMonster)
 
 	while( MonsterPos )
 	{
-		pMonster = (CMonster*)m_pMonsterList->GetNext( MonsterPos );				
+		pMonster = (CMonster*)m_pMonsterList->GetAndAdvance( MonsterPos );				
 
 		if (pMonster->IsNormalMonster())
 		{
@@ -2127,7 +2127,7 @@ void CDungeonLayer::ResetMonster(BOOL bCreateMonster)
 		MonsterPos = m_pResponseMonsterList->GetHeadPosition();
 		while( MonsterPos )
 		{
-			pMonster = (CMonster*)m_pResponseMonsterList->GetNext( MonsterPos );	
+			pMonster = (CMonster*)m_pResponseMonsterList->GetAndAdvance( MonsterPos );	
 			CreateMonster( pMonster );
 		}
 	}
@@ -2137,7 +2137,7 @@ void CDungeonLayer::ResetMonster(BOOL bCreateMonster)
 	POSITION_ pos = m_pMonsterList->GetHeadPosition();
 	while(pos)
 	{
-		CMonster* pMonster = (CMonster*)m_pMonsterList->GetNext(pos);
+		CMonster* pMonster = (CMonster*)m_pMonsterList->GetAndAdvance(pos);
 		
 		if (pMonster->IsNormalMonster() )
 		{
@@ -2161,7 +2161,7 @@ BOOL CDungeonLayer::RemoveMonster( CMonster* pMonster )
 	{	
 		if( pMonster->IsMindControll() )
 		{
-			((CUser*)pMonster->GetLord())->m_pMonster[pMonster->GetTemp(NPC_TEMP_SLOT)] = NULL;
+			((CUser*)pMonster->GetLord())->servantMonsters[pMonster->GetTemp(NPC_TEMP_SLOT)] = NULL;
 			pMonster->AddResponList();
 		}
 		else if(pMonster->GetLord())
@@ -2203,7 +2203,7 @@ BOOL CDungeonLayer::RemoveMonster( CMonster* pMonster )
 			// 서머닝 몬스터
 			if (pMonster->GetTemp(NPC_TEMP_SLOT) < MAX_USER_GUARDIAN)
 			{
-				((CUser*)pMonster->GetLord())->m_pMonster[pMonster->GetTemp(NPC_TEMP_SLOT)] = NULL;
+				((CUser*)pMonster->GetLord())->servantMonsters[pMonster->GetTemp(NPC_TEMP_SLOT)] = NULL;
 			}
 		}
 

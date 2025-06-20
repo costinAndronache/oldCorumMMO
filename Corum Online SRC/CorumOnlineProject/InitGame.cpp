@@ -115,8 +115,8 @@ DUNGEONPRODUCTIONITEMMINMAX	*g_DungeonProductionItemMinMax;
 NPC_TABLE					*g_NPCTable;
 BASE_CLASS_INFO* g_sBaseClassInfo;
 SSKILL_DPINFO				g_sSkillInfoDP[MAX_SKILL];
-SLEVEL_EXP					g_sLevelExp[MAX_LEVEL+1];
-SLEVEL_EXP					g_sGuardianLevelExp[MAX_LEVEL+1];
+DWORD					g_sLevelExp[MAX_LEVEL+1];
+DWORD					g_sGuardianLevelExp[MAX_LEVEL+1];
 SSKILL_LIST_MANAGER			g_sSkillListManager;
 GUILD_INFO					g_pGuildInfo;
 A_STAR						g_PathFinder;
@@ -378,12 +378,14 @@ void LoadBaseClassInfo()
 
 void LoadLevelExp()
 {
+	// Level.bin , GDLevel.bin :: serialized array of 256 DWORDs
 	_CHECK_MEMORY();
-	auto levelResult = DecodeCDBData(GetFile("Level.cdb", DATA_TYPE_MANAGER));
-	memcpy(&g_sLevelExp[1], levelResult.buffer, levelResult.size);
+	std::ifstream Levelbin(GetFile("Level.bin", DATA_TYPE_MANAGER), std::ios::binary);
 
-	auto glevelResult = DecodeCDBData(GetFile("GuardianLevel.cdb", DATA_TYPE_MANAGER));
-	memcpy(&g_sGuardianLevelExp[1], glevelResult.buffer, glevelResult.size);
+	Levelbin.read((char*)g_sLevelExp, sizeof(g_sLevelExp));
+
+	std::ifstream GuardianLevelbin(GetFile("GuardianLevel.bin", DATA_TYPE_MANAGER), std::ios::binary);
+	GuardianLevelbin.read((char*)g_sGuardianLevelExp, sizeof(g_sGuardianLevelExp));
 	_CHECK_MEMORY();
 }
 
@@ -392,9 +394,33 @@ DWORD GetExpTableOfLevel(GAME_OBJECT_TYPE eObjectType, DWORD dwLevel)
 	switch (eObjectType)
 	{
 	case OBJECT_TYPE_PLAYER:
-		return g_sLevelExp[dwLevel].dwExp;
+		return g_sLevelExp[dwLevel];
 	case OBJECT_TYPE_MONSTER:
-		return g_sGuardianLevelExp[dwLevel].dwExp;
+		return g_sGuardianLevelExp[dwLevel];
+	}
+
+	return 0;
+}
+
+DWORD	GetCumulatedExpByLevel(GAME_OBJECT_TYPE eObjectType, DWORD dwLevel) {
+	switch (eObjectType)
+	{
+	case OBJECT_TYPE_PLAYER:
+		return cumulatedExperienceAtLevel(dwLevel, g_sLevelExp);
+	case OBJECT_TYPE_MONSTER:
+		return cumulatedExperienceAtLevel(dwLevel, g_sGuardianLevelExp);
+	}
+
+	return 0;
+}
+
+DWORD	GetLevelForCumulatedExp(GAME_OBJECT_TYPE eObjectType, DWORD cumulatedExp) {
+	switch (eObjectType)
+	{
+	case OBJECT_TYPE_PLAYER:
+		return levelForCumulatedExperience(cumulatedExp, g_sLevelExp);
+	case OBJECT_TYPE_MONSTER:
+		return levelForCumulatedExperience(cumulatedExp, g_sGuardianLevelExp);
 	}
 
 	return 0;
@@ -525,7 +551,7 @@ void InitializePool()
 	InitializeStaticMemoryPool( g_pMonsterPool, sizeof( CMonster ), 1100, 1100 );
 
 	g_pEffectPool = CreateStaticMemoryPool();
-	InitializeStaticMemoryPool( g_pEffectPool, sizeof( EffectDesc ), 10000, 10000 );
+	InitializeStaticMemoryPool( g_pEffectPool, sizeof( AppliedSkill ), 10000, 10000 );
 	
 	g_pItemPool = CreateStaticMemoryPool();
 	InitializeStaticMemoryPool( g_pItemPool, sizeof( ITEM ), 20000, 20000);
@@ -707,13 +733,6 @@ BOOL InitGame()
 	g_Camera.v3Angle.x =  g_Camera.CameraDesc.fXRot;
 	g_Camera.v3Angle.y =  g_Camera.CameraDesc.fYRot;
 	g_Camera.v3Angle.z =  g_Camera.CameraDesc.fZRot;
-
-	//
-	SLEVEL_EXP *testDecode = new SLEVEL_EXP[300];
-	memset(testDecode, 0, sizeof(SLEVEL_EXP) * 300);
-
-	//DecodeCDBData(GetFile("ExodusLevel.cdb", DATA_TYPE_MANAGER), testDecode);
-	//
 
 
 	SetListener(&g_Camera.v3Angle);
@@ -971,7 +990,7 @@ void ReleaseGame()
 		{
 			posTemp = pos;
 
-			LP_SKILL_RESOURCE_EX lpSkillResourceNode = (LP_SKILL_RESOURCE_EX)g_sSkillListManager.pSkillList[i].pActiveList->GetNext(pos);			
+			LP_SKILL_RESOURCE_EX lpSkillResourceNode = (LP_SKILL_RESOURCE_EX)g_sSkillListManager.pSkillList[i].pActiveList->GetAndAdvance(pos);			
 			g_sSkillListManager.pSkillList[i].pActiveList->RemoveAt(posTemp);
 			delete lpSkillResourceNode;
 		}
@@ -985,7 +1004,7 @@ void ReleaseGame()
 		{
 			posTemp = pos;
 
-			LP_SKILL_RESOURCE_EX lpSkillResourceNode = (LP_SKILL_RESOURCE_EX)g_sSkillListManager.pSkillList[i].pPassiveList->GetNext(pos);			
+			LP_SKILL_RESOURCE_EX lpSkillResourceNode = (LP_SKILL_RESOURCE_EX)g_sSkillListManager.pSkillList[i].pPassiveList->GetAndAdvance(pos);			
 			g_sSkillListManager.pSkillList[i].pPassiveList->RemoveAt(posTemp);
 			delete lpSkillResourceNode;
 		}
@@ -999,7 +1018,7 @@ void ReleaseGame()
 		{
 			posTemp = pos;
 
-			LP_SKILL_RESOURCE_EX lpSkillResourceNode = (LP_SKILL_RESOURCE_EX)g_sSkillListManager.pSkillList[i].pOverDriveList->GetNext(pos);			
+			LP_SKILL_RESOURCE_EX lpSkillResourceNode = (LP_SKILL_RESOURCE_EX)g_sSkillListManager.pSkillList[i].pOverDriveList->GetAndAdvance(pos);			
 			g_sSkillListManager.pSkillList[i].pOverDriveList->RemoveAt(posTemp);
 			delete lpSkillResourceNode;
 		}
@@ -1013,7 +1032,7 @@ void ReleaseGame()
 		{
 			posTemp = pos;
 
-			LP_SKILL_RESOURCE_EX lpSkillResourceNode = (LP_SKILL_RESOURCE_EX)g_sSkillListManager.pSkillList[i].pMasteryList->GetNext(pos);			
+			LP_SKILL_RESOURCE_EX lpSkillResourceNode = (LP_SKILL_RESOURCE_EX)g_sSkillListManager.pSkillList[i].pMasteryList->GetAndAdvance(pos);			
 			g_sSkillListManager.pSkillList[i].pMasteryList->RemoveAt(posTemp);
 			delete lpSkillResourceNode;
 		}						

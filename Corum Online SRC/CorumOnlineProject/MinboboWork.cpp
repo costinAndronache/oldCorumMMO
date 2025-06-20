@@ -115,7 +115,7 @@ void PortalAppearFuncUser(GXOBJECT_HANDLE handle, LPObjectDesc pData, DWORD dwCu
 		CUser*	pUser = (CUser*)pData->pInfo;
 		
 		ToggleUserShadow(pUser, TRUE);
-		pUser->SetAction(MOTION_TYPE_WARSTAND);
+		pUser->SetMotion(MOTION_TYPE_WARSTAND);
 		pUser->SetStatus(UNIT_STATUS_NORMAL);
 		pData->ObjectFunc = NULL;		
 
@@ -393,7 +393,7 @@ void ReleaseDungeonEffect()
 
 	while(pos)
 	{
-		DUNGEON_DATA_EX* pDungeon = (DUNGEON_DATA_EX*)g_pDungeonTable->m_pReceivedDungeonList->GetNext(pos);
+		DUNGEON_DATA_EX* pDungeon = (DUNGEON_DATA_EX*)g_pDungeonTable->m_pReceivedDungeonList->GetAndAdvance(pos);
 		g_pDungeonTable->RemoveDungeonEffect(pDungeon);
 	}
 }

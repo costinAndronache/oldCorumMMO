@@ -77,7 +77,7 @@ DWORD EffectLayer::Load(char *szFileName)
 
 	for(int i = 0; i < count; ++i)
 	{
-		memcpy(&m_Effect[baseskill[i].bID], &baseskill[i], sizeof(BASESKILL));		
+		memcpy(&m_Effect[baseskill[i].skillKind], &baseskill[i], sizeof(BASESKILL));		
 	}
 
 	return TRUE;
@@ -280,7 +280,7 @@ BOOL EffectLayer::IsSuccessByFormula5(BYTE bSkillKind, BYTE bSkillLevel, BYTE bS
 	return (DWORD)iRand < min(GetEffectInfo(bSkillKind)->Value[bSkillLevel].nProbability*(dwOffenseLevel+nSummonMasteryValue/30)/dwDefenceLevel, 100);
 }
 
-BOOL EffectLayer::IsSuccess(BYTE bSkillKind, BYTE bSkillLevel, EffectDesc* pEffectDesc_Pray)
+BOOL EffectLayer::IsSuccess(BYTE bSkillKind, BYTE bSkillLevel, AppliedSkill* pEffectDesc_Pray)
 {		
 	if (GetEffectInfo(bSkillKind)->bCrime == CRIME_APPLY_ENEMY && pEffectDesc_Pray )
 	{
@@ -341,22 +341,53 @@ int EffectLayer::GetBaseClassSkillMax(WORD wClass, BYTE bSkillKind)
 	return nBaseClassSkillMax;
 }
 
-int EffectLayer::GetUsedSPSkill(CUser* pOwnUser, SKILLDESC* pSkillDesc)
+int EffectLayer::spOffsetPerSecondIfContinousSkill(const Effect* skill, DWORD skillLevel, const CUser* user) {
+	if (skill->skillKind == __SKILL_AURARECHARGE__) {
+		return skill->Value[skillLevel].nMin;
+	}
+
+	if (skill->bType == TYPE_DRIVE) {
+		return -(int)(user->GetMaxSP() * 0.1);
+	}
+
+	return 0;
+}
+
+void EffectLayer::updateKeepTimeForContinousSkill(const CUser* pOwnUser, SkillCast* pSkillDesc) {
+	const Effect* pEffect = GetEffectInfo(pSkillDesc->bSkillKind);
+	const auto castTimeMilliseconds = (g_dwTickCount - pOwnUser->m_dwTemp[USER_TEMP_CASTINGSTARTTICK]);
+	const auto castTimeSeconds = millisecondsToSeconds(castTimeMilliseconds);
+
+	if (pEffect->skillKind == __SKILL_AURARECHARGE__) {
+		pSkillDesc->dwSkillKeepTime = castTimeMilliseconds;
+	} else if (pEffect->bType == TYPE_DRIVE) {
+		auto nUseMana = abs((int)(spOffsetPerSecondIfContinousSkill(pEffect, pSkillDesc->bSkillLevel, pOwnUser) * castTimeSeconds));
+		 
+		nUseMana = min((int)pOwnUser->GetSP(), nUseMana);
+		const auto skillManaAtCurrentLevel = pEffect->Value[pSkillDesc->bSkillLevel].nMana;
+		pSkillDesc->dwSkillKeepTime =
+			(DWORD)(nUseMana / skillManaAtCurrentLevel  * pOwnUser->GetODC() * 1000);
+
+		printf("\nUpdated keep time: %d, for:: %d / %d * %.1f * 1000", pSkillDesc->dwSkillKeepTime, nUseMana, skillManaAtCurrentLevel, pOwnUser->GetODC());
+	}
+}
+
+int EffectLayer::UserManaOffsetForSkillUsage(const CUser* pOwnUser, const SkillCast* pSkillDesc)
 {
 	int nUseMana = 0;
 	Effect* pEffect = GetEffectInfo(pSkillDesc->bSkillKind);
-	
-	//>>>> user의 mp깍아 주기.
+	const auto castTimeMilliseconds = (g_dwTickCount - pOwnUser->m_dwTemp[USER_TEMP_CASTINGSTARTTICK]);
+	const auto castTimeSeconds = millisecondsToSeconds(castTimeMilliseconds);
+
 	if (pEffect->bType == TYPE_ACTIVE || pEffect->bType == TYPE_TIMEZERO )
 	{
-		if (pEffect->bID == __SKILL_AURARECHARGE__)
+		if (pEffect->skillKind == __SKILL_AURARECHARGE__)
 		{
-			pSkillDesc->dwSkillKeepTime = g_dwTickCount-pOwnUser->m_dwTemp[USER_TEMP_CASTINGSTARTTICK];
-			nUseMana = (int)(pEffect->Value[pSkillDesc->bSkillLevel].nMin*(pSkillDesc->dwSkillKeepTime/1000.));			
+			nUseMana = (int)(spOffsetPerSecondIfContinousSkill(pEffect, pSkillDesc->bSkillLevel, pOwnUser) * castTimeSeconds);			
 		}
 		else
 		{
-			if (pEffect->bID == __SKILL_LIFEEXPLOSION__)
+			if (pEffect->skillKind == __SKILL_LIFEEXPLOSION__)
 				nUseMana = -(INT)pOwnUser->GetSP();	// 전부다 사용해야 한다.
 			else
 				nUseMana = -pEffect->Value[pSkillDesc->bSkillLevel].nMana;
@@ -364,12 +395,9 @@ int EffectLayer::GetUsedSPSkill(CUser* pOwnUser, SKILLDESC* pSkillDesc)
 	}
 	else if (pEffect->bType == TYPE_DRIVE)
 	{
-		pSkillDesc->dwSkillKeepTime = g_dwTickCount - pOwnUser->m_dwTemp[USER_TEMP_CASTINGSTARTTICK];
-		nUseMana = (int)(((pOwnUser->GetMaxSP()*0.1)*(pSkillDesc->dwSkillKeepTime/1000.)));
+		nUseMana = abs((int)(spOffsetPerSecondIfContinousSkill(pEffect, pSkillDesc->bSkillLevel, pOwnUser) * castTimeSeconds));
 		
 		nUseMana = min((int)pOwnUser->GetSP(), nUseMana);
-		pSkillDesc->dwSkillKeepTime = 
-			(DWORD)(nUseMana/pEffect->Value[pSkillDesc->bSkillLevel].nMana*pOwnUser->GetODC()*1000);
 
 		if ((INT)pOwnUser->GetSP() <= nUseMana)
 			nUseMana = -(INT)pOwnUser->GetSP();
@@ -379,26 +407,26 @@ int EffectLayer::GetUsedSPSkill(CUser* pOwnUser, SKILLDESC* pSkillDesc)
 	return nUseMana;
 }
 
-BOOL EffectLayer::MessyProcessForSystem(CUser* pOwnUser, SKILLDESC* pSkillDesc)
+BOOL EffectLayer::MessyProcessForSystem(CUser* pOwnUser, SkillCast* pSkillDesc)
 {
 	if (!pOwnUser)
 		return FALSE;
 	
 	// 쏘는 주체는 아이템이나 시피지만 그 사건이 캐릭터로 부터 발생된것이라면.. 유저가 쏜것처럼 바꿔준다.	
 	pOwnUser = pSkillDesc->pMonsterMaster;
-	if (!IsUnitStatusReadySkill(pSkillDesc->bSkillKind, pOwnUser))
+	if (!CanUnitCastSkill(pSkillDesc->bSkillKind, pOwnUser))
 		return FALSE;
 	
-	pSkillDesc->bOwnType = BYTE(pOwnUser->GetObjectType());
-	pSkillDesc->dwOwnIndex = pOwnUser->GetID();		
+	pSkillDesc->casterType = BYTE(pOwnUser->GetObjectType());
+	pSkillDesc->casterDungeonID = pOwnUser->GetID();		
 
 	return TRUE;
 }
 
 
-BOOL EffectLayer::MessyProcessForUser(CUser* pOwnUser, SKILLDESC* pSkillDesc)
+BOOL EffectLayer::ProcessUsersSkillCast(CUser* pOwnUser, SkillCast* pSkillDesc)
 {
-	if (!IsUnitStatusReadySkill(pSkillDesc->bSkillKind, pOwnUser))
+	if (!CanUnitCastSkill(pSkillDesc->bSkillKind, pOwnUser))
 		return FALSE;
 		
 	assert(pSkillDesc->bSkillLevel < MAX_SKILL_LEVEL);
@@ -415,16 +443,17 @@ BOOL EffectLayer::MessyProcessForUser(CUser* pOwnUser, SKILLDESC* pSkillDesc)
 		return FALSE;
 	}
 
-	int nMana = GetUsedSPSkill(pOwnUser, pSkillDesc);		
+	int nMana = UserManaOffsetForSkillUsage(pOwnUser, pSkillDesc);		
 	if (nMana < 0 && (INT)pOwnUser->GetSP() < -nMana)
 	{
 		pOwnUser->SendSkillCastingFail(SKILL_CASTING_FAIL_REASON_LACK_SP);
 		return FALSE;
 	}
+	g_pEffectLayer->updateKeepTimeForContinousSkill(pOwnUser, pSkillDesc);
+
 
 	Effect* pEffect = g_pEffectLayer->GetEffectInfo(pSkillDesc->bSkillKind);
-	if (pEffect->bType == TYPE_DRIVE && !pOwnUser->OverDriveChk())	
-	{
+	if (pEffect->bType == TYPE_DRIVE && !pOwnUser->OverDriveChk()) {
 		pOwnUser->SendSkillCastingFail(SKILL_CASTING_FAIL_REASON_LACK_ZODIAC_ITEM);
 		return FALSE;
 	}
@@ -432,11 +461,15 @@ BOOL EffectLayer::MessyProcessForUser(CUser* pOwnUser, SKILLDESC* pSkillDesc)
 	pOwnUser->m_dwStartSkillTick[pSkillDesc->bSkillKind] = g_dwTickCount;
 	pOwnUser->SetSP(pOwnUser->GetSP()+nMana);
 
+
+
 	// 보정도 할겸 보내주자. ㅡ.ㅡ
 	DSTC_USER_STATUS UserStatus;	
 	UserStatus.bStatusMany								= 0;
 	UserStatus.pStatus[UserStatus.bStatusMany].dwCode	= USER_MP;
 	UserStatus.pStatus[UserStatus.bStatusMany++].dwMin	= pOwnUser->GetSP();
+
+	printf("\nUSER_STATUS update from ProcessUsersSkillCast");
 	
 	NetSendToUser( pOwnUser->m_dwConnectionIndex, (char*)&UserStatus, UserStatus.GetPacketSize()
 		, FLAG_SEND_NOT_ENCRYPTION);
@@ -445,17 +478,17 @@ BOOL EffectLayer::MessyProcessForUser(CUser* pOwnUser, SKILLDESC* pSkillDesc)
 }
 
 
-BOOL EffectLayer::IsRange(SKILLDESC* pSkillDesc, VECTOR2* pV2Start)
+BOOL EffectLayer::IsRange(SkillCast* pSkillDesc, VECTOR2* pV2Start)
 {
 	Effect* pEffect = GetEffectInfo(pSkillDesc->bSkillKind);
 	
-	float fDist = CalcDistance( pV2Start, &pSkillDesc->v2OwnObjectPos );
+	float fDist = CalcDistance( pV2Start, &pSkillDesc->casterPosition );
 
 	if( pEffect->dwRange && fDist > pEffect->dwRange )
 	{
-		if (pSkillDesc->bOwnType == OBJECT_TYPE_PLAYER)
+		if (pSkillDesc->casterType == OBJECT_TYPE_PLAYER)
 		{
-			CUser*	pOwnUser = g_pUserHash->GetData(pSkillDesc->dwOwnIndex);
+			CUser*	pOwnUser = g_pUserHash->GetData(pSkillDesc->casterDungeonID);
 			pOwnUser->SendSkillCastingFail(SKILL_CASTING_FAIL_REASON_OVER_RANGE);
 		}
 		return FALSE;
@@ -464,7 +497,7 @@ BOOL EffectLayer::IsRange(SKILLDESC* pSkillDesc, VECTOR2* pV2Start)
 	return TRUE;
 }
 
-BOOL EffectLayer::IsUnitStatusReadySkill(BYTE bySkillKind, const CUnit* pUnit)
+BOOL EffectLayer::CanUnitCastSkill(BYTE bySkillKind, const CUnit* pUnit)
 {
 	if (!pUnit)
 		return FALSE;
@@ -480,7 +513,7 @@ BOOL EffectLayer::IsUnitStatusReadySkill(BYTE bySkillKind, const CUnit* pUnit)
 }
 
 BYTE EffectLayer::GetAppliedTargetCount(CDungeonLayer* pDungeonLayer
-					, SKILLDESC* pSkillDesc
+					, SkillCast* pSkillDesc
 					, SKILL_TARGETINFO* pTargetInfo
 					, VECTOR2* pV2Start)
 {
@@ -493,7 +526,7 @@ BYTE EffectLayer::GetAppliedTargetCount(CDungeonLayer* pDungeonLayer
 	param_target.pDungeonLayer	= pDungeonLayer;
 	param_target.pMaster		= pSkillDesc->pMonsterMaster;
 	param_target.pTargetInfo	= pTargetInfo;
-	param_target.vecDest		= &pSkillDesc->v2OwnObjectPos;
+	param_target.vecDest		= &pSkillDesc->casterPosition;
 	param_target.vecStart		= pV2Start;
 	param_target.dwTargetIndex	= pSkillDesc->dwTargetIndex;
 	param_target.bTargetType	= pSkillDesc->bTargetType;
@@ -501,22 +534,22 @@ BYTE EffectLayer::GetAppliedTargetCount(CDungeonLayer* pDungeonLayer
 	return (BYTE)GetTargetCount(&param_target);
 }
 
-void EffectLayer::RevisionStartPositon(SKILLDESC* pSkillDesc, VECTOR2* pV2Start)
+void EffectLayer::RevisionStartPositon(SkillCast* pSkillDesc, VECTOR2* pV2Start)
 {
 	pV2Start->x = 0.f; pV2Start->y = 0.f;
 	Effect* pEffect = GetEffectInfo(pSkillDesc->bSkillKind);
 	
 	if (pEffect->dwRange == 0)// 자기 위치에서 나가라.
 	{
-		pSkillDesc->v2OwnObjectPos = GetSkillStartPosition(
-											pSkillDesc->bOwnType
-											, pSkillDesc->dwOwnIndex
+		pSkillDesc->casterPosition = GetSkillStartPosition(
+											pSkillDesc->casterType
+											, pSkillDesc->casterDungeonID
 											, pSkillDesc->wTileIndex_X
 											, pSkillDesc->wTileIndex_Z
 											);
 
-		pSkillDesc->bTargetType = pSkillDesc->bOwnType;
-		pSkillDesc->dwTargetIndex = pSkillDesc->dwOwnIndex;
+		pSkillDesc->bTargetType = pSkillDesc->casterType;
+		pSkillDesc->dwTargetIndex = pSkillDesc->casterDungeonID;
 
 		// 마우스 찍은곳
 		switch (pEffect->bSkillType)
@@ -528,7 +561,7 @@ void EffectLayer::RevisionStartPositon(SKILLDESC* pSkillDesc, VECTOR2* pV2Start)
 			pV2Start->y = TILE_SIZE*pSkillDesc->wTileIndex_Z;
 			break;
 		default:
-			*pV2Start = pSkillDesc->v2OwnObjectPos;
+			*pV2Start = pSkillDesc->casterPosition;
 		}		
 	}
 	else
@@ -541,7 +574,7 @@ void EffectLayer::RevisionStartPositon(SKILLDESC* pSkillDesc, VECTOR2* pV2Start)
 	}
 }
 
-CUnit* EffectLayer::GetValiidUnit(SKILLDESC* pSkillDesc)
+CUnit* EffectLayer::ProcessCasterForSkillCast(SkillCast* pSkillDesc)
 {
 	CUnit*	pOffenseUnit = NULL;
 	
@@ -549,19 +582,20 @@ CUnit* EffectLayer::GetValiidUnit(SKILLDESC* pSkillDesc)
 	if( !pDungeonLayer ) 
 		return NULL;
 	
-	if (pSkillDesc->bOwnType == OBJECT_TYPE_PLAYER)
+	if (pSkillDesc->casterType == OBJECT_TYPE_PLAYER)
 	{
-		pOffenseUnit = g_pUserHash->GetData(pSkillDesc->dwOwnIndex);
-		if (!MessyProcessForUser((CUser*)pOffenseUnit, pSkillDesc))
+		pOffenseUnit = g_pUserHash->GetData(pSkillDesc->casterDungeonID);
+		if (!ProcessUsersSkillCast((CUser*)pOffenseUnit, pSkillDesc)) {
 			return NULL;
+		}
 	}
-	else if (pSkillDesc->bOwnType == OBJECT_TYPE_MONSTER)
+	else if (pSkillDesc->casterType == OBJECT_TYPE_MONSTER)
 	{
-		pOffenseUnit	= g_pMonsterTable->GetMonsterABS(pSkillDesc->dwOwnIndex);
+		pOffenseUnit	= g_pMonsterTable->GetMonsterABS(pSkillDesc->casterDungeonID);
 		if(!pOffenseUnit)
 			return NULL;
 	}
-	else if (pSkillDesc->bOwnType == OBJECT_TYPE_SKILL)
+	else if (pSkillDesc->casterType == OBJECT_TYPE_SKILL)
 	{
 		if (pSkillDesc->pMonsterMaster)
 		{
@@ -575,16 +609,15 @@ CUnit* EffectLayer::GetValiidUnit(SKILLDESC* pSkillDesc)
 	return pOffenseUnit;
 }
 
-BOOL EffectLayer::IsSkillSuccess(SKILLDESC* pSkillDesc, CUnit* pOffense, CUnit* pDefense, SKILL_RESULT* pSkill_result)
+BOOL EffectLayer::IsSkillSuccess(SkillCast* pSkillDesc, CUnit* pOffense, CUnit* pDefense, SKILL_RESULT* pSkill_result)
 {
 	BOOL bSkillSuccess = FALSE;
 
-	if (OBJECT_TYPE_MONSTER == pDefense->GetObjectType())
-	{
+	if (OBJECT_TYPE_MONSTER == pDefense->GetObjectType()) {
 		CMonster* pMonster = (CMonster*)pDefense;
-		if (pSkillDesc->bOwnType == OBJECT_TYPE_PLAYER)
+		if (pSkillDesc->casterType == OBJECT_TYPE_PLAYER)
 		{
-			if (!IsSkillUserMon(pSkillDesc->bSkillKind, (CUser*)pOffense, pMonster))
+			if (!CanUserCastSkillOnMonster(pSkillDesc->bSkillKind, (CUser*)pOffense, pMonster))
 				return FALSE;
 			
 			bSkillSuccess = SkillResult_Unit_Unit(pOffense
@@ -608,9 +641,7 @@ BOOL EffectLayer::IsSkillSuccess(SKILLDESC* pSkillDesc, CUnit* pOffense, CUnit* 
 			{
 				pMonster->ChangeTargetObject(pOffense);
 			}										
-		}
-		else if (pSkillDesc->bOwnType == OBJECT_TYPE_MONSTER)
-		{
+		} else if (pSkillDesc->casterType == OBJECT_TYPE_MONSTER) {
 			if (!IsSkillMonMon(pSkillDesc->bSkillKind, (CMonster*)pOffense, pMonster))
 				return FALSE;
 			
@@ -642,7 +673,7 @@ BOOL EffectLayer::IsSkillSuccess(SKILLDESC* pSkillDesc, CUnit* pOffense, CUnit* 
 				}
 			}
 		}
-		else if (pSkillDesc->bOwnType == OBJECT_TYPE_SKILL)
+		else if (pSkillDesc->casterType == OBJECT_TYPE_SKILL)
 		{
 			if (!IsSkillMon(pSkillDesc->bSkillKind, pMonster))
 				return FALSE;
@@ -677,13 +708,13 @@ BOOL EffectLayer::IsSkillSuccess(SKILLDESC* pSkillDesc, CUnit* pOffense, CUnit* 
 	{					
 		CUser*	pTargetUser	= (CUser*)pDefense;
 
-		if (pSkillDesc->bOwnType == OBJECT_TYPE_PLAYER)
+		if (pSkillDesc->casterType == OBJECT_TYPE_PLAYER)
 		{
 			
 			if (!IsSkillUserUser(pSkillDesc->bSkillKind
 					, (CUser*)pOffense
 					, pTargetUser
-					, (BYTE)pSkillDesc->bPK))
+					, (BYTE)pSkillDesc->casterPlayerPKFlagEnabled))
 			{
 				return FALSE;
 			}
@@ -698,7 +729,7 @@ BOOL EffectLayer::IsSkillSuccess(SKILLDESC* pSkillDesc, CUnit* pOffense, CUnit* 
 								, pSkill_result
 							);					
 		}
-		else if (pSkillDesc->bOwnType == OBJECT_TYPE_MONSTER)
+		else if (pSkillDesc->casterType == OBJECT_TYPE_MONSTER)
 		{
 			
 			if (!IsSkillMonUser(pSkillDesc->bSkillKind, (CMonster*)pOffense, pTargetUser))
@@ -713,7 +744,7 @@ BOOL EffectLayer::IsSkillSuccess(SKILLDESC* pSkillDesc, CUnit* pOffense, CUnit* 
 								, pSkill_result
 							);
 		}
-		else if (pSkillDesc->bOwnType == OBJECT_TYPE_SKILL)
+		else if (pSkillDesc->casterType == OBJECT_TYPE_SKILL)
 		{
 			if (!IsSkillUser(pSkillDesc->bSkillKind, pTargetUser))	
 				return FALSE;
@@ -732,13 +763,13 @@ BOOL EffectLayer::IsSkillSuccess(SKILLDESC* pSkillDesc, CUnit* pOffense, CUnit* 
 
 extern void DieOnGuildWar(CDungeonLayer *pLayer, CUser* pDieUser);
 
-void EffectLayer::AfterSkillSuccessProcess(SKILLDESC* pSkillDesc, CUnit* pOffense, CUnit* pDefense, DSTC_USER_STATUS* pUserStatus)
+void EffectLayer::AfterSkillSuccessProcess(SkillCast* pSkillDesc, CUnit* caster, CUnit* targetedUnit, DSTC_USER_STATUS* pUserStatus)
 {
 	Effect* pEffect = g_pEffectLayer->GetEffectInfo(pSkillDesc->bSkillKind);
 
-	if (pDefense->GetObjectType() == OBJECT_TYPE_MONSTER)
+	if (targetedUnit->GetObjectType() == OBJECT_TYPE_MONSTER)
 	{
-		CMonster* pMonster = (CMonster*)pDefense;
+		CMonster* pMonster = (CMonster*)targetedUnit;
 		
 		switch (pSkillDesc->bSkillKind)
 		{
@@ -753,8 +784,8 @@ void EffectLayer::AfterSkillSuccessProcess(SKILLDESC* pSkillDesc, CUnit* pOffens
 				{
 					SystemSkillToMonster(pSkillDesc->pDungeonLayer
 						, __SKILL_PRESSURE__, pSkillDesc->bSkillLevel
-						, 0, &pSkillDesc->v2OwnObjectPos
-						, wMinMax, pSkillDesc->bOwnType, pSkillDesc->dwOwnIndex
+						, 0, &pSkillDesc->casterPosition
+						, wMinMax, pSkillDesc->casterType, pSkillDesc->casterDungeonID
 						, pMonster);
 				}
 			}
@@ -762,26 +793,26 @@ void EffectLayer::AfterSkillSuccessProcess(SKILLDESC* pSkillDesc, CUnit* pOffens
 		case __SKILL_VAMPIRE__:
 			{
 				int nPlusHP = pEffect->Value[pSkillDesc->bSkillLevel].nMax;
-				if (pSkillDesc->bOwnType == OBJECT_TYPE_PLAYER)
+				if (pSkillDesc->casterType == OBJECT_TYPE_PLAYER)
 				{
-					pOffense->SetHP((WORD)(pOffense->GetHP()+nPlusHP));
+					caster->SetHP((WORD)(caster->GetHP()+nPlusHP));
 					if (nPlusHP)
 					{
 						pUserStatus->bStatusMany	= 0;
 						pUserStatus->pStatus[pUserStatus->bStatusMany].dwCode	= USER_HP;
-						pUserStatus->pStatus[pUserStatus->bStatusMany++].dwMin	= pOffense->GetHP();
-						NetSendToUser( pOffense->GetConnectionIndex()
+						pUserStatus->pStatus[pUserStatus->bStatusMany++].dwMin	= caster->GetHP();
+						NetSendToUser( caster->GetConnectionIndex()
 							, (char*)pUserStatus
 							, pUserStatus->GetPacketSize()
 							, FLAG_SEND_NOT_ENCRYPTION 
 							);
 					}
 				}
-				else if (pSkillDesc->bOwnType == OBJECT_TYPE_MONSTER)
+				else if (pSkillDesc->casterType == OBJECT_TYPE_MONSTER)
 				{
-					pOffense->SetHP(pOffense->GetHP()+nPlusHP);
+					caster->SetHP(caster->GetHP()+nPlusHP);
 				}
-				else if (pSkillDesc->bOwnType	== OBJECT_TYPE_SKILL)
+				else if (pSkillDesc->casterType	== OBJECT_TYPE_SKILL)
 				{
 					if (pSkillDesc->pMonsterMaster)
 					{
@@ -807,47 +838,47 @@ void EffectLayer::AfterSkillSuccessProcess(SKILLDESC* pSkillDesc, CUnit* pOffens
 
 		if(!pMonster->GetHP())	// 몬스터는 죽었다.
 		{						
-			if(pSkillDesc->bOwnType == OBJECT_TYPE_PLAYER)
-				MonsterKillByUser( (CUser*)pOffense, pMonster );
-			else if (pSkillDesc->bOwnType == OBJECT_TYPE_MONSTER)
-				MonsterKillByMonster( (CMonster*)pOffense, pMonster );
+			if(pSkillDesc->casterType == OBJECT_TYPE_PLAYER)
+				MonsterKillByUser( (CUser*)caster, pMonster );
+			else if (pSkillDesc->casterType == OBJECT_TYPE_MONSTER)
+				MonsterKillByMonster( (CMonster*)caster, pMonster );
 			else
 				pMonster->SetStatus( UNIT_STATUS_DEAD );
 			
-			SetBadAction(pOffense, pMonster);
+			SetBadAction(caster, pMonster);
 			UpdateMonsterForAI( pMonster );
 		}
 	}
-	if (pDefense->GetObjectType() == OBJECT_TYPE_PLAYER)
+	if (targetedUnit->GetObjectType() == OBJECT_TYPE_PLAYER)
 	{
-		CUser* pTargetUser = (CUser*)pDefense;
+		CUser* pTargetUser = (CUser*)targetedUnit;
 		
 		switch (pSkillDesc->bSkillKind)
 		{
 		case __SKILL_VAMPIRE__:
 			{
 				int nPlusHP = pEffect->Value[pSkillDesc->bSkillLevel].nMax;
-				if (pSkillDesc->bOwnType == OBJECT_TYPE_PLAYER)
+				if (pSkillDesc->casterType == OBJECT_TYPE_PLAYER)
 				{
-					pOffense->SetHP((WORD)(pOffense->GetHP()+nPlusHP));
+					caster->SetHP((WORD)(caster->GetHP()+nPlusHP));
 					if (nPlusHP)
 					{
 						pUserStatus->bStatusMany	= 0;
 						pUserStatus->pStatus[pUserStatus->bStatusMany].dwCode	= USER_HP;
-						pUserStatus->pStatus[pUserStatus->bStatusMany++].dwMin	= pOffense->GetHP();
+						pUserStatus->pStatus[pUserStatus->bStatusMany++].dwMin	= caster->GetHP();
 
-						NetSendToUser( pOffense->GetConnectionIndex()
+						NetSendToUser( caster->GetConnectionIndex()
 							, (char*)pUserStatus
 							, pUserStatus->GetPacketSize()
 							, FLAG_SEND_NOT_ENCRYPTION 
 							);
 					}
 				}
-				else if (pSkillDesc->bOwnType == OBJECT_TYPE_MONSTER)
+				else if (pSkillDesc->casterType == OBJECT_TYPE_MONSTER)
 				{
-					pOffense->SetHP(pOffense->GetHP()+nPlusHP);
+					caster->SetHP(caster->GetHP()+nPlusHP);
 				}
-				else if (pSkillDesc->bOwnType	== OBJECT_TYPE_SKILL)
+				else if (pSkillDesc->casterType	== OBJECT_TYPE_SKILL)
 				{
 					if (pSkillDesc->pMonsterMaster)
 					{
@@ -872,44 +903,44 @@ void EffectLayer::AfterSkillSuccessProcess(SKILLDESC* pSkillDesc, CUnit* pOffens
 
 		if (!pTargetUser->GetHP())
 		{
-			if(pOffense && pTargetUser)
+			if(caster && pTargetUser)
 			{
-				if (pOffense->GetLord())
-					((CUser*)pOffense->GetLord())->GuildMemberKill(pTargetUser);
+				if (caster->GetLord())
+					((CUser*)caster->GetLord())->GuildMemberKill(pTargetUser);
 				else 
-					((CUser*)pOffense)->GuildMemberKill(pTargetUser);
+					((CUser*)caster)->GuildMemberKill(pTargetUser);
 				// 죽었구만.
 				
-				CDungeon	*pDungeon = pOffense->GetCurDungeon();
-				CDungeonLayer *pLayer = pOffense->GetCurDungeonLayer();
+				CDungeon	*pDungeon = caster->GetCurDungeon();
+				CDungeonLayer *pLayer = caster->GetCurDungeonLayer();
 
 				if(	pLayer//레이어가 있고
-				&&	!pLayer->OnDie( (CUser*)pOffense, (CUser*)pDefense) )//길드전 사망처리가 죽이면 안된다고 한다. : hwoarang 050202
+				&&	!pLayer->OnDie( (CUser*)caster, (CUser*)targetedUnit) )//길드전 사망처리가 죽이면 안된다고 한다. : hwoarang 050202
 				{
 					if(	pDungeon
 					&&	pDungeon->GetDungeonDataEx()->IsStadium() //경기장이고
 					&&	pLayer->m_pTeamMatch )//팀매치 매니저가 있으면
 					{
-						DieOnGuildWar( pLayer, (CUser*)pDefense);
+						DieOnGuildWar( pLayer, (CUser*)targetedUnit);
 						return;
 					}
 
 				} 
 				
 				pTargetUser->SetStatus( UNIT_STATUS_DEAD );
-				pTargetUser->SendItemSkill(ITEM_SKILL_DIE, OBJECT_TYPE_PLAYER, pOffense);
+				pTargetUser->SendItemSkill(ITEM_SKILL_DIE, OBJECT_TYPE_PLAYER, caster);
 			}
 		}
 	}
 }
 
-void EffectLayer::SendSkill(SKILLDESC* pSkillDesc)
+void EffectLayer::SendSkill(SkillCast* pSkillDesc)
 {
 	//>>> goto를 이용하기 위해선 여기에 변수를 선언해야 한다.
-	CUnit*	pOffenseUnit = GetValiidUnit(pSkillDesc);
-	if (pSkillDesc->bOwnType != OBJECT_TYPE_SKILL && !pOffenseUnit)
+	CUnit*	pOffenseUnit = ProcessCasterForSkillCast(pSkillDesc);
+	if (pSkillDesc->casterType != OBJECT_TYPE_SKILL && !pOffenseUnit)
 		return;
-		
+	
 	VECTOR2 vecStart= {0.f, 0.f};
 	RevisionStartPositon(pSkillDesc, &vecStart);
 	if (!IsRange(pSkillDesc, &vecStart))
@@ -946,7 +977,7 @@ void EffectLayer::SendSkill(SKILLDESC* pSkillDesc)
 	packet.bSkillKind	= pSkillDesc->bSkillKind;
 	packet.bSkillLevel	= pSkillDesc->bSkillLevel;
 	packet.vecStart		= vecStart;
-	packet.dwOwnIndex	= pSkillDesc->dwOwnIndex;
-	packet.bOwnType		= pSkillDesc->bOwnType;
+	packet.casterDungeonID	= pSkillDesc->casterDungeonID;
+	packet.casterType		= pSkillDesc->casterType;
 	pSkillDesc->pDungeonLayer->BroadCastSectionMsg( (char*)&packet, packet.GetPacketSize(), pSkillDesc->bSectionNum );
 }

@@ -1,5 +1,5 @@
 #pragma once
-#include "Voidlist.h"
+#include "../BaseLibrary/VoidList.h"
 #ifdef SS3D_TEST
 #include "./../SS3D_0719/4dyuchigx/4DyuchiGXGFunc/global.h"
 #else

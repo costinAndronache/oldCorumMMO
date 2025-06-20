@@ -122,7 +122,7 @@
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='CHINA_LOCALIZING|Win32'">false</LinkIncremental>
     <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.\Debug\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.\Debug\</IntDir>
-    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</LinkIncremental>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</LinkIncremental>
     <OutDir Condition="'$(Configuration)|$(Platform)'=='Dev|Win32'">.\DungeonServer___Win32_Dev\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Dev|Win32'">.\DungeonServer___Win32_Dev\</IntDir>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Dev|Win32'">false</LinkIncremental>
@@ -265,6 +265,7 @@
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <LanguageStandard>stdcpp14</LanguageStandard>
+      <MinimalRebuild>true</MinimalRebuild>
     </ClCompile>
     <Link>
       <AdditionalDependencies>odbc32.lib;odbccp32.lib;WS2_32.lib;SS3DGFunc.lib;BaseLibrary.lib;CommonServer.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -817,20 +818,6 @@
       <BasicRuntimeChecks Condition="'$(Configuration)|$(Platform)'=='Dev|Win32'">EnableFastChecks</BasicRuntimeChecks>
       <BrowseInformation Condition="'$(Configuration)|$(Platform)'=='Dev|Win32'">true</BrowseInformation>
     </ClCompile>
-    <ClCompile Include="Voidlist.cpp">
-      <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug_with_New_Command|Win32'">Disabled</Optimization>
-      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug_with_New_Command|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <BasicRuntimeChecks Condition="'$(Configuration)|$(Platform)'=='Debug_with_New_Command|Win32'">EnableFastChecks</BasicRuntimeChecks>
-      <BrowseInformation Condition="'$(Configuration)|$(Platform)'=='Debug_with_New_Command|Win32'">true</BrowseInformation>
-      <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Disabled</Optimization>
-      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <BasicRuntimeChecks Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">EnableFastChecks</BasicRuntimeChecks>
-      <BrowseInformation Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</BrowseInformation>
-      <Optimization Condition="'$(Configuration)|$(Platform)'=='Dev|Win32'">Disabled</Optimization>
-      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Dev|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <BasicRuntimeChecks Condition="'$(Configuration)|$(Platform)'=='Dev|Win32'">EnableFastChecks</BasicRuntimeChecks>
-      <BrowseInformation Condition="'$(Configuration)|$(Platform)'=='Dev|Win32'">true</BrowseInformation>
-    </ClCompile>
     <ClCompile Include="MsgProc.cpp">
       <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug_with_New_Command|Win32'">Disabled</Optimization>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug_with_New_Command|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -1323,7 +1310,6 @@
     <ClInclude Include="Effect.h" />
     <ClInclude Include="TrafficLog.h" />
     <ClInclude Include="Linkedlist.h" />
-    <ClInclude Include="Voidlist.h" />
     <ClInclude Include="MsgProc.h" />
     <ClInclude Include="MsgProc_for_jjw6263.h" />
     <ClInclude Include="MsgProc_for_minbobo.h" />

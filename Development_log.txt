@@ -1,0 +1,213 @@
+
+
+
+TRIVIA::
+ - the class `Effect`
+   - contrary to its name it does not describe a visual effect / animation; it describes the properties of a skill
+
+
+
+---------------------------------- TO DO -----------------------------------------------
+
+ - DungeonServer: Effect.cpp l:365 + Client:: DungeonProcess.cpp l:948
+   - seems like different formulas are used for the overdrive mana charge, should look into it [DONE]
+
+- DungeonProcess.cpp :: l: 1037 
+ - seems like the client computes the weight percentage & does a check on the limit; 
+   - this info should come from the server, to be investigated;
+
+
+- Client.EffectProcess.cpp :: 1574, seems like the client updates the HP based on the poison effect; 
+    - should be done on the server
+
+
+- Client.Effect.cpp l: 455 + DungeonProcess l: 939 
+    - seems like the client is handling the cast speed logic ? [DONE, no more]
+
+
+- User. m_dwExp :: represents the total accumulated EXP; (computing the correct level & scale of the xp bar should now be complete) [DONE]
+
+- there's duplicate copies of CVoidList on each target, should be unified
+
+- weight limit exceeded not correctly handled now; movement speed reduction not correctly applied
+
+- inform visually when the cast fails because of not enough cool points; 
+  + display the required coolpoints on each skill description
+    + display the user's current coolpoints numerically in the interface
+
+- fix the UI
+
+- sorceress' "fast cast" overdrive doesnt seem to do anything, must look into it
+
+-------------------------------------- FINDINGS --------------------------------------------
+
+- Skills + Cooldown points + time [To be investigated more]
+  - player cool points seem to represent an amount in seconds, of "available cast time"
+
+  + each skill has a "cool time" in milliseconds : Effect->BaseSkill->dwCoolTime ; 
+    - this represents the animation duration;
+      - generally there's a quick basic animation for most skills, but fighter & ranger have complex animation ; sorc and summoner have basic animations
+
+
+    [OUTDATED]- the player should wait "dwCoolTime / 1000" seconds before casting the same skill again; i.e. wait for the current animation to finish
+    [OUTDATED] - the last cast date( time in milliseconds) for each skill is stored in g_pMainPlayer->d_dwStartSkillTick and it used in checks
+
+
+
+- CTDS_DUNGEON_CASTING + DSTC_DUNGEON_CASTING vs CTDS_SKILL + DSTC_SKILL
+
+  CTDS_DUNGEON_CASTING
+    - sent by the client when 
+       - left or mouse button press event (DungeonProcess.SkillEvent(0 (left) || 1 (right)))
+    + Processing done by the DungeonServer::
+        + cond1: if the time since the last cast (g_dwTickCount - pUser->m_dwStartSkillTick[bSkillKind]) is less than the effect's cooldown time (pEffect->dwCoolTime)
+          - check if you can 'substract' the effect's cooldown time(milliseconds) from the user's cooldown points(seconds)
+            - int nCool = INT(pUser->m_fCurCoolPoint*1000 - pEffect->dwCoolTime); 
+            - nCool < 0 ? fail the current skill cast, send packet about it; 
+              else
+                - pUser->m_fCurCoolPoint = max(nCool/1000.f, 0.1F) and continue;
+              (===>the client shouldn't perform cooldown cost calculations, this value should be sent back by the dungeon server)
+        + then recompute the user's min /max attack damages (CUser::GetAttackingDamage)
+            - actually it only recomputes if the user's character is a ranger, case in which it adds maxSP() / 30 as a bonus damage; 
+        + record the time(milliseconds) of the skill's :: 
+           -- cast start time : into ``` pUser->m_dwTemp[USER_TEMP_CASTINGSTARTTICK] = g_dwTickCount;``
+           -- cast end(?) time: into ``` pUser->m_dwTemp[USER_TEMP_CASTINGDESTTICK] = complicated formula;```
+        + then build a ``DSTC_DUNGEON_CASTING`` with updated 3D positions of the target of the skill cast (if monster or player) or the 3d position of the tile (if not a targeted skill cast) and broadcast it back
+          + the client receives this 'confirmation' packet but it only does some visual  updates on the 3d model of the caster + plays the skill sound, and thats it on
+
+
+- CTDS_SKILL is sent by the client only if it's overdrive or (fighter) aura recharge; i.e. a continous skill
+ + Also, 'sent' by the DungeonServer to itself during the periodic user update (ServerFunction.cpp :: ProcessDungeon :: CUser.Update()) if 
+    ````
+    			case UNIT_STATUS_CASTING:
+				{
+					if (g_dwTickCount > m_dwTemp[USER_TEMP_CASTINGDESTTICK] 
+    ```` 
+  - Processed by EffectLayer 
+    - on each CTDS_SKILL event { pSkillDesc } ::
+      + Process and find out the caster : GetCaster(pSkillDesc) 
+        i.e. : 
+          -  find out if the caster is a user or a monster or a user's monster
+          - special handling when the caster is a user::
+             - cond 1: check if the user is not dead (and if so he can only cast __TREEAGION__ (??)) and he is not in a village (IsUnitStatusReadySkill)
+             - cond 2: about to do with skill level, basic integrity checks (skill level > 0 , < 255)
+             - cond 3: something about user being in god mode, no idea what is that;
+             - cond 4: if overdrive then check if there is an item in users inventory that allows it( free pass, taurus zodiac)
+             - step: get the mana 'offset', to be added to the user's current mana points for using this skill;
+                - mostly this value is negative except when the used skill is aura recharge; that skill actually gives mana
+               - special computations:
+                  - life explosion uses all of the mana, offset = -user.currentSP()
+                  - overdrive has a complicated formula + it also updates the skill 'keepTime' based on the time passed since the skill cast (cast started at user->m_dwTemp[USER_TEMP_CASTINGSTARTTICK] (milliseconds)); let duration = time_now_milliseconds - user->m_dwTemp[USER_TEMP_CASTINGSTARTTICK];
+                   - formula:: 
+                        spOffset = user.maxSP() * 0.1 * (duration / 1000)
+                        skillKeepTime = spOffset / skill.currentManaCost(based on its level, etc) * (weird ego formula) * 1000 (last *1000 probably to turn it into milliseconds)
+
+           - returned offset either positive(if aura recharge) or negative
+        - record the time for this current skill event, update the mana
+          ```
+        	  pOwnUser->m_dwStartSkillTick[pSkillDesc->bSkillKind] = g_dwTickCount;
+	          pOwnUser->SetSP(pOwnUser->GetSP()+nMana);
+          ```
+        - then send a USER_STATUS update to the client; 
+          ( this means that the client should not deal with computing the mana value at each cast 'step', 
+            it will be returned back by the server in a USER_STATUS packet;
+            [OK NOT TRUE ANYMORE] the client is responsible for sending CTDS_SKILL packets as long as the user keeps the mouse button pressed;
+              - what actually should happen is, the client should lock the character into 'casting' position until the `DSTC_SKILL` confirmation packet arrives; even for overdrive skills;
+                problems though:
+                  - the status with the used sp comes only at the end; players are used to see their sp updated during the overdrive cast
+                  -  USER_TEMP_CASTINGDESTTICK] = ... ; in the formula the SP value is not taken into consideration;
+                   - seems like for overdrive the consumed sp is (0.1 * maxSP() * seconds since USER_TEMP_CASTINGSTARTTICK), defaulted to current sp if exceeding; 
+                  - so in the 'R/L mouse button up' event  the client sends a 'CTDS_SKILL' packet, for the same skill;
+                      - this will make the dungeon server instantly move into the 'processing phase' for the skill / i.e. not wait until USER_TEMP_CASTINGDESTTICK to process it; 
+                      - the client makes sure to send this packet only for continous skills; [to be moved into the dungeon server]
+                  - seems like OD skills have a casting time '0' , so there needs to be a different formula for them; 
+          )
+      + find the targets this skill applies to, process the applied skill (reduce the target hp, etc..); 
+        - during this processing affected players's hp updates are sent with a USER_STATUS packet;
+      + send back a DSTC_SKILL packet; it contains properties of the original packet + a list of targets the skill applied to 
+
+      + the client processes the DSTC_SKILL packet by setting up the player model's motion change (from the casting animation to whatever animation depending on the skill) + the effect animation of that skill; EffectCommand.cpp :: CmdSkill
+
+SKILL FLOW  :: RECAP
+ - Client: L/R button press -> 
+   -> Client: DungeonProcess::SkillEvent(0 || 1)
+     -> Client: User.SetPacket*(skillUSer | skillMonster | skillTile)
+        -> Client: User.SendCasting(): 
+          :: client sends CTDS_DUNGEON_CASTING, sets unit status to UNIT_STATUS_CASTING
+
+ -> DungeonServer: receives `CTDS_DUNGEON_CASTING` & processes it in `CmdDungeonSkillCasting`
+   + check '''g_dwTickCount - pUser->m_dwStartSkillTick[bSkillKind] < pEffect->dwCoolTime''', update user's m_fCurCoolPoint property if so, 
+   + if not a continous skill then update user's status to UNIT_STATUS_CASTING
+   + update user's ``m_sCastingInfo`` with the  properties of the skill from the packet
+   + re-update user's min/max damages (a.k.a if ranger add a bonus: maxSP() / 30)
+   + update 
+      ``` 
+       	pUser->m_dwTemp[USER_TEMP_CASTINGSTARTTICK] = g_dwTickCount;
+	      pUser->m_dwTemp[USER_TEMP_CASTINGDESTTICK] = DWORD(max(g_dwTickCount, etc...
+      ```
+   + create `confirmation` packet DSTC_DUNGEON_CASTING, with proper target positions and broadcast to all players in the layer
+
+ -> Client: receives `DSTC_DUNGEON_CASTING` & process it in `EffectCommand.CmdSkillCasting`
+  + basically updates the 3d model animation to MOTION_TYPE_CHARGE, plays the skill cast sound
+
+----- time passes -----
+ -> DungeonServer: CUser::Update() for all users
+  + processing related to skill casting: (if UNIT_STATUS_CASTING && g_dwTickCount > m_dwTemp[USER_TEMP_CASTINGDESTTICK]) ::
+    + create CTDS_SKILL , update it with the properties of the skill, from `m_sCastingInfo`
+     -> DungeonServer: CmdSkill is called with it
+      + augment it with more data, into a SKILL_DESC
+      -> g_pEffectLayer->SendSkill(&skillDesc)::
+        + call  ProcessCasterForSkillCast(pSkillDesc)
+          -> ProcessUsersSkillCast((CUser*)pOffenseUnit, pSkillDesc))
+            + basic skill cast integrity checks (
+                not in a village, 
+                not an invalid level, 
+                has enough SP for it,
+                if overdrive : has taurus or overdrive items in inventory,
+                player not dead (or dead AND the cast skill is revive/treeagion))
+            + pOwnUser->m_dwStartSkillTick[pSkillDesc->bSkillKind] = g_dwTickCount;
+            + pOwnUser->SetSP(pOwnUser->GetSP() + manaOffset);
+            + send DSTC_USER_STATUS with current sp points
+        + find the number of targets this skill applies to, 
+          for each target:
+            + apply damage, update status and hp (where possible)
+            + record the target
+        + broadcast to all players a DSTC_SKILL packet, with the targets and skill properties
+          -> Client: receives and processes it in `EffectCommand.cpp::CmdSkill`
+            + call pOwnUser->SetActionSkill(bSkillKind);
+              + sets the appropriate 3d character model's skill 'execution' animation (i.e. fighter and ranger have specific animations i.e. knife chain / lightining strike;)
+              + creates and sets the 3d model & animation for the actual skill
+
+SKILLing is comprised of two phases: 
+ 1. loading or 'cast' phase :: between USER_TEMP_CASTINGSTARTTICK and USER_TEMP_CASTINGDESTTICK
+ 2. 'execution'  phase :: starts from m_dwStartSkillTick[bSkillKind] (which should usually coincide with USER_TEMP_CASTINGDESTTICK)
+
+
+[ USER_TEMP_CASTINGSTARTTICK (loading phase starts)
+. 
+. during this time the player 3d model is locked into the 'cast' animation
+. 
+.
+[ USER_TEMP_CASTINGDESTTICK (loading phase ends)
+[..]
+[m_dwStartSkillTick[bSkillKind] (processing phase starts)
+.
+. during this time the skill is 'applied'  (i.e. find out the number of affected monsters/players, reduce their hp)
+.
+.
+[pEffect[bSkillKind]->dwCoolTime (skill cooldown time ends, can be cast again)
+
+[[-- and a new skill cast can happen again from this point
+  -> so, if a user wants to cast a new skill instance (of the same skill) at a time during the cooldown of the previous instance, the cooldown time is substracted from the user's cooldown points]] \\[OUTDATED]
+
+
+  
+--------------------------------------------- 
+  -> NEW IMPLEMENTATION
+
+ :: the cooldown of the skill will be substracted from the user's cooldown points; 
+      :: cooldown points are regenerated & updated every 0.5 seconds by the dungeon server
+      :: the player has to put in EGO stats to increase the capacity of his cooldown points 
+      [TO DO] :: must display on the skill description the required cooldown points cost (dwCoolTime) + show the user's cooldown points numerically somewhere in the interface
+  [BUG]
+

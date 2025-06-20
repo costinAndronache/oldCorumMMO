@@ -1145,7 +1145,7 @@ void __stdcall BillingCheck(DWORD dwEventIndex)
 	
 	while(pos)
 	{
-		pUser = (CUser*)g_pUserTable->GetUserList()->GetNext(pos);
+		pUser = (CUser*)g_pUserTable->GetUserList()->GetAndAdvance(pos);
 
 		if(!pUser->m_dwLastBillingCheckTick) continue;		//아직 월드맵에 안들어간 유저 
 

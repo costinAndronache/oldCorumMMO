@@ -11,6 +11,10 @@ call :COPY_IN_ALL_PLACES CommonServer.dll
 call :COPY_IN_ALL_PLACES CommonServer.lib
 call :COPY_IN_ALL_PLACES CommonServer.pdb
 
+call :COPY_IN_ALL_PLACES BaseNetwork.dll
+call :COPY_IN_ALL_PLACES BaseNetwork.lib
+call :COPY_IN_ALL_PLACES BaseNetwork.pdb
+
 call :COPY_IN_ALL_PLACES BaseLibrary.lib
 call :COPY_IN_ALL_PLACES BaseLibrary.pdb
 

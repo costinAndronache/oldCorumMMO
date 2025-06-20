@@ -67,8 +67,8 @@ public:
 
 	OBJECT_HANDLE_DESC	m_hMonster;						// 20
 
-	EffectDesc*			m_pEffectTarget;						// 자신의 소유 몬스터를 표현할떄 쓴다.
-	EffectDesc*			m_pEffectSelect;						// 자신의 소유 몬스터를 선택할떄 쓴다.
+	AppliedSkill*			m_pEffectTarget;						// 자신의 소유 몬스터를 표현할떄 쓴다.
+	AppliedSkill*			m_pEffectSelect;						// 자신의 소유 몬스터를 선택할떄 쓴다.
 	
 	GXOBJECT_HANDLE		m_hShadowHandle;
 	
@@ -100,11 +100,11 @@ public:
 	//=======> yakolla
 	BYTE				m_bOverDriveCount;
 	BYTE				m_bZipCode;
-	DWORD				m_dwLordIndex;
+	DWORD				lordDungeonID;
 	
 	COnlyList*			m_pEffectList;				// 이펙트가 를 쏘기 전에 이펙트가 온것을 저장할 큐
-	COnlyList*			m_pUsingStatusEffectList;	// 현재 적용받고 있는 상태이펙트 리스트
-	EffectDesc*			m_pEffectDesc[MAX_SKILL_COUNT];
+	COnlyList*			skillsAppliedOnThisUnit;	// 현재 적용받고 있는 상태이펙트 리스트
+	AppliedSkill*		m_pEffectDesc[MAX_SKILL_COUNT];
 	VECTOR3				m_vecTemp;		// 초기 위치
 	float				m_radian;		// 튀길 각도
 	float				m_fDir;			// 회전할때 쓰일 변수.

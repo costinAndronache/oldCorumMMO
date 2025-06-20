@@ -255,7 +255,7 @@ void CWorldUserTable::SendUserInWorld(char* pPacket, DWORD dwLength)
 
 	while (pos)
 	{
-		pUser = (CWorldUser*)m_pUserListInWorld->GetNext(pos);
+		pUser = (CWorldUser*)m_pUserListInWorld->GetAndAdvance(pos);
 		if(!pUser)
 		{
 			Log(LOG_IMPORTANT, "pUser is NULL in CWorldUserTable::SendUserInWorld");
@@ -272,7 +272,7 @@ void CWorldUserTable::BroadCast(char* pPacket, DWORD dwLength)
 	
 	while(pos)
 	{
-		CWorldUser* pUser = (CWorldUser*)m_pTotalUserList->GetNext(pos);
+		CWorldUser* pUser = (CWorldUser*)m_pTotalUserList->GetAndAdvance(pos);
 		if(!pUser)
 		{
 			Log(LOG_IMPORTANT, "pUser is NULL in CWorldUserTable::BroadCast");

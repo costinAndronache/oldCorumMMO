@@ -142,7 +142,7 @@ class CMonster : public CUnit					// 가디언도 몬스터 클래스를 같이쓴다.
 	A_STAR				m_PathFinder;
 	BASEMONSTER*		m_pBaseMonster;			// 몬스터일떄의 베이스 정보.
 	POSITION_			m_pResponListPos;
-	SKILLDESC			m_SkillDesc;			// 스킬 쏠수 있는 패킷
+	SkillCast			m_SkillDesc;			// 스킬 쏠수 있는 패킷
 	VECTOR2				m_v2TargetAIPos;		// 타겟의 위치
 	VECTOR2				m_v2TargetAIDir;
 	MONSTER_SKILL		m_MonsterSkill[MAX_MONSTER_USE_SKILL];
@@ -202,7 +202,7 @@ public:
 	static void operator delete(void* pDeleteMonster);
 
 	virtual void	Update();
-	virtual void	DetachSkill(EffectDesc* pEffectDesc);	// 상태 스킬을 띄어라.
+	virtual void	DetachSkill(AppliedSkill* pEffectDesc);	// 상태 스킬을 띄어라.
 	virtual void	RemoveResource();
 	virtual void	CreateResource();
 	virtual void	UpdateMaxHP();
@@ -220,7 +220,7 @@ public:
 	virtual void	UpdateAD();
 	
 	virtual int		GetExpDying();
-	virtual void	ReSetStatusFromSkillStatusValue(EffectDesc* pEffectDesc);
+	virtual void	ReSetStatusFromSkillStatusValue(AppliedSkill* pEffectDesc);
 	virtual void	SetStatusFromSkillStatusValue(BYTE bSkillKind
 						, BYTE bSkillLevel
 						, WORD wClass

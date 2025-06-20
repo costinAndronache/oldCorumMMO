@@ -33,7 +33,7 @@ void CUnit::RemoveAllDetachSkill()
 		POSITION_ pos = m_pUsingStatusEffectList->GetHeadPosition();
 		while(pos)
 		{
-			EffectDesc* pEffectDesc = (EffectDesc*)m_pUsingStatusEffectList->GetNext(pos);
+			AppliedSkill* pEffectDesc = (AppliedSkill*)m_pUsingStatusEffectList->GetAndAdvance(pos);
 			DetachSkill(pEffectDesc);
 		}
 	}
@@ -346,7 +346,7 @@ void CUnit::NewUsingStatusEffectList()
 		m_pUsingStatusEffectList = new CVoidList;
 }
 
-EffectDesc* CUnit::GetEffectDesc(BYTE bySkillKind) const
+AppliedSkill* CUnit::GetEffectDesc(BYTE bySkillKind) const
 {
 	assert(bySkillKind<__SKILL_ATTACK__);
 	
@@ -434,7 +434,7 @@ void CUnit::SetLastMoveTick(DWORD dwLastTick)
 	m_dwLastMoveTick = dwLastTick;
 }
 
-void CUnit::SetEffectDesc(BYTE bySkillKind, EffectDesc* const pEffectDesc)
+void CUnit::SetEffectDesc(BYTE bySkillKind, AppliedSkill* const pEffectDesc)
 {
 	assert(bySkillKind < __SKILL_ATTACK__);
 
@@ -673,13 +673,13 @@ DWORD CUnit::GetConnectionIndex() const
 	return 0;
 }
 
-EffectDesc* CUnit::AllocEffectDesc(BYTE bySkillKind, BYTE bySkillLevel)
+AppliedSkill* CUnit::AllocEffectDesc(BYTE bySkillKind, BYTE bySkillLevel)
 {
 	assert(bySkillLevel < MAX_SKILL_LEVEL);
 	
 	Effect* pEffect = g_pEffectLayer->GetEffectInfo(bySkillKind);
-	EffectDesc* pEffectDesc = new EffectDesc;
-	memset(pEffectDesc, 0, sizeof(EffectDesc));
+	AppliedSkill* pEffectDesc = new AppliedSkill;
+	memset(pEffectDesc, 0, sizeof(AppliedSkill));
 	
 	pEffectDesc->pEffect = pEffect;
 	pEffectDesc->pos = GetUsingStatusEffectList()->AddHead(pEffectDesc);
@@ -700,10 +700,10 @@ EffectDesc* CUnit::AllocEffectDesc(BYTE bySkillKind, BYTE bySkillLevel)
 	return pEffectDesc;
 }
 
-void CUnit::FreeEffectDesc(EffectDesc* pEffectDesc)
+void CUnit::FreeEffectDesc(AppliedSkill* pEffectDesc)
 {
 	ReSetStatusFromSkillStatusValue(pEffectDesc);
-	SetEffectDesc(pEffectDesc->pEffect->bID, NULL);
+	SetEffectDesc(pEffectDesc->pEffect->skillKind, NULL);
 	GetUsingStatusEffectList()->RemoveAt(pEffectDesc->pos);
 	
 	delete pEffectDesc;

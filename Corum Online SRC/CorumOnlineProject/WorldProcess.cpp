@@ -233,7 +233,7 @@ BOOL InitGameWorld()
 	{
 		// 여기 들어왔다는 소리는 던전 들어갔다가 다시 월드로 왔다는것.
 		// 던전이펙트들을 다시 생성해라.
-		DUNGEON_DATA_EX* pDungeon =	(DUNGEON_DATA_EX*)g_pDungeonTable->m_pReceivedDungeonList->GetNext(pos);
+		DUNGEON_DATA_EX* pDungeon =	(DUNGEON_DATA_EX*)g_pDungeonTable->m_pReceivedDungeonList->GetAndAdvance(pos);
 
 		if(pDungeon->IsDungeonOwner(g_pMainPlayer))
 		{
@@ -278,7 +278,7 @@ BOOL InitGameWorld()
 	From.z = 0.0f;	
 	g_pGeometry->ResetCamera(&From, 100.0f, 80000.0f, DEG45, 0 );
 
-	g_pMainPlayer->SetAction(MOTION_TYPE_STAND1, 0, ACTION_LOOP);
+	g_pMainPlayer->SetMotion(MOTION_TYPE_STAND1, 0, ACTION_LOOP);
 	
 	g_pMainPlayer->SetStatus(UNIT_STATUS_NORMAL);
 	
@@ -873,7 +873,7 @@ void UpdateGameWorld()
 			_PlaySound(0, SOUND_TYPE_SYSTEM, SOUND_SYSTEM_ERRORMSG, g_Camera.v3CameraPos, FALSE);
 			MoveToUserPrevPos();
 			
-			g_pMainPlayer->SetAction(MOTION_TYPE_VILLAGESTAND, 0, ACTION_LOOP);
+			g_pMainPlayer->SetMotion(MOTION_TYPE_VILLAGESTAND, 0, ACTION_LOOP);
 			g_pMainPlayer->SetStatus(UNIT_STATUS_NORMAL);
 		}
 	}
@@ -977,7 +977,7 @@ void ReleaseGameWorld()
 	while(pos)
 	{
 		// 던전이펙트들을 숨겨라.
-		DUNGEON_DATA_EX* pDungeon =	(DUNGEON_DATA_EX*)g_pDungeonTable->m_pReceivedDungeonList->GetNext(pos);
+		DUNGEON_DATA_EX* pDungeon =	(DUNGEON_DATA_EX*)g_pDungeonTable->m_pReceivedDungeonList->GetAndAdvance(pos);
 
 		DeleteObj(&pDungeon->m_hGroupDungeon);
 		DeleteObj(&pDungeon->m_hOwnDungeon);
@@ -1296,7 +1296,7 @@ DWORD __stdcall AfterRenderGameWorld()
 		POSITION_ pos = g_pDungeonTable->m_pInfoList[ bCurrentWorldMapID ]->GetHeadPosition();
 		while(pos)
 		{
-			pDungeon = (DUNGEON_DATA_EX*)g_pDungeonTable->m_pInfoList[ bCurrentWorldMapID ]->GetNext(pos);
+			pDungeon = (DUNGEON_DATA_EX*)g_pDungeonTable->m_pInfoList[ bCurrentWorldMapID ]->GetAndAdvance(pos);
 
 			GetScreenXYFromXYZ( g_pGeometry, 0, &pDungeon->vPos, &vOutPos);
 
@@ -1601,7 +1601,7 @@ void OnKeyDownWorld(WPARAM wParam, LPARAM lParam)
 					vPos.x += 250.0f;
 					GXSetPosition(g_pMainPlayer->m_hPlayer.pHandle, &vPos, FALSE);
 					g_pMainPlayer->m_v3CurPos = vPos;
-					g_pMainPlayer->SetAction(MOTION_TYPE_VILLAGESTAND, 0, ACTION_LOOP);					
+					g_pMainPlayer->SetMotion(MOTION_TYPE_VILLAGESTAND, 0, ACTION_LOOP);					
 					ShowObject(g_pMainPlayer->m_hPlayer.pHandle);
 					SetBoundingVolume(g_pMainPlayer->m_hPlayer.pHandle, 80.0f);
 
@@ -1712,11 +1712,11 @@ void OnKeyDownWorld(WPARAM wParam, LPARAM lParam)
 					g_pMainPlayer->SetStatus(g_pMainPlayer->m_bMoveType);
 					if( g_pMainPlayer->GetStatus()== UNIT_STATUS_WALKING )
 					{
-						g_pMainPlayer->SetAction(MOTION_TYPE_WALK, 0, ACTION_LOOP);						
+						g_pMainPlayer->SetMotion(MOTION_TYPE_WALK, 0, ACTION_LOOP);						
 					}
 					else if( g_pMainPlayer->GetStatus()== UNIT_STATUS_RUNNING )
 					{
-						g_pMainPlayer->SetAction(MOTION_TYPE_RUN, 0, ACTION_LOOP);
+						g_pMainPlayer->SetMotion(MOTION_TYPE_RUN, 0, ACTION_LOOP);
 					}
 				}
 			}			
@@ -2849,7 +2849,7 @@ lb_TileAgain:
 	LPObjectDesc pDesc = (LPObjectDesc)g_pExecutive->GetData(g_pMainPlayer->m_hPlayer.pHandle);// = OnCrashUser;
 	pDesc->CrashFunc = OnCrashUser;
 	
-	g_pMainPlayer->SetAction( MOTION_TYPE_VILLAGESTAND, 0, ACTION_LOOP );
+	g_pMainPlayer->SetMotion( MOTION_TYPE_VILLAGESTAND, 0, ACTION_LOOP );
 	g_pMainPlayer->SetStatus(UNIT_STATUS_NORMAL);	//보통 상태로 
 	pDesc->ObjectFunc = NULL;	
 	
@@ -3172,7 +3172,7 @@ bool DeleteDungeonObjects(void)
 
 	while (pos)
 	{
-		pDungeon = (DUNGEON_DATA_EX*)g_pDungeonTable->m_pEventList->GetNext(pos);
+		pDungeon = (DUNGEON_DATA_EX*)g_pDungeonTable->m_pEventList->GetAndAdvance(pos);
 
 		// 이벤트 던젼 그래픽 리소스 제거.
 		if (NULL != pDungeon->m_hEventDungeonModel)
@@ -3208,7 +3208,7 @@ void DrawEventDungeonName(void)
 	
 	while (pos)
 	{
-		pDungeon = (DUNGEON_DATA_EX*)g_pDungeonTable->m_pEventList->GetNext(pos);
+		pDungeon = (DUNGEON_DATA_EX*)g_pDungeonTable->m_pEventList->GetAndAdvance(pos);
 
 		if (NULL == pDungeon)
 		{

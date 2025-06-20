@@ -10,7 +10,7 @@ void CSoundControl::Release()
 	while(pos)
 	{
 		PrevPos = pos;
-		ISoundEffect * pSoundEffect = (ISoundEffect *)m_SoundEffectList.GetNext(pos);
+		ISoundEffect * pSoundEffect = (ISoundEffect *)m_SoundEffectList.GetAndAdvance(pos);
 		if (pSoundEffect)
 		{
 			pSoundEffect->Stop();
@@ -23,7 +23,7 @@ void CSoundControl::Release()
 	while(pos)
 	{
 		PrevPos = pos;
-		SOUND_FILE_HANDLE pSoundFile = m_SoundFileList.GetNext(pos);
+		SOUND_FILE_HANDLE pSoundFile = m_SoundFileList.GetAndAdvance(pos);
 		if (pSoundFile )
 		{			
 			m_SoundFileList.RemoveAt(PrevPos);
@@ -69,7 +69,7 @@ ISoundEffect * CSoundControl::GetSoundEffect(const char * szSoundFileName, VECTO
 		while(pos)
 		{
 			PrevPos = pos;
-			ISoundEffect * pSoundEffect = (ISoundEffect *)m_SoundEffectList.GetNext(pos);
+			ISoundEffect * pSoundEffect = (ISoundEffect *)m_SoundEffectList.GetAndAdvance(pos);
 			if (pSoundEffect)
 			{
 				if ( !pSoundEffect->IsLoop() && !pSoundEffect->IsAlive())

@@ -20,7 +20,7 @@
 #include "map.h"
 #include "Parsing.h"
 #include "CodeFun.h"
-
+#include "UserInterface.h"
 
 void EffectLayer::Init(BOOL bChk)
 {
@@ -57,7 +57,7 @@ void EffectLayer::LoadScript(BOOL bChk)
 		}
 
 		// 이펙트에 알맞는 펑션들 정의
-		switch(m_Effect[i].bID)
+		switch(m_Effect[i].skillKind)
 		{
 		case __SKILL_ICEMISSILE__:
 		case __SKILL_FIREMISSILE__:
@@ -106,7 +106,7 @@ void EffectLayer::LoadScript(BOOL bChk)
 		m_Effect[i].MonsterDamageFunc = SkillDamageFunc1; // 몬스터 맞는 펑션
 		m_Effect[i].MonsterKillFunc = MonsterKillFunc; // 몬스터 죽는 펑션.
 
-		switch(m_Effect[i].bID)
+		switch(m_Effect[i].skillKind)
 		{// 몬스터 죽기전에 액션
 		case __SKILL_METEOR__:
 			{
@@ -133,7 +133,7 @@ void EffectLayer::LoadScript(BOOL bChk)
 			m_Effect[i].MonsterKillWithAction  = MonsterKillWithAction;			
 		}
 
-		switch(m_Effect[i].bID)
+		switch(m_Effect[i].skillKind)
 		{// 몬스터 스킬맞으면서의 액션
 		case __SKILL_EARTHQUAKE__:
 			{
@@ -147,7 +147,7 @@ void EffectLayer::LoadScript(BOOL bChk)
 			m_Effect[i].MonsterSKillDamageWithAction = MonsterSKillDamageWithAction1;
 		}
 		
-		ParsingSkillDescription(m_Effect[i].bID);			
+		ParsingSkillDescription(m_Effect[i].skillKind);			
 	}
 }
 
@@ -161,7 +161,7 @@ DWORD EffectLayer::Load(char *szFileName)
 	
 	for(int i=0; i<m_nMaxNode; i++ )
 	{
-		memcpy(&m_Effect[baseskill[i].bID], &baseskill[i], sizeof(BASESKILL));		
+		memcpy(&m_Effect[baseskill[i].skillKind], &baseskill[i], sizeof(BASESKILL));		
 	}
 	
 	return TRUE;
@@ -284,7 +284,7 @@ BOOL EffectLayer::SearchString(BYTE bSkillKind, int nLen, int nIndex)
 	return (g_sSkillInfoDP[bSkillKind].enSkillInfo[nIndex]!=SKILLINFO_NONE);
 }
 
-EffectDesc* EffectLayer::CreateEffect(BYTE bSkillKind, BYTE bJoint, BOOL bOwn)
+AppliedSkill* EffectLayer::CreateEffect(BYTE bSkillKind, BYTE bJoint, BOOL bOwn)
 {		
 	Effect* pEffect = GetEffectInfo(bSkillKind );
 	char* szFileName = g_pObjManager->GetFile(pEffect->dwResourceID+bJoint);
@@ -294,9 +294,9 @@ EffectDesc* EffectLayer::CreateEffect(BYTE bSkillKind, BYTE bJoint, BOOL bOwn)
 		int	a = 0;
 	}
 
-	EffectDesc* pEffectDesc = CreateGXObject(szFileName, bOwn, bSkillKind);
+	AppliedSkill* pEffectDesc = CreateGXObject(szFileName, bOwn, bSkillKind);
 
-	pEffectDesc->bEffectInfoNum	= bSkillKind;
+	pEffectDesc->skillKind	= bSkillKind;
 	pEffectDesc->bJoint			= bJoint;
 	pEffectDesc->pEffect		= pEffect;	
 
@@ -328,7 +328,7 @@ EffectDesc* EffectLayer::CreateEffect(BYTE bSkillKind, BYTE bJoint, BOOL bOwn)
 	return pEffectDesc;
 }
 
-BOOL EffectLayer::IsEffectShow(EffectDesc* pEffectDesc)
+BOOL EffectLayer::IsEffectShow(AppliedSkill* pEffectDesc)
 {
 	DWORD dwEffectOptionLevel = CGameMenuWnd::GetInstance()->m_byEffectIndex;
 	
@@ -360,12 +360,12 @@ BOOL EffectLayer::IsEffectShow(EffectDesc* pEffectDesc)
 */
 }
 
-EffectDesc* EffectLayer::CreateStatusEffect(BYTE bSkillKind, BYTE bJoint, BOOL bOwn)
+AppliedSkill* EffectLayer::CreateStatusEffect(BYTE bSkillKind, BYTE bJoint, BOOL bOwn)
 {
 	Effect* pEffect = GetEffectInfo(bSkillKind );
-	EffectDesc* effectDesc = CreateGXObject(g_pObjManager->GetFile(pEffect->dwStatusResourceID+bJoint), bOwn, bSkillKind);
+	AppliedSkill* effectDesc = CreateGXObject(g_pObjManager->GetFile(pEffect->dwStatusResourceID+bJoint), bOwn, bSkillKind);
 	
-	effectDesc->bEffectInfoNum			= bSkillKind;
+	effectDesc->skillKind			= bSkillKind;
 	effectDesc->bJoint					= bJoint;
 	effectDesc->hEffect.pDesc->bType	= OBJECT_TYPE_EFFECT;
 	effectDesc->hEffect.pDesc->pInfo	= effectDesc;
@@ -374,10 +374,10 @@ EffectDesc* EffectLayer::CreateStatusEffect(BYTE bSkillKind, BYTE bJoint, BOOL b
 	return effectDesc;
 }
 
-EffectDesc* EffectLayer::CreateGXObject(char *szFile, BOOL bOwn, WORD wChrNum)
+AppliedSkill* EffectLayer::CreateGXObject(char *szFile, BOOL bOwn, WORD wChrNum)
 {
-	EffectDesc* pEffectDesc = new EffectDesc;
-	memset(pEffectDesc, 0, sizeof(EffectDesc));
+	AppliedSkill* pEffectDesc = new AppliedSkill;
+	memset(pEffectDesc, 0, sizeof(AppliedSkill));
 
 	pEffectDesc->hEffect.pDesc				= AllocObjDesc();	
 	pEffectDesc->hEffect.pHandle			= CreateHandleObject( szFile, GXPlayerPROC, pEffectDesc->hEffect.pDesc,0);//GXOBJECT_CREATE_TYPE_EFFECT );
@@ -408,7 +408,7 @@ EffectDesc* EffectLayer::CreateGXObject(char *szFile, BOOL bOwn, WORD wChrNum)
 	return pEffectDesc;
 }
 
-BOOL EffectLayer::IsEffectUse(BYTE bSkillKind, VECTOR3* vecTarget, DWORD dwStartSkillTick)
+BOOL EffectLayer::CanSkillBeCastAtPosition(BYTE bSkillKind, VECTOR3* vecTarget)
 {
 	if (g_pThisDungeon->GetDungeonType() == DUNGEON_TYPE_VILLAGE 
 		&& !g_pMainPlayer->m_bCurLayer )
@@ -444,36 +444,22 @@ BOOL EffectLayer::IsEffectUse(BYTE bSkillKind, VECTOR3* vecTarget, DWORD dwStart
 		return FALSE;
 	}
 	
-	int nMana = g_pMainPlayer->m_wMP - pEffect->Value[bSkillLevel].nMana;	
+	int nMana = g_pMainPlayer->currentSP() - pEffect->Value[bSkillLevel].nMana;
 	if(nMana<0)
 	{
 		DisplayMessageAdd(g_Message[ETC_MESSAGE148].szMessage, 0xFFFFC309);		// MSG_ID : 148 ; 마나가 없습니다.
 		_PlaySound(0, SOUND_TYPE_SYSTEM, SOUND_SYSTEM_ERRORMSG, g_v3InterfaceSoundPos, FALSE);
 		return FALSE;
 	}
-		
-	if (g_dwCurTick - dwStartSkillTick < pEffect->dwCoolTime)
-	{
-		int nCool = int(g_pMainPlayer->m_fCurCoolPoint*1000-pEffect->dwCoolTime);
-	
-		if(nCool<0)
-		{
-			DisplayMessageAdd(g_Message[ETC_MESSAGE149].szMessage, 0xFFFFC309);	// MSG_ID : 149 ; 쿨게이지가 부족합니다.
-			_PlaySound(0, SOUND_TYPE_SYSTEM, SOUND_SYSTEM_ERRORMSG, g_v3InterfaceSoundPos, FALSE);
-			return FALSE;
-		}
-		
-		g_pMainPlayer->m_fCurCoolPoint = (float)max(nCool/1000.f, 0.1);		
-	}
-	
+
 	return TRUE;
 }
 
-EffectDesc* EffectLayer::CreateMagicArray(BYTE bSkillKind, VECTOR3* vecStart, BOOL bOwn)
+AppliedSkill* EffectLayer::CreateMagicArray(BYTE bSkillKind, VECTOR3* vecStart, BOOL bOwn)
 {
 	Effect* pEffect = GetEffectInfo(bSkillKind);
 	
-	EffectDesc*	pEffectDesc = NULL;
+	AppliedSkill*	pEffectDesc = NULL;
 	switch(pEffect->wProperty%100-pEffect->wProperty%10)
 	{
 	case 70:
@@ -526,7 +512,7 @@ EffectDesc* EffectLayer::CreateMagicArray(BYTE bSkillKind, VECTOR3* vecStart, BO
 	return pEffectDesc;
 }
 
-void EffectLayer::AttachLight(EffectDesc* pEffectDesc, BYTE bLightNum, void(*LightFunc)(EffectDesc*))
+void EffectLayer::AttachLight(AppliedSkill* pEffectDesc, BYTE bLightNum, void(*LightFunc)(AppliedSkill*))
 {	
 	pEffectDesc->m_sLightDescEx.m_handle = CreateLight((LIGHT_DESC*)&pEffectDesc->m_sLightDescEx, &pEffectDesc->vecBasePosion, bLightNum);		
 
@@ -539,7 +525,7 @@ void EffectLayer::AttachLight(EffectDesc* pEffectDesc, BYTE bLightNum, void(*Lig
 	_CHECK_MEMORY();
 }
 
-void EffectLayer::DetachLight(EffectDesc* pEffectDesc)
+void EffectLayer::DetachLight(AppliedSkill* pEffectDesc)
 {
 	g_pExecutive->GXODetachLight(pEffectDesc->hEffect.pHandle, pEffectDesc->m_sLightDescEx.m_handle);
 	g_pExecutive->DeleteGXLight(pEffectDesc->m_sLightDescEx.m_handle);

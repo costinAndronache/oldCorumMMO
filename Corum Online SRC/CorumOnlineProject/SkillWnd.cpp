@@ -15,8 +15,19 @@
 #include "effect.h"
 #include "CodeFun.h"
 
-CSkillWnd* CSkillWnd::c_pThis = NULL;
 
+std::shared_ptr<CSkillWnd> CSkillWnd::_shared(nullptr);
+
+std::shared_ptr<CSkillWnd> CSkillWnd::getShared() {
+	if (!_shared) {
+		_shared = std::make_shared<CSkillWnd>();
+	}
+
+	return _shared;
+}
+void CSkillWnd::updatedSkillPoints(CMainUser*, DWORD oldValue, DWORD newValue) {
+
+}
 //======================================================//
 // Construction/Destrution.								//
 //======================================================//
@@ -204,7 +215,7 @@ void CSkillWnd::CreateSkillResourceSpr( COnlyList* pSkillList )
 
 	while(pos)
 	{
-		LP_SKILL_RESOURCE_EX lpSkillResourceNode = (LP_SKILL_RESOURCE_EX)pSkillList->GetNext(pos);
+		LP_SKILL_RESOURCE_EX lpSkillResourceNode = (LP_SKILL_RESOURCE_EX)pSkillList->GetAndAdvance(pos);
 				
 		nPosX = lpSkillResourceNode->wIndex % 8 * SKILL_ICON_SIZE;
 		nPosY = lpSkillResourceNode->wIndex / 8 * SKILL_ICON_SIZE;
@@ -228,7 +239,7 @@ void CSkillWnd::ReleaseSkillResourceSpr( COnlyList* pSkillList )
 
 	while(pos)
 	{
-		LP_SKILL_RESOURCE_EX lpSkillResourceNode = (LP_SKILL_RESOURCE_EX)pSkillList->GetNext(pos);
+		LP_SKILL_RESOURCE_EX lpSkillResourceNode = (LP_SKILL_RESOURCE_EX)pSkillList->GetAndAdvance(pos);
 				
 		if(lpSkillResourceNode != NULL && lpSkillResourceNode->pSpr != NULL)
 		{
@@ -355,8 +366,8 @@ void CSkillWnd::RenderSkillIcon()
 	
 	VECTOR2	vPos;					
 		
-	BYTE nLeft	= g_pMainPlayer->GetSkillKind(SELECT_ATTACK_TYPE_LBUTTON);
-	BYTE nRight	= g_pMainPlayer->GetSkillKind(SELECT_ATTACK_TYPE_RBUTTON);
+	BYTE skillKind_left	= g_pMainPlayer->GetSkillKind(SELECT_ATTACK_TYPE_LBUTTON);
+	BYTE skillKind_right	= g_pMainPlayer->GetSkillKind(SELECT_ATTACK_TYPE_RBUTTON);
 
 	BYTE nGuardianSkill = -1;
 	
@@ -366,35 +377,35 @@ void CSkillWnd::RenderSkillIcon()
 		nGuardianSkill = pGuardian->GetSelectedSkill();
 	}
 	
-	if(nLeft!=__SKILL_NONE_SELECT__)
+	if(skillKind_left!=__SKILL_NONE_SELECT__)
 	{
 		vPos.x	= 133;
 		vPos.y	= 733;
 
-		if(nLeft==__SKILL_ATTACK__)
+		if(skillKind_left==__SKILL_ATTACK__)
 		{
 			g_pRenderer->RenderSprite(m_pAttackSpr, NULL, 0.0f, &vPos, NULL, 0xffffffff, nOrder, RENDER_TYPE_DISABLE_TEX_FILTERING);
 		}
 		else
 		{
-			if(g_sSkillListManager.pSpr[nLeft])
-				g_pRenderer->RenderSprite(g_sSkillListManager.pSpr[nLeft], NULL, 0.0f, &vPos, NULL, 0xffffffff, nOrder, RENDER_TYPE_DISABLE_TEX_FILTERING);
+			if(g_sSkillListManager.pSpr[skillKind_left])
+				g_pRenderer->RenderSprite(g_sSkillListManager.pSpr[skillKind_left], NULL, 0.0f, &vPos, NULL, 0xffffffff, nOrder, RENDER_TYPE_DISABLE_TEX_FILTERING);
 		}
 	}
 	
-	if(nRight!=-1)
+	if(skillKind_right!=-1)
 	{
 		vPos.x	= 248;
 		vPos.y	= 733;
 
-		if(nRight==__SKILL_ATTACK__)
+		if(skillKind_right==__SKILL_ATTACK__)
 		{
 			g_pRenderer->RenderSprite(m_pAttackSpr, NULL, 0.0f, &vPos, NULL, 0xffffffff, nOrder, RENDER_TYPE_DISABLE_TEX_FILTERING);
 		}
 		else
 		{
-			if(g_sSkillListManager.pSpr[nRight])
-				g_pRenderer->RenderSprite(g_sSkillListManager.pSpr[nRight], NULL, 0.0f, &vPos, NULL, 0xffffffff, nOrder, RENDER_TYPE_DISABLE_TEX_FILTERING);
+			if(g_sSkillListManager.pSpr[skillKind_right])
+				g_pRenderer->RenderSprite(g_sSkillListManager.pSpr[skillKind_right], NULL, 0.0f, &vPos, NULL, 0xffffffff, nOrder, RENDER_TYPE_DISABLE_TEX_FILTERING);
 		}
 	}
 
@@ -536,9 +547,9 @@ void CSkillWnd::RenderText()
 	RenderSkillInfo();
 	
 	// 스킬포인트 //
-	if(g_pMainPlayer->m_wPointSkill>0)
+	if(g_pMainPlayer->currentSkillPoints() > 0)
 	{
-		wsprintf(szInfo, "%u", g_pMainPlayer->m_wPointSkill);
+		wsprintf(szInfo, "%u", g_pMainPlayer->currentSkillPoints());
 		
 		int nSize = lstrlen(szInfo);
 
@@ -583,7 +594,7 @@ void CSkillWnd::RenderSkillInfo()
 
 		while(pos)
 		{
-			LP_SKILL_RESOURCE_EX lpSkillResourceEx = (LP_SKILL_RESOURCE_EX)g_sSkillListManager.pSkillList[bySkillIndex].pMasteryList->GetNext(pos);
+			LP_SKILL_RESOURCE_EX lpSkillResourceEx = (LP_SKILL_RESOURCE_EX)g_sSkillListManager.pSkillList[bySkillIndex].pMasteryList->GetAndAdvance(pos);
 
 			if(lpSkillResourceEx)
 			{			
@@ -602,7 +613,7 @@ void CSkillWnd::RenderSkillInfo()
 
 			while(pos)
 			{
-				LP_SKILL_RESOURCE_EX lpSkillResourceEx = (LP_SKILL_RESOURCE_EX)g_sSkillListManager.pSkillList[bySkillIndex].pActiveList->GetNext(pos);
+				LP_SKILL_RESOURCE_EX lpSkillResourceEx = (LP_SKILL_RESOURCE_EX)g_sSkillListManager.pSkillList[bySkillIndex].pActiveList->GetAndAdvance(pos);
 
 				if(lpSkillResourceEx)
 				{
@@ -624,7 +635,7 @@ void CSkillWnd::RenderSkillInfo()
 
 			while(pos)
 			{
-				LP_SKILL_RESOURCE_EX lpSkillResourceEx = (LP_SKILL_RESOURCE_EX)g_sSkillListManager.pSkillList[bySkillIndex].pPassiveList->GetNext(pos);
+				LP_SKILL_RESOURCE_EX lpSkillResourceEx = (LP_SKILL_RESOURCE_EX)g_sSkillListManager.pSkillList[bySkillIndex].pPassiveList->GetAndAdvance(pos);
 
 				if(lpSkillResourceEx)
 				{
@@ -646,7 +657,7 @@ void CSkillWnd::RenderSkillInfo()
 
 			while(pos)
 			{
-				LP_SKILL_RESOURCE_EX lpSkillResourceEx = (LP_SKILL_RESOURCE_EX)g_sSkillListManager.pSkillList[bySkillIndex].pOverDriveList->GetNext(pos);
+				LP_SKILL_RESOURCE_EX lpSkillResourceEx = (LP_SKILL_RESOURCE_EX)g_sSkillListManager.pSkillList[bySkillIndex].pOverDriveList->GetAndAdvance(pos);
 
 				if(lpSkillResourceEx)
 				{
@@ -684,7 +695,7 @@ void CSkillWnd::SetRenderSkillInfo(LP_SKILL_RESOURCE_EX lpSkillResourceEx, int n
 	// 이름 //
 	Effect* pEffect = g_pEffectLayer->GetEffectInfo(nSkillId);
 	
-	if(pEffect->bID==0)
+	if(pEffect->skillKind==0)
 		return;
 		
 	wsprintf(szInfo, "%s(id=%d)", pEffect->szName, nSkillId);
@@ -911,7 +922,7 @@ void CSkillWnd::RenderSkill()
 
 	while(pos)
 	{
-		LP_SKILL_RESOURCE_EX lpSkillResourceNode = (LP_SKILL_RESOURCE_EX)g_sSkillListManager.pSkillList[bySkillIndex].pActiveList->GetNext(pos);						
+		LP_SKILL_RESOURCE_EX lpSkillResourceNode = (LP_SKILL_RESOURCE_EX)g_sSkillListManager.pSkillList[bySkillIndex].pActiveList->GetAndAdvance(pos);						
 
 		if(!lpSkillResourceNode)
 			return;
@@ -944,7 +955,7 @@ void CSkillWnd::RenderSkill()
 
 	while(pos)
 	{		
-		LP_SKILL_RESOURCE_EX lpSkillResourceNode = (LP_SKILL_RESOURCE_EX)g_sSkillListManager.pSkillList[bySkillIndex].pMasteryList->GetNext(pos);						
+		LP_SKILL_RESOURCE_EX lpSkillResourceNode = (LP_SKILL_RESOURCE_EX)g_sSkillListManager.pSkillList[bySkillIndex].pMasteryList->GetAndAdvance(pos);						
 		
 		vPos.x	= m_fPosX+26;
 		vPos.y	= m_fPosZ+28;
@@ -979,7 +990,7 @@ void CSkillWnd::RenderSkill()
 
 	while(pos)
 	{
-		LP_SKILL_RESOURCE_EX lpSkillResourceNode = (LP_SKILL_RESOURCE_EX)g_sSkillListManager.pSkillList[bySkillIndex].pPassiveList->GetNext(pos);		
+		LP_SKILL_RESOURCE_EX lpSkillResourceNode = (LP_SKILL_RESOURCE_EX)g_sSkillListManager.pSkillList[bySkillIndex].pPassiveList->GetAndAdvance(pos);		
 
 		int nPosX	= (int)m_fPosX+243;
 		int nPosY	= (int)m_fPosZ+108+42*lpSkillResourceNode->byTypeIndex;
@@ -1009,7 +1020,7 @@ void CSkillWnd::RenderSkill()
 
 	while(pos)
 	{
-		LP_SKILL_RESOURCE_EX lpSkillResourceNode = (LP_SKILL_RESOURCE_EX)g_sSkillListManager.pSkillList[bySkillIndex].pOverDriveList->GetNext(pos);		
+		LP_SKILL_RESOURCE_EX lpSkillResourceNode = (LP_SKILL_RESOURCE_EX)g_sSkillListManager.pSkillList[bySkillIndex].pOverDriveList->GetAndAdvance(pos);		
 
 		if(!lpSkillResourceNode)
 			return;
@@ -1099,7 +1110,7 @@ void CSkillWnd::SetSkillUpBtn()
 		SetRender(SPR_OBJ_SKILL_UP1+i*2+1, FALSE);
 	}
 
-	if(g_pMainPlayer->m_wPointSkill>0)
+	if(g_pMainPlayer->currentSkillPoints() > 0)
 	{
 		const auto bySkillIndex = m_bySkillType; 
 
@@ -1129,7 +1140,7 @@ void CSkillWnd::SetSkillUpBtn()
 
 		while(pos)
 		{	
-			LP_SKILL_RESOURCE_EX lpSkillResourceEx = (LP_SKILL_RESOURCE_EX)g_sSkillListManager.pSkillList[bySkillIndex].pActiveList->GetNext(pos);
+			LP_SKILL_RESOURCE_EX lpSkillResourceEx = (LP_SKILL_RESOURCE_EX)g_sSkillListManager.pSkillList[bySkillIndex].pActiveList->GetAndAdvance(pos);
 
 			if(lpSkillResourceEx)
 			{
@@ -1159,7 +1170,7 @@ void CSkillWnd::SetSkillUpBtn()
 
 		while(pos)
 		{	
-			LP_SKILL_RESOURCE_EX lpSkillResourceEx = (LP_SKILL_RESOURCE_EX)g_sSkillListManager.pSkillList[bySkillIndex].pPassiveList->GetNext(pos);
+			LP_SKILL_RESOURCE_EX lpSkillResourceEx = (LP_SKILL_RESOURCE_EX)g_sSkillListManager.pSkillList[bySkillIndex].pPassiveList->GetAndAdvance(pos);
 
 			if(lpSkillResourceEx)
 			{
@@ -1189,7 +1200,7 @@ void CSkillWnd::SetSkillUpBtn()
 
 		while(pos)
 		{	
-			LP_SKILL_RESOURCE_EX lpSkillResourceEx = (LP_SKILL_RESOURCE_EX)g_sSkillListManager.pSkillList[bySkillIndex].pOverDriveList->GetNext(pos);
+			LP_SKILL_RESOURCE_EX lpSkillResourceEx = (LP_SKILL_RESOURCE_EX)g_sSkillListManager.pSkillList[bySkillIndex].pOverDriveList->GetAndAdvance(pos);
 
 			if(lpSkillResourceEx)
 			{
@@ -1386,7 +1397,7 @@ int CSkillWnd::CheckInterface()
 
 					while(pos)
 					{	
-						LP_SKILL_RESOURCE_EX lpSkillResourceEx = (LP_SKILL_RESOURCE_EX)g_sSkillListManager.pSkillList[byIndex].pActiveList->GetNext(pos);
+						LP_SKILL_RESOURCE_EX lpSkillResourceEx = (LP_SKILL_RESOURCE_EX)g_sSkillListManager.pSkillList[byIndex].pActiveList->GetAndAdvance(pos);
 
 						if(nRt-10==lpSkillResourceEx->byTypeIndex)
 						{
@@ -1409,7 +1420,7 @@ int CSkillWnd::CheckInterface()
 
 										if(nMaxLevel>=(int)pEffect->dwMinMastery)
 										{
-											if(g_pMainPlayer->m_wPointSkill>0)
+											if(g_pMainPlayer->currentSkillPoints() > 0)
 											{
 												SetRender(SPR_OBJ_SKILL_UP1+2+lpSkillResourceEx->byTypeIndex*2, TRUE);
 												SetRender(SPR_OBJ_SKILL_UP1+3+lpSkillResourceEx->byTypeIndex*2, FALSE);
@@ -1440,7 +1451,7 @@ int CSkillWnd::CheckInterface()
 
 					while(pos)
 					{	
-						LP_SKILL_RESOURCE_EX lpSkillResourceEx = (LP_SKILL_RESOURCE_EX)g_sSkillListManager.pSkillList[byIndex].pPassiveList->GetNext(pos);
+						LP_SKILL_RESOURCE_EX lpSkillResourceEx = (LP_SKILL_RESOURCE_EX)g_sSkillListManager.pSkillList[byIndex].pPassiveList->GetAndAdvance(pos);
 
 						if(nRt-24==lpSkillResourceEx->byTypeIndex)
 						{
@@ -1463,7 +1474,7 @@ int CSkillWnd::CheckInterface()
 										
 										if(nMaxLevel>=(int)pEffect->dwMinMastery)
 										{
-											if(g_pMainPlayer->m_wPointSkill>0)
+											if(g_pMainPlayer->currentSkillPoints() > 0)
 											{
 												SetRender(SPR_OBJ_SKILL_UP1+30+lpSkillResourceEx->byTypeIndex*2, TRUE);
 												SetRender(SPR_OBJ_SKILL_UP1+31+lpSkillResourceEx->byTypeIndex*2, FALSE);
@@ -1494,7 +1505,7 @@ int CSkillWnd::CheckInterface()
 
 					while(pos)
 					{	
-						LP_SKILL_RESOURCE_EX lpSkillResourceEx = (LP_SKILL_RESOURCE_EX)g_sSkillListManager.pSkillList[byIndex].pOverDriveList->GetNext(pos);
+						LP_SKILL_RESOURCE_EX lpSkillResourceEx = (LP_SKILL_RESOURCE_EX)g_sSkillListManager.pSkillList[byIndex].pOverDriveList->GetAndAdvance(pos);
 
 						if(nRt-31==lpSkillResourceEx->byTypeIndex)
 						{
@@ -1517,7 +1528,7 @@ int CSkillWnd::CheckInterface()
 
 										if(nMaxLevel>=(int)pEffect->dwMinMastery)
 										{
-											if(g_pMainPlayer->m_wPointSkill>0)
+											if(g_pMainPlayer->currentSkillPoints() > 0)
 											{
 												SetRender(SPR_OBJ_SKILL_UP1+44+lpSkillResourceEx->byTypeIndex*2, TRUE);
 												SetRender(SPR_OBJ_SKILL_UP1+45+lpSkillResourceEx->byTypeIndex*2, FALSE);
@@ -1615,7 +1626,7 @@ int CSkillWnd::CheckInterface()
 
 					while(pos)
 					{	
-						LP_SKILL_RESOURCE_EX lpSkillResourceEx = (LP_SKILL_RESOURCE_EX)g_sSkillListManager.pSkillList[byIndex].pActiveList->GetNext(pos);
+						LP_SKILL_RESOURCE_EX lpSkillResourceEx = (LP_SKILL_RESOURCE_EX)g_sSkillListManager.pSkillList[byIndex].pActiveList->GetAndAdvance(pos);
 
 						if(nRt-10==lpSkillResourceEx->byTypeIndex)
 						{
@@ -1638,7 +1649,7 @@ int CSkillWnd::CheckInterface()
 
 										if(nMaxLevel>=(int)pEffect->dwMinMastery)
 										{
-											if(g_pMainPlayer->m_wPointSkill>0)
+											if(g_pMainPlayer->currentSkillPoints() > 0)
 											{
 												SetRender(SPR_OBJ_SKILL_UP1+2+lpSkillResourceEx->byTypeIndex*2, FALSE);
 												SetRender(SPR_OBJ_SKILL_UP1+3+lpSkillResourceEx->byTypeIndex*2, TRUE);												
@@ -1671,7 +1682,7 @@ int CSkillWnd::CheckInterface()
 
 					while(pos)
 					{	
-						LP_SKILL_RESOURCE_EX lpSkillResourceEx = (LP_SKILL_RESOURCE_EX)g_sSkillListManager.pSkillList[byIndex].pPassiveList->GetNext(pos);
+						LP_SKILL_RESOURCE_EX lpSkillResourceEx = (LP_SKILL_RESOURCE_EX)g_sSkillListManager.pSkillList[byIndex].pPassiveList->GetAndAdvance(pos);
 
 						if(nRt-24==lpSkillResourceEx->byTypeIndex)
 						{
@@ -1694,7 +1705,7 @@ int CSkillWnd::CheckInterface()
 										
 										if(nMaxLevel>=(int)pEffect->dwMinMastery)
 										{
-											if(g_pMainPlayer->m_wPointSkill>0)
+											if(g_pMainPlayer->currentSkillPoints() > 0)
 											{
 												SetRender(SPR_OBJ_SKILL_UP1+30+lpSkillResourceEx->byTypeIndex*2, FALSE);
 												SetRender(SPR_OBJ_SKILL_UP1+31+lpSkillResourceEx->byTypeIndex*2, TRUE);												
@@ -1727,7 +1738,7 @@ int CSkillWnd::CheckInterface()
 
 					while(pos)
 					{	
-						LP_SKILL_RESOURCE_EX lpSkillResourceEx = (LP_SKILL_RESOURCE_EX)g_sSkillListManager.pSkillList[byIndex].pOverDriveList->GetNext(pos);
+						LP_SKILL_RESOURCE_EX lpSkillResourceEx = (LP_SKILL_RESOURCE_EX)g_sSkillListManager.pSkillList[byIndex].pOverDriveList->GetAndAdvance(pos);
 
 						if(nRt-31==lpSkillResourceEx->byTypeIndex)
 						{
@@ -1750,7 +1761,7 @@ int CSkillWnd::CheckInterface()
 
 										if(nMaxLevel>=(int)pEffect->dwMinMastery)
 										{
-											if(g_pMainPlayer->m_wPointSkill>0)
+											if(g_pMainPlayer->currentSkillPoints() > 0)
 											{
 												SetRender(SPR_OBJ_SKILL_UP1+44+lpSkillResourceEx->byTypeIndex*2, FALSE);
 												SetRender(SPR_OBJ_SKILL_UP1+45+lpSkillResourceEx->byTypeIndex*2, TRUE);
@@ -1842,7 +1853,7 @@ int CSkillWnd::CheckInterface()
 
 					while(pos)
 					{	
-						LP_SKILL_RESOURCE_EX lpSkillResourceEx = (LP_SKILL_RESOURCE_EX)g_sSkillListManager.pSkillList[byIndex].pActiveList->GetNext(pos);
+						LP_SKILL_RESOURCE_EX lpSkillResourceEx = (LP_SKILL_RESOURCE_EX)g_sSkillListManager.pSkillList[byIndex].pActiveList->GetAndAdvance(pos);
 
 						if(nRt-10==lpSkillResourceEx->byTypeIndex)
 						{
@@ -1865,7 +1876,7 @@ int CSkillWnd::CheckInterface()
 
 										if(nMaxLevel>=(int)pEffect->dwMinMastery)
 										{
-											if(g_pMainPlayer->m_wPointSkill<=0)												
+											if(g_pMainPlayer->currentSkillPoints() <= 0)												
 												byMousePosChk = __MOUSE_POINTER_DEFAULT__;
 										}
 										else
@@ -1891,7 +1902,7 @@ int CSkillWnd::CheckInterface()
 
 					while(pos)
 					{	
-						LP_SKILL_RESOURCE_EX lpSkillResourceEx = (LP_SKILL_RESOURCE_EX)g_sSkillListManager.pSkillList[byIndex].pPassiveList->GetNext(pos);
+						LP_SKILL_RESOURCE_EX lpSkillResourceEx = (LP_SKILL_RESOURCE_EX)g_sSkillListManager.pSkillList[byIndex].pPassiveList->GetAndAdvance(pos);
 
 						if(nRt-24==lpSkillResourceEx->byTypeIndex)
 						{
@@ -1914,7 +1925,7 @@ int CSkillWnd::CheckInterface()
 										
 										if(byLevel>=(int)pEffect->dwMinMastery)
 										{		
-											if(g_pMainPlayer->m_wPointSkill>0)
+											if(g_pMainPlayer->currentSkillPoints() > 0)
 												CUserInterface::GetInstance()->SetPointer(__MOUSE_POINTER_BUTTON__);
 											else
 												byMousePosChk = __MOUSE_POINTER_DEFAULT__;
@@ -1942,7 +1953,7 @@ int CSkillWnd::CheckInterface()
 
 					while(pos)
 					{	
-						LP_SKILL_RESOURCE_EX lpSkillResourceEx = (LP_SKILL_RESOURCE_EX)g_sSkillListManager.pSkillList[byIndex].pOverDriveList->GetNext(pos);
+						LP_SKILL_RESOURCE_EX lpSkillResourceEx = (LP_SKILL_RESOURCE_EX)g_sSkillListManager.pSkillList[byIndex].pOverDriveList->GetAndAdvance(pos);
 
 						if(nRt-31==lpSkillResourceEx->byTypeIndex)
 						{
@@ -1965,7 +1976,7 @@ int CSkillWnd::CheckInterface()
 
 										if(nMaxLevel>=(int)pEffect->dwMinMastery)
 										{
-											if(g_pMainPlayer->m_wPointSkill<=0)												
+											if(g_pMainPlayer->currentSkillPoints() <= 0)
 												byMousePosChk = __MOUSE_POINTER_DEFAULT__;
 										}
 										else
@@ -2008,57 +2019,7 @@ int CSkillWnd::CheckInterface()
 	return 0;
 }
 
-void CSkillWnd::RenderUsing()
-{
-	
-	POSITION_ pos =  g_pMainPlayer->m_pUsingStatusEffectList->GetHeadPosition();
 
-	char	szInfo[0xff] = {0,};
-//	RECT	rtPos;
-	BYTE	bySkillIndex = 0; 
-	int		nSize = 0;
-		
-	VECTOR2 vPos;
-
-	while(pos)
-	{
-		EffectDesc* pEffectDesc = (EffectDesc*)g_pMainPlayer->m_pUsingStatusEffectList->GetNext(pos);		
-
-		if(!g_sSkillListManager.pSpr[pEffectDesc->pEffect->bID])
-			continue;
-
-		int nPosX	= (int)10+(bySkillIndex*35);
-		int nPosY	= (int)10;
-			
-		vPos.x	= (float)nPosX;
-		vPos.y	= (float)nPosY;
-												
-		g_pRenderer->RenderSprite(g_sSkillListManager.pSpr[pEffectDesc->pEffect->bID], NULL, 0.0f, &vPos, NULL, 0xffffffff, __ORDER_USERINTERFACE_START_, RENDER_TYPE_DISABLE_TEX_FILTERING);
-					
-		wsprintf(szInfo, "%u", pEffectDesc->GetRemainTime(g_dwCurTick));
-
-		nSize = lstrlen(szInfo);
-		RenderFont(szInfo, nPosX+30-(nSize*7), nPosX+30, nPosY+17, nPosY+31, __ORDER_USERINTERFACE_START_+1, 0xffff8383);		
-		bySkillIndex++;
-		
-	}	
-
-	if(CUserInterface::GetInstance()->m_dwMagicArray!=0)
-	{
-		LP_ITEM_RESOURCE_EX lpItemResource = g_pItemResourceHash->GetData(CUserInterface::GetInstance()->m_dwMagicArray);		
-
-		if(lpItemResource)
-		{			
-			int nPosX	= (int)10+(bySkillIndex*35);
-			int nPosY	= (int)10;
-				
-			vPos.x	= (float)nPosX;
-			vPos.y	= (float)nPosY;
-			
-			g_pRenderer->RenderSprite(lpItemResource->pSpr, NULL, 0.0f, &vPos, NULL, 0xffffffff, __ORDER_USERINTERFACE_START_, RENDER_TYPE_DISABLE_TEX_FILTERING);
-		}
-	}
-}
 //======================================================//
 // End.													//
 //======================================================//

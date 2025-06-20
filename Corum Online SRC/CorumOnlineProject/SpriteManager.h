@@ -73,7 +73,7 @@ public:
 	COnlyList*				m_pSpriteList;
 
 	POSITION_				GetSpriteListHeadPos()	{	return m_pSpriteList->GetHeadPosition();	}
-	V2_SPRITE*				GetNextSprite(POSITION_& rPosition)		{	return (V2_SPRITE*)m_pSpriteList->GetNext(rPosition);	}	
+	V2_SPRITE*				GetNextSprite(POSITION_& rPosition)		{	return (V2_SPRITE*)m_pSpriteList->GetAndAdvance(rPosition);	}	
 
 	V2_SPRITE*				CreateSprite(DWORD dwSprID, float x, float y, bool bShow = TRUE, 
 												int nOrder = 0, BYTE bAlpha = 0xff);	

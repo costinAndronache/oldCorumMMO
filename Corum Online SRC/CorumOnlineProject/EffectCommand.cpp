@@ -17,6 +17,7 @@
 #include "CorumResource.h"
 #include "DungeonSiegeInfoWnd.h"
 #include "CodeFun.h"
+#include "User.h"
 
 void CmdSkillResult( char* pMsg, DWORD dwLen )
 {
@@ -52,13 +53,13 @@ void CmdSkillResult( char* pMsg, DWORD dwLen )
 			}break;
 		case __SKILL_AMFLEAFIRE__:
 			{
-				POSITION_ pos = g_pMainPlayer->m_pUsingStatusEffectList->GetHeadPosition();
-				EffectDesc* pEffectDesc = NULL;
+				POSITION_ pos = g_pMainPlayer->skillsAppliedOnThisUnit->GetHeadPosition();
+				AppliedSkill* pEffectDesc = NULL;
 				int nTemp = 0;
 				int nAmple = int(pResult->dwSkillResult[0])/100;
 				while(pos)
 				{
-					pEffectDesc = (EffectDesc*)g_pMainPlayer->m_pUsingStatusEffectList->GetNext(pos);
+					pEffectDesc = (AppliedSkill*)g_pMainPlayer->skillsAppliedOnThisUnit->GetAndAdvance(pos);
 					if (pEffectDesc->pEffect->bType == TYPE_DRIVE)
 					{
 						if (nAmple > 0)
@@ -93,15 +94,15 @@ void CmdSkillResult( char* pMsg, DWORD dwLen )
 				if( pResult->dwSkillResult[0] == 1 )		// 마인드 컨드롤 설정.
 				{
 					// 몬스터를 설정하고 이펙트를 로드한다.
-					pUser->m_pMonster[ pResult->dwSkillResult[3] ]	= pMonster;
+					pUser->servantMonsters[ pResult->dwSkillResult[3] ]	= pMonster;
 					pMonster->m_bZipCode	= (BYTE)pResult->dwSkillResult[3];
-					pMonster->m_dwLordIndex	= pUser->m_dwUserIndex;
+					pMonster->lordDungeonID	= pUser->m_dwUserIndex;
 					pMonster->m_dwTemp[ MONSTER_TEMP_SELECTED ] = 0;
 					
 					pMonster->m_pEffectTarget = g_pEffectLayer->CreateGXObject(GetFile( "e0704000.chr", DATA_TYPE_EFFECT ), 1, __CHR_EFFECT_NONE__);
 					
 					GXSetPosition( pMonster->m_pEffectTarget->hEffect.pHandle, &pMonster->m_v3CurPos, FALSE );
-					SetAction( pMonster->m_pEffectTarget->hEffect.pHandle, WORD((pMonster->m_dwLordIndex==pUser->m_dwUserIndex)+1), 0, ACTION_LOOP );
+					SetAction( pMonster->m_pEffectTarget->hEffect.pHandle, WORD((pMonster->lordDungeonID==pUser->m_dwUserIndex)+1), 0, ACTION_LOOP );
 						
 					if( pUser == g_pMainPlayer )
 					{						
@@ -115,9 +116,9 @@ void CmdSkillResult( char* pMsg, DWORD dwLen )
 				}
 				else										// 해제.
 				{
-					pUser->m_pMonster[ pResult->dwSkillResult[3] ]	= NULL;
+					pUser->servantMonsters[ pResult->dwSkillResult[3] ]	= NULL;
 					pMonster->m_bZipCode	= 0;
-					pMonster->m_dwLordIndex	= 0;
+					pMonster->lordDungeonID	= 0;
 					pMonster->m_dwTemp[ MONSTER_TEMP_SELECTED ] = 0;
 
 					if( pMonster->m_pEffectTarget )
@@ -156,28 +157,29 @@ void CmdSkill( char* pMsg, DWORD dwLen )
 	BYTE bSkillKind = pPacket->bSkillKind;
 	char bSkillLevel = pPacket->bSkillLevel;
 	Effect* pEffect = g_pEffectLayer->GetEffectInfo(bSkillKind);
-	VECTOR3 vecObjectPos={0.f,};
-	GXOBJECT_HANDLE handle=0;
-	BOOL bOwnSkill = FALSE;	// 내가 쏘는 스킬인가?
+	VECTOR3 casterPosition={0.f,};
+	GXOBJECT_HANDLE caster3DModelHandle=0;
+	BOOL mainPlayerIsCaster = FALSE;	// 내가 쏘는 스킬인가?
 	CUser* pOwnUser = NULL;
 
 	char szOwnName[MAX_CHARACTER_NAME_LENGTH];	
 	memset(szOwnName, 0, sizeof(szOwnName));
 
-	if (pPacket->bOwnType == OBJECT_TYPE_PLAYER)
+	if (pPacket->casterType == OBJECT_TYPE_PLAYER)
 	{
+
 		// 쏜놈이 플레이어
-		pOwnUser = g_pUserHash->GetData(pPacket->dwOwnIndex);
+		pOwnUser = g_pUserHash->GetData(pPacket->casterDungeonID);
 		
 		if (!pOwnUser)
 		{
-			RequestDungeonInfo( 1, pPacket->dwOwnIndex );			
+			RequestDungeonInfo( 1, pPacket->casterDungeonID );			
 		}
 		else
 		{
-			vecObjectPos = pOwnUser->m_v3CurPos;
-			handle = pOwnUser->m_hPlayer.pHandle;
-			bOwnSkill = pOwnUser==g_pMainPlayer;
+			casterPosition = pOwnUser->m_v3CurPos;
+			caster3DModelHandle = pOwnUser->m_hPlayer.pHandle;
+			mainPlayerIsCaster = pOwnUser==g_pMainPlayer;
 			
 			memcpy(szOwnName,pOwnUser->m_szName,MAX_CHARACTER_NAME_LENGTH);
 
@@ -185,24 +187,23 @@ void CmdSkill( char* pMsg, DWORD dwLen )
 			{			
 				// 스킬 쏘는놈의 셋팅
 				pOwnUser->m_bSkillTmp				= bSkillKind;
-				pOwnUser->SetActionSkill(bSkillKind);
-				pOwnUser->SetStatus(UNIT_STATUS_SKILL);
+				pOwnUser->OnCastPhaseEndExecutionPhaseBegin(bSkillKind);
 				pOwnUser->m_hPlayer.pDesc->ObjectFunc		= PlayerSkillFunc;
 			}
 		}
 	}
-	else if(pPacket->bOwnType == OBJECT_TYPE_MONSTER) // 쏜놈이 몬스터.
+	else if(pPacket->casterType == OBJECT_TYPE_MONSTER) // 쏜놈이 몬스터.
 	{
-		CMonster* pOwnMonster = g_pMonsterHash->GetData(pPacket->dwOwnIndex);
+		CMonster* pOwnMonster = g_pMonsterHash->GetData(pPacket->casterDungeonID);
 		if (!pOwnMonster)
 		{
-			RequestDungeonInfo( 2, pPacket->dwOwnIndex );			
+			RequestDungeonInfo( 2, pPacket->casterDungeonID );			
 		}
 		else
 		{
 			// 스킬 사용 동작 세팅.		
-			vecObjectPos = pOwnMonster->m_v3CurPos;
-			handle = pOwnMonster->m_hMonster.pHandle;			
+			casterPosition = pOwnMonster->m_v3CurPos;
+			caster3DModelHandle = pOwnMonster->m_hMonster.pHandle;			
 
 			pOwnMonster->m_bSkillTmp = bSkillKind;
 			pOwnMonster->SetActionSkill(bSkillKind);
@@ -210,17 +211,17 @@ void CmdSkill( char* pMsg, DWORD dwLen )
 			pOwnMonster->m_hMonster.pDesc->ObjectFunc = MonsterSkillFunc;
 		}				
 	}
-	else if (pPacket->bOwnType == OBJECT_TYPE_SKILL)
+	else if (pPacket->casterType == OBJECT_TYPE_SKILL)
 	{		
-		vecObjectPos.x = (pPacket->dwOwnIndex>>16)*TILE_WIDTH+TILE_WIDTH/2;
-		vecObjectPos.z = (pPacket->dwOwnIndex&0x0000ffff)*TILE_WIDTH+TILE_WIDTH/2;
-		vecObjectPos.y = 0;
+		casterPosition.x = (pPacket->casterDungeonID>>16)*TILE_WIDTH+TILE_WIDTH/2;
+		casterPosition.z = (pPacket->casterDungeonID&0x0000ffff)*TILE_WIDTH+TILE_WIDTH/2;
+		casterPosition.y = 0;
 	}
 	// 타일가운데로 옮겨줘.
 	//pPacket->vecStart.x = pPacket->vecStart.x/TILE_SIZE*TILE_SIZE+TILE_SIZE/2;
 	//pPacket->vecStart.z = pPacket->vecStart.z/TILE_SIZE*TILE_SIZE+TILE_SIZE/2;
 	
-	EffectDesc* pEffectDesc = NULL;
+	AppliedSkill* pEffectDesc = NULL;
 
 	switch(bSkillKind)
 	{// 서브 루틴..
@@ -254,10 +255,10 @@ void CmdSkill( char* pMsg, DWORD dwLen )
 					tempAng = DEG360/nCompass*i;
 				VECTOR2_TO_VECTOR3(pPacket->vecStart, v3Start)
 				pEffectDesc = SkillSubProcess_FireBall(bSkillKind
-					, bSkillLevel, pPacket->bOwnType, pPacket->dwOwnIndex
+					, bSkillLevel, pPacket->casterType, pPacket->casterDungeonID
 					, pPacket->bTargetCount, v3Start, pPacket->sTargetInfo
 					, tempAng);
-				pEffectDesc->vecBasePosion = vecObjectPos;
+				pEffectDesc->vecBasePosion = casterPosition;
 				pEffectDesc->vecBasePosion.y+=100;
 			
 				pEffectDesc->dwTemp[SKILL_TEMP_CREATECOUNT] = i; // 몇번째 인지.
@@ -290,12 +291,12 @@ void CmdSkill( char* pMsg, DWORD dwLen )
 				{
 					VECTOR2_TO_VECTOR3(pPacket->vecStart, v3Start)
 					pEffectDesc = SkillSubProcess_MagmaWall(bSkillKind
-						, bSkillLevel, pPacket->bOwnType, pPacket->dwOwnIndex
+						, bSkillLevel, pPacket->casterType, pPacket->casterDungeonID
 						, pPacket->bTargetCount, v3Start
 						, pPacket->sTargetInfo);
 					pEffectDesc->dwCount = 0;
 					pEffectDesc->dwTemp[SKILL_TEMP_CREATECOUNT] = i*pEffect->Value[bSkillLevel].nCompass+j; // 몇번째 인지.
-					pEffectDesc->f_Radian = (float)atan2(pPacket->vecStart.y-vecObjectPos.z, pPacket->vecStart.x-vecObjectPos.x);
+					pEffectDesc->f_Radian = (float)atan2(pPacket->vecStart.y-casterPosition.z, pPacket->vecStart.x-casterPosition.x);
 					if (bCount < pPacket->bTargetCount)	
 					{//  데미지 입힐 객체를 가져라.
 						pEffectDesc->byTargetObjectType[0]	= pPacket->sTargetInfo[bCount].bTargetType;
@@ -316,7 +317,7 @@ void CmdSkill( char* pMsg, DWORD dwLen )
 			{
 				VECTOR2_TO_VECTOR3(pPacket->vecStart, v3Start)
 				pEffectDesc = SkillSubProcess_IceWall(bSkillKind, bSkillLevel
-					, pPacket->bOwnType, pPacket->dwOwnIndex
+					, pPacket->casterType, pPacket->casterDungeonID
 					, pPacket->bTargetCount, v3Start
 					, pPacket->sTargetInfo);
 				pEffectDesc->dwCount = 0;
@@ -341,13 +342,13 @@ void CmdSkill( char* pMsg, DWORD dwLen )
 			{// 마그마 생성갯수
 				VECTOR2_TO_VECTOR3(pPacket->vecStart, v3Start)
 				pEffectDesc = SkillSubProcess_BlastQuake(bSkillKind, bSkillLevel
-					, pPacket->bOwnType, pPacket->dwOwnIndex
+					, pPacket->casterType, pPacket->casterDungeonID
 					, pPacket->bTargetCount, v3Start
 					, pPacket->sTargetInfo);
-				pEffectDesc->vecBasePosion = vecObjectPos;
+				pEffectDesc->vecBasePosion = casterPosition;
 				pEffectDesc->dwCount = 0;
 				pEffectDesc->dwTemp[SKILL_TEMP_CREATECOUNT] = i; // 몇번째 마그마인지.
-				pEffectDesc->f_Radian = (float)atan2(pPacket->vecStart.y-vecObjectPos.z, pPacket->vecStart.x-vecObjectPos.x);
+				pEffectDesc->f_Radian = (float)atan2(pPacket->vecStart.y-casterPosition.z, pPacket->vecStart.x-casterPosition.x);
 				if (bCount < pPacket->bTargetCount)	
 				{// 마그마당 데미지 입힐 객체를 가져라.
 					pEffectDesc->byTargetObjectType[0]	= pPacket->sTargetInfo[bCount].bTargetType;
@@ -368,14 +369,14 @@ void CmdSkill( char* pMsg, DWORD dwLen )
 				VECTOR2_TO_VECTOR3(pPacket->vecStart, v3Start)
 				// 잡은 객체들 셋팅해 줘라.
 				pEffectDesc = SkillSubProcess_General(bSkillKind, bSkillLevel
-					, BYTE(bSkillLevel/10), pPacket->bOwnType, pPacket->dwOwnIndex
+					, BYTE(bSkillLevel/10), pPacket->casterType, pPacket->casterDungeonID
 					, pPacket->bTargetCount, v3Start
 					, pPacket->sTargetInfo);
 				
 				pEffectDesc->byTargetObjectType[0]	= pPacket->sTargetInfo[i].bTargetType;
 				pEffectDesc->dwTargetIndex[0]		= pPacket->sTargetInfo[i].dwTargetIndex;
 				pEffectDesc->dwCount = 1;
-				pEffectDesc->vecBasePosion = vecObjectPos;	// 쏜놈으로 부터 나가야 한다.
+				pEffectDesc->vecBasePosion = casterPosition;	// 쏜놈으로 부터 나가야 한다.
 				pEffectDesc->vecBasePosion.y+=300;
 			}			
 		}break;
@@ -412,7 +413,7 @@ void CmdSkill( char* pMsg, DWORD dwLen )
 					}	
 
 					pEffectDesc = SkillSubProcess_General(bSkillKind, bSkillLevel
-						, 0, pPacket->bOwnType, pPacket->dwOwnIndex
+						, 0, pPacket->casterType, pPacket->casterDungeonID
 						, pPacket->bTargetCount, v3Start, pPacket->sTargetInfo);
 					
 					pEffectDesc->byTargetObjectType[0]	= pPacket->sTargetInfo[i].bTargetType;
@@ -432,7 +433,7 @@ void CmdSkill( char* pMsg, DWORD dwLen )
 				VECTOR2_TO_VECTOR3(pPacket->vecStart, v3Start)
 
 				pEffectDesc = SkillSubProcess_General(bSkillKind, bSkillLevel
-					, 0, pPacket->bOwnType, pPacket->dwOwnIndex
+					, 0, pPacket->casterType, pPacket->casterDungeonID
 					, pPacket->bTargetCount, v3Start
 					, pPacket->sTargetInfo);
 				for(int i = 0; i < pPacket->bTargetCount; ++i)
@@ -443,7 +444,7 @@ void CmdSkill( char* pMsg, DWORD dwLen )
 				pEffectDesc->dwCount = pPacket->bTargetCount;
 				if (bSkillKind == __SKILL_DRAGONICFIREBLAST__)
 				{// 용에 입에서 나가야 해
-					pEffectDesc->vecBasePosion = vecObjectPos;
+					pEffectDesc->vecBasePosion = casterPosition;
 				}
 				
 			}			
@@ -461,17 +462,17 @@ void CmdSkill( char* pMsg, DWORD dwLen )
 	case __SKILL_RAGINGSWORD__:
 		{		
 			float fRad;	VECTOR3 vec;
-			g_pExecutive->GXOGetDirection(handle, &vec, &fRad);
+			g_pExecutive->GXOGetDirection(caster3DModelHandle, &vec, &fRad);
 			g_pExecutive->GXOSetDirection( pEffectDesc->hEffect.pHandle, &g_Camera.v3AxsiY, -fRad );
-			pEffectDesc->vecBasePosion = vecObjectPos;
+			pEffectDesc->vecBasePosion = casterPosition;
 		}break;
 	
 	case __SKILL_LIGHTNINGBREAK__:
 		{	
 			float fRad;	VECTOR3 vec;
-			g_pExecutive->GXOGetDirection(handle, &vec, &fRad);
+			g_pExecutive->GXOGetDirection(caster3DModelHandle, &vec, &fRad);
 			g_pExecutive->GXOSetDirection( pEffectDesc->hEffect.pHandle, &vec, fRad );
-			pEffectDesc->vecBasePosion = vecObjectPos;
+			pEffectDesc->vecBasePosion = casterPosition;
 		}break;			
 	}
 	
@@ -480,7 +481,7 @@ void CmdSkill( char* pMsg, DWORD dwLen )
 		VECTOR3 v3Start;
 		VECTOR2_TO_VECTOR3(pPacket->vecStart, v3Start)
 		VECTOR3	v3DirMon;
-		VECTOR3_SUB_VECTOR3( &v3DirMon, &v3Start, &vecObjectPos );
+		VECTOR3_SUB_VECTOR3( &v3DirMon, &v3Start, &casterPosition );
 		g_pExecutive->GXOSetDirection( pEffectDesc->hEffect.pHandle, &g_Camera.v3AxsiY, (float)(atan2(v3DirMon.z, v3DirMon.x) + DEG90 ) );		
 	}
 	
@@ -488,7 +489,8 @@ void CmdSkill( char* pMsg, DWORD dwLen )
 	{// 잡은 몬스터만큼...		
 		if (pPacket->sTargetInfo[i].bTargetType ==OBJECT_TYPE_MONSTER)
 		{
-			CMonster*	pMonster = g_pMonsterHash->GetData( pPacket->sTargetInfo[i].dwTargetIndex);			
+			CMonster*	pMonster = g_pMonsterHash->GetData( pPacket->sTargetInfo[i].dwTargetIndex);		
+
 			if( !pMonster )
 			{
 				RequestDungeonInfo( 2, pPacket->sTargetInfo[i].dwTargetIndex );
@@ -506,7 +508,7 @@ void CmdSkill( char* pMsg, DWORD dwLen )
 				|| bSkillKind == __SKILL_BASH__ 
 				|| bSkillKind == __SKILL_RAGINGSWORD__)
 			{
-				VECTOR3_SUB_VECTOR3( &v3DirMon, &pMonster->m_v3CurPos, &vecObjectPos );	
+				VECTOR3_SUB_VECTOR3( &v3DirMon, &pMonster->m_v3CurPos, &casterPosition );	
 			}
 			else
 			{
@@ -520,28 +522,28 @@ void CmdSkill( char* pMsg, DWORD dwLen )
 					
 			if( pMonster->m_dwHP == 0 )
 			{
-				if (pPacket->bOwnType == OBJECT_TYPE_PLAYER)
+				if (pPacket->casterType == OBJECT_TYPE_PLAYER)
 				{
-					CUser* pKiller = g_pUserHash->GetData(pPacket->dwOwnIndex);
+					CUser* pKiller = g_pUserHash->GetData(pPacket->casterDungeonID);
 					
-					pMonster->InitDie(pKiller, bOwnSkill, min(pMonster->m_dwTemp[MONSTER_TEMP_DAMAGE]/10, 50)+GetRandom(20), g_pChrInfoEffect->GetFrameInfo(pEffectDesc->wChrNum, 0, 1, _CHRINFO_FRAME0)+GetSkillStartActionFinishCount(bSkillKind, pKiller, pPacket->bOwnType));
+					pMonster->InitDie(pKiller, mainPlayerIsCaster, min(pMonster->m_dwTemp[MONSTER_TEMP_DAMAGE]/10, 50)+GetRandom(20), g_pChrInfoEffect->GetFrameInfo(pEffectDesc->wChrNum, 0, 1, _CHRINFO_FRAME0)+GetSkillStartActionFinishCount(bSkillKind, pKiller, pPacket->casterType));
 				}
-				else if (pPacket->bOwnType == OBJECT_TYPE_MONSTER)
+				else if (pPacket->casterType == OBJECT_TYPE_MONSTER)
 				{
-					CMonster* pOwnMonster = g_pMonsterHash->GetData(pPacket->dwOwnIndex);
+					CMonster* pOwnMonster = g_pMonsterHash->GetData(pPacket->casterDungeonID);
 					if (pOwnMonster)
 					{
-						CUser* pKiller = g_pUserHash->GetData(pOwnMonster->m_dwLordIndex);
-						pMonster->InitDie(pKiller, bOwnSkill, min(pMonster->m_dwTemp[MONSTER_TEMP_DAMAGE]/10, 50)+GetRandom(20), g_pChrInfoEffect->GetFrameInfo(pEffectDesc->wChrNum, 0, 1, _CHRINFO_FRAME0)+GetSkillStartActionFinishCount(bSkillKind, pKiller, pPacket->bOwnType));
+						CUser* pKiller = g_pUserHash->GetData(pOwnMonster->lordDungeonID);
+						pMonster->InitDie(pKiller, mainPlayerIsCaster, min(pMonster->m_dwTemp[MONSTER_TEMP_DAMAGE]/10, 50)+GetRandom(20), g_pChrInfoEffect->GetFrameInfo(pEffectDesc->wChrNum, 0, 1, _CHRINFO_FRAME0)+GetSkillStartActionFinishCount(bSkillKind, pKiller, pPacket->casterType));
 					}
 					else
 					{
-						pMonster->InitDie(NULL, bOwnSkill, min(pMonster->m_dwTemp[MONSTER_TEMP_DAMAGE]/10, 50)+GetRandom(20), g_pChrInfoEffect->GetFrameInfo(pEffectDesc->wChrNum, 0, 1, _CHRINFO_FRAME0)+GetSkillStartActionFinishCount(bSkillKind, NULL, pPacket->bOwnType));
+						pMonster->InitDie(NULL, mainPlayerIsCaster, min(pMonster->m_dwTemp[MONSTER_TEMP_DAMAGE]/10, 50)+GetRandom(20), g_pChrInfoEffect->GetFrameInfo(pEffectDesc->wChrNum, 0, 1, _CHRINFO_FRAME0)+GetSkillStartActionFinishCount(bSkillKind, NULL, pPacket->casterType));
 					}
 				}
-				else if (pPacket->bOwnType == OBJECT_TYPE_SKILL)
+				else if (pPacket->casterType == OBJECT_TYPE_SKILL)
 				{
-					pMonster->InitDie(NULL, FALSE, min(pMonster->m_dwTemp[MONSTER_TEMP_DAMAGE]/10, 50)+GetRandom(20), g_pChrInfoEffect->GetFrameInfo(pEffectDesc->wChrNum, 0, 1, _CHRINFO_FRAME0)+GetSkillStartActionFinishCount(bSkillKind, NULL, pPacket->bOwnType));
+					pMonster->InitDie(NULL, FALSE, min(pMonster->m_dwTemp[MONSTER_TEMP_DAMAGE]/10, 50)+GetRandom(20), g_pChrInfoEffect->GetFrameInfo(pEffectDesc->wChrNum, 0, 1, _CHRINFO_FRAME0)+GetSkillStartActionFinishCount(bSkillKind, NULL, pPacket->casterType));
 				}
 			}
 			pMonster->WithActionFunc = pEffect->MonsterSKillDamageWithAction;
@@ -549,9 +551,9 @@ void CmdSkill( char* pMsg, DWORD dwLen )
 			{
 				if(pEffect->bType == TYPE_DRIVE || pEffect->bType == TYPE_TIMEZERO)			
 				{
-					pMonster->AttachSkill(pEffect->bID, bSkillLevel, pPacket->dwDestTime);
-					if (pMonster->m_pEffectDesc[pEffect->bID])
-						HideObject(pMonster->m_pEffectDesc[pEffect->bID]->hEffect.pHandle);
+					pMonster->AttachSkill(pEffect->skillKind, bSkillLevel, pPacket->dwDestTime);
+					if (pMonster->m_pEffectDesc[pEffect->skillKind])
+						HideObject(pMonster->m_pEffectDesc[pEffect->skillKind]->hEffect.pHandle);
 				}
 			}
 			if (bSkillKind == __SKILL_POISONING__ 
@@ -559,8 +561,7 @@ void CmdSkill( char* pMsg, DWORD dwLen )
 				pMonster->m_pEffectDesc[__SKILL_POISONING__]->dwTemp[SKILL_TEMP_POSONING] = pPacket->sTargetInfo[i].dwDamage;
 			else if (bSkillKind == __SKILL_POSIONCLOUD__
 				&& pMonster->m_pEffectDesc[__SKILL_POSIONCLOUD__])
-				pMonster->m_pEffectDesc[__SKILL_POSIONCLOUD__]->dwTemp[SKILL_TEMP_POSONING] = pPacket->sTargetInfo[i].dwDamage;		
-			
+				pMonster->m_pEffectDesc[__SKILL_POSIONCLOUD__]->dwTemp[SKILL_TEMP_POSONING] = pPacket->sTargetInfo[i].dwDamage;			
 		}// IF
 		else if(pPacket->sTargetInfo[i].bTargetType ==OBJECT_TYPE_PLAYER)
 		{
@@ -572,7 +573,7 @@ void CmdSkill( char* pMsg, DWORD dwLen )
 			}
 			if (g_pMainPlayer == pTargetUser)
 			{
-				CUserInterface::GetInstance()->SetDengeonHp((WORD)pPacket->sTargetInfo[i].dwCurHP);
+				g_pMainPlayer->updateCurrentHP(pPacket->sTargetInfo[i].dwCurHP);
 			}
 
 			pTargetUser->m_dwTemp[USER_TEMP_DAMAGE_TYPE] = pPacket->sTargetInfo[i].bType;
@@ -590,7 +591,7 @@ void CmdSkill( char* pMsg, DWORD dwLen )
 				}
 				else
 				{	
-					if (pPacket->bOwnType == OBJECT_TYPE_PLAYER)
+					if (pPacket->casterType == OBJECT_TYPE_PLAYER)
 						wsprintf(szTemp, g_Message[ETC_MESSAGE505].szMessage, szOwnName, pTargetUser->m_szName);//"%s님이 %s님을 죽였습니다."
 				}
 
@@ -601,8 +602,8 @@ void CmdSkill( char* pMsg, DWORD dwLen )
 			{
 				if(pEffect->bType == TYPE_DRIVE || pEffect->bType == TYPE_TIMEZERO)			
 				{
-					pTargetUser->AttachSkill(pEffect->bID, bSkillLevel, pPacket->dwDestTime);
-					HideObject(pTargetUser->m_pEffectDesc[pEffect->bID]->hEffect.pHandle);
+					pTargetUser->AttachSkill(pEffect->skillKind, bSkillLevel, pPacket->dwDestTime);
+					HideObject(pTargetUser->m_pEffectDesc[pEffect->skillKind]->hEffect.pHandle);
 				}
 			}
 
@@ -706,9 +707,10 @@ void CmdSkillCasting( char* pMsg, DWORD dwLen )
 		bDirection = !(pOwnUser == pTargetUser);
 	}
 
-	if (pPacket->bSkillKind)
-	{
-		pOwnUser->SetActionCasting(pPacket->bSkillKind, vecTarget, bDirection);
+	if (pPacket->bSkillKind) {
+		const auto user = pOwnUser;
+
+		pOwnUser->OnCastPhaseBegin(pPacket->bSkillKind, vecTarget, bDirection, pPacket->spOfssetPerSecondForContinousSkillCast);
 	}
 	else	// fail
 	{
@@ -732,13 +734,14 @@ void CmdSkillStopStatusEffect( char* pMsg, DWORD dwLen )
 			return;
 		}
 
-		EffectDesc* pEffectDesc = pUser->m_pEffectDesc[pPacket->bSkillKind];
+		AppliedSkill* pEffectDesc = pUser->m_pEffectDesc[pPacket->bSkillKind];
 		if (pEffectDesc)
 		{
-			if (pUser == g_pMainPlayer)
-				CUserInterface::GetInstance()->SetDengeonHp((WORD)pPacket->dwCurHP);
+			if (pUser == g_pMainPlayer) {
+				g_pMainPlayer->updateCurrentHP(pPacket->dwCurHP);
+			}
 			
-			if (pEffectDesc->bEffectInfoNum == __SKILL_HIDING__)
+			if (pEffectDesc->skillKind == __SKILL_HIDING__)
 			{
 				// 은신일경우 알파 하이드.
 				pUser->UserObjectEnable(TRUE);
@@ -750,17 +753,17 @@ void CmdSkillStopStatusEffect( char* pMsg, DWORD dwLen )
 
 			pEffectDesc->dwTemp[SKILL_TEMP_EFFECT_TIME_FINISH] = 1; // 이젠 상태 이펙트 끝내라는 플래그.
 
-			pUser->m_pUsingStatusEffectList->RemoveAt(pEffectDesc->pUsingStatus);
+			pUser->skillsAppliedOnThisUnit->RemoveAt(pEffectDesc->pUsingStatus);
 
-			pUser->m_pEffectDesc[pEffectDesc->pEffect->bID] = NULL;
+			pUser->m_pEffectDesc[pEffectDesc->pEffect->skillKind] = NULL;
 			RemoveEffectDesc(pEffectDesc);
 			
 		}
 
-		POSITION_ pos = pUser->m_pUsingStatusEffectList->GetHeadPosition();
+		POSITION_ pos = pUser->skillsAppliedOnThisUnit->GetHeadPosition();
 		while (pos)
 		{
-			pEffectDesc = (EffectDesc*)pUser->m_pUsingStatusEffectList->GetNext(pos);
+			pEffectDesc = (AppliedSkill*)pUser->skillsAppliedOnThisUnit->GetAndAdvance(pos);
 			if (pEffectDesc->pEffect && pEffectDesc->pEffect->bType == TYPE_DRIVE)
 			{			
 				if (g_pEffectLayer->IsEffectShow(pEffectDesc))
@@ -785,23 +788,23 @@ void CmdSkillStopStatusEffect( char* pMsg, DWORD dwLen )
 			return;
 		}
 		
-		EffectDesc* pEffectDesc = pMonster->m_pEffectDesc[pPacket->bSkillKind];
+		AppliedSkill* pEffectDesc = pMonster->m_pEffectDesc[pPacket->bSkillKind];
 		if (pEffectDesc)
 		{
 			pMonster->m_dwHP = pPacket->dwCurHP;
 			if (pEffectDesc->pEffect->bType == TYPE_DRIVE)
 				pMonster->m_bOverDriveCount--;
-			pMonster->m_pUsingStatusEffectList->RemoveAt(pEffectDesc->pUsingStatus);
-			pMonster->m_pEffectDesc[pEffectDesc->pEffect->bID] = NULL;
+			pMonster->skillsAppliedOnThisUnit->RemoveAt(pEffectDesc->pUsingStatus);
+			pMonster->m_pEffectDesc[pEffectDesc->pEffect->skillKind] = NULL;
 			RemoveEffectDesc(pEffectDesc);
 			
 			pEffectDesc->dwTemp[SKILL_TEMP_EFFECT_TIME_FINISH] = 1; // 이젠 상태 이펙트 끝내라는 플래그.
 		}
 
-		POSITION_ pos = pMonster->m_pUsingStatusEffectList->GetHeadPosition();
+		POSITION_ pos = pMonster->skillsAppliedOnThisUnit->GetHeadPosition();
 		while (pos)
 		{
-			pEffectDesc = (EffectDesc*)pMonster->m_pUsingStatusEffectList->GetNext(pos);
+			pEffectDesc = (AppliedSkill*)pMonster->skillsAppliedOnThisUnit->GetAndAdvance(pos);
 			if (pEffectDesc->pEffect && pEffectDesc->pEffect->bType == TYPE_DRIVE)
 			{			
 				if (g_pEffectLayer->IsEffectShow(pEffectDesc))
@@ -830,7 +833,7 @@ void CmdDestroyCP( char* pMsg, DWORD dwLen )
 	POSITION_ pos = g_pMap->m_pCPList->GetHeadPosition();
 	while(pos)
 	{
-		CP_DESC* pCPDesc = (CP_DESC*)g_pMap->m_pCPList->GetNext(pos);
+		CP_DESC* pCPDesc = (CP_DESC*)g_pMap->m_pCPList->GetAndAdvance(pos);
 		if (pCPDesc->bID == pPacket->sCP_Info.bCPID)
 		{
 			::SetAction( pCPDesc->pEffectDesc->hEffect.pHandle, 2, 0, ACTION_ONCE );
@@ -848,14 +851,14 @@ void CmdDestroyCP( char* pMsg, DWORD dwLen )
 			if (g_pCPTable[pPacket->sCP_Info.wProperty].bClass == 2)
 			{
 				// 함정이 들어 있는 cp를 해제시켰군. ㅡ.ㅡ				
-				EffectDesc* pEffectDesc = g_pEffectLayer->CreateGXObject(g_pObjManager->GetFile(EFFECT_CP_RELEASE1), 1, __CHR_EFFECT_NONE__);
+				AppliedSkill* pEffectDesc = g_pEffectLayer->CreateGXObject(g_pObjManager->GetFile(EFFECT_CP_RELEASE1), 1, __CHR_EFFECT_NONE__);
 				::SetAction( pEffectDesc->hEffect.pHandle, 1, 0, ACTION_ONCE );
 				GXSetPosition(pEffectDesc->hEffect.pHandle, &pCPDesc->pEffectDesc->vecBasePosion, FALSE);
 				pEffectDesc->hEffect.pDesc->ObjectFunc = EffectOnceAndRemoveFunc;
 			}
 			else if (g_pCPTable[pPacket->sCP_Info.wProperty].bClass == 1)
 			{				
-				EffectDesc* pEffectDesc = g_pEffectLayer->CreateGXObject(g_pObjManager->GetFile(EFFECT_CP_RELEASE2), 1, __CHR_EFFECT_NONE__);
+				AppliedSkill* pEffectDesc = g_pEffectLayer->CreateGXObject(g_pObjManager->GetFile(EFFECT_CP_RELEASE2), 1, __CHR_EFFECT_NONE__);
 				::SetAction( pEffectDesc->hEffect.pHandle, 1, 0, ACTION_ONCE );
 				GXSetPosition(pEffectDesc->hEffect.pHandle, &pCPDesc->pEffectDesc->vecBasePosion, FALSE);
 				pEffectDesc->hEffect.pDesc->ObjectFunc = EffectOnceAndRemoveFunc;
@@ -877,7 +880,7 @@ void CmdSiegeInfo( char* pMsg, DWORD dwLen )
 		POSITION_ pos = g_pMap->m_pCPList->GetHeadPosition();
 		while(pos)
 		{
-			CP_DESC* pCPDesc = (CP_DESC*)g_pMap->m_pCPList->GetNext(pos);
+			CP_DESC* pCPDesc = (CP_DESC*)g_pMap->m_pCPList->GetAndAdvance(pos);
 			if (pPacket->sCP_Info[i].bCPID == pCPDesc->bID)
 			{
 				if (pPacket->sCP_Info[i].bDestroy)
@@ -958,7 +961,7 @@ void CmdUsedPotion( char* pMsg, DWORD dwLen )
 	CUser* pUser = g_pUserHash->GetData(pPacket->dwUserIndex);
 	if (!pUser)	return;
 
-	EffectDesc* pEffectDesc = g_pEffectLayer->CreateGXObject(g_pObjManager->GetFile(EFFECT_HPPOTION), g_pMainPlayer == pUser, __CHR_EFFECT_NONE__);
+	AppliedSkill* pEffectDesc = g_pEffectLayer->CreateGXObject(g_pObjManager->GetFile(EFFECT_HPPOTION), g_pMainPlayer == pUser, __CHR_EFFECT_NONE__);
 	
 	switch(pPacket->bType)
 	{

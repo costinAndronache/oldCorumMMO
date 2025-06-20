@@ -45,7 +45,7 @@ interface ISoundEffect;
 
 typedef struct BASESKILL
 {
-	BYTE			bID;		// 아이디.
+	BYTE			skillKind;		// 아이디.
 	DWORD			dwResourceID;
 	DWORD			dwStatusResourceID;
 	WORD			wProperty; // none : 0, 마법 : 500, Aura : 100, Divine, : 200, Summon : 300, Chakra : 400
@@ -58,8 +58,8 @@ typedef struct BASESKILL
 	BYTE			bSkillType; // none : 0, player : 1, monster : 2, object : 100, 2 직선 : 110, 원 : 120, X범위 : 130, 직교 : 140, 3중충돌 : 150, 타일셋 : 160
 	DWORD			dwRange;
 	DWORD			dwMinMastery;	// 최소 마스터리
-	DWORD			dwCastingTime;
-	DWORD			dwCoolTime;
+	DWORD			dwCastingTimeMilliseconds;
+	DWORD			dwCoolTimeMilliseconds;
 	DWORD			dwEffectPosition; // none : 0, 머리위 : 1, 몸통 : 2, 바닥 : 4
 	BYTE			bJointEffect;
 	BYTE			bFormula;		// 공식 
@@ -101,23 +101,23 @@ public:
 	}
 
 };
-class EffectDesc;
+class AppliedSkill;
 #define LIGHT_DESCEX_TEMP_SHOW 0		// SHOW상태인지 HIDE상태인지.
 struct LIGHT_DESCEX
 {
 	GXLIGHT_HANDLE		m_handle;		// 데미지 입었을때 나타나는 라이트 핸들
 	LIGHT_DESC			m_sLightDesc;			// 라이트 데스크
-	void				(*LightFunc)(EffectDesc*);			// 라이트 펑션.깜빡거리기 위해서..	
+	void				(*LightFunc)(AppliedSkill*);			// 라이트 펑션.깜빡거리기 위해서..	
 	int					m_nDestTick;
 	DWORD				m_dwTemp[10];
 };
 // 이펙트 표현을 위한 구조체.
-class EffectDesc
+class AppliedSkill
 {
 public:
-	EffectDesc(){};
-	~EffectDesc(){};
-	BYTE				bEffectInfoNum;		// 표현할려고 하는 이펙트의 정보 아이디.	
+	AppliedSkill(){};
+	~AppliedSkill(){};
+	BYTE				skillKind;		// 표현할려고 하는 이펙트의 정보 아이디.	
 	BYTE				bJoint;				// 부가 이펙트 리소스 정보.
 	WORD				wChrNum;			// chr 정보 참조 인덱스
 	Effect*				pEffect;				// 이펙트 정보
@@ -146,7 +146,7 @@ public:
 	ISoundEffect*		m_pSound[8];
 	SOUND_FILE_HANDLE	m_hSoundFile[8];
 	
-	DWORD				GetRemainTime(DWORD dwCurTick)	
+	DWORD				GetRemainTime(DWORD dwCurTick)	const
 	{
 		return (hEffect.pDesc->dwDestTime > dwCurTick) ?
 			((hEffect.pDesc->dwDestTime - dwCurTick)/1000) : 0;
@@ -168,18 +168,18 @@ private:
 	DWORD					m_dwCount;
 
 public:
-	EffectDesc*				CreateMagicArray(BYTE bSkillKind, VECTOR3* vecStart, BOOL bOwn);	// 마법을 사용할때 마법원 그리기.
+	AppliedSkill*				CreateMagicArray(BYTE bSkillKind, VECTOR3* vecStart, BOOL bOwn);	// 마법을 사용할때 마법원 그리기.
 	void					SetSkillStatusUserUser(CUser* pTargetUser, BYTE bSkillKind);
 	void					SendSkillStatusUserUser();
-	BOOL					IsEffectUse(BYTE bSkillKind, VECTOR3* vecTarget, DWORD dwStartSkillTick);
-	EffectDesc*				CreateGXObject(char *szFile, BOOL bOwn, WORD wChrNum);
-	EffectDesc*				CreateStatusEffect(BYTE bSkillKind, BYTE bJoint, BOOL bOwn);
+	BOOL					CanSkillBeCastAtPosition(BYTE bSkillKind, VECTOR3* vecTarget);
+	AppliedSkill*				CreateGXObject(char *szFile, BOOL bOwn, WORD wChrNum);
+	AppliedSkill*				CreateStatusEffect(BYTE bSkillKind, BYTE bJoint, BOOL bOwn);
 	void					SetSkillStatusUserMon(CMonster* pMonster, BYTE bSkillKind);
 	void					SendSkillStatusUserMon();
-	EffectDesc*				CreateEffect(BYTE bSkillKind, BYTE bJoint, BOOL bOwn);
-	BOOL					IsEffectShow(EffectDesc* pEffectDesc);
-	void					AttachLight(EffectDesc* pEffectDesc, BYTE bLightNum, void(*LightFunc)(EffectDesc*));
-	void					DetachLight(EffectDesc* pEffectDesc);
+	AppliedSkill*				CreateEffect(BYTE bSkillKind, BYTE bJoint, BOOL bOwn);
+	BOOL					IsEffectShow(AppliedSkill* pEffectDesc);
+	void					AttachLight(AppliedSkill* pEffectDesc, BYTE bLightNum, void(*LightFunc)(AppliedSkill*));
+	void					DetachLight(AppliedSkill* pEffectDesc);
 		
 	void					Init(BOOL bChk);			// 초기화
 	void					LoadScript(BOOL bChk);		// 스크립트 파일을 읽어 와라.

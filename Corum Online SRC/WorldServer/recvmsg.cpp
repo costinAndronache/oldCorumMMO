@@ -507,14 +507,14 @@ void __stdcall OnDisconnectUser(DWORD dwConnectionIndex)
 				{					
 					POSITION_ delPosDungeon = posDungeon;
 
-					DUNGEON_DATA_EX* pDungeon = (DUNGEON_DATA_EX*)pUser->m_pListRefreshFromDungeon->GetNext(posDungeon);
+					DUNGEON_DATA_EX* pDungeon = (DUNGEON_DATA_EX*)pUser->m_pListRefreshFromDungeon->GetAndAdvance(posDungeon);
 					POSITION_ posUser = pDungeon->m_pListSendToUser->GetHeadPosition();
 
 					while(posUser)
 					{	
 						// 던전 갱신되었을때 보내져야될 유저리스트에서 유저를 찾아 없애라.
 						POSITION_ delPosUser = posUser;
-						CWorldUser* pWorldUser = (CWorldUser*)pDungeon->m_pListSendToUser->GetNext(posUser);
+						CWorldUser* pWorldUser = (CWorldUser*)pDungeon->m_pListSendToUser->GetAndAdvance(posUser);
 						
 						if (pWorldUser == pUser)
 						{
@@ -772,7 +772,7 @@ void __PartyDisconnectUser(CWorldUser* pUser)
 			{			
 				posTemp = pos;
 
-				CWorldUser* pPartyUser = (CWorldUser*)lpPartyTable->pPartyUserList->GetNext(pos);
+				CWorldUser* pPartyUser = (CWorldUser*)lpPartyTable->pPartyUserList->GetAndAdvance(pos);
 
 				// 자기 자신일 경우 //
 				if(pPartyUser->m_dwUserIndex==pUser->m_dwUserIndex)
@@ -781,7 +781,7 @@ void __PartyDisconnectUser(CWorldUser* pUser)
 
 					while(posDst)
 					{
-						CWorldUser*	pUserRv	= (CWorldUser*)lpPartyTable->pPartyUserList->GetNext(posDst);
+						CWorldUser*	pUserRv	= (CWorldUser*)lpPartyTable->pPartyUserList->GetAndAdvance(posDst);
 
 						if(!pUserRv)								
 							continue;								
@@ -815,7 +815,7 @@ void __PartyDisconnectUser(CWorldUser* pUser)
 
 						while(posLeader)
 						{
-							CWorldUser* pUserLeader = (CWorldUser*)lpPartyTable->pPartyUserList->GetNext(posLeader);
+							CWorldUser* pUserLeader = (CWorldUser*)lpPartyTable->pPartyUserList->GetAndAdvance(posLeader);
 							
 							if(!pUserLeader)
 								continue;
@@ -889,7 +889,7 @@ void __PartyDisconnectUser(CWorldUser* pUser)
 			{			
 				posTemp = pos;
 
-				CWorldUser*	pUserRv	= (CWorldUser*)lpPartyTable->pPartyUserList->GetNext(pos);						
+				CWorldUser*	pUserRv	= (CWorldUser*)lpPartyTable->pPartyUserList->GetAndAdvance(pos);						
 
 				if(!pUserRv)						
 					continue;																		
@@ -936,7 +936,7 @@ void __PartyDisconnectUser(CWorldUser* pUser)
 				
 				while(pos)
 				{
-					DUNGEON_DATA_EX* pDungeon = (DUNGEON_DATA_EX*)g_pDungeonTable->m_pDungeonVillList->GetNext(pos);
+					DUNGEON_DATA_EX* pDungeon = (DUNGEON_DATA_EX*)g_pDungeonTable->m_pDungeonVillList->GetAndAdvance(pos);
 
 					if(pDungeon && pDungeon->m_pServer)
 					{

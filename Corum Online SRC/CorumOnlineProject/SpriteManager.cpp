@@ -471,7 +471,7 @@ void CSpriteManager::RenderAllSprite()
 
 	while(pos)
 	{
-		V2_SPRITE* pSpr = (V2_SPRITE*)m_pSpriteList->GetNext(pos);
+		V2_SPRITE* pSpr = (V2_SPRITE*)m_pSpriteList->GetAndAdvance(pos);
 		
 		if(pSpr->v2Scaling.x==1.0f && pSpr->v2Scaling.y==1.0f)		
 		{

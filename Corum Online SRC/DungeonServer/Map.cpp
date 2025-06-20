@@ -50,7 +50,7 @@ void CMap::Destroy()
 		while(pos)
 		{
 			POSITION_ del  = pos;
-			delete (CP_DESC*)m_pCPList->GetNext(pos);
+			delete (CP_DESC*)m_pCPList->GetAndAdvance(pos);
 			m_pCPList->RemoveAt(del);
 		}
 

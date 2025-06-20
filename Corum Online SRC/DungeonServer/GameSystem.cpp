@@ -14,7 +14,7 @@
 #include "GameSystemNative.h"
 #include "EventDungeonManager.h"
 #include "MsgProc_for_jjw6263.h"
-
+#include "../CommonServer/CommonClientDungeon.h"
 
 DWORD	g_pdwExp[MAX_LEVEL +1];				// 레벨당 경험치.
 DWORD	g_pdwGuardianExp[MAX_LEVEL +1];		// 레벨당 경험치.
@@ -480,6 +480,29 @@ DWORD GetExpTableOfLevel(GAME_OBJECT_TYPE eObjectType, DWORD dwLevel)
 	return 0;
 }
 
+DWORD	GetCumulatedExpByLevel(GAME_OBJECT_TYPE eObjectType, DWORD dwLevel) {
+	switch (eObjectType)
+	{
+	case OBJECT_TYPE_PLAYER:
+		return cumulatedExperienceAtLevel(dwLevel, g_pdwExp);
+	case OBJECT_TYPE_MONSTER:
+		return cumulatedExperienceAtLevel(dwLevel, g_pdwGuardianExp);
+	}
+
+	return 0;
+}
+
+DWORD	GetLevelForCumulatedExp(GAME_OBJECT_TYPE eObjectType, DWORD cumulatedExp) {
+	switch (eObjectType)
+	{
+	case OBJECT_TYPE_PLAYER:
+		return levelForCumulatedExperience(cumulatedExp, g_pdwExp);
+	case OBJECT_TYPE_MONSTER:
+		return levelForCumulatedExperience(cumulatedExp, g_pdwGuardianExp);
+	}
+
+	return 0;
+}
 
 void MonsterKillByUser( CUser* pUser, CMonster* pMonster )
 {	
