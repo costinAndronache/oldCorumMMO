@@ -129,7 +129,7 @@ void CVoidList::AddTail(CVoidList* pNewList)
     // add a list of same elements
     POSITION_ pos = pNewList->GetHeadPosition();
     while (pos != NULL)
-        AddTail(pNewList->GetNext(pos));
+        AddTail(pNewList->GetAndAdvance(pos));
 }
 
 

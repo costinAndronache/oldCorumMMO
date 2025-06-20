@@ -10,7 +10,7 @@
 #endif // _MSC_VER > 1000
 
 #include "dungeon_data.h"
-#include "VoidList.h"
+#include "../BaseLibrary/VoidList.h"
 struct V2_SPRITE;
 class CUser;
 

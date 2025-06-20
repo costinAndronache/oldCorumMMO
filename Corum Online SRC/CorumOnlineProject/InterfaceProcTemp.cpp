@@ -209,7 +209,7 @@ int CUserInterface::BeltProcForInterface()
 
 										while(pos)
 										{
-											DUNGEON_DATA_EX* pDungeon = (DUNGEON_DATA_EX*)g_pDungeonTable->m_pReceivedDungeonList->GetNext(pos);
+											DUNGEON_DATA_EX* pDungeon = (DUNGEON_DATA_EX*)g_pDungeonTable->m_pReceivedDungeonList->GetAndAdvance(pos);
 
 											if(pDungeon)
 											{

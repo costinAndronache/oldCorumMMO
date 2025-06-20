@@ -48,21 +48,22 @@ void __stdcall Normalize (VECTOR2* OUT pv2Result,VECTOR2* IN pv2Arg1)
 	pv2Result->y = v3Result.z;
 }
 
-int	SkillResult_Unit_Unit(CUnit* pUser
-						  , CUnit* pMonster
+int	SkillResult_Unit_Unit(CUnit* caster
+						  , CUnit* targetedUnit
 						  , BYTE bSkillKind
 						  , BYTE bSkillLevel
 						  , DWORD& dwTime
 						  , WORD wAttackDamage[2]
-						  , LPSKILL_RESULT pResult)
-{
+						  , LPSKILL_RESULT pResult) {
+	printf("\nSkillResult_Unit_Unit::");
+
 	Effect* pEffect = g_pEffectLayer->GetEffectInfo(bSkillKind);
 	BOOL bSuccess = FALSE;
 	BYTE bType = 2;
 
-	if( pUser->GetEffectDesc(__SKILL_HIDING__) )
+	if( caster->GetEffectDesc(__SKILL_HIDING__) )
 	{
-		pUser->DetachSkill( pUser->GetEffectDesc( __SKILL_HIDING__ ));
+		caster->DetachSkill( caster->GetEffectDesc( __SKILL_HIDING__ ));
 	}
 		
 	switch(pEffect->bSuccessFormula)
@@ -73,26 +74,26 @@ int	SkillResult_Unit_Unit(CUnit* pUser
 		}break;
 	case 1:
 		{
-			bSuccess = g_pEffectLayer->IsSuccessByFormula1(pUser->GetAttackAcuracy()
-						, pMonster->GetAvoid()
-						, pMonster->GetBlockRate()
-						, pUser->GetLevel()
-						, pMonster->GetLevel()); 
+			bSuccess = g_pEffectLayer->IsSuccessByFormula1(caster->GetAttackAcuracy()
+						, targetedUnit->GetAvoid()
+						, targetedUnit->GetBlockRate()
+						, caster->GetLevel()
+						, targetedUnit->GetLevel()); 
 		}break;
 	case 2:
 		{
 			bSuccess = g_pEffectLayer->IsSuccessByFormula2(bSkillKind
 						, bSkillLevel
-						, pUser->GetLevel()
-						, pMonster->GetLevel());
+						, caster->GetLevel()
+						, targetedUnit->GetLevel());
 		}break;
 	case 3:
 		{
-			bSuccess = g_pEffectLayer->IsSuccessByFormula1(pUser->GetAttackAcuracy()
-						, pMonster->GetAvoid()
-						, pMonster->GetBlockRate()
-						, pUser->GetLevel()
-						, pMonster->GetLevel()); 
+			bSuccess = g_pEffectLayer->IsSuccessByFormula1(caster->GetAttackAcuracy()
+						, targetedUnit->GetAvoid()
+						, targetedUnit->GetBlockRate()
+						, caster->GetLevel()
+						, targetedUnit->GetLevel()); 
 		}break;
 	case 4:
 		{
@@ -104,25 +105,25 @@ int	SkillResult_Unit_Unit(CUnit* pUser
 			{
 				fPlusDP = g_pEffectLayer->GetFormula3(bSkillKind
 							, bSkillLevel
-							, pMonster->GetClass());
+							, targetedUnit->GetClass());
 				fPlusBL = g_pEffectLayer->GetFormula3(bSkillKind
 							, bSkillLevel
-							, pMonster->GetClass());
+							, targetedUnit->GetClass());
 			}
 
-			bSuccess = g_pEffectLayer->IsSuccessByFormula1(pUser->GetAttackAcuracy()
-				, WORD(pMonster->GetAvoid()+pMonster->GetAvoid()*fPlusDP)
-				, WORD(pMonster->GetBlockRate()+pMonster->GetBlockRate()*fPlusBL)
-				, pUser->GetLevel(), pMonster->GetLevel()); 
+			bSuccess = g_pEffectLayer->IsSuccessByFormula1(caster->GetAttackAcuracy()
+				, WORD(targetedUnit->GetAvoid()+targetedUnit->GetAvoid()*fPlusDP)
+				, WORD(targetedUnit->GetBlockRate()+targetedUnit->GetBlockRate()*fPlusBL)
+				, caster->GetLevel(), targetedUnit->GetLevel()); 
 			
 		}break;
 	case 5:
 		{
 			bSuccess = g_pEffectLayer->IsSuccessByFormula5(bSkillKind
 						, bSkillLevel
-						, BYTE(pUser->GetSkillLevel(__SKILL_SUMMONMASTERY__)-1)
-						, pUser->GetLevel()
-						, pMonster->GetLevel());
+						, BYTE(caster->GetSkillLevel(__SKILL_SUMMONMASTERY__)-1)
+						, caster->GetLevel()
+						, targetedUnit->GetLevel());
 		}break;
 	case 6:
 		{
@@ -130,21 +131,21 @@ int	SkillResult_Unit_Unit(CUnit* pUser
 		}break;
 	}
 
-	if (bSuccess > 0)
-	{
+	if (bSuccess > 0) {
+		printf("\nSkill cast success!");
 		// 기존에 사용중이던 스킬을 없애라.
-		if( pMonster->GetEffectDesc(bSkillKind) )
+		if( targetedUnit->GetEffectDesc(bSkillKind) )
 		{
-			pMonster->DetachSkill(pMonster->GetEffectDesc(bSkillKind));
+			targetedUnit->DetachSkill(targetedUnit->GetEffectDesc(bSkillKind));
 		}
 		
 		DWORD dwAlphaDamage = 0;
 
-		if (pMonster->AttachSkill(BYTE(pUser->GetObjectType())
-				, pUser->GetID()
+		if (targetedUnit->AttachSkill(BYTE(caster->GetObjectType())
+				, caster->GetID()
 				, bSkillKind
 				, bSkillLevel
-				, pUser->GetClass()
+				, caster->GetClass()
 				, dwTime
 				, dwAlphaDamage))
 		{	
@@ -153,47 +154,47 @@ int	SkillResult_Unit_Unit(CUnit* pUser
 			pResult->nDamage = rand()%( wAttackDamage[1] - wAttackDamage[0] + 1 );
 			pResult->nDamage += wAttackDamage[0];
 
-			if (pMonster->GetEffectDesc(bSkillKind))
+			if (targetedUnit->GetEffectDesc(bSkillKind))
 			{
-				EffectDesc* pEffectDesc = pMonster->GetEffectDesc(bSkillKind);
+				AppliedSkill* pEffectDesc = targetedUnit->GetEffectDesc(bSkillKind);
 				pResult->nDamage += pEffectDesc->dwTemp[EFFECT_DESC_TEMP_POISON_DAMAGE_MIN]; // 풀데미지 
 					//pMonster->GetEffectDesc(bSkillKind)->dwTemp[EFFECT_DESC_TEMP_POISON_DAMAGE_MIN]; // 풀데미지
 			}
 
 			// 데토네이션이면서 주인있ㄴ놈은 데미지 입히지 말고 폭팔 걸어라.
-			if (bSkillKind == __SKILL_DETONATION__ && pMonster->GetLord())
+			if (bSkillKind == __SKILL_DETONATION__ && targetedUnit->GetLord())
 			{
 				pResult->nDamage  = 0;
 			}
 
-			pResult->nDamage = pMonster->GetReduceDamageForObject(pResult->nDamage, pUser);
+			pResult->nDamage = targetedUnit->GetReduceDamageForObject(pResult->nDamage, caster);
 			
 			// 그린엘리멘탈 슬립버그 임시로 막음 , 2005.02.21 김영대 
 			if( bSkillKind != __SKILL_SLEEP__ && pResult->nDamage )
 			{
-				if (pMonster->GetEffectDesc(__SKILL_SLEEP__))
-					pMonster->DetachSkill( pMonster->GetEffectDesc(__SKILL_SLEEP__ ));
-				if ( pMonster->GetEffectDesc(__SKILL_SOULETER__) )
-					pMonster->DetachSkill(pMonster->GetEffectDesc(__SKILL_SOULETER__));
-				if ( pMonster->GetEffectDesc(__SKILL_CALMDOWN__) )
-					pMonster->DetachSkill(pMonster->GetEffectDesc(__SKILL_CALMDOWN__));
+				if (targetedUnit->GetEffectDesc(__SKILL_SLEEP__))
+					targetedUnit->DetachSkill( targetedUnit->GetEffectDesc(__SKILL_SLEEP__ ));
+				if ( targetedUnit->GetEffectDesc(__SKILL_SOULETER__) )
+					targetedUnit->DetachSkill(targetedUnit->GetEffectDesc(__SKILL_SOULETER__));
+				if ( targetedUnit->GetEffectDesc(__SKILL_CALMDOWN__) )
+					targetedUnit->DetachSkill(targetedUnit->GetEffectDesc(__SKILL_CALMDOWN__));
 			
 			}
 
 			pResult->nDamage = GetPropertyRealDamageByResist(BYTE(pEffect->wProperty%10)
 								, pResult->nDamage
-								, BYTE(pUser->GetObjectType())
-								, pUser->GetID()
-								, BYTE(pMonster->GetObjectType())
-								, pMonster->GetID());
+								, BYTE(caster->GetObjectType())
+								, caster->GetID()
+								, BYTE(targetedUnit->GetObjectType())
+								, targetedUnit->GetID());
 			
 			if (bSkillKind == 	__SKILL_POISONING__	|| bSkillKind == __SKILL_POSIONCLOUD__)
 			{
-				EffectDesc* pEffectDesc = pMonster->GetEffectDesc(bSkillKind);
+				AppliedSkill* pEffectDesc = targetedUnit->GetEffectDesc(bSkillKind);
 
 				pEffectDesc->dwTemp[EFFECT_DESC_TEMP_POISON_DAMAGE_MIN] = pResult->nDamage;
-				pEffectDesc->dwTemp[EFFECT_DESC_TEMP_POISON_OWNER_TYPE] = pUser->GetObjectType();
-				pEffectDesc->dwTemp[EFFECT_DESC_TEMP_POISON_OWNER_INDEX] = pUser->GetID();
+				pEffectDesc->dwTemp[EFFECT_DESC_TEMP_POISON_OWNER_TYPE] = caster->GetObjectType();
+				pEffectDesc->dwTemp[EFFECT_DESC_TEMP_POISON_OWNER_INDEX] = caster->GetID();
 			} 
 			else if(bSkillKind == __SKILL_CALMDOWN__ || bSkillKind == __SKILL_HEAL__)
 			{
@@ -201,14 +202,14 @@ int	SkillResult_Unit_Unit(CUnit* pUser
 			}
 			else
 			{
-				if (pMonster->GetHP() < DWORD(pResult->nDamage)) 
+				if (targetedUnit->GetHP() < DWORD(pResult->nDamage)) 
 				{
-					pMonster->SetHP(0, pUser);
+					targetedUnit->SetHP(0, caster);
 				}
 				else
 				{
-					pMonster->SetHP(pMonster->GetHP() -pResult->nDamage, pUser); 
-					pMonster->ChangeTargetObject(pUser, pResult->nDamage);
+					targetedUnit->SetHP(targetedUnit->GetHP() -pResult->nDamage, caster); 
+					targetedUnit->ChangeTargetObject(caster, pResult->nDamage);
 				}
 			}
 
@@ -318,6 +319,7 @@ lbl_fail:
 
 int	SkillResult_System_User(CUser* pTargetUser, BYTE bSkillKind, BYTE bSkillLevel, DWORD& dwTime, WORD wMinMax[2], LPSKILL_RESULT pResult)
 {
+	printf("\n SkillResult_System_User:: time: %d", dwTime);
 	// 기존에 사용중이던 스킬을 없애라.
 	if( pTargetUser->GetEffectDesc(bSkillKind))
 		pTargetUser->DetachSkill(pTargetUser->GetEffectDesc(bSkillKind));
@@ -824,7 +826,7 @@ int GetDamageCircle(PARAM_TARGETCOUNT* pParam)
 		
 	while(pos)
 	{
-		pMonster = (CMonster*)pStartingPointSection->m_pMonsterList->GetNext(pos);
+		pMonster = (CMonster*)pStartingPointSection->m_pMonsterList->GetAndAdvance(pos);
 
 		if (IsCollitionByCircle(pParam->pDungeonLayer, pParam->vecStart, pMonster->GetCurPosition(), BYTE(nMax)))
 		{
@@ -840,7 +842,7 @@ int GetDamageCircle(PARAM_TARGETCOUNT* pParam)
 		
 	while(pos)
 	{
-		pUser = (CUser*)pStartingPointSection->m_pPcList->GetNext(pos);
+		pUser = (CUser*)pStartingPointSection->m_pPcList->GetAndAdvance(pos);
 
 		if (IsCollitionByCircle(pParam->pDungeonLayer, pParam->vecStart, pUser->GetCurPosition(), BYTE(nMax)))
 		{
@@ -867,7 +869,7 @@ int GetDamageCircle(PARAM_TARGETCOUNT* pParam)
 
 		while(pos)
 		{
-			pMonster = (CMonster*)pLinkSection->m_pMonsterList->GetNext(pos);
+			pMonster = (CMonster*)pLinkSection->m_pMonsterList->GetAndAdvance(pos);
 			
 			if (IsCollitionByCircle(pParam->pDungeonLayer, pParam->vecStart, pMonster->GetCurPosition(), BYTE(nMax)))
 			{
@@ -881,7 +883,7 @@ int GetDamageCircle(PARAM_TARGETCOUNT* pParam)
 
 		while(pos)
 		{
-			pUser = (CUser*)pLinkSection->m_pPcList->GetNext(pos);
+			pUser = (CUser*)pLinkSection->m_pPcList->GetAndAdvance(pos);
 			
 			if (IsCollitionByCircle(pParam->pDungeonLayer, pParam->vecStart, pUser->GetCurPosition(), BYTE(nMax)))
 			{
@@ -966,24 +968,24 @@ int	GetSummon(PARAM_TARGETCOUNT* pParam)
 	// 한마리씩만 소환가능하다. 나중에 또 여러마리 소환가능할지도 모르니깐 4
 	for(int i = 0; i < MAX_USER_GUARDIAN; ++i)
 	{
-		if (pUser->m_pMonster[i])
+		if (pUser->servantMonsters[i])
 		{			
-			if (pEffect->bID == __SKILL_REDELEMENTAL__ && 
-				pUser->m_pMonster[i]->GetEffectDesc(pEffect->bID))
+			if (pEffect->skillKind == __SKILL_REDELEMENTAL__ && 
+				pUser->servantMonsters[i]->GetEffectDesc(pEffect->skillKind))
 			{
-				pUser->m_pMonster[i]->DetachSkill(pUser->m_pMonster[i]->GetEffectDesc(pEffect->bID));
+				pUser->servantMonsters[i]->DetachSkill(pUser->servantMonsters[i]->GetEffectDesc(pEffect->skillKind));
 				break;
 			}
-			else if (pEffect->bID == __SKILL_BLUEELEMENTAL__ && 
-				pUser->m_pMonster[i]->GetEffectDesc(pEffect->bID))
+			else if (pEffect->skillKind == __SKILL_BLUEELEMENTAL__ && 
+				pUser->servantMonsters[i]->GetEffectDesc(pEffect->skillKind))
 			{
-				pUser->m_pMonster[i]->DetachSkill(pUser->m_pMonster[i]->GetEffectDesc(pEffect->bID));
+				pUser->servantMonsters[i]->DetachSkill(pUser->servantMonsters[i]->GetEffectDesc(pEffect->skillKind));
 				break;
 			}
-			else if (pEffect->bID == __SKILL_GREENELEMENTAL__ && 
-				pUser->m_pMonster[i]->GetEffectDesc(pEffect->bID))
+			else if (pEffect->skillKind == __SKILL_GREENELEMENTAL__ && 
+				pUser->servantMonsters[i]->GetEffectDesc(pEffect->skillKind))
 			{
-				pUser->m_pMonster[i]->DetachSkill(pUser->m_pMonster[i]->GetEffectDesc(pEffect->bID));
+				pUser->servantMonsters[i]->DetachSkill(pUser->servantMonsters[i]->GetEffectDesc(pEffect->skillKind));
 				break;
 			}
 		}
@@ -1035,7 +1037,7 @@ int	GetDamageBox(PARAM_TARGETCOUNT* pParam)
 
 	while(pos)
 	{
-		pMonster = (CMonster*)pStartingPointSection->m_pMonsterList->GetNext(pos);
+		pMonster = (CMonster*)pStartingPointSection->m_pMonsterList->GetAndAdvance(pos);
 
 		if (IsCollitionByBox(pParam->pDungeonLayer, &vecStart, pMonster->GetCurPosition(), BYTE(nMax)))
 		{
@@ -1050,7 +1052,7 @@ int	GetDamageBox(PARAM_TARGETCOUNT* pParam)
 		
 	while(pos)
 	{
-		pUser = (CUser*)pStartingPointSection->m_pPcList->GetNext(pos);
+		pUser = (CUser*)pStartingPointSection->m_pPcList->GetAndAdvance(pos);
 
 		if (IsCollitionByBox(pParam->pDungeonLayer, &vecStart
 			, pUser->GetCurPosition(), BYTE(nMax)))
@@ -1075,7 +1077,7 @@ int	GetDamageBox(PARAM_TARGETCOUNT* pParam)
 
 		while(pos)
 		{
-			pMonster = (CMonster*)pLinkSection->m_pMonsterList->GetNext(pos);
+			pMonster = (CMonster*)pLinkSection->m_pMonsterList->GetAndAdvance(pos);
 			
 			if (IsCollitionByBox(pParam->pDungeonLayer, &vecStart, 
 				pMonster->GetCurPosition(), BYTE(nMax)))
@@ -1090,7 +1092,7 @@ int	GetDamageBox(PARAM_TARGETCOUNT* pParam)
 
 		while(pos)
 		{
-			pUser = (CUser*)pLinkSection->m_pPcList->GetNext(pos);
+			pUser = (CUser*)pLinkSection->m_pPcList->GetAndAdvance(pos);
 			
 			if (IsCollitionByBox(pParam->pDungeonLayer, &vecStart
 				, pUser->GetCurPosition(), BYTE(nMax)))
@@ -1141,7 +1143,7 @@ int	GetDamage8Line(PARAM_TARGETCOUNT* pParam)
 			
 		while(pos)
 		{
-			pMonster = (CMonster*)pStartingPointSection->m_pMonsterList->GetNext(pos);
+			pMonster = (CMonster*)pStartingPointSection->m_pMonsterList->GetAndAdvance(pos);
 
 			if (IsCollitionByLine(pParam->pDungeonLayer, pParam->vecStart
 				, fRad, pMonster->GetCurPosition(), BYTE(nMax)))
@@ -1157,7 +1159,7 @@ int	GetDamage8Line(PARAM_TARGETCOUNT* pParam)
 			
 		while ( pos )
 		{
-			pUser = (CUser*)pStartingPointSection->m_pPcList->GetNext(pos);
+			pUser = (CUser*)pStartingPointSection->m_pPcList->GetAndAdvance(pos);
 
 			if ( IsCollitionByLine( pParam->pDungeonLayer, pParam->vecStart, fRad, pUser->GetCurPosition(), BYTE(nMax)) )
 			{
@@ -1180,7 +1182,7 @@ int	GetDamage8Line(PARAM_TARGETCOUNT* pParam)
 
 			while(pos)
 			{
-				pMonster = (CMonster*)pLinkSection->m_pMonsterList->GetNext(pos);
+				pMonster = (CMonster*)pLinkSection->m_pMonsterList->GetAndAdvance(pos);
 				
 				if (IsCollitionByLine(pParam->pDungeonLayer, pParam->vecStart
 					, fRad, pMonster->GetCurPosition(), BYTE(nMax)))
@@ -1195,7 +1197,7 @@ int	GetDamage8Line(PARAM_TARGETCOUNT* pParam)
 
 			while(pos)
 			{
-				pUser = (CUser*)pLinkSection->m_pPcList->GetNext(pos);
+				pUser = (CUser*)pLinkSection->m_pPcList->GetAndAdvance(pos);
 				
 				if (IsCollitionByLine(pParam->pDungeonLayer, pParam->vecStart
 					, fRad, pUser->GetCurPosition(), BYTE(nMax)))
@@ -1235,7 +1237,7 @@ int GetDamageLine(PARAM_TARGETCOUNT* pParam)
 		
 	while(pos)
 	{
-		pMonster = (CMonster*)pStartingPointSection->m_pMonsterList->GetNext(pos);
+		pMonster = (CMonster*)pStartingPointSection->m_pMonsterList->GetAndAdvance(pos);
 
 		if (IsCollitionByLine(pParam->pDungeonLayer, pParam->vecDest
 			, fRad, pMonster->GetCurPosition(), BYTE(nMax)))
@@ -1251,7 +1253,7 @@ int GetDamageLine(PARAM_TARGETCOUNT* pParam)
 		
 	while(pos)
 	{
-		pUser = (CUser*)pStartingPointSection->m_pPcList->GetNext(pos);
+		pUser = (CUser*)pStartingPointSection->m_pPcList->GetAndAdvance(pos);
 
 		if (IsCollitionByLine(pParam->pDungeonLayer, pParam->vecDest
 			, fRad, pUser->GetCurPosition(), BYTE(nMax)))
@@ -1274,7 +1276,7 @@ int GetDamageLine(PARAM_TARGETCOUNT* pParam)
 
 		while(pos)
 		{
-			pMonster = (CMonster*)pLinkSection->m_pMonsterList->GetNext(pos);
+			pMonster = (CMonster*)pLinkSection->m_pMonsterList->GetAndAdvance(pos);
 			
 			if (IsCollitionByLine(pParam->pDungeonLayer, pParam->vecDest
 				, fRad, pMonster->GetCurPosition(), BYTE(nMax)))
@@ -1289,7 +1291,7 @@ int GetDamageLine(PARAM_TARGETCOUNT* pParam)
 
 		while(pos)
 		{
-			pUser = (CUser*)pLinkSection->m_pPcList->GetNext(pos);
+			pUser = (CUser*)pLinkSection->m_pPcList->GetAndAdvance(pos);
 			
 			if (IsCollitionByLine(pParam->pDungeonLayer, pParam->vecDest
 				, fRad, pUser->GetCurPosition(), BYTE(nMax)))
@@ -1326,7 +1328,7 @@ int GetDamageArc(PARAM_TARGETCOUNT* pParam)
 		
 	while(pos)
 	{
-		pMonster = (CMonster*)pStartingPointSection->m_pMonsterList->GetNext(pos);
+		pMonster = (CMonster*)pStartingPointSection->m_pMonsterList->GetAndAdvance(pos);
 		if (IsCollitionByArc(pParam->pDungeonLayer, pParam->vecDest
 			, fRad, pMonster->GetCurPosition(), BYTE(nMax)))
 		{
@@ -1342,7 +1344,7 @@ int GetDamageArc(PARAM_TARGETCOUNT* pParam)
 		
 	while(pos)
 	{
-		pUser = (CUser*)pStartingPointSection->m_pPcList->GetNext(pos);
+		pUser = (CUser*)pStartingPointSection->m_pPcList->GetAndAdvance(pos);
 		if (IsCollitionByArc(pParam->pDungeonLayer, pParam->vecDest
 			, fRad, pUser->GetCurPosition(), BYTE(nMax)))
 		{
@@ -1368,7 +1370,7 @@ int GetDamageArc(PARAM_TARGETCOUNT* pParam)
 
 		while(pos)
 		{
-			pMonster = (CMonster*)pLinkSection->m_pMonsterList->GetNext(pos);
+			pMonster = (CMonster*)pLinkSection->m_pMonsterList->GetAndAdvance(pos);
 			
 			if (IsCollitionByArc(pParam->pDungeonLayer, pParam->vecDest
 				, fRad, pMonster->GetCurPosition(), BYTE(nMax)))
@@ -1383,7 +1385,7 @@ int GetDamageArc(PARAM_TARGETCOUNT* pParam)
 
 		while(pos)
 		{
-			pUser = (CUser*)pLinkSection->m_pPcList->GetNext(pos);
+			pUser = (CUser*)pLinkSection->m_pPcList->GetAndAdvance(pos);
 			
 			if (IsCollitionByArc(pParam->pDungeonLayer, pParam->vecDest
 				, fRad, pUser->GetCurPosition(), BYTE(nMax)))
@@ -1791,10 +1793,6 @@ int	IsSkillUserUser(BYTE bSkillKind, CUser *pOwnUser, CUser* pTargetUser, BYTE b
 
 	Effect* pEffect = g_pEffectLayer->GetEffectInfo(bSkillKind);
 
-#ifdef JAPAN_LOCALIZING	//	일본은 배쉬 스킬 대인공격 안됨!!
-	if (pEffect->bID == __SKILL_BASH__)	// added by minjin. 2004. 10. 30.
-		return 0;
-#endif
 
 	if (!IsSkillUser(bSkillKind, pTargetUser))
 	{
@@ -1830,7 +1828,7 @@ int	IsSkillUserUser(BYTE bSkillKind, CUser *pOwnUser, CUser* pTargetUser, BYTE b
 }
 
 
-int	IsSkillUserMon(BYTE bSkillKind, CUser *pOwnUser, CMonster* pTargetMonster)
+int	CanUserCastSkillOnMonster(BYTE bSkillKind, CUser *pOwnUser, CMonster* pTargetMonster)
 {
 	if(bSkillKind >= MAX_SKILL) return 0;
 	if(!pOwnUser)				return 0;
@@ -1879,10 +1877,10 @@ void SystemSkillToUser(CDungeonLayer* pLayer
 					   , DWORD dwOwnIndex
 					   , CUser* pTargetUser)
 {
-	SKILLDESC skillDesc;
-	skillDesc.dwOwnIndex		= int(pvecStartPosition->x/TILE_WIDTH)<<16 | int(pvecStartPosition->y/TILE_HEIGHT);
-	skillDesc.bOwnType			= OBJECT_TYPE_SKILL;
-	skillDesc.bPK				= 0;
+	SkillCast skillDesc;
+	skillDesc.casterDungeonID		= int(pvecStartPosition->x/TILE_WIDTH)<<16 | int(pvecStartPosition->y/TILE_HEIGHT);
+	skillDesc.casterType			= OBJECT_TYPE_SKILL;
+	skillDesc.casterPlayerPKFlagEnabled				= 0;
 	skillDesc.bSectionNum		= pTargetUser->GetPrevSectionNum();
 	skillDesc.bSkillKind		= bSkillKind;
 	skillDesc.bSkillLevel		= bSkillLevel;
@@ -1890,7 +1888,7 @@ void SystemSkillToUser(CDungeonLayer* pLayer
 	skillDesc.dwSkillKeepTime	= dwTime;
 	skillDesc.dwTargetIndex		= pTargetUser->GetID();
 	skillDesc.pDungeonLayer		= pLayer;
-	skillDesc.v2OwnObjectPos	= *pvecStartPosition;
+	skillDesc.casterPosition	= *pvecStartPosition;
 	skillDesc.wDamageMinMax[0]	= WORD(wMinMax[0]/4);
 	skillDesc.wDamageMinMax[1]	= WORD(wMinMax[1]/4);
 	skillDesc.wTileIndex_X		= 0;
@@ -1902,8 +1900,8 @@ void SystemSkillToUser(CDungeonLayer* pLayer
 		skillDesc.pMonsterMaster = g_pUserHash->GetData(dwOwnIndex);
 		if (skillDesc.pMonsterMaster)
 		{
-			skillDesc.bPK = skillDesc.pMonsterMaster->m_sPKDescInfo.m_bPKMode;
-			skillDesc.dwOwnIndex = skillDesc.pMonsterMaster->GetID();			
+			skillDesc.casterPlayerPKFlagEnabled = skillDesc.pMonsterMaster->m_sPKDescInfo.m_bPKMode;
+			skillDesc.casterDungeonID = skillDesc.pMonsterMaster->GetID();			
 		}
 	}
 	
@@ -1920,11 +1918,11 @@ void SystemSkillToMonster(CDungeonLayer* pLayer
 							, DWORD dwOwnIndex
 							, CMonster* pTargetMonster)
 {	
-	SKILLDESC skillDesc;
+	SkillCast skillDesc;
 
-	skillDesc.dwOwnIndex		= int(pvecStartPosition->x/TILE_WIDTH)<<16 | int(pvecStartPosition->y/TILE_HEIGHT);
-	skillDesc.bOwnType			= OBJECT_TYPE_SKILL;
-	skillDesc.bPK				= 0;
+	skillDesc.casterDungeonID		= int(pvecStartPosition->x/TILE_WIDTH)<<16 | int(pvecStartPosition->y/TILE_HEIGHT);
+	skillDesc.casterType			= OBJECT_TYPE_SKILL;
+	skillDesc.casterPlayerPKFlagEnabled				= 0;
 	skillDesc.bSectionNum		= pTargetMonster->GetPrevSectionNum();
 	skillDesc.bSkillKind		= bSkillKind;
 	skillDesc.bSkillLevel		= bSkillLevel;
@@ -1932,7 +1930,7 @@ void SystemSkillToMonster(CDungeonLayer* pLayer
 	skillDesc.dwSkillKeepTime	= dwTime;
 	skillDesc.dwTargetIndex		= pTargetMonster->GetID();
 	skillDesc.pDungeonLayer		= pLayer;
-	skillDesc.v2OwnObjectPos	= *pvecStartPosition;
+	skillDesc.casterPosition	= *pvecStartPosition;
 	skillDesc.wDamageMinMax[0]	= wMinMax[0];
 	skillDesc.wDamageMinMax[1]	= wMinMax[1];
 	skillDesc.wTileIndex_X		= 0;
@@ -1944,8 +1942,8 @@ void SystemSkillToMonster(CDungeonLayer* pLayer
 		skillDesc.pMonsterMaster = g_pUserHash->GetData(dwOwnIndex);
 		if (skillDesc.pMonsterMaster)
 		{
-			skillDesc.bPK = skillDesc.pMonsterMaster->m_sPKDescInfo.m_bPKMode;
-			skillDesc.dwOwnIndex = skillDesc.pMonsterMaster->GetID();
+			skillDesc.casterPlayerPKFlagEnabled = skillDesc.pMonsterMaster->m_sPKDescInfo.m_bPKMode;
+			skillDesc.casterDungeonID = skillDesc.pMonsterMaster->GetID();
 		}
 	}
 

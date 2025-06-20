@@ -26,12 +26,235 @@
 #include "RivalGuildWar.h"
 #include "../CommonServer/ItemManagerDefine.h"
 
-CMainUser::CMainUser()
-{
-	memset(this, 0, sizeof(CMainUser));
+void listenersUpdate(const std::vector<CMainUserUpdateInterestedWeakRef>& listeners, 
+					std::function<void(CMainUserUpdateInterestedSharedRef)> f) {
+	std::for_each(listeners.begin(), listeners.end(), [&f](CMainUserUpdateInterestedWeakRef ref) {
+		auto listener = ref.lock();
+		if (listener) {
+			f(listener);
+		}
+	});
+}
+
+void				CMainUser::OnCastPhaseBegin(BYTE bSkillKind, VECTOR3& vecTarget, BOOL bDirection, int spOffsetPerSecond) {
+	printf("\nOnCastPhaseBegin");
+	CUser::OnCastPhaseBegin(bSkillKind, vecTarget, bDirection, spOffsetPerSecond);
+	continousSkillCastSPUpdateTimer->launchAfter(1000, true, [this, spOffsetPerSecond]() {
+		printf("\nAdding: %d to current sp", spOffsetPerSecond);
+		this->updateCurrentSP(max(0, (int)this->currentSP() + spOffsetPerSecond));
+	});
+}
+void				CMainUser::OnCastPhaseEndExecutionPhaseBegin(BYTE bSkillKind) {
+	CUser::OnCastPhaseEndExecutionPhaseBegin(bSkillKind);
+	printf("\nOnCastPhaseEnd");
+	continousSkillCastSPUpdateTimer->cancelCurrentSetup();
+}
+
+float			CMainUser::percentageHP() const {
+	return (float)currentHP() / (maxHP() ? maxHP() : 0.01);
+}
+
+float			CMainUser::percentageMP() const {
+	return (float)currentSP() / (maxSP() ? maxSP() : 0.01);
+}
+
+float			CMainUser::percentageCoolPoints() const {
+	return currentCoolPoints() / (maxCoolPoints() ? maxCoolPoints() : 0.01);
+}
+
+float			CMainUser::currentCoolPoints() const {
+	return m_fCurCoolPoint;
+}
+
+void			CMainUser::updateCurrentCoolPoints(float points) {
+	const auto oldValue = m_fCurCoolPoint;
+	m_fCurCoolPoint = points;
+	listenersUpdate(updateListeners, [this, oldValue, points](CMainUserUpdateInterestedSharedRef listener) {
+		listener->updatedCoolPoints(this, oldValue, points);
+	});
+}
+
+float			CMainUser::maxCoolPoints() const {
+	return m_fMaxCoolPoint;
+}
+
+void			CMainUser::updateMaxCoolPoints(float points) {
+	m_fMaxCoolPoint = points;
+}
+
+//
+void			CMainUser::addUpdateListener(CMainUserUpdateInterestedWeakRef ref) {
+	updateListeners.push_back(ref);
+}
+
+DWORD			CMainUser::currentHP() const {
+	return m_dwHP;
+}
+
+void			CMainUser::updateCurrentHP(DWORD hp) {
+	const auto oldValue = m_dwHP;
+	m_dwHP = hp;
+
+	listenersUpdate(updateListeners, [this, oldValue, hp](CMainUserUpdateInterestedSharedRef listener) {
+		listener->updatedCurrentHP(this, oldValue, hp);
+	});
+}
+
+DWORD			CMainUser::currentSP() const {
+	return m_dwMP;
+}
+
+void			CMainUser::updateCurrentSP(DWORD sp) {
+	const auto oldValue = m_dwMP;
+	const auto diff = (long)sp - (long)oldValue;
+
+	m_dwMP = sp;
+	listenersUpdate(updateListeners, [this, oldValue, sp](CMainUserUpdateInterestedSharedRef listener) {
+		listener->updatedCurrentSP(this, oldValue, sp);
+	});
+}
+
+DWORD			CMainUser::maxHP() const {
+	return m_dwMaxHP;
+}
+
+void			CMainUser::updateMaxHP(DWORD maxHP) {
+	const auto oldValue = m_dwMaxHP;
+	m_dwMaxHP = maxHP;
+	listenersUpdate(updateListeners, [this, oldValue, maxHP](CMainUserUpdateInterestedSharedRef listener) {
+		listener->updatedMAXHP(this, oldValue, maxHP);
+	});
+}
+
+DWORD			CMainUser::maxSP() const {
+	return m_dwMaxMP;
+}
+
+void			CMainUser::updateMaxSP(DWORD maxSP) {
+	const auto oldValue = m_dwMaxMP;
+	m_dwMaxMP = maxSP;
+	listenersUpdate(updateListeners, [this, oldValue, maxSP](CMainUserUpdateInterestedSharedRef listener) {
+		listener->updatedMAXSP(this, oldValue, maxSP);
+	});
+}
+
+DWORD			CMainUser::currentStatPoints() const {
+	return m_dwPoint;
+}
+
+void			CMainUser::updateCurrentStatPoints(DWORD points) {
+	const auto oldValue = m_dwPoint;
+	m_dwPoint = points;
+	listenersUpdate(updateListeners, [this, oldValue, points](CMainUserUpdateInterestedSharedRef listener) {
+		listener->updatedStatPoints(this, oldValue, points);
+	});
+}
+
+
+DWORD			CMainUser::currentSkillPoints() const {
+	return m_dwPointSkill;
+}
+
+void			CMainUser::updateCurrentSkillPoints(DWORD skillPoints) {
+	const auto oldValue = m_dwPointSkill;
+	m_dwPointSkill = skillPoints;
+	listenersUpdate(updateListeners, [this, oldValue, skillPoints](CMainUserUpdateInterestedSharedRef listener) {
+		listener->updatedSkillPoints(this, oldValue, skillPoints);
+	});
+}
+
+DWORD			CMainUser::currentEXP() const {
+	return m_dwExp;
+}
+
+void			CMainUser::updateCurrentEXP(DWORD exp) {
+	const auto oldValue = m_dwExp;
+	m_dwExp = exp;
+	listenersUpdate(updateListeners, [this, oldValue, exp](CMainUserUpdateInterestedSharedRef listener) {
+		listener->updatedEXP(this, oldValue, exp);
+	});
+}
+
+DWORD			CMainUser::currentLevel() const {
+	return m_dwLevel;
+}
+
+void			CMainUser::updateCurrentLevel(DWORD level) {
+	const auto oldValue = m_dwLevel;
+	m_dwLevel = level;
+	listenersUpdate(updateListeners, [this, oldValue, level](CMainUserUpdateInterestedSharedRef listener) {
+		listener->updatedLevel(this, oldValue, level);
+	});
+}
+
+DWORD			CMainUser::currentHonor() const {
+	return m_dwHonor;
+}
+
+void			CMainUser::updateCurrentHonor(DWORD honor) {
+	m_dwHonor = honor;
+}
+
+
+DWORD			CMainUser::currentEGO() const {
+	return m_dwEgo;
+}
+
+void			CMainUser::updateCurrentEGO(DWORD ego) {
+	m_dwEgo = ego;
+}
+
+DWORD			CMainUser::currentSTR() const {
+	return m_dwStr;
+}
+
+void			CMainUser::updateCurrentSTR(DWORD str) {
+	m_dwStr = str;
+}
+
+DWORD			CMainUser::currentINT() const {
+	return m_dwInt;
+}
+
+void			CMainUser::updateCurrentINT(DWORD intP) {
+	m_dwInt = intP;
+}
+
+DWORD			CMainUser::currentDEX() const {
+	return m_dwDex;
+}
+
+void			CMainUser::updateCurrentDEX(DWORD dex) {
+	m_dwDex = dex;
+}
+
+DWORD			CMainUser::currentVIT() const {
+	return m_dwVit;
+}
+
+void			CMainUser::updateCurrentVIT(DWORD vit) {
+	m_dwVit = vit;
+}
+
+DWORD			CMainUser::currentLUCK() const {
+	return m_dwLuck;
+}
+
+void			CMainUser::updateCurrentLUCK(DWORD luck) {
+	m_dwLuck = luck;
+}
+
+//
+
+
+
+
+CMainUser::CMainUser() {
+	memset(((char*)this) + sizeof(void*), 0, sizeof(CMainUser) - sizeof(void*));
 	
 	m_bMoveType					= UNIT_STATUS_WALKING;
 	m_bInEventDungeon			= FALSE;
+	continousSkillCastSPUpdateTimer = new Timer(WorkQueue::mainThreadQueue());
 }
 
 CMainUser::~CMainUser()
@@ -454,13 +677,13 @@ BOOL CMainUser::IsAlliance(CUser* pUser)
 
 BOOL CMainUser::IsAlliance(CMonster* pMonster)
 {
-	BOOL bAlliance =	(pMonster->m_dwLordIndex == m_dwUserIndex) 
+	BOOL bAlliance =	(pMonster->lordDungeonID == m_dwUserIndex) 
 					||	(m_bAttackMode == ATTACK_MODE_DEFENSE 
 					&& pMonster->m_dwMonsterKind == OBJECT_TYPE_GUARDIAN 
-					&& !pMonster->m_dwLordIndex);	// 방어자일 경우에 수호가디언을 공격하지 못해.
+					&& !pMonster->lordDungeonID);	// 방어자일 경우에 수호가디언을 공격하지 못해.
 	if (!bAlliance)
 	{
-		CUser* pUser = g_pUserHash->GetData(pMonster->m_dwLordIndex);
+		CUser* pUser = g_pUserHash->GetData(pMonster->lordDungeonID);
 		if (pUser)
 		{
 			bAlliance = IsAlliance(pUser);
@@ -586,9 +809,9 @@ BOOL CMainUser::IsAttack(CMonster* pMonster, BOOL bAuto)
 		bChk = TRUE;
 	}
 
-	if(pMonster->m_dwLordIndex)
+	if(pMonster->lordDungeonID)
 	{								
-		CUser* pUser = g_pUserHash->GetData(pMonster->m_dwLordIndex);
+		CUser* pUser = g_pUserHash->GetData(pMonster->lordDungeonID);
 
 		if(pUser)
 		{
@@ -599,7 +822,7 @@ BOOL CMainUser::IsAttack(CMonster* pMonster, BOOL bAuto)
 
 	if(!bChk)
 	{
-		if (pMonster->m_dwLordIndex && !CUserInterface::GetInstance()->m_nPK)
+		if (pMonster->lordDungeonID && !CUserInterface::GetInstance()->m_nPK)
 			return FALSE;
 	}	
 		
@@ -636,9 +859,6 @@ void CUser::SetStatus(BYTE bStatus, BOOL bLive)
 
 	m_bStatus	= bStatus;
 
-	if(bStatus==UNIT_STATUS_DAMAGING)
-	{
-	}	
 	if(bStatus == UNIT_STATUS_DEAD)
 	{
 		g_pMap->SetTileOccupied( m_pCurTile->wIndex_X, m_pCurTile->wIndex_Z, TILE_EMPTY, this );
@@ -659,7 +879,7 @@ void CUser::SetStatus(BYTE bStatus, BOOL bLive)
 			g_pMainPlayer->m_dwTemp[USER_TEMP_LASTATTACKTICK] = g_dwCurTick;
 		}
 
-		SetAction(MOTION_TYPE_DYING, 0, ACTION_ONCE);
+		SetMotion(MOTION_TYPE_DYING, 0, ACTION_ONCE);
 		m_hPlayer.pDesc->ObjectFunc = PlayerKillFunc;		
 	}
 }
@@ -668,7 +888,7 @@ void CUser::SetStatus(BYTE bStatus, BOOL bLive)
 void CUser::CreateResource()
 {
 	m_pEffectList = new COnlyList(50);
-	m_pUsingStatusEffectList = new COnlyList(50);
+	skillsAppliedOnThisUnit = new COnlyList(50);
 	m_dwTemp[USER_TEMP_100MILLI] = 0;	
 	m_pSkillPacket = new CTDS_SKILL;
 	memset(m_pSkillPacket, 0, sizeof(CTDS_SKILL));
@@ -702,9 +922,9 @@ void CUser::RemoveResource()
 		m_pOwnerEffect = NULL;
 	}
 
-	if(m_pUsingStatusEffectList)
-		delete m_pUsingStatusEffectList;
-	m_pUsingStatusEffectList = NULL;
+	if(skillsAppliedOnThisUnit)
+		delete skillsAppliedOnThisUnit;
+	skillsAppliedOnThisUnit = NULL;
 //	g_pDigitalAudioSet->Stop(m_hCastingSoundHandle);
 	
 	if (m_pEffectAttackMode)
@@ -735,7 +955,7 @@ BOOL CUser::UsingStatusSkill(BYTE bSkillKind)
 
 void CUser::AttachSkill(BYTE bSkillKind, BYTE bSkillLevel, DWORD dwEndTime)
 {	
-	EffectDesc*	pEffectDesc = m_pEffectDesc[bSkillKind];
+	AppliedSkill*	pEffectDesc = m_pEffectDesc[bSkillKind];
 	Effect*		pEffect = g_pEffectLayer->GetEffectInfo(bSkillKind);
 
 	// 오버라이드 3개 이하까지는 중첩된 이펙트를 보여줘야 하기 때문에..
@@ -746,11 +966,11 @@ void CUser::AttachSkill(BYTE bSkillKind, BYTE bSkillLevel, DWORD dwEndTime)
 		// 새로 생성되긴 하지만 기존에 오버드라이브 이펙트가 보여지기는 하지만 중첩된 이미지로 교체시켜야 해야 한다.
 		if (pEffect->bType == TYPE_DRIVE)
 		{
-			POSITION_ pos = m_pUsingStatusEffectList->GetHeadPosition();
+			POSITION_ pos = skillsAppliedOnThisUnit->GetHeadPosition();
 			while(pos)
 			{
 				// 숨겨라.
-				EffectDesc* pEffectDescTemp = (EffectDesc*)m_pUsingStatusEffectList->GetNext(pos);
+				AppliedSkill* pEffectDescTemp = (AppliedSkill*)skillsAppliedOnThisUnit->GetAndAdvance(pos);
 				
 				if (pEffectDescTemp->pEffect->bType == TYPE_DRIVE)
 					g_pExecutive->DisableRender(pEffectDescTemp->hEffect.pHandle);
@@ -758,7 +978,7 @@ void CUser::AttachSkill(BYTE bSkillKind, BYTE bSkillLevel, DWORD dwEndTime)
 		}
 		
 		pEffectDesc = g_pEffectLayer->CreateStatusEffect(bSkillKind, 0, g_pMainPlayer == this);
-		pEffectDesc->pUsingStatus = m_pUsingStatusEffectList->AddTail(pEffectDesc);
+		pEffectDesc->pUsingStatus = skillsAppliedOnThisUnit->AddTail(pEffectDesc);
 		m_pEffectDesc[bSkillKind] = pEffectDesc;
 		
 		pEffectDesc->dwCount = 1;
@@ -799,14 +1019,19 @@ void CUser::AttachSkill(BYTE bSkillKind, BYTE bSkillLevel, DWORD dwEndTime)
 	pEffectDesc->hEffect.pDesc->dwStartTick = g_dwCurTick;
 }
 
-void CUser::SetActionCasting(BYTE bSkillKind, VECTOR3 &vecTarget, BOOL bDirection)
+void CUser::OnCastPhaseEndExecutionPhaseBegin(BYTE bSkillKind) {
+	SetCharacterMotionForSkillExecution(bSkillKind);
+	SetStatus(UNIT_STATUS_SKILL);
+}
+
+void CUser::OnCastPhaseBegin(BYTE bSkillKind, VECTOR3 &vecTarget, BOOL bDirection, int)
 {
 	if (m_bStatus == UNIT_STATUS_DEAD)
 		return;
 
 	m_bSkillTmp = bSkillKind;
 	
-	SetAction(MOTION_TYPE_CHARGE, 0, ACTION_LOOP);
+	SetMotion(MOTION_TYPE_CHARGE, 0, ACTION_LOOP);
 	SetStatus(UNIT_STATUS_CASTING);
 	m_hPlayer.pDesc->ObjectFunc	= PlayerSkillFunc;
 	
@@ -821,47 +1046,44 @@ void CUser::SetActionCasting(BYTE bSkillKind, VECTOR3 &vecTarget, BOOL bDirectio
 	if (m_pEffectMagicArray == NULL)
 		m_pEffectMagicArray = g_pEffectLayer->CreateMagicArray(bSkillKind, &m_v3CurPos, g_pMainPlayer == this);	
 	
-//	m_hCastingSoundHandle = _PlaySound(bSkillKind, SOUND_EFFECT_CASTING1,1);
+	_PlaySound(bSkillKind, SOUND_EFFECT_CASTING1,1, m_v3CurPos, false);
 }
 
-void CUser::SetActionSkill(BYTE bSkillKind)
+void CUser::SetCharacterMotionForSkillExecution(BYTE bSkillKind)
 {
 	switch(bSkillKind)
 	{// 유저 액션
 	
 	case __SKILL_ZEAL__:
-		SetAction( MOTION_TYPE_ATTACK1_1, 0, ACTION_ONCE );
+		SetMotion( MOTION_TYPE_ATTACK1_1, 0, ACTION_ONCE );
 		break;
 
 	case __SKILL_BASH__:
-		SetActionNext( MOTION_TYPE_BASH, MOTION_TYPE_WARSTAND, ACTION_LOOP, 0 );
+		SetMotionSequence( MOTION_TYPE_BASH, MOTION_TYPE_WARSTAND, ACTION_LOOP, 0 );
 		break;
 
 	case __SKILL_RAGINGSWORD__:
-		SetActionNext( MOTION_TYPE_RAGINGSWORD, MOTION_TYPE_WARSTAND, ACTION_LOOP, 0 );
+		SetMotionSequence( MOTION_TYPE_RAGINGSWORD, MOTION_TYPE_WARSTAND, ACTION_LOOP, 0 );
 		break;
 	
 	case __SKILL_LIGHTNINGBREAK__:
-		SetActionNext( MOTION_TYPE_LIGHTNINGBREAK, MOTION_TYPE_WARSTAND, ACTION_LOOP, 0 );
+		SetMotionSequence( MOTION_TYPE_LIGHTNINGBREAK, MOTION_TYPE_WARSTAND, ACTION_LOOP, 0 );
 		break;
 
 	case __SKILL_BLASTQUAKE__:
-		SetActionNext( MOTION_TYPE_BLASTQUAKE, MOTION_TYPE_WARSTAND, ACTION_LOOP, 0 );
+		SetMotionSequence( MOTION_TYPE_BLASTQUAKE, MOTION_TYPE_WARSTAND, ACTION_LOOP, 0 );
 		break;
 	case __SKILL_CHAINATTACKER__:
-		SetActionNext( MOTION_TYPE_CHAINATTACKER, MOTION_TYPE_WARSTAND, ACTION_LOOP, 0 );
+		SetMotionSequence( MOTION_TYPE_CHAINATTACKER, MOTION_TYPE_WARSTAND, ACTION_LOOP, 0 );
 		break;
 	default:
 		{			
 			if (g_pEffectLayer->GetEffectInfo(bSkillKind)->bType == TYPE_DRIVE)
-				SetActionNext( MOTION_TYPE_OVERDRIVE, MOTION_TYPE_WARSTAND, ACTION_LOOP, 0 );
+				SetMotion( MOTION_TYPE_OVERDRIVE, ACTION_LOOP, 0);
 			else
-				SetActionNext( MOTION_TYPE_SKILL, MOTION_TYPE_WARSTAND, ACTION_LOOP, 0 );			
+				SetMotionSequence( MOTION_TYPE_SKILL, MOTION_TYPE_WARSTAND, ACTION_LOOP, 0 );			
 		}		
 	}
-
-	if (this == g_pMainPlayer)
-		g_pMainPlayer->m_dwStartSkillTick[bSkillKind] = g_dwCurTick;
 }
 
 BOOL CMainUser::CheckItem(CItem* pItem)
@@ -891,7 +1113,7 @@ BOOL CMainUser::CheckItem(CItem* pItem)
 // CUser Code....
 CUser::CUser()
 {
-	memset(this, 0, sizeof(CUser));
+	memset(((char*)this) + sizeof(void*), 0, sizeof(CUser) - sizeof(void*));
 }
 
 CUser::~CUser()
@@ -899,7 +1121,7 @@ CUser::~CUser()
 
 }
 
-void CUser::SetAction( WORD wAct, int nFrame /* = 0 */, BYTE bFlag /* = ACTION_LOOP  */)
+void CUser::SetMotion( WORD wAct, int nFrame /* = 0 */, BYTE bFlag /* = ACTION_LOOP  */)
 {			
 	GXOBJECT_HANDLE handle = m_hPlayer.pHandle ;
 	LPObjectDesc	pDesc = (LPObjectDesc)g_pExecutive->GetData( handle );
@@ -940,7 +1162,7 @@ void CUser::SetAction( WORD wAct, int nFrame /* = 0 */, BYTE bFlag /* = ACTION_L
 	::SetAction( m_hPlayer.pHandle, wAct, nFrame, bFlag );
 }
 
-void CUser::SetActionNext( WORD wAct, WORD wNextAct, BYTE bNextFlag /* = ACTION_LOOP */, int nNextFrame /* = 0  */)
+void CUser::SetMotionSequence( WORD wAct, WORD wNextAct, BYTE bNextFlag /* = ACTION_LOOP */, int nNextFrame /* = 0  */)
 {
 	GXOBJECT_HANDLE handle = m_hPlayer.pHandle ;
 	LPObjectDesc	pDesc = (LPObjectDesc)g_pExecutive->GetData( handle );
@@ -1000,17 +1222,17 @@ void CUser::RemoveAllStatusEffect()
 	if (m_pEffectList)
 		m_pEffectList->RemoveAll();
 
-	if (m_pUsingStatusEffectList)
+	if (skillsAppliedOnThisUnit)
 	{
-		POSITION_ pos = m_pUsingStatusEffectList->GetHeadPosition();
+		POSITION_ pos = skillsAppliedOnThisUnit->GetHeadPosition();
 	
 		while( pos )
 		{
 			POSITION_ delPos = pos;
-			EffectDesc* pEffectDesc = (EffectDesc*)m_pUsingStatusEffectList->GetNext(pos);
+			AppliedSkill* pEffectDesc = (AppliedSkill*)skillsAppliedOnThisUnit->GetAndAdvance(pos);
 			
 			RemoveEffectDesc(pEffectDesc);
-			m_pUsingStatusEffectList->RemoveAt(delPos);
+			skillsAppliedOnThisUnit->RemoveAt(delPos);
 		}
 		memset(m_pEffectDesc, 0, sizeof(m_pEffectDesc));
 		m_bOverDriveCount = 0;		
@@ -1155,7 +1377,7 @@ void CUser::SetSkillFailAction(ENUM_SKILL_CASTING_FAIL_REASON eFailReason)
 	m_hPlayer.pDesc->ObjectFunc = NULL;
 
 	_PlaySound(0, SOUND_TYPE_SYSTEM, SOUND_SYSTEM_ERRORMSG, g_Camera.v3CameraPos, FALSE);
-	SetActionNext( MOTION_TYPE_SKILL, MOTION_TYPE_WARSTAND, ACTION_LOOP, 0 );
+	SetMotionSequence( MOTION_TYPE_SKILL, MOTION_TYPE_WARSTAND, ACTION_LOOP, 0 );
 
 	DeleteMagicArray();
 }
@@ -1293,7 +1515,7 @@ void CUser::SetPlayerShop(BOOL bPlayerShop)
 
 		SendStopPacket();
 		SetStatus(UNIT_STATUS_PLAYER_SHOP);		
-		SetActionNext(39, 40, ACTION_LOOP);		
+		SetMotionSequence(39, 40, ACTION_LOOP);		
 		
 		::ShowObject(m_hPlayerShop.pHandle);
 		::SetAction(m_hPlayerShop.pHandle, 1, 0, ACTION_ONCE);
@@ -1307,7 +1529,7 @@ void CUser::SetPlayerShop(BOOL bPlayerShop)
 		::SetAction(m_hPlayerShop.pHandle, 2, 0, ACTION_ONCE);
 		m_hPlayerShop.pDesc->ObjectFunc	= ShopProc;
 
-		SetAction(41, 0, ACTION_ONCE);
+		SetMotion(41, 0, ACTION_ONCE);
 		m_hPlayer.pDesc->ObjectFunc	= PlayerShopProc;
 
 		if(g_pMainPlayer == this)		
@@ -1364,58 +1586,58 @@ BYTE CMainUser::GetSkillLevel(BYTE bSkillKind)
 	return BYTE(max(bSkillLevel, 0));
 }
 
-void CMainUser::SetPacketSkillUser(CUser *pTargetUser, BYTE bSkillKindLR)
+void CMainUser::BeginSkillCastOn(CUser *pTargetUser, BYTE bSkillKindLR)
 {
 	m_pSkillPacket->bStatus = UPDATE_GAME_PLAY;
 	m_pSkillPacket->bHeader = Protocol_CTS::CMD_SKILL;
-	m_pSkillPacket->bSkillKind		= bSkillKindLR;
-	m_pSkillPacket->dwTargetIndex		= pTargetUser->m_dwUserIndex;
+	m_pSkillPacket->skillMouseIndex		= bSkillKindLR;
+	m_pSkillPacket->targetDungeonID		= pTargetUser->m_dwUserIndex;
 	m_pSkillPacket->wTileIndex_X		= WORD(pTargetUser->m_v3CurPos.x / TILE_SIZE);
 	m_pSkillPacket->wTileIndex_Z		= WORD(pTargetUser->m_v3CurPos.z / TILE_SIZE);
-	m_pSkillPacket->bOwnType = OBJECT_TYPE_PLAYER;
+	m_pSkillPacket->casterType = OBJECT_TYPE_PLAYER;
 	m_pSkillPacket->bTargetType = OBJECT_TYPE_PLAYER;
 	m_pSkillPacket->bPK = CUserInterface::GetInstance()->m_nPK == __PK_MODE__;
-	m_pSkillPacket->dwTime = g_dwCurTick;
+	m_pSkillPacket->casterLocalTime = g_dwCurTick;
 
 	m_bSkillTmp = GetSkillKind(bSkillKindLR);
 
 	SendCasting();			
 }
 
-void CMainUser::SetPacketSkillMonster(CMonster* pTargetMonster, BYTE bSkillKindLR)
+void CMainUser::BeginSkillCastOn(CMonster* pTargetMonster, BYTE bSkillKindLR)
 {
 	m_pSkillPacket->bStatus = UPDATE_GAME_PLAY;
 	m_pSkillPacket->bHeader = Protocol_CTS::CMD_SKILL;
-	m_pSkillPacket->bSkillKind		= bSkillKindLR;
-	m_pSkillPacket->dwTargetIndex		= pTargetMonster->m_dwMonsterIndex;
+	m_pSkillPacket->skillMouseIndex		= bSkillKindLR;
+	m_pSkillPacket->targetDungeonID		= pTargetMonster->m_dwMonsterIndex;
 	m_pSkillPacket->wTileIndex_X		= WORD(pTargetMonster->m_v3CurPos.x / TILE_SIZE);
 	m_pSkillPacket->wTileIndex_Z		= WORD(pTargetMonster->m_v3CurPos.z / TILE_SIZE);
-	m_pSkillPacket->bOwnType = OBJECT_TYPE_PLAYER;
+	m_pSkillPacket->casterType = OBJECT_TYPE_PLAYER;
 	m_pSkillPacket->bTargetType = OBJECT_TYPE_MONSTER;
 	m_pSkillPacket->bPK = CUserInterface::GetInstance()->m_nPK == __PK_MODE__;
-	m_pSkillPacket->dwTime = g_dwCurTick;
+	m_pSkillPacket->casterLocalTime = g_dwCurTick;
 
 	m_bSkillTmp = GetSkillKind(bSkillKindLR);
 
 	SendCasting();	
 }
 
-void CMainUser::SetPacketSkillTile(WORD wTileIndexX, WORD wTileIndexZ,  BYTE bSkillKindLR)
+void CMainUser::BeginSkillCastAtTile(WORD wTileIndexX, WORD wTileIndexZ,  BYTE bSkillKindLR, BYTE skillKind)
 {
 	m_pSkillPacket->bStatus = UPDATE_GAME_PLAY;
 	m_pSkillPacket->bHeader = Protocol_CTS::CMD_SKILL;
-	m_pSkillPacket->bSkillKind		= bSkillKindLR;
-	m_pSkillPacket->dwTargetIndex		= 0;
+	m_pSkillPacket->skillMouseIndex		= bSkillKindLR;
+	m_pSkillPacket->targetDungeonID		= 0;
 	m_pSkillPacket->wTileIndex_X		= wTileIndexX;
 	m_pSkillPacket->wTileIndex_Z		= wTileIndexZ;
-	m_pSkillPacket->bOwnType = OBJECT_TYPE_PLAYER;
+	m_pSkillPacket->casterType = OBJECT_TYPE_PLAYER;
 	m_pSkillPacket->bTargetType = OBJECT_TYPE_TILE;
 	m_pSkillPacket->bPK = CUserInterface::GetInstance()->m_nPK == __PK_MODE__;
-	m_pSkillPacket->dwTime = g_dwCurTick;
+	m_pSkillPacket->casterLocalTime = g_dwCurTick;
 
 	m_bSkillTmp = GetSkillKind(bSkillKindLR);
 
-	SendCasting();	
+	SendCasting();
 }
 
 void CMainUser::SetSkillChangeLR(BYTE bySkillKind, BYTE byLR)
@@ -1445,44 +1667,48 @@ BYTE CMainUser::GetSkillKind(BYTE byLR)
 	return m_bySkill[byLR];
 }
 
-float CMainUser::GetODC()
+float CMainUser::GetODC() const
 {
 	return (float)max((m_dwEgo*2 / m_dwLevel) * (100 + 5 * m_wClassRank) / 100., 0.5);
 }
 
 void CMainUser::SendCasting()
 {	
+
 	CTDS_DUNGEON_CASTING packet;
-	packet.bSkillKindLR		= m_pSkillPacket->bSkillKind;
-	packet.dwTargetIndex	= m_pSkillPacket->dwTargetIndex;
+	packet.bSkillKindLR		= m_pSkillPacket->skillMouseIndex;
+	packet.dwTargetIndex	= m_pSkillPacket->targetDungeonID;
 	packet.wTileIndex_X		= m_pSkillPacket->wTileIndex_X;
 	packet.wTileIndex_Z		= m_pSkillPacket->wTileIndex_Z;
 	packet.bTargetType		= m_pSkillPacket->bTargetType;
-	packet.bOwnType			= m_pSkillPacket->bOwnType;
+	packet.bOwnType			= m_pSkillPacket->casterType;
 		
 	g_pNet->SendMsg( (char*)&packet, packet.GetPacketSize(), SERVER_INDEX_ZONE );
 
+	printf("\n[SendCasting] sent cast");
 	m_dwCastingTick = 0;	
-	SetStatus(UNIT_STATUS_CASTING);	// 캐스팅은 끝났으나 아직 스킬 메시지가 날라오질 않았따.	
+	SetStatus(UNIT_STATUS_CASTING);	// 캐스팅은 끝났으나 아직 스킬 메시지가 날라오질 않았따.
 }
 
-void CMainUser::SendSkill()
-{
-	if (IsSkilling())
-	{
+void CMainUser::SignalStartProcessingContinousSkillAtCurrentState() {
+	if (IsWithContinousSkillSelected() && GetStatus() == UNIT_STATUS_CASTING) {
 		g_pNet->SendMsg( (char*)m_pSkillPacket, m_pSkillPacket->GetPacketSize(), SERVER_INDEX_ZONE );
-		m_pSkillPacket->bStatus = 0;
+		printf("\n[SENT] continous skill cast");
+		SetStatus(UNIT_STATUS_READY);
 	}
 }
 
-BOOL CMainUser::IsSkilling()
-{
-	if (m_pSkillPacket == NULL) { return FALSE; }
+BOOL CMainUser::IsWithContinousSkillSelected() {
+	if (m_pSkillPacket == NULL) { 
+		printf("\nIsCastingContinousSkill :: skill packet NULL!");
+		return FALSE; 
+	}
+
 	Effect* pEffect = g_pEffectLayer->GetEffectInfo(m_bSkillTmp);
-	return m_pSkillPacket->bStatus && (pEffect->bType == TYPE_DRIVE || pEffect->bID == __SKILL_AURARECHARGE__);
+	return isContinousSkill(pEffect->skillKind);
 }
 
-void CMainUser::SetActionDummy()
+void CMainUser::SwitchBetweenIdleCharacterMotions()
 {
 	// 멍청하게 있을때 동작 바꿔주기.
 	int nMotionIndex = g_pExecutive->GXOGetCurrentMotionIndex(m_hPlayer.pHandle);
@@ -1502,16 +1728,16 @@ void CMainUser::SetActionDummy()
 		BYTE bStandMode = nMotionIndex%50 == MOTION_TYPE_WARSTAND;
 		
 		if (bStandMode)
-			SetActionNext(MOTION_TYPE_WARSTANDSTAND, MOTION_TYPE_DUNGEONSTAND);
+			SetMotionSequence(MOTION_TYPE_WARSTANDSTAND, MOTION_TYPE_DUNGEONSTAND);
 		else
 		{
 			switch (rand()%2)
 			{
 			case 0:
-				SetActionNext(MOTION_TYPE_STAND1, MOTION_TYPE_DUNGEONSTAND);
+				SetMotionSequence(MOTION_TYPE_STAND1, MOTION_TYPE_DUNGEONSTAND);
 				break;
 			case 1:
-				SetActionNext(MOTION_TYPE_STAND2, MOTION_TYPE_DUNGEONSTAND);
+				SetMotionSequence(MOTION_TYPE_STAND2, MOTION_TYPE_DUNGEONSTAND);
 				break;
 			}
 		}		
@@ -1538,8 +1764,8 @@ void CMainUser::GetAttackDamage_L(WORD& wAttackDamageMin, WORD& wAttackDamageMax
 		{
 			if (GetSkillKind(SELECT_ATTACK_TYPE_LBUTTON) == __SKILL_ATTACK__)
 			{
-				wAttackDamageMin = WORD(m_pwAttackDamage_L[0] + m_wMP/30);
-				wAttackDamageMax = WORD(m_pwAttackDamage_L[1] + m_wMP/30);
+				wAttackDamageMin = WORD(m_pwAttackDamage_L[0] + m_dwMP/30);
+				wAttackDamageMax = WORD(m_pwAttackDamage_L[1] + m_dwMP/30);
 			}
 			else
 			{
@@ -1570,8 +1796,8 @@ void CMainUser::GetAttackDamage_R(WORD& wAttackDamageMin, WORD& wAttackDamageMax
 		{
 			if (GetSkillKind(SELECT_ATTACK_TYPE_RBUTTON) == __SKILL_ATTACK__)
 			{
-				wAttackDamageMin = WORD(m_pwAttackDamage_R[0] + m_wMP/30);
-				wAttackDamageMax = WORD(m_pwAttackDamage_R[1] + m_wMP/30);
+				wAttackDamageMin = WORD(m_pwAttackDamage_R[0] + m_dwMP/30);
+				wAttackDamageMax = WORD(m_pwAttackDamage_R[1] + m_dwMP/30);
 			}
 			else
 			{
@@ -1597,7 +1823,7 @@ short CMainUser::GetPhyResist()
 	if (m_wClass == CLASS_TYPE_HUNTER)
 	{
 		// 레인저는 mp 양에 따라 데미지가 변한다.
-		return short(min(m_wPhyResist + max(int(m_wMP/20 - (73+22*m_dwLevel)/35), 0), 75));
+		return short(min(m_wPhyResist + max(int(m_dwMP/20 - (73+22*m_dwLevel)/35), 0), 75));
 	}
 	else
 	{

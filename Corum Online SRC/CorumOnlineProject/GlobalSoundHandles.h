@@ -10,7 +10,7 @@
 #include "EffectInfo.h"
 #include "GlobalSoundHandles.h"
 #include "SoundLib.h"
-#include "VoidList.h"
+#include "../BaseLibrary/VoidList.h"
 
 // 사운드 관련 디파인 
 #define DEFAULT_SOUND_MAX_DISTANCE			1500

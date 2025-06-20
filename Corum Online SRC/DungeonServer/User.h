@@ -12,7 +12,7 @@
 
 
 class	CDungeon;
-struct	EffectDesc;
+struct	AppliedSkill;
 struct	CTDS_DUNGEON_CASTING;
 struct	MAP_TILE;
 class	CClassMemoryPool;
@@ -85,6 +85,7 @@ enum USER_TEMP
 	USER_TEMP_GOTOWORLD_OUTSTAUS		= 23,	// 던전에서 죽었을때 복귀될때 위치를 나타낸다.
 	USER_TEMP_GM_DRIVED_OBSERVE			= 24,	// GM 명령에서 OBSERVE를 하면 타유저에게는 GM 이 보이지 않는다
 	USER_TEMP_GM_DRIVED_SILENCE_FLAG	= 25,	// GM 이 해당캐릭에게 대화 유무를 결정한 상태 
+	USER_TEMP_LAST_COOLPOINT_UPDATE_TIME_TICK = 26,
 	
 	MAX_USER_TEMP				
 };
@@ -407,7 +408,7 @@ public:
 	float						m_fCurCoolPoint;		
 	DB_USER_CHARACTERINFO		m_pUserCharacterInfo[4];
 	CMonster*					m_pGuardian[MAX_USER_GUARDIAN];
-	CMonster*					m_pMonster[MAX_USER_GUARDIAN];
+	CMonster*					servantMonsters[MAX_USER_GUARDIAN];
 	DWORD						m_dwStartSkillTick[MAX_SKILL];					// 쿨타임을 위해서.
 	float						m_fPlusParamByMagicFieldArray[USER_MAX_STATUS];	// 던전 마법진에 의한 상승치를 가지고 있는 배열
 	CVoidList*					m_pUsingMagicArrayList;
@@ -457,7 +458,7 @@ public:
 	virtual void				Update();
 	virtual void				RemoveResource();
 	virtual void				CreateResource();
-	virtual void				DetachSkill(EffectDesc* pEffectDesc);
+	virtual void				DetachSkill(AppliedSkill* pEffectDesc);
 	virtual void				UpdateMaxHP();
 	virtual void				UpdateMaxSP();
 	virtual void				UpdateAttackSpeed();
@@ -474,7 +475,7 @@ public:
 	virtual void				GetAttackDamage(BYTE bySelectedSkill, BYTE bSkillLevel, BYTE bWeaponKind, WORD* pwAttackDamageMin, WORD* pwAttackDamageMax, BYTE bLR) const;
 	virtual int					GetExpDying();
 	virtual void				GetAttackingDamage(WORD wAttackDamageMin, WORD wAttackDamageMax, WORD* pwAttackDamageMin, WORD* pwAttackDamageMax, BYTE byLR);
-	virtual void				ReSetStatusFromSkillStatusValue(EffectDesc* pEffectDesc);
+	virtual void				ReSetStatusFromSkillStatusValue(AppliedSkill* pEffectDesc);
 	virtual void				SetStatusFromSkillStatusValue(BYTE bSkillKind, BYTE bSkillLevel, WORD wClass, float* pResetValue, BOOL bUserStatusSend = FALSE);
 	virtual void				SetDamageOver(const CUnit* pUnit, DWORD dwDamage);
 	virtual BOOL				IsAlliance(const CUnit* pUnit);
@@ -494,7 +495,8 @@ public:
 	virtual const char*			GetName() const;
 	virtual void				SendStopPacket(ENUM_SEND_MODE eSendMode) const;
 	virtual void				UpdateAllStatus();
-	virtual void				SendAllStatus();					
+	virtual void				SendAllStatus();
+	void						SendCoolpointsStatusValues();
 	virtual DWORD				GetConnectionIndex() const;
 
 	virtual bool				OnDie();//사망 처리: hwoarang 050202 
@@ -615,7 +617,7 @@ public:
 	enum DUNGEON_JOIN_FAIL	IsEnterDungeon();
 	enum PORTAL_TYPE		GetPortalType() const;
 	void					SetPortalType(enum PORTAL_TYPE	ePortalType);
-	void					Recover5SecPer();
+	void					HandleResourceRecoveries();
 	void					BadModeReleaseTimeProcess();
 	void					GodModeReleaseTimeProcess();
 	void					EffectSkillTimeProcess();

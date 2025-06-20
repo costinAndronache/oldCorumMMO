@@ -29,7 +29,9 @@
 #include "PacketEncrypt.h"
 #include "Interface.h"
 #include "GroupWnd.h"
-
+#include "UserInterface.h"
+#include "CharWnd.h"
+#include <memory>
 
 BOOL g_bCharacterChk = FALSE;
 
@@ -1815,12 +1817,12 @@ void SetRHandChangeChr(CUser* pUser, DWORD dwId)
 	if(!dwId)
 	{
 		pUser->m_byItemType = 0;		
-		pUser->SetAction(MOTION_TYPE_VILLAGESTAND, 0, ACTION_LOOP);
+		pUser->SetMotion(MOTION_TYPE_VILLAGESTAND, 0, ACTION_LOOP);
 	}			
 	else
 	{		
 		pUser->m_byItemType = BYTE(nIndex+1);		
-		pUser->SetAction(WORD(nIndex*50+MOTION_TYPE_VILLAGESTAND), 0, ACTION_LOOP);
+		pUser->SetMotion(WORD(nIndex*50+MOTION_TYPE_VILLAGESTAND), 0, ACTION_LOOP);
 	}	
 }
 
@@ -1883,6 +1885,9 @@ BOOL CreateMainPlayer(WSTC_WORLD_USER_INFO* pInfo)
 	g_pMainPlayer = new CMainUser;
 #endif // __RANDOM_MEMORY_ALLOCATION
 
+	g_pMainPlayer->addUpdateListener(std::weak_ptr<CUserInterface>(CUserInterface::getShared()));
+	g_pMainPlayer->addUpdateListener(std::weak_ptr<CCharWnd>(CCharWnd::getShared()));
+
 	g_pMainPlayer->m_hPlayer.pHandle = pSelectChr->hHandle;				//g_pGVLogin->ChrSelectInfo[ g_pGVLogin->dwCurCharIndex ].hHandle;
 
 	if(!g_pMainPlayer->m_hPlayer.pHandle)
@@ -1911,15 +1916,17 @@ BOOL CreateMainPlayer(WSTC_WORLD_USER_INFO* pInfo)
 	g_pMainPlayer->m_dwUserIndex = pInfo->dwUserIndex;
 	__lstrcpyn(g_pMainPlayer->m_szName, pSelectChr->ReceivedChrInfo.szName, MAX_CHARACTER_NAME_REAL_LENGTH); 
 	
-	g_pMainPlayer->m_dwDex			= pSelectChr->ReceivedChrInfo.dwDex;
-	g_pMainPlayer->m_dwEgo			= pSelectChr->ReceivedChrInfo.dwEgo;
-	g_pMainPlayer->m_dwExp			= pSelectChr->ReceivedChrInfo.dwExp;
-	g_pMainPlayer->m_dwHonor		= pSelectChr->ReceivedChrInfo.dwHonor;
-	g_pMainPlayer->m_dwInt			= pSelectChr->ReceivedChrInfo.dwInt;
-	g_pMainPlayer->m_dwLevel		= pSelectChr->ReceivedChrInfo.dwLevel;
-	g_pMainPlayer->m_dwLuck			= pSelectChr->ReceivedChrInfo.dwLuck;
-	g_pMainPlayer->m_dwStr			= pSelectChr->ReceivedChrInfo.dwStr;
-	g_pMainPlayer->m_dwVit			= pSelectChr->ReceivedChrInfo.dwVit;
+
+	g_pMainPlayer->updateCurrentDEX(pSelectChr->ReceivedChrInfo.dwDex);
+	g_pMainPlayer->updateCurrentEGO(pSelectChr->ReceivedChrInfo.dwEgo);
+	g_pMainPlayer->updateCurrentEXP(pSelectChr->ReceivedChrInfo.dwExp);
+	g_pMainPlayer->updateCurrentHonor(pSelectChr->ReceivedChrInfo.dwHonor);
+	g_pMainPlayer->updateCurrentINT(pSelectChr->ReceivedChrInfo.dwInt);
+	g_pMainPlayer->updateCurrentLevel(pSelectChr->ReceivedChrInfo.dwLevel);
+	g_pMainPlayer->updateCurrentLUCK(pSelectChr->ReceivedChrInfo.dwLuck);
+	g_pMainPlayer->updateCurrentSTR(pSelectChr->ReceivedChrInfo.dwStr);
+	g_pMainPlayer->updateCurrentVIT(pSelectChr->ReceivedChrInfo.dwVit);
+
 	g_pMainPlayer->m_wGrade			= pSelectChr->ReceivedChrInfo.wGrade;
 	g_pMainPlayer->m_bCurrnetHand	= pInfo->byCurrentHand;
 	

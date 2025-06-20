@@ -117,7 +117,7 @@ DWORD CConnectionDistributionTable::SendKeepAlivePacket()
 
 	while(pos)
 	{
-		CWorldUser* pUser = (CWorldUser*)m_ppBucketList[ m_dwNextCheckBucketListID ]->GetNext(pos);
+		CWorldUser* pUser = (CWorldUser*)m_ppBucketList[ m_dwNextCheckBucketListID ]->GetAndAdvance(pos);
 
 		if(!pUser)
 		{
@@ -144,7 +144,7 @@ void CConnectionDistributionTable::CheckKeepAlive()
 
 	while(pos)
 	{
-		CWorldUser* pUser = (CWorldUser*)m_ppBucketList[ m_dwNextCheckBucketListID ]->GetNext(pos);
+		CWorldUser* pUser = (CWorldUser*)m_ppBucketList[ m_dwNextCheckBucketListID ]->GetAndAdvance(pos);
 
 		if(!pUser)
 		{

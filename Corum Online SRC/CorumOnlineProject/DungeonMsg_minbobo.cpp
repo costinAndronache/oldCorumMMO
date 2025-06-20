@@ -247,14 +247,14 @@ void CmdPlayerRest( char* pMsg, DWORD dwLen )
 	{
 		if(pPacket->byType==1)
 		{
-			g_pMainPlayer->SetActionNext(39, 40, ACTION_LOOP);
+			g_pMainPlayer->SetMotionSequence(39, 40, ACTION_LOOP);
 			g_pMainPlayer->m_hPlayer.pDesc->ObjectFunc	= NULL;
 			g_pMainPlayer->SetStatus(UNIT_STATUS_PLAYER_REST);
 			SendStopPacket();						
 		}
 		else
 		{
-			g_pMainPlayer->SetAction(41, 0, ACTION_ONCE);
+			g_pMainPlayer->SetMotion(41, 0, ACTION_ONCE);
 			g_pMainPlayer->m_hPlayer.pDesc->ObjectFunc	= PlayerShopProc;	
 		}
 	}
@@ -267,13 +267,13 @@ void CmdPlayerRest( char* pMsg, DWORD dwLen )
 		
 		if(pPacket->byType==1)
 		{
-			pUser->SetActionNext(39, 40, ACTION_LOOP);
+			pUser->SetMotionSequence(39, 40, ACTION_LOOP);
 			pUser->SetStatus(UNIT_STATUS_PLAYER_REST);
 			pUser->m_hPlayer.pDesc->ObjectFunc	= NULL;
 		}
 		else
 		{
-			pUser->SetAction(41, 0, ACTION_ONCE);
+			pUser->SetMotion(41, 0, ACTION_ONCE);
 			pUser->m_hPlayer.pDesc->ObjectFunc	= PlayerShopProc;
 		}
 	}	
@@ -290,7 +290,7 @@ void CmdUserPortal( char* pMsg, DWORD dwLen )
 				
 	SendPacketRequestDungeonInfo(wToDungeonID);
 
-	g_pMainPlayer->SetAction(36);
+	g_pMainPlayer->SetMotion(36);
 	g_pMainPlayer->m_hPlayer.pDesc->ObjectFunc = NULL;
 	
 	SendStopPacket();
@@ -319,7 +319,7 @@ void CmdSkillInit( char* pMsg, DWORD dwLen )
 	g_pMainPlayer->SetSkillChangeLR(__SKILL_ATTACK__, 0);
 	g_pMainPlayer->SetSkillChangeLR(__SKILL_NONE_SELECT__, 1);
 		
-	g_pMainPlayer->m_wPointSkill	= pPacket->wPoint;
+	g_pMainPlayer->updateCurrentSkillPoints(pPacket->wPoint);
 
 	CSkillWnd* pSkillWnd = CSkillWnd::GetInstance();
 	
@@ -335,7 +335,7 @@ void CmdStatusInit( char* pMsg, DWORD dwLen )
 {
 	DSTC_STATUS_INIT* pPacket = (DSTC_STATUS_INIT*)pMsg;
 	
-	g_pMainPlayer->m_wPoint	= pPacket->wPoint;
+	g_pMainPlayer->updateCurrentStatPoints(pPacket->wPoint);
 
 	// "초기화에 성공하였습니다."
 	DisplayMessageAdd(g_Message[ETC_MESSAGE157].szMessage, 0xffff0000); 
@@ -530,28 +530,10 @@ void CmdStatusInfo(char* pMsg, DWORD dwLen)
 		{
 		case OBJECT_TYPE_PLAYER:
 			{			
-				switch(pPacket->byStatusType)
-				{
-				case 0:
-					g_pMainPlayer->m_dwEgo += 1;
-					break;
-				case 1:
-					g_pMainPlayer->m_dwStr += 1;	
-					break;
-				case 2:
-					g_pMainPlayer->m_dwInt += 1;	
-					break;
-				case 3:
-					g_pMainPlayer->m_dwDex += 1;	
-					break;
-				case 4:
-					g_pMainPlayer->m_dwVit += 1;
-					break;
-				}
-				g_pMainPlayer->m_wPoint -= 1;
-				
-				if(g_pMainPlayer->m_wPoint==0)
+				if (g_pMainPlayer->currentStatPoints() == 0) {
 					pCharWnd->HideAllStatButton();
+				}
+
 			}break;
 		
 		case OBJECT_TYPE_MONSTER:
@@ -611,9 +593,12 @@ void CmdSkillInfo(char* pMsg, DWORD dwLen)
 	DSTC_SKILL_INFO*	pPacket		= (DSTC_SKILL_INFO*)pMsg;
 	CSkillWnd*			pSkillWnd	= CSkillWnd::GetInstance();
 	
-	if(pPacket->bSkillInfo==TRUE)
-	{		
-		g_pMainPlayer->m_wPointSkill -= 1;		
+	if(pPacket->bSkillInfo == TRUE) {		
+		// all good, that skill level up is succesful
+		// an all status packet should follow		
+	}
+	else {
+		// display an error or something
 	}
 
 	if(g_pMainPlayer->m_byHelp[1]==11)
@@ -667,7 +652,7 @@ void CmdPortalJoinUser( char* pMsg, DWORD dwLen )
 	memcpy(pCopy, pMsg, dwLen);
 	
 	g_bRButton	= FALSE;	
-	g_pMainPlayer->SetAction(MOTION_TYPE_PORTAL_DISAPPEAR, 0, ACTION_ONCE);
+	g_pMainPlayer->SetMotion(MOTION_TYPE_PORTAL_DISAPPEAR, 0, ACTION_ONCE);
 	g_pMainPlayer->SetStatus(UNIT_STATUS_PORTAL_MOVING);
 	g_pMainPlayer->m_hPlayer.pDesc->bSkip	= 0;
 	g_pMainPlayer->m_bCurLayer				= pCopy->bCurLayerIndex;
@@ -722,7 +707,7 @@ void CmdPortalMoveOutside( char* pMsg, DWORD dwLen )
 	ShowObject(g_pMainPlayer->m_hSelfPortalEffect.pHandle);
 	g_pMainPlayer->m_hSelfPortalEffect.pDesc->bSkip = 0;
 
-	g_pMainPlayer->SetAction(37,0,ACTION_ONCE);
+	g_pMainPlayer->SetMotion(37,0,ACTION_ONCE);
 	g_pMainPlayer->m_hPlayer.pDesc->ObjectFunc = NULL;
 	g_pMainPlayer->m_hSelfPortalEffect.pDesc->ObjectFunc = PortalEffectFuncMainPlayer;
 	g_pMainPlayer->m_hPlayer.pDesc->bSkip = 0;
@@ -822,7 +807,7 @@ void CmdPortalMoveOutsideFail( char* pMsg, DWORD dwLen )
 	
 	DisplayMessageAdd(szBuf, 0xFF21DBFF);
 	
-	g_pMainPlayer->SetAction(MOTION_TYPE_DUNGEONSTAND);
+	g_pMainPlayer->SetMotion(MOTION_TYPE_DUNGEONSTAND);
 	g_pMainPlayer->SetStatus(UNIT_STATUS_NORMAL);
 	g_bRButton	= FALSE;
 	g_bBeltChk	= FALSE;
@@ -865,7 +850,7 @@ void CmdResponsePotalJoinUser( char* pMsg, DWORD dwLen )
 	GXSetPosition(pUser->m_hSelfPortalEffect.pHandle, &v3Start, FALSE, TRUE);
 	
 	pUser->m_hSelfPortalEffect.pDesc->pInfo			= (void*)pUser;
-	pUser->SetAction(MOTION_TYPE_PORTAL_APPEAR, 0, ACTION_ONCE);
+	pUser->SetMotion(MOTION_TYPE_PORTAL_APPEAR, 0, ACTION_ONCE);
 	pUser->m_hSelfPortalEffect.pDesc->ObjectFunc	= PortalAppearFuncUser;
 	pUser->SetStatus(UNIT_STATUS_PORTAL_MOVING);
 	pUser->m_hPlayer.pDesc->bSkip = FALSE;
@@ -968,7 +953,7 @@ void CmdPortalDisappear( char* pMsg, DWORD dwLen )
 	SetAction(pUser->m_hSelfPortalEffect.pHandle, 1, 0, ACTION_ONCE);
 	pUser->m_hSelfPortalEffect.pDesc->bSkip = 0;
 
-	pUser->SetAction(MOTION_TYPE_PORTAL_DISAPPEAR, 0, ACTION_ONCE);
+	pUser->SetMotion(MOTION_TYPE_PORTAL_DISAPPEAR, 0, ACTION_ONCE);
 	pUser->m_hSelfPortalEffect.pDesc->ObjectFunc = PortalEffectFunc;
 	pUser->m_hPlayer.pDesc->bSkip = 0;
 

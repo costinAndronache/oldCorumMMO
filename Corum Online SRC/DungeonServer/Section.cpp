@@ -36,7 +36,7 @@ CMonster* CSection::FindMonster(DWORD dwBaseMonsterID)
 
 	while(pos)
 	{
-		pMonster = (CMonster*)m_pMonsterList->GetNext(pos);
+		pMonster = (CMonster*)m_pMonsterList->GetAndAdvance(pos);
 
 		if(pMonster->IsGuardian())
 			continue;

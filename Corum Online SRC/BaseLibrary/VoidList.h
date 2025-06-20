@@ -1,7 +1,8 @@
 #ifndef __POINTERLIST_INCLUDE__
 #define __POINTERLIST_INCLUDE__
 
-#include "stdafx.h"
+#include <functional>
+#include <vector>
 
 #ifndef NULL
 #define NULL (0)
@@ -18,8 +19,7 @@ struct CNode
     void*    data;
 };
 
-class CVoidList
-{
+class CVoidList {
 public:
 
     CVoidList();
@@ -76,7 +76,7 @@ public:
 
         return pData; 
     }
-    void*    GetNext(POSITION_& rPosition) const // return *Position++
+    void*    GetAndAdvance(POSITION_& rPosition) const // return *Position++
                 { CNode* pNode = (CNode*) rPosition;
                     if (pNode == NULL) return NULL;
                     rPosition = (POSITION_) pNode->pNext;
@@ -125,6 +125,13 @@ protected:
 public:
     unsigned char m_bFreeData;
     ~CVoidList();
+
+public:
+    typedef std::function<void(void*, unsigned int)> IterationStepFn;
+    void iterateWith(IterationStepFn stepFn);
+
+    typedef std::function<bool(void*)> FilterConditionFn;
+    std::vector<void*> filterWith(FilterConditionFn filterFn);
 };
 
 

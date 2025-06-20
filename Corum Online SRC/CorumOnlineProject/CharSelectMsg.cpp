@@ -67,7 +67,7 @@ void CmdWorldUserInfo( char* pMsg, DWORD dwLen )
 		else
 			g_pMainPlayer->m_byItemType	= nVal+1;
 
-		g_pMainPlayer->SetAction(MOTION_TYPE_VILLAGESTAND, 0, ACTION_LOOP);
+		g_pMainPlayer->SetMotion(MOTION_TYPE_VILLAGESTAND, 0, ACTION_LOOP);
 		return;
 	}
 	
@@ -114,7 +114,7 @@ void CmdWorldUserInfo( char* pMsg, DWORD dwLen )
 	else
 		g_pMainPlayer->m_byItemType	= BYTE(nVal+1);
 
-	g_pMainPlayer->SetAction(MOTION_TYPE_VILLAGESTAND, 0, ACTION_LOOP);	
+	g_pMainPlayer->SetMotion(MOTION_TYPE_VILLAGESTAND, 0, ACTION_LOOP);	
 }
 
 void AcmdWarningTitle(char* pMsg, DWORD dwLen )

@@ -111,9 +111,6 @@
     <ClCompile Include="LinkedList.cpp">
       <Filter>Container</Filter>
     </ClCompile>
-    <ClCompile Include="Voidlist.cpp">
-      <Filter>Container</Filter>
-    </ClCompile>
     <ClCompile Include="MsgProc.cpp">
       <Filter>MsgProc</Filter>
     </ClCompile>
@@ -293,9 +290,6 @@
       <Filter>Accessary</Filter>
     </ClInclude>
     <ClInclude Include="Linkedlist.h">
-      <Filter>Container</Filter>
-    </ClInclude>
-    <ClInclude Include="Voidlist.h">
       <Filter>Container</Filter>
     </ClInclude>
     <ClInclude Include="MsgProc.h">

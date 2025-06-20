@@ -35,7 +35,7 @@ CMonster::~CMonster()
 BOOL CMonster::IsNormalMonster()
 {
 	return m_dwMonsterKind == OBJECT_TYPE_MONSTER 
-		&& !m_dwLordIndex
+		&& !lordDungeonID
 		&& !m_pEffectDesc[__SKILL_REDELEMENTAL__]
 		&& !m_pEffectDesc[__SKILL_BLUEELEMENTAL__]
 		&& !m_pEffectDesc[__SKILL_GREENELEMENTAL__];
@@ -248,9 +248,10 @@ BOOL CMonster::UsingStatusSkill(BYTE bSkillKind)
 
 void CMonster::AttachSkill(BYTE bSkillKind, BYTE bSkillLevel, DWORD dwEndTime)
 {	
+	printf("\nCMonster::AttachSkill");
 	Effect* pEffect = g_pEffectLayer->GetEffectInfo(bSkillKind);
 	
-	EffectDesc*	pEffectDesc = m_pEffectDesc[bSkillKind];
+	AppliedSkill*	pEffectDesc = m_pEffectDesc[bSkillKind];
 		
 	if (!pEffectDesc)
 	{// 어쭈? 새로 만들어야 하는군.
@@ -264,7 +265,7 @@ void CMonster::AttachSkill(BYTE bSkillKind, BYTE bSkillLevel, DWORD dwEndTime)
 		pEffectDesc->dwTargetIndex[0] = m_dwMonsterIndex;
 					
 		::SetAction( pEffectDesc->hEffect.pHandle, 1, 0, ACTION_LOOP );
-		pEffectDesc->pUsingStatus = m_pUsingStatusEffectList->AddTail(pEffectDesc);
+		pEffectDesc->pUsingStatus = skillsAppliedOnThisUnit->AddTail(pEffectDesc);
 		m_pEffectDesc[bSkillKind] = pEffectDesc;
 					
 		switch(pEffectDesc->pEffect->GetEffectPosition())
@@ -277,7 +278,7 @@ void CMonster::AttachSkill(BYTE bSkillKind, BYTE bSkillLevel, DWORD dwEndTime)
 			break;
 		case EFFECT_TYPE_STATUS_BOTTOM:
 			pEffectDesc->hEffect.pDesc->ObjectFunc = EffectSkillMonsterStatusBottomFunc;
-			switch(pEffectDesc->pEffect->bID)
+			switch(pEffectDesc->pEffect->skillKind)
 			{
 			case __SKILL_REDELEMENTAL__:
 			case __SKILL_BLUEELEMENTAL__:
@@ -307,7 +308,7 @@ void CMonster::AttachSkill(BYTE bSkillKind, BYTE bSkillLevel, DWORD dwEndTime)
 void CMonster::CreateResource()
 {
 	m_pEffectList = new COnlyList(50);
-	m_pUsingStatusEffectList = new COnlyList(50);
+	skillsAppliedOnThisUnit = new COnlyList(50);
 	m_pDyingList = NULL;
 	
 	m_pSoundControl = new CSoundControl;
@@ -321,9 +322,9 @@ void CMonster::RemoveResource()
 		delete m_pEffectList;
 	m_pEffectList = NULL;	
 
-	if(m_pUsingStatusEffectList)
-		delete m_pUsingStatusEffectList;
-	m_pUsingStatusEffectList = NULL;
+	if(skillsAppliedOnThisUnit)
+		delete skillsAppliedOnThisUnit;
+	skillsAppliedOnThisUnit = NULL;
 
 	if (m_pDyingList)
 		g_pDyingMonsterList->RemoveAt(m_pDyingList);
@@ -337,15 +338,15 @@ void CMonster::RemoveResource()
 void CMonster::RemoveAllStatusEffect()
 {	
 	m_pEffectList->RemoveAll();
-	POSITION_ pos = m_pUsingStatusEffectList->GetHeadPosition();
+	POSITION_ pos = skillsAppliedOnThisUnit->GetHeadPosition();
 	
 	while( pos )
 	{
 		POSITION_ delPos = pos;
-		EffectDesc* pEffectDesc = (EffectDesc*)m_pUsingStatusEffectList->GetNext(pos);		
+		AppliedSkill* pEffectDesc = (AppliedSkill*)skillsAppliedOnThisUnit->GetAndAdvance(pos);		
 		
 		RemoveEffectDesc(pEffectDesc);
-		m_pUsingStatusEffectList->RemoveAt(delPos);			
+		skillsAppliedOnThisUnit->RemoveAt(delPos);			
 	}
 
 	m_bOverDriveCount = 0;
@@ -383,7 +384,7 @@ void CMonster::InitDie(CUser* pKiller, BOOL bOwn, DWORD dwPower, DWORD dwStartKi
 	if (!m_pDyingList)
 		m_pDyingList = g_pDyingMonsterList->AddTail((void*)m_dwMonsterIndex);
 	
-	if( g_pMainPlayer->m_dwUserIndex == m_dwLordIndex )
+	if( g_pMainPlayer->m_dwUserIndex == lordDungeonID )
 		__asm nop;
 }
 void CMonster::ModelScaleByLevel()
@@ -391,7 +392,7 @@ void CMonster::ModelScaleByLevel()
 	float fAlphaScale = 0.f;
 	// 마지막으로 가디언이라면 주인 유저에게 연결해준다.( 지금은 일단 메인 케릭터에만. )
 	if( m_dwMonsterKind == OBJECT_TYPE_GUARDIAN
-		&& m_dwLordIndex )
+		&& lordDungeonID )
 	{
 		fAlphaScale = (m_dwLevel*0.25f)/10.f;
 	}

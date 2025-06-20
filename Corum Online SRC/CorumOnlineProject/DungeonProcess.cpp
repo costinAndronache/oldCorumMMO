@@ -101,12 +101,16 @@
 #include "GuildWarStatusWnd.h"
 #include "ItemPickupFiltering/ItemPickupFiltering.h"
 #include "../CommonServer/ItemManagerDefine.h"
+#include "MouseButtonLongPressRecognizer.h"
+#include "AppliedSkillsIconsView.h"
 
 using namespace ItemPickupFiltering;
 
 char globalDebugLine[255];
 
 static int _renderFPS = 30;
+std::shared_ptr<AppliedSkillsIconsView> _appliedSkillsIconsView(nullptr);
+
 
 DWORD						g_dwMileHandleRefs	= 0;
 LPGlobalVariable_Dungeon	g_pGVDungeon		= NULL;
@@ -200,9 +204,9 @@ void cancelTooltipRenderingForAllDropped() {
 }
 //
 
-BOOL InitGameDungeon()
-{
+BOOL InitGameDungeon() {
 	ItemPickupFilteringSystem::sharedInstance()->setViewActive(false);
+	_appliedSkillsIconsView = std::make_shared<AppliedSkillsIconsView>();
 
 	CBankWnd::GetInstance()->Init();
 	// 카메라 이동에 관련된 플래그 세팅.
@@ -572,7 +576,7 @@ void UpdateGameDungeon()
 	while(pos)
 	{
 		POSITION_ del = pos;
-		DWORD dwMonsterIndex = (DWORD)g_pDyingMonsterList->GetNext(pos);
+		DWORD dwMonsterIndex = (DWORD)g_pDyingMonsterList->GetAndAdvance(pos);
 		CMonster* pMonster = g_pMonsterHash->GetData(dwMonsterIndex);
 
 		if (!pMonster) continue;
@@ -893,12 +897,12 @@ DWORD __stdcall BeforeRenderGameDungeon()
 
 	if(pUserInterface->m_pMonster)
 	{
-		if(pUserInterface->m_pMonster->m_dwLordIndex==0)
+		if(pUserInterface->m_pMonster->lordDungeonID==0)
 		{
 			if(pUserInterface->m_bMoveChr==TRUE && pUserInterface->m_byMoveType==1)
 				GXSetPosition(pUserInterface->m_pUserMouseHandle[0].pHandle, &pUserInterface->m_pMonster->m_v3CurPos, FALSE);
 		}
-		else if(g_pMainPlayer->m_dwUserIndex==pUserInterface->m_pMonster->m_dwLordIndex)
+		else if(g_pMainPlayer->m_dwUserIndex==pUserInterface->m_pMonster->lordDungeonID)
 		{
 			if(pUserInterface->m_bMoveChr==TRUE && pUserInterface->m_byMoveType==2)
 				GXSetPosition(pUserInterface->m_pUserMouseHandle[1].pHandle, &pUserInterface->m_pMonster->m_v3CurPos, FALSE);
@@ -935,21 +939,6 @@ DWORD __stdcall BeforeRenderGameDungeon()
 	
 	if (g_dwCurTick-g_pMainPlayer->m_dwTemp[USER_TEMP_100MILLI] >= 100) 
 	{
-		// 쿨타임포인터 올리기.
-		g_pMainPlayer->m_fCurCoolPoint = 
-			(float)min(g_pMainPlayer->m_fMaxCoolPoint, g_pMainPlayer->m_fCurCoolPoint+g_pMainPlayer->m_fMaxCoolPoint/g_pMainPlayer->GetODC()/30*0.1);
-
-		if (g_pMainPlayer->IsSkilling())
-		{
-			Effect* pEffect = g_pEffectLayer->GetEffectInfo(g_pMainPlayer->m_bSkillTmp);
-			BYTE bSkillLevel = g_pMainPlayer->GetSkillLevel(pEffect->bID);
-			if (bSkillLevel)
-			{
-				if (pEffect->bType == TYPE_DRIVE) // 마우스 누르고 있는 만큼만 마나 빼라.
-					pUserInterface->SetDengeonMp((WORD)max(0, g_pMainPlayer->m_wMP - g_pMainPlayer->m_wMaxMP*0.1*0.1 ));
-			}
-		}
-
 		if (g_pThisDungeon && g_pThisDungeon->m_bSiege)
 		{
 			if (g_pMainPlayer->m_bAttackMode != ATTACK_MODE_DEFENSE)
@@ -959,7 +948,7 @@ DWORD __stdcall BeforeRenderGameDungeon()
 
 				while(pos)
 				{
-					CP_DESC* pCPDesc = (CP_DESC*)g_pMap->m_pCPList->GetNext(pos);
+					CP_DESC* pCPDesc = (CP_DESC*)g_pMap->m_pCPList->GetAndAdvance(pos);
 					MAP_TILE* pTile = g_pMap->GetTile(g_pMainPlayer->m_v3CurPos.x, g_pMainPlayer->m_v3CurPos.z );
 					BOOL bShow = FALSE;
 					
@@ -998,26 +987,11 @@ DWORD __stdcall BeforeRenderGameDungeon()
 	
 	if (g_dwCurTick-g_pMainPlayer->m_dwTemp[USER_TEMP_1SECTICK] >= 1000  ) 
 	{
-		// 마나 올리기
-		if (g_pMainPlayer->m_wClass == CLASS_TYPE_WARRIOR)
-		{
-			// 전사만 쓸수 있다.		
-			if (g_pMainPlayer->IsSkilling())
-			{
-				Effect* pEffect = g_pEffectLayer->GetEffectInfo(g_pMainPlayer->m_bSkillTmp);
-				BYTE bSkillLevel = g_pMainPlayer->GetSkillLevel(pEffect->bID);
-				if (bSkillLevel)
-				{
-					if (pEffect->bID ==__SKILL_AURARECHARGE__) // 마우스 누르고 있는 만큼만 마나 더해라.
-						pUserInterface->SetDengeonMp((WORD)min(g_pMainPlayer->m_wMaxMP, g_pMainPlayer->m_wMP + pEffect->Value[bSkillLevel-1].nMin ));
-				}
-			}
-		}
-		
+		// 마나 올리기		
 		g_pMainPlayer->m_dwTemp[USER_TEMP_1SECTICK] = g_dwCurTick;
 	}
 
-	g_pMainPlayer->SetActionDummy();
+	g_pMainPlayer->SwitchBetweenIdleCharacterMotions();
 
 	if (g_pMainPlayer->GetStatus()!=UNIT_STATUS_DEAD)
 	{			
@@ -1030,15 +1004,13 @@ DWORD __stdcall BeforeRenderGameDungeon()
 
 			if(fPerWeight < WEIGTH_80PER_OVER)
 			{
-				pUserInterface->SetDengeonHp(min(g_pMainPlayer->m_wMaxHP, g_pMainPlayer->m_wHP+g_pMainPlayer->m_dwHealHPSec));
+				g_pMainPlayer->updateCurrentHP(min(g_pMainPlayer->maxHP(), g_pMainPlayer->currentHP()));
 				
 				if (g_pMainPlayer->m_wClass != CLASS_TYPE_WARRIOR) {
-					const DWORD maxMP = g_pMainPlayer->m_wMaxMP;
-					const DWORD currentMP = g_pMainPlayer->m_wMP;
-					const DWORD mpRegen = g_pMainPlayer->m_dwHealMPSec;
+					const DWORD maxMP = g_pMainPlayer->maxSP();
+					const DWORD currentMP = g_pMainPlayer->currentSP();
 
-					sprintf(globalDebugLine, "SetDengeonMP:: max: %d, current: %d, mpRegen: %d", maxMP, currentMP, mpRegen);
-					pUserInterface->SetDengeonMp(min(maxMP, currentMP + mpRegen));
+					g_pMainPlayer->updateCurrentSP(min(maxMP, currentMP));
 
 				}// 전사는 오라리차지로 올려야 한다. ㅡ.ㅡ
 			}	
@@ -1089,7 +1061,7 @@ DWORD __stdcall AfterRenderGameDungeon()
 		pItemWnd->RenderBelt(); // 밸트의 수량 
 	}
 	
-	pSkillWnd->RenderUsing();
+	_appliedSkillsIconsView->renderAppliedSkillsIcons();
 
 	ProcessMessgae();
 	
@@ -1110,10 +1082,10 @@ DWORD __stdcall AfterRenderGameDungeon()
 	if( !g_pThisDungeon->IsStadium() || (g_pMainPlayer->m_dwGuildWarFlag != G_W_F_OBSERVER) )
 	{
 		// Hp, Sp //	
-		wsprintf(szInfo, g_Message[ETC_MESSAGE864].szMessage, g_pMainPlayer->m_wHP, g_pMainPlayer->m_wMaxHP);//"Hp:%d/%d"	
+		wsprintf(szInfo, g_Message[ETC_MESSAGE864].szMessage, g_pMainPlayer->currentHP(), g_pMainPlayer->maxHP());//"Hp:%d/%d"	
 		RenderFont(szInfo, 5, 100, 740, 752, 1);
 
-		wsprintf(szInfo, g_Message[ETC_MESSAGE865].szMessage, g_pMainPlayer->m_wMP, g_pMainPlayer->m_wMaxMP);//"Sp:%d/%d"
+		wsprintf(szInfo, g_Message[ETC_MESSAGE865].szMessage, g_pMainPlayer->currentSP(), g_pMainPlayer->maxSP());//"Sp:%d/%d"
 		RenderFont(szInfo, 5, 100, 755, 777, 1);	
 	}
 		
@@ -1618,7 +1590,7 @@ void OnKeyDownDungeon(WPARAM wParam, LPARAM lParam)
 								else if( g_pMainPlayer->GetStatus()==UNIT_STATUS_RUNNING )
 									wAct = MOTION_TYPE_WALK;
 								
-								g_pMainPlayer->SetAction(wAct, 0, ACTION_LOOP );
+								g_pMainPlayer->SetMotion(wAct, 0, ACTION_LOOP );
 								g_pMainPlayer->SetStatus(g_pMainPlayer->m_bMoveType);
 								SendMovePacket();
 							}
@@ -1951,13 +1923,13 @@ void OnKeyDownDungeon(WPARAM wParam, LPARAM lParam)
 						{
 							if( g_pMainPlayer->GetStatus()==UNIT_STATUS_WALKING )
 							{
-								g_pMainPlayer->SetAction( MOTION_TYPE_WALK, 0, ACTION_LOOP );
+								g_pMainPlayer->SetMotion( MOTION_TYPE_WALK, 0, ACTION_LOOP );
 								g_pMainPlayer->SetStatus(g_pMainPlayer->m_bMoveType);
 								SendMovePacket();
 							}
 							else if( g_pMainPlayer->GetStatus()==UNIT_STATUS_RUNNING)
 							{
-								g_pMainPlayer->SetAction( MOTION_TYPE_RUN, 0, ACTION_LOOP );								
+								g_pMainPlayer->SetMotion( MOTION_TYPE_RUN, 0, ACTION_LOOP );								
 								SendMovePacket();
 							}
 
@@ -2102,7 +2074,9 @@ BOOL OnLButtonDownInterfaceDungeon()
 
 void OnLButtonDownDungeon(WPARAM wParam, LPARAM lParam)
 {
+
 	if (ItemPickupFilteringSystem::sharedInstance()->handleMouseDown()) {
+		printf("\nItemPickupFiltering handles it");
 		return;
 	}
 
@@ -2122,7 +2096,7 @@ void OnLButtonDownDungeon(WPARAM wParam, LPARAM lParam)
 
 	if( OnLButtonDownInterfaceDungeon() )
 	{
-		g_pMainPlayer->SendSkill();
+		g_pMainPlayer->SignalStartProcessingContinousSkillAtCurrentState();
 		return;		
 	}
 
@@ -2145,7 +2119,7 @@ void OnLButtonDownDungeon(WPARAM wParam, LPARAM lParam)
 	{
 		if( g_pMainPlayer->GetStatus() == UNIT_STATUS_WALKING || g_pMainPlayer->GetStatus() == UNIT_STATUS_RUNNING)
 		{
-			g_pMainPlayer->SetAction( MOTION_TYPE_WARSTAND, 0, ACTION_LOOP );			
+			g_pMainPlayer->SetMotion( MOTION_TYPE_WARSTAND, 0, ACTION_LOOP );			
 			g_pMainPlayer->SetStatus(UNIT_STATUS_NORMAL);
 			g_pMainPlayer->m_hPlayer.pDesc->ObjectFunc = NULL;
 			SendStopPacket();
@@ -2319,9 +2293,9 @@ void OnLButtonUpDungeon(WPARAM wParam, LPARAM lParam)
 
 		for( i=0; i<MAX_USER_GUARDIAN; i++ )
 		{
-			if( g_pMainPlayer->m_pMonster[i] )
+			if( g_pMainPlayer->servantMonsters[i] )
 			{
-				SelectSummonMonster(g_pMainPlayer->m_pMonster[i], FALSE);
+				SelectSummonMonster(g_pMainPlayer->servantMonsters[i], FALSE);
 			}
 		}
 
@@ -2342,7 +2316,7 @@ void OnLButtonUpDungeon(WPARAM wParam, LPARAM lParam)
 			if( !pMonster )
 				continue;
 
-			if( g_pMainPlayer->m_dwUserIndex == pMonster->m_dwLordIndex )
+			if( g_pMainPlayer->m_dwUserIndex == pMonster->lordDungeonID )
 			{
 				SelectSummonMonster(pMonster, TRUE);
 			}
@@ -2509,7 +2483,7 @@ void OnRButtonDownDungeon(WPARAM wParam, LPARAM lParam)
 
 
 void OnRButtonUpDungeon(WPARAM wParam, LPARAM lParam)
-{			
+{
 	CInterface* pInterface	= CInterface::GetInstance();
 	
 	pInterface->SetUp(FALSE);
@@ -2533,7 +2507,7 @@ void OnRButtonUpDungeon(WPARAM wParam, LPARAM lParam)
 
 	if(nChkInter==-1)
 	{
-		g_pMainPlayer->SendSkill();	
+		g_pMainPlayer->SignalStartProcessingContinousSkillAtCurrentState();	
 	}
 
 	if(pItemWnd->GetActive()==TRUE)		
@@ -2833,7 +2807,7 @@ void OnMouseMoveDungeon(WPARAM wParam, LPARAM lParam)
 					
 					CUserInterface::GetInstance()->m_pMonster = pMonster;
 
-					if(pMonster->m_dwLordIndex==0)
+					if(pMonster->lordDungeonID==0)
 					{
 						if(	CUserInterface::GetInstance()->m_bMoveChr==FALSE ||
 							CUserInterface::GetInstance()->m_byMoveType!=1)
@@ -2845,7 +2819,7 @@ void OnMouseMoveDungeon(WPARAM wParam, LPARAM lParam)
 							CUserInterface::GetInstance()->m_byMoveType = 1;
 						}						
 					}
-					else if(g_pMainPlayer->m_dwUserIndex==pMonster->m_dwLordIndex)
+					else if(g_pMainPlayer->m_dwUserIndex==pMonster->lordDungeonID)
 					{
 						if(	CUserInterface::GetInstance()->m_bMoveChr==FALSE ||
 							CUserInterface::GetInstance()->m_byMoveType!=2)
@@ -3778,9 +3752,9 @@ void InitMainPlayer( DSTC_JOIN* pJoin )
 	// 임시.. 오른손.. 왼손//
 
 	if (g_dwLayerID < 100 )	// 던전은 아니므로
-		g_pMainPlayer->SetAction( MOTION_TYPE_VILLAGESTAND, 0, ACTION_LOOP );		
+		g_pMainPlayer->SetMotion( MOTION_TYPE_VILLAGESTAND, 0, ACTION_LOOP );		
 	else
-		g_pMainPlayer->SetAction( MOTION_TYPE_WARSTAND, 0, ACTION_LOOP );
+		g_pMainPlayer->SetMotion( MOTION_TYPE_WARSTAND, 0, ACTION_LOOP );
 
 	InitChrInfo( GetFile( "pm01000.cdt", DATA_TYPE_CDT ), 0, OBJECT_TYPE_PLAYER );
 	
@@ -3898,7 +3872,7 @@ void InitMainPlayer( DSTC_CHANGE_LAYER* pLayer )
 	g_pMainPlayer->SetStatus(UNIT_STATUS_NORMAL, TRUE);
 	g_pMainPlayer->m_hPlayer.pDesc->ObjectFunc = NULL;
 	g_pMainPlayer->m_hPlayer.pDesc->CrashFunc = NULL;
-	g_pMainPlayer->SetAction( MOTION_TYPE_WARSTAND, 0, ACTION_LOOP );	
+	g_pMainPlayer->SetMotion( MOTION_TYPE_WARSTAND, 0, ACTION_LOOP );	
 	g_pMainPlayer->m_bCurLayer		= pLayer->bCurLayerIndex;
 	g_pMainPlayer->m_i64PickupItem	= 0;
 	
@@ -3939,9 +3913,9 @@ void InitMainPlayer( DSTC_CHANGE_LAYER* pLayer )
 	g_pGeometry->SetCameraPos( &v3Tmp, 0 );
 
 	if (g_dwLayerID < 100 )	// 던전은 아니므로
-		g_pMainPlayer->SetAction( MOTION_TYPE_VILLAGESTAND, 0, ACTION_LOOP );		
+		g_pMainPlayer->SetMotion( MOTION_TYPE_VILLAGESTAND, 0, ACTION_LOOP );		
 	else
-		g_pMainPlayer->SetAction( MOTION_TYPE_WARSTAND, 0, ACTION_LOOP );	
+		g_pMainPlayer->SetMotion( MOTION_TYPE_WARSTAND, 0, ACTION_LOOP );	
 
 	delete g_pSw;
 	g_pSw = NULL;
@@ -4136,7 +4110,7 @@ CUser* InitPlayer( DSTC_APPEAR* pAppear )
 	pPlayer->m_wHelmet	= pAppear->wHelmet;
 	pPlayer->m_byItemType = BYTE((pAppear->wHandR==0) ? 0 : (pAppear->wHandR/ITEM_DISTRIBUTE)+1);
 	
-	pPlayer->SetAction( MOTION_TYPE_WARSTAND, g_pExecutive->GXOGetCurrentFrame( pPlayer->m_hPlayer.pHandle ), ACTION_LOOP );
+	pPlayer->SetMotion( MOTION_TYPE_WARSTAND, g_pExecutive->GXOGetCurrentFrame( pPlayer->m_hPlayer.pHandle ), ACTION_LOOP );
 	pPlayer->m_hPlayer.pDesc->ObjectFunc	= NULL;				
 	pPlayer->SetStatus(UNIT_STATUS_NORMAL);
 		
@@ -4400,7 +4374,7 @@ void InitMonster( DSTC_APPEAR_MON* pAppear )
 	
 	pMonster->SetAction( MON_MOTION_TYPE_STAND1, 0, ACTION_LOOP );
 	pMonster->SetStatus(UNIT_STATUS_NORMAL, NULL);
-	pMonster->m_dwLordIndex = pAppear->dwLordIndex;	
+	pMonster->lordDungeonID = pAppear->dwLordIndex;	
 	pMonster->m_byBaseScale = pAppear->bScale;
 
 	// 마지막으로 가디언이라면 주인 유저에게 연결해준다.( 지금은 일단 메인 케릭터에만. )
@@ -4410,7 +4384,7 @@ void InitMonster( DSTC_APPEAR_MON* pAppear )
 		{
 			g_pMainPlayer->m_pGuardian[ pAppear->bZipCode ] = pMonster;
 			pMonster->m_bZipCode	= pAppear->bZipCode;
-			pMonster->m_dwLordIndex	= g_pMainPlayer->m_dwUserIndex;
+			pMonster->lordDungeonID	= g_pMainPlayer->m_dwUserIndex;
 			// Interface update		
 			CUserInterface* pUserInterface = CUserInterface::GetInstance();
 			pUserInterface->OpenGuardianDescriptionWnd(pMonster->m_dwMonsterIndex
@@ -4421,16 +4395,16 @@ void InitMonster( DSTC_APPEAR_MON* pAppear )
 	}
 	else if (!pAppear->dwLordIndex && pAppear->bMonsterKind == OBJECT_TYPE_GUARDIAN)
 	{
-		EffectDesc* pEffectDesc = g_pEffectLayer->CreateGXObject(g_pObjManager->GetFile(EFFECT_DUNGEON_GUARDIAN), FALSE, __CHR_EFFECT_NONE__);
+		AppliedSkill* pEffectDesc = g_pEffectLayer->CreateGXObject(g_pObjManager->GetFile(EFFECT_DUNGEON_GUARDIAN), FALSE, __CHR_EFFECT_NONE__);
 		pEffectDesc->byTargetObjectType[0] = OBJECT_TYPE_MONSTER;
 		pEffectDesc->dwTargetIndex[0] = pMonster->m_dwMonsterIndex;
 		pEffectDesc->hEffect.pDesc->ObjectFunc = EffectSkillAroundFunc;
 		::SetAction(pEffectDesc->hEffect.pHandle, 1, 0, ACTION_LOOP);
-		pEffectDesc->pUsingStatus = pMonster->m_pUsingStatusEffectList->AddTail(pEffectDesc);		
+		pEffectDesc->pUsingStatus = pMonster->skillsAppliedOnThisUnit->AddTail(pEffectDesc);		
 	}
 	else if( pAppear->bMonsterKind == OBJECT_TYPE_MONSTER && pAppear->dwLordIndex == g_pMainPlayer->m_dwUserIndex )
 	{
-		g_pMainPlayer->m_pMonster[ pAppear->bZipCode ]	= pMonster;
+		g_pMainPlayer->servantMonsters[ pAppear->bZipCode ]	= pMonster;
 		pMonster->m_bZipCode							= pAppear->bZipCode;		
 	}
 	
@@ -4622,7 +4596,7 @@ BOOL SetPathFindMove()
 			if( EpsilonVector( &g_pMainPlayer->m_v3Direction,  &v3DirNormal, 0.1f ) ) return TRUE;	// 같은 방향이면 메시지를 보낼 필요없음.						
 
 			// 방향이 같지 않다면 이동 메시지를 날린다.
-			g_pMainPlayer->SetAction( WORD((g_pMainPlayer->m_bMoveType == UNIT_STATUS_WALKING) ? MOTION_TYPE_WALK : MOTION_TYPE_RUN)
+			g_pMainPlayer->SetMotion( WORD((g_pMainPlayer->m_bMoveType == UNIT_STATUS_WALKING) ? MOTION_TYPE_WALK : MOTION_TYPE_RUN)
 					, g_pExecutive->GXOGetCurrentFrame( g_pMainPlayer->m_hPlayer.pHandle )
 					, ACTION_LOOP );
 			
@@ -4646,7 +4620,7 @@ BOOL SetPathFindMove()
 	
 	case UNIT_STATUS_NORMAL:
 		{
-			g_pMainPlayer->SetAction(WORD((g_pMainPlayer->m_bMoveType == UNIT_STATUS_WALKING) ? MOTION_TYPE_WALK : MOTION_TYPE_RUN), 0, ACTION_LOOP );
+			g_pMainPlayer->SetMotion(WORD((g_pMainPlayer->m_bMoveType == UNIT_STATUS_WALKING) ? MOTION_TYPE_WALK : MOTION_TYPE_RUN), 0, ACTION_LOOP );
 			
 			g_pMainPlayer->m_v3Direction	= v3DirNormal;
 			g_pMainPlayer->SetStatus(g_pMainPlayer->m_bMoveType);
@@ -5094,7 +5068,7 @@ void MonsterMoveFunc(GXOBJECT_HANDLE handle, LPObjectDesc pData, DWORD dwCurFram
 void EffectOnceAndNormal( GXOBJECT_HANDLE handle, LPObjectDesc pData, DWORD dwCurFrame, BYTE bFrameFlag )
 {
 	LPObjectDesc pObjDesc	= (LPObjectDesc)pData;
-	EffectDesc*	pEffectDesc = (EffectDesc*)pObjDesc->pInfo;
+	AppliedSkill*	pEffectDesc = (AppliedSkill*)pObjDesc->pInfo;
 	if (pEffectDesc->m_sLightDescEx.LightFunc)
 		pEffectDesc->m_sLightDescEx.LightFunc(pEffectDesc);
 	

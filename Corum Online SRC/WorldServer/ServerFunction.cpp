@@ -441,7 +441,7 @@ void __stdcall TimerPerSec(DWORD dwVal)
 
 		while(pos)
 		{
-			DUNGEON_DATA_EX* pDungeon = (DUNGEON_DATA_EX*)g_pDungeonTable->m_pDungeonList->GetNext(pos);
+			DUNGEON_DATA_EX* pDungeon = (DUNGEON_DATA_EX*)g_pDungeonTable->m_pDungeonList->GetAndAdvance(pos);
 			
 			if (pDungeon->IsConquer() && pDungeon->m_pServer)
 			{	
@@ -1018,7 +1018,7 @@ void BillingProcess()
 	POSITION_ pos_ = g_pUserTable->m_pTotalUserList->GetHeadPosition();
 	while(pos_)
 	{
-		CWorldUser* pUser = (CWorldUser*)g_pUserTable->m_pTotalUserList->GetNext(pos_);
+		CWorldUser* pUser = (CWorldUser*)g_pUserTable->m_pTotalUserList->GetAndAdvance(pos_);
 		
 		switch(pUser->m_BillingInfo.BillingOrder[ pUser->m_BillingInfo.bCurBillingOrderIndex ])
 		{
@@ -1222,7 +1222,7 @@ void __stdcall TimerPer5Minute(DWORD dwVal)
 
 	while(pos)
 	{
-		ACCEPT_USER* pAccept = (ACCEPT_USER*)g_pAcceptTable->m_pAcceptedList->GetNext(pos);
+		ACCEPT_USER* pAccept = (ACCEPT_USER*)g_pAcceptTable->m_pAcceptedList->GetAndAdvance(pos);
 		
 		if(dwCurTick < pAccept->dwAcceptedTick)		
 		{
@@ -1276,7 +1276,7 @@ void __stdcall TimerPer5Minute(DWORD dwVal)
 
 	while(pos)
 	{
-		LP_GUILDWAR_TIME lpGuildWarTime = (LP_GUILDWAR_TIME)g_pGuildWarTimeList->GetNext(pos);
+		LP_GUILDWAR_TIME lpGuildWarTime = (LP_GUILDWAR_TIME)g_pGuildWarTimeList->GetAndAdvance(pos);
 
 		if(NULL == lpGuildWarTime)	continue;
 
@@ -1342,7 +1342,7 @@ void __stdcall TimerPer5Minute(DWORD dwVal)
 
 				while(pos)
 				{
-					LP_GUILDWAR_RANK lpGuildWarRank = (LP_GUILDWAR_RANK)g_pRankList->GetNext(pos);
+					LP_GUILDWAR_RANK lpGuildWarRank = (LP_GUILDWAR_RANK)g_pRankList->GetAndAdvance(pos);
 
 					if(lpGuildWarRank)
 					{
@@ -1371,7 +1371,7 @@ void __stdcall TimerPer5Minute(DWORD dwVal)
 					POSITION_ posDelete	= posRank;
 					POSITION_ posChange	= NULL; 
 
-					LP_GUILDWAR_RANK lpGuildWarRank = (LP_GUILDWAR_RANK)g_pRankList->GetNext(posRank);
+					LP_GUILDWAR_RANK lpGuildWarRank = (LP_GUILDWAR_RANK)g_pRankList->GetAndAdvance(posRank);
 					if(NULL == lpGuildWarRank)	continue;
 
 					if(!dwPrevGuildId)
@@ -1404,7 +1404,7 @@ void __stdcall TimerPer5Minute(DWORD dwVal)
 				posRank = g_pRankList->GetHeadPosition();
 				if(NULL == posRank)	continue;
 
-				LP_GUILDWAR_RANK lpGuildWarRank = (LP_GUILDWAR_RANK)g_pRankList->GetNext(posRank);
+				LP_GUILDWAR_RANK lpGuildWarRank = (LP_GUILDWAR_RANK)g_pRankList->GetAndAdvance(posRank);
 				if(lpGuildWarRank)
 				{
 					if(dwPrevGuildId != 0 && lpGuildWarRank->dwGuildId != dwPrevGuildId)
@@ -1540,7 +1540,7 @@ void __stdcall TimerPer5Minute(DWORD dwVal)
 				
 				while(pos)
 				{
-					DUNGEON_DATA_EX* pDungeonDataEx = (DUNGEON_DATA_EX*)g_pDungeonTable->m_pDungeonList->GetNext(pos);
+					DUNGEON_DATA_EX* pDungeonDataEx = (DUNGEON_DATA_EX*)g_pDungeonTable->m_pDungeonList->GetAndAdvance(pos);
 
 					if(pDungeonDataEx && pDungeonDataEx->m_pServer)
 					{									
@@ -1584,7 +1584,7 @@ void __stdcall TimerPer5Minute(DWORD dwVal)
 
 				while(pos)
 				{
-					LP_GUILDWAR_TIME lpGuildWarTime = (LP_GUILDWAR_TIME)g_pGuildWarTimeList->GetNext(pos);
+					LP_GUILDWAR_TIME lpGuildWarTime = (LP_GUILDWAR_TIME)g_pGuildWarTimeList->GetAndAdvance(pos);
 
 					if(lpGuildWarTime && lpGuildWarTime->n64Id==lpGuildWarTime->n64Id)
 					{

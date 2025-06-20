@@ -9,7 +9,9 @@
 #include "../CommonServer/CommonHeader.h"
 #include "../CommonServer/CommonClientDungeon.h"
 #include "Effect.h"
-
+#include <vector>
+#include "CMainUserUpdateInterested.h"
+#include "../BaseLibrary/Timer.h"
 
 #define		USER_TEMP_DAMAGE_TYPE				0		// 미스인지 블록인지 성공인지
 #define		USER_TEMP_DAMAGE					1		// 데미지 값
@@ -85,16 +87,16 @@ public:
 	GXOBJECT_HANDLE		m_hEventClearObject;
 	GXLIGHT_HANDLE		m_hShadowLightHandle;
 
-	EffectDesc*			m_pEffectDesc[MAX_SKILL_COUNT];			
-	EffectDesc*			m_pPKEffect;
-	EffectDesc*			m_pOwnerEffect;
-	EffectDesc*			m_pEffectMagicArray;	// 마법진 이펙트 가지고 있기..
-	EffectDesc*			m_pEffectAttackMode;
+	AppliedSkill*			m_pEffectDesc[MAX_SKILL_COUNT];			
+	AppliedSkill*			m_pPKEffect;
+	AppliedSkill*			m_pOwnerEffect;
+	AppliedSkill*			m_pEffectMagicArray;	// 마법진 이펙트 가지고 있기..
+	AppliedSkill*			m_pEffectAttackMode;
 	
 	BYTE				m_bOverDriveCount;	
 	
 	COnlyList*			m_pEffectList;				// 이펙트가 를 쏘기 전에 이펙트가 온것을 저장할 큐
-	COnlyList*			m_pUsingStatusEffectList;	// 현재 적용받고 있는 상태이펙트 리스트
+	COnlyList*			skillsAppliedOnThisUnit;	// 현재 적용받고 있는 상태이펙트 리스트
 	CTDS_SKILL*			m_pSkillPacket;
 	
 	WORD				m_wAttackType;
@@ -108,7 +110,7 @@ public:
 	short				m_wCriminalTime;	// 범죄 타임
 	WORD				m_wSiegePKCount;	// 공성전일때의 pk수.
 	CMonster*			m_pGuardian[ MAX_USER_GUARDIAN ];
-	CMonster*			m_pMonster[ MAX_USER_GUARDIAN ];
+	CMonster*			servantMonsters[ MAX_USER_GUARDIAN ];
 	
 public:		
 	
@@ -152,8 +154,8 @@ public:
 	
 	void				SetDamageIndex( DWORD dwDamage );
 	void				SetDamageChar( DWORD dwChar );
-	void				SetAction( WORD wAct, int nFrame = 0, BYTE bFlag = ACTION_LOOP );
-	void				SetActionNext( WORD wAct, WORD wNextAct, BYTE bNextFlag = ACTION_LOOP, int nNextFrame = 0 );
+	void				SetMotion( WORD wAct, int nFrame = 0, BYTE bFlag = ACTION_LOOP );
+	void				SetMotionSequence( WORD wAct, WORD wNextAct, BYTE bNextFlag = ACTION_LOOP, int nNextFrame = 0 );
 	void				SetMatchUser(DWORD	dwMatchUserIndex);
 	void				ShowMoveStartEffect();
 	void				ShowMoveStopEffect();
@@ -161,14 +163,16 @@ public:
 	void				SetStatus(BYTE bStatus, BOOL bLive = FALSE);		
 
 public:
+	virtual void				OnCastPhaseBegin(BYTE bSkillKind, VECTOR3& vecTarget, BOOL bDirection, int spOffsetPerSecond);
+	virtual void				OnCastPhaseEndExecutionPhaseBegin(BYTE bSkillKind);
+
 	void				UserObjectAlpha(BYTE bAlpha);
 	void				UserObjectEnable(BYTE bEnable);
 	void				SetPlayerShop(BOOL bPlayerShop);	
 	void				SetAttackMode(BYTE bAttackMode);
 	void				SetSiegePKCount(int nCount);
 	void				DungeonOwnerEffect();
-	void				SetActionSkill(BYTE bSkillKind);
-	void				SetActionCasting(BYTE bSkillKind, VECTOR3& vecTarget, BOOL bDirection);
+	void				SetCharacterMotionForSkillExecution(BYTE bSkillKind);
 	void				AttachSkill(BYTE bSkillKind, BYTE bSkillLevel, DWORD dwEndTime);
 	void				SetSkillFailAction(ENUM_SKILL_CASTING_FAIL_REASON eFailReason);
 	void				DeleteMagicArray();
@@ -184,17 +188,15 @@ public:
 
 class CMainUser : public CUser
 {
-
-public:
-	
-	DWORD			m_wRace;
-	DWORD			m_wGrade;
-	DWORD			m_wHP;					
-	DWORD			m_wMP;
-	DWORD			m_wMaxHP;
-	DWORD			m_wMaxMP;
-	DWORD			m_wPoint;				// 레벨업시 발생하는 보너스 포인트.
-	DWORD			m_wPointSkill;
+private:
+	std::vector<CMainUserUpdateInterestedWeakRef> updateListeners;
+	Timer			*continousSkillCastSPUpdateTimer;
+	DWORD			m_dwHP;
+	DWORD			m_dwMP;
+	DWORD			m_dwMaxHP;
+	DWORD			m_dwMaxMP;
+	DWORD			m_dwPoint;				// 레벨업시 발생하는 보너스 포인트.
+	DWORD			m_dwPointSkill;
 
 	DWORD			m_dwExp;
 	DWORD			m_dwLevel;
@@ -205,7 +207,82 @@ public:
 	DWORD			m_dwDex;
 	DWORD			m_dwVit;
 	DWORD			m_dwLuck;
-	
+
+	float			m_fMaxCoolPoint;
+	float			m_fCurCoolPoint;
+
+
+	void			SendCasting();
+	BOOL			IsWithContinousSkillSelected();
+
+public:
+	void				OnCastPhaseBegin(BYTE bSkillKind, VECTOR3& vecTarget, BOOL bDirection, int spOffsetPerSecond) override;
+	void				OnCastPhaseEndExecutionPhaseBegin(BYTE bSkillKind) override;
+
+	void			addUpdateListener(CMainUserUpdateInterestedWeakRef);
+
+	float			percentageHP() const;
+	float			percentageMP() const; 
+	float			percentageCoolPoints() const;
+
+	float			currentCoolPoints() const;
+	void			updateCurrentCoolPoints(float);
+
+	float			maxCoolPoints() const;
+	void			updateMaxCoolPoints(float);
+
+	DWORD			currentHP() const;
+	void			updateCurrentHP(DWORD hp);
+
+	DWORD			currentSP() const;
+	void			updateCurrentSP(DWORD sp);
+
+	DWORD			maxHP() const;
+	void			updateMaxHP(DWORD);
+
+	DWORD			maxSP() const;
+	void			updateMaxSP(DWORD);
+
+
+	DWORD			currentStatPoints() const;
+	void			updateCurrentStatPoints(DWORD);
+
+	DWORD			currentSkillPoints() const;
+	void			updateCurrentSkillPoints(DWORD);
+
+	DWORD			currentEXP() const;
+	void			updateCurrentEXP(DWORD);
+
+	DWORD			currentLevel() const;
+	void			updateCurrentLevel(DWORD);
+
+	DWORD			currentHonor() const;
+	void			updateCurrentHonor(DWORD);
+
+
+	DWORD			currentEGO() const;
+	void			updateCurrentEGO(DWORD);
+
+	DWORD			currentSTR() const;
+	void			updateCurrentSTR(DWORD);
+
+	DWORD			currentINT() const;
+	void			updateCurrentINT(DWORD);
+
+	DWORD			currentDEX() const;
+	void			updateCurrentDEX(DWORD);
+
+	DWORD			currentVIT() const;
+	void			updateCurrentVIT(DWORD);
+
+	DWORD			currentLUCK() const;
+	void			updateCurrentLUCK(DWORD);
+
+	//
+
+	DWORD			m_wRace;
+	DWORD			m_wGrade;
+
 	CItem			m_pEquip[ MAX_EQUIP_POOL ];
 	CItem			m_pInv_Large[ MAX_INV_LARGE_POOL ];
 	CItem			m_pInv_Small[ MAX_INV_SMALL_POOL ];
@@ -242,9 +319,6 @@ public:
 	DWORD			m_wPoiResist;
 	DWORD			m_wPhyResist;
 	DWORD			m_bMaxResist;
-	
-	float			m_fMaxCoolPoint;
-	float			m_fCurCoolPoint;
 	
 	BYTE			m_byPKCount;
 	BYTE			m_byPKRepeatCount;
@@ -297,7 +371,6 @@ public:
 	int					m_nSkillKey[16];		// 스킬 단축키에 저장되어 있는 스킬 인덱스.
 	int					m_nPosSK[16];			// 스킬 단축키에 왼쪽, 오른쪽.
 			
-	DWORD				m_dwStartSkillTick[MAX_SKILL];	// 스킬쏜시간을 저장하는 변수.
 	BYTE				m_bCurLayer;			//현재 있는 던전의 층 
 	
 
@@ -311,8 +384,6 @@ public:
 	BYTE				m_byLayerIndex;
 	WORD				m_wDungeonID;
 	// 
-public:
-
 public:	
 	
 	BOOL			IsGMUser() const;
@@ -320,17 +391,17 @@ public:
 	void			GetAttackDamage_L(WORD& wAttackDamageMin, WORD& wAttackDamageMax);
 	void			GetAttackDamage_R(WORD& wAttackDamageMin, WORD& wAttackDamageMax);
 	BYTE			GetSkillLevel(BYTE bSkillKind);
-	BOOL			IsSkilling();	// 현재 스킬쏘려는중인가? 마우스 다운은 했는데 업을 안했다는 소리다.
-	void			SendSkill();	// 셋팅한 스킬을 보내라.
-	void			SendCasting();
-	void			SetActionDummy();	// 멍청히 있으면 서있기로 변신.
-	void			SetPacketSkillMonster(CMonster* pTargetMonster, BYTE bSkillKindLR);//몬스터에게 보낼 스킬을 셋팅할.
-	void			SetPacketSkillUser(CUser* pTargetUser,  BYTE bSkillKindLR);//플레이어에게 보낼 스킬을 셋팅하라.
-	void			SetPacketSkillTile(WORD wTileIndexX, WORD wTileIndexZ,  BYTE bSkillKindLR);//타일에게 보낼 스킬을 셋팅하라.
+
 	void			SetSkillChangeLR(BYTE bySkillKind, BYTE byLR);//left = 0, right = 1
+	void			BeginSkillCastOn(CMonster* pTargetMonster, BYTE bSkillKindLR);
+	void			BeginSkillCastOn(CUser* pTargetUser, BYTE bSkillKindLR);
+	void			BeginSkillCastAtTile(WORD wTileIndexX, WORD wTileIndexZ, BYTE bSkillKindLR, BYTE skillKind);
+	void			SignalStartProcessingContinousSkillAtCurrentState();
+
+	void			SwitchBetweenIdleCharacterMotions();	// 멍청히 있으면 서있기로 변신.
 	BOOL			CheckItem(CItem* pItem);
 	BYTE			GetSkillKind(BYTE byLR);
-	float			GetODC();
+	float			GetODC() const;
 	BOOL			IsAlliance(CUser* pUser);
 	BOOL			IsAlliance(CMonster* pMonster);
 	BOOL			IsMatching() const;

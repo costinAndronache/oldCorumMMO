@@ -211,7 +211,7 @@ void CDungeonTable::BroadCast(char* pPacket, DWORD dwLength)
 
 	while(pos)
 	{
-		pDungeon = (CDungeon*)m_pDungeonList->GetNext(pos);	
+		pDungeon = (CDungeon*)m_pDungeonList->GetAndAdvance(pos);	
 		pDungeon->BroadCast(pPacket, dwLength);
 	}
 }
@@ -232,7 +232,7 @@ void CDungeonTable::ShowAllDungeonStatus()
 		
 	while(pos)
 	{
-		pDungeon = (CDungeon*)m_pDungeonList->GetNext(pos);	
+		pDungeon = (CDungeon*)m_pDungeonList->GetAndAdvance(pos);	
 		
 		wsprintf(szTemp, "[%s] Type: %s, TotalLayer: %d, TotalUser: %d", pDungeon->GetDungeonName(), 
 				szType[ pDungeon->GetDungeonKind()-1 ], pDungeon->GetTotalLayer(), pDungeon->GetDungeonTotalUserCount() );

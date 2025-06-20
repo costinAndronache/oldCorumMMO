@@ -75,7 +75,7 @@ void CmdPartyAllPortal(SERVER_DATA* pServer, char* pMsg, DWORD dwLength)
 
 				while(pos)
 				{
-					CWorldUser* pPartyUser =  (CWorldUser*)lpPartyTable->pPartyUserList->GetNext(pos);
+					CWorldUser* pPartyUser =  (CWorldUser*)lpPartyTable->pPartyUserList->GetAndAdvance(pos);
 
 					if(pPartyUser)
 					{
@@ -185,7 +185,7 @@ void CmdPartyHp(SERVER_DATA* pServer, char* pMsg, DWORD dwLength)
 
 			while(pos)
 			{
-				CWorldUser* pPartyUser = (CWorldUser*)lpPartyTable->pPartyUserList->GetNext(pos);
+				CWorldUser* pPartyUser = (CWorldUser*)lpPartyTable->pPartyUserList->GetAndAdvance(pos);
 
 				if(pPartyUser)
 				{
@@ -212,7 +212,7 @@ void CmdPartyHp(SERVER_DATA* pServer, char* pMsg, DWORD dwLength)
 
 						while(posDst)
 						{
-							CWorldUser* pPartyUserDst = (CWorldUser*)lpPartyTable->pPartyUserList->GetNext(posDst);
+							CWorldUser* pPartyUserDst = (CWorldUser*)lpPartyTable->pPartyUserList->GetAndAdvance(posDst);
 
 							if(pPartyUserDst->m_dwUserIndex!=pUser->m_dwUserIndex)
 							{
@@ -295,7 +295,7 @@ void CmdPartyLevel(SERVER_DATA* pServer, char* pMsg, DWORD dwLength)
 
 			while(pos)
 			{
-				CWorldUser* pPartyUser = (CWorldUser*)lpPartyTable->pPartyUserList->GetNext(pos);
+				CWorldUser* pPartyUser = (CWorldUser*)lpPartyTable->pPartyUserList->GetAndAdvance(pos);
 
 				if(!pPartyUser)
 					continue;
@@ -318,7 +318,7 @@ void CmdPartyLevel(SERVER_DATA* pServer, char* pMsg, DWORD dwLength)
 
 					while(posDst)
 					{
-						CWorldUser* pPartyUserDst = (CWorldUser*)lpPartyTable->pPartyUserList->GetNext(posDst);
+						CWorldUser* pPartyUserDst = (CWorldUser*)lpPartyTable->pPartyUserList->GetAndAdvance(posDst);
 
 						if(!pPartyUserDst)
 							continue;
@@ -390,7 +390,7 @@ void CmdDungeonGroupExp(SERVER_DATA* pServer, char* pMsg, DWORD dwLength)
 
 	while(pos)
 	{
-		CWorldUser* pPartyUser = (CWorldUser*)lpPartyTable->pPartyUserList->GetNext(pos);				
+		CWorldUser* pPartyUser = (CWorldUser*)lpPartyTable->pPartyUserList->GetAndAdvance(pos);				
 	
 		if(!pPartyUser) continue;
 

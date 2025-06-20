@@ -154,7 +154,7 @@ void PickingObjectTypeMonster(LPObjectDesc pObjDesc)
 				}
 				else
 				{
-					if(	pMonster->m_dwLordIndex 
+					if(	pMonster->lordDungeonID 
 					&&	!pUserInterface->m_nPK  )
 					{
 						bAttack = FALSE;

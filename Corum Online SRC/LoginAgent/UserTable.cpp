@@ -286,5 +286,5 @@ POSITION_ CUserTable::GetHeadPosition()
 
 CUser* CUserTable::GetNext(POSITION_& Position)
 {
-	return (CUser*)m_pUserList->GetNext(Position);
+	return (CUser*)m_pUserList->GetAndAdvance(Position);
 }

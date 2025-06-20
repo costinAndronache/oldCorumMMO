@@ -179,7 +179,7 @@ void CMiniMapWnd::SetOrder()
 
 	while(pos)
 	{
-		CP_DESC* pCPDesc = (CP_DESC*)g_pMap->m_pCPList->GetNext(pos);
+		CP_DESC* pCPDesc = (CP_DESC*)g_pMap->m_pCPList->GetAndAdvance(pos);
 		pCPDesc->pSpr_Minimap_Dot->nZOrder = nOrder+3;
 	}		
 }
@@ -399,7 +399,7 @@ void CMiniMapWnd::SetMinimapPos()
 	POSITION_ pos = g_pMap->m_pCPList->GetHeadPosition();	
 	while(pos)
 	{
-		CP_DESC* pCPDesc = (CP_DESC*)g_pMap->m_pCPList->GetNext(pos);
+		CP_DESC* pCPDesc = (CP_DESC*)g_pMap->m_pCPList->GetAndAdvance(pos);
 		VECTOR2 vec2 = GetRatioMinimap(pCPDesc->pTile->x, pCPDesc->pTile->z);
 		pCPDesc->pSpr_Minimap_Dot->vPos.x = m_fPosX+vec2.x+8;
 		pCPDesc->pSpr_Minimap_Dot->vPos.y = m_fPosZ+vec2.y+42;

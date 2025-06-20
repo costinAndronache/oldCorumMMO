@@ -1,5 +1,5 @@
 #pragma once
-#include "BaseNetworkInterface.h"
+#include "../[Lib]BaseNetwork/BaseNetworkInterface.h"
 #include "Define.h"
 
 #define		MAX_SERVER_CONNECT		4

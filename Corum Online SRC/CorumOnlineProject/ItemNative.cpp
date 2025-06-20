@@ -6132,14 +6132,14 @@ void SetRHandChange(CUser* pUser, DWORD dwId)
 	if(dwId==0)
 	{
 		pUser->m_byItemType	= 0;		
-		pUser->SetAction(MOTION_TYPE_WARSTAND, g_pExecutive->GXOGetCurrentFrame( pUser->m_hPlayer.pHandle ), ACTION_LOOP );
+		pUser->SetMotion(MOTION_TYPE_WARSTAND, g_pExecutive->GXOGetCurrentFrame( pUser->m_hPlayer.pHandle ), ACTION_LOOP );
 		pUser->m_hPlayer.pDesc->ObjectFunc	= NULL;				
 		pUser->SetStatus(UNIT_STATUS_NORMAL);
 	}		
 	else
 	{
 		pUser->m_byItemType	= nIndex+1;		
-		pUser->SetAction(MOTION_TYPE_WARSTAND, g_pExecutive->GXOGetCurrentFrame( pUser->m_hPlayer.pHandle ), ACTION_LOOP );
+		pUser->SetMotion(MOTION_TYPE_WARSTAND, g_pExecutive->GXOGetCurrentFrame( pUser->m_hPlayer.pHandle ), ACTION_LOOP );
 		pUser->m_hPlayer.pDesc->ObjectFunc	= NULL;
 		pUser->SetStatus(UNIT_STATUS_NORMAL);
 	}

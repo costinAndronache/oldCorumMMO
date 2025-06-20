@@ -13,7 +13,6 @@
 #include "Voidlist.h"
 
 
-
 //---------------------------------------------------------------------------
 // 인  수: 없음                                                             |
 // 반환값: 없음                                                             |
@@ -129,7 +128,7 @@ void CVoidList::AddTail(CVoidList* pNewList)
     // add a list of same elements
     POSITION_ pos = pNewList->GetHeadPosition();
     while (pos != NULL)
-        AddTail(pNewList->GetNext(pos));
+        AddTail(pNewList->GetAndAdvance(pos));
 }
 
 
@@ -370,5 +369,24 @@ void CVoidList::FreeData(void* pData)
 }
 
 
+void CVoidList::iterateWith(IterationStepFn stepFn) {
+    POSITION_ pos = GetHeadPosition();
+    unsigned int index = 0;
+    
+    while (pos) {
+        void* currentValue = GetAndAdvance(pos);
+        stepFn(currentValue, index);
+        index += 1;
+    }
+}
+
+std::vector<void*> CVoidList::filterWith(FilterConditionFn filterFn) {
+    std::vector<void*> result;
+    iterateWith([&result, &filterFn](void* current, unsigned int) {
+        if (filterFn(current)) { result.push_back(current); }
+    });
+
+    return result;
+}
 
 

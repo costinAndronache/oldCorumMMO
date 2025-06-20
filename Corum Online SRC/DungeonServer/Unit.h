@@ -55,7 +55,7 @@ class CUnit
 	DWORD				m_dwLastMoveTick;					// 마지막으로 이동했던 시각.
 	CDungeon*			m_pCurDungeon;						// 현재 몬스터가 있는던젼.
 	CDungeonLayer*		m_pCurDungeonLayer;
-	EffectDesc*			m_pEffectDesc[MAX_SKILL];			// 현재 적용중인 이펙트를 가지고 있는다.
+	AppliedSkill*			m_pEffectDesc[MAX_SKILL];			// 현재 적용중인 이펙트를 가지고 있는다.
 	float				m_fPlusParam[USER_MAX_STATUS];		// 상승치를 가지고 있는 배열
 	WORD				m_pwAttackDamage_L[2];
 	WORD				m_pwAttackDamage_R[2];
@@ -95,7 +95,7 @@ public:
 
 	// 유저, 몬스터 둘다 가지고 있어야 할 함수들.
 	virtual void					Update() = 0;
-	virtual void					DetachSkill(EffectDesc* pEffectDesc) = 0;
+	virtual void					DetachSkill(AppliedSkill* pEffectDesc) = 0;
 	virtual void					RemoveResource() = 0;
 	virtual void					CreateResource() = 0;
 	virtual void					UpdateMaxHP() = 0;
@@ -112,7 +112,7 @@ public:
 	virtual void					UpdateAvoid() = 0;
 	virtual void					UpdateAD() = 0;
 	virtual int						GetExpDying() = 0;
-	virtual void					ReSetStatusFromSkillStatusValue(EffectDesc* pEffectDesc) = 0;
+	virtual void					ReSetStatusFromSkillStatusValue(AppliedSkill* pEffectDesc) = 0;
 	virtual void					SetStatusFromSkillStatusValue(BYTE bSkillKind, BYTE bSkillLevel, WORD wClass, float* pResetValue, BOOL bUserStatusSend = FALSE) = 0;
 	virtual void					SetDamageOver(const CUnit* pUnit, DWORD dwDamage) = 0;
 	virtual BOOL					IsAlliance(const CUnit* pUnit) = 0;
@@ -205,8 +205,8 @@ public:
 	void							SetPrevSectionNum(BYTE bySectionNum);
 	CVoidList*						GetUsingStatusEffectList() const;
 	void							NewUsingStatusEffectList();
-	EffectDesc*						GetEffectDesc(BYTE bySkillKind) const;
-	void							SetEffectDesc(BYTE bySkillKind, EffectDesc* pEffectDesc);
+	AppliedSkill*						GetEffectDesc(BYTE bySkillKind) const;
+	void							SetEffectDesc(BYTE bySkillKind, AppliedSkill* pEffectDesc);
 	const VECTOR2*					GetCurDirection() const;
 	void							SetCurDirection(const VECTOR2* v2Dir);
 	void							SetSP(DWORD dwSP);
@@ -233,8 +233,8 @@ public:
 	void							SetStaff(CUnit* pUnit);
 	CUnit*							GetStaff() const;
 	DWORD							GetReduceDamageForObject(DWORD dwDamage, CUnit* pAttackUnit);
-	EffectDesc*						AllocEffectDesc(BYTE bySkillKind, BYTE bySkillLevel);
-	void							FreeEffectDesc(EffectDesc* pEffectDesc);
+	AppliedSkill*						AllocEffectDesc(BYTE bySkillKind, BYTE bySkillLevel);
+	void							FreeEffectDesc(AppliedSkill* pEffectDesc);
 	void							AddStatusPoint(enum STATUS_POINT_KIND eStatus_Point_Kind);
 	void							RemoveAllDetachSkill();
 	char							GetSkillLevelByItem(BYTE bySkillKind) const;

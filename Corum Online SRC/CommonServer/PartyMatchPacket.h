@@ -2,6 +2,7 @@
 
 #include "ProtocolDefinition.h"
 
+#pragma pack(push, 1)
 // ¸ÅÄª Á¶°Ç
 struct PMATCH_CONDITION
 {
@@ -76,3 +77,5 @@ struct WSTC_PMATCH_CHANGE_RESULT : WORLD_PACKET_HEADER
 	WSTC_PMATCH_CHANGE_RESULT()	{	bGameStatus = UPDATE_GAME_WORLD;	bHeader = Protocol_World::CMD_PMATCH_CHANGE_RESULT;	}
 	DWORD	GetPacketSize()	{	return sizeof(WSTC_PMATCH_CHANGE_RESULT);	}
 };
+
+#pragma pack(pop)

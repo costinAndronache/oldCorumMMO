@@ -25,7 +25,7 @@ public:
 	void DeleteData( void* pData );
 };
 
-class CEffectHash : public CAbyssHash<EffectDesc>
+class CEffectHash : public CAbyssHash<AppliedSkill>
 {
 public:
 	void DeleteData( void* pData );

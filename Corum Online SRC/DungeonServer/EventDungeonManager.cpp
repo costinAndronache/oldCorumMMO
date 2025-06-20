@@ -33,7 +33,7 @@ BOOL QueryEventDungeonProperties()
 
 	while (pos)
 	{
-		pDungeon = (CDungeon*)g_pDungeonTable->m_pDungeonList->GetNext(pos);
+		pDungeon = (CDungeon*)g_pDungeonTable->m_pDungeonList->GetAndAdvance(pos);
 
 		if (NULL == pDungeon)
 			continue;
@@ -341,7 +341,7 @@ void Event_SurvivalClear(CDungeon* pDungeon)
 
 		while(pos)
 		{
-			pUser = (CUser*)pDungeon->GetDungeonUserList()->GetNext(pos);
+			pUser = (CUser*)pDungeon->GetDungeonUserList()->GetAndAdvance(pos);
 
 			if(pUser)
 			{

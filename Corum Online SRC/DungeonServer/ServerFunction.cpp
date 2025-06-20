@@ -44,7 +44,7 @@ void __stdcall ProcessDungeon(DWORD dwVal)
 
 	while( DungeonPos )
 	{
-		CDungeon* pDungeon = (CDungeon*)g_pDungeonTable->m_pDungeonList->GetNext( DungeonPos );	
+		CDungeon* pDungeon = (CDungeon*)g_pDungeonTable->m_pDungeonList->GetAndAdvance( DungeonPos );	
 
 		// 적어도 한던젼 마다는 다른 틱을 설정하자.
 		g_dwTickCount = timeGetTime();	
@@ -54,7 +54,7 @@ void __stdcall ProcessDungeon(DWORD dwVal)
 		
 		while( pos )
 		{
-			CUser* pUser = (CUser*)pDungeon->GetDungeonUserList()->GetNext(pos);
+			CUser* pUser = (CUser*)pDungeon->GetDungeonUserList()->GetAndAdvance(pos);
 			pUser->Update();
 		}
 
@@ -125,7 +125,7 @@ void __stdcall UpdateMonitor(DWORD dwVal)	// 일단 임시로 만드는것이다. 다음에 계
 	pos = pPcList->GetHeadPosition();
 	while( pos )
 	{
-		pUser = (CUser*)pPcList->GetNext( pos );
+		pUser = (CUser*)pPcList->GetAndAdvance( pos );
 		g_pGDI->DrawFillBox( INT( pUser->GetCurPosition()->x / TILE_WIDTH ) * 2, INT(wHeight-( pUser->GetCurPosition()->y / TILE_HEIGHT * 2)), 
 			INT( pUser->GetCurPosition()->x / TILE_WIDTH ) * 2 + 2, INT(wHeight-( pUser->GetCurPosition()->y / TILE_HEIGHT * 2 + 2)), 0xff00 );
 	}
@@ -137,7 +137,7 @@ void __stdcall UpdateMonitor(DWORD dwVal)	// 일단 임시로 만드는것이다. 다음에 계
 	pos = pMonsterList->GetHeadPosition();
 	while( pos )
 	{
-		pMonster = (CMonster*)pMonsterList->GetNext( pos );
+		pMonster = (CMonster*)pMonsterList->GetAndAdvance( pos );
 		g_pGDI->DrawFillBox( INT( pMonster->GetCurPosition()->x / TILE_WIDTH ) * 2, INT(wHeight-( pMonster->GetCurPosition()->y / TILE_HEIGHT * 2)), 
 			INT( pMonster->GetCurPosition()->x / TILE_WIDTH ) * 2 + 2, INT(wHeight-( pMonster->GetCurPosition()->y / TILE_HEIGHT * 2 + 2)), 0x07E0 );
 	}
@@ -148,7 +148,7 @@ void __stdcall UpdateMonitor(DWORD dwVal)	// 일단 임시로 만드는것이다. 다음에 계
 	pos = pActiveList->GetHeadPosition();
 	while( pos )
 	{
-		pSection = (CSection*)pActiveList->GetNext( pos );
+		pSection = (CSection*)pActiveList->GetAndAdvance( pos );
 		g_pGDI->DrawBox( pSection->x1*2, wHeight-(pSection->y1*2), pSection->x2 * 2+2, wHeight-( pSection->y2 * 2+2 ), 0xffff );
 	}
 		
@@ -180,7 +180,7 @@ void __stdcall DungeonEnteredCount(DWORD dwVal)
 	
 	while (pos)
 	{
-		pDungeon = (CDungeon*)g_pDungeonTable->m_pDungeonList->GetNext(pos);
+		pDungeon = (CDungeon*)g_pDungeonTable->m_pDungeonList->GetAndAdvance(pos);
 
 		if (NULL == pDungeon)
 		{
@@ -260,7 +260,7 @@ void __stdcall PkDecreaseCountCheck(DWORD dwVal)
 	while(pos)
 	{
 		del = pos;
-		pUser = (CUser*)g_pThis->m_pPKUserCheckList->GetNext(pos);
+		pUser = (CUser*)g_pThis->m_pPKUserCheckList->GetAndAdvance(pos);
 
 		if ((pUser->m_sPKDescInfo.m_bPKCount|pUser->m_sPKDescInfo.m_bPKRepeatCount) == 0)
 		{
@@ -1013,7 +1013,7 @@ void RemoveUserProcess(CDungeon* pDungeon)
 	while(posRemove)
 	{
 		POSITION_	del			= posRemove;
-		CUser*		pRemoveUser = (CUser*)pDungeon->GetRemovePCList()->GetNext(posRemove);
+		CUser*		pRemoveUser = (CUser*)pDungeon->GetRemovePCList()->GetAndAdvance(posRemove);
 
 		if (pRemoveUser->m_dwTemp[USER_TEMP_FLAG_UPDATEUSERFORAI])
 		{

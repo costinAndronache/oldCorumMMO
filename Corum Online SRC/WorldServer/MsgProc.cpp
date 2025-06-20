@@ -758,7 +758,7 @@ void CmdChatUser(CWorldUser* pUser ,char* pMsg, DWORD dwLength)
 		CWorldUser * pExistUserRev = NULL;
 		while(pos)
 		{
-			CWorldUser* pUserRev = (CWorldUser*)lpPartyTable->pPartyUserList->GetNext(pos);			
+			CWorldUser* pUserRev = (CWorldUser*)lpPartyTable->pPartyUserList->GetAndAdvance(pos);			
 
 			if(!pUserRev)
 			{
@@ -801,7 +801,7 @@ void CmdRequestOwnDungeonInfo(CWorldUser* pUser, char* pMsg, DWORD dwLength)
 	POSITION_ pos = g_pDungeonTable->m_pDungeonList->GetHeadPosition();
 	while(pos)
 	{
-		DUNGEON_DATA_EX* pDungeon = (DUNGEON_DATA_EX*)g_pDungeonTable->m_pDungeonList->GetNext(pos);
+		DUNGEON_DATA_EX* pDungeon = (DUNGEON_DATA_EX*)g_pDungeonTable->m_pDungeonList->GetAndAdvance(pos);
 		
 		if (pDungeon->m_dwOwnerIndex == pUser->m_dwUserIndex)
 		{
@@ -809,7 +809,7 @@ void CmdRequestOwnDungeonInfo(CWorldUser* pUser, char* pMsg, DWORD dwLength)
 			POSITION_ poss = pUser->m_pListRefreshFromDungeon->GetHeadPosition();
 			while(poss)
 			{
-				DUNGEON_DATA_EX* pTempDungeon = (DUNGEON_DATA_EX*)pUser->m_pListRefreshFromDungeon->GetNext(poss);
+				DUNGEON_DATA_EX* pTempDungeon = (DUNGEON_DATA_EX*)pUser->m_pListRefreshFromDungeon->GetAndAdvance(poss);
 				if (pTempDungeon->m_dwID == pDungeon->m_dwID)
 				{
 					bSend = FALSE;
@@ -882,7 +882,7 @@ void CmdDSChatUser(CWorldUser* pUser ,char* pMsg, DWORD dwLength)
 
 		while(pos)
 		{
-			CWorldUser*	pUserRev = (CWorldUser*)lpPartyTable->pPartyUserList->GetNext(pos);			
+			CWorldUser*	pUserRev = (CWorldUser*)lpPartyTable->pPartyUserList->GetAndAdvance(pos);			
 
 			if(!pUserRev)
 				return;
@@ -1070,7 +1070,7 @@ void CmdGoToWorldSuccess(CWorldUser* pUser ,char* pMsg, DWORD dwLength)
 
 				 while(pos)
 				 {
-					 CWorldUser* pPartyUser =  (CWorldUser*)lpPartyTable->pPartyUserList->GetNext(pos);																 
+					 CWorldUser* pPartyUser =  (CWorldUser*)lpPartyTable->pPartyUserList->GetAndAdvance(pos);																 
 					 		
 					 //월드맵에 있는 파티 유저가 아니면 Skip
 					 if(pPartyUser->m_dwCurServerPos != POS_SERVER_WORLD )	continue;					 
@@ -1151,7 +1151,7 @@ void CmdWorldMove(CWorldUser* pUser ,char* pMsg, DWORD dwLength)
 
 			 while(pos)
 			 {
-				 CWorldUser* pPartyUser =  (CWorldUser*)lpPartyTable->pPartyUserList->GetNext(pos);
+				 CWorldUser* pPartyUser =  (CWorldUser*)lpPartyTable->pPartyUserList->GetAndAdvance(pos);
 
 				 if(pPartyUser->m_dwUserIndex==pUser->m_dwUserIndex
 					 || pPartyUser->m_dwCurServerPos != POS_SERVER_WORLD)
@@ -1195,7 +1195,7 @@ void CmdWorldStop(CWorldUser* pUser ,char* pMsg, DWORD dwLength)
 
 			 while(pos)
 			 {
-				 CWorldUser* pPartyUser =  (CWorldUser*)lpPartyTable->pPartyUserList->GetNext(pos);
+				 CWorldUser* pPartyUser =  (CWorldUser*)lpPartyTable->pPartyUserList->GetAndAdvance(pos);
 
 				 if(pPartyUser->m_dwUserIndex == pUser->m_dwUserIndex 
 					 || pPartyUser->m_dwCurServerPos != POS_SERVER_WORLD)		continue;	//본인이거나 월드에 없는 유저면 Skip
@@ -1224,7 +1224,7 @@ void CmdWorldSetPosition(CWorldUser* pUser ,char* pMsg, DWORD dwLength)
 
 			 while(pos)
 			 {
-				 CWorldUser* pPartyUser =  (CWorldUser*)lpPartyTable->pPartyUserList->GetNext(pos);
+				 CWorldUser* pPartyUser =  (CWorldUser*)lpPartyTable->pPartyUserList->GetAndAdvance(pos);
 
 				 if(pPartyUser->m_dwUserIndex == pUser->m_dwUserIndex 
 					 || pPartyUser->m_dwCurServerPos != POS_SERVER_WORLD)		continue;	//본인이거나 월드에 없는 유저면 Skip
@@ -1253,7 +1253,7 @@ void CmdAirshipRiding(CWorldUser* pUser ,char* pMsg, DWORD dwLength)
 
 			 while(pos)
 			 {
-				 CWorldUser* pPartyUser =  (CWorldUser*)lpPartyTable->pPartyUserList->GetNext(pos);
+				 CWorldUser* pPartyUser =  (CWorldUser*)lpPartyTable->pPartyUserList->GetAndAdvance(pos);
 
 				 if(pPartyUser->m_dwUserIndex == pUser->m_dwUserIndex 
 					 || pPartyUser->m_dwCurServerPos != POS_SERVER_WORLD)		continue;	//본인이거나 월드에 없는 유저면 Skip
@@ -1282,7 +1282,7 @@ void CmdAirshipGetoff(CWorldUser* pUser ,char* pMsg, DWORD dwLength)
 
 			 while(pos)
 			 {
-				 CWorldUser* pPartyUser =  (CWorldUser*)lpPartyTable->pPartyUserList->GetNext(pos);
+				 CWorldUser* pPartyUser =  (CWorldUser*)lpPartyTable->pPartyUserList->GetAndAdvance(pos);
 
 				 if(pPartyUser->m_dwUserIndex == pUser->m_dwUserIndex 
 					 || pPartyUser->m_dwCurServerPos != POS_SERVER_WORLD)		continue;	//본인이거나 월드에 없는 유저면 Skip
@@ -1550,7 +1550,7 @@ void SendAllEventInfo(DWORD dwConnectionIndex)
 
 	while(pos)
 	{
-		pDungeon = (DUNGEON_DATA_EX*)g_pEventDungeonManager->m_pEventDungeonList->GetNext(pos);
+		pDungeon = (DUNGEON_DATA_EX*)g_pEventDungeonManager->m_pEventDungeonList->GetAndAdvance(pos);
 		
 		if(DUNGEON_TYPE_EVENT != pDungeon->GetDungeonType())
 			continue;		
@@ -1591,7 +1591,7 @@ void SendAllEventState(DWORD dwConnectionIndex)
 
 	while(pos)
 	{
-		pDungeon = (DUNGEON_DATA_EX*)g_pEventDungeonManager->m_pEventDungeonList->GetNext(pos);
+		pDungeon = (DUNGEON_DATA_EX*)g_pEventDungeonManager->m_pEventDungeonList->GetAndAdvance(pos);
 		
 		if(DUNGEON_TYPE_EVENT != pDungeon->GetDungeonType())
 			continue;

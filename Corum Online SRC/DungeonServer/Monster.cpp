@@ -448,7 +448,7 @@ lbl_user:
 	UserPos		= GetCurSection()->m_pPcList->GetHeadPosition();
 	while( UserPos )
 	{
-		pUser	= (CUser*)GetCurSection()->m_pPcList->GetNext( UserPos );
+		pUser	= (CUser*)GetCurSection()->m_pPcList->GetAndAdvance( UserPos );
 		fLength = CalcDistance( GetCurPosition(), pUser->GetCurPosition() );
 		
 		if( fLength < fMin 
@@ -495,7 +495,7 @@ lbl_user:
 		
 		while( UserPos )
 		{
-			pUser = (CUser*)pLinkSection->m_pPcList->GetNext( UserPos );
+			pUser = (CUser*)pLinkSection->m_pPcList->GetAndAdvance( UserPos );
 			fLength = CalcDistance( GetCurPosition(), pUser->GetCurPosition() );
 			
 			if( fLength < fMin && pUser->GetUnitStatus() != UNIT_STATUS_DEAD 
@@ -545,7 +545,7 @@ lbl_monster:
 	MonsterPos		= GetCurSection()->m_pMonsterList->GetHeadPosition();
 	while( MonsterPos )
 	{
-		pMonster	= (CMonster*)GetCurSection()->m_pMonsterList->GetNext( MonsterPos );
+		pMonster	= (CMonster*)GetCurSection()->m_pMonsterList->GetAndAdvance( MonsterPos );
 		fLength		= CalcDistance( GetCurPosition(), pMonster->GetCurPosition() );
 
 		if( fLength < fMin && pMonster->GetUnitStatus() != UNIT_STATUS_DEAD 
@@ -577,7 +577,7 @@ lbl_monster:
 		
 		while( MonsterPos )
 		{
-			pMonster	= (CMonster*)GetCurSection()->m_pMonsterList->GetNext( MonsterPos );
+			pMonster	= (CMonster*)GetCurSection()->m_pMonsterList->GetAndAdvance( MonsterPos );
 			fLength		= CalcDistance( GetCurPosition(), pMonster->GetCurPosition() );
 
 			if( fLength < fMin && pMonster->GetUnitStatus()	!= UNIT_STATUS_DEAD 
@@ -612,7 +612,7 @@ lbl_summon:
 	MonsterPos		= GetCurSection()->m_pMonsterList->GetHeadPosition();
 	while( MonsterPos )
 	{
-		pMonster	= (CMonster*)GetCurSection()->m_pMonsterList->GetNext( MonsterPos );
+		pMonster	= (CMonster*)GetCurSection()->m_pMonsterList->GetAndAdvance( MonsterPos );
 
 		if(pMonster == this || !pMonster->GetLord())	continue;	//자기자신이거나 소환물이 아닐경우는 Skip
 
@@ -647,7 +647,7 @@ lbl_summon:
 		
 		while( MonsterPos )
 		{
-			pMonster	= (CMonster*)GetCurSection()->m_pMonsterList->GetNext( MonsterPos );
+			pMonster	= (CMonster*)GetCurSection()->m_pMonsterList->GetAndAdvance( MonsterPos );
 			if(pMonster == this || !pMonster->GetLord())	continue;	//자기자신이거나 소환물이 아닐경우는 Skip
 
 			fLength		= CalcDistance( GetCurPosition(), pMonster->GetCurPosition() );
@@ -731,7 +731,7 @@ BOOL CMonster::ChangeTargetObject(const CUnit* pAttackUser, int nAttackDemage)
 		CMonster *pMonster=0;
 		while(pos)
 		{
-			pMonster = (CMonster*)GetCurSection()->m_pMonsterList->GetNext( pos );
+			pMonster = (CMonster*)GetCurSection()->m_pMonsterList->GetAndAdvance( pos );
 
 			if ( !pMonster )			continue;	// added by minjin.
 			if ( !m_pBaseMonster )		continue;	// added by minjin.
@@ -759,7 +759,7 @@ BOOL CMonster::ChangeTargetObject(const CUnit* pAttackUser, int nAttackDemage)
 			pos = pLinkSection->m_pMonsterList->GetHeadPosition();
 			while(pos)
 			{
-				pMonster = (CMonster*)pLinkSection->m_pMonsterList->GetNext( pos );
+				pMonster = (CMonster*)pLinkSection->m_pMonsterList->GetAndAdvance( pos );
 
 				if ( !pMonster ) continue; // added by minjin.
 
@@ -807,7 +807,7 @@ lbl_user:
 	UserPos		= GetCurSection()->m_pPcList->GetHeadPosition();
 	while( UserPos )
 	{
-		pUser	= (CUser*)GetCurSection()->m_pPcList->GetNext( UserPos );
+		pUser	= (CUser*)GetCurSection()->m_pPcList->GetAndAdvance( UserPos );
 		fLength = CalcDistance( GetCurPosition(), pUser->GetCurPosition() );
 		if( fLength > m_fSight )	continue;		//시야 밖이면 다른놈을 찾고..
 
@@ -855,7 +855,7 @@ lbl_user:
 		
 		while( UserPos )
 		{
-			pUser = (CUser*)pLinkSection->m_pPcList->GetNext( UserPos );
+			pUser = (CUser*)pLinkSection->m_pPcList->GetAndAdvance( UserPos );
 			fLength = CalcDistance( GetCurPosition(), pUser->GetCurPosition());
 			if( fLength > m_fSight )	continue;		//시야 밖이면 다른놈을 찾고..
 
@@ -901,7 +901,7 @@ lbl_monster:
 	MonsterPos		= GetCurSection()->m_pMonsterList->GetHeadPosition();
 	while( MonsterPos )
 	{
-		pMonster	= (CMonster*)GetCurSection()->m_pMonsterList->GetNext( MonsterPos );
+		pMonster	= (CMonster*)GetCurSection()->m_pMonsterList->GetAndAdvance( MonsterPos );
 		fLength		= CalcDistance( GetCurPosition(), pMonster->GetCurPosition() );
 		if( fLength > m_fSight )	continue;		//시야 밖이면 다른놈을 찾고..
 
@@ -935,7 +935,7 @@ lbl_monster:
 		
 		while( MonsterPos )
 		{
-			pMonster	= (CMonster*)GetCurSection()->m_pMonsterList->GetNext( MonsterPos );
+			pMonster	= (CMonster*)GetCurSection()->m_pMonsterList->GetAndAdvance( MonsterPos );
 			fLength		= CalcDistance( GetCurPosition(), pMonster->GetCurPosition() );
 
 			if( fLength > m_fSight )	continue;		//시야 밖이면 다른놈을 찾고..
@@ -969,7 +969,7 @@ lbl_summon:
 	MonsterPos		= GetCurSection()->m_pMonsterList->GetHeadPosition();
 	while( MonsterPos )
 	{
-		pMonster	= (CMonster*)GetCurSection()->m_pMonsterList->GetNext( MonsterPos );
+		pMonster	= (CMonster*)GetCurSection()->m_pMonsterList->GetAndAdvance( MonsterPos );
 
 		if(pMonster == this || !pMonster->GetLord())	continue;	//자기자신이거나 소환물이 아닐경우는 Skip
 
@@ -1006,7 +1006,7 @@ lbl_summon:
 		
 		while( MonsterPos )
 		{
-			pMonster	= (CMonster*)GetCurSection()->m_pMonsterList->GetNext( MonsterPos );
+			pMonster	= (CMonster*)GetCurSection()->m_pMonsterList->GetAndAdvance( MonsterPos );
 			if(pMonster == this || !pMonster->GetLord())	continue;	//자기자신이거나 소환물이 아닐경우는 Skip
 
 			fLength		= CalcDistance( GetCurPosition(), pMonster->GetCurPosition());
@@ -1063,7 +1063,7 @@ lbl_user:
 	UserPos		= GetCurSection()->m_pPcList->GetHeadPosition();
 	while( UserPos )
 	{
-		pUser	= (CUser*)GetCurSection()->m_pPcList->GetNext( UserPos );
+		pUser	= (CUser*)GetCurSection()->m_pPcList->GetAndAdvance( UserPos );
 		
 		if ( !pUser )				continue;	// added by minjin.
 		if ( !m_pBaseMonster )		continue;	// added by minjin.
@@ -1117,7 +1117,7 @@ lbl_user:
 		
 		while( UserPos )
 		{
-			pUser = (CUser*)pLinkSection->m_pPcList->GetNext( UserPos );
+			pUser = (CUser*)pLinkSection->m_pPcList->GetAndAdvance( UserPos );
 			
 			if ( !pUser )				continue;	// added by minjin.
 			if ( !m_pBaseMonster )		continue;	// added by minjin.
@@ -1173,7 +1173,7 @@ lbl_monster:
 	MonsterPos		= GetCurSection()->m_pMonsterList->GetHeadPosition();
 	while( MonsterPos )
 	{
-		pMonster	= (CMonster*)GetCurSection()->m_pMonsterList->GetNext( MonsterPos );
+		pMonster	= (CMonster*)GetCurSection()->m_pMonsterList->GetAndAdvance( MonsterPos );
 
 		if ( !pUser )				continue;	// added by minjin.
 		if ( !m_pBaseMonster )		continue;	// added by minjin.
@@ -1218,7 +1218,7 @@ lbl_monster:
 		
 		while( MonsterPos )
 		{
-			pMonster		= (CMonster*)GetCurSection()->m_pMonsterList->GetNext( MonsterPos );
+			pMonster		= (CMonster*)GetCurSection()->m_pMonsterList->GetAndAdvance( MonsterPos );
 			// 대상과의 거리를 구한다.
 			fLength = CalcDistance( GetCurPosition(), pMonster->GetCurPosition());
 			if( fLength > m_fSight ) continue;		// 시야 밖의 유저이면 무시.
@@ -1257,7 +1257,7 @@ lbl_summon:
 	MonsterPos		= GetCurSection()->m_pMonsterList->GetHeadPosition();
 	while( MonsterPos )
 	{
-		pMonster	= (CMonster*)GetCurSection()->m_pMonsterList->GetNext( MonsterPos );
+		pMonster	= (CMonster*)GetCurSection()->m_pMonsterList->GetAndAdvance( MonsterPos );
 
 		if(pMonster == this || !pMonster->GetLord())	continue;	//자기자신이거나 소환물이 아닐경우는 Skip
 
@@ -1301,7 +1301,7 @@ lbl_summon:
 		
 		while( MonsterPos )
 		{
-			pMonster	= (CMonster*)GetCurSection()->m_pMonsterList->GetNext( MonsterPos );
+			pMonster	= (CMonster*)GetCurSection()->m_pMonsterList->GetAndAdvance( MonsterPos );
 
 			if(pMonster == this || !pMonster->GetLord())	continue;	//자기자신이거나 소환물이 아닐경우는 Skip
 			// 대상과의 거리를 구한다.
@@ -1363,7 +1363,7 @@ lbl_user:
 	UserPos		= GetCurSection()->m_pPcList->GetHeadPosition();
 	while( UserPos )
 	{
-		pUser	= (CUser*)GetCurSection()->m_pPcList->GetNext( UserPos );
+		pUser	= (CUser*)GetCurSection()->m_pPcList->GetAndAdvance( UserPos );
 		
 		// 대상과의 거리를 구한다.
 		fLength = CalcDistance( GetCurPosition(), pUser->GetCurPosition());
@@ -1419,7 +1419,7 @@ lbl_user:
 		
 		while( UserPos )
 		{
-			pUser = (CUser*)pLinkSection->m_pPcList->GetNext( UserPos );
+			pUser = (CUser*)pLinkSection->m_pPcList->GetAndAdvance( UserPos );
 			
 			fLength = CalcDistance( GetCurPosition(), pUser->GetCurPosition());
 			if( fLength > m_fSight ) continue;		// 시야 밖의 유저이면 무시.
@@ -1472,7 +1472,7 @@ lbl_monster:
 	MonsterPos		= GetCurSection()->m_pMonsterList->GetHeadPosition();
 	while( MonsterPos )
 	{
-		pMonster	= (CMonster*)GetCurSection()->m_pMonsterList->GetNext( MonsterPos );
+		pMonster	= (CMonster*)GetCurSection()->m_pMonsterList->GetAndAdvance( MonsterPos );
 
 		// 대상과의 거리를 구한다.
 		fLength = CalcDistance( GetCurPosition(), pMonster->GetCurPosition() );
@@ -1513,7 +1513,7 @@ lbl_monster:
 		
 		while( MonsterPos )
 		{
-			pMonster	= (CMonster*)GetCurSection()->m_pMonsterList->GetNext( MonsterPos );
+			pMonster	= (CMonster*)GetCurSection()->m_pMonsterList->GetAndAdvance( MonsterPos );
 			// 대상과의 거리를 구한다.
 			fLength = CalcDistance( GetCurPosition(), pMonster->GetCurPosition() );
 			if( fLength > m_fSight ) continue;		// 시야 밖의 유저이면 무시.
@@ -1551,7 +1551,7 @@ lbl_summon:
 	MonsterPos		= GetCurSection()->m_pMonsterList->GetHeadPosition();
 	while( MonsterPos )
 	{
-		pMonster	= (CMonster*)GetCurSection()->m_pMonsterList->GetNext( MonsterPos );
+		pMonster	= (CMonster*)GetCurSection()->m_pMonsterList->GetAndAdvance( MonsterPos );
 
 		if(pMonster == this || !pMonster->GetLord())	continue;	//자기자신이거나 소환물이 아닐경우는 Skip
 
@@ -1594,7 +1594,7 @@ lbl_summon:
 		
 		while( MonsterPos )
 		{
-			pMonster	= (CMonster*)GetCurSection()->m_pMonsterList->GetNext( MonsterPos );
+			pMonster	= (CMonster*)GetCurSection()->m_pMonsterList->GetAndAdvance( MonsterPos );
 
 			if(pMonster == this || !pMonster->GetLord())	continue;	//자기자신이거나 소환물이 아닐경우는 Skip
 			// 대상과의 거리를 구한다.
@@ -1681,7 +1681,7 @@ void* CMonster::FindUser_Guardian()
 	// 유저에서 검사한다.
 	while( UserPos )
 	{
-		pUser		= (CUser*)GetCurSection()->m_pPcList->GetNext( UserPos );
+		pUser		= (CUser*)GetCurSection()->m_pPcList->GetAndAdvance( UserPos );
 		fLength		= CalcDistance( GetCurPosition(), pUser->GetCurPosition());
 //		fLengthLord = CalcDistance( &GetLord()->GetCurPosition(), &pUser->GetCurPosition() );
 
@@ -1713,7 +1713,7 @@ void* CMonster::FindUser_Guardian()
 		
 		while( UserPos )
 		{
-			pUser		= (CUser*)GetCurSection()->m_pPcList->GetNext( UserPos );
+			pUser		= (CUser*)GetCurSection()->m_pPcList->GetAndAdvance( UserPos );
 			fLength		= CalcDistance( GetCurPosition(), pUser->GetCurPosition());
 //			fLengthLord = CalcDistance( &GetLord()->GetCurPosition(), &pUser->GetCurPosition() );
 
@@ -3285,7 +3285,7 @@ void CMonster::Update()
 	while( pos )
 	{
 		// 적용중인 이펙트를 찾아라.
-		EffectDesc* pEffectDesc = (EffectDesc*)GetUsingStatusEffectList()->GetNext(pos);
+		AppliedSkill* pEffectDesc = (AppliedSkill*)GetUsingStatusEffectList()->GetAndAdvance(pos);
 		
 		if (g_dwTickCount > pEffectDesc->dwDestTick)
 		{			
@@ -3294,7 +3294,7 @@ void CMonster::Update()
 		}
 		else
 		{
-			switch( pEffectDesc->pEffect->bID )
+			switch( pEffectDesc->pEffect->skillKind )
 			{
 			case __SKILL_POSIONCLOUD__:
 			case __SKILL_POISONING__:				// 중독 처리.
@@ -3362,7 +3362,7 @@ USER_PROPERTY_CODE CMonster::SetDamage(DWORD dwOffenseLevel, DWORD dwDamage )
 	else		// SP로 깍는다.
 	{
 		// HP깍는량 : 받을데미지 * (100 - 스킬.min) / 100
-		EffectDesc* pEffectDesc = GetEffectDesc(__SKILL_AIREALCOAT__);
+		AppliedSkill* pEffectDesc = GetEffectDesc(__SKILL_AIREALCOAT__);
 		BYTE bySkillLevel = pEffectDesc->bSkillLevel;
 		
 		float fDamage = dwDamage*(100-pEffectDesc->pEffect->Value[bySkillLevel].nMin) / 100.f;
@@ -3966,17 +3966,17 @@ void CMonster::SkillToMonster(BYTE bSkillKind
 							, const CMonster* pTargetMonster
 							, const WORD* pwMinMax)
 {
-	m_SkillDesc.bOwnType			= OBJECT_TYPE_MONSTER;
-	m_SkillDesc.bPK					= (GetLord()) ? ((CUser*)GetLord())->m_sPKDescInfo.m_bPKMode : 1;
+	m_SkillDesc.casterType			= OBJECT_TYPE_MONSTER;
+	m_SkillDesc.casterPlayerPKFlagEnabled					= (GetLord()) ? ((CUser*)GetLord())->m_sPKDescInfo.m_bPKMode : 1;
 	m_SkillDesc.bSectionNum			= this->GetPrevSectionNum();
 	m_SkillDesc.bSkillKind			= bSkillKind;
 	m_SkillDesc.bSkillLevel			= bSkillLevel;
 	m_SkillDesc.bTargetType			= OBJECT_TYPE_MONSTER;
-	m_SkillDesc.dwOwnIndex			= GetID();
+	m_SkillDesc.casterDungeonID			= GetID();
 	m_SkillDesc.dwSkillKeepTime		= g_pEffectLayer->GetEffectInfo(bSkillKind)->Value[bSkillLevel].nDuration;
 	m_SkillDesc.dwTargetIndex		= pTargetMonster->GetID();
 	m_SkillDesc.pDungeonLayer		= GetCurDungeonLayer();
-	m_SkillDesc.v2OwnObjectPos		= *GetCurPosition();
+	m_SkillDesc.casterPosition		= *GetCurPosition();
 	m_SkillDesc.wTileIndex_X		= WORD(pTargetMonster->GetCurPosition()->x/TILE_SIZE);
 	m_SkillDesc.wTileIndex_Z		= WORD(pTargetMonster->GetCurPosition()->y/TILE_SIZE);
 	m_SkillDesc.pMonsterMaster		= NULL;
@@ -4001,17 +4001,17 @@ void CMonster::SkillToUser(BYTE bSkillKind
 						 , BYTE bSkillLevel
 						 , const CUser* pTargetUser)
 {	
-	m_SkillDesc.bOwnType		= OBJECT_TYPE_MONSTER;
-	m_SkillDesc.bPK				= (GetLord()) ? ((CUser*)GetLord())->m_sPKDescInfo.m_bPKMode : 1;
+	m_SkillDesc.casterType		= OBJECT_TYPE_MONSTER;
+	m_SkillDesc.casterPlayerPKFlagEnabled				= (GetLord()) ? ((CUser*)GetLord())->m_sPKDescInfo.m_bPKMode : 1;
 	m_SkillDesc.bSectionNum		= this->GetPrevSectionNum();
 	m_SkillDesc.bSkillKind		= bSkillKind;
 	m_SkillDesc.bSkillLevel		= bSkillLevel;
 	m_SkillDesc.bTargetType		= OBJECT_TYPE_PLAYER;
-	m_SkillDesc.dwOwnIndex		= GetID();
+	m_SkillDesc.casterDungeonID		= GetID();
 	m_SkillDesc.dwSkillKeepTime	= g_pEffectLayer->GetEffectInfo(bSkillKind)->Value[bSkillLevel].nDuration;
 	m_SkillDesc.dwTargetIndex	= pTargetUser->GetID();
 	m_SkillDesc.pDungeonLayer	= GetCurDungeonLayer();
-	m_SkillDesc.v2OwnObjectPos	= *GetCurPosition();
+	m_SkillDesc.casterPosition	= *GetCurPosition();
 	m_SkillDesc.wTileIndex_X	= WORD(pTargetUser->GetCurPosition()->x/TILE_SIZE);
 	m_SkillDesc.wTileIndex_Z	= WORD(pTargetUser->GetCurPosition()->y/TILE_SIZE);
 	m_SkillDesc.pMonsterMaster	= NULL;
@@ -4025,17 +4025,17 @@ void CMonster::SkillToTile(BYTE bSkillKind
 						 , BYTE bSkillLevel
 						 , const MAP_TILE* pTile)
 {	
-	m_SkillDesc.bOwnType		= OBJECT_TYPE_MONSTER;
-	m_SkillDesc.bPK				= (GetLord()) ? ((CUser*)GetLord())->m_sPKDescInfo.m_bPKMode : 1;
+	m_SkillDesc.casterType		= OBJECT_TYPE_MONSTER;
+	m_SkillDesc.casterPlayerPKFlagEnabled				= (GetLord()) ? ((CUser*)GetLord())->m_sPKDescInfo.m_bPKMode : 1;
 	m_SkillDesc.bSectionNum		= this->GetPrevSectionNum();
 	m_SkillDesc.bSkillKind		= bSkillKind;
 	m_SkillDesc.bSkillLevel		= bSkillLevel;
 	m_SkillDesc.bTargetType		= OBJECT_TYPE_TILE;
-	m_SkillDesc.dwOwnIndex		= GetID();
+	m_SkillDesc.casterDungeonID		= GetID();
 	m_SkillDesc.dwSkillKeepTime	= g_pEffectLayer->GetEffectInfo(bSkillKind)->Value[bSkillLevel].nDuration;
 	m_SkillDesc.dwTargetIndex	= 0;
 	m_SkillDesc.pDungeonLayer	= GetCurDungeonLayer();
-	m_SkillDesc.v2OwnObjectPos	= *GetCurPosition();
+	m_SkillDesc.casterPosition	= *GetCurPosition();
 	m_SkillDesc.wTileIndex_X	= pTile->wIndex_X;
 	m_SkillDesc.wTileIndex_Z	= pTile->wIndex_Z;
 	m_SkillDesc.pMonsterMaster	= NULL;
@@ -4053,8 +4053,10 @@ BOOL CMonster::AttachSkill(BYTE bOwnType
 						 , DWORD& dwDestTime
 						 , DWORD& dwAlphaDamage)
 {
+	printf("\n%s", __FUNCSIG__);
+
 	Effect* pEffect = g_pEffectLayer->GetEffectInfo(bSkillKind);
-	EffectDesc* pEffectDesc = GetEffectDesc(bSkillKind);
+	AppliedSkill* pEffectDesc = GetEffectDesc(bSkillKind);
 	int nInsertNum = -1;
 	switch(bSkillKind)
 	{// 스킬 실패 요인들
@@ -4167,7 +4169,7 @@ BOOL CMonster::AttachSkill(BYTE bOwnType
 					SetLord(pEffectDesc->pOwnUser);	// 주인을 세팅하고.
 					m_dwTemp[NPC_TEMP_SLOT]		= (DWORD)pEffectDesc->fParamPlus[0];
 					m_dwTemp[ NPC_TEMP_PEACE ]	= 1;						// 주인의 커맨드를 기다리기 위해서.
-					((CUser*)GetLord())->m_pMonster[ m_dwTemp[NPC_TEMP_SLOT] ] = this;
+					((CUser*)GetLord())->servantMonsters[ m_dwTemp[NPC_TEMP_SLOT] ] = this;
 					SetMonsterAI( 4 );										// 가디언의 AI로 바꾸어 준다.
 
 					// 여기서 해당 유저에게 마인드 컨트롤이 됐다고 알려야한다.
@@ -4201,11 +4203,11 @@ BOOL CMonster::AttachSkill(BYTE bOwnType
 				POSITION_ pos = GetUsingStatusEffectList()->GetHeadPosition();
 				while(pos)
 				{
-					EffectDesc* pEffectDesc = (EffectDesc*)GetUsingStatusEffectList()->GetNext(pos);
+					AppliedSkill* pEffectDesc = (AppliedSkill*)GetUsingStatusEffectList()->GetAndAdvance(pos);
 					if (pEffectDesc->pEffect->bCrime == CRIME_APPLY_ENEMY)
 					{
 						//프레이 확률 * { 프레이레벨 * 2 / (프레이 레벨 + 걸려있는 스킬레벨) }
-						if (g_pEffectLayer->IsSuccessByFormula0(pEffectDesc->pEffect->bID, pEffectDesc->bSkillLevel))
+						if (g_pEffectLayer->IsSuccessByFormula0(pEffectDesc->pEffect->skillKind, pEffectDesc->bSkillLevel))
 						{
 							DetachSkill( pEffectDesc );
 							break;
@@ -4235,7 +4237,7 @@ BOOL CMonster::AttachSkill(BYTE bOwnType
 				POSITION_ pos = GetUsingStatusEffectList()->GetHeadPosition();
 				while(pos)
 				{
-					EffectDesc* pEffectDesc = (EffectDesc*)GetUsingStatusEffectList()->GetNext(pos);
+					AppliedSkill* pEffectDesc = (AppliedSkill*)GetUsingStatusEffectList()->GetAndAdvance(pos);
 					if (pEffectDesc->pEffect->bType == TYPE_DRIVE)
 					{
 						DWORD dwTime = pEffectDesc->dwDestTick - g_dwTickCount;
@@ -4309,11 +4311,11 @@ BOOL CMonster::AttachSkill(BYTE bOwnType
 	return TRUE;
 }
 
-void CMonster::DetachSkill(EffectDesc* pEffectDesc)
+void CMonster::DetachSkill(AppliedSkill* pEffectDesc)
 {
 	DSTC_DUNGEON_STOPSTATUSEFFECT packet;
 	packet.bTargetType		= 1; // 몬스터 스킬 멈추라는 플래그.
-	packet.bSkillKind		= pEffectDesc->pEffect->bID;
+	packet.bSkillKind		= pEffectDesc->pEffect->skillKind;
 	packet.dwTargetIndex	= GetID();
 	packet.dwCurHP			= GetHP();
 	
@@ -4322,7 +4324,7 @@ void CMonster::DetachSkill(EffectDesc* pEffectDesc)
 		, packet.GetPacketSize()
 		, GetPrevSectionNum() );
 	
-	switch( pEffectDesc->pEffect->bID )
+	switch( pEffectDesc->pEffect->skillKind )
 	{
 	case __SKILL_CALMDOWN__:				// 타켓을 버리고 공격을 받을때까지 타켓을 잡지않는다.
 		{
@@ -4368,7 +4370,7 @@ void CMonster::DetachSkill(EffectDesc* pEffectDesc)
 			SetStatus( UNIT_STATUS_NORMAL, TRUE );
 			m_dwTemp[ NPC_TEMP_PEACE ]	= 0;			// 주인의 커맨드를 기다리기 위해서.
 			SetMonsterAI( m_pBaseMonster->bAI );
-			((CUser*)GetLord())->m_pMonster[ m_dwTemp[NPC_TEMP_SLOT] ] = NULL;
+			((CUser*)GetLord())->servantMonsters[ m_dwTemp[NPC_TEMP_SLOT] ] = NULL;
 			SetLord(NULL);
 			m_dwTemp[NPC_TEMP_SLOT]		= 0xffffffff;
 		}
@@ -4389,7 +4391,7 @@ void CMonster::DetachSkill(EffectDesc* pEffectDesc)
 			POSITION_  pos = GetUsingStatusEffectList()->GetHeadPosition();
 			while(pos)
 			{
-				EffectDesc* pEffectDesc = (EffectDesc*)GetUsingStatusEffectList()->GetNext(pos);
+				AppliedSkill* pEffectDesc = (AppliedSkill*)GetUsingStatusEffectList()->GetAndAdvance(pos);
 				if (pEffectDesc->dwAmfleafireTime) // 증가한 시간을 다시 빼줘야지.
 				{
 					DWORD dwTime = pEffectDesc->dwAmfleafireTime;
@@ -4429,7 +4431,7 @@ void CMonster::DetachSkill(EffectDesc* pEffectDesc)
 			if (GetLord() || !GetHP())
 #else
 			if ( (GetLord() || !GetHP())
-					&& g_pEffectLayer->IsSuccessByFormula0(pEffectDesc->pEffect->bID, pEffectDesc->bSkillLevel))
+					&& g_pEffectLayer->IsSuccessByFormula0(pEffectDesc->pEffect->skillKind, pEffectDesc->bSkillLevel))
 #endif
 			{				
 				WORD wMinMax[2]={0,};
@@ -4439,7 +4441,7 @@ void CMonster::DetachSkill(EffectDesc* pEffectDesc)
 					+GetAttackDamageMax_L()*(1+(GetLord() != NULL)));
 
 				if (GetLord())
-					((CUser*)GetLord())->m_pMonster[GetTemp(NPC_TEMP_SLOT)] = NULL;
+					((CUser*)GetLord())->servantMonsters[GetTemp(NPC_TEMP_SLOT)] = NULL;
 
 				SetLord(pEffectDesc->pOwnUser);
 				
@@ -4713,7 +4715,7 @@ void CMonster::SetStatusFromSkillStatusValue(BYTE bSkillKind
 	}	
 }
 
-void CMonster::ReSetStatusFromSkillStatusValue(EffectDesc* pEffectDesc)
+void CMonster::ReSetStatusFromSkillStatusValue(AppliedSkill* pEffectDesc)
 {
 	const Effect* pEffect = pEffectDesc->pEffect;
 	BYTE bSkillLevel = pEffectDesc->bSkillLevel;
@@ -5123,7 +5125,7 @@ void UpdateUserForAI( CUser* pUser )
 	
 	while( MonsterPos )
 	{
-		pMonster = (CMonster*)pSection->m_pMonsterList->GetNext( MonsterPos );
+		pMonster = (CMonster*)pSection->m_pMonsterList->GetAndAdvance( MonsterPos );
 		pMonster->DisAppearUnit( pUser->GetID() );
 	}
 	
@@ -5135,7 +5137,7 @@ void UpdateUserForAI( CUser* pUser )
 		MonsterPos = pLinkSection->m_pMonsterList->GetHeadPosition();
 		while( MonsterPos )
 		{
-			pMonster = (CMonster*)pSection->m_pMonsterList->GetNext( MonsterPos );
+			pMonster = (CMonster*)pSection->m_pMonsterList->GetAndAdvance( MonsterPos );
 			pMonster->DisAppearUnit( pUser->GetID() );
 		}
 	}
@@ -5156,7 +5158,7 @@ void UpdateMonsterForAI( CMonster* pMonster )
 	MonsterPos	= pSection->m_pMonsterList->GetHeadPosition();	
 	while( MonsterPos )
 	{
-		pMon = (CMonster*)pSection->m_pMonsterList->GetNext( MonsterPos );
+		pMon = (CMonster*)pSection->m_pMonsterList->GetAndAdvance( MonsterPos );
 		pMon->DisAppearUnit( pMonster->GetID() );
 	}
 	
@@ -5168,7 +5170,7 @@ void UpdateMonsterForAI( CMonster* pMonster )
 		MonsterPos = pLinkSection->m_pMonsterList->GetHeadPosition();
 		while( MonsterPos )
 		{
-			pMon = (CMonster*)pSection->m_pMonsterList->GetNext( MonsterPos );
+			pMon = (CMonster*)pSection->m_pMonsterList->GetAndAdvance( MonsterPos );
 			pMon->DisAppearUnit( pMonster->GetID() );
 		}
 	}

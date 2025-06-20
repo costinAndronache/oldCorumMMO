@@ -157,7 +157,7 @@ void CDungeonInfoWnd::RenderText()
 
 			while(pos)
 			{
-				DUNGEON_DATA_EX* pDungeon = (DUNGEON_DATA_EX*)g_pDungeonTable->m_pReceivedDungeonList->GetNext(pos);				
+				DUNGEON_DATA_EX* pDungeon = (DUNGEON_DATA_EX*)g_pDungeonTable->m_pReceivedDungeonList->GetAndAdvance(pos);				
 				
 				RenderFont(pDungeon->m_szDungeonName
 					, m_fPosX+7, m_fPosX+107, m_fPosZ+52+nLine*17, m_fPosZ+64+nLine*17, GetStartOrder()+2);
@@ -263,7 +263,7 @@ void CDungeonInfoWnd::RenderText()
 
 			while(pos)
 			{
-				DUNGEON_DATA_EX* pDungeon = (DUNGEON_DATA_EX*)g_pDungeonTable->m_pReceivedDungeonList->GetNext(pos);
+				DUNGEON_DATA_EX* pDungeon = (DUNGEON_DATA_EX*)g_pDungeonTable->m_pReceivedDungeonList->GetAndAdvance(pos);
 												
 				RenderFont(pDungeon->m_szDungeonName
 					, m_fPosX+7, m_fPosX+107, m_fPosZ+52+nLine*17, m_fPosZ+64+nLine*17, GetStartOrder()+2);
@@ -357,7 +357,7 @@ void CDungeonInfoWnd::RenderText()
 			
 			while(pos)
 			{
-				DUNGEON_DATA_EX* pDungeon = (DUNGEON_DATA_EX*)g_pDungeonTable->m_pReceivedDungeonList->GetNext(pos);
+				DUNGEON_DATA_EX* pDungeon = (DUNGEON_DATA_EX*)g_pDungeonTable->m_pReceivedDungeonList->GetAndAdvance(pos);
 								
 				RenderFont(pDungeon->m_szDungeonName, m_fPosX+7, m_fPosX+107, m_fPosZ+52+nLine*17, m_fPosZ+64+nLine*17, GetStartOrder()+2);
 							
@@ -654,7 +654,7 @@ void CDungeonInfoWnd::SetTab(BYTE bTabIndex)
 void CDungeonInfoWnd::NextPage()
 {
 	POSITION_  pos = m_pDisplayHeadPosition;	
-	m_pPageList->GetNext(pos);
+	m_pPageList->GetAndAdvance(pos);
 	if (!pos)		return;
 	
 	m_pDisplayHeadPosition = pos;
@@ -686,7 +686,7 @@ void CDungeonInfoWnd::SelectDungeon(int nIndex)
 	POSITION_ pos = m_pPageList->GetAt(m_pDisplayHeadPosition);
 	while(pos)
 	{
-		DUNGEON_DATA_EX* pDungeon = (DUNGEON_DATA_EX*)g_pDungeonTable->m_pReceivedDungeonList->GetNext(pos);
+		DUNGEON_DATA_EX* pDungeon = (DUNGEON_DATA_EX*)g_pDungeonTable->m_pReceivedDungeonList->GetAndAdvance(pos);
 		if (nLine == nIndex)
 		{
 			m_pSelectDungeon = pDungeon;

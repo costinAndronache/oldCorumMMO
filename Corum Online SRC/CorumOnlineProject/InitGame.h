@@ -309,6 +309,8 @@ ATOM				RegisterWindowClass(HINSTANCE hInstance);
 void				CentreWindow(HWND hwnd);
 LRESULT CALLBACK	WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 DWORD				GetExpTableOfLevel(GAME_OBJECT_TYPE eObjectType, DWORD dwLevel);
+DWORD	GetCumulatedExpByLevel(GAME_OBJECT_TYPE eObjectType, DWORD dwLevel);
+DWORD	GetLevelForCumulatedExp(GAME_OBJECT_TYPE eObjectType, DWORD cumulatedExp);
 DWORD				GetGuardianItemLevel(DWORD dwExp);
 
 extern std::vector<ITEM*> selectedItemsForTooltipRendering;

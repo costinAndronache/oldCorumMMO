@@ -124,7 +124,7 @@ EVENT_DUNGEON_PROPERTY* CEventDungeonManager::GetEventProperty(DWORD dwDungeonNu
 
 	while(pos)
 	{
-		pProperty = (EVENT_DUNGEON_PROPERTY*)m_pPropertyList->GetNext(pos);		
+		pProperty = (EVENT_DUNGEON_PROPERTY*)m_pPropertyList->GetAndAdvance(pos);		
 
 		if(dwDungeonNumber == (DWORD)pProperty->dwDungeonNumber)
 		{
@@ -152,7 +152,7 @@ void CEventDungeonManager::ProcessRelationWithCreate()
 
 	while(pos)
 	{
-		pDungeon = (DUNGEON_DATA_EX*)m_pEventDungeonList->GetNext(pos);
+		pDungeon = (DUNGEON_DATA_EX*)m_pEventDungeonList->GetAndAdvance(pos);
 		if(NULL == pDungeon)	continue;
 
 		pProperty = GetEventProperty(pDungeon->m_dwID);
@@ -186,7 +186,7 @@ void CEventDungeonManager::Process()
 	
 	while(pos)
 	{		
-		pDungeon = (DUNGEON_DATA_EX*)m_pEventDungeonList->GetNext(pos);
+		pDungeon = (DUNGEON_DATA_EX*)m_pEventDungeonList->GetAndAdvance(pos);
 		if(NULL == pDungeon)	continue;
 
 		pProperty = GetEventProperty(pDungeon->m_dwID);		

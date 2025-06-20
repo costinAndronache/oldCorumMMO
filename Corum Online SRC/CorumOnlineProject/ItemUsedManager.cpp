@@ -153,7 +153,7 @@ void CItemUsedManager::Value_ItemUsedNative_Goto_Coordinate(DSTC_ITEM_USED_NATIV
 	WORD wToDungeonID = pItemNative->m_Item_Zodiac.wMapId;
 	SendPacketRequestDungeonInfo(wToDungeonID);
 
-	g_pMainPlayer->SetAction(36);
+	g_pMainPlayer->SetMotion(36);
 	g_pMainPlayer->m_hPlayer.pDesc->ObjectFunc = NULL;
 
 	SendStopPacket();
@@ -206,7 +206,7 @@ void CItemUsedManager::Value_ItemUsedNative_TownPortalScroll(DSTC_ITEM_USED_NATI
 					
 	SendPacketRequestDungeonInfo(wToDungeonID);
 
-	g_pMainPlayer->SetAction(36);
+	g_pMainPlayer->SetMotion(36);
 	g_pMainPlayer->m_hPlayer.pDesc->ObjectFunc = NULL;	
 
 	SendStopPacket();

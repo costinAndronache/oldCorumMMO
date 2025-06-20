@@ -270,6 +270,7 @@
     <GenerateManifest>false</GenerateManifest>
     <CustomBuildAfterTargets>
     </CustomBuildAfterTargets>
+    <CopyCppRuntimeToOutputDir>true</CopyCppRuntimeToOutputDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>.\Release\</OutDir>
@@ -795,7 +796,7 @@
       <LanguageStandard>stdcpp14</LanguageStandard>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>legacy_stdio_definitions.lib;odbc32.lib;odbccp32.lib;imm32.lib;Winmm.lib;WS2_32.lib;d3d8.lib;mss32.lib;version.lib;gdiplus.lib;SS3DGFunc.lib;CResNameResolver.lib;SoundLib.lib;CommonServer.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>legacy_stdio_definitions.lib;odbc32.lib;odbccp32.lib;imm32.lib;Winmm.lib;WS2_32.lib;d3d8.lib;mss32.lib;version.lib;gdiplus.lib;BaseLibrary.lib;SS3DGFunc.lib;CResNameResolver.lib;SoundLib.lib;CommonServer.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>.\Debug\CorumOnlineResult.exe</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <IgnoreSpecificDefaultLibraries>LIBC.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
@@ -872,6 +873,7 @@
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AppliedSkillsIconsView.cpp" />
     <ClCompile Include="BaloonChat.cpp">
       <BasicRuntimeChecks Condition="'$(Configuration)|$(Platform)'=='CHINA_DEV|Win32'">EnableFastChecks</BasicRuntimeChecks>
       <BrowseInformation Condition="'$(Configuration)|$(Platform)'=='CHINA_DEV|Win32'">true</BrowseInformation>
@@ -4831,6 +4833,7 @@
       <BasicRuntimeChecks Condition="'$(Configuration)|$(Platform)'=='dev|Win32'">EnableFastChecks</BasicRuntimeChecks>
       <BrowseInformation Condition="'$(Configuration)|$(Platform)'=='dev|Win32'">true</BrowseInformation>
     </ClCompile>
+    <ClCompile Include="MouseButtonLongPressRecognizer.cpp" />
     <ClCompile Include="MouseLib.cpp">
       <BasicRuntimeChecks Condition="'$(Configuration)|$(Platform)'=='CHINA_DEV|Win32'">EnableFastChecks</BasicRuntimeChecks>
       <BrowseInformation Condition="'$(Configuration)|$(Platform)'=='CHINA_DEV|Win32'">true</BrowseInformation>
@@ -6397,35 +6400,6 @@
       <BasicRuntimeChecks Condition="'$(Configuration)|$(Platform)'=='dev|Win32'">EnableFastChecks</BasicRuntimeChecks>
       <BrowseInformation Condition="'$(Configuration)|$(Platform)'=='dev|Win32'">true</BrowseInformation>
     </ClCompile>
-    <ClCompile Include="Voidlist.cpp">
-      <BasicRuntimeChecks Condition="'$(Configuration)|$(Platform)'=='CHINA_DEV|Win32'">EnableFastChecks</BasicRuntimeChecks>
-      <BrowseInformation Condition="'$(Configuration)|$(Platform)'=='CHINA_DEV|Win32'">true</BrowseInformation>
-      <BasicRuntimeChecks Condition="'$(Configuration)|$(Platform)'=='CHINA|Win32'">EnableFastChecks</BasicRuntimeChecks>
-      <BrowseInformation Condition="'$(Configuration)|$(Platform)'=='CHINA|Win32'">true</BrowseInformation>
-      <BasicRuntimeChecks Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">EnableFastChecks</BasicRuntimeChecks>
-      <BrowseInformation Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</BrowseInformation>
-      <BasicRuntimeChecks Condition="'$(Configuration)|$(Platform)'=='EngineTest|Win32'">EnableFastChecks</BasicRuntimeChecks>
-      <BrowseInformation Condition="'$(Configuration)|$(Platform)'=='EngineTest|Win32'">true</BrowseInformation>
-      <BasicRuntimeChecks Condition="'$(Configuration)|$(Platform)'=='JAPAN_DEV|Win32'">EnableFastChecks</BasicRuntimeChecks>
-      <BrowseInformation Condition="'$(Configuration)|$(Platform)'=='JAPAN_DEV|Win32'">true</BrowseInformation>
-      <BasicRuntimeChecks Condition="'$(Configuration)|$(Platform)'=='JAPAN_ENCRYPE|Win32'">EnableFastChecks</BasicRuntimeChecks>
-      <BrowseInformation Condition="'$(Configuration)|$(Platform)'=='JAPAN_ENCRYPE|Win32'">true</BrowseInformation>
-      <BasicRuntimeChecks Condition="'$(Configuration)|$(Platform)'=='JAPAN|Win32'">EnableFastChecks</BasicRuntimeChecks>
-      <BrowseInformation Condition="'$(Configuration)|$(Platform)'=='JAPAN|Win32'">true</BrowseInformation>
-      <BasicRuntimeChecks Condition="'$(Configuration)|$(Platform)'=='Korea_GMMode|Win32'">EnableFastChecks</BasicRuntimeChecks>
-      <BrowseInformation Condition="'$(Configuration)|$(Platform)'=='Korea_GMMode|Win32'">true</BrowseInformation>
-      <BrowseInformation Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</BrowseInformation>
-      <BasicRuntimeChecks Condition="'$(Configuration)|$(Platform)'=='TAIWAN_DEV|Win32'">EnableFastChecks</BasicRuntimeChecks>
-      <BrowseInformation Condition="'$(Configuration)|$(Platform)'=='TAIWAN_DEV|Win32'">true</BrowseInformation>
-      <BasicRuntimeChecks Condition="'$(Configuration)|$(Platform)'=='TAIWAN|Win32'">EnableFastChecks</BasicRuntimeChecks>
-      <BrowseInformation Condition="'$(Configuration)|$(Platform)'=='TAIWAN|Win32'">true</BrowseInformation>
-      <BasicRuntimeChecks Condition="'$(Configuration)|$(Platform)'=='dev_NEW_COMMAND|Win32'">EnableFastChecks</BasicRuntimeChecks>
-      <BrowseInformation Condition="'$(Configuration)|$(Platform)'=='dev_NEW_COMMAND|Win32'">true</BrowseInformation>
-      <BasicRuntimeChecks Condition="'$(Configuration)|$(Platform)'=='develop_Test|Win32'">EnableFastChecks</BasicRuntimeChecks>
-      <BrowseInformation Condition="'$(Configuration)|$(Platform)'=='develop_Test|Win32'">true</BrowseInformation>
-      <BasicRuntimeChecks Condition="'$(Configuration)|$(Platform)'=='dev|Win32'">EnableFastChecks</BasicRuntimeChecks>
-      <BrowseInformation Condition="'$(Configuration)|$(Platform)'=='dev|Win32'">true</BrowseInformation>
-    </ClCompile>
     <ClCompile Include="WorldMsg_jjw6263.cpp">
       <BasicRuntimeChecks Condition="'$(Configuration)|$(Platform)'=='CHINA_DEV|Win32'">EnableFastChecks</BasicRuntimeChecks>
       <BrowseInformation Condition="'$(Configuration)|$(Platform)'=='CHINA_DEV|Win32'">true</BrowseInformation>
@@ -6573,6 +6547,7 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AppliedSkillsIconsView.h" />
     <ClInclude Include="BaloonChat.h" />
     <ClInclude Include="BankWnd.h" />
     <ClInclude Include="BaseNetworkInterface.h" />
@@ -6594,6 +6569,7 @@
     <ClInclude Include="ChinaHackToolBlock.h" />
     <ClInclude Include="ChrInfo.h" />
     <ClInclude Include="ClientTrafficLog.h" />
+    <ClInclude Include="CMainUserUpdateInterested.h" />
     <ClInclude Include="cmd_message.h" />
     <ClInclude Include="CodeFun.h" />
     <ClInclude Include="ComboBox.h" />
@@ -6739,6 +6715,7 @@
     <ClInclude Include="MinboboWork.h" />
     <ClInclude Include="Monster.h" />
     <ClInclude Include="MonsterManager.h" />
+    <ClInclude Include="MouseButtonLongPressRecognizer.h" />
     <ClInclude Include="MouseLib.h" />
     <ClInclude Include="MSoundControl.h" />
     <ClInclude Include="MSoundManager.h" />
@@ -6803,7 +6780,6 @@
     <ClInclude Include="UserHash.h" />
     <ClInclude Include="UserInterface.h" />
     <ClInclude Include="Version.h" />
-    <ClInclude Include="VoidList.h" />
     <ClInclude Include="WorldMsg.h" />
     <ClInclude Include="WorldMsg_jjw6263.h" />
     <ClInclude Include="WorldMsg_minbobo.h" />

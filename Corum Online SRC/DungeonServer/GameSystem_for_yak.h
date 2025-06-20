@@ -47,7 +47,7 @@ void	SendSummonEggStatus(DWORD dwConnectionIndex, BOOL bSummon, const CItem* pGu
 int		IsSkillMonMon(BYTE bSkillKind, CMonster *pOwnMonster, CMonster* pTargetMonster);
 int		IsSkillMonUser(BYTE bSkillKind, CMonster *pOwnMonster, CUser* pTargetUser);
 int		IsSkillUserUser(BYTE bSkillKind, CUser *pOwnUser, CUser* pTargetUser, BYTE bPK);
-int		IsSkillUserMon(BYTE bSkillKind, CUser *pOwnUser, CMonster* pTargetMonster);
+int		CanUserCastSkillOnMonster(BYTE bSkillKind, CUser *pOwnUser, CMonster* pTargetMonster);
 int		IsSkillMon(BYTE bSkillKind, CMonster* pMonster);
 int		IsSkillUser(BYTE bSkillKind, CUser* pUser);
 

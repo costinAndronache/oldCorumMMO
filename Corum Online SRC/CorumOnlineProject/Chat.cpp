@@ -442,19 +442,19 @@ void RemoveChat(POSITION_ pos, BYTE byType)
 	switch(byType)
 	{
 	case DEF_CHAT_TYPE_ALLCHAT:
-		lpChatMsg	= (LP_CHAT_MSG)g_pAllChatList->GetNext(pos);	
+		lpChatMsg	= (LP_CHAT_MSG)g_pAllChatList->GetAndAdvance(pos);	
 		break;
 	case DEF_CHAT_TYPE_WHISPER:
-		lpChatMsg	= (LP_CHAT_MSG)g_pWhisperChatList->GetNext(pos);			
+		lpChatMsg	= (LP_CHAT_MSG)g_pWhisperChatList->GetAndAdvance(pos);			
 		break;
 	case DEF_CHAT_TYPE_GUILD:
-		lpChatMsg = (LP_CHAT_MSG)g_pGuildChatList->GetNext(pos);
+		lpChatMsg = (LP_CHAT_MSG)g_pGuildChatList->GetAndAdvance(pos);
 		break;
 	case DEF_CHAT_TYPE_PARTY:
-		lpChatMsg = (LP_CHAT_MSG)g_pPartyChatList->GetNext(pos);
+		lpChatMsg = (LP_CHAT_MSG)g_pPartyChatList->GetAndAdvance(pos);
 		break;
 	case DEF_CHAT_TYPE_FRIEND:
-		lpChatMsg = (LP_CHAT_MSG)g_pFriendChatList->GetNext(pos);
+		lpChatMsg = (LP_CHAT_MSG)g_pFriendChatList->GetAndAdvance(pos);
 		break;		
 	default:
 		return;

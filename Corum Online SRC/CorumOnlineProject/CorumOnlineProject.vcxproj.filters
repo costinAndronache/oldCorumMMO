@@ -684,9 +684,6 @@
     <ClCompile Include="OnlyList.cpp">
       <Filter>Hash &amp; List</Filter>
     </ClCompile>
-    <ClCompile Include="Voidlist.cpp">
-      <Filter>Hash &amp; List</Filter>
-    </ClCompile>
     <ClCompile Include="ChinaBillingRemainTime.cpp">
       <Filter>ChinaBilling</Filter>
     </ClCompile>
@@ -799,6 +796,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="ItemPickupFiltering\ItemPickupFilteringBase.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MouseButtonLongPressRecognizer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="AppliedSkillsIconsView.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -1388,9 +1391,6 @@
     <ClInclude Include="OnlyList.h">
       <Filter>Hash &amp; List</Filter>
     </ClInclude>
-    <ClInclude Include="VoidList.h">
-      <Filter>Hash &amp; List</Filter>
-    </ClInclude>
     <ClInclude Include="ChinaBillingRemainTime.h">
       <Filter>ChinaBilling</Filter>
     </ClInclude>
@@ -1512,6 +1512,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ItemPickupFiltering\ItemPickupFilteringBase.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CMainUserUpdateInterested.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MouseButtonLongPressRecognizer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="AppliedSkillsIconsView.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

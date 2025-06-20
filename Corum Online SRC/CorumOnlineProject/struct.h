@@ -389,13 +389,6 @@ struct ITEM
 	BYTE				bSectionNum;
 };
 
-typedef struct __tag_level_exp__
-{
-	BYTE		byLevel;
-	DWORD		dwExp;
-
-}SLEVEL_EXP, *LP_LEVEL_EXP;
-
 typedef struct __tag_item_store__
 {
 	WORD	wItemId;

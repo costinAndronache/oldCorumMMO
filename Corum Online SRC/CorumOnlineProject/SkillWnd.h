@@ -6,6 +6,7 @@
 #define		__SKILL_WINDOW_INC__
 
 #include	"Menu.h"
+#include	"CMainUserUpdateInterested.h"
 
 #define SPR_OBJ_SKILL_WND1				0
 #define SPR_OBJ_SKILL_WND2				1
@@ -82,8 +83,9 @@
 
 enum class SkillSelectionWindow { none, leftSkills, rightSkills, guardianSkills};
 
-class CSkillWnd : public CMenu
-{
+class CSkillWnd : public CMenu, public CMainUserUpdateInterested {
+public:
+	void updatedSkillPoints(CMainUser*, DWORD oldValue, DWORD newValue) override;
 public:
 
 	BYTE				m_byBitClassType;
@@ -102,11 +104,12 @@ public:
 
 	// Singleton Patten //
 private:
-	static CSkillWnd* c_pThis;
+	static std::shared_ptr<CSkillWnd> _shared;
 
 public:
-	static CSkillWnd*	GetInstance()		{ if(!c_pThis) c_pThis = new CSkillWnd; return c_pThis; }
-	static void		DestroyInstance()	{ if(c_pThis) { delete c_pThis; c_pThis = NULL;} }
+	static std::shared_ptr<CSkillWnd> getShared();
+	static CSkillWnd* GetInstance() { return getShared().get(); }
+	static void		DestroyInstance() { _shared.reset(); }
 
 
 	// 공통으로 사용되는 것들은 재정의 한다 //
@@ -135,7 +138,6 @@ public:
 	BOOL	CheckSkillIfno(int nIndex, int nPosX, int nPosY, int nPosX2, int nPosY2);
 
 	void	RenderSkillIcon();
-	void	RenderUsing();
 
 	CSkillWnd();
 	virtual ~CSkillWnd();

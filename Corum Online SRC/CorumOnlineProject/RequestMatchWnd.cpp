@@ -178,7 +178,7 @@ int CRequestMatchWnd::CheckInterface()
 				if(!(g_pMainPlayer->GetStatus()==UNIT_STATUS_PLAYER_SHOP
 					|| g_pMainPlayer->GetStatus()==UNIT_STATUS_PLAYER_REST))
 				{					
-					g_pMainPlayer->SetAction(MOTION_TYPE_WARSTAND, 0, ACTION_LOOP );		
+					g_pMainPlayer->SetMotion(MOTION_TYPE_WARSTAND, 0, ACTION_LOOP );		
 					g_pMainPlayer->SetStatus(UNIT_STATUS_NORMAL);
 					g_pMainPlayer->m_hPlayer.pDesc->ObjectFunc = NULL;
 					SendStopPacket();

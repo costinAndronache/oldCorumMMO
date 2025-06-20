@@ -153,7 +153,7 @@
     <ClCompile>
       <Optimization>Disabled</Optimization>
       <AdditionalIncludeDirectories>../;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;_DISABLE_CONSTEXPR_MUTEX_CONSTRUCTOR;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -311,6 +311,7 @@
     <ClInclude Include="Thread\Lock.hpp" />
     <ClInclude Include="Thread\Thread.h" />
     <ClInclude Include="Thread\ThreadManager.h" />
+    <ClInclude Include="Timer.h" />
     <ClInclude Include="Utility\MemoryPool\MemoryPool.hpp" />
     <ClInclude Include="Utility\Script\Delimiter.h" />
     <ClInclude Include="Utility\Script\ScriptFile.h" />
@@ -364,10 +365,13 @@
     <ClInclude Include="Definition\SysDeps.h" />
     <ClInclude Include="Definition\TypeDef.h" />
     <ClInclude Include="stdafx.h" />
+    <ClInclude Include="VoidList.h" />
+    <ClInclude Include="WorkQueue.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="datastructure\template.cpp" />
     <ClCompile Include="Thread\ThreadManager.cpp" />
+    <ClCompile Include="Timer.cpp" />
     <ClCompile Include="Utility\Script\Delimiter.cpp" />
     <ClCompile Include="Utility\Script\ScriptFile.cpp" />
     <ClCompile Include="Utility\Macro\BaseMath.cpp" />
@@ -411,6 +415,8 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='ReleaseS|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="Voidlist.cpp" />
+    <ClCompile Include="WorkQueue.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

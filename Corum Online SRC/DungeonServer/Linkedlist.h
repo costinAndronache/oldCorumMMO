@@ -1,7 +1,7 @@
 #pragma once
 
 
-#include "VoidList.h"
+#include "../BaseLibrary/VoidList.h"
 
 
 class CNpcList : public CVoidList

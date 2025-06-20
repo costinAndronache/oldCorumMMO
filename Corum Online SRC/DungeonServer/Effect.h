@@ -33,7 +33,7 @@ struct DSTC_USER_STATUS;
 
 typedef struct BASESKILL
 {
-	BYTE			bID;				// 아이디.
+	BYTE			skillKind;				// 아이디.
 	DWORD			dwResourceID;
 	DWORD			dwStatusResourceID;
 	WORD			wProperty;			// none : 0, 마법 : 500, Aura : 100, Divine, : 200, Summon : 300, Chakra : 400
@@ -78,7 +78,7 @@ enum
 	EFFECT_DESC_TEMP_MAX 
 };
 
-struct EffectDesc
+struct AppliedSkill
 {
 	float		fParamPlus[5];					// 상태변화값.
 	DWORD		dwDestTick;						// 끝날 시간.
@@ -91,19 +91,19 @@ struct EffectDesc
 	BYTE		bSkillLevel;					// 스킬 레벨	
 };
 
-struct SKILLDESC
+struct SkillCast
 {
 	BYTE			bSkillKind;					// 스킬 아이디
 	char			bSkillLevel;				// 스킬 레벨 : zero base
 	DWORD			dwSkillKeepTime;			// 스킬 지속시간 (단, 오버드라이브만 사용가능하다)
-	BYTE			bOwnType;					// 스킬을 쏘는 객체 타입
-	DWORD			dwOwnIndex;					// 스킬을 쏘는 객체 인덱스
+	BYTE			casterType;					// 스킬을 쏘는 객체 타입
+	DWORD			casterDungeonID;					// 스킬을 쏘는 객체 인덱스
 	BYTE			bTargetType;				// 스킬을 당하는 객체 타입
 	DWORD			dwTargetIndex;				// 스킬을 당하는 객체 인덱스
 	WORD			wTileIndex_X;				// 스킬 발동할 위치
 	WORD			wTileIndex_Z;				// 스킬 발동할 위치
-	VECTOR2			v2OwnObjectPos;				// 스킬 쏘는 객체의 위치
-	BOOL			bPK;						// PK 모드인가.
+	VECTOR2			casterPosition;				// 스킬 쏘는 객체의 위치
+	BOOL			casterPlayerPKFlagEnabled;						// PK 모드인가.
 	WORD			wDamageMinMax[2];			// 스킬 데미지 최소 최대값을 기록
 	CDungeonLayer*	pDungeonLayer;				// 쏘려고 하는 던전 층포인터
 	BYTE			bSectionNum;				// 쏘려고 하는 섹션 넘버.
@@ -117,14 +117,14 @@ struct EffectLayer
 private:
 	
 	DWORD			Load(char* szFileName); // 파일 읽어.
-	BOOL			MessyProcessForUser(CUser* pOwnUser, SKILLDESC* pSkillDesc);
-	BOOL			MessyProcessForSystem(CUser* pOwnUser, SKILLDESC* pSkillDesc);
-	BYTE			GetAppliedTargetCount(CDungeonLayer* pDungeonLayer, SKILLDESC* pSkillDesc, SKILL_TARGETINFO* pTargetInfo, VECTOR2* pV2Start);
-	void			RevisionStartPositon(SKILLDESC* pSkillDesc, VECTOR2* pV2Start);
-	BOOL			IsRange(SKILLDESC* pSkillDesc, VECTOR2* pV2Start);
-	CUnit*			GetValiidUnit(SKILLDESC* pSkillDesc);
-	BOOL			IsSkillSuccess(SKILLDESC* pSkillDesc, CUnit* pOffense, CUnit* pDefense, SKILL_RESULT* pSkill_result);
-	void			AfterSkillSuccessProcess(SKILLDESC* pSkillDesc, CUnit* pOffense, CUnit* pDefense, DSTC_USER_STATUS*	pUserStatus);
+	BOOL			ProcessUsersSkillCast(CUser* pOwnUser, SkillCast* pSkillDesc);
+	BOOL			MessyProcessForSystem(CUser* pOwnUser, SkillCast* pSkillDesc);
+	BYTE			GetAppliedTargetCount(CDungeonLayer* pDungeonLayer, SkillCast* pSkillDesc, SKILL_TARGETINFO* pTargetInfo, VECTOR2* pV2Start);
+	void			RevisionStartPositon(SkillCast* pSkillDesc, VECTOR2* pV2Start);
+	BOOL			IsRange(SkillCast* pSkillDesc, VECTOR2* pV2Start);
+	CUnit*			ProcessCasterForSkillCast(SkillCast* pSkillDesc);
+	BOOL			IsSkillSuccess(SkillCast* pSkillDesc, CUnit* pOffense, CUnit* pDefense, SKILL_RESULT* pSkill_result);
+	void			AfterSkillSuccessProcess(SkillCast* pSkillDesc, CUnit* pOffense, CUnit* pDefense, DSTC_USER_STATUS*	pUserStatus);
 public:
 	int				GetBaseClassSkillMax(WORD wClass, BYTE bSkillKind);
 	BYTE			GetSkillMasteryKind(BYTE bSkillKind);	// 해당종류의 마스터리 아이디를 얻어온다.
@@ -135,7 +135,7 @@ public:
 	BOOL			IsSuccessByFormula9(BYTE bSkillKind, BYTE bSkillLevel, BYTE bSummonMasteryLevel, BYTE bSenderLevel, BYTE bRecverLevel);
 	BOOL			IsSuccessByFormula5(BYTE bSkillKind, BYTE bSkillLevel, BYTE bSummonMasterySkillLevel, DWORD dwOffenseLevel, DWORD dwDefenceLevel);
 	BOOL			IsSuccessByFormula6(BYTE bSkillKind, BYTE bSkillLevel);
-	BOOL			IsSuccess(BYTE bSkillKind, BYTE bSkillLevel, EffectDesc* pEffectDesc_Pray);
+	BOOL			IsSuccess(BYTE bSkillKind, BYTE bSkillLevel, AppliedSkill* pEffectDesc_Pray);
 	float			GetFormula8(BYTE bSkillKind, BYTE bSkillLevel, float fOriginaParam);
 	int				GetFormula9(BYTE bSkillKind, BYTE bSkillLevel, BYTE bOwnLevel, BYTE bTargetLevel, BYTE bSummonMasteryLevel);
 	int				GetFormula16(BYTE bSkillKind, BYTE bSkillLevel, WORD wClass);
@@ -157,9 +157,11 @@ public:
 	Effect*			GetEffectInfo(BYTE bSkillKind);
 	void			LoadScript();		// 스크립트 파일을 읽어 와라.
 	int				GetEffectStatusPostion(BYTE bID);
-	void			SendSkill(SKILLDESC* pSkillDesc);
-	int				GetUsedSPSkill(CUser* pOwnUser, SKILLDESC* pSkillDesc);
-	BOOL			IsUnitStatusReadySkill(BYTE bySkillKind, const CUnit* pUnit);
+	void			SendSkill(SkillCast* pSkillDesc);
+	int				spOffsetPerSecondIfContinousSkill(const Effect* skill, DWORD skillLevel, const CUser* user);
+	int				UserManaOffsetForSkillUsage(const CUser* pOwnUser, const SkillCast* pSkillDesc);
+	void			updateKeepTimeForContinousSkill(const CUser* pOwnUser, SkillCast* pSkillDesc);
+	BOOL			CanUnitCastSkill(BYTE bySkillKind, const CUnit* pUnit);
 
 	~EffectLayer();
 };

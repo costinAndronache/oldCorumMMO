@@ -219,7 +219,7 @@ void CServerTable::BroadCast(char* pPacket, DWORD dwLength, BYTE bServerType)
 
 			while(pos)
 			{
-				pServer = (SERVER_DATA*)m_ServerList[i].GetNext(pos);
+				pServer = (SERVER_DATA*)m_ServerList[i].GetAndAdvance(pos);
 				
 				if (NULL == pServer)
 				{
@@ -238,7 +238,7 @@ void CServerTable::BroadCast(char* pPacket, DWORD dwLength, BYTE bServerType)
 
 		while(pos)
 		{
-			pServer = (SERVER_DATA*)m_ServerList[ bServerType  ].GetNext(pos);	
+			pServer = (SERVER_DATA*)m_ServerList[ bServerType  ].GetAndAdvance(pos);	
 			if(!pServer)
 			{
 				Log(LOG_IMPORTANT, "pServer is NULL!! in CServerTable::BroadCast()");
@@ -262,7 +262,7 @@ void CServerTable::BroadCastAlivePacket()
 
 		while(pos)
 		{
-			pServer = (SERVER_DATA*)m_ServerList[i].GetNext(pos);
+			pServer = (SERVER_DATA*)m_ServerList[i].GetAndAdvance(pos);
 			
 			if (NULL == pServer)
 			{
@@ -287,7 +287,7 @@ void CServerTable::CheckAlivePacket()
 
 		while(pos)
 		{
-			pServer = (SERVER_DATA*)m_ServerList[i].GetNext(pos);
+			pServer = (SERVER_DATA*)m_ServerList[i].GetAndAdvance(pos);
 			
 			if (NULL == pServer)
 			{
@@ -361,7 +361,7 @@ void CServerTable::ShowAllServerStatus()
 		while(pos)
 		{
 			nCount++;
-			pServer = (SERVER_DATA*)m_ServerList[i].GetNext(pos);
+			pServer = (SERVER_DATA*)m_ServerList[i].GetAndAdvance(pos);
 			if(pServer->dwServerStatus == SERVER_STATUS_NOT_CONNECTED)
 			{
 				Log( LOG_JUST_DISPLAY, "[%2d] %7s / %15s / %3d /  (%s)   <<Disconnected!!>>"     

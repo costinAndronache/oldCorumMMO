@@ -62,7 +62,7 @@ void ACmdGuildCharacterDelete(SERVER_DATA* pServer, char* pMsg, DWORD dwLength)
 			{				
 				POSITION_ posTemp = pos;
 
-				LP_GUILDWAR_RANK lpGuildWarRank = (LP_GUILDWAR_RANK)g_pRankList->GetNext(pos);
+				LP_GUILDWAR_RANK lpGuildWarRank = (LP_GUILDWAR_RANK)g_pRankList->GetAndAdvance(pos);
 
 				if(lpGuildWarRank->dwGuildId==pPacket->dwGuildId)
 				{

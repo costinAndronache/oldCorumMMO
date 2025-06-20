@@ -45,7 +45,7 @@ void CUser::UsingItemListProcess()
 		del		= pos;
 		bDetach = FALSE;
 
-		CItem* pItem = (CItem*)m_pUsingItemList->GetNext(pos);
+		CItem* pItem = (CItem*)m_pUsingItemList->GetAndAdvance(pos);
 		if (NULL == pItem)
 		{
 			m_pUsingItemList->RemoveAt(del);
@@ -120,7 +120,7 @@ BOOL CUser::IsAvailabilityAttachItem(WORD wItemID)
 	
 	while(pos)
 	{
-		CItem*	pItem	= (CItem*)m_pUsingItemList->GetNext(pos);
+		CItem*	pItem	= (CItem*)m_pUsingItemList->GetAndAdvance(pos);
 		WORD	wID		= pItem->GetID();
 
 		if(wItemID == wID)
@@ -826,12 +826,15 @@ void CUser::InitUserItemAll()
 	}
 
 	// 아이템 몰 아이템 적용 //
-	POSITION_ pos = m_pUsingItemList->GetHeadPosition();
-	while(pos)
-	{
-		CItem* pItem = (CItem*)m_pUsingItemList->GetNext(pos);
-		UpdateUsingItem(pItem);
+	if (m_pUsingItemList) {
+		POSITION_ pos = m_pUsingItemList->GetHeadPosition();
+		while (pos)
+		{
+			CItem* pItem = (CItem*)m_pUsingItemList->GetAndAdvance(pos);
+			UpdateUsingItem(pItem);
+		}
 	}
+
 
 	BYTE byUpgrade[5] = {0, 0, 0, 0, 0};
 

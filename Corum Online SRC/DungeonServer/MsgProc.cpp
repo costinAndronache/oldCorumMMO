@@ -5987,7 +5987,7 @@ void CmdItemUsed( DWORD dwConnectionIndex, char* pMsg, DWORD dwLength )
 			fPer = FLOAT(g_pBaseClassInfo[ pUser->GetClass() ].wPotion_Recovery 
 				+ g_pBaseRaceInfo[ pUser->GetClass() ].wPotion_Recovery);
 
-			if( pBaseItem->BaseItem_Supplies.bType == 1 )		
+			if( pBaseItem->BaseItem_Supplies.bType == ITEM_SUPPLY_TYPE_PERCENT_HP_POTION )		
 			{
 				// HP
 				dwRand	= ( rand()%(pBaseItem->BaseItem_Supplies.wMax - pBaseItem->BaseItem_Supplies.wMin+1) )
@@ -6000,7 +6000,7 @@ void CmdItemUsed( DWORD dwConnectionIndex, char* pMsg, DWORD dwLength )
 				UserStatus.pStatus[0].dwCode	= USER_HP;
 				UserStatus.pStatus[0].dwMin		= pUser->GetHP();
 			}
-			else if( pBaseItem->BaseItem_Supplies.bType == 2 )	
+			else if( pBaseItem->BaseItem_Supplies.bType == ITEM_SUPPLY_TYPE_PERCENT_SP_POTION )	
 			{
 				// MP
 				dwRand = ( rand()%(pBaseItem->BaseItem_Supplies.wMax - pBaseItem->BaseItem_Supplies.wMin+1) ) 
@@ -6012,7 +6012,7 @@ void CmdItemUsed( DWORD dwConnectionIndex, char* pMsg, DWORD dwLength )
 				UserStatus.pStatus[0].dwCode	= USER_MP;
 				UserStatus.pStatus[0].dwMin		= pUser->GetSP();
 			}
-			else if( pBaseItem->BaseItem_Supplies.bType == 3 ) 
+			else if( pBaseItem->BaseItem_Supplies.bType == ITEM_SUPPLY_TYPE_FIXED_HP_POTION ) 
 			{
 				// HP POINT
 				dwRand = ( rand()%(pBaseItem->BaseItem_Supplies.wMax - pBaseItem->BaseItem_Supplies.wMin+1) )
@@ -6028,7 +6028,7 @@ void CmdItemUsed( DWORD dwConnectionIndex, char* pMsg, DWORD dwLength )
 				UserStatus.pStatus[0].dwCode	= USER_HP;
 				UserStatus.pStatus[0].dwMin		= pUser->GetHP();
 			}
-			else if( pBaseItem->BaseItem_Supplies.bType == 4 ) 
+			else if( pBaseItem->BaseItem_Supplies.bType == ITEM_SUPPLY_TYPE_FIXED_SP_POTION ) 
 			{
 				// sp, hp POINT
 				dwRand = ( rand()%(pBaseItem->BaseItem_Supplies.wMax - pBaseItem->BaseItem_Supplies.wMin+1) )
@@ -6174,14 +6174,15 @@ void CmdDungeonJoin(DWORD dwConnectionIndex, char* pMsg, DWORD dwLength)
 	BOOL			bConnectToGameRoom	= FALSE;
 	BYTE			bUserType			= USER_TYPE_NORMAL;
 
-	if(!pAccept)
-	{
+	printf("\nCTDS_DUNGEON_JOIN received from %s", join->szChrName);
+
+	if(!pAccept) {
+		printf("\nACCEPT NOT FOUND");
 		Log(LOG_IMPORTANT, "Unauthorized User Joined! (Name:%s)", join->szChrName);
 		SendDungeonJoinFailMessage(dwConnectionIndex, DUNGEON_JOIN_FAIL_UNAUTHORIZED_USER);
 		return;
-	}
-	else
-	{
+	} else {
+		printf("\nAccept FOUND");
 		//정상적으로 인증되었으면 AcceptTable에서 Remove하고 
 		bConnectToGameRoom = pAccept->bConnectToGameRoom;
 		bUserType		   = pAccept->bUserType;
@@ -6376,7 +6377,7 @@ void CmdDungeonStop( DWORD dwConnectionIndex, char* pMsg, DWORD dwLength )
 
 			while( UserPos )
 			{
-				pDisAppearUser = (CUser*)pSection->m_pPcList->GetNext( UserPos );
+				pDisAppearUser = (CUser*)pSection->m_pPcList->GetAndAdvance( UserPos );
 				Section.pdwDisAppearIndex[Section.bDisAppearUserCount++] = pDisAppearUser->GetID();			
 			}
 
@@ -6384,7 +6385,7 @@ void CmdDungeonStop( DWORD dwConnectionIndex, char* pMsg, DWORD dwLength )
 
 			while( MonsterPos )
 			{
-				pDisAppearMonster = (CMonster*)pSection->m_pMonsterList->GetNext( MonsterPos );
+				pDisAppearMonster = (CMonster*)pSection->m_pMonsterList->GetAndAdvance( MonsterPos );
 				Section.pdwDisAppearIndex[Section.bDisAppearUserCount + Section.bDisAppearMonsterCount++] = pDisAppearMonster->GetID();
 			}
 		}
@@ -6837,7 +6838,7 @@ void CmdSkillLevelUp( DWORD dwConnectionIndex, char* pMsg, DWORD dwLength )
 		Effect* pEffectTar	= g_pEffectLayer->GetEffectInfo(bSkillMastery);
 
 #ifndef __SKILL_MASTERY_ENABLE
-	if (bSkillMastery == pEffectUp->bID)
+	if (bSkillMastery == pEffectUp->skillKind)
 		return;
 #endif
 		if(pEffectUp->dwMinMastery <=(DWORD)pEffectTar->GetMaxMastery(pUser->GetLevel(), pUser->m_pwSkillLevel[bSkillMastery], pUser->GetClass()))
@@ -6854,7 +6855,6 @@ void CmdSkillLevelUp( DWORD dwConnectionIndex, char* pMsg, DWORD dwLength )
 				pSendPacket.bSkillInfo		= TRUE;
 				pSendPacket.bySkillIndex	= (BYTE)pPacket->nSkillIndex;
 				
-				pUser->SendAllStatus();	// 모든 상태를 갱신해서 보낸다.					
 			}
 		}				
 	}
@@ -6865,6 +6865,9 @@ void CmdSkillLevelUp( DWORD dwConnectionIndex, char* pMsg, DWORD dwLength )
 	}
 
 	NetSendToUser(dwConnectionIndex, (char*)&pSendPacket, pSendPacket.GetPacketSize(), FLAG_SEND_NOT_ENCRYPTION);
+
+	pUser->SendAllStatus();	// 모든 상태를 갱신해서 보낸다.					
+
 }
 
 
@@ -7214,7 +7217,7 @@ void CmdMonsterCommand( DWORD dwConnectionIndex, char* pMsg, DWORD dwLength )
 		{
 			for( i=0; i<MAX_USER_GUARDIAN; i++ )
 			{
-				pUser->m_pMonster[i]->ClearTargetAI();
+				pUser->servantMonsters[i]->ClearTargetAI();
 			}
 		}
 		break;
@@ -7228,18 +7231,18 @@ void CmdMonsterCommand( DWORD dwConnectionIndex, char* pMsg, DWORD dwLength )
 
 				for( i=0; i<MAX_USER_GUARDIAN; i++ )
 				{
-					if( pUser->m_pMonster[i] )
+					if( pUser->servantMonsters[i] )
 					{
-						if( pTargetMon == pUser->m_pMonster[i] ) return;
+						if( pTargetMon == pUser->servantMonsters[i] ) return;
 						if( pTargetMon == pUser->GetGuardian(BYTE(i)) ) return;
 					}
 				}
 				
 				for( i=0; i<MAX_USER_GUARDIAN; i++ )
 				{
-					if( pUser->m_pMonster[i] )
+					if( pUser->servantMonsters[i] )
 					{
-						pUser->m_pMonster[i]->SetTargetAI((CUnit*) pTargetMon );
+						pUser->servantMonsters[i]->SetTargetAI((CUnit*) pTargetMon );
 					}
 				}
 			}
@@ -7252,9 +7255,9 @@ void CmdMonsterCommand( DWORD dwConnectionIndex, char* pMsg, DWORD dwLength )
 
 				for( i=0; i<MAX_USER_GUARDIAN; i++ )
 				{
-					if( pUser->m_pMonster[i] )
+					if( pUser->servantMonsters[i] )
 					{
-						pUser->m_pMonster[i]->SetTargetAI((CUnit*) pTargetUser );
+						pUser->servantMonsters[i]->SetTargetAI((CUnit*) pTargetUser );
 					}
 				}
 			}
@@ -7457,7 +7460,7 @@ void CmdGMQuickMove( DWORD dwConnectionIndex, char* pMsg, DWORD dwLength )
 			UserPos = pSection->m_pPcList->GetHeadPosition();
 			while( UserPos )
 			{
-				pDisAppearUser = (CUser*)pSection->m_pPcList->GetNext( UserPos );
+				pDisAppearUser = (CUser*)pSection->m_pPcList->GetAndAdvance( UserPos );
 				// mod by deepdark
 				Section.pdwDisAppearIndex[Section.bDisAppearUserCount++] = pDisAppearUser->GetID();
 			//	Section.pdwDisAppearUserIndex[dwUserCount] = pDisAppearUser->GetID();
@@ -7467,7 +7470,7 @@ void CmdGMQuickMove( DWORD dwConnectionIndex, char* pMsg, DWORD dwLength )
 			MonsterPos = pSection->m_pMonsterList->GetHeadPosition();
 			while( MonsterPos )
 			{
-				pDisAppearMonster = (CMonster*)pSection->m_pMonsterList->GetNext( MonsterPos );
+				pDisAppearMonster = (CMonster*)pSection->m_pMonsterList->GetAndAdvance( MonsterPos );
 				// mod by deepdark
 				Section.pdwDisAppearIndex[Section.bDisAppearUserCount + Section.bDisAppearMonsterCount++] = pDisAppearMonster->GetID();
 			//	Section.pdwDisAppearMonsterIndex[dwMonsterCount] = pDisAppearMonster->GetID();

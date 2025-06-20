@@ -70,7 +70,7 @@ void CSoundEffectBasketCase::ForceAllClean()
 	while(pos)
 	{
 		PrevPos = pos;
-		ISoundEffect * pSoundEffect = (ISoundEffect *)m_pSoundEffectList->GetNext(pos);
+		ISoundEffect * pSoundEffect = (ISoundEffect *)m_pSoundEffectList->GetAndAdvance(pos);
 		if (pSoundEffect)
 		{
 			pSoundEffect->Stop();
@@ -96,7 +96,7 @@ void CSoundEffectBasketCase::UpdateToClean()
 	{
 		PrevPos = pos;
 
-		ISoundEffect * pSoundEffect = (ISoundEffect *)m_pSoundEffectList->GetNext(pos);
+		ISoundEffect * pSoundEffect = (ISoundEffect *)m_pSoundEffectList->GetAndAdvance(pos);
 		if (pSoundEffect && !pSoundEffect->IsAlive())
 		{				
 			m_pSoundEffectList->RemoveAt(PrevPos);

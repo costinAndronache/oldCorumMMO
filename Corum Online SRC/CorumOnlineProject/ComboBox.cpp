@@ -52,7 +52,7 @@ void CComboBox::AddTail(char *szName, void *pDesc)
 	while(pos)
 	{
 		POSITION_ del = pos;
-		COMBOBOX* pComboBox =  (COMBOBOX*)m_pComboList->GetNext(pos);
+		COMBOBOX* pComboBox =  (COMBOBOX*)m_pComboList->GetAndAdvance(pos);
 		if (!__strcmp(pComboBox->szComboName, szName))
 		{
 			if (m_pComboDisplayFirst == del)
@@ -84,7 +84,7 @@ void CComboBox::AddTail(char *szName, void *pDesc)
 	int nLine = 0;
 	while(pos)
 	{		
-		COMBOBOX* pComboBox =  (COMBOBOX*)m_pComboList->GetNext(pos);
+		COMBOBOX* pComboBox =  (COMBOBOX*)m_pComboList->GetAndAdvance(pos);
 		pComboBox->dwIndex = nLine++;
 	}
 	if (!m_pComboDisplayFirst)
@@ -97,7 +97,7 @@ void CComboBox::AddTail(char *szName, void *pDesc)
 void CComboBox::RemoveHead()
 {
 	if (m_pComboDisplayFirst == m_pComboList->GetHeadPosition())
-		m_pComboList->GetNext(m_pComboDisplayFirst);
+		m_pComboList->GetAndAdvance(m_pComboDisplayFirst);
 	
 	m_pComboList->RemoveHead();
 	m_pSprBoard->SetScaling((float)1, (float)1*min(m_dwComboListMaxDisplay, GetCount()));
@@ -190,7 +190,7 @@ void CComboBox::RenderList(IDIFontObject *pFont, int nOrder)
 		while(pos)
 		{
 			// 콤보박스 목록을 디스플레이.
-			COMBOBOX* pComboBox = (COMBOBOX*)m_pComboList->GetNext(pos);		
+			COMBOBOX* pComboBox = (COMBOBOX*)m_pComboList->GetAndAdvance(pos);		
 			
 			int nPosX = (int)nStartX;
 			int nPosY = (int)nStartY+nCount*m_pSprBoard->dwHeight;
@@ -261,7 +261,7 @@ int CComboBox::MouseEventCheck()
 					m_pComboCurSel = pos;
 					break;
 				}
-				m_pComboList->GetNext(pos);
+				m_pComboList->GetAndAdvance(pos);
 			}
 			m_pSprBoard->ShowSprite(false);
 			m_pSprScrollButton->ShowSprite(false);
@@ -309,7 +309,7 @@ void CComboBox::OnScroll()
 	if (p->dwIndex < dwIndex)
 	{// 스크롤바가 기존에 선택된 것 보다 down
 		if (GetCount() - p->dwIndex > m_dwComboListMaxDisplay)
-			m_pComboList->GetNext(m_pComboDisplayFirst);
+			m_pComboList->GetAndAdvance(m_pComboDisplayFirst);
 		
 	}
 	else if (p->dwIndex > dwIndex)

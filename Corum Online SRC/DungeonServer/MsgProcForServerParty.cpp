@@ -59,7 +59,7 @@ void CmdPartyMsg(DWORD dwConnectionIndex, char* pMsg, DWORD dwLength)
 			while(pos)
 			{
 				// 마법진 지워버려.
-				ITEM_MAGICARRAY_DESC* pDesc = (ITEM_MAGICARRAY_DESC*)pUser->m_pUsingMagicArrayList->GetNext(pos);
+				ITEM_MAGICARRAY_DESC* pDesc = (ITEM_MAGICARRAY_DESC*)pUser->m_pUsingMagicArrayList->GetAndAdvance(pos);
 				pUser->DetachMagicArray(pDesc);
 			}			
 		}

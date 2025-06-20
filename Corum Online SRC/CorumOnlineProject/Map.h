@@ -19,7 +19,7 @@
 #define MAX_SECTION_LINK_NUM			20		//한섹션당 링크되는 섹션의 최대 갯수
 
 
-class EffectDesc;
+class AppliedSkill;
 class CVoidList;
 struct V2_SPRITE;
 
@@ -51,7 +51,7 @@ struct CP_DESC
 	WORD		wProperty;			// 중화되었을때 나타나는 현상번호.
 	DWORD		dwStartTime;		// 유저가 cp에 서있기 시작한 시간.
 	MAP_TILE*	pTile;
-	EffectDesc* pEffectDesc;
+	AppliedSkill* pEffectDesc;
 	V2_SPRITE*	pSpr_Cp_GuageBar;
 	V2_SPRITE*	pSpr_Cp_GuageBoard;
 	V2_SPRITE*	pSpr_Minimap_Dot;

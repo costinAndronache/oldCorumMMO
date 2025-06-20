@@ -66,7 +66,7 @@ void CreateDamageEffect( BYTE bObjectType, DWORD dwIndex )
 		}break;
 	}
 
-	EffectDesc*	pEffectDesc =  g_pEffectLayer->CreateGXObject(g_pObjManager->GetFile(dwResource), bOwn, __CHR_EFFECT_NONE__);
+	AppliedSkill*	pEffectDesc =  g_pEffectLayer->CreateGXObject(g_pObjManager->GetFile(dwResource), bOwn, __CHR_EFFECT_NONE__);
 	pEffectDesc->byTargetObjectType[0]	= bObjectType;
 	pEffectDesc->dwTargetIndex[0]		= dwIndex;
 
@@ -82,7 +82,7 @@ void CreateDamageEffect( BYTE bObjectType, DWORD dwIndex )
 void EffectSkillStartFunc(GXOBJECT_HANDLE handle, LPObjectDesc pData, DWORD dwCurFrame, BYTE bFrameFlag)
 {// 이펙트 시작할 타이밍 관리하는 평션.	
 	LPObjectDesc pObjDesc	= (LPObjectDesc)pData;
-	EffectDesc*	pEffectDesc = (EffectDesc*)pObjDesc->pInfo;
+	AppliedSkill*	pEffectDesc = (AppliedSkill*)pObjDesc->pInfo;
 
 	if (!pEffectDesc->dwFrameCount)
 	{
@@ -91,7 +91,7 @@ void EffectSkillStartFunc(GXOBJECT_HANDLE handle, LPObjectDesc pData, DWORD dwCu
 			// 마법진을 없애라.
 			CUser* pUser = g_pUserHash->GetData(pEffectDesc->dwOwnIndex);
 			if (pUser)
-				pEffectDesc->dwFrameFinish  = GetSkillStartActionFinishCount(pEffectDesc->pEffect->bID, pUser, pEffectDesc->dwOwnType);
+				pEffectDesc->dwFrameFinish  = GetSkillStartActionFinishCount(pEffectDesc->pEffect->skillKind, pUser, pEffectDesc->dwOwnType);
 		}
 	}
 	
@@ -114,7 +114,7 @@ void EffectSkillStartFunc(GXOBJECT_HANDLE handle, LPObjectDesc pData, DWORD dwCu
 		if (g_pEffectLayer->IsEffectShow(pEffectDesc))
 			g_pExecutive->EnableRender(handle);
 
-		switch(pEffectDesc->pEffect->bID)
+		switch(pEffectDesc->pEffect->skillKind)
 		{
 		case __SKILL_FIREMISSILE__:
 		case __SKILL_DETONATION__:
@@ -289,7 +289,7 @@ void MonsterSkillFunc(GXOBJECT_HANDLE handle, LPObjectDesc pData, DWORD dwCurFra
 }
 
 // 이펙트 맞았을때의 공통 루틴.
-void EffectSubCommonProcess(EffectDesc* pEffectDesc)
+void EffectSubCommonProcess(AppliedSkill* pEffectDesc)
 {
 	for(DWORD i = 0; i < pEffectDesc->dwCount; ++i)
 	{	
@@ -306,7 +306,7 @@ void EffectSubCommonProcess(EffectDesc* pEffectDesc)
 					CMonster* pOwnMonster = g_pMonsterHash->GetData(pEffectDesc->dwOwnIndex);
 					if (pOwnMonster)
 					{
-						pUser = g_pUserHash->GetData(pOwnMonster->m_dwLordIndex);
+						pUser = g_pUserHash->GetData(pOwnMonster->lordDungeonID);
 					}
 				}
 				else if (OBJECT_TYPE_PLAYER == pEffectDesc->dwOwnType)
@@ -357,7 +357,7 @@ void EffectSubCommonProcess(EffectDesc* pEffectDesc)
 						{
 							if(pMonster->m_dwHP>0)
 							{
-								if(g_pMainPlayer->m_dwUserIndex==pMonster->m_dwLordIndex)
+								if(g_pMainPlayer->m_dwUserIndex==pMonster->lordDungeonID)
 								{
 									CUserInterface* pUserInterface = CUserInterface::GetInstance();
 
@@ -410,10 +410,10 @@ void EffectSubCommonProcess(EffectDesc* pEffectDesc)
 					pUser->SetDamageChar( pUser->m_dwTemp[USER_TEMP_DAMAGE_TYPE]-1 );
 				}
 
-				if (pUser->m_dwTemp[USER_TEMP_DAMAGE_TYPE] == 4 && pEffectDesc->pEffect->bID == __SKILL_TREEAGION__)
+				if (pUser->m_dwTemp[USER_TEMP_DAMAGE_TYPE] == 4 && pEffectDesc->pEffect->skillKind == __SKILL_TREEAGION__)
 				{
 					// 죽은놈 살아나게 해라.
-					pUser->SetAction(MOTION_TYPE_WARSTAND, 0, ACTION_LOOP);
+					pUser->SetMotion(MOTION_TYPE_WARSTAND, 0, ACTION_LOOP);
 					pUser->SetStatus(UNIT_STATUS_NORMAL, TRUE);
 					pUser->m_hPlayer.pDesc->ObjectFunc = NULL;
 					pUser->m_v3CurPos.y = 0;
@@ -439,7 +439,7 @@ void EffectSubCommonProcess(EffectDesc* pEffectDesc)
 void EffectAlphaFunc( GXOBJECT_HANDLE handle, LPObjectDesc pData, DWORD dwCurFrame, BYTE bFrameFlag )
 {
 	LPObjectDesc pObjDesc	= (LPObjectDesc)pData;
-	EffectDesc*	pEffectDesc = (EffectDesc*)pObjDesc->pInfo;
+	AppliedSkill*	pEffectDesc = (AppliedSkill*)pObjDesc->pInfo;
 
 	++pEffectDesc->dwFrameCount;
 
@@ -454,7 +454,7 @@ void EffectAlphaFunc( GXOBJECT_HANDLE handle, LPObjectDesc pData, DWORD dwCurFra
 void EffectFallingFunc( GXOBJECT_HANDLE handle, LPObjectDesc pData, DWORD dwCurFrame, BYTE bFrameFlag )
 {
 	LPObjectDesc pObjDesc	= (LPObjectDesc)pData;
-	EffectDesc*	pEffectDesc = (EffectDesc*)pObjDesc->pInfo;
+	AppliedSkill*	pEffectDesc = (AppliedSkill*)pObjDesc->pInfo;
 	float fPower = 35;	
 		
 	if (pEffectDesc->vecBasePosion.y > 10)
@@ -489,7 +489,7 @@ lbl_remove:
 void EffectChainAttackerFunc( GXOBJECT_HANDLE handle, LPObjectDesc pData, DWORD dwCurFrame, BYTE bFrameFlag )
 {
 	LPObjectDesc pObjDesc	= (LPObjectDesc)pData;
-	EffectDesc*	pEffectDesc = (EffectDesc*)pObjDesc->pInfo;
+	AppliedSkill*	pEffectDesc = (AppliedSkill*)pObjDesc->pInfo;
 	
 	VECTOR3 vecDest = {0,}, vPos = {0,};
 	float fRad = 0.f;
@@ -537,7 +537,7 @@ void EffectChainAttackerFunc( GXOBJECT_HANDLE handle, LPObjectDesc pData, DWORD 
 		if (vecDest.y > -10 && sqrt(pow(vecDest.z - vPos.z, 2)+pow(vecDest.x - vPos.x, 2)) < 100)
 		{
 			// 폭발 이미지 출력
-			EffectDesc* effectDesc = g_pEffectLayer->CreateGXObject(g_pObjManager->GetFile(EFFECT_CHAIN_EXPLODE), pEffectDesc->bOwn, __CHR_EFFECT_NONE__);
+			AppliedSkill* effectDesc = g_pEffectLayer->CreateGXObject(g_pObjManager->GetFile(EFFECT_CHAIN_EXPLODE), pEffectDesc->bOwn, __CHR_EFFECT_NONE__);
 			vPos.y = 0;
 			GXSetPosition( effectDesc->hEffect.pHandle, &vPos, FALSE);
 			::SetAction(effectDesc->hEffect.pHandle, 1, 0, ACTION_ONCE);
@@ -575,7 +575,7 @@ lbl_remove:
 void EffectGuardianKillFunc( GXOBJECT_HANDLE handle, LPObjectDesc pData, DWORD dwCurFrame, BYTE bFrameFlag )
 {
 	LPObjectDesc pObjDesc	= (LPObjectDesc)pData;
-	EffectDesc*	pEffectDesc = (EffectDesc*)pObjDesc->pInfo;
+	AppliedSkill*	pEffectDesc = (AppliedSkill*)pObjDesc->pInfo;
 
 	if( bFrameFlag == FRAME_FLAG_FINISHED )
 		goto lbl_remove;
@@ -662,7 +662,7 @@ void EffectGuardianKillFunc( GXOBJECT_HANDLE handle, LPObjectDesc pData, DWORD d
 
 				{
 					// 점령자에게 나오는 이펙트
-					EffectDesc* pEffectDesc = g_pEffectLayer->CreateGXObject(g_pObjManager->GetFile(EFFECT_DUNGEON_CAPTURE), 1, __CHR_EFFECT_NONE__);
+					AppliedSkill* pEffectDesc = g_pEffectLayer->CreateGXObject(g_pObjManager->GetFile(EFFECT_DUNGEON_CAPTURE), 1, __CHR_EFFECT_NONE__);
 					pEffectDesc->hEffect.pDesc->ObjectFunc = EffectSkillUserAroundRemoveFunc;
 					pEffectDesc->dwTargetIndex[0] = dwOwnIndex;
 					pEffectDesc->byTargetObjectType[0] = dwOwnType;
@@ -683,7 +683,7 @@ lbl_remove:
 void EffectEventDungeonFunc( GXOBJECT_HANDLE handle, LPObjectDesc pData, DWORD dwCurFrame, BYTE bFrameFlag )
 {
 	LPObjectDesc pObjDesc	= (LPObjectDesc)pData;
-	EffectDesc*	pEffectDesc = (EffectDesc*)pObjDesc->pInfo;
+	AppliedSkill*	pEffectDesc = (AppliedSkill*)pObjDesc->pInfo;
 
 	CUser* pTargetUser = g_pUserHash->GetData(pEffectDesc->dwTargetIndex[0]);
 	if (pTargetUser == NULL)
@@ -719,9 +719,9 @@ void EffectEventDungeonFunc( GXOBJECT_HANDLE handle, LPObjectDesc pData, DWORD d
 void EffectOnceAndRemoveFunc( GXOBJECT_HANDLE handle, LPObjectDesc pData, DWORD dwCurFrame, BYTE bFrameFlag )
 { 
 	LPObjectDesc pObjDesc	= (LPObjectDesc)pData;
-	EffectDesc*	pEffectDesc = (EffectDesc*)pObjDesc->pInfo;	
+	AppliedSkill*	pEffectDesc = (AppliedSkill*)pObjDesc->pInfo;	
 	
-	switch(pEffectDesc->bEffectInfoNum)
+	switch(pEffectDesc->skillKind)
 	{
 	case __SKILL_ZEAL__:
 		break;
@@ -787,7 +787,7 @@ void EffectOnceAndRemoveFunc( GXOBJECT_HANDLE handle, LPObjectDesc pData, DWORD 
 
 	if( bFrameFlag == FRAME_FLAG_FINISHED || bFrameFlag == FRAME_FLAG_CHANGE_NEXT )
 	{
-		if(pEffectDesc->bEffectInfoNum == __SKILL_EARTHQUAKE__ || pEffectDesc->bEffectInfoNum == __SKILL_DRAGONICVIBRATION__)
+		if(pEffectDesc->skillKind == __SKILL_EARTHQUAKE__ || pEffectDesc->skillKind == __SKILL_DRAGONICVIBRATION__)
 		{// 프레임 끝난후 알파로 사라지기 위해서.
 		
 			VECTOR3 vec;
@@ -814,12 +814,12 @@ void EffectOnceAndRemoveFunc( GXOBJECT_HANDLE handle, LPObjectDesc pData, DWORD 
 						CUser* pTargetUser = g_pUserHash->GetData(pEffectDesc->dwTargetIndex[i]);
 						if (pTargetUser && pTargetUser->m_dwTemp[USER_TEMP_DAMAGE_TYPE] == 4) // 성공했을때만 붙여라.
 						{
-							if (pTargetUser->m_pEffectDesc[pEffectDesc->pEffect->bID])
+							if (pTargetUser->m_pEffectDesc[pEffectDesc->pEffect->skillKind])
 							{
 								if (g_pEffectLayer->IsEffectShow(pEffectDesc))
-									ShowObject(pTargetUser->m_pEffectDesc[pEffectDesc->pEffect->bID]->hEffect.pHandle);
+									ShowObject(pTargetUser->m_pEffectDesc[pEffectDesc->pEffect->skillKind]->hEffect.pHandle);
 								else
-									g_pExecutive->EnableSchedule(pTargetUser->m_pEffectDesc[pEffectDesc->pEffect->bID]->hEffect.pHandle);
+									g_pExecutive->EnableSchedule(pTargetUser->m_pEffectDesc[pEffectDesc->pEffect->skillKind]->hEffect.pHandle);
 								//pTargetUser->m_pEffectDesc[pEffectDesc->pEffect->bID]->dwTemp[SKILL_TEMP_POSONING] = pEffectDesc->dwTemp[SKILL_TEMP_POSONING];
 							}
 						}
@@ -830,12 +830,12 @@ void EffectOnceAndRemoveFunc( GXOBJECT_HANDLE handle, LPObjectDesc pData, DWORD 
 						CMonster* pTargetMonster = g_pMonsterHash->GetData(pEffectDesc->dwTargetIndex[i]);
 						if (pTargetMonster && pTargetMonster->m_dwTemp[MONSTER_TEMP_DAMAGE_TYPE] == 4) // 성공했을때만 붙여라.
 						{
-							if (pTargetMonster->m_pEffectDesc[pEffectDesc->pEffect->bID])
+							if (pTargetMonster->m_pEffectDesc[pEffectDesc->pEffect->skillKind])
 							{
 								if (g_pEffectLayer->IsEffectShow(pEffectDesc))
-									ShowObject(pTargetMonster->m_pEffectDesc[pEffectDesc->pEffect->bID]->hEffect.pHandle);
+									ShowObject(pTargetMonster->m_pEffectDesc[pEffectDesc->pEffect->skillKind]->hEffect.pHandle);
 								else 
-									g_pExecutive->EnableSchedule(pTargetMonster->m_pEffectDesc[pEffectDesc->pEffect->bID]->hEffect.pHandle);
+									g_pExecutive->EnableSchedule(pTargetMonster->m_pEffectDesc[pEffectDesc->pEffect->skillKind]->hEffect.pHandle);
 								//pTargetMonster->m_pEffectDesc[pEffectDesc->pEffect->bID]->dwTemp[SKILL_TEMP_POSONING] = pEffectDesc->dwTemp[SKILL_TEMP_POSONING];
 							}							
 						}
@@ -852,7 +852,7 @@ void EffectOnceAndRemoveFunc( GXOBJECT_HANDLE handle, LPObjectDesc pData, DWORD 
 	}
 }
 
-void EffectSkillCameraQuake(EffectDesc* pEffectDesc, DWORD dwCurFrame)
+void EffectSkillCameraQuake(AppliedSkill* pEffectDesc, DWORD dwCurFrame)
 {// 이펙트 카메라 관련놈들 모아놓은것 ㅡ.ㅡ;;;
 	
 	VECTOR3 v3Effect;g_pExecutive->GXOGetPosition(pEffectDesc->hEffect.pHandle, &v3Effect);		
@@ -862,7 +862,7 @@ void EffectSkillCameraQuake(EffectDesc* pEffectDesc, DWORD dwCurFrame)
 
 	VECTOR3 vecQuake;vecQuake.x = vecQuake.y = vecQuake.z = 0;	
 
-	switch(pEffectDesc->bEffectInfoNum)
+	switch(pEffectDesc->skillKind)
 	{
 		// 스킬 끝날때까지 흔들어.
 	case __SKILL_EARTHQUAKE__:
@@ -1004,7 +1004,7 @@ void PlayerAttackFunc(GXOBJECT_HANDLE handle, LPObjectDesc pData, DWORD dwCurFra
 						pMonster->WithActionFunc = MonsterKillWithAction;
 					}
 					
-					if( ( pUser == g_pMainPlayer ) || ( pMonster->m_dwLordIndex == g_pMainPlayer->m_dwUserIndex	 ) )
+					if( ( pUser == g_pMainPlayer ) || ( pMonster->lordDungeonID == g_pMainPlayer->m_dwUserIndex	 ) )
 					{
 						if( pMonster->m_dwTemp[MONSTER_TEMP_DAMAGE_TYPE] == 4 )	// 공격이 성공했다면.
 						{
@@ -1050,7 +1050,7 @@ void PlayerAttackFunc(GXOBJECT_HANDLE handle, LPObjectDesc pData, DWORD dwCurFra
 					{	
 						if (pDefense->GetStatus()== UNIT_STATUS_NORMAL)
 						{
-							pDefense->SetActionNext( MOTION_TYPE_DEFENSEFAIL, MOTION_TYPE_WARSTAND, ACTION_ONCE, 0 );
+							pDefense->SetMotionSequence( MOTION_TYPE_DEFENSEFAIL, MOTION_TYPE_WARSTAND, ACTION_ONCE, 0 );
 							pDefense->SetStatus(UNIT_STATUS_DAMAGING);
 							pDefense->m_hPlayer.pDesc->ObjectFunc = PlayerDamageFunc;
 						}
@@ -1164,7 +1164,7 @@ void MonsterAttackFunc(GXOBJECT_HANDLE handle, LPObjectDesc pData, DWORD dwCurFr
 							VECTOR3_SUB_VECTOR3( &v3DirMon, &pMonster->m_v3CurPos, &pUser->m_v3CurPos );
 							g_pExecutive->GXOSetDirection( pUser->m_hPlayer.pHandle, &g_Camera.v3AxsiY, (float)(atan2(v3DirMon.z, v3DirMon.x) + DEG90 ) );							
 							
-							pUser->SetActionNext( MOTION_TYPE_DEFENSEFAIL, MOTION_TYPE_WARSTAND, ACTION_ONCE, 0 );
+							pUser->SetMotionSequence( MOTION_TYPE_DEFENSEFAIL, MOTION_TYPE_WARSTAND, ACTION_ONCE, 0 );
 							pUser->SetStatus(UNIT_STATUS_DAMAGING);
 							pUser->m_hPlayer.pDesc->ObjectFunc = PlayerDamageFunc;
 						}
@@ -1185,7 +1185,7 @@ void MonsterAttackFunc(GXOBJECT_HANDLE handle, LPObjectDesc pData, DWORD dwCurFr
 					if( pMonster->m_dwTemp[MONSTER_TEMP_MONMON_DAMAGE_TYPE] == 4 )
 					{
 						// 내 몬스터가 다른 플레이어를 친다.
-						if( g_pMainPlayer->m_dwUserIndex == pMonster->m_dwLordIndex )
+						if( g_pMainPlayer->m_dwUserIndex == pMonster->lordDungeonID )
 						{
 							pUser->SetDamageIndex( pMonster->m_dwTemp[MONSTER_TEMP_MONMON_DAMAGE] );
 						}
@@ -1193,7 +1193,7 @@ void MonsterAttackFunc(GXOBJECT_HANDLE handle, LPObjectDesc pData, DWORD dwCurFr
 					else 
 					{
 						// 내 몬스터가 다른 플레이어를 친다.
-						if( g_pMainPlayer->m_dwUserIndex == pMonster->m_dwLordIndex )
+						if( g_pMainPlayer->m_dwUserIndex == pMonster->lordDungeonID )
 						{
 							pUser->SetDamageChar( pMonster->m_dwTemp[MONSTER_TEMP_MONMON_DAMAGE_TYPE] - 1);
 						}
@@ -1232,7 +1232,7 @@ void MonsterAttackFunc(GXOBJECT_HANDLE handle, LPObjectDesc pData, DWORD dwCurFr
 							VECTOR3_SUB_VECTOR3( &v3DirMon, &pMonster->m_v3CurPos, &g_pMainPlayer->m_v3CurPos );
 							g_pExecutive->GXOSetDirection( g_pMainPlayer->m_hPlayer.pHandle, &g_Camera.v3AxsiY, (float)(atan2(v3DirMon.z, v3DirMon.x) + DEG90 ) );
 
-							g_pMainPlayer->SetActionNext( MOTION_TYPE_DEFENSEFAIL, MOTION_TYPE_WARSTAND, ACTION_ONCE, 0 );
+							g_pMainPlayer->SetMotionSequence( MOTION_TYPE_DEFENSEFAIL, MOTION_TYPE_WARSTAND, ACTION_ONCE, 0 );
 							g_pMainPlayer->m_hPlayer.pDesc->ObjectFunc = PlayerDamageFunc;
 							g_pMainPlayer->SetStatus(UNIT_STATUS_DAMAGING);
 
@@ -1296,7 +1296,7 @@ void MonsterAttackFunc(GXOBJECT_HANDLE handle, LPObjectDesc pData, DWORD dwCurFr
 					if( pMonster->m_dwTemp[MONSTER_TEMP_MONMON_DAMAGE_TYPE] == 4 )
 					{
 						// 내가 몬스터의 주인이거나 나의 몬스터가 대상이라면.
-						if( ( g_pMainPlayer->m_dwUserIndex == pMonster->m_dwLordIndex ) || ( g_pMainPlayer->m_dwUserIndex == pDefenseMon->m_dwLordIndex ) )
+						if( ( g_pMainPlayer->m_dwUserIndex == pMonster->lordDungeonID ) || ( g_pMainPlayer->m_dwUserIndex == pDefenseMon->lordDungeonID ) )
 						{
 							pDefenseMon->SetDamageIndex( pMonster->m_dwTemp[MONSTER_TEMP_MONMON_DAMAGE] );
 						}
@@ -1304,7 +1304,7 @@ void MonsterAttackFunc(GXOBJECT_HANDLE handle, LPObjectDesc pData, DWORD dwCurFr
 					else 
 					{
 						// 내가 몬스터의 주인이거나 나의 몬스터가 대상이라면.
-						if( ( g_pMainPlayer->m_dwUserIndex == pMonster->m_dwLordIndex ) || ( g_pMainPlayer->m_dwUserIndex == pDefenseMon->m_dwLordIndex ) )
+						if( ( g_pMainPlayer->m_dwUserIndex == pMonster->lordDungeonID ) || ( g_pMainPlayer->m_dwUserIndex == pDefenseMon->lordDungeonID ) )
 						{
 							pDefenseMon->SetDamageChar( pMonster->m_dwTemp[MONSTER_TEMP_MONMON_DAMAGE_TYPE] - 1);
 						}
@@ -1367,10 +1367,10 @@ void MonsterKillFunc( GXOBJECT_HANDLE handle, LPObjectDesc pData, DWORD dwCurFra
 
 				if (pMonster->m_v3CurPos.y == -10)
 				{
-					if (pMonster->m_dwMonsterKind == OBJECT_TYPE_GUARDIAN && !pMonster->m_dwLordIndex)
+					if (pMonster->m_dwMonsterKind == OBJECT_TYPE_GUARDIAN && !pMonster->lordDungeonID)
 					{
 						// 수호가디언이 죽었을때
-						EffectDesc* pEffectDesc = g_pEffectLayer->CreateGXObject(g_pObjManager->GetFile(EFFECT_GUARDIAN_DYING),TRUE, __CHR_EFFECT_GUARDIAN_DYING__);
+						AppliedSkill* pEffectDesc = g_pEffectLayer->CreateGXObject(g_pObjManager->GetFile(EFFECT_GUARDIAN_DYING),TRUE, __CHR_EFFECT_GUARDIAN_DYING__);
 						pEffectDesc->dwOwnIndex = pMonster->m_dwMonsterIndex;
 						pEffectDesc->dwOwnType = OBJECT_TYPE_MONSTER;
 						pEffectDesc->byTargetObjectType[0] = OBJECT_TYPE_PLAYER;
@@ -1386,7 +1386,7 @@ void MonsterKillFunc( GXOBJECT_HANDLE handle, LPObjectDesc pData, DWORD dwCurFra
 			else
 			{
 				// 나의 가디언이 죽었다면.
-				if( pMonster->m_dwLordIndex == g_pMainPlayer->m_dwUserIndex )
+				if( pMonster->lordDungeonID == g_pMainPlayer->m_dwUserIndex )
 				{
 					if( pMonster->m_dwMonsterKind == OBJECT_TYPE_GUARDIAN )
 					{
@@ -1422,7 +1422,7 @@ void MonsterKillFunc( GXOBJECT_HANDLE handle, LPObjectDesc pData, DWORD dwCurFra
 void EffectPotionAroundRemoveFunc( GXOBJECT_HANDLE handle, LPObjectDesc pData, DWORD dwCurFrame, BYTE bFrameFlag )
 {
 	LPObjectDesc pObjDesc	= (LPObjectDesc)pData;
-	EffectDesc* pEffectDesc = (EffectDesc*)pObjDesc->pInfo;
+	AppliedSkill* pEffectDesc = (AppliedSkill*)pObjDesc->pInfo;
 	VECTOR3 vecStart;
 	
 	switch(pEffectDesc->byTargetObjectType[0])
@@ -1455,7 +1455,7 @@ void EffectPotionAroundRemoveFunc( GXOBJECT_HANDLE handle, LPObjectDesc pData, D
 void EffectSkillUserAroundRemoveFunc( GXOBJECT_HANDLE handle, LPObjectDesc pData, DWORD dwCurFrame, BYTE bFrameFlag )
 {
 	LPObjectDesc pObjDesc	= (LPObjectDesc)pData;
-	EffectDesc* pEffectDesc = (EffectDesc*)pObjDesc->pInfo;
+	AppliedSkill* pEffectDesc = (AppliedSkill*)pObjDesc->pInfo;
 	VECTOR3 vecStart;
 
 	switch(pEffectDesc->byTargetObjectType[0])
@@ -1490,7 +1490,7 @@ void EffectSkillUserAroundRemoveFunc( GXOBJECT_HANDLE handle, LPObjectDesc pData
 void EffectSkillAroundFunc( GXOBJECT_HANDLE handle, LPObjectDesc pData, DWORD dwCurFrame, BYTE bFrameFlag )
 {
 	LPObjectDesc pObjDesc	= (LPObjectDesc)pData;
-	EffectDesc* pEffectDesc = (EffectDesc*)pObjDesc->pInfo;
+	AppliedSkill* pEffectDesc = (AppliedSkill*)pObjDesc->pInfo;
 	VECTOR3 vecStart;
 
 	switch(pEffectDesc->byTargetObjectType[0])
@@ -1526,7 +1526,7 @@ void EffectSkillAroundFunc( GXOBJECT_HANDLE handle, LPObjectDesc pData, DWORD dw
 void EffectSkillUserStatusTopFunc( GXOBJECT_HANDLE handle, LPObjectDesc pData, DWORD dwCurFrame, BYTE bFrameFlag )
 {	
 	LPObjectDesc pObjDesc	= (LPObjectDesc)pData;
-	EffectDesc* pEffectDesc = (EffectDesc*)pObjDesc->pInfo;
+	AppliedSkill* pEffectDesc = (AppliedSkill*)pObjDesc->pInfo;
 	
 	CUser* pUser = (CUser*)g_pUserHash->GetData(pEffectDesc->dwTargetIndex[0]);
 	if (!pUser) return;	
@@ -1551,7 +1551,7 @@ void EffectSkillUserStatusTopFunc( GXOBJECT_HANDLE handle, LPObjectDesc pData, D
 void EffectSkillUserStatusCenterFunc( GXOBJECT_HANDLE handle, LPObjectDesc pData, DWORD dwCurFrame, BYTE bFrameFlag )
 {	
 	LPObjectDesc pObjDesc	= (LPObjectDesc)pData;
-	EffectDesc* pEffectDesc = (EffectDesc*)pObjDesc->pInfo;
+	AppliedSkill* pEffectDesc = (AppliedSkill*)pObjDesc->pInfo;
 	
 	CUser* pUser = (CUser*)g_pUserHash->GetData(pEffectDesc->dwTargetIndex[0]);
 	if (!pUser)	return;
@@ -1567,7 +1567,7 @@ void EffectSkillUserStatusCenterFunc( GXOBJECT_HANDLE handle, LPObjectDesc pData
 		PlaySoundEffect(pEffectDesc->m_pSound[SOUND_EFFECT_GENERAL2], &pEffectDesc->vecBasePosion, FALSE);
 	}
 
-	switch(pEffectDesc->pEffect->bID )
+	switch(pEffectDesc->pEffect->skillKind )
 	{
 	case __SKILL_POSIONCLOUD__:
 	case __SKILL_POISONING__:
@@ -1578,10 +1578,12 @@ void EffectSkillUserStatusCenterFunc( GXOBJECT_HANDLE handle, LPObjectDesc pData
 			int  nDamage = pEffectDesc->dwTemp[SKILL_TEMP_POSONING];
 			if (pUser == g_pMainPlayer)
 			{				
-				if (g_pMainPlayer->m_wHP-nDamage >= 1)
-					CUserInterface::GetInstance()->SetDengeonHp(g_pMainPlayer->m_wHP-nDamage);
-				else
-					CUserInterface::GetInstance()->SetDengeonHp(1);				
+				if (g_pMainPlayer->currentHP() - nDamage >= 1) {
+					g_pMainPlayer->updateCurrentHP(g_pMainPlayer->currentHP() - nDamage);
+				}
+				else {
+					g_pMainPlayer->updateCurrentHP(1);
+				}
 			}
 
 			pUser->SetDamageIndex( nDamage );
@@ -1596,14 +1598,14 @@ void EffectSkillUserStatusCenterFunc( GXOBJECT_HANDLE handle, LPObjectDesc pData
 void EffectSkillUserStatusBottomFunc( GXOBJECT_HANDLE handle, LPObjectDesc pData, DWORD dwCurFrame, BYTE bFrameFlag )
 {	
 	LPObjectDesc pObjDesc	= (LPObjectDesc)pData;
-	EffectDesc* pEffectDesc = (EffectDesc*)pObjDesc->pInfo;
+	AppliedSkill* pEffectDesc = (AppliedSkill*)pObjDesc->pInfo;
 	
 	CUser* pUser = (CUser*)g_pUserHash->GetData(pEffectDesc->dwTargetIndex[0]);
 	if (!pUser)	return;
 
 	pEffectDesc->dwFrameCount++; 
 	
-	if (pEffectDesc->bEffectInfoNum == __SKILL_HIDING__)
+	if (pEffectDesc->skillKind == __SKILL_HIDING__)
 	{
 		if(g_pMainPlayer->IsAlliance(pUser))
 		{
@@ -1659,7 +1661,7 @@ void EffectSkillUserStatusBottomFunc( GXOBJECT_HANDLE handle, LPObjectDesc pData
 void EffectSkillMonsterStatusTopFunc( GXOBJECT_HANDLE handle, LPObjectDesc pData, DWORD dwCurFrame, BYTE bFrameFlag )
 {	
 	LPObjectDesc pObjDesc	= (LPObjectDesc)pData;
-	EffectDesc* pEffectDesc = (EffectDesc*)pObjDesc->pInfo;
+	AppliedSkill* pEffectDesc = (AppliedSkill*)pObjDesc->pInfo;
 	
 	CMonster* pMonster = g_pMonsterHash->GetData(pEffectDesc->dwTargetIndex[0]);
 	if (!pMonster)	return;
@@ -1683,14 +1685,14 @@ void EffectSkillMonsterStatusTopFunc( GXOBJECT_HANDLE handle, LPObjectDesc pData
 	if (bFrameFlag == FRAME_FLAG_FINISHED_HIDE)
 		g_pExecutive->DisableRender(handle);
 	
-	if (pEffectDesc->pEffect && __SKILL_DETONATION__ == pEffectDesc->pEffect->bID)
+	if (pEffectDesc->pEffect && __SKILL_DETONATION__ == pEffectDesc->pEffect->skillKind)
 		g_pExecutive->GXOSetEffectIndex(pMonster->m_hMonster.pHandle, EFS_upgrade_effect_6);
 }
 
 void EffectSkillMonsterStatusCenterFunc( GXOBJECT_HANDLE handle, LPObjectDesc pData, DWORD dwCurFrame, BYTE bFrameFlag )
 {	
 	LPObjectDesc pObjDesc	= (LPObjectDesc)pData;
-	EffectDesc* pEffectDesc = (EffectDesc*)pObjDesc->pInfo;
+	AppliedSkill* pEffectDesc = (AppliedSkill*)pObjDesc->pInfo;
 	
 	CMonster* pMonster = g_pMonsterHash->GetData(pEffectDesc->dwTargetIndex[0]);
 	if (!pMonster)	return;
@@ -1706,7 +1708,7 @@ void EffectSkillMonsterStatusCenterFunc( GXOBJECT_HANDLE handle, LPObjectDesc pD
 		PlaySoundEffect(pEffectDesc->m_pSound[SOUND_EFFECT_GENERAL2], &pEffectDesc->vecBasePosion, FALSE);
 	}
 
-	switch(pEffectDesc->pEffect->bID )
+	switch(pEffectDesc->pEffect->skillKind )
 	{
 	case __SKILL_POSIONCLOUD__:
 	case __SKILL_POISONING__:
@@ -1734,7 +1736,7 @@ void EffectSkillMonsterStatusCenterFunc( GXOBJECT_HANDLE handle, LPObjectDesc pD
 void EffectSkillMonsterStatusBottomFunc( GXOBJECT_HANDLE handle, LPObjectDesc pData, DWORD dwCurFrame, BYTE bFrameFlag )
 {	
 	LPObjectDesc pObjDesc	= (LPObjectDesc)pData;
-	EffectDesc* pEffectDesc = (EffectDesc*)pObjDesc->pInfo;
+	AppliedSkill* pEffectDesc = (AppliedSkill*)pObjDesc->pInfo;
 	
 	CMonster* pMonster = g_pMonsterHash->GetData(pEffectDesc->dwTargetIndex[0]);
 	if (!pMonster)	return;
@@ -1750,7 +1752,7 @@ void EffectSkillMonsterStatusBottomFunc( GXOBJECT_HANDLE handle, LPObjectDesc pD
 		PlaySoundEffect(pEffectDesc->m_pSound[SOUND_EFFECT_GENERAL2], &pEffectDesc->vecBasePosion, FALSE);
 	}
 	
-	switch(pEffectDesc->pEffect->bID)
+	switch(pEffectDesc->pEffect->skillKind)
 	{
 	case __SKILL_REDELEMENTAL__:
 	case __SKILL_BLUEELEMENTAL__:
@@ -1919,9 +1921,9 @@ DWORD	GetSkillStartActionFinishCount(BYTE bSkillKind, void* pObject, BYTE bObjec
 	}	
 }
 
-EffectDesc* SkillSubProcess_General(BYTE bSkillKind, BYTE bSkillLevel, BYTE bJoint, DWORD dwOwnType, DWORD dwOwnIndex, DWORD dwCount, VECTOR3 vecStart, TARGETINFO* pTargetInfo )
+AppliedSkill* SkillSubProcess_General(BYTE bSkillKind, BYTE bSkillLevel, BYTE bJoint, DWORD dwOwnType, DWORD dwOwnIndex, DWORD dwCount, VECTOR3 vecStart, TARGETINFO* pTargetInfo )
 {		
-	EffectDesc*	pEffectDesc = g_pEffectLayer->CreateEffect(bSkillKind, bJoint, dwOwnType==OBJECT_TYPE_PLAYER && g_pMainPlayer->m_dwUserIndex == dwOwnIndex);
+	AppliedSkill*	pEffectDesc = g_pEffectLayer->CreateEffect(bSkillKind, bJoint, dwOwnType==OBJECT_TYPE_PLAYER && g_pMainPlayer->m_dwUserIndex == dwOwnIndex);
 	
 	pEffectDesc->vecBasePosion = vecStart;
 	pEffectDesc->dwOwnIndex = dwOwnIndex;
@@ -1935,9 +1937,9 @@ EffectDesc* SkillSubProcess_General(BYTE bSkillKind, BYTE bSkillLevel, BYTE bJoi
 	return pEffectDesc;
 }
 
-EffectDesc* SkillSubProcess_FireBall(BYTE bSkillKind, BYTE bSkillLevel, DWORD dwOwnType, DWORD dwOwnIndex, DWORD dwCount, VECTOR3 vecStart, TARGETINFO* pTargetInfo, float fRad )
+AppliedSkill* SkillSubProcess_FireBall(BYTE bSkillKind, BYTE bSkillLevel, DWORD dwOwnType, DWORD dwOwnIndex, DWORD dwCount, VECTOR3 vecStart, TARGETINFO* pTargetInfo, float fRad )
 {
-	EffectDesc*	pEffectDesc = CreateEffectBall(bSkillKind, fRad, dwOwnType, dwOwnIndex);
+	AppliedSkill*	pEffectDesc = CreateEffectBall(bSkillKind, fRad, dwOwnType, dwOwnIndex);
 	pEffectDesc->vecBasePosion = vecStart;
 	pEffectDesc->dwOwnIndex = dwOwnIndex;
 	pEffectDesc->dwOwnType = dwOwnType;
@@ -1950,9 +1952,9 @@ EffectDesc* SkillSubProcess_FireBall(BYTE bSkillKind, BYTE bSkillLevel, DWORD dw
 	return pEffectDesc;
 }
 
-EffectDesc* SkillSubProcess_MagmaWall(BYTE bSkillKind, BYTE bSkillLevel, DWORD dwOwnType, DWORD dwOwnIndex, DWORD dwCount, VECTOR3 vecStart, TARGETINFO* pTargetInfo )
+AppliedSkill* SkillSubProcess_MagmaWall(BYTE bSkillKind, BYTE bSkillLevel, DWORD dwOwnType, DWORD dwOwnIndex, DWORD dwCount, VECTOR3 vecStart, TARGETINFO* pTargetInfo )
 {
-	EffectDesc*	pEffectDesc = g_pEffectLayer->CreateEffect(bSkillKind, 0 , dwOwnType==OBJECT_TYPE_PLAYER && g_pMainPlayer->m_dwUserIndex == dwOwnIndex);
+	AppliedSkill*	pEffectDesc = g_pEffectLayer->CreateEffect(bSkillKind, 0 , dwOwnType==OBJECT_TYPE_PLAYER && g_pMainPlayer->m_dwUserIndex == dwOwnIndex);
 		
 	pEffectDesc->vecBasePosion = vecStart;
 	pEffectDesc->dwOwnIndex = dwOwnIndex;
@@ -1982,9 +1984,9 @@ EffectDesc* SkillSubProcess_MagmaWall(BYTE bSkillKind, BYTE bSkillLevel, DWORD d
 	return pEffectDesc;	
 }
 
-EffectDesc* SkillSubProcess_IceWall(BYTE bSkillKind, BYTE bSkillLevel, DWORD dwOwnType, DWORD dwOwnIndex, DWORD dwCount, VECTOR3 vecStart, TARGETINFO* pTargetInfo )
+AppliedSkill* SkillSubProcess_IceWall(BYTE bSkillKind, BYTE bSkillLevel, DWORD dwOwnType, DWORD dwOwnIndex, DWORD dwCount, VECTOR3 vecStart, TARGETINFO* pTargetInfo )
 {
-	EffectDesc*	pEffectDesc = g_pEffectLayer->CreateEffect(bSkillKind, 0 , dwOwnType==OBJECT_TYPE_PLAYER && g_pMainPlayer->m_dwUserIndex == dwOwnIndex);
+	AppliedSkill*	pEffectDesc = g_pEffectLayer->CreateEffect(bSkillKind, 0 , dwOwnType==OBJECT_TYPE_PLAYER && g_pMainPlayer->m_dwUserIndex == dwOwnIndex);
 		
 	pEffectDesc->vecBasePosion = vecStart;
 	pEffectDesc->dwOwnIndex = dwOwnIndex;
@@ -2012,9 +2014,9 @@ EffectDesc* SkillSubProcess_IceWall(BYTE bSkillKind, BYTE bSkillLevel, DWORD dwO
 	return pEffectDesc;	
 }
 
-EffectDesc* SkillSubProcess_BlastQuake(BYTE bSkillKind, BYTE bSkillLevel, DWORD dwOwnType, DWORD dwOwnIndex, DWORD dwCount, VECTOR3 vecStart, TARGETINFO* pTargetInfo )
+AppliedSkill* SkillSubProcess_BlastQuake(BYTE bSkillKind, BYTE bSkillLevel, DWORD dwOwnType, DWORD dwOwnIndex, DWORD dwCount, VECTOR3 vecStart, TARGETINFO* pTargetInfo )
 {
-	EffectDesc*	pEffectDesc = g_pEffectLayer->CreateEffect(bSkillKind, 0 , dwOwnType==OBJECT_TYPE_PLAYER && g_pMainPlayer->m_dwUserIndex == dwOwnIndex);
+	AppliedSkill*	pEffectDesc = g_pEffectLayer->CreateEffect(bSkillKind, 0 , dwOwnType==OBJECT_TYPE_PLAYER && g_pMainPlayer->m_dwUserIndex == dwOwnIndex);
 		
 	pEffectDesc->vecBasePosion = vecStart;
 	pEffectDesc->dwOwnIndex = dwOwnIndex;
@@ -2057,7 +2059,7 @@ EffectDesc* SkillSubProcess_BlastQuake(BYTE bSkillKind, BYTE bSkillLevel, DWORD 
 // 임시 진짜 임시. slowboat
 void MakingNullEffect(BYTE bSkillKind,VECTOR3 vPos, BYTE bJoint, BOOL bOwn)
 {	
-	EffectDesc*	effectDesc = g_pEffectLayer->CreateEffect(bSkillKind, bJoint, bOwn);
+	AppliedSkill*	effectDesc = g_pEffectLayer->CreateEffect(bSkillKind, bJoint, bOwn);
 	
 	effectDesc->byTargetObjectType[0]	= OBJECT_TYPE_EFFECT;	// 
 	effectDesc->dwTargetIndex[0]		= 0;	// 
@@ -2070,7 +2072,7 @@ void MakingNullEffect(BYTE bSkillKind,VECTOR3 vPos, BYTE bJoint, BOOL bOwn)
 
 // 유도미사일함수 . 유도되는 미사일의 방향을 결정하는 함수이다.
 // 인자는 타겟의 위치, 현재 나의 위치, 나의 핸들, 최대 꺽이는각도, 랜덤값, 이펙트 구조체 포인터
-void SetHoamingDirection(VECTOR3* vTarget, VECTOR3* vMine, HANDLE hHandle, float fpower, DWORD dwRandom,EffectDesc*	pEffectDesc)
+void SetHoamingDirection(VECTOR3* vTarget, VECTOR3* vMine, HANDLE hHandle, float fpower, DWORD dwRandom,AppliedSkill*	pEffectDesc)
 {
 	float fNewdirection = atan2(vMine->z - vTarget->z , vMine->x - vTarget->x);
 	float fCurrentDirection=0.f;
@@ -2143,7 +2145,7 @@ void SetHoamingDirection(VECTOR3* vTarget, VECTOR3* vMine, HANDLE hHandle, float
 void DragonicFireblast( GXOBJECT_HANDLE handle, LPObjectDesc pData, DWORD dwCurFrame, BYTE bFrameFlag )
 {
 	LPObjectDesc pObjDesc	= (LPObjectDesc)pData;
-	EffectDesc*	pEffectDesc = (EffectDesc*)pObjDesc->pInfo;
+	AppliedSkill*	pEffectDesc = (AppliedSkill*)pObjDesc->pInfo;
 	pEffectDesc->dwFrameCount++;	// counting
 	VECTOR3 vPos, vecDest;	
 
@@ -2204,7 +2206,7 @@ lb_remove:
 void FireBallHeadFunctionBySlowboatEightDirection( GXOBJECT_HANDLE handle, LPObjectDesc pData, DWORD dwCurFrame, BYTE bFrameFlag )
 {
 	LPObjectDesc pObjDesc	= (LPObjectDesc)pData;
-	EffectDesc*	pEffectDesc = (EffectDesc*)pObjDesc->pInfo;
+	AppliedSkill*	pEffectDesc = (AppliedSkill*)pObjDesc->pInfo;
 	pEffectDesc->dwFrameCount++;	// counting
 	VECTOR3 vPos, vecDest;
 	
@@ -2252,7 +2254,7 @@ void FireBallHeadFunctionBySlowboatEightDirection( GXOBJECT_HANDLE handle, LPObj
 		if (vecDest.y > -10 && fabs(vecDest.z - vPos.z) + fabs(vecDest.x - vPos.x) < 100)
 		{
 			// 폭발 이미지 출력
-			EffectDesc* effectDesc = g_pEffectLayer->CreateEffect(pEffectDesc->bEffectInfoNum,6, pEffectDesc->bOwn );
+			AppliedSkill* effectDesc = g_pEffectLayer->CreateEffect(pEffectDesc->skillKind,6, pEffectDesc->bOwn );
 			effectDesc->dwCount = pEffectDesc->dwCount;
 			memcpy(effectDesc->dwTargetIndex, pEffectDesc->dwTargetIndex, effectDesc->dwCount*sizeof(DWORD));
 			memcpy(effectDesc->byTargetObjectType, pEffectDesc->byTargetObjectType, effectDesc->dwCount*sizeof(DWORD));
@@ -2291,7 +2293,7 @@ void FireBallHeadFunctionBySlowboatEightDirection( GXOBJECT_HANDLE handle, LPObj
 	// 꼬리생성, 현재 2프레임마다 하나씩 생성한다.
 	if (pEffectDesc->dwFrameCount % 4 == 0)
 	{// 꼬리생성, 현재 2프레임마다 하나씩 생성한다.
-		EffectDesc* effectDesc = g_pEffectLayer->CreateEffect(pEffectDesc->bEffectInfoNum, GetRandom(5)+1, pEffectDesc->bOwn);
+		AppliedSkill* effectDesc = g_pEffectLayer->CreateEffect(pEffectDesc->skillKind, GetRandom(5)+1, pEffectDesc->bOwn);
 		
 		GXSetPosition( effectDesc->hEffect.pHandle, &vPos, FALSE);
 		::SetAction( effectDesc->hEffect.pHandle, 1, 0, ACTION_ONCE );
@@ -2317,7 +2319,7 @@ lb_remove:
 void FireBallHeadFunctionBySlowboat( GXOBJECT_HANDLE handle, LPObjectDesc pData, DWORD dwCurFrame, BYTE bFrameFlag )
 {
 	LPObjectDesc pObjDesc	= (LPObjectDesc)pData;
-	EffectDesc*	pEffectDesc = (EffectDesc*)pObjDesc->pInfo;
+	AppliedSkill*	pEffectDesc = (AppliedSkill*)pObjDesc->pInfo;
 
 	if (pEffectDesc->dwFrameCount == 0)			// 처음 발사 될때 소리 내기
 		PlaySoundEffect(pEffectDesc->m_pSound[SOUND_EFFECT_START], &pEffectDesc->vecBasePosion, FALSE);
@@ -2347,7 +2349,7 @@ void FireBallHeadFunctionBySlowboat( GXOBJECT_HANDLE handle, LPObjectDesc pData,
 	
 	if (pEffectDesc->dwFrameCount % 4 == 0)
 	{// 꼬리생성, 현재 2프레임마다 하나씩 생성한다.
-		EffectDesc* effectDesc = g_pEffectLayer->CreateEffect(pEffectDesc->bEffectInfoNum, GetRandom(5)+1, pEffectDesc->bOwn);
+		AppliedSkill* effectDesc = g_pEffectLayer->CreateEffect(pEffectDesc->skillKind, GetRandom(5)+1, pEffectDesc->bOwn);
 		
 		GXSetPosition( effectDesc->hEffect.pHandle, &vPos, FALSE);
 		::SetAction( effectDesc->hEffect.pHandle, 1, 0, ACTION_ONCE );
@@ -2358,7 +2360,7 @@ void FireBallHeadFunctionBySlowboat( GXOBJECT_HANDLE handle, LPObjectDesc pData,
 	if (vecDest.y > -10 && fabs(vecDest.z - vPos.z) + fabs(vecDest.x - vPos.x) < 100)
 	{
 		// 폭발 이미지 출력
-		EffectDesc* effectDesc = g_pEffectLayer->CreateEffect(pEffectDesc->bEffectInfoNum,6, pEffectDesc->bOwn );
+		AppliedSkill* effectDesc = g_pEffectLayer->CreateEffect(pEffectDesc->skillKind,6, pEffectDesc->bOwn );
 		effectDesc->dwCount = pEffectDesc->dwCount;
 		memcpy(effectDesc->dwTargetIndex, pEffectDesc->dwTargetIndex, effectDesc->dwCount*sizeof(DWORD));
 		memcpy(effectDesc->byTargetObjectType, pEffectDesc->byTargetObjectType, effectDesc->dwCount*sizeof(DWORD));
@@ -2416,7 +2418,7 @@ lb_remove:
 void FireBallCoatFunctionBySlowboat( GXOBJECT_HANDLE handle, LPObjectDesc pData, DWORD dwCurFrame, BYTE bFrameFlag )
 {
 	LPObjectDesc pObjDesc	= (LPObjectDesc)pData;
-	EffectDesc*	pEffectDesc = (EffectDesc*)pObjDesc->pInfo;
+	AppliedSkill*	pEffectDesc = (AppliedSkill*)pObjDesc->pInfo;
 	pEffectDesc->dwFrameCount++;	// counting
 	VECTOR3 vPos;
 	VECTOR3 vPosEffect;
@@ -2457,7 +2459,7 @@ void FireBallCoatFunctionBySlowboat( GXOBJECT_HANDLE handle, LPObjectDesc pData,
 
 	// 꼬리의 생성
 	if (pEffectDesc->dwFrameCount % 8 == 1)
-		MakingNullEffect(pEffectDesc->bEffectInfoNum, vPos, GetRandom(5), pEffectDesc->bOwn);
+		MakingNullEffect(pEffectDesc->skillKind, vPos, GetRandom(5), pEffectDesc->bOwn);
 
 	// 시간주기. 현재는 1000 프레임 지나면 없어진다
 	if (pEffectDesc->dwFrameCount > 1000)
@@ -2475,7 +2477,7 @@ void	MakeCoatFunctionBySlowboat(DWORD dwPara)
 {
 	// 몸 감싸기의 머리 생성 
 	// 이것은 허리에서 xz평면에 평행하게 회전하는 것.
-	EffectDesc*	pEffectDesc = g_pEffectLayer->CreateEffect(__SKILL_FIREMISSILE__, 0, 1);
+	AppliedSkill*	pEffectDesc = g_pEffectLayer->CreateEffect(__SKILL_FIREMISSILE__, 0, 1);
 	VECTOR3 vPos = g_pMainPlayer->m_v3CurPos;
 	vPos.y+=70.0f;
 	
@@ -2512,9 +2514,9 @@ void	MakeCoatFunctionBySlowboat(DWORD dwPara)
 	pEffectDesc->hEffect.pDesc->ObjectFunc	= FireBallCoatFunctionBySlowboat;
 }
 
-EffectDesc*	CreateEffectBall(BYTE bSkillKind, float fRadian, DWORD dwOwnType, DWORD dwOwnIndex)
+AppliedSkill*	CreateEffectBall(BYTE bSkillKind, float fRadian, DWORD dwOwnType, DWORD dwOwnIndex)
 {
-	EffectDesc* pEffectDesc = g_pEffectLayer->CreateEffect(bSkillKind, 0, dwOwnType==OBJECT_TYPE_PLAYER && g_pMainPlayer->m_dwUserIndex == dwOwnIndex);
+	AppliedSkill* pEffectDesc = g_pEffectLayer->CreateEffect(bSkillKind, 0, dwOwnType==OBJECT_TYPE_PLAYER && g_pMainPlayer->m_dwUserIndex == dwOwnIndex);
 	pEffectDesc->f_Radcount			=	fRadian;
 		
 	VECTOR3 vPosTemp = g_Camera.v3AxsiY;
@@ -2541,7 +2543,7 @@ EffectDesc*	CreateEffectBall(BYTE bSkillKind, float fRadian, DWORD dwOwnType, DW
 void EffectWall( GXOBJECT_HANDLE handle, LPObjectDesc pData, DWORD dwCurFrame, BYTE bFrameFlag )
 {	// 
 	LPObjectDesc pObjDesc	= (LPObjectDesc)pData;
-	EffectDesc*	pEffectDesc = (EffectDesc*)pObjDesc->pInfo;
+	AppliedSkill*	pEffectDesc = (AppliedSkill*)pObjDesc->pInfo;
 	
 	if (pEffectDesc->dwFrameCount > 0)
 	{// 월 하나하나 나올 타이밍.
@@ -2550,7 +2552,7 @@ void EffectWall( GXOBJECT_HANDLE handle, LPObjectDesc pData, DWORD dwCurFrame, B
 			::SetAction(handle, 1, 0, ACTION_ONCE);
 			if (g_pEffectLayer->IsEffectShow(pEffectDesc))
 			{// 액션이 3개이다. 여기선 첫번째 액션에 라이트 붙이기.
-				if (pEffectDesc->pEffect->bID == __SKILL_MAGMAWALL__)
+				if (pEffectDesc->pEffect->skillKind == __SKILL_MAGMAWALL__)
 					g_pEffectLayer->AttachLight(pEffectDesc, 7, LightTimeOnOff);
 				else
 					g_pEffectLayer->AttachLight(pEffectDesc, 6, LightTimeOnOff);
@@ -2576,7 +2578,7 @@ void EffectWall( GXOBJECT_HANDLE handle, LPObjectDesc pData, DWORD dwCurFrame, B
 	{
 		if( bFrameFlag == FRAME_FLAG_FINISHED || bFrameFlag == FRAME_FLAG_CHANGE_NEXT )
 		{			
-			EffectDesc*	effectDesc = g_pEffectLayer->CreateEffect(pEffectDesc->bEffectInfoNum, 1, pEffectDesc->bOwn);
+			AppliedSkill*	effectDesc = g_pEffectLayer->CreateEffect(pEffectDesc->skillKind, 1, pEffectDesc->bOwn);
 			
 			effectDesc->pEffect = pEffectDesc->pEffect;	// 첫번째 이펙트 정보를 그대로 알고 있어야 한다.
 			effectDesc->dwCount = pEffectDesc->dwCount;
@@ -2595,7 +2597,7 @@ void EffectWall( GXOBJECT_HANDLE handle, LPObjectDesc pData, DWORD dwCurFrame, B
 			PlaySoundEffect(pEffectDesc->m_pSound[SOUND_EFFECT_MID], &pEffectDesc->vecBasePosion, FALSE);
 			
 			// 액션이 3개이다. 여기선 두번째 액션에 라이트 붙이기.
-			if (pEffectDesc->pEffect->bID == __SKILL_MAGMAWALL__)
+			if (pEffectDesc->pEffect->skillKind == __SKILL_MAGMAWALL__)
 				g_pEffectLayer->AttachLight(effectDesc, 7, LightTimeOnOff);
 			else
 				g_pEffectLayer->AttachLight(effectDesc, 6, LightTimeOnOff);
@@ -2609,7 +2611,7 @@ void EffectWall( GXOBJECT_HANDLE handle, LPObjectDesc pData, DWORD dwCurFrame, B
 	{
 		if (g_dwCurTick >= pObjDesc->dwDestTime)
 		{		
-			EffectDesc*	effectDesc = g_pEffectLayer->CreateEffect(pEffectDesc->bEffectInfoNum, 2, pEffectDesc->bOwn);
+			AppliedSkill*	effectDesc = g_pEffectLayer->CreateEffect(pEffectDesc->skillKind, 2, pEffectDesc->bOwn);
 			effectDesc->pEffect = pEffectDesc->pEffect;	// 첫번째 이펙트 정보를 그대로 알고 있어야 한다.
 			VECTOR3 vec;
 			g_pExecutive->GXOGetPosition(handle, &vec);
@@ -2638,7 +2640,7 @@ lbl_remove:
 void EffectBlastQuake( GXOBJECT_HANDLE handle, LPObjectDesc pData, DWORD dwCurFrame, BYTE bFrameFlag )
 {	// 
 	LPObjectDesc pObjDesc	= (LPObjectDesc)pData;
-	EffectDesc*	pEffectDesc = (EffectDesc*)pObjDesc->pInfo;
+	AppliedSkill*	pEffectDesc = (AppliedSkill*)pObjDesc->pInfo;
 	//VECTOR3 v3From;
 	
 	if (pEffectDesc->dwFrameCount > 0)
@@ -2813,7 +2815,7 @@ void PlayerKillFunc(GXOBJECT_HANDLE handle, LPObjectDesc pData, DWORD dwCurFrame
 	}
 }
 
-void LightTimeOff(EffectDesc* pEffectDesc)
+void LightTimeOff(AppliedSkill* pEffectDesc)
 {
 	if (pEffectDesc->m_sLightDescEx.m_nDestTick < g_dwCurTick)
 	{
@@ -2822,7 +2824,7 @@ void LightTimeOff(EffectDesc* pEffectDesc)
 	}
 }
 
-void LightTimeOnOff(EffectDesc* pEffectDesc)
+void LightTimeOnOff(AppliedSkill* pEffectDesc)
 {
 	if (pEffectDesc->m_sLightDescEx.m_nDestTick < g_dwCurTick)
 	{
@@ -2871,20 +2873,11 @@ BOOL SkillEvent(BYTE bLR)
 		|| g_pMainPlayer->GetStatus() == UNIT_STATUS_WALKING 
 		|| g_pMainPlayer->GetStatus() == UNIT_STATUS_RUNNING )
 		&& g_pMainPlayer->GetSkillKind(bLR) < __SKILL_ATTACK__ 
-		&& g_pMainPlayer->GetSkillKind(bLR) >= __SKILL_MANAMASTERY__)
-	{		
-#if IS_TAIWAN_LOCALIZING()
-		if (g_pMainPlayer->GetAverageWeight() >= 100.f)
-		{
-			//"포화무게한도에 도달하여 달리기가 안되며, 포션의 사용 딜레이가 증가합니다."
-			DisplayMessageAdd(g_Message[ETC_MESSAGE986].szMessage, 0xffff0000);	
-			return FALSE;
-		}
-#endif		
+		&& g_pMainPlayer->GetSkillKind(bLR) >= __SKILL_MANAMASTERY__) {		
 		
 		g_Mouse.v3Mouse = GetXYZFromScreenXY( g_pGeometry, g_Mouse.MousePos.x , g_Mouse.MousePos.y
 			, g_rcScreenRect.right, g_rcScreenRect.bottom);
-		g_pMainPlayer->SetAction( MOTION_TYPE_WARSTAND, 0, ACTION_LOOP );		
+		g_pMainPlayer->SetMotion( MOTION_TYPE_WARSTAND, 0, ACTION_LOOP );		
 		g_pMainPlayer->SetStatus(UNIT_STATUS_NORMAL);
 		g_pMainPlayer->m_hPlayer.pDesc->ObjectFunc = NULL;
 		SendStopPacket();
@@ -2913,9 +2906,8 @@ BOOL SkillEvent(BYTE bLR)
 					
 				if (pEffect->dwRange == 0)
 				{// 자기 자신으로 부터 나가야 해.
-					if ( g_pEffectLayer->IsEffectUse(bSkillKind
-							, &g_pMainPlayer->m_v3CurPos 
-							, g_pMainPlayer->m_dwStartSkillTick[bSkillKind]) )
+					if ( g_pEffectLayer->CanSkillBeCastAtPosition(bSkillKind
+							, &g_pMainPlayer->m_v3CurPos))
 					{
 						vecStart = pUser->m_v3CurPos;
 						goto lbl_skill_to_tile;
@@ -2923,7 +2915,7 @@ BOOL SkillEvent(BYTE bLR)
 				}
 				else
 				{
-					BOOL bChk = FALSE;
+					BOOL canOtherPlayerBeTargetedForDamage = FALSE;
 					ListNode<SGUILD_WAR>* lpGuildWarPos = g_pGuildWarHash->GetHead();
 
 					while(lpGuildWarPos)
@@ -2934,7 +2926,7 @@ BOOL SkillEvent(BYTE bLR)
 						{
 							if(lpGuildWar->dwGuildId==pUser->m_dwGuildId)
 							{
-								bChk = TRUE;
+								canOtherPlayerBeTargetedForDamage = TRUE;
 								break;
 							}
 							lpGuildWarPos = lpGuildWarPos->pNext;
@@ -2943,12 +2935,12 @@ BOOL SkillEvent(BYTE bLR)
 					
 					if( !g_pMainPlayer->IsAlliance( pUser ) )//적이면 : hwoarang 050202 
 					{
-						bChk = TRUE;
+						canOtherPlayerBeTargetedForDamage = TRUE;
 					}
 
-					if(!bChk)
+					if(!canOtherPlayerBeTargetedForDamage)
 					{
-						if (!IsSkillUserUser(pEffect->bID, g_pMainPlayer, pUser, pUserInterface->m_nPK))
+						if (!IsSkillUserUser(pEffect->skillKind, g_pMainPlayer, pUser, pUserInterface->m_nPK))
 							return FALSE;
 					}
 					
@@ -2962,11 +2954,10 @@ BOOL SkillEvent(BYTE bLR)
 						}
 						else
 						{
-							if (g_pEffectLayer->IsEffectUse(bSkillKind, 
-								&pUser->m_v3CurPos, 
-								g_pMainPlayer->m_dwStartSkillTick[bSkillKind]))
+							if (g_pEffectLayer->CanSkillBeCastAtPosition(bSkillKind, 
+								&pUser->m_v3CurPos))
 							{
-								g_pMainPlayer->SetPacketSkillUser(pUser, bLR);
+								g_pMainPlayer->BeginSkillCastOn(pUser, bLR);
 								bSkill = TRUE;
 							}
 						}
@@ -2977,12 +2968,12 @@ BOOL SkillEvent(BYTE bLR)
 			{
 				CMonster*	pMonster = (CMonster*)pObjDesc->pInfo;					
 
-				if (!IsSkillUserMon(pEffect->bID, g_pMainPlayer, pMonster))
+				if (!CanUserCastSkillOnMonster(pEffect->skillKind, g_pMainPlayer, pMonster))
 					return FALSE;				
 
 				if (pEffect->dwRange == 0)
 				{// 자기 자신으로 부터 나가야 해.
-					if (g_pEffectLayer->IsEffectUse(bSkillKind, &g_pMainPlayer->m_v3CurPos, g_pMainPlayer->m_dwStartSkillTick[bSkillKind]))
+					if (g_pEffectLayer->CanSkillBeCastAtPosition(bSkillKind, &g_pMainPlayer->m_v3CurPos))
 					{
 						vecStart = pMonster->m_v3CurPos;
 						goto lbl_skill_to_tile;
@@ -3003,9 +2994,9 @@ BOOL SkillEvent(BYTE bLR)
 						}
 						else 
 						{
-							if (g_pEffectLayer->IsEffectUse(bSkillKind, &pMonster->m_v3CurPos, g_pMainPlayer->m_dwStartSkillTick[bSkillKind]))
+							if (g_pEffectLayer->CanSkillBeCastAtPosition(bSkillKind, &pMonster->m_v3CurPos))
 							{
-								g_pMainPlayer->SetPacketSkillMonster(pMonster, bLR);
+								g_pMainPlayer->BeginSkillCastOn(pMonster, bLR);
 								bSkill = TRUE;
 							}
 						}
@@ -3017,7 +3008,7 @@ BOOL SkillEvent(BYTE bLR)
 		{
 			if (pEffect->dwRange == 0)
 			{// 자기 자신으로 부터 나가야 해.
-				if (g_pEffectLayer->IsEffectUse(bSkillKind, &g_pMainPlayer->m_v3CurPos, g_pMainPlayer->m_dwStartSkillTick[bSkillKind]))
+				if (g_pEffectLayer->CanSkillBeCastAtPosition(bSkillKind, &g_pMainPlayer->m_v3CurPos))
 				{
 					vecStart.x = DWORD(g_Mouse.v3Mouse.x/TILE_WIDTH)*TILE_WIDTH+TILE_WIDTH/2;
 					vecStart.z = DWORD(g_Mouse.v3Mouse.z/TILE_WIDTH)*TILE_WIDTH+TILE_WIDTH/2;
@@ -3033,11 +3024,9 @@ BOOL SkillEvent(BYTE bLR)
 				}
 lbl_skill_to_tile:
 					
-				if (g_pEffectLayer->IsEffectUse(bSkillKind, 
-						&vecStart, 
-						g_pMainPlayer->m_dwStartSkillTick[bSkillKind]))
+				if (g_pEffectLayer->CanSkillBeCastAtPosition(bSkillKind, &vecStart))
 				{
-					g_pMainPlayer->SetPacketSkillTile(vecStart.x/TILE_WIDTH, vecStart.z/TILE_WIDTH, bLR);
+					g_pMainPlayer->BeginSkillCastAtTile(vecStart.x/TILE_WIDTH, vecStart.z/TILE_WIDTH, bLR, bSkillKind);
 					bSkill = TRUE;
 				}
 			}
@@ -3047,7 +3036,7 @@ lbl_skill_to_tile:
 	return bSkill;
 }
 
-void InitSnowEffect(EffectDesc* pEffectDesc)
+void InitSnowEffect(AppliedSkill* pEffectDesc)
 {
 	pEffectDesc->vecBasePosion.x = g_pMainPlayer->m_v3CurPos.x;
 	pEffectDesc->vecBasePosion.x += rand() % int(__GAME_SIZE_X__*1.5);
@@ -3075,7 +3064,7 @@ void CreateSnowEffect()
 	{
 		for(int i = 0; i < MAX_SNOW_EFFECT; ++i)
 		{
-			EffectDesc* pEffectDesc = g_pEffectLayer->CreateGXObject(g_pObjManager->GetFile(EFFECT_SNOW), 1, __CHR_EFFECT_NONE__);			
+			AppliedSkill* pEffectDesc = g_pEffectLayer->CreateGXObject(g_pObjManager->GetFile(EFFECT_SNOW), 1, __CHR_EFFECT_NONE__);			
 			
 			InitSnowEffect(pEffectDesc);
 			
@@ -3095,7 +3084,7 @@ void CreateSnowEffect()
 void EffectSnowFunc( GXOBJECT_HANDLE handle, LPObjectDesc pData, DWORD dwCurFrame, BYTE bFrameFlag )
 {
 	LPObjectDesc pObjDesc	= (LPObjectDesc)pData;
-	EffectDesc*	pEffectDesc = (EffectDesc*)pObjDesc->pInfo;
+	AppliedSkill*	pEffectDesc = (AppliedSkill*)pObjDesc->pInfo;
 	
 	if (pEffectDesc->dwFrameCount>0)
 	{
@@ -3267,7 +3256,7 @@ int		IsSkillUserUser(BYTE bSkillKind, CMainUser *pOwnUser, CUser* pTargetUser, B
 	return nResult;
 }
 
-int		IsSkillUserMon(BYTE bSkillKind, CMainUser *pOwnUser, CMonster* pTargetMonster)
+int		CanUserCastSkillOnMonster(BYTE bSkillKind, CMainUser *pOwnUser, CMonster* pTargetMonster)
 {
 	int nResult = 1;
 	Effect* pEffect = g_pEffectLayer->GetEffectInfo(bSkillKind);
@@ -3277,7 +3266,7 @@ int		IsSkillUserMon(BYTE bSkillKind, CMainUser *pOwnUser, CMonster* pTargetMonst
 		nResult = 0;
 	else if (pEffect->bCrime == CRIME_APPLY_ENEMY && pOwnUser->IsAlliance(pTargetMonster))
 		nResult = 0;// 적공격하는 마법인데 우리편은 빼야지.
-	else if (!pOwnUser->IsAlliance(pTargetMonster) && pTargetMonster->m_dwLordIndex && pEffect->bCrime == CRIME_APPLY_ENEMY && !(CUserInterface::GetInstance()->m_nPK == __PK_MODE__))
+	else if (!pOwnUser->IsAlliance(pTargetMonster) && pTargetMonster->lordDungeonID && pEffect->bCrime == CRIME_APPLY_ENEMY && !(CUserInterface::GetInstance()->m_nPK == __PK_MODE__))
 		nResult = 0;
 	else if (//pEffect->bCrime == CRIME_APPLY_FRIENDLY &&
 		!(pEffect->bSkillTarget & TARGETTYPE_ENEMY_MONSTER)

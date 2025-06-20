@@ -209,7 +209,7 @@ void CmdEventDungeonClear(char* pMsg, DWORD dwLen)
 	DSTC_EVENT_DUNGEON_CLEAR*	pPacket = (DSTC_EVENT_DUNGEON_CLEAR*)pMsg;
 	CUser*						pUser	= g_pUserHash->GetData( pPacket->dwUserIndex );
 
-	EffectDesc* pEffectDesc = g_pEffectLayer->CreateGXObject(FILE(EFFECT_DUNGEONDEFENSESUCCESS_WORLD)
+	AppliedSkill* pEffectDesc = g_pEffectLayer->CreateGXObject(FILE(EFFECT_DUNGEONDEFENSESUCCESS_WORLD)
 		, 1, __CHR_EFFECT_NONE__);
 
 	pEffectDesc->dwTargetIndex[0] = pPacket->dwUserIndex;

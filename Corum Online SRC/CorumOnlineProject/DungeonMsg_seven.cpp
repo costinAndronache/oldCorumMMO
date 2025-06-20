@@ -96,7 +96,7 @@ void CmdDungeonReplyMatchM2M(char* pMsg, DWORD dwLen)
 	case 0:	// 기타 문제 
 		break;
 	case 1: // 대결 
-		g_pMainPlayer->SetAction(MOTION_TYPE_WARSTAND, 0, ACTION_LOOP );		
+		g_pMainPlayer->SetMotion(MOTION_TYPE_WARSTAND, 0, ACTION_LOOP );		
 		g_pMainPlayer->SetStatus(UNIT_STATUS_NORMAL);
 		g_pMainPlayer->m_hPlayer.pDesc->ObjectFunc = NULL;
 		SendStopPacket();
@@ -215,7 +215,7 @@ void CmdDungeonReplyMatchM2M(char* pMsg, DWORD dwLen)
 
 	if(pPacket->bReplyCode>=7 && pPacket->bReplyCode<=9 && pPacket->bReplyCode==12)
 	{
-		g_pMainPlayer->SetAction(MOTION_TYPE_WARSTAND, 0, ACTION_LOOP );		
+		g_pMainPlayer->SetMotion(MOTION_TYPE_WARSTAND, 0, ACTION_LOOP );		
 		g_pMainPlayer->SetStatus(UNIT_STATUS_NORMAL);
 	}	
 

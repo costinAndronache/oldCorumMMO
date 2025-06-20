@@ -1089,7 +1089,7 @@ void InitMap( DWORD dwLayerID )
 			vec.z = pTile->z+TILE_SIZE/2;
 			vec.y = 0;			
 			
-			EffectDesc*	pEffectDesc = g_pEffectLayer->CreateGXObject(g_pObjManager->GetFile(EFFECT_CP_POSITION), 0xff, __CHR_EFFECT_NONE__);
+			AppliedSkill*	pEffectDesc = g_pEffectLayer->CreateGXObject(g_pObjManager->GetFile(EFFECT_CP_POSITION), 0xff, __CHR_EFFECT_NONE__);
 			pEffectDesc->vecBasePosion = vec;
 			GXSetPosition( pEffectDesc->hEffect.pHandle, &vec, FALSE );
 			::SetAction( pEffectDesc->hEffect.pHandle, 1, 0, ACTION_LOOP );
@@ -1191,7 +1191,7 @@ void InitMap( DWORD dwLayerID )
 					vec.z = pTile->z;
 					vec.y = 0;					
 					
-					EffectDesc*	pEffectDesc = g_pEffectLayer->CreateGXObject(g_pObjManager->GetFile(EFFECT_TELEPORT_POSITION), 0xff, __CHR_EFFECT_NONE__);
+					AppliedSkill*	pEffectDesc = g_pEffectLayer->CreateGXObject(g_pObjManager->GetFile(EFFECT_TELEPORT_POSITION), 0xff, __CHR_EFFECT_NONE__);
 					
 					GXSetPosition( pEffectDesc->hEffect.pHandle, &vec, FALSE );
 					MOTION_DESC		MotionDesc;
@@ -1775,11 +1775,11 @@ int FillSelectedMonster( DWORD* pdwGuardian, DWORD* pdwMonster )
 	cnt = 0;
 	for( i=0; i<MAX_USER_GUARDIAN; i++ )
 	{
-		if( g_pMainPlayer->m_pMonster[i] )
+		if( g_pMainPlayer->servantMonsters[i] )
 		{
-			if( g_pMainPlayer->m_pMonster[i]->m_dwTemp[ MONSTER_TEMP_SELECTED ] )
+			if( g_pMainPlayer->servantMonsters[i]->m_dwTemp[ MONSTER_TEMP_SELECTED ] )
 			{
-				pdwMonster[cnt] = g_pMainPlayer->m_pMonster[i]->m_dwMonsterIndex;
+				pdwMonster[cnt] = g_pMainPlayer->servantMonsters[i]->m_dwMonsterIndex;
 				cnt++;
 				total++;
 			}
@@ -2068,7 +2068,7 @@ void FreeItem( ITEM* pItem )
 	pItem = NULL;
 }
 
-void FreeEffect( EffectDesc* pEffectDesc )
+void FreeEffect( AppliedSkill* pEffectDesc )
 {
 	DeleteHandleObject( pEffectDesc->hEffect.pHandle );
 	pEffectDesc->hEffect.pHandle = NULL;
@@ -2080,7 +2080,7 @@ void FreeEffect( EffectDesc* pEffectDesc )
 	
 	pEffectDesc->hEffect.pDesc = NULL;
 
-	memset( pEffectDesc, 0, sizeof( EffectDesc ) );
+	memset( pEffectDesc, 0, sizeof( AppliedSkill ) );
 	delete pEffectDesc;
 	pEffectDesc = NULL;
 }
@@ -2161,11 +2161,11 @@ void RemoveMonster( CMonster* pMonster )
 			g_pMainPlayer->m_pGuardian[ pMonster->m_bZipCode ] = NULL;									
 		}
 	}
-	else if( pMonster->m_dwLordIndex == g_pMainPlayer->m_dwUserIndex )
+	else if( pMonster->lordDungeonID == g_pMainPlayer->m_dwUserIndex )
 	{
-		if( g_pMainPlayer->m_pMonster[ pMonster->m_bZipCode ] == pMonster )
+		if( g_pMainPlayer->servantMonsters[ pMonster->m_bZipCode ] == pMonster )
 		{
-			g_pMainPlayer->m_pMonster[ pMonster->m_bZipCode ] = NULL;
+			g_pMainPlayer->servantMonsters[ pMonster->m_bZipCode ] = NULL;
 		}
 	}
 
@@ -2224,8 +2224,8 @@ void RemovePlayer( CUser* pUser )
 
 void RemoveAllEffectDesc()
 {
-	ListNode<EffectDesc>*		pNode;
-	ListNode<EffectDesc>*		pDel;
+	ListNode<AppliedSkill>*		pNode;
+	ListNode<AppliedSkill>*		pDel;
 
 	pNode = g_pEffectHash->GetHead();
 	while( pNode )
@@ -2237,7 +2237,7 @@ void RemoveAllEffectDesc()
 }
 
 
-void RemoveEffectDesc( EffectDesc*	pEffectDesc )
+void RemoveEffectDesc( AppliedSkill*	pEffectDesc )
 {
 	g_Camera.iCameraMoveOption = CAMERA_MOVE_OPTION_SCREEN_FRAME;
 	if (pEffectDesc->m_sLightDescEx.m_handle)

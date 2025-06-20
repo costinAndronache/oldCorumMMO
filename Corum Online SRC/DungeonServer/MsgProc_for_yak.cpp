@@ -142,23 +142,19 @@ void CmdDungeonSkillCasting( DWORD dwConnectionIndex, char* pMsg, DWORD dwLength
 	
 	Effect* pEffect = g_pEffectLayer->GetEffectInfo(bSkillKind);
 	
-	if (g_dwTickCount - pUser->m_dwStartSkillTick[bSkillKind] < pEffect->dwCoolTime)
-	{
-		// 쿨포인트 계산하기.
-		int nCool = INT(pUser->m_fCurCoolPoint*1000-pEffect->dwCoolTime);
-	
-		if(nCool<0)
-		{
-			bSkillKind = 0;
-			goto lbl_fail;
-		}
-				
-		pUser->m_fCurCoolPoint = max(nCool/1000.f, 0.1F);		
+	printf("\Received skill cast(%d), with coolTime: %.1f s", (DWORD)bSkillKind, millisecondsToSeconds(pEffect->dwCoolTime));
+
+	int nCool = INT(secondsToMilliseconds(pUser->m_fCurCoolPoint) - (pEffect->dwCoolTime));
+
+	if (nCool < 0) {
+		printf("\nCast fail, not enough cool points: %.1f", pUser->m_fCurCoolPoint);
+		bSkillKind = 0;
+		goto lbl_fail;
 	}
 
-	if (pEffect->bID != __SKILL_AURARECHARGE__ 
-		&& (pEffect->bType == TYPE_ACTIVE || pEffect->bType == TYPE_TIMEZERO))// 드라이브는 클라이언트에서 마우스업할때 쏘기 때문에 서버에서 캐스팅 타임 끝난후에 보내줄수가 없기 때문에 이런 편법을..
-		pUser->SetStatus(UNIT_STATUS_CASTING);
+	pUser->m_fCurCoolPoint = max(millisecondsToSeconds(nCool), 0.1F);
+
+	pUser->SetStatus(UNIT_STATUS_CASTING);
 	
 	pUser->m_sCastingInfo.bSkillKind = bSkillKind;
 	pUser->m_sCastingInfo.bOwnType = pPacket->bOwnType;
@@ -220,15 +216,26 @@ void CmdDungeonSkillCasting( DWORD dwConnectionIndex, char* pMsg, DWORD dwLength
 	}
 	
 	pUser->m_dwTemp[USER_TEMP_CASTINGSTARTTICK] = g_dwTickCount;
-	pUser->m_dwTemp[USER_TEMP_CASTINGDESTTICK] = DWORD(max(g_dwTickCount, 
-		g_dwTickCount+pEffect->dwCastingTime
-		+pEffect->dwCastingTime*pUser->GetAlphaStat(USER_CASTINGTIME)
-		+(pEffect->dwCastingTime*pUser->m_fPlusParamByMagicFieldArray[USER_CASTINGTIME]/100.F)));
+	if (isContinousSkill(bSkillKind)) {
+		pUser->m_dwTemp[USER_TEMP_CASTINGDESTTICK] = g_dwTickCount + (60 * 10 * 1000); // 10 minutes, no one will hold that long anyway
+	}
+	else {
+		pUser->m_dwTemp[USER_TEMP_CASTINGDESTTICK] = DWORD(max(g_dwTickCount,
+			g_dwTickCount + pEffect->dwCastingTime +
+			(pEffect->dwCastingTime * pUser->GetAlphaStat(USER_CASTINGTIME)) +
+			(pEffect->dwCastingTime * pUser->m_fPlusParamByMagicFieldArray[USER_CASTINGTIME] / 100.F)));
+	}
+
+
+	const auto diff = pUser->m_dwTemp[USER_TEMP_CASTINGDESTTICK] - pUser->m_dwTemp[USER_TEMP_CASTINGSTARTTICK];
+
+	printf("\nConfirm begin cast phase, execution phase starts in %.1f for casting time: %.1f", millisecondsToSeconds(diff), millisecondsToSeconds(pEffect->dwCastingTime));
 lbl_fail:
 	DSTC_DUNGEON_CASTING	packet;
 	packet.bSkillKind		= bSkillKind;
 	packet.dwUserIndex		= pUser->GetID();
 	packet.dwTargetIndex	= 0;	
+	packet.spOfssetPerSecondForContinousSkillCast = g_pEffectLayer->spOffsetPerSecondIfContinousSkill(pEffect, (DWORD)bSkillLevel, pUser);
 	
 	packet.bTargetType		= pPacket->bTargetType;
 	if (pPacket->bTargetType==OBJECT_TYPE_MONSTER)
@@ -301,38 +308,35 @@ void CmdFinishMapLoading( DWORD dwConnectionIndex, char* pMsg, DWORD dwLength )
 
 void CmdSkill( DWORD dwConnectionIndex, char* pMsg, DWORD dwLength )
 {
+	printf("\nCmdSkill received!");
 	CTDS_SKILL*			pPacket = (CTDS_SKILL*)pMsg;
 
 	CUser*		pOwnUser	= (CUser*)g_pNet->GetUserInfo( dwConnectionIndex );
-	if(!pOwnUser )
-		return;
+	if (!pOwnUser) { return; }
+	if (pOwnUser->GetUnitStatus() == UNIT_STATUS_DEAD) { return;  }
+	if (NULL == pOwnUser->GetCurDungeon()) { return; }
 	
-	else if( pOwnUser->GetUnitStatus() == UNIT_STATUS_DEAD)
-		return;			
-	
-	else if (NULL == pOwnUser->GetCurDungeon())
-		return;
-	
-#if defined TAIWAN_LOCALIZING
-	if (pOwnUser->GetAverageWeight() >= WEIGTH_100PER_OVER)
-	{
-		pOwnUser->SendSkillCastingFail(SKILL_CASTING_FAIL_REASON_LOW);
-		return;
+	const auto skillKind = pOwnUser->m_sCastingInfo.bSkillKind;
+	const bool canInterruptCastingPhase = isContinousSkill(skillKind);
+	if (g_dwTickCount < pOwnUser->m_dwTemp[USER_TEMP_CASTINGDESTTICK] && 
+		!canInterruptCastingPhase) {
+		printf("\nSkill is not continous: %d ", skillKind);
+		return; 
 	}
-#endif
 	
-	SKILLDESC skillDesc;
-	skillDesc.bOwnType			= OBJECT_TYPE_PLAYER;
-	skillDesc.bPK				= pPacket->bPK;
+	
+	SkillCast skillDesc;
+	skillDesc.casterType			= OBJECT_TYPE_PLAYER;
+	skillDesc.casterPlayerPKFlagEnabled				= pPacket->bPK;
 	skillDesc.bSkillKind		= pOwnUser->m_sCastingInfo.bSkillKind;
 	skillDesc.bSkillLevel		= BYTE(pOwnUser->GetSkillLevel(skillDesc.bSkillKind)-1);
 	skillDesc.bTargetType		= pPacket->bTargetType;
-	skillDesc.dwOwnIndex		= pOwnUser->GetID();
-	skillDesc.dwSkillKeepTime	= pPacket->dwTime;
-	skillDesc.dwTargetIndex		= pPacket->dwTargetIndex;
+	skillDesc.casterDungeonID		= pOwnUser->GetID();
+	skillDesc.dwSkillKeepTime	= pPacket->casterLocalTime;
+	skillDesc.dwTargetIndex		= pPacket->targetDungeonID;
 	skillDesc.pDungeonLayer		= pOwnUser->GetCurDungeonLayer();
 	skillDesc.bSectionNum		= pOwnUser->GetPrevSectionNum();
-	skillDesc.v2OwnObjectPos	= *pOwnUser->GetCurPosition();
+	skillDesc.casterPosition	= *pOwnUser->GetCurPosition();
 	skillDesc.wTileIndex_X		= pPacket->wTileIndex_X;
 	skillDesc.wTileIndex_Z		= pPacket->wTileIndex_Z;
 	skillDesc.pMonsterMaster	= pOwnUser;
