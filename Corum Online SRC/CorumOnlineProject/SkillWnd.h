@@ -78,10 +78,8 @@
 #define SPR_OBJ_SKILL_UP49				66
 #define SPR_OBJ_SKILL_UP50				67
 
-#define SKILL_ICON_SIZE					32
 
 
-enum class SkillSelectionWindow { none, leftSkills, rightSkills, guardianSkills};
 
 class CSkillWnd : public CMenu, public CMainUserUpdateInterested {
 public:
@@ -91,7 +89,6 @@ public:
 	BYTE				m_byBitClassType;
 
 	BYTE				m_bySkillType;
-	SkillSelectionWindow activeSkillSelectionWindowType;
 	BYTE				m_bClassType[5];
 	
 	BOOL				m_bMoveChk;		
@@ -136,8 +133,6 @@ public:
 	void	SetRenderSkillInfo(LP_SKILL_RESOURCE_EX lpSkillResourceEx, int nIndex, int nPosX, int nPosX2, int nPosY, int nPosY2);	
 
 	BOOL	CheckSkillIfno(int nIndex, int nPosX, int nPosY, int nPosX2, int nPosY2);
-
-	void	RenderSkillIcon();
 
 	CSkillWnd();
 	virtual ~CSkillWnd();

@@ -1948,8 +1948,8 @@ void LoadSkillresourceTable()
 	int nMaxNode	= nTotalSize / sizeof(SSKILL_RESOURCE);		
 
 	_CHECK_MEMORY();
-	g_sSkillListManager.byLeftSkill[0] = 0;
-	g_sSkillListManager.byRightSkill[0] = 0;
+	g_sSkillListManager.allowedLeftSideSkills[0] = 0;
+	g_sSkillListManager.allowedRightSideSkills[0] = 0;
 
 	for(int i = 0; i < nMaxNode; i++)
 	{		
@@ -1982,14 +1982,14 @@ void LoadSkillresourceTable()
 
 		if(lpSkillResourceEx->byTypePos==2)
 		{
-			g_sSkillListManager.byLeftSkill[nLeftIndex] = (lpSkillResourceEx->wId);
-			g_sSkillListManager.byRightSkill[nRightIndex] = (lpSkillResourceEx->wId);
+			g_sSkillListManager.allowedLeftSideSkills[nLeftIndex] = (lpSkillResourceEx->wId);
+			g_sSkillListManager.allowedRightSideSkills[nRightIndex] = (lpSkillResourceEx->wId);
 			nLeftIndex++;
 			nRightIndex++;			
 		}
 		else if(lpSkillResourceEx->byTypePos==1)
 		{
-			g_sSkillListManager.byRightSkill[nRightIndex] = lpSkillResourceEx->wId;
+			g_sSkillListManager.allowedRightSideSkills[nRightIndex] = lpSkillResourceEx->wId;
 			nRightIndex++;
 		}
 
@@ -2010,8 +2010,8 @@ void LoadSkillresourceTable()
 		default: break;
 		}
 	}
-	g_sSkillListManager.byLeftSkillCnt	= (BYTE)nLeftIndex;
-	g_sSkillListManager.byRightSkillCnt	= (BYTE)nRightIndex;
+	g_sSkillListManager.allowedLeftSideSkillsCount	= (BYTE)nLeftIndex;
+	g_sSkillListManager.allowedRightSideSkillsCount	= (BYTE)nRightIndex;
 	delete sSkillResource;
 }
 

@@ -1044,23 +1044,7 @@ void CmdUserStatus( char* pMsg, DWORD dwLen )
 		case USER_DEC_SKILLLEVEL:
 			{
 				int nLevel = (int)pUserStatus->pStatus[i].dwMin;
-				
-				for(int s = 0; s < MAX_SKILL; ++s)
-				{
-					int nSkillLevel = g_pMainPlayer->sSkillTable[s].bSKillLevel;
-
-					if(nSkillLevel+nLevel<0)
-					{
-						g_pMainPlayer->m_nDecLevel[s]				+=	nLevel-nSkillLevel;
-						g_pMainPlayer->sSkillTable[s].bSKillLevel	=	0;
-					}
-					else
-					{
-						g_pMainPlayer->sSkillTable[s].bSKillLevel	+=	nLevel;
-						g_pMainPlayer->sSkillTable[s].bSKillLevel	+=	g_pMainPlayer->m_nDecLevel[s];
-						g_pMainPlayer->m_nDecLevel[s]				=	0;
-					}
-				}				
+				g_pMainPlayer->applyOffsetForSkills(nLevel);
 			}
 			
 			break;
@@ -1111,8 +1095,7 @@ void CmdUserSkillLevel( char* pMsg, DWORD dwLen )
 	DSTC_USER_SKILL_LEVEL*	pSkillLevel = ( DSTC_USER_SKILL_LEVEL* )pMsg;
 
 	// 서버로부터 넘어온 스킬레벨을 적용한다.
-	for( int i = 0; i < MAX_SKILL; i++)
-		g_pMainPlayer->sSkillTable[i].bSKillLevel	= pSkillLevel->pbSkillLevel[i];
+	g_pMainPlayer->initializeSkillLevelsFrom(pSkillLevel->pbSkillLevel);
 
 	// 스킬창 버그 수정 2005.02.16 김영대 
 	CSkillWnd*	pSkillWnd = CSkillWnd::GetInstance();

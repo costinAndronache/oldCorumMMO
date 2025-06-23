@@ -103,6 +103,7 @@
 #include "../CommonServer/ItemManagerDefine.h"
 #include "MouseButtonLongPressRecognizer.h"
 #include "AppliedSkillsIconsView.h"
+#include "SkillSelectionView.h"
 
 using namespace ItemPickupFiltering;
 
@@ -1519,7 +1520,7 @@ DWORD __stdcall AfterRenderGameDungeon()
 
 	
 	sprintf(szTempEx, "%ld, %ld,", g_Mouse.MousePos.x, g_Mouse.MousePos.y);
-	//RenderFont(szTempEx, 500, 1200, 50, 90, 0);
+	RenderFont(szTempEx, 500, 1200, 100, 150, 0);
 
 	sprintf(globalDebugLine, "FPS:: %d", _renderFPS);
 	RenderFont((char*)globalDebugLine, 500, 1200, 50, 90, 0);
@@ -2028,10 +2029,6 @@ BOOL OnLButtonDownInterfaceDungeon()
 		
 	if(pInterface->InterfaceCheck() == -1)
 	{
-		if(pSkillWnd->activeSkillSelectionWindowType != SkillSelectionWindow::none)
-		{
-			pSkillWnd->activeSkillSelectionWindowType = SkillSelectionWindow::none;
-		}
 		if(pItemShopWnd->GetActive()==TRUE)
 		{			
 			pItemShopWnd->SetActive(FALSE);						
@@ -5487,86 +5484,7 @@ void SkillRender()
 	CMonster *pGuardian = g_pMainPlayer->m_pGuardian[0];
 	
 	// Skill ÀÛ¾÷ //
-	if(pSkillWnd->activeSkillSelectionWindowType == SkillSelectionWindow::leftSkills)
-	{
-		for(int i = 0; i < 16; i++)
-		{
-			if(g_pMainPlayer->m_nSkillKey[i]!=-1)
-			{
-				if(g_pMainPlayer->m_nSkillKey[i]==__SKILL_ATTACK__)
-				{
-					if(g_pMainPlayer->m_nPosSK[i]==0)
-					{
-						int		nPosX	= 116;
-						int		nPosY	= 646;					
-						char*	szKey	= KeySearch(g_sKeyConfig.snKey[18+i]);
 
-						if(!IsEmptyString(szKey))
-							RenderFont(szKey, nPosX+3, nPosX+32, nPosY+12, nPosY+26, nOrder, 0xff00ff00);
-					}					
-				}
-				else
-				{
-					int nSkill_Idx = 1;
-
-					for(int j = 0; j < g_sSkillListManager.byLeftSkillCnt; j++)
-					{
-						if(g_pMainPlayer->GetSkillLevel(g_sSkillListManager.byLeftSkill[j])>0)
-						{
-						//	int nPosX = 116+(nSkill_Idx%5)*33;
-						//	int nPosY = 646-(nSkill_Idx/5)*33;
-							
-							if(g_pMainPlayer->m_nSkillKey[i]==g_sSkillListManager.byLeftSkill[j])
-							{
-								if(g_pMainPlayer->m_nPosSK[i]==0)
-								{
-									int		nPosX	= 116+(nSkill_Idx%5)*32;
-									int		nPosY	= 646-(nSkill_Idx/5)*32;
-									char*	szKey	= KeySearch(g_sKeyConfig.snKey[18+i]);																		
-
-									if(szKey && !IsEmptyString(szKey))
-										RenderFont(szKey, nPosX+3, nPosX+32, nPosY+12, nPosY+26, nOrder, 0xff00ff00);
-								}										
-							}
-							nSkill_Idx++;
-						}
-					}					
-				}
-			}
-		}
-	}
-	else if(pSkillWnd->activeSkillSelectionWindowType == SkillSelectionWindow::rightSkills)
-	{		
-//		Effect* pEffect;
-
-		for(int i = 0; i < 16; i++)
-		{
-			if(g_pMainPlayer->m_nSkillKey[i]!=-1)
-			{				
-				int nSkill_Idx = 0;
-
-				for(int j = 0; j < g_sSkillListManager.byRightSkillCnt; j++)
-				{
-					if(g_pMainPlayer->GetSkillLevel(g_sSkillListManager.byRightSkill[j])>0)
-					{
-						if(g_pMainPlayer->m_nSkillKey[i]==g_sSkillListManager.byRightSkill[j])
-						{
-							if(g_pMainPlayer->m_nPosSK[i]==1)
-							{
-								int		nPosX	= 116+(nSkill_Idx%5)*32;
-								int		nPosY	= 646-(nSkill_Idx/5)*32;
-								char*	szKey	= KeySearch(g_sKeyConfig.snKey[18+i]);
-								
-								if(!IsEmptyString(szKey))
-									RenderFont(szKey, nPosX+3, nPosX+32, nPosY+12, nPosY+26, nOrder, 0xff00ff00);
-							}										
-						}
-						nSkill_Idx++;
-					}				
-				}
-			}
-		}
-	}
 }
 
 BOOL BeltCollision()
@@ -6159,101 +6077,7 @@ void SetKey(int nKey)
 		
 			if(!g_pGVDungeon->bChatMode)
 			{				
-				for(DWORD i = 0; i < 16; i++)
-				{
-					if(nKey==(WPARAM)g_sKeyConfig.snKey[18+i])
-					{
-						int nSkill_Idx = 1;
-
-						if(pSkillWnd->activeSkillSelectionWindowType == SkillSelectionWindow::none)
-						{
-							if(g_pMainPlayer->m_nSkillKey[i]!=-1)
-							{
-								if(g_pMainPlayer->m_nPosSK[i]==0)
-									g_pMainPlayer->SetSkillChangeLR((BYTE)g_pMainPlayer->m_nSkillKey[i], 0);
-								else if(g_pMainPlayer->m_nPosSK[i]==1)
-									g_pMainPlayer->SetSkillChangeLR((BYTE)g_pMainPlayer->m_nSkillKey[i], 1);																								
-							}
-						}
-						else if(pSkillWnd->activeSkillSelectionWindowType == SkillSelectionWindow::leftSkills)
-						{
-							if(g_Mouse.MousePos.x>=116 && g_Mouse.MousePos.x<=116+32 &&
-								g_Mouse.MousePos.y>=646 && g_Mouse.MousePos.y<=646+32)
-							{
-								for(int k = 0; k < 16; k++)
-								{
-									if(g_pMainPlayer->m_nSkillKey[k]==__SKILL_ATTACK__)
-										g_pMainPlayer->m_nSkillKey[k] = -1;
-								}
-								g_pMainPlayer->m_nSkillKey[i] = __SKILL_ATTACK__;
-								g_pMainPlayer->m_nPosSK[i] = 0;
-								break;
-							}						
-							
-							for(int j = 0; j < g_sSkillListManager.byLeftSkillCnt; j++)
-							{
-								if(g_pMainPlayer->GetSkillLevel(g_sSkillListManager.byLeftSkill[j])>0)
-								{
-									int nPosX = 116+(nSkill_Idx%5)*33;
-									int nPosY = 646-(nSkill_Idx/5)*33;
-									
-									if(g_Mouse.MousePos.x>=nPosX && g_Mouse.MousePos.x<=nPosX+32 &&
-										g_Mouse.MousePos.y>=nPosY && g_Mouse.MousePos.y<=nPosY+32)
-									{
-										for(int k = 0; k < 16; k++)
-										{
-											if(g_pMainPlayer->m_nSkillKey[k]==g_sSkillListManager.byLeftSkill[j])
-												g_pMainPlayer->m_nSkillKey[k] = -1;
-										}							
-										g_pMainPlayer->m_nSkillKey[i] = g_sSkillListManager.byLeftSkill[j];
-										g_pMainPlayer->m_nPosSK[i] = 0;
-										break;
-									}																						
-									nSkill_Idx++;
-								}
-							}							
-						}
-						else if(pSkillWnd->activeSkillSelectionWindowType == SkillSelectionWindow::rightSkills)
-						{			
-							nSkill_Idx = 0;
-							
-							for(int j = 0; j < g_sSkillListManager.byRightSkillCnt; j++)
-							{
-								if(g_pMainPlayer->GetSkillLevel(g_sSkillListManager.byRightSkill[j])>0)
-								{
-									int nPosX = 116+(nSkill_Idx%5)*33;
-									int nPosY = 646-(nSkill_Idx/5)*33;
-									
-									if(g_Mouse.MousePos.x>=nPosX && g_Mouse.MousePos.x<=nPosX+32 &&
-										g_Mouse.MousePos.y>=nPosY && g_Mouse.MousePos.y<=nPosY+32)
-									{
-										for(int k = 0; k < 16; k++)
-										{
-											if(g_pMainPlayer->m_nSkillKey[k]==g_sSkillListManager.byRightSkill[j])
-												g_pMainPlayer->m_nSkillKey[k] = -1;
-										}							
-										g_pMainPlayer->m_nSkillKey[i] = g_sSkillListManager.byRightSkill[j];
-										g_pMainPlayer->m_nPosSK[i] = 1;
-										break;
-									}																						
-									nSkill_Idx++;
-								}
-							}
-						}															
-						// Key //
-						if(pSkillWnd->activeSkillSelectionWindowType != SkillSelectionWindow::none)
-						{
-							CTWS_SKILL_KEY pPacket;
-
-							for(int i = 0; i < 16; i++)
-							{
-								pPacket.bSkillKey[i]	= BYTE((g_pMainPlayer->m_nSkillKey[i]==-1) ? 0 : g_pMainPlayer->m_nSkillKey[i]);
-								pPacket.bPosKey[i]		= BYTE(g_pMainPlayer->m_nPosSK[i]);
-							}
-							g_pNet->SendMsg((char*)&pPacket, pPacket.GetPacketSize(), SERVER_INDEX_WORLD);
-						}
-					}
-				}
+				SkillSelectionView::sharedInstance()->handleKeyEvent(0);
 			}
 			
 			if(nKey==g_sKeyConfig.snKey[__KEY_GROUP_OPEN__])

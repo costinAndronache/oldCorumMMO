@@ -16,6 +16,7 @@ public:
 	virtual void updatedSkillPoints(CMainUser*, DWORD oldValue, DWORD newValue) {}
 	virtual void updatedCoolPoints(CMainUser*, float oldValue, float newValue) {}
 	virtual void updatedLevel(CMainUser*, DWORD oldValue, DWORD newValue) {}
+	virtual void updatedSkills(CMainUser*) {}
 };
 
 typedef std::weak_ptr<CMainUserUpdateInterested> CMainUserUpdateInterestedWeakRef;

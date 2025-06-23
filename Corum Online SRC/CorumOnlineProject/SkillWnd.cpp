@@ -14,7 +14,7 @@
 #include "NetworkClient.h"
 #include "effect.h"
 #include "CodeFun.h"
-
+#include "DungeonInterfaceLayout.h"
 
 std::shared_ptr<CSkillWnd> CSkillWnd::_shared(nullptr);
 
@@ -25,6 +25,9 @@ std::shared_ptr<CSkillWnd> CSkillWnd::getShared() {
 
 	return _shared;
 }
+
+
+
 void CSkillWnd::updatedSkillPoints(CMainUser*, DWORD oldValue, DWORD newValue) {
 
 }
@@ -34,7 +37,6 @@ void CSkillWnd::updatedSkillPoints(CMainUser*, DWORD oldValue, DWORD newValue) {
 CSkillWnd::CSkillWnd()
 { 	
 	m_byBitClassType	= 0;
-	activeSkillSelectionWindowType		= SkillSelectionWindow::none;
 	m_bySkillType		= CLASS_TYPE_WARRIOR;		
 	m_bBtnChk[0]		= FALSE;
 	m_bBtnChk[1]		= FALSE;
@@ -195,8 +197,8 @@ BOOL CSkillWnd::Init()
 		InsertCheckInterface(112+i*82, 460, 144+i*82, 476, 31+i, CHECK_BTN);
 				
 	// 테두리 //
-	m_pLineSpr		= g_pRenderer->CreateSpriteObject(GetFile("menu_4.tif", DATA_TYPE_UI), 71, 33, 71, 38, 0);
-	m_pAttackSpr	= g_pRenderer->CreateSpriteObject(GetFile("skill_icon1.tga", DATA_TYPE_UI), 0, 0, 32, 32, 0);
+	m_pLineSpr = g_pRenderer->CreateSpriteObject(GetFile("menu_4.tif", DATA_TYPE_UI), 71, 33, 71, 38, 0);
+	m_pAttackSpr = g_pRenderer->CreateSpriteObject(GetFile("skill_icon1.tga", DATA_TYPE_UI), 0, 0, 32, 32, 0);
 	
 	SetSkillUpPos();
 
@@ -228,7 +230,7 @@ void CSkillWnd::CreateSkillResourceSpr( COnlyList* pSkillList )
 		lpSkillResourceNode->pSprAct	= g_pRenderer->CreateSpriteObject( GetFile(lpSkillResourceNode->szFileNameAct, DATA_TYPE_UI)
 																			, nPosX, nPosY, SKILL_ICON_SIZE, SKILL_ICON_SIZE, 0 );
 
-		g_sSkillListManager.pSpr[lpSkillResourceNode->wId]	= lpSkillResourceNode->pSpr;
+		g_sSkillListManager.spriteForSkillKind[lpSkillResourceNode->wId]	= lpSkillResourceNode->pSpr;
 	}
 }
 
@@ -360,140 +362,6 @@ void CSkillWnd::SetOrder()
 {
 }
 
-void CSkillWnd::RenderSkillIcon()
-{
-	int nOrder	= __ORDER_USERINTERFACE_START_ + 4;
-	
-	VECTOR2	vPos;					
-		
-	BYTE skillKind_left	= g_pMainPlayer->GetSkillKind(SELECT_ATTACK_TYPE_LBUTTON);
-	BYTE skillKind_right	= g_pMainPlayer->GetSkillKind(SELECT_ATTACK_TYPE_RBUTTON);
-
-	BYTE nGuardianSkill = -1;
-	
-	CMonster *pGuardian = g_pMainPlayer->m_pGuardian[0];
-	if(pGuardian)
-	{
-		nGuardianSkill = pGuardian->GetSelectedSkill();
-	}
-	
-	if(skillKind_left!=__SKILL_NONE_SELECT__)
-	{
-		vPos.x	= 133;
-		vPos.y	= 733;
-
-		if(skillKind_left==__SKILL_ATTACK__)
-		{
-			g_pRenderer->RenderSprite(m_pAttackSpr, NULL, 0.0f, &vPos, NULL, 0xffffffff, nOrder, RENDER_TYPE_DISABLE_TEX_FILTERING);
-		}
-		else
-		{
-			if(g_sSkillListManager.pSpr[skillKind_left])
-				g_pRenderer->RenderSprite(g_sSkillListManager.pSpr[skillKind_left], NULL, 0.0f, &vPos, NULL, 0xffffffff, nOrder, RENDER_TYPE_DISABLE_TEX_FILTERING);
-		}
-	}
-	
-	if(skillKind_right!=-1)
-	{
-		vPos.x	= 248;
-		vPos.y	= 733;
-
-		if(skillKind_right==__SKILL_ATTACK__)
-		{
-			g_pRenderer->RenderSprite(m_pAttackSpr, NULL, 0.0f, &vPos, NULL, 0xffffffff, nOrder, RENDER_TYPE_DISABLE_TEX_FILTERING);
-		}
-		else
-		{
-			if(g_sSkillListManager.pSpr[skillKind_right])
-				g_pRenderer->RenderSprite(g_sSkillListManager.pSpr[skillKind_right], NULL, 0.0f, &vPos, NULL, 0xffffffff, nOrder, RENDER_TYPE_DISABLE_TEX_FILTERING);
-		}
-	}
-
-	// 가디언이 소환중이면
-	if(pGuardian)
-	{
-		vPos.x	= 209;
-		vPos.y	= 733;
-
-		// 선택된 스킬이 없다면
-		if(nGuardianSkill == 0)
-		{
-			// 물리공격 혹은 렌덤스킬 스프라이트 출력
-			g_pRenderer->RenderSprite(m_pAttackSpr, NULL, 0.0f, &vPos, NULL, 0xffaaffaa, nOrder, RENDER_TYPE_DISABLE_TEX_FILTERING);
-		}
-		// 선택된 스킬이 있다면
-		else
-		{
-			// 선택된 스킬 스프라이트 출력
-			if(g_sSkillListManager.pSpr[nGuardianSkill])
-				g_pRenderer->RenderSprite(g_sSkillListManager.pSpr[nGuardianSkill], NULL, 0.0f, &vPos, NULL, 0xffaaffaa, nOrder, RENDER_TYPE_DISABLE_TEX_FILTERING);
-		}
-	}
-
-	if(activeSkillSelectionWindowType == SkillSelectionWindow::leftSkills)
-	{
-		int nCount = 1;
-
-		vPos.x	= 116;
-		vPos.y	= 640;
-		g_pRenderer->RenderSprite(m_pAttackSpr, NULL, 0.0f, &vPos, NULL, 0xffffffff, nOrder, RENDER_TYPE_DISABLE_TEX_FILTERING);
-
-		for(int i = 0; i < g_sSkillListManager.byLeftSkillCnt; i++)
-		{
-			if(g_pMainPlayer->GetSkillLevel(g_sSkillListManager.byLeftSkill[i])>0)
-			{
-				vPos.x	= 116+32*(nCount%5);
-				vPos.y	= 640-32*(nCount/5);
-				g_pRenderer->RenderSprite(g_sSkillListManager.pSpr[g_sSkillListManager.byLeftSkill[i]], NULL, 0.0f, &vPos, NULL, 0xffffffff, nOrder, RENDER_TYPE_DISABLE_TEX_FILTERING);
-				nCount++;
-			}
-		}		
-	}
-	else if(activeSkillSelectionWindowType == SkillSelectionWindow::rightSkills)
-	{
-		int nCount = 0;
-
-		/*vPos.x	= 116;
-		vPos.y	= 640;
-		g_pRenderer->RenderSprite(m_pAttackSpr, NULL, 0.0f, &vPos, NULL, 0xffffffff, nOrder, RENDER_TYPE_DISABLE_TEX_FILTERING);*/
-		
-		for(int i = 0; i < g_sSkillListManager.byRightSkillCnt; i++)
-		{
-			const auto skillID = g_sSkillListManager.byRightSkill[i];
-			const auto level = g_pMainPlayer->GetSkillLevel(skillID);
-			const auto sprite = g_sSkillListManager.pSpr[skillID];
-			if( level > 0)
-			{
-				vPos.x	= 116+32*(nCount%5);
-				vPos.y	= 640-32*(nCount/5);
-				g_pRenderer->RenderSprite(sprite, NULL, 0.0f, &vPos, NULL, 0xffffffff, nOrder, RENDER_TYPE_DISABLE_TEX_FILTERING);
-				nCount++;
-			}
-		}
-	}
-	// 가디언 스킬 선택 : 최덕석 2005.3.3
-	else if(pGuardian && activeSkillSelectionWindowType == SkillSelectionWindow::guardianSkills)
-	{
-		int nCount = 1;
-
-		vPos.x	= 116;
-		vPos.y	= 640;
-		g_pRenderer->RenderSprite(m_pAttackSpr, NULL, 0.0f, &vPos, NULL, 0xffaaffaa, nOrder, RENDER_TYPE_DISABLE_TEX_FILTERING);
-		
-		for(int i = 0; i < MAX_GUARDIAN_USE_SKILL; i++)
-		{
-			WORD wSkill = pGuardian->m_Skill[i].wSkill;
-			if(wSkill > 0 && pGuardian->GetSkillLevel(wSkill) > 0)
-			{
-				vPos.x	= 116+32*(nCount%5);
-				vPos.y	= 640-32*(nCount/5);
-				g_pRenderer->RenderSprite(g_sSkillListManager.pSpr[wSkill], NULL, 0.0f, &vPos, NULL, 0xffaaffaa, nOrder, RENDER_TYPE_DISABLE_TEX_FILTERING);
-				nCount++;
-			}
-		}
-	}
-
-}
 
 void CSkillWnd::SetSkillButtonPos()
 {
@@ -1148,11 +1016,11 @@ void CSkillWnd::SetSkillUpBtn()
 				
 				if(pEffect->bAbleClass&m_byBitClassType)
 				{
-					if(g_pMainPlayer->sSkillTable[lpSkillResourceEx->wId].bSKillLevel<CUserInterface::GetInstance()->m_wMaxSkillLevel)
+					if(g_pMainPlayer->GetSkillLevel(lpSkillResourceEx->wId) < CUserInterface::GetInstance()->m_wMaxSkillLevel)
 					{
 						int		nMaxLevel		= 0;
 						BYTE	byMastery		= g_pEffectLayer->GetSkillMasteryKind(lpSkillResourceEx->wId);
-						BYTE	byLevel			= g_pMainPlayer->sSkillTable[byMastery].bSKillLevel;
+						BYTE	byLevel = g_pMainPlayer->GetSkillLevel(byMastery);
 						Effect* pEffect			= g_pEffectLayer->GetEffectInfo(lpSkillResourceEx->wId);
 						Effect* pMasteryEffect	= g_pEffectLayer->GetEffectInfo(byMastery);
 
@@ -1178,11 +1046,11 @@ void CSkillWnd::SetSkillUpBtn()
 				
 				if(pEffect->bAbleClass&m_byBitClassType)
 				{				
-					if(g_pMainPlayer->sSkillTable[lpSkillResourceEx->wId].bSKillLevel<CUserInterface::GetInstance()->m_wMaxSkillLevel)
+					if(g_pMainPlayer->GetSkillLevel(lpSkillResourceEx->wId) < CUserInterface::GetInstance()->m_wMaxSkillLevel)
 					{
 						int		nMaxLevel		= 0;
 						BYTE	byMastery		= g_pEffectLayer->GetSkillMasteryKind(lpSkillResourceEx->wId);
-						BYTE	byLevel			= g_pMainPlayer->sSkillTable[byMastery].bSKillLevel;
+						BYTE	byLevel			= g_pMainPlayer->GetSkillLevel(byMastery);
 						Effect* pEffect			= g_pEffectLayer->GetEffectInfo(lpSkillResourceEx->wId);
 						Effect* pMasteryEffect	= g_pEffectLayer->GetEffectInfo(byMastery);
 
@@ -1208,11 +1076,11 @@ void CSkillWnd::SetSkillUpBtn()
 				
 				if(pEffect->bAbleClass&m_byBitClassType)
 				{
-					if(g_pMainPlayer->sSkillTable[lpSkillResourceEx->wId].bSKillLevel<CUserInterface::GetInstance()->m_wMaxSkillLevel)
+					if(g_pMainPlayer->GetSkillLevel(lpSkillResourceEx->wId) < CUserInterface::GetInstance()->m_wMaxSkillLevel)
 					{
 						int		nMaxLevel		= 0;
 						BYTE	byMastery		= g_pEffectLayer->GetSkillMasteryKind(lpSkillResourceEx->wId);
-						BYTE	byLevel			= g_pMainPlayer->sSkillTable[byMastery].bSKillLevel;
+						BYTE	byLevel			= g_pMainPlayer->GetSkillLevel(byMastery);
 						Effect* pEffect			= g_pEffectLayer->GetEffectInfo(lpSkillResourceEx->wId);
 						Effect* pMasteryEffect	= g_pEffectLayer->GetEffectInfo(byMastery);
 
@@ -1407,11 +1275,11 @@ int CSkillWnd::CheckInterface()
 					
 								if(pEffect->bAbleClass&m_byBitClassType)
 								{
-									if(g_pMainPlayer->sSkillTable[lpSkillResourceEx->wId].bSKillLevel<CUserInterface::GetInstance()->m_wMaxSkillLevel)
+									if(g_pMainPlayer->GetSkillLevel(lpSkillResourceEx->wId) < CUserInterface::GetInstance()->m_wMaxSkillLevel)
 									{
 										int		nMaxLevel		= 0;
 										BYTE	byMastery		= g_pEffectLayer->GetSkillMasteryKind(lpSkillResourceEx->wId);
-										BYTE	byLevel			= g_pMainPlayer->sSkillTable[byMastery].bSKillLevel;
+										BYTE	byLevel			= g_pMainPlayer->GetSkillLevel(byMastery);
 										Effect* pEffect			= g_pEffectLayer->GetEffectInfo(lpSkillResourceEx->wId);
 										Effect* pMasteryEffect	= g_pEffectLayer->GetEffectInfo(byMastery);
 
@@ -1461,11 +1329,11 @@ int CSkillWnd::CheckInterface()
 					
 								if(pEffect->bAbleClass&m_byBitClassType)
 								{
-									if(g_pMainPlayer->sSkillTable[lpSkillResourceEx->wId].bSKillLevel<CUserInterface::GetInstance()->m_wMaxSkillLevel)
+									if(g_pMainPlayer->GetSkillLevel(lpSkillResourceEx->wId) < CUserInterface::GetInstance()->m_wMaxSkillLevel)
 									{
 										int		nMaxLevel		= 0;
 										BYTE	byMastery		= g_pEffectLayer->GetSkillMasteryKind(lpSkillResourceEx->wId);
-										BYTE	byLevel			= g_pMainPlayer->sSkillTable[byMastery].bSKillLevel;
+										BYTE	byLevel			= g_pMainPlayer->GetSkillLevel(byMastery);
 										Effect* pEffect			= g_pEffectLayer->GetEffectInfo(lpSkillResourceEx->wId);
 										Effect* pMasteryEffect	= g_pEffectLayer->GetEffectInfo(byMastery);
 
@@ -1515,11 +1383,11 @@ int CSkillWnd::CheckInterface()
 					
 								if(pEffect->bAbleClass&m_byBitClassType)
 								{
-									if(g_pMainPlayer->sSkillTable[lpSkillResourceEx->wId].bSKillLevel<CUserInterface::GetInstance()->m_wMaxSkillLevel)
+									if(g_pMainPlayer->GetSkillLevel(lpSkillResourceEx->wId) < CUserInterface::GetInstance()->m_wMaxSkillLevel)
 									{
 										int		nMaxLevel		= 0;
 										BYTE	byMastery		= g_pEffectLayer->GetSkillMasteryKind(lpSkillResourceEx->wId);
-										BYTE	byLevel			= g_pMainPlayer->sSkillTable[byMastery].bSKillLevel;
+										BYTE	byLevel			= g_pMainPlayer->GetSkillLevel(byMastery);
 										Effect* pEffect			= g_pEffectLayer->GetEffectInfo(lpSkillResourceEx->wId);
 										Effect* pMasteryEffect	= g_pEffectLayer->GetEffectInfo(byMastery);
 
@@ -1636,11 +1504,11 @@ int CSkillWnd::CheckInterface()
 					
 								if(pEffect->bAbleClass&m_byBitClassType)
 								{
-									if(g_pMainPlayer->sSkillTable[lpSkillResourceEx->wId].bSKillLevel<CUserInterface::GetInstance()->m_wMaxSkillLevel)
+									if(g_pMainPlayer->GetSkillLevel(lpSkillResourceEx->wId) < CUserInterface::GetInstance()->m_wMaxSkillLevel)
 									{
 										int		nMaxLevel		= 0;
 										BYTE	byMastery		= g_pEffectLayer->GetSkillMasteryKind(lpSkillResourceEx->wId);
-										BYTE	byLevel			= g_pMainPlayer->sSkillTable[byMastery].bSKillLevel;
+										BYTE	byLevel			= g_pMainPlayer->GetSkillLevel(byMastery);
 										Effect* pEffect			= g_pEffectLayer->GetEffectInfo(lpSkillResourceEx->wId);
 										Effect* pMasteryEffect	= g_pEffectLayer->GetEffectInfo(byMastery);
 
@@ -1692,11 +1560,11 @@ int CSkillWnd::CheckInterface()
 					
 								if(pEffect->bAbleClass&m_byBitClassType)
 								{
-									if(g_pMainPlayer->sSkillTable[lpSkillResourceEx->wId].bSKillLevel<CUserInterface::GetInstance()->m_wMaxSkillLevel)
+									if(g_pMainPlayer->GetSkillLevel(lpSkillResourceEx->wId) < CUserInterface::GetInstance()->m_wMaxSkillLevel)
 									{
 										int		nMaxLevel		= 0;
 										BYTE	byMastery		= g_pEffectLayer->GetSkillMasteryKind(lpSkillResourceEx->wId);
-										BYTE	byLevel			= g_pMainPlayer->sSkillTable[byMastery].bSKillLevel;
+										BYTE	byLevel			= g_pMainPlayer->GetSkillLevel(byMastery);
 										Effect* pEffect			= g_pEffectLayer->GetEffectInfo(lpSkillResourceEx->wId);
 										Effect* pMasteryEffect	= g_pEffectLayer->GetEffectInfo(byMastery);
 
@@ -1748,11 +1616,11 @@ int CSkillWnd::CheckInterface()
 					
 								if(pEffect->bAbleClass&m_byBitClassType)
 								{
-									if(g_pMainPlayer->sSkillTable[lpSkillResourceEx->wId].bSKillLevel<CUserInterface::GetInstance()->m_wMaxSkillLevel)
+									if(g_pMainPlayer->GetSkillLevel(lpSkillResourceEx->wId) < CUserInterface::GetInstance()->m_wMaxSkillLevel)
 									{
 										int		nMaxLevel		= 0;
 										BYTE	byMastery		= g_pEffectLayer->GetSkillMasteryKind(lpSkillResourceEx->wId);
-										BYTE	byLevel			= g_pMainPlayer->sSkillTable[byMastery].bSKillLevel;
+										BYTE	byLevel			= g_pMainPlayer->GetSkillLevel(byMastery);
 										Effect* pEffect			= g_pEffectLayer->GetEffectInfo(lpSkillResourceEx->wId);
 										Effect* pMasteryEffect	= g_pEffectLayer->GetEffectInfo(byMastery);
 
@@ -1863,11 +1731,11 @@ int CSkillWnd::CheckInterface()
 					
 								if(pEffect->bAbleClass&m_byBitClassType)
 								{
-									if(g_pMainPlayer->sSkillTable[lpSkillResourceEx->wId].bSKillLevel<CUserInterface::GetInstance()->m_wMaxSkillLevel)
+									if(g_pMainPlayer->GetSkillLevel(lpSkillResourceEx->wId) < CUserInterface::GetInstance()->m_wMaxSkillLevel)
 									{
 										int		nMaxLevel		= 0;
 										BYTE	byMastery		= g_pEffectLayer->GetSkillMasteryKind(lpSkillResourceEx->wId);
-										BYTE	byLevel			= g_pMainPlayer->sSkillTable[byMastery].bSKillLevel;
+										BYTE	byLevel			= g_pMainPlayer->GetSkillLevel(byMastery);
 										Effect* pEffect			= g_pEffectLayer->GetEffectInfo(lpSkillResourceEx->wId);
 										Effect* pMasteryEffect	= g_pEffectLayer->GetEffectInfo(byMastery);
 
@@ -1912,11 +1780,11 @@ int CSkillWnd::CheckInterface()
 					
 								if(pEffect->bAbleClass&m_byBitClassType)
 								{
-									if(g_pMainPlayer->sSkillTable[lpSkillResourceEx->wId].bSKillLevel<CUserInterface::GetInstance()->m_wMaxSkillLevel)
+									if(g_pMainPlayer->GetSkillLevel(lpSkillResourceEx->wId) < CUserInterface::GetInstance()->m_wMaxSkillLevel)
 									{
 										int		nMaxLevel		= 0;
 										BYTE	byMastery		= g_pEffectLayer->GetSkillMasteryKind(lpSkillResourceEx->wId);
-										BYTE	byLevel			= g_pMainPlayer->sSkillTable[byMastery].bSKillLevel;
+										BYTE	byLevel			= g_pMainPlayer->GetSkillLevel(byMastery);
 										Effect* pEffect			= g_pEffectLayer->GetEffectInfo(lpSkillResourceEx->wId);
 										Effect* pMasteryEffect	= g_pEffectLayer->GetEffectInfo(byMastery);
 
@@ -1963,11 +1831,11 @@ int CSkillWnd::CheckInterface()
 					
 								if(pEffect->bAbleClass&m_byBitClassType)
 								{							
-									if(g_pMainPlayer->sSkillTable[lpSkillResourceEx->wId].bSKillLevel<CUserInterface::GetInstance()->m_wMaxSkillLevel)
+									if(g_pMainPlayer->GetSkillLevel(lpSkillResourceEx->wId) < CUserInterface::GetInstance()->m_wMaxSkillLevel)
 									{
 										int		nMaxLevel		= 0;
 										BYTE	byMastery		= g_pEffectLayer->GetSkillMasteryKind(lpSkillResourceEx->wId);
-										BYTE	byLevel			= g_pMainPlayer->sSkillTable[byMastery].bSKillLevel;
+										BYTE	byLevel			= g_pMainPlayer->GetSkillLevel(byMastery);
 										Effect* pEffect			= g_pEffectLayer->GetEffectInfo(lpSkillResourceEx->wId);
 										Effect* pMasteryEffect	= g_pEffectLayer->GetEffectInfo(byMastery);
 

@@ -437,6 +437,18 @@ void CMonster::SetActionSkill(BYTE bSkillKind)
 	}	
 }
 
+std::vector<BYTE> CMonster::currentSkills() {
+	std::vector<BYTE> result;
+
+	for (int i = 0; i < MAX_GUARDIAN_USE_SKILL; ++i) {
+		if (m_Skill[i].wSkill) {
+			result.push_back(m_Skill[i].wSkill);
+		}
+	}
+
+	return result;
+}
+
 BYTE CMonster::GetSkillLevel(const BYTE bySkillKind) const
 {
 	for(int i = 0; i < MAX_GUARDIAN_USE_SKILL; ++i)

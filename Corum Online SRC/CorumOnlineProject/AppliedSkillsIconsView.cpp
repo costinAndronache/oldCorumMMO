@@ -6,14 +6,14 @@ const auto skillIconSize = 35;
 
 void renderAppliedSkill(const AppliedSkill* appliedSkill, unsigned int index) {
 	static char szInfo[0xff] = { 0, };
-	if (!g_sSkillListManager.pSpr[appliedSkill->pEffect->skillKind]) { return; }
+	if (!g_sSkillListManager.spriteForSkillKind[appliedSkill->pEffect->skillKind]) { return; }
 
 	int nPosX = (int)10 + (index * 35);
 	int nPosY = (int)10;
 
 	VECTOR2 vPos = { (float)nPosX,  (float)nPosY };
 
-	g_pRenderer->RenderSprite(g_sSkillListManager.pSpr[appliedSkill->pEffect->skillKind], NULL, 0.0f, &vPos, NULL, 0xffffffff, __ORDER_USERINTERFACE_START_, RENDER_TYPE_DISABLE_TEX_FILTERING);
+	g_pRenderer->RenderSprite(g_sSkillListManager.spriteForSkillKind[appliedSkill->pEffect->skillKind], NULL, 0.0f, &vPos, NULL, 0xffffffff, __ORDER_USERINTERFACE_START_, RENDER_TYPE_DISABLE_TEX_FILTERING);
 
 	wsprintf(szInfo, "%u", appliedSkill->GetRemainTime(g_dwCurTick));
 

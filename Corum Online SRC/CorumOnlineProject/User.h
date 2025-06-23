@@ -189,7 +189,7 @@ public:
 class CMainUser : public CUser
 {
 private:
-	std::vector<CMainUserUpdateInterestedWeakRef> updateListeners;
+	std::vector<CMainUserUpdateInterestedWeakRef> _updateListeners;
 	Timer			*continousSkillCastSPUpdateTimer;
 	DWORD			m_dwHP;
 	DWORD			m_dwMP;
@@ -212,10 +212,14 @@ private:
 	float			m_fCurCoolPoint;
 
 
+
 	void			SendCasting();
 	BOOL			IsWithContinousSkillSelected();
 
 public:
+	std::vector<BYTE>	skillsAvailableOnLeft();
+	std::vector<BYTE>	skillsAvailableOnRight();
+
 	void				OnCastPhaseBegin(BYTE bSkillKind, VECTOR3& vecTarget, BOOL bDirection, int spOffsetPerSecond) override;
 	void				OnCastPhaseEndExecutionPhaseBegin(BYTE bSkillKind) override;
 
@@ -298,7 +302,6 @@ public:
 	int				m_nItemSelect;
 	int				m_nInterfaceChk;
 
-	SSKILL_TABLE	sSkillTable[MAX_SKILL];
 	WORD			m_wClassRank;
 
 	DWORD			m_wAttackSpeed;
@@ -390,7 +393,6 @@ public:
 	short			GetPhyResist();
 	void			GetAttackDamage_L(WORD& wAttackDamageMin, WORD& wAttackDamageMax);
 	void			GetAttackDamage_R(WORD& wAttackDamageMin, WORD& wAttackDamageMax);
-	BYTE			GetSkillLevel(BYTE bSkillKind);
 
 	void			SetSkillChangeLR(BYTE bySkillKind, BYTE byLR);//left = 0, right = 1
 	void			BeginSkillCastOn(CMonster* pTargetMonster, BYTE bSkillKindLR);
@@ -426,5 +428,14 @@ public:
 public:
 	CMainUser();
 	~CMainUser();
+
+
+private:
+	BYTE			_skillLevel[MAX_SKILL];
+public:
+	void			initializeSkillLevelsFrom(const BYTE skillLevels[MAX_SKILL]);
+	BYTE			GetSkillLevel(BYTE bSkillKind);
+	void			applyOffsetForSkills(int offset);
+
 };
 
