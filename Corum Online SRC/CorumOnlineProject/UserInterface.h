@@ -2,6 +2,9 @@
 // Code by Jang.								2002.12.17	//
 // Object : User Interface.									//
 //==========================================================//
+/////////////////////////////
+#include "DungeonInterfaceLayout.h"
+
 #ifndef		__USER_INTERFACE__
 #define		__USER_INTERFACE__
 

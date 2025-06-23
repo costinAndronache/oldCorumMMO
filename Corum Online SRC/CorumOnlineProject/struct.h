@@ -429,13 +429,13 @@ typedef struct __tag_skill_list_manager__
 	SSKILL_LIST	pSkillList[10];
 	static const int pSkillListCount = 10;
 
-	BYTE byLeftSkillCnt;
-	BYTE byRightSkillCnt;
-	WORD byRightSkill[200];
+	BYTE allowedLeftSideSkillsCount;
+	BYTE allowedRightSideSkillsCount;
+	WORD allowedRightSideSkills[MAX_SKILL];
 
-	WORD byLeftSkill[200];	
+	WORD allowedLeftSideSkills[MAX_SKILL];	
 
-	IDISpriteObject* pSpr[MAX_SKILL];
+	IDISpriteObject* spriteForSkillKind[MAX_SKILL];
 
 }SSKILL_LIST_MANAGER, *LP_SKILL_LIST_MANAGER;
 

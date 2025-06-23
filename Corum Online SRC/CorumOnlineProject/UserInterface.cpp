@@ -39,12 +39,13 @@
 #include "ItemTradeShopWnd.h"
 #include "ItemNative.h"
 #include "GuardianWnd.h"
+#include "SkillSelectionView.h"
 
 //////////////////////////////////////////////////////////////////////////
 // Temporary File for Interface Process
 #include "InterfaceManager.h"
 #include "InterfaceProcTemp.h"
-
+#include "DungeonInterfaceLayout.h"
 
 std::shared_ptr<CUserInterface> CUserInterface::_shared(nullptr);
 
@@ -243,71 +244,72 @@ void	CUserInterface::CreateMenu(
 		bActive, 
 		bScroll );
 }
+
+
 void CUserInterface::InsertUIData()
 {
 	int Order = __ORDER_USERINTERFACE_START_;
-	
-	InsertData(SPR_OBJ_UI_LEFT, SPR_INTERFACE_UI_LEFT, 0, 640, 1.0f, 1.0f, Order, FALSE, FALSE, FALSE);
-	InsertData(SPR_OBJ_UI_RIGHT, SPR_INTERFACE_UI_RIGHT, 512, 640, 1.0f, 1.0f, Order, FALSE, FALSE, FALSE);	
-	InsertData(SPR_OBJ_EN2, SPR_INTERFACE_EN2, 0, 709, 0.0f, 1.0f,  Order+1,FALSE, FALSE, FALSE);
-	InsertData(SPR_OBJ_EN1, SPR_INTERFACE_EN1, 0, 709, 0.0f, 1.0f, Order+2,FALSE, FALSE, FALSE);
-	InsertData(SPR_OBJ_EXP, SPR_INTERFACE_EXP, 0, 725, 1.0f, 1.0f, Order+3, FALSE, FALSE, FALSE);		
-	InsertData(SPR_OBJ_MANA2, SPR_INTERFACE_MANA2, 1023, 709, 0.0f, 1.0f, Order+1, FALSE, FALSE, FALSE);
-	InsertData(SPR_OBJ_MANA1, SPR_INTERFACE_MANA1, 723, 709, 0.0f, 1.0f, Order+2, FALSE, FALSE, FALSE);		
-	InsertData(SPR_OBJ_CAST, SPR_INTERFACE_CAST, 723, 725, (float)g_pMainPlayer->percentageCoolPoints() * 300/2, 1.0f, Order+3, FALSE, FALSE, FALSE);			
-	
-	InsertData(BUTTON_OBJ_ITEM1, BUTTON_INTERFACE_ITEM1, 83, 684, 1.0f, 1.0f, Order+1, FALSE, FALSE, FALSE);
-	InsertData(BUTTON_OBJ_CHR1, BUTTON_INTERFACE_CHR1, 164, 684, 1.0f, 1.0f, Order+1, FALSE, FALSE, FALSE);
-	InsertData(BUTTON_OBJ_SKILL1, BUTTON_INTERFACE_SKILL1, 243, 684, 1.0f, 1.0f, Order+1, FALSE, FALSE, FALSE);
-	InsertData(BUTTON_OBJ_GUILD1, BUTTON_INTERFACE_GUILD1, 747, 684, 1.0f, 1.0f, Order+1, FALSE, FALSE, FALSE);
-	InsertData(BUTTON_OBJ_PARTY1, BUTTON_INTERFACE_PARTY1, 827, 684, 1.0f, 1.0f, Order+1, FALSE, FALSE, FALSE);
-	InsertData(BUTTON_OBJ_CHAT1, BUTTON_INTERFACE_CHAT1, 907, 684, 1.0f, 1.0f, Order+1, FALSE, FALSE, FALSE);	
-	InsertData(BUTTON_OBJ_ITEM2, BUTTON_INTERFACE_ITEM2, 83, 684, 1.0f, 1.0f, Order+1, FALSE, FALSE, FALSE);
-	InsertData(BUTTON_OBJ_CHR2, BUTTON_INTERFACE_CHR2, 164, 684, 1.0f, 1.0f, Order+1, FALSE, FALSE, FALSE);
-	InsertData(BUTTON_OBJ_SKILL2, BUTTON_INTERFACE_SKILL2, 243, 684, 1.0f, 1.0f, Order+1, FALSE, FALSE, FALSE);
-	InsertData(BUTTON_OBJ_GUILD2, BUTTON_INTERFACE_GUILD2, 747, 684, 1.0f, 1.0f, Order+1, FALSE, FALSE, FALSE);
-	InsertData(BUTTON_OBJ_PARTY2, BUTTON_INTERFACE_PARTY2, 827, 684, 1.0f, 1.0f, Order+1, FALSE, FALSE, FALSE);
-	InsertData(BUTTON_OBJ_CHAT2, BUTTON_INTERFACE_CHAT2, 907, 684, 1.0f, 1.0f, Order+1, FALSE, FALSE, FALSE);		
-	InsertData(BUTTON_OBJ_SYSTEM1, BUTTON_INTERFACE_SYSTEM1, 659, 731, 1.0f, 1.0f, Order+1, FALSE, FALSE, FALSE);	
-	InsertData(BUTTON_OBJ_SYSTEM2, BUTTON_INTERFACE_SYSTEM2, 659, 731, 1.0f, 1.0f, Order+1, FALSE, FALSE, FALSE);
-	InsertData(BUTTON_OBJ_PKON1, BUTTON_INTERFACE_PKON1, 333, 731, 1.0f, 1.0f, Order+1, FALSE, FALSE, FALSE);
-	InsertData(BUTTON_OBJ_PKON2, BUTTON_INTERFACE_PKON2, 333, 731, 1.0f, 1.0f, Order+1, FALSE, FALSE, FALSE);
-	InsertData(BUTTON_OBJ_PKOFF1, BUTTON_INTERFACE_PKOFF1, 333, 731, 1.0f, 1.0f, Order+1, FALSE, FALSE, FALSE);
-	InsertData(BUTTON_OBJ_PKOFF2, BUTTON_INTERFACE_PKOFF2, 333, 731, 1.0f, 1.0f, Order+1, FALSE, FALSE, FALSE);
 
-	InsertData(SPR_OBJ_MONSTERHP_BAR1, SPR_INTERFACE_MONSTERHP_BAR1, 401, 0, 1.0f, 1.0f, Order, FALSE, FALSE, FALSE);
-	InsertData(SPR_OBJ_MONSTERHP_BAR2, SPR_INTERFACE_MONSTERHP_BAR2, 598, 0, 1.0f, 1.0f, Order, FALSE, FALSE, FALSE);	
-	InsertData(SPR_OBJ_MONSTER_GAGE1, SPR_INTERFACE_MONSTER_GAGE1, 412, 3, 1.0f, 1.0f, Order+2, FALSE, FALSE, FALSE);	
-	InsertData(SPR_OBJ_MONSTER_GAGE2, SPR_INTERFACE_MONSTER_GAGE2, 412, 3, 1.0f, 1.0f, Order+1, FALSE, FALSE, FALSE);
-	
-	InsertData(SPR_OBJ_USERHP_BAR1, SPR_INTERFACE_USERHP_BAR1, 401, 0, 1.0f, 1.0f, Order, FALSE, FALSE, FALSE);
-	InsertData(SPR_OBJ_USERHP_BAR2, SPR_INTERFACE_USERHP_BAR2, 598, 0, 1.0f, 1.0f, Order, FALSE, FALSE, FALSE);	
-	InsertData(SPR_OBJ_USER_GAGE1, SPR_INTERFACE_USER_GAGE1, 412, 3, 1.0f, 1.0f, Order+2, FALSE, FALSE, FALSE);	
-	InsertData(SPR_OBJ_USER_GAGE2, SPR_INTERFACE_USER_GAGE2, 412, 3, 1.0f, 1.0f, Order+1, FALSE, FALSE, FALSE);
+	InsertData(SPR_OBJ_UI_LEFT, SPR_INTERFACE_UI_LEFT, hudLeft.x, hudLeft.y, 1.0f, 1.0f, Order, FALSE, FALSE, FALSE);
+	InsertData(SPR_OBJ_UI_RIGHT, SPR_INTERFACE_UI_RIGHT, hudRight.x, hudRight.y, 1.0f, 1.0f, Order, FALSE, FALSE, FALSE);
+	InsertData(SPR_OBJ_EN2, SPR_INTERFACE_EN2, hp.x, hp.y, 0.0f, 1.0f, Order + 1, FALSE, FALSE, FALSE);
+	InsertData(SPR_OBJ_EN1, SPR_INTERFACE_EN1, hp.x, hp.y, 0.0f, 1.0f, Order + 2, FALSE, FALSE, FALSE);
+	InsertData(SPR_OBJ_EXP, SPR_INTERFACE_EXP, expPos.x, expPos.y, 1.0f, 1.0f, Order + 3, FALSE, FALSE, FALSE);
+	InsertData(SPR_OBJ_MANA2, SPR_INTERFACE_MANA2, 1023, 709, 0.0f, 1.0f, Order + 1, FALSE, FALSE, FALSE);
+	InsertData(SPR_OBJ_MANA1, SPR_INTERFACE_MANA1, sp.x, sp.y, 0.0f, 1.0f, Order + 2, FALSE, FALSE, FALSE);
+	InsertData(SPR_OBJ_CAST, SPR_INTERFACE_CAST, cool.x, cool.y, (float)g_pMainPlayer->percentageCoolPoints() * 300 / 2, 1.0f, Order + 3, FALSE, FALSE, FALSE);
+
+	InsertData(BUTTON_OBJ_ITEM1, BUTTON_INTERFACE_ITEM1, btnItem.x, btnItem.y, 1.0f, 1.0f, Order + 1, FALSE, FALSE, FALSE);
+	InsertData(BUTTON_OBJ_CHR1, BUTTON_INTERFACE_CHR1, btnStats.x, btnStats.y, 1.0f, 1.0f, Order + 1, FALSE, FALSE, FALSE);
+	InsertData(BUTTON_OBJ_SKILL1, BUTTON_INTERFACE_SKILL1, btnSkill.x, btnSkill.y, 1.0f, 1.0f, Order + 1, FALSE, FALSE, FALSE);
+	InsertData(BUTTON_OBJ_GUILD1, BUTTON_INTERFACE_GUILD1, btnGroup.x, btnGroup.y, 1.0f, 1.0f, Order + 1, FALSE, FALSE, FALSE);
+	InsertData(BUTTON_OBJ_PARTY1, BUTTON_INTERFACE_PARTY1, btnLair.x, btnLair.y, 1.0f, 1.0f, Order + 1, FALSE, FALSE, FALSE);
+	InsertData(BUTTON_OBJ_CHAT1, BUTTON_INTERFACE_CHAT1, btnChat.x, btnChat.y, 1.0f, 1.0f, Order + 1, FALSE, FALSE, FALSE);
+	InsertData(BUTTON_OBJ_ITEM2, BUTTON_INTERFACE_ITEM2, btnItem.x, btnItem.y, 1.0f, 1.0f, Order + 1, FALSE, FALSE, FALSE);
+	InsertData(BUTTON_OBJ_CHR2, BUTTON_INTERFACE_CHR2, btnStats.x, btnStats.y, 1.0f, 1.0f, Order + 1, FALSE, FALSE, FALSE);
+	InsertData(BUTTON_OBJ_SKILL2, BUTTON_INTERFACE_SKILL2, btnSkill.x, btnSkill.y, 1.0f, 1.0f, Order + 1, FALSE, FALSE, FALSE);
+	InsertData(BUTTON_OBJ_GUILD2, BUTTON_INTERFACE_GUILD2, btnGroup.x, btnGroup.y, 1.0f, 1.0f, Order + 1, FALSE, FALSE, FALSE);
+	InsertData(BUTTON_OBJ_PARTY2, BUTTON_INTERFACE_PARTY2, btnLair.x, btnLair.y, 1.0f, 1.0f, Order + 1, FALSE, FALSE, FALSE);
+	InsertData(BUTTON_OBJ_CHAT2, BUTTON_INTERFACE_CHAT2, btnChat.x, btnChat.y, 1.0f, 1.0f, Order + 1, FALSE, FALSE, FALSE);
+	InsertData(BUTTON_OBJ_SYSTEM1, BUTTON_INTERFACE_SYSTEM1, btnOptions.x, btnOptions.y, 1.0f, 1.0f, Order + 1, FALSE, FALSE, FALSE);
+	InsertData(BUTTON_OBJ_SYSTEM2, BUTTON_INTERFACE_SYSTEM2, btnOptions.x, btnOptions.y, 1.0f, 1.0f, Order + 1, FALSE, FALSE, FALSE);
+	InsertData(BUTTON_OBJ_PKON1, BUTTON_INTERFACE_PKON1, btnPK.x, btnPK.y, 1.0f, 1.0f, Order + 1, FALSE, FALSE, FALSE);
+	InsertData(BUTTON_OBJ_PKON2, BUTTON_INTERFACE_PKON2, btnPK.x, btnPK.y, 1.0f, 1.0f, Order + 1, FALSE, FALSE, FALSE);
+	InsertData(BUTTON_OBJ_PKOFF1, BUTTON_INTERFACE_PKOFF1, btnPK.x, btnPK.y, 1.0f, 1.0f, Order + 1, FALSE, FALSE, FALSE);
+	InsertData(BUTTON_OBJ_PKOFF2, BUTTON_INTERFACE_PKOFF2, btnPK.x, btnPK.y, 1.0f, 1.0f, Order + 1, FALSE, FALSE, FALSE);
+	InsertData(SPR_OBJ_MONSTERHP_BAR1, SPR_INTERFACE_MONSTERHP_BAR1, monsterHP1.x, monsterHP1.y, 1.0f, 1.0f, Order, FALSE, FALSE, FALSE);
+	InsertData(SPR_OBJ_MONSTERHP_BAR2, SPR_INTERFACE_MONSTERHP_BAR2, monsterHP2.x, monsterHP2.y, 1.0f, 1.0f, Order, FALSE, FALSE, FALSE);
+	InsertData(SPR_OBJ_MONSTER_GAGE1, SPR_INTERFACE_MONSTER_GAGE1, monsterGage.x, monsterGage.y, 1.0f, 1.0f, Order + 2, FALSE, FALSE, FALSE);
+	InsertData(SPR_OBJ_MONSTER_GAGE2, SPR_INTERFACE_MONSTER_GAGE2, monsterGage.x, monsterGage.y, 1.0f, 1.0f, Order + 1, FALSE, FALSE, FALSE);
+
+	InsertData(SPR_OBJ_USERHP_BAR1, SPR_INTERFACE_USERHP_BAR1, monsterHP1.x, monsterHP1.y, 1.0f, 1.0f, Order, FALSE, FALSE, FALSE);
+	InsertData(SPR_OBJ_USERHP_BAR2, SPR_INTERFACE_USERHP_BAR2, monsterHP2.x, monsterHP2.y, 1.0f, 1.0f, Order, FALSE, FALSE, FALSE);
+	InsertData(SPR_OBJ_USER_GAGE1, SPR_INTERFACE_USER_GAGE1, monsterGage.x, monsterGage.y, 1.0f, 1.0f, Order + 2, FALSE, FALSE, FALSE);
+	InsertData(SPR_OBJ_USER_GAGE2, SPR_INTERFACE_USER_GAGE2, monsterGage.x, monsterGage.y, 1.0f, 1.0f, Order + 1, FALSE, FALSE, FALSE);
 	InsertData(SPR_OBJ_GUARDIAN_WND1, SPR_INTERFACE_GUARDIAN_WND1, 0, 0, 1.0f, 1.0f, Order, FALSE, FALSE, FALSE);
-	InsertData(SPR_OBJ_GUARDIAN_EN, SPR_INTERFACE_GUARDIAN_EN, 0, 0, 1.0f, 1.0f, Order+1, FALSE, FALSE, FALSE);
+	InsertData(SPR_OBJ_GUARDIAN_EN, SPR_INTERFACE_GUARDIAN_EN, 0, 0, 1.0f, 1.0f, Order + 1, FALSE, FALSE, FALSE);
+	InsertData(SPR_OBJ_UI_TRADE1, SPR_INTERFACE_UI_TRADE1, btnTrade.x, btnTrade.y, 1.0f, 1.0f, Order + 1, FALSE, FALSE, FALSE);
+	InsertData(SPR_OBJ_UI_TRADE2, SPR_INTERFACE_UI_TRADE2, btnTrade.x, btnTrade.y, 1.0f, 1.0f, Order + 1, FALSE, FALSE, FALSE);
+	InsertData(SPR_OBJ_UI_TRADE3, SPR_INTERFACE_UI_TRADE3, btnTrade.x, btnTrade.y, 1.0f, 1.0f, Order + 1, FALSE, FALSE, FALSE);
+	InsertData(SPR_OBJ_UI_SHOP1, SPR_INTERFACE_UI_SHOP1, btnShop.x, btnShop.y, 1.0f, 1.0f, Order + 1, FALSE, FALSE, FALSE);
+	InsertData(SPR_OBJ_UI_SHOP2, SPR_INTERFACE_UI_SHOP2, btnShop.x, btnShop.y, 1.0f, 1.0f, Order + 1, FALSE, FALSE, FALSE);
+	InsertData(SPR_OBJ_UI_SHOP3, SPR_INTERFACE_UI_SHOP3, btnShop.x, btnShop.y, 1.0f, 1.0f, Order + 1, FALSE, FALSE, FALSE);
 
-	InsertData(SPR_OBJ_UI_TRADE1, SPR_INTERFACE_UI_TRADE1, 0, 661, 1.0f, 1.0f, Order+1, FALSE, FALSE, FALSE);	
-	InsertData(SPR_OBJ_UI_TRADE2, SPR_INTERFACE_UI_TRADE2, 0, 661, 1.0f, 1.0f, Order+1, FALSE, FALSE, FALSE);	
-	InsertData(SPR_OBJ_UI_TRADE3, SPR_INTERFACE_UI_TRADE3, 0, 661, 1.0f, 1.0f, Order+1, FALSE, FALSE, FALSE);		
-	InsertData(SPR_OBJ_UI_SHOP1, SPR_INTERFACE_UI_SHOP1, 0, 679, 1.0f, 1.0f, Order+1, FALSE, FALSE, FALSE);	
-	InsertData(SPR_OBJ_UI_SHOP2, SPR_INTERFACE_UI_SHOP2, 0, 679, 1.0f, 1.0f, Order+1, FALSE, FALSE, FALSE);	
-	InsertData(SPR_OBJ_UI_SHOP3, SPR_INTERFACE_UI_SHOP3, 0, 679, 1.0f, 1.0f, Order+1, FALSE, FALSE, FALSE);		
-	InsertData(SPR_OBJ_UI_REST1, SPR_INTERFACE_UI_REST1, 977, 661, 1.0f, 1.0f, Order+1, FALSE, FALSE, FALSE);	
-	InsertData(SPR_OBJ_UI_REST2, SPR_INTERFACE_UI_REST2, 977, 661, 1.0f, 1.0f, Order+1, FALSE, FALSE, FALSE);	
-	InsertData(SPR_OBJ_UI_REST3, SPR_INTERFACE_UI_REST3, 977, 661, 1.0f, 1.0f, Order+1, FALSE, FALSE, FALSE);	
-	InsertData(SPR_OBJ_UI_MATCH1, SPR_INTERFACE_UI_MATCH1, 977, 679, 1.0f, 1.0f, Order+1, FALSE, FALSE, FALSE);	
-	InsertData(SPR_OBJ_UI_MATCH2, SPR_INTERFACE_UI_MATCH2, 977, 679, 1.0f, 1.0f, Order+1, FALSE, FALSE, FALSE);	
-	InsertData(SPR_OBJ_UI_MATCH3, SPR_INTERFACE_UI_MATCH3, 977, 679, 1.0f, 1.0f, Order+1, FALSE, FALSE, FALSE);		
+	InsertData(SPR_OBJ_UI_REST1, SPR_INTERFACE_UI_REST1, btnRest.x, btnRest.y, 1.0f, 1.0f, Order+1, FALSE, FALSE, FALSE);	
+	InsertData(SPR_OBJ_UI_REST2, SPR_INTERFACE_UI_REST2, btnRest.x, btnRest.y, 1.0f, 1.0f, Order+1, FALSE, FALSE, FALSE);
+	InsertData(SPR_OBJ_UI_REST3, SPR_INTERFACE_UI_REST3, btnRest.x, btnRest.y, 1.0f, 1.0f, Order+1, FALSE, FALSE, FALSE);
+	InsertData(SPR_OBJ_UI_MATCH1, SPR_INTERFACE_UI_MATCH1, btnMatch.x, btnMatch.y, 1.0f, 1.0f, Order+1, FALSE, FALSE, FALSE);	
+	InsertData(SPR_OBJ_UI_MATCH2, SPR_INTERFACE_UI_MATCH2, btnMatch.x, btnMatch.y, 1.0f, 1.0f, Order+1, FALSE, FALSE, FALSE);
+	InsertData(SPR_OBJ_UI_MATCH3, SPR_INTERFACE_UI_MATCH3, btnMatch.x, btnMatch.y, 1.0f, 1.0f, Order+1, FALSE, FALSE, FALSE);
 	
-	InsertData(SPR_OBJ_UI_QUICKSLOT_INABLE1, SPR_INTERFACE_UI_QUICKSLOT_INABLE, 727, 733, 1.0f, 1.0f, __ORDER_USER_BLET__+1, FALSE, FALSE, FALSE);
-	InsertData(SPR_OBJ_UI_QUICKSLOT_INABLE2, SPR_INTERFACE_UI_QUICKSLOT_INABLE, 764, 733, 1.0f, 1.0f, __ORDER_USER_BLET__+1, FALSE, FALSE, FALSE);
-	InsertData(SPR_OBJ_UI_QUICKSLOT_INABLE3, SPR_INTERFACE_UI_QUICKSLOT_INABLE, 801, 733, 1.0f, 1.0f, __ORDER_USER_BLET__+1, FALSE, FALSE, FALSE);
-	InsertData(SPR_OBJ_UI_QUICKSLOT_INABLE4, SPR_INTERFACE_UI_QUICKSLOT_INABLE, 838, 733, 1.0f, 1.0f, __ORDER_USER_BLET__+1, FALSE, FALSE, FALSE);
-	InsertData(SPR_OBJ_UI_QUICKSLOT_INABLE5, SPR_INTERFACE_UI_QUICKSLOT_INABLE, 875, 733, 1.0f, 1.0f, __ORDER_USER_BLET__+1, FALSE, FALSE, FALSE);
-	InsertData(SPR_OBJ_UI_QUICKSLOT_INABLE6, SPR_INTERFACE_UI_QUICKSLOT_INABLE, 912, 733, 1.0f, 1.0f, __ORDER_USER_BLET__+1, FALSE, FALSE, FALSE);
-	InsertData(SPR_OBJ_UI_QUICKSLOT_INABLE7, SPR_INTERFACE_UI_QUICKSLOT_INABLE, 949, 733, 1.0f, 1.0f, __ORDER_USER_BLET__+1, FALSE, FALSE, FALSE);
-	InsertData(SPR_OBJ_UI_QUICKSLOT_INABLE8, SPR_INTERFACE_UI_QUICKSLOT_INABLE, 986, 733, 1.0f, 1.0f, __ORDER_USER_BLET__+1, FALSE, FALSE, FALSE);	
+	InsertData(SPR_OBJ_UI_QUICKSLOT_INABLE1, SPR_INTERFACE_UI_QUICKSLOT_INABLE, beltItemPos(0).x, beltItemPos(0).y, 1.0f, 1.0f, __ORDER_USER_BLET__ + 1, FALSE, FALSE, FALSE);
+	InsertData(SPR_OBJ_UI_QUICKSLOT_INABLE2, SPR_INTERFACE_UI_QUICKSLOT_INABLE, beltItemPos(1).x, beltItemPos(0).y, 1.0f, 1.0f, __ORDER_USER_BLET__+1, FALSE, FALSE, FALSE);
+	InsertData(SPR_OBJ_UI_QUICKSLOT_INABLE3, SPR_INTERFACE_UI_QUICKSLOT_INABLE, beltItemPos(2).x, beltItemPos(0).y, 1.0f, 1.0f, __ORDER_USER_BLET__+1, FALSE, FALSE, FALSE);
+	InsertData(SPR_OBJ_UI_QUICKSLOT_INABLE4, SPR_INTERFACE_UI_QUICKSLOT_INABLE, beltItemPos(3).x, beltItemPos(0).y, 1.0f, 1.0f, __ORDER_USER_BLET__+1, FALSE, FALSE, FALSE);
+	InsertData(SPR_OBJ_UI_QUICKSLOT_INABLE5, SPR_INTERFACE_UI_QUICKSLOT_INABLE, beltItemPos(4).x, beltItemPos(0).y, 1.0f, 1.0f, __ORDER_USER_BLET__+1, FALSE, FALSE, FALSE);
+	InsertData(SPR_OBJ_UI_QUICKSLOT_INABLE6, SPR_INTERFACE_UI_QUICKSLOT_INABLE, beltItemPos(5).x, beltItemPos(0).y, 1.0f, 1.0f, __ORDER_USER_BLET__+1, FALSE, FALSE, FALSE);
+	InsertData(SPR_OBJ_UI_QUICKSLOT_INABLE7, SPR_INTERFACE_UI_QUICKSLOT_INABLE, beltItemPos(6).x, beltItemPos(0).y, 1.0f, 1.0f, __ORDER_USER_BLET__+1, FALSE, FALSE, FALSE);
+	InsertData(SPR_OBJ_UI_QUICKSLOT_INABLE8, SPR_INTERFACE_UI_QUICKSLOT_INABLE, beltItemPos(7).x, beltItemPos(0).y, 1.0f, 1.0f, __ORDER_USER_BLET__+1, FALSE, FALSE, FALSE);
 
 	// 가디언 스탯창 열기 버튼 : 최덕석 2005.3.29 
 	InsertData(SPR_OBJ_UI_GUARDIAN_STATUS, SPR_INTERFACE_UI_GUARDIAN_STATUS, 0, 49, 1.0f, 1.0f, Order+1, FALSE, FALSE, FALSE);	
@@ -411,166 +413,100 @@ void CUserInterface::Remove()
 	
 }
 
+enum NRET {
+	NRET_OUTSIDE_HUD = 0,
+	NRET_JUST_INSIDE_HUD = 1,
+	NRET_BUTTON_ITEM = 2,
+	NRET_BUTTON_CHR = 3,
+	NRET_BUTTON_SKILL = 4,
+	NRET_BUTTON_GUILD = 5,
+	NRET_BUTTON_LAIR = 6,
+	NRET_BUTTON_CHAT = 7,
+	NRET_BUTTON_SYSTEM = 8,
+	NRET_BUTTON_PK = 13,
+	NRET_GUARDIAN_INTERFACE1 = 23,
+	NRET_GUARDIAN_POTION = 15,
+	NRET_GUARDIAN_SKILL = 21,
+	NRET_ITEMBELT_AREA = 14,
+	NRET_BUTTON_TRADE = 16,
+	NRET_BUTTON_SHOP = 17,
+	NRET_BUTTON_REST = 18,
+	NRET_BUTTON_MATCH = 19
+};
 
 int	CUserInterface::GetChk()
 {
+	const bool m_bGuardian = true;
+
+	const auto mousePoint = VECTOR2{ (float)g_Mouse.MousePos.x, (float)g_Mouse.MousePos.y };
+
 	CSkillWnd* pSkillWnd = CSkillWnd::GetInstance();
-	CMonster *pGuardian = g_pMainPlayer->m_pGuardian[0];
-
-	if(pSkillWnd->activeSkillSelectionWindowType != SkillSelectionWindow::none)
-	{		
-		if(	g_Mouse.MousePos.x>=116 &&
-			g_Mouse.MousePos.x<=116+32 &&
-			g_Mouse.MousePos.y>=646 &&
-			g_Mouse.MousePos.y<=646+32)
-		{
-			switch(pSkillWnd->activeSkillSelectionWindowType)
-			{
-			case SkillSelectionWindow::leftSkills:
-				return 11;
-				break;
-			case SkillSelectionWindow::rightSkills:
-				return 12;
-				break;
-			case SkillSelectionWindow::guardianSkills:
-				return 22;
-				break;
-			}
-		}
-		else
-		{
-			if(pSkillWnd->activeSkillSelectionWindowType == SkillSelectionWindow::leftSkills)
-			{
-				int nCount = 1;
-
-				for(int i = 0; i < g_sSkillListManager.byLeftSkillCnt; i++)
-				{
-					if(g_pMainPlayer->GetSkillLevel(g_sSkillListManager.byLeftSkill[i])>0)
-					{
-						int nPosX = 116+32*(nCount%5);
-						int nPosY = 646-32*(nCount/5);
-
-						if( g_Mouse.MousePos.x>=nPosX &&
-							g_Mouse.MousePos.x<=nPosX+32 &&
-							g_Mouse.MousePos.y>=nPosY &&
-							g_Mouse.MousePos.y<=nPosY+32)
-						{
-							return 11;
-						}
-
-						nCount++;
-					}
-				}
-			}
-			else if(pSkillWnd->activeSkillSelectionWindowType == SkillSelectionWindow::rightSkills)
-			{
-				int nCount = 0;
-
-				for(int i = 0; i < g_sSkillListManager.byRightSkillCnt; i++)
-				{					
-					if(g_pMainPlayer->GetSkillLevel(g_sSkillListManager.byRightSkill[i])>0)
-					{
-						int nPosX = 116+32*(nCount%5);
-						int nPosY = 646-32*(nCount/5);
-
-						if( g_Mouse.MousePos.x>=nPosX &&
-							g_Mouse.MousePos.x<=nPosX+32 &&
-							g_Mouse.MousePos.y>=nPosY &&
-							g_Mouse.MousePos.y<=nPosY+32)
-							return 12;
-
-						nCount++;
-					}					
-				}
-			}
-			else if(pGuardian && pSkillWnd->activeSkillSelectionWindowType == SkillSelectionWindow::guardianSkills)
-			{
-				int nCount = 1;
-
-				for(int i = 0; i < MAX_GUARDIAN_USE_SKILL; i++)
-				{					
-					if(pGuardian->GetSkillLevel(pGuardian->m_Skill[i].wSkill) > 0)
-					{
-						int nPosX = 116+32*(nCount%5);
-						int nPosY = 646-32*(nCount/5);
-
-						if( g_Mouse.MousePos.x>=nPosX &&
-							g_Mouse.MousePos.x<=nPosX+32 &&
-							g_Mouse.MousePos.y>=nPosY &&
-							g_Mouse.MousePos.y<=nPosY+32)
-							return 22;
-
-						nCount++;
-					}					
-				}
-			}
-		}
+	CMonster* pGuardian = g_pMainPlayer->m_pGuardian[0];
+	if (SkillSelectionView::sharedInstance()->isMouseHovering()) {
+		return 22;
 	}
 
-	if(m_bGuardian)
-	{
+	if (m_bGuardian) {
 		// 가디언 정보창 버튼
-		if(g_Mouse.MousePos.x>=0 && g_Mouse.MousePos.x<=59 && g_Mouse.MousePos.y>=49 && g_Mouse.MousePos.y<=69)
-			return 23;
-	
+		if (pointInsideRect(mousePoint,
+			guardianInterface1.origin,
+			guardianInterface1.size.x,
+			guardianInterface1.size.y)) {
+			return NRET_GUARDIAN_INTERFACE1;
+		}
+
+
 		// 가디언 아이템
-		if(g_Mouse.MousePos.x>=93 && g_Mouse.MousePos.x<=125 && g_Mouse.MousePos.y>=76 && g_Mouse.MousePos.y<=108)
-			return 15;
+		if (pointInsideRect(mousePoint, guardianPotionPos)) {
+			return NRET_GUARDIAN_POTION;
+		}
+
 
 		// 가디언 스킬 선택 : 최덕석 2005.3.3
-		if(g_Mouse.MousePos.x>=209 && g_Mouse.MousePos.x<=209+32 && g_Mouse.MousePos.y>=733 && g_Mouse.MousePos.y<=733+32)
-			return 21;	
+		if (pointInsideRect(mousePoint, guardianSkillPos)) {
+			return NRET_GUARDIAN_SKILL;
+		}
+
 	}
 
- 
-	if( (g_Mouse.MousePos.x>=0   && g_Mouse.MousePos.x<=340  && g_Mouse.MousePos.y>=661 && g_Mouse.MousePos.y<=768)	||
-		(g_Mouse.MousePos.x>=341 && g_Mouse.MousePos.x<=370  && g_Mouse.MousePos.y>=723 && g_Mouse.MousePos.y<=768)	||
-		(g_Mouse.MousePos.x>=653 && g_Mouse.MousePos.x<=682  && g_Mouse.MousePos.y>=723 && g_Mouse.MousePos.y<=768)	||
-#ifndef VER_RIVAL_GUILD_WAR
-		(g_Mouse.MousePos.x>=683 && g_Mouse.MousePos.x<=1024 && g_Mouse.MousePos.y>=661 && g_Mouse.MousePos.y<=768) )
-#else
-		(g_Mouse.MousePos.x>=683 && g_Mouse.MousePos.x<=1024 && g_Mouse.MousePos.y>=631 && g_Mouse.MousePos.y<=768) )	//kjk
-#endif
-	{	
-		if(g_Mouse.MousePos.x>=83 && g_Mouse.MousePos.x<=83+32 && g_Mouse.MousePos.y>=684 && g_Mouse.MousePos.y<=684+16)
-			return 2;
-		else if(g_Mouse.MousePos.x>=164 && g_Mouse.MousePos.x<=164+32 && g_Mouse.MousePos.y>=684 && g_Mouse.MousePos.y<=684+16)
-			return 3;
-		else if(g_Mouse.MousePos.x>=243 && g_Mouse.MousePos.x<=243+32 && g_Mouse.MousePos.y>=684 && g_Mouse.MousePos.y<=684+16)
-			return 4;
-		else if(g_Mouse.MousePos.x>=747 && g_Mouse.MousePos.x<=747+32 && g_Mouse.MousePos.y>=684 && g_Mouse.MousePos.y<=684+16)
-			return 5;
-		else if(g_Mouse.MousePos.x>=827 && g_Mouse.MousePos.x<=827+32 && g_Mouse.MousePos.y>=684 && g_Mouse.MousePos.y<=684+16)
-			return 6;
-		else if(g_Mouse.MousePos.x>=907 && g_Mouse.MousePos.x<=907+32 && g_Mouse.MousePos.y>=684 && g_Mouse.MousePos.y<=684+16)
-			return 7;
-		else if(g_Mouse.MousePos.x>=659 && g_Mouse.MousePos.x<=659+32 && g_Mouse.MousePos.y>=731 && g_Mouse.MousePos.y<=731+32)
-			return 8;
-		else if(g_Mouse.MousePos.x>=132 && g_Mouse.MousePos.x<=132+32 && g_Mouse.MousePos.y>=733 && g_Mouse.MousePos.y<=733+32)
-			return 9;
-		else if(g_Mouse.MousePos.x>=245 && g_Mouse.MousePos.x<=245+32 && g_Mouse.MousePos.y>=733 && g_Mouse.MousePos.y<=733+32)
-			return 10;
-		else if(g_Mouse.MousePos.x>=333 && g_Mouse.MousePos.x<=333+32 && g_Mouse.MousePos.y>=731 && g_Mouse.MousePos.y<=731+32)
-			return 13;
-		else if(g_Mouse.MousePos.x>=727 && g_Mouse.MousePos.x<=1024 && g_Mouse.MousePos.y>=733 && g_Mouse.MousePos.y<=768)
-			return 14;
-		else if(g_Mouse.MousePos.x>=0 && g_Mouse.MousePos.x<=46 && g_Mouse.MousePos.y>=661 && g_Mouse.MousePos.y<=677)
-			return 16;	// 교환.
-		else if(g_Mouse.MousePos.x>=0 && g_Mouse.MousePos.x<=64 && g_Mouse.MousePos.y>=679 && g_Mouse.MousePos.y<=695)
-			return 17;	// 앉기.
-		else if(g_Mouse.MousePos.x>=977 && g_Mouse.MousePos.x<=1024 && g_Mouse.MousePos.y>=661 && g_Mouse.MousePos.y<=677)
-			return 18;	// 샾.
-		else if(g_Mouse.MousePos.x>=977 && g_Mouse.MousePos.x<=1024 && g_Mouse.MousePos.y>=679 && g_Mouse.MousePos.y<=695)
-			return 19;	// 대결.
-#ifdef VER_RIVAL_GUILD_WAR	//kjk
-		else if(g_Mouse.MousePos.x>=977 && g_Mouse.MousePos.x<=1024 && g_Mouse.MousePos.y>=634 && g_Mouse.MousePos.y<=659)
-			return 20;
-#endif
-		else
-			return 1;
-	}	
+	if ( pointInsideRect(mousePoint, leftHUD) || pointInsideRect(mousePoint, rightHUD)) {
+		if (pointInsideRect(mousePoint, btnItem)) return NRET_BUTTON_ITEM;
 
-	return 0;
+		if (pointInsideRect(mousePoint, btnStats)) return NRET_BUTTON_CHR;
+
+		if (pointInsideRect(mousePoint, btnSkill)) return NRET_BUTTON_SKILL;
+
+		if (pointInsideRect(mousePoint, btnGroup)) return NRET_BUTTON_GUILD;
+
+		if (pointInsideRect(mousePoint, btnLair)) return NRET_BUTTON_LAIR;
+
+		if (pointInsideRect(mousePoint, btnChat)) return NRET_BUTTON_CHAT;
+
+		if (pointInsideRect(mousePoint, btnOptions)) return NRET_BUTTON_SYSTEM;
+
+
+		if (pointInsideRect(mousePoint, btnPK))
+			return NRET_BUTTON_PK;
+
+		else if (g_Mouse.MousePos.x >= 727 && g_Mouse.MousePos.x <= 1024 && g_Mouse.MousePos.y >= 733 && g_Mouse.MousePos.y <= 768)
+			return NRET_ITEMBELT_AREA;
+
+		if (pointInsideRect(mousePoint, btnTrade))
+			return NRET_BUTTON_TRADE;	// 교환.
+
+		if (pointInsideRect(mousePoint, btnShop))
+			return NRET_BUTTON_SHOP;	// 앉기.
+
+		if (pointInsideRect(mousePoint, btnRest))
+			return NRET_BUTTON_REST;
+
+		if (pointInsideRect(mousePoint, btnMatch))
+			return NRET_BUTTON_MATCH;	// 대결.
+
+		return NRET_JUST_INSIDE_HUD;
+	}
+
+	return NRET_OUTSIDE_HUD;
 }
 
 
@@ -581,18 +517,21 @@ int CUserInterface::CheckInterface()
 		
 	int nRt = GetChk();
 
-//	if(nRt>=1 && nRt<=19)
 	if(nRt>=1 && nRt<=23)
 		m_bMouseIcon = TRUE;
+	
+	if (g_Mouse.bLDown) {
+		const VECTOR2 mousePoint = { (float)g_Mouse.MousePos.x, (float)g_Mouse.MousePos.y };
+		SkillSelectionView::sharedInstance()->handleMouseButtonDownEvent(mousePoint);
 
-	if(g_Mouse.bLDown && !m_bSoundChk)
-	{		
-		if(nRt>1)
-		{
-			if(nRt!=14)
-				_PlaySound(0, SOUND_TYPE_SYSTEM, SOUND_SYSTEM_BTNCLICK, g_Camera.v3CameraPos, FALSE);
-		}			
-		m_bSoundChk = TRUE;
+		if (!m_bSoundChk) {
+			if (nRt > 1)
+			{
+				if (nRt != 14)
+					_PlaySound(0, SOUND_TYPE_SYSTEM, SOUND_SYSTEM_BTNCLICK, g_Camera.v3CameraPos, FALSE);
+			}
+			m_bSoundChk = TRUE;
+		}
 	}
 
 	// 대전중 
@@ -634,72 +573,58 @@ int CUserInterface::CheckInterface()
 		SetRender(SPR_OBJ_UI_MATCH3, FALSE);
 		m_bUIChk[3] = FALSE;
 	}
-//#ifdef  __RIVALGUILD_WAR__	//kjk
-//UI Insert
-//#endif
-
 
 	switch(nRt)
 	{
-	case 2:
+	case NRET_BUTTON_ITEM:
 		{
 			SetRender(BUTTON_OBJ_ITEM1, TRUE);
 			SetPointer(__MOUSE_POINTER_BUTTON__);
 		}		
 		break;
-	case 3:
+	case NRET_BUTTON_CHR:
 		{
 			SetRender(BUTTON_OBJ_CHR1, TRUE);
 			SetPointer(__MOUSE_POINTER_BUTTON__);
 		}
 		break;
-	case 4:
+	case NRET_BUTTON_SKILL:
 		{
 			SetRender(BUTTON_OBJ_SKILL1, TRUE);
 			SetPointer(__MOUSE_POINTER_BUTTON__);
 		}
 		break;
-	case 5:
+	case NRET_BUTTON_GUILD:
 		{
 			SetRender(BUTTON_OBJ_GUILD1, TRUE);
 			SetPointer(__MOUSE_POINTER_BUTTON__);
 		}				
 		break;
-	case 6:
+	case NRET_BUTTON_LAIR:
 		{
 			SetRender(BUTTON_OBJ_PARTY1, TRUE);
 			SetPointer(__MOUSE_POINTER_BUTTON__);
 		}		
 		break;
-	case 7:
+	case NRET_BUTTON_CHAT:
 		{
 			SetRender(BUTTON_OBJ_CHAT1, TRUE);
 			SetPointer(__MOUSE_POINTER_BUTTON__);
 		}
 		break;
-	case 8:
+	case NRET_BUTTON_SYSTEM:
 		{
 			SetRender(BUTTON_OBJ_SYSTEM1, TRUE);
 			SetPointer(__MOUSE_POINTER_BUTTON__);
 		}
 		break;	
-	case 9:
-	case 10:
-	case 21:
+	case NRET_GUARDIAN_SKILL:
 		if(g_Mouse.bLDown)		
 			SetPointer(__MOUSE_POINTER_BUTTONCLICK__);	
 		else
 			SetPointer(__MOUSE_POINTER_BUTTON__);		
 		break;
-	case 11:
-	case 12:
-	case 22:
-		if(g_Mouse.bLDown)
-			SetPointer(__MOUSE_POINTER_BUTTONCLICK__);
-		else
-			SetPointer(__MOUSE_POINTER_BUTTON__);
-		break;
-	case 13:
+	case NRET_BUTTON_PK:
 		{
 			SetPointer(__MOUSE_POINTER_BUTTON__);
 			
@@ -715,16 +640,16 @@ int CUserInterface::CheckInterface()
 			}
 		}
 		break;
-	case 14:
+	case NRET_ITEMBELT_AREA:
 		if( !g_pThisDungeon->IsStadium() || g_pMainPlayer->m_dwGuildWarFlag != G_W_F_OBSERVER )
 			if ( !BeltProcForInterface() )	return 0;
 
 		break;
 
-	case 15: // 가디언 
+	case NRET_GUARDIAN_POTION: // 가디언 
 		GuardianProcForInterface();
 		break;
-	case 23:	// 가디언 정보창 버튼
+	case NRET_GUARDIAN_INTERFACE1:	// 가디언 정보창 버튼
 		if(g_Mouse.bLDown)
 		{
 			SetPointer(__MOUSE_POINTER_BUTTONCLICK__);
@@ -734,7 +659,7 @@ int CUserInterface::CheckInterface()
 			SetPointer(__MOUSE_POINTER_BUTTON__);
 		}
 		break;
-	case 16:	// 트레이드 //
+	case NRET_BUTTON_TRADE:	// 트레이드 //
 		{
 			if(g_Mouse.bLDown)
 			{
@@ -757,7 +682,7 @@ int CUserInterface::CheckInterface()
 			}
 		}
 		break;
-	case 17:	// 노점상 //
+	case NRET_BUTTON_SHOP:	// 노점상 //
 		{
 			if(g_Mouse.bLDown)
 			{
@@ -780,7 +705,7 @@ int CUserInterface::CheckInterface()
 			}
 		}
 		break;
-	case 18:	// 앉기 //
+	case NRET_BUTTON_REST:	// 앉기 //
 		{
 			if(g_Mouse.bLDown)
 			{
@@ -790,12 +715,6 @@ int CUserInterface::CheckInterface()
 				SetRender(SPR_OBJ_UI_REST3, TRUE);
 				SetPointer(__MOUSE_POINTER_BUTTONCLICK__);
 
-#ifdef	DEVELOP_MODE
-
-				if(g_pMainPlayer->GetStatus()==UNIT_STATUS_NORMAL)
-				{
-				}
-#endif
 			}
 			else if(!g_Mouse.bLDown)
 			{
@@ -807,7 +726,7 @@ int CUserInterface::CheckInterface()
 			}			
 		}
 		break;
-	case 19:	// 1:1 대결 //
+	case NRET_BUTTON_MATCH:	// 1:1 대결 //
 		{
 			if(g_Mouse.bLDown)
 			{
@@ -826,24 +745,11 @@ int CUserInterface::CheckInterface()
 				SetPointer(__MOUSE_POINTER_BUTTON__);
 			}
 		}
-#ifdef VER_RIVAL_GUILD_WAR	//kjk
-	case 20:
-		{
-			if(g_Mouse.bLDown)
-			{
-				SetPointer(__MOUSE_POINTER_BUTTONCLICK__);
-			}
-			else if(!g_Mouse.bLDown && !m_bUp)
-			{
-				SetPointer(__MOUSE_POINTER_BUTTON__);
-			}
-		}
 		break;
-#endif
-	case 0:
-	case 1:
+	case NRET_OUTSIDE_HUD:
+	case NRET_JUST_INSIDE_HUD:
 
-		if(nRt==1)
+		if(nRt == NRET_JUST_INSIDE_HUD)
 			if(!g_Mouse.bLDown)
 				SetPointer(__MOUSE_POINTER_DEFAULT__);
 					
@@ -880,6 +786,8 @@ int CUserInterface::CheckInterface()
 	SetRender(BUTTON_OBJ_CHAT2, FALSE);
 	SetRender(BUTTON_OBJ_SYSTEM2, FALSE);
 
+	const auto pSkillWnd = SkillSelectionView::sharedInstance();
+
 	m_nChatChk		= 0;
 	m_byOrderCheck	= 0;
 	
@@ -893,7 +801,7 @@ int CUserInterface::CheckInterface()
 	{			
 		m_bSmall = FALSE;
 		
-		if ( nRt == 2 )				// Item Inventory Wnd
+		if ( nRt == NRET_BUTTON_ITEM )				// Item Inventory Wnd
 		{			
 			if (g_pMainPlayer->m_bMatching)
 				return 0;
@@ -905,34 +813,34 @@ int CUserInterface::CheckInterface()
 			
 			m_byOrderCheck = ITEM_WND;
 		}
-		else if ( nRt == 3 )		// Character Info Wnd
+		else if ( nRt == NRET_BUTTON_CHR )		// Character Info Wnd
 		{			
 			CCharWnd* pCharWnd = CCharWnd::GetInstance();
 			pCharWnd->SetActive(!pCharWnd->GetActive());			
 
 			m_byOrderCheck = CHAR_WND;
 		}
-		else if ( nRt == 4 )		// Skill Info Wnd
+		else if ( nRt == NRET_BUTTON_SKILL )		// Skill Info Wnd
 		{			
 			CSkillWnd* pSkillWnd = CSkillWnd::GetInstance();			
 			pSkillWnd->SetActive(!pSkillWnd->GetActive());			
 
 			m_byOrderCheck = SKILL_WND;
 		}
-		else if ( nRt == 5 )		// Group Wnd
+		else if ( nRt == NRET_BUTTON_GUILD )		// Group Wnd
 		{
 			CGroupWnd* pGroupWnd = CGroupWnd::GetInstance();
 			pGroupWnd->SetActive(!pGroupWnd->GetActive());			
 		}
-		else if ( nRt == 6 )		// Dungeon Info Wnd
+		else if ( nRt == NRET_BUTTON_LAIR )		// Dungeon Info Wnd
 		{		
 			DungeonInfoProcForInterface();
 		}
-		else if ( nRt == 7 )		// Chatting Wnd
+		else if ( nRt == NRET_BUTTON_CHAT )		// Chatting Wnd
 		{	
 			ChattingProcForInterface();
 		}	
-		else if ( nRt == 8 )		// Game Option Wnd
+		else if ( nRt == NRET_BUTTON_SYSTEM )		// Game Option Wnd
 		{			
 			CGameMenuWnd* pGameMenuWnd = CGameMenuWnd::GetInstance();			
 			pGameMenuWnd->SetActive(!pGameMenuWnd->GetActive());
@@ -940,11 +848,11 @@ int CUserInterface::CheckInterface()
 			if(pGameMenuWnd->GetActive()==TRUE)
 				pGameMenuWnd->OpenWnd();						
 		}
-		else if ( nRt == 13 )		// PK MODE ON / OFF
+		else if ( nRt == NRET_BUTTON_PK )		// PK MODE ON / OFF
 		{		
 			(m_nPK==0) ? SendPKMode( TRUE ) : SendPKMode( FALSE );
 		}
-		else if ( nRt == 16 )		// TRADE
+		else if ( nRt == NRET_BUTTON_TRADE )		// TRADE
 		{
 			if(!g_pMainPlayer->m_bMatching)
 			{
@@ -959,222 +867,20 @@ int CUserInterface::CheckInterface()
 			}
 
 		}
-		else if ( nRt == 17 )		// PLAYER SHOP
+		else if ( nRt == NRET_BUTTON_SHOP )		// PLAYER SHOP
 		{
 			if ( !PlayerShopProcForInterface() )	return 0;
 		}
-		else if ( nRt == 18 )		// REST
+		else if ( nRt == NRET_BUTTON_REST )		// REST
 		{		
 			if ( !RestProcForInterface() )			return 0;	
 		}
-		else if ( nRt == 19 )		// MATCH
+		else if ( nRt == NRET_BUTTON_MATCH )		// MATCH
 		{
 			if ( !MatchProcForInterface() )			return 0;
 		}
-#ifdef VER_RIVAL_GUILD_WAR
-		else if ( nRt == 20 )		// RIVAL GUILD WAR
-		{
-			if(g_pThisDungeon->IsKaien())
-			{
-				// "카이엔의 집에서는 대결을 할 수 없습니다."
-				DisplayMessageAdd(g_Message[ETC_MESSAGE1241].szMessage, 0xFFFF0000); 
-				return 0;
-			}
-			
-			if(g_pMainPlayer->GetStatus()==UNIT_STATUS_PLAYER_SHOP)
-			{
-				// "노점중에는 사용할 수 없습니다."
-				DisplayMessageAdd(g_Message[ETC_MESSAGE798].szMessage, 0xFFFF0000); 
-				return 0;
-			}
-			else if(g_pMainPlayer->GetStatus()==UNIT_STATUS_PLAYER_REST)
-			{
-				// "앉기중에는 사용할 수 없습니다."
-				DisplayMessageAdd(g_Message[ETC_MESSAGE797].szMessage, 0xFFFF0000); 
-				return 0;
-			}
-			
-			if (g_pMainPlayer->m_bMatching )
-			{
-				// "대전중엔 대전신청을 하실 수 없습니다."
-				DisplayMessageAdd(g_Message[ETC_MESSAGE664].szMessage, 0xFFFF0000); 
-				return 0;
-			}
-			
-			SetPointer(__MOUSE_POINTER_GUARDIAN__);
-			SetPointerChk( TRUE );
-
-			m_bRGW = TRUE;
-		}
-#endif
-		else if(nRt==76)
-		{
-			
-		}
-		// 스킬 선택 아이콘, 가디언 스킬 선택 아이콘이면 : 최덕석 2005.3.3
- 		else if(nRt==9 || nRt==10 || nRt==21)	
-		{
-			CSkillWnd* pSkillWnd = CSkillWnd::GetInstance();
-			
-			if(nRt==9)
-				pSkillWnd->activeSkillSelectionWindowType = SkillSelectionWindow::leftSkills;
-			else if(nRt==10)
-				pSkillWnd->activeSkillSelectionWindowType = SkillSelectionWindow::rightSkills;
-			else if(nRt==21)
-				pSkillWnd->activeSkillSelectionWindowType = SkillSelectionWindow::guardianSkills;
-			
-			SetPointer(__MOUSE_POINTER_BUTTONCLICK__);
-		}			
-		else if(nRt>=11 && nRt<=12)
-		{			
-			CSkillWnd* pSkillWnd = CSkillWnd::GetInstance();
-			
-			if(nRt==11)
-			{		
-				if( g_Mouse.MousePos.x>=116 &&
-					g_Mouse.MousePos.x<=116+32 &&
-					g_Mouse.MousePos.y>=646 &&
-					g_Mouse.MousePos.y<=646+32)
-				{
-					for(int i = 0; i < 2; i++)
-					{
-						if(g_pMainPlayer->GetSkillKind(BYTE(i))==__SKILL_ATTACK__)
-							g_pMainPlayer->SetSkillChangeLR(__SKILL_NONE_SELECT__, BYTE(i));
-					}
-									
-					if(pSkillWnd->activeSkillSelectionWindowType == SkillSelectionWindow::leftSkills)
-						g_pMainPlayer->SetSkillChangeLR(__SKILL_ATTACK__, 0);										
-					if(pSkillWnd->activeSkillSelectionWindowType == SkillSelectionWindow::rightSkills)
-						g_pMainPlayer->SetSkillChangeLR(__SKILL_ATTACK__, 1);
-
-					pSkillWnd->activeSkillSelectionWindowType = SkillSelectionWindow::none;					
-				}
-				else
-				{
-					if(pSkillWnd->activeSkillSelectionWindowType == SkillSelectionWindow::leftSkills)
-					{
-						int nCount = 1;
-
-						for(int i = 0; i < g_sSkillListManager.byLeftSkillCnt; i++)
-						{
-							if(g_pMainPlayer->GetSkillLevel(g_sSkillListManager.byLeftSkill[i])>0)
-							{
-								int nPosX = 116+32*(nCount%5);
-								int nPosY = 640-32*(nCount/5);
-
-								if(	g_Mouse.MousePos.x>=nPosX &&
-									g_Mouse.MousePos.x<=nPosX+32 &&
-									g_Mouse.MousePos.y>=nPosY &&
-									g_Mouse.MousePos.y<=nPosY+32)
-								{									
-									for(int j = 0; j < 2; j++)
-									{
-										if(g_pMainPlayer->GetSkillKind(BYTE(j))==g_sSkillListManager.byLeftSkill[i])
-											g_pMainPlayer->SetSkillChangeLR(__SKILL_NONE_SELECT__, BYTE(j));
-									}
-									g_pMainPlayer->SetSkillChangeLR(g_sSkillListManager.byLeftSkill[i], 0);
-									pSkillWnd->activeSkillSelectionWindowType = SkillSelectionWindow::none;								
-									break;
-								}
-								nCount++;
-							}
-						}
-					}		
-				}				
-			}
-			else
-			{
-				/*if(g_Mouse.MousePos.x>=116 && g_Mouse.MousePos.x<=116+32 && g_Mouse.MousePos.y>=646 && g_Mouse.MousePos.y<=646+32)
-				{
-					for(int i = 0; i < 2; i++)
-					{
-						if(g_pMainPlayer->GetSkillKind(i)==__SKILL_ATTACK__)
-							g_pMainPlayer->SetSkillChangeLR(-1, i);
-					}
-									
-					if(pSkillWnd->m_bySkillIndex==1)
-						g_pMainPlayer->SetSkillChangeLR(__SKILL_ATTACK__, 0);										
-					if(pSkillWnd->m_bySkillIndex==2)
-						g_pMainPlayer->SetSkillChangeLR(__SKILL_ATTACK__, 1);
-
-					pSkillWnd->m_bySkillIndex = 0;
-				}
-				else*/
-				{
-					if(pSkillWnd->activeSkillSelectionWindowType == SkillSelectionWindow::rightSkills)
-					{
-						int nCount = 0;
-
-						for(int i = 0; i < g_sSkillListManager.byRightSkillCnt; i++)
-						{
-							if(g_pMainPlayer->GetSkillLevel(g_sSkillListManager.byRightSkill[i])>0)
-							{
-								int nPosX = 116+32*(nCount%5);
-								int nPosY = 640-32*(nCount/5);
-
-								if( g_Mouse.MousePos.x>=nPosX &&
-									g_Mouse.MousePos.x<=nPosX+32 &&
-									g_Mouse.MousePos.y>=nPosY &&
-									g_Mouse.MousePos.y<=nPosY+32)
-								{
-									for(int j = 0; j < 2; j++)
-									{
-										if(g_pMainPlayer->GetSkillKind(BYTE(j))==g_sSkillListManager.byRightSkill[i])
-											g_pMainPlayer->SetSkillChangeLR(__SKILL_NONE_SELECT__, BYTE(j));
-									}										
-									g_pMainPlayer->SetSkillChangeLR(g_sSkillListManager.byRightSkill[i], 1);										
-									pSkillWnd->activeSkillSelectionWindowType = SkillSelectionWindow::none;
-									break;
-								}
-								nCount++;
-							}
-						}
-					}
-				}
-			}
-		}
-		// 가디언 스킬 선택 : 최덕석 2005.3.3
-		else if(nRt==22)
-		{
-			CSkillWnd* pSkillWnd = CSkillWnd::GetInstance();
-			CMonster *pGuardian = g_pMainPlayer->m_pGuardian[0];
-			
-			if(pGuardian && pSkillWnd->activeSkillSelectionWindowType == SkillSelectionWindow::guardianSkills)
-			{
-				int nCount = 1;
-
-				if( g_Mouse.MousePos.x>=116 &&
-					g_Mouse.MousePos.x<=116+32 &&
-					g_Mouse.MousePos.y>=646 &&
-					g_Mouse.MousePos.y<=646+32)
-				{
-					pGuardian->SetSelectedSkill(0);
-					pSkillWnd->activeSkillSelectionWindowType = SkillSelectionWindow::none;
-				}
-
-				for(int i = 0; i < MAX_GUARDIAN_USE_SKILL; i++)
-				{
-					if(pGuardian->GetSkillLevel(pGuardian->m_Skill[i].wSkill)>0)
-					{
-						int nPosX = 116+32*(nCount%5);
-						int nPosY = 640-32*(nCount/5);
-
-						if( g_Mouse.MousePos.x>=nPosX &&
-							g_Mouse.MousePos.x<=nPosX+32 &&
-							g_Mouse.MousePos.y>=nPosY &&
-							g_Mouse.MousePos.y<=nPosY+32)
-						{										
-							pGuardian->SetSelectedSkill(pGuardian->m_Skill[i].wSkill);
-							pSkillWnd->activeSkillSelectionWindowType = SkillSelectionWindow::none;
-							break;
-						}
-						nCount++;
-					}
-				}
-			}
-		}
-		// 가디언 정보 창
-		else if(nRt == 23)
+		
+		else if(nRt == NRET_GUARDIAN_INTERFACE1)
 		{
 			CGuardianWnd* pGuardianWnd = CGuardianWnd::GetInstance();		
 					
@@ -1185,81 +891,13 @@ int CUserInterface::CheckInterface()
 
 			m_byOrderCheck = GUARDIAN_WND;
 		}
-		/*else if(nRt==77)
-		{
-			CTWS_PARTY_JOIN pPacket;
-			memset(pPacket.szName, 0, sizeof(pPacket.szName));
-			__lstrcpyn(pPacket.szName, m_szCharacterName, MAX_CHARACTER_NAME_REAL_LENGTH);			
-			pPacket.bErrCode	= 0;
-			pPacket.dwUserIndex	= m_dwUserIndex;			
-			g_pNet->SendMsg((char*)&pPacket, pPacket.GetPacketSize(), SERVER_INDEX_WORLD);
-			
-			char szInfo[0xff]={0,};
-			wsprintf(szInfo, g_Message[ETC_MESSAGE387].szMessage, m_szCharacterName);	// MSG_ID : 387 ; %s 님에게 파티 메세지 보냈습니다.
-			DisplayMessageAdd(szInfo, 0xFF00FF1E);
-
-			UserClickInterface(FALSE, 0);
-			CUserInterface::GetInstance()->m_bTimeChk		= FALSE;
-			CUserInterface::GetInstance()->m_bUserInterface = FALSE;
-		}*/
-		/*else if(nRt==79)
-		{
-			if(g_pMainPlayer->m_byRank>=__GUILD_MASTER__ && g_pMainPlayer->m_byRank<=__GUILD_USER__)
-			{
-				char			szInfo[0xff]={0,};
-				CGuildRankWnd*	pGuildRankWnd	= CGuildRankWnd::GetInstance();
-				CGuildExWnd*	pGuildExWnd		= CGuildExWnd::GetInstance();
-
-				if(pGuildRankWnd->GetActive()==FALSE && pGuildExWnd->GetActive()==FALSE)
-				{				
-					if(g_pGuildInfo.byCount<__MAX_GUILD_USER__)
-					{
-						CTWS_GUILDJOIN_MESSAGE	pGuildJoin;
-						memset(pGuildJoin.szGuildName, 0, sizeof(pGuildJoin.szGuildName));
-
-						pGuildJoin.bType = g_pMainPlayer->m_byType;
-						__lstrcpyn(pGuildJoin.szGuildName, g_pMainPlayer->m_szGuildName, MAX_GUILD_NAME_REAL_LENGTH);
-						__lstrcpyn(pGuildJoin.szCharacterName, m_szCharacterName, MAX_CHARACTER_NAME_REAL_LENGTH);
-						g_pNet->SendMsg((char*)&pGuildJoin, pGuildJoin.GetPacketSize(), SERVER_INDEX_WORLD);
-						
-						if(g_pMainPlayer->m_byType==__GCTYPE_GUILD__)
-							wsprintf(szInfo, g_Message[ETC_MESSAGE388].szMessage, m_szCharacterName);	// MSG_ID : 388 ; %s 님에게 길드 가입 메세지를 보냈습니다.
-						else
-							wsprintf(szInfo, g_Message[ETC_MESSAGE389].szMessage, m_szCharacterName);	// MSG_ID : 389 ; %s 님에게 클랜 가입 메세지를 보냈습니다.
-
-						DisplayMessageAdd(szInfo, 0xFFFFFF00);
-					}
-					else
-					{
-						wsprintf(szInfo, g_Message[ETC_MESSAGE390].szMessage);		// MSG_ID : 390 ; 더이상 가입을 받을수 없습니다.				
-						DisplayMessageAdd(szInfo, 0xFFFFFF00);
-						_PlaySound(0, SOUND_TYPE_SYSTEM, SOUND_SYSTEM_ERRORMSG, g_Camera.v3CameraPos, FALSE);
-					}
-				}
-				else
-				{
-					if(pGuildExWnd->m_byGuildType==__GCTYPE_GUILD__)
-						wsprintf(szInfo, g_Message[ETC_MESSAGE391].szMessage);	// MSG_ID : 391 ; 길드를 생성중입니다.
-					else
-						wsprintf(szInfo, g_Message[ETC_MESSAGE392].szMessage);	// MSG_ID : 392 ; 클랜를 생성중입니다.
-				}			
-			}
-			else
-			{
-				DisplayMessageAdd(g_Message[ETC_MESSAGE393].szMessage, 0xFFFFFF00);	// MSG_ID : 393 ; 권한이 없습니다.
-				_PlaySound(0, SOUND_TYPE_SYSTEM, SOUND_SYSTEM_ERRORMSG, g_Camera.v3CameraPos, FALSE);
-			}			
-			UserClickInterface(FALSE, 0);
-			CUserInterface::GetInstance()->m_bTimeChk		= FALSE;
-			CUserInterface::GetInstance()->m_bUserInterface = FALSE;
-		}*/
 		m_bUp	= FALSE;
 		m_bDown = FALSE;
 	}
 	
 	if(g_Mouse.bLDown && nRt>0)
 	{
-		if(nRt!=15)
+		if(nRt != NRET_GUARDIAN_POTION)
 		{
 			CInterface::GetInstance()->SetIconChk(FALSE);		
 			SetPointer(__MOUSE_POINTER_BUTTONCLICK__);
@@ -1270,29 +908,14 @@ int CUserInterface::CheckInterface()
 
 		switch ( nRt )
 		{
-			case 2:		SetRender(BUTTON_OBJ_ITEM2, TRUE);			break;
-			case 3:		SetRender(BUTTON_OBJ_CHR2, TRUE);			break;
+			case NRET_BUTTON_ITEM:		SetRender(BUTTON_OBJ_ITEM2, TRUE);			break;
+			case NRET_BUTTON_CHR:		SetRender(BUTTON_OBJ_CHR2, TRUE);			break;
 			case 4:		SetRender(BUTTON_OBJ_SKILL2, TRUE);			break;
 			case 5:		SetRender(BUTTON_OBJ_GUILD2, TRUE);			break;
 			case 6:		SetRender(BUTTON_OBJ_PARTY2, TRUE);			break;
 			case 7:		SetRender(BUTTON_OBJ_CHAT2, TRUE);			break;
 			case 8:		SetRender(BUTTON_OBJ_SYSTEM2, TRUE);		break;
 		}
-/*		for more simple code
-		if(nRt==2)
-			SetRender(BUTTON_OBJ_ITEM2, TRUE);
-		else if(nRt==3)
-			SetRender(BUTTON_OBJ_CHR2, TRUE);	
-		else if(nRt==4)
-			SetRender(BUTTON_OBJ_SKILL2, TRUE);
-		else if(nRt==5)
-			SetRender(BUTTON_OBJ_GUILD2, TRUE);
-		else if(nRt==6)
-			SetRender(BUTTON_OBJ_PARTY2, TRUE);
-		else if(nRt==7)
-			SetRender(BUTTON_OBJ_CHAT2, TRUE);
-		else if(nRt==8)
-			SetRender(BUTTON_OBJ_SYSTEM2, TRUE);		//*/
 
 		SetRender(BUTTON_OBJ_ITEM1, FALSE);
 		SetRender(BUTTON_OBJ_CHR1, FALSE);
@@ -1403,7 +1026,7 @@ void CUserInterface::RenderText()
 	RenderGuardianItem();
 
 	CItemWnd::GetInstance()->RenderItemBelt();
-	CSkillWnd::GetInstance()->RenderSkillIcon();
+	SkillSelectionView::sharedInstance()->render();
 
 	if(g_pMainPlayer->m_GuardianItem.m_wItemID!=0)
 	{		
@@ -1444,205 +1067,6 @@ void CUserInterface::RenderText()
 		{
  			RenderFont(m_szGuardianName, 2, 100, 85, 99, __ORDER_USERINTERFACE_START_+2);
 		}
-	}
-
-	if(CSkillWnd::GetInstance()->activeSkillSelectionWindowType == SkillSelectionWindow::none)
-	{				
-		if(g_Mouse.MousePos.x>=132 && g_Mouse.MousePos.x<=132+32 && g_Mouse.MousePos.y>=733 && g_Mouse.MousePos.y<=733+32)
-		{			
-			if(InterfaceCollision(INTERFACE_USER, 132, 164, 733, 765)==FALSE)
-				return;
-							
-			if(g_pMainPlayer->GetSkillKind(SELECT_ATTACK_TYPE_LBUTTON)==__SKILL_ATTACK__)
-			{
-				RenderFont(g_Message[ETC_MESSAGE377].szMessage, g_Mouse.MousePos.x-15, g_Mouse.MousePos.x+100, g_Mouse.MousePos.y-10, g_Mouse.MousePos.y+4, __ORDER_ITEM_DESC__+2);
-				
-				CInterface::GetInstance()->RenderInfoBox(float(g_Mouse.MousePos.x-22-5), float(g_Mouse.MousePos.y-16), 44+10, 24, __ORDER_ITEM_DESC__);
-			}
-			else if(g_pMainPlayer->GetSkillKind(SELECT_ATTACK_TYPE_LBUTTON)!=__SKILL_NONE_SELECT__)
-			{				
-				if(g_pEffectLayer->m_Effect[g_pMainPlayer->GetSkillKind(SELECT_ATTACK_TYPE_LBUTTON)].wProperty!=0)
-				{				
-					if(g_pEffectLayer->m_Effect[g_pMainPlayer->GetSkillKind(SELECT_ATTACK_TYPE_LBUTTON)].bSkillType!=0)
-					{
-						if(!IsEmptyString(g_pEffectLayer->m_Effect[g_pMainPlayer->GetSkillKind(SELECT_ATTACK_TYPE_LBUTTON)].szName))
-						{
-							RenderFont(g_pEffectLayer->m_Effect[g_pMainPlayer->GetSkillKind(SELECT_ATTACK_TYPE_LBUTTON)].szName, 
-								g_Mouse.MousePos.x-g_pEffectLayer->m_nEffectSize[g_pMainPlayer->GetSkillKind(SELECT_ATTACK_TYPE_LBUTTON)]/2*6, 
-								g_Mouse.MousePos.x+100, 
-								g_Mouse.MousePos.y-10, 
-								g_Mouse.MousePos.y+4, 
-								__ORDER_ITEM_DESC__+2);
-
-							CInterface::GetInstance()->RenderInfoBox(float(g_Mouse.MousePos.x-g_pEffectLayer->m_nEffectSize[g_pMainPlayer->GetSkillKind(SELECT_ATTACK_TYPE_LBUTTON)]/2*7-5), float(g_Mouse.MousePos.y-16), float(g_pEffectLayer->m_nEffectSize[g_pMainPlayer->GetSkillKind(SELECT_ATTACK_TYPE_LBUTTON)]/2*8*2+10), 24, __ORDER_ITEM_DESC__);
-						}												
-					}
-				}								
-			}				
-		}
-		else if(g_Mouse.MousePos.x>=245 && g_Mouse.MousePos.x<=245+32 && g_Mouse.MousePos.y>=733 && g_Mouse.MousePos.y<=733+32)
-		{
-			if(InterfaceCollision(INTERFACE_USER, 245, 277, 733, 765)==FALSE)
-				return;
-
-			if(g_pMainPlayer->GetSkillKind(SELECT_ATTACK_TYPE_RBUTTON)==__SKILL_ATTACK__)
-			{
-				RenderFont(g_Message[ETC_MESSAGE377].szMessage, g_Mouse.MousePos.x-12, g_Mouse.MousePos.x+100, g_Mouse.MousePos.y-10, g_Mouse.MousePos.y+4, __ORDER_ITEM_DESC__+2);
-				
-				CInterface::GetInstance()->RenderInfoBox(float(g_Mouse.MousePos.x-22-5), float(g_Mouse.MousePos.y-16), 44+10, 24, __ORDER_ITEM_DESC__);								
-			}			
-			else if(g_pMainPlayer->GetSkillKind(SELECT_ATTACK_TYPE_RBUTTON)!=__SKILL_NONE_SELECT__)
-			{
-				if(g_pEffectLayer->m_Effect[g_pMainPlayer->GetSkillKind(SELECT_ATTACK_TYPE_RBUTTON)].wProperty!=0)
-				{				
-					if(g_pEffectLayer->m_Effect[g_pMainPlayer->GetSkillKind(SELECT_ATTACK_TYPE_RBUTTON)].bSkillType!=0)
-					{
-						if(!IsEmptyString(g_pEffectLayer->m_Effect[g_pMainPlayer->GetSkillKind(SELECT_ATTACK_TYPE_RBUTTON)].szName))
-						{						
-							RenderFont(g_pEffectLayer->m_Effect[g_pMainPlayer->GetSkillKind(SELECT_ATTACK_TYPE_RBUTTON)].szName, 
-								g_Mouse.MousePos.x-g_pEffectLayer->m_nEffectSize[g_pMainPlayer->GetSkillKind(SELECT_ATTACK_TYPE_RBUTTON)]/2*6, 
-								g_Mouse.MousePos.x+100, 
-								g_Mouse.MousePos.y-10, 
-								g_Mouse.MousePos.y+4, __ORDER_ITEM_DESC__+2);
-							
-							CInterface::GetInstance()->RenderInfoBox(float(g_Mouse.MousePos.x-g_pEffectLayer->m_nEffectSize[g_pMainPlayer->GetSkillKind(SELECT_ATTACK_TYPE_RBUTTON)]/2*7-5), float(g_Mouse.MousePos.y-16), float(g_pEffectLayer->m_nEffectSize[g_pMainPlayer->GetSkillKind(SELECT_ATTACK_TYPE_RBUTTON)]/2*8*2+10), 24, __ORDER_ITEM_DESC__);
-						}																		
-					}
-				}				
-			}
-		}
-		else		
-			return;
-	}
-	else
-	{
-//		RECT Pos;				
-
-		int nX	= (g_Mouse.MousePos.x-116)/33;
-		int nY	= (678-g_Mouse.MousePos.y)/33;
-
-		BOOL bError = FALSE;
-		
-		if(InterfaceCollision(INTERFACE_USER, nX*33+116, nX*33+149, 678-nY*33, 710-nY*32)==FALSE)
-			return;
-
-		if(678-g_Mouse.MousePos.y<0)
-			bError = TRUE;
-		if(g_Mouse.MousePos.x-116<0 && nY==0)
-			bError = TRUE;
-		if(nX<0)
-			bError = TRUE;
-		if(nX>=5)
-			bError = TRUE;
-		if(nY<0)
-			bError = TRUE;
-
-		if(bError==TRUE)
-		{			
-			return;
-		}		
-
-		if((nY*5+nX==0) && (CSkillWnd::GetInstance()->activeSkillSelectionWindowType == SkillSelectionWindow::leftSkills))
-		{
-			RenderFont(g_Message[ETC_MESSAGE377].szMessage, g_Mouse.MousePos.x-12, g_Mouse.MousePos.x+100, g_Mouse.MousePos.y-10, g_Mouse.MousePos.y+4, __ORDER_ITEM_DESC__+2);
-
-			CInterface::GetInstance()->RenderInfoBox(float(g_Mouse.MousePos.x-22-5), float(g_Mouse.MousePos.y-16), 44+10, 24, __ORDER_ITEM_DESC__);
-			return;
-		}
-		
-		if(CSkillWnd::GetInstance()->activeSkillSelectionWindowType == SkillSelectionWindow::rightSkills)
-		{		
-			BYTE	bySkillValue	= 0;
-			int		nCount			= 0;
-			
-			for(int i = 1; i < g_sSkillListManager.byLeftSkillCnt+1; i++)
-			{
-				if(g_pMainPlayer->GetSkillLevel(g_sSkillListManager.byLeftSkill[i])>0)
-				{	
-					nCount++;
-
-					if(nY*5+nX==nCount)
-						bySkillValue = g_sSkillListManager.byLeftSkill[i];					
-				}
-			}
-			
-			if(nCount>=nY*5+nX)
-			{
-				if(!IsEmptyString(g_pEffectLayer->m_Effect[bySkillValue].szName))
-				{
-					RenderFont(g_pEffectLayer->m_Effect[bySkillValue].szName, g_Mouse.MousePos.x-g_pEffectLayer->m_nEffectSize[bySkillValue]/2*6, g_Mouse.MousePos.x+100, g_Mouse.MousePos.y-10, g_Mouse.MousePos.y+4, __ORDER_ITEM_DESC__+2);
-					
-					CInterface::GetInstance()->RenderInfoBox(float(g_Mouse.MousePos.x-g_pEffectLayer->m_nEffectSize[bySkillValue]/2*7-5), float(g_Mouse.MousePos.y-16), float(g_pEffectLayer->m_nEffectSize[bySkillValue]/2*8*2+10), 24, __ORDER_ITEM_DESC__);
-				}								
-				return;
-			}			
-		}
-		else if(CSkillWnd::GetInstance()->activeSkillSelectionWindowType == SkillSelectionWindow::rightSkills)
-		{
-			BYTE	bySkillValue	= 1;
-			int		nCount			= 0;
-			
-			for(int i = 1; i < g_sSkillListManager.byRightSkillCnt; i++)
-			{
-				if(g_pMainPlayer->GetSkillLevel(g_sSkillListManager.byRightSkill[i])>0)
-				{						
-					if(nY*5+nX==nCount)
-						bySkillValue = g_sSkillListManager.byRightSkill[i];
-
-					nCount++;
-				}
-			}
-			
-			int nSize = 0;
-
-			if(nCount>nY*5+nX)
-			{
-				if(!IsEmptyString(g_pEffectLayer->m_Effect[bySkillValue].szName))
-				{
-					nSize = lstrlen(g_pEffectLayer->m_Effect[bySkillValue].szName);
-
-					RenderFont(g_pEffectLayer->m_Effect[bySkillValue].szName, g_Mouse.MousePos.x-nSize/2*6, g_Mouse.MousePos.x+100, g_Mouse.MousePos.y-10, g_Mouse.MousePos.y+4, __ORDER_ITEM_DESC__+2);
-															
-					CInterface::GetInstance()->RenderInfoBox(float(g_Mouse.MousePos.x-g_pEffectLayer->m_nEffectSize[bySkillValue]/2*7-5), float(g_Mouse.MousePos.y-16), float(g_pEffectLayer->m_nEffectSize[bySkillValue]/2*8*2+10), 24, __ORDER_ITEM_DESC__);
-				}								
-				return;
-			}		
-		}
-		else if(CSkillWnd::GetInstance()->activeSkillSelectionWindowType == SkillSelectionWindow::guardianSkills && g_pMainPlayer->m_pGuardian[0])
-		{
-			CMonster *pGuardian = g_pMainPlayer->m_pGuardian[0];
-			BYTE	bySkillValue	= 0;
-			int		nCount			= 1;
-			
-			for(int i = 0; i < MAX_GUARDIAN_USE_SKILL; i++)
-			{
-				if(pGuardian->GetSkillLevel(pGuardian->m_Skill[i].wSkill) > 0)
-				{						
-					if(nY*5+nX==nCount)
-						bySkillValue = pGuardian->m_Skill[i].wSkill;
-
-					nCount++;
-				}
-			}
-			
-			int nSize = 0;
-
-			if(nCount>nY*5+nX)
-			{
-				if(!IsEmptyString(g_pEffectLayer->m_Effect[bySkillValue].szName))
-				{
-					char szTmp[100];
-					sprintf(szTmp, "%s Lv. %d", g_pEffectLayer->m_Effect[bySkillValue].szName, pGuardian->GetSkillLevel(bySkillValue));
-					nSize = lstrlen(szTmp);
-
-					RenderFont(szTmp, g_Mouse.MousePos.x-nSize/2*6, g_Mouse.MousePos.x+100, g_Mouse.MousePos.y-10, g_Mouse.MousePos.y+4, __ORDER_ITEM_DESC__+2);
-															
-					CInterface::GetInstance()->RenderInfoBox(float(g_Mouse.MousePos.x-g_pEffectLayer->m_nEffectSize[bySkillValue]/2*7-5) - 15, float(g_Mouse.MousePos.y-16), float(g_pEffectLayer->m_nEffectSize[bySkillValue]/2*8*2+10) + 35, 24, __ORDER_ITEM_DESC__);
-				}
-				return;
-			}		
-		}
-		return;	
 	}
 }
 

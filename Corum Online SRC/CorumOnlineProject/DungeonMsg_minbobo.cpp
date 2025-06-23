@@ -313,8 +313,7 @@ void CmdSkillInit( char* pMsg, DWORD dwLen )
 {
 	DSTC_SKILL_INIT* pPacket = (DSTC_SKILL_INIT*)pMsg;
 	
-	for(int i = 0; i < MAX_SKILL; i++)
-		g_pMainPlayer->sSkillTable[i].bSKillLevel	= pPacket->bySkill[i];
+	g_pMainPlayer->initializeSkillLevelsFrom(pPacket->bySkill);
 
 	g_pMainPlayer->SetSkillChangeLR(__SKILL_ATTACK__, 0);
 	g_pMainPlayer->SetSkillChangeLR(__SKILL_NONE_SELECT__, 1);

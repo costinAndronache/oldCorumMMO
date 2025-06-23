@@ -2510,8 +2510,7 @@ void CmdJoinDungeon( char* pMsg, DWORD dwLen )
 	memset(g_pMainPlayer->m_sPlayerShop.szTitle, 0, sizeof(g_pMainPlayer->m_sPlayerShop.szTitle));	
 	SetProgressBar(dwTotalProgress, ++dwCurProgress);
 
-	for(i = 0; i < MAX_SKILL; i++)	
-		g_pMainPlayer->sSkillTable[i].bSKillLevel	= pJoin->pwSkillLevel[i];
+	g_pMainPlayer->initializeSkillLevelsFrom(pJoin->pwSkillLevel);
 	SetProgressBar(dwTotalProgress, ++dwCurProgress);
 
 	for(i = 0; i < MAX_EQUIP_POOL; i++)

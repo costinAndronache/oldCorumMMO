@@ -804,6 +804,12 @@
     <ClCompile Include="AppliedSkillsIconsView.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="SkillSelectionView.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DungeonInterfaceLayout.cpp">
+      <Filter>Header Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MouseLib.h">
@@ -1521,6 +1527,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="AppliedSkillsIconsView.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SkillSelectionView.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DungeonInterfaceLayout.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

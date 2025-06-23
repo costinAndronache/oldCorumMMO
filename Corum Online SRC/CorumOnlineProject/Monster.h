@@ -163,6 +163,7 @@ public:
 	void SetSkillLevel(const BYTE bySkillKind, const BYTE bySkillLevel);
 	BYTE GetSelectedSkill() const;
 	void SetSelectedSkill(BYTE bSkill);
+	std::vector<BYTE> currentSkills();
 
 	CMonster();
 	~CMonster();

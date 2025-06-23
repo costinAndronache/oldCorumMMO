@@ -36,6 +36,32 @@ void listenersUpdate(const std::vector<CMainUserUpdateInterestedWeakRef>& listen
 	});
 }
 
+std::vector<BYTE>	CMainUser::skillsAvailableOnLeft() {
+	std::vector<BYTE> result;
+
+	for (int i = 0; i < g_sSkillListManager.allowedLeftSideSkillsCount; i++) {
+		const auto skill = g_sSkillListManager.allowedLeftSideSkills[i];
+		if (_skillLevel[skill]) {
+			result.push_back(skill);
+		}
+	}
+
+	return result;
+}
+
+std::vector<BYTE>	CMainUser::skillsAvailableOnRight() {
+	std::vector<BYTE> result;
+
+	for (int i = 0; i < g_sSkillListManager.allowedRightSideSkillsCount; i++) {
+		const auto skill = g_sSkillListManager.allowedRightSideSkills[i];
+		if (_skillLevel[skill]) {
+			result.push_back(skill);
+		}
+	}
+
+	return result;
+}
+
 void				CMainUser::OnCastPhaseBegin(BYTE bSkillKind, VECTOR3& vecTarget, BOOL bDirection, int spOffsetPerSecond) {
 	printf("\nOnCastPhaseBegin");
 	CUser::OnCastPhaseBegin(bSkillKind, vecTarget, bDirection, spOffsetPerSecond);
@@ -69,7 +95,7 @@ float			CMainUser::currentCoolPoints() const {
 void			CMainUser::updateCurrentCoolPoints(float points) {
 	const auto oldValue = m_fCurCoolPoint;
 	m_fCurCoolPoint = points;
-	listenersUpdate(updateListeners, [this, oldValue, points](CMainUserUpdateInterestedSharedRef listener) {
+	listenersUpdate(_updateListeners, [this, oldValue, points](CMainUserUpdateInterestedSharedRef listener) {
 		listener->updatedCoolPoints(this, oldValue, points);
 	});
 }
@@ -84,7 +110,7 @@ void			CMainUser::updateMaxCoolPoints(float points) {
 
 //
 void			CMainUser::addUpdateListener(CMainUserUpdateInterestedWeakRef ref) {
-	updateListeners.push_back(ref);
+	_updateListeners.push_back(ref);
 }
 
 DWORD			CMainUser::currentHP() const {
@@ -95,7 +121,7 @@ void			CMainUser::updateCurrentHP(DWORD hp) {
 	const auto oldValue = m_dwHP;
 	m_dwHP = hp;
 
-	listenersUpdate(updateListeners, [this, oldValue, hp](CMainUserUpdateInterestedSharedRef listener) {
+	listenersUpdate(_updateListeners, [this, oldValue, hp](CMainUserUpdateInterestedSharedRef listener) {
 		listener->updatedCurrentHP(this, oldValue, hp);
 	});
 }
@@ -109,7 +135,7 @@ void			CMainUser::updateCurrentSP(DWORD sp) {
 	const auto diff = (long)sp - (long)oldValue;
 
 	m_dwMP = sp;
-	listenersUpdate(updateListeners, [this, oldValue, sp](CMainUserUpdateInterestedSharedRef listener) {
+	listenersUpdate(_updateListeners, [this, oldValue, sp](CMainUserUpdateInterestedSharedRef listener) {
 		listener->updatedCurrentSP(this, oldValue, sp);
 	});
 }
@@ -121,7 +147,7 @@ DWORD			CMainUser::maxHP() const {
 void			CMainUser::updateMaxHP(DWORD maxHP) {
 	const auto oldValue = m_dwMaxHP;
 	m_dwMaxHP = maxHP;
-	listenersUpdate(updateListeners, [this, oldValue, maxHP](CMainUserUpdateInterestedSharedRef listener) {
+	listenersUpdate(_updateListeners, [this, oldValue, maxHP](CMainUserUpdateInterestedSharedRef listener) {
 		listener->updatedMAXHP(this, oldValue, maxHP);
 	});
 }
@@ -133,7 +159,7 @@ DWORD			CMainUser::maxSP() const {
 void			CMainUser::updateMaxSP(DWORD maxSP) {
 	const auto oldValue = m_dwMaxMP;
 	m_dwMaxMP = maxSP;
-	listenersUpdate(updateListeners, [this, oldValue, maxSP](CMainUserUpdateInterestedSharedRef listener) {
+	listenersUpdate(_updateListeners, [this, oldValue, maxSP](CMainUserUpdateInterestedSharedRef listener) {
 		listener->updatedMAXSP(this, oldValue, maxSP);
 	});
 }
@@ -145,7 +171,7 @@ DWORD			CMainUser::currentStatPoints() const {
 void			CMainUser::updateCurrentStatPoints(DWORD points) {
 	const auto oldValue = m_dwPoint;
 	m_dwPoint = points;
-	listenersUpdate(updateListeners, [this, oldValue, points](CMainUserUpdateInterestedSharedRef listener) {
+	listenersUpdate(_updateListeners, [this, oldValue, points](CMainUserUpdateInterestedSharedRef listener) {
 		listener->updatedStatPoints(this, oldValue, points);
 	});
 }
@@ -158,7 +184,7 @@ DWORD			CMainUser::currentSkillPoints() const {
 void			CMainUser::updateCurrentSkillPoints(DWORD skillPoints) {
 	const auto oldValue = m_dwPointSkill;
 	m_dwPointSkill = skillPoints;
-	listenersUpdate(updateListeners, [this, oldValue, skillPoints](CMainUserUpdateInterestedSharedRef listener) {
+	listenersUpdate(_updateListeners, [this, oldValue, skillPoints](CMainUserUpdateInterestedSharedRef listener) {
 		listener->updatedSkillPoints(this, oldValue, skillPoints);
 	});
 }
@@ -170,7 +196,7 @@ DWORD			CMainUser::currentEXP() const {
 void			CMainUser::updateCurrentEXP(DWORD exp) {
 	const auto oldValue = m_dwExp;
 	m_dwExp = exp;
-	listenersUpdate(updateListeners, [this, oldValue, exp](CMainUserUpdateInterestedSharedRef listener) {
+	listenersUpdate(_updateListeners, [this, oldValue, exp](CMainUserUpdateInterestedSharedRef listener) {
 		listener->updatedEXP(this, oldValue, exp);
 	});
 }
@@ -182,7 +208,7 @@ DWORD			CMainUser::currentLevel() const {
 void			CMainUser::updateCurrentLevel(DWORD level) {
 	const auto oldValue = m_dwLevel;
 	m_dwLevel = level;
-	listenersUpdate(updateListeners, [this, oldValue, level](CMainUserUpdateInterestedSharedRef listener) {
+	listenersUpdate(_updateListeners, [this, oldValue, level](CMainUserUpdateInterestedSharedRef listener) {
 		listener->updatedLevel(this, oldValue, level);
 	});
 }
@@ -1579,13 +1605,6 @@ BOOL CUser::IsSameUser( CUser* pUser )		// added by minjin.
 	return ( m_dwUserIndex == pUser->m_dwUserIndex ) ? TRUE : FALSE;
 }
 
-BYTE CMainUser::GetSkillLevel(BYTE bSkillKind)
-{
-	unsigned char bSkillLevel = (char)sSkillTable[bSkillKind].bSKillLevel;
-	
-	return BYTE(max(bSkillLevel, 0));
-}
-
 void CMainUser::BeginSkillCastOn(CUser *pTargetUser, BYTE bSkillKindLR)
 {
 	m_pSkillPacket->bStatus = UPDATE_GAME_PLAY;
@@ -1856,4 +1875,37 @@ void CMainUser::WeightProcess(BOOL bChk, WORD wWeight)
 			DisplayMessageAdd(g_Message[ETC_MESSAGE990].szMessage, 0xffff0000);
 		}
 	}
+}
+
+void CMainUser::initializeSkillLevelsFrom(const BYTE skillLevels[MAX_SKILL]) {
+	for (int i = 0; i < MAX_SKILL; i++) {
+		_skillLevel[i] = skillLevels[i];
+	}
+
+	listenersUpdate(_updateListeners, [this](CMainUserUpdateInterestedSharedRef ref) {
+		ref->updatedSkills(this);
+	});
+}
+
+BYTE CMainUser::GetSkillLevel(BYTE bSkillKind) {
+	if (!(0 <= bSkillKind && bSkillKind <= MAX_SKILL)) { return 0; }
+	return _skillLevel[bSkillKind];
+}
+
+void CMainUser::applyOffsetForSkills(int offset) {
+	for (int s = 0; s < MAX_SKILL; ++s) {
+		int nSkillLevel = _skillLevel[s];
+
+		if (nSkillLevel + offset < 0) {
+			m_nDecLevel[s] += offset - nSkillLevel;
+			_skillLevel[s] = 0;
+		} else {
+			m_nDecLevel[s] = 0;
+			_skillLevel[s] += offset + g_pMainPlayer->m_nDecLevel[s];
+		}
+	}
+
+	listenersUpdate(_updateListeners, [this](CMainUserUpdateInterestedSharedRef ref) {
+		ref->updatedSkills(this);
+	});
 }

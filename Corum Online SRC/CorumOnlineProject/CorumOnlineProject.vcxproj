@@ -2036,6 +2036,7 @@
       <BasicRuntimeChecks Condition="'$(Configuration)|$(Platform)'=='dev|Win32'">EnableFastChecks</BasicRuntimeChecks>
       <BrowseInformation Condition="'$(Configuration)|$(Platform)'=='dev|Win32'">true</BrowseInformation>
     </ClCompile>
+    <ClCompile Include="DungeonInterfaceLayout.cpp" />
     <ClCompile Include="DungeonMsg.cpp">
       <BasicRuntimeChecks Condition="'$(Configuration)|$(Platform)'=='CHINA_DEV|Win32'">EnableFastChecks</BasicRuntimeChecks>
       <BrowseInformation Condition="'$(Configuration)|$(Platform)'=='CHINA_DEV|Win32'">true</BrowseInformation>
@@ -6023,6 +6024,7 @@
       <BasicRuntimeChecks Condition="'$(Configuration)|$(Platform)'=='dev|Win32'">EnableFastChecks</BasicRuntimeChecks>
       <BrowseInformation Condition="'$(Configuration)|$(Platform)'=='dev|Win32'">true</BrowseInformation>
     </ClCompile>
+    <ClCompile Include="SkillSelectionView.cpp" />
     <ClCompile Include="SkillWnd.cpp">
       <BasicRuntimeChecks Condition="'$(Configuration)|$(Platform)'=='CHINA_DEV|Win32'">EnableFastChecks</BasicRuntimeChecks>
       <BrowseInformation Condition="'$(Configuration)|$(Platform)'=='CHINA_DEV|Win32'">true</BrowseInformation>
@@ -6601,6 +6603,7 @@
     <ClInclude Include="Develop.h" />
     <ClInclude Include="DFXForm.h" />
     <ClInclude Include="DSMiniMap.h" />
+    <ClInclude Include="DungeonInterfaceLayout.h" />
     <ClInclude Include="DungeonMsg.h" />
     <ClInclude Include="DungeonMsg_deepdark.h" />
     <ClInclude Include="DungeonMsg_jjw6263.h" />
@@ -6761,6 +6764,7 @@
     <ClInclude Include="Script.h" />
     <ClInclude Include="SevenWork.h" />
     <ClInclude Include="Shop.h" />
+    <ClInclude Include="SkillSelectionView.h" />
     <ClInclude Include="SkillWnd.h" />
     <ClInclude Include="SoundControl.h" />
     <ClInclude Include="SoundLib.h" />
