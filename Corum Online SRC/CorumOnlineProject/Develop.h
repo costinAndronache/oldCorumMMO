@@ -20,15 +20,7 @@
 
 
 // 내부에서 팩 쓰고 싶어서 
-#if defined(DEVELOP_MODE)
-	#define __PACKAGE_MODE__
-#endif
 
-#if !defined(DEVELOP_MODE)
-	#ifndef __PACKAGE_MODE__
-		#define __PACKAGE_MODE__
-	#endif
-#endif
 
 #define	__RANDOM_MEMORY_ALLOCATION			// 메인 캐릭터 생성 시, 메모리 위치 랜덤화!!
 //#define	__USE_CLIENT_SPEEDHACK_CHECKER	// 클라이언트 스피드핵 체크 활성화!

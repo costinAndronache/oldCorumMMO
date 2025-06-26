@@ -25,6 +25,7 @@ class CMy4DyuchiFilePackDlg : public CDialog
 	
 	void					UpdateFileViewDisplay();
 	void					ClearFileViewDisplay();
+	void					Repack();
 // Construction
 public:	
 	DWORD					UnlockProc(DWORD dwCurCount,DWORD dwTotalCount,void* pArg);
@@ -65,6 +66,8 @@ protected:
 	afx_msg void OnButtonExtractAllInStorage();
 	afx_msg void OnButtonSelectPackfile();
 	afx_msg void OnButtonDeletePackfile();
+	afx_msg void OnBnClickedButton1();
+	afx_msg void OnBnClickedButtonRepack();
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 };

@@ -250,8 +250,8 @@ void CUserInterface::InsertUIData()
 {
 	int Order = __ORDER_USERINTERFACE_START_;
 
-	InsertData(SPR_OBJ_UI_LEFT, SPR_INTERFACE_UI_LEFT, hudLeft.x, hudLeft.y, 1.0f, 1.0f, Order, FALSE, FALSE, FALSE);
-	InsertData(SPR_OBJ_UI_RIGHT, SPR_INTERFACE_UI_RIGHT, hudRight.x, hudRight.y, 1.0f, 1.0f, Order, FALSE, FALSE, FALSE);
+	InsertData(SPR_OBJ_UI_LEFT, SPR_INTERFACE_UI_LEFT, leftHUD.origin.x, leftHUD.origin.y, 1.0f, 1.0f, Order, FALSE, FALSE, FALSE);
+	InsertData(SPR_OBJ_UI_RIGHT, SPR_INTERFACE_UI_RIGHT, rightHUD.origin.x, rightHUD.origin.y, 1.0f, 1.0f, Order, FALSE, FALSE, FALSE);
 	InsertData(SPR_OBJ_EN2, SPR_INTERFACE_EN2, hp.x, hp.y, 0.0f, 1.0f, Order + 1, FALSE, FALSE, FALSE);
 	InsertData(SPR_OBJ_EN1, SPR_INTERFACE_EN1, hp.x, hp.y, 0.0f, 1.0f, Order + 2, FALSE, FALSE, FALSE);
 	InsertData(SPR_OBJ_EXP, SPR_INTERFACE_EXP, expPos.x, expPos.y, 1.0f, 1.0f, Order + 3, FALSE, FALSE, FALSE);

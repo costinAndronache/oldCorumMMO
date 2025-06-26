@@ -40,29 +40,31 @@ void InterfaceSprLoad(BYTE /*byType*/)
 	// 모든 스프라이트는 자동으로 생성한다 //
 	LP_SPRITE_DATA lpSpriteData;
 	INTERFACE_RESOURCE_INFO* pInterfaceResourceInfo;
-	for( i = 0; i < nMaxNode; i++ )
-	{		
+	for( i = 0; i < nMaxNode; i++ ) {
+		const auto resourceID = sInterfaceSprite[i].wResourceID;
 		lpSpriteData = new SSPRITE_DATA;
 		lpSpriteData->dwId	= sInterfaceSprite[i].wID;
-		pInterfaceResourceInfo = &sInterfaceResourceInfo[sInterfaceSprite[i].wResourceID];
+		pInterfaceResourceInfo = &sInterfaceResourceInfo[resourceID];
 
 		if(!pInterfaceResourceInfo->wID)	continue;
 		
+		printf("\n\n%s is associated with %d", pInterfaceResourceInfo->szFileName, resourceID);
+
+		if (resourceID == 250) {
+			printf("NOW!");
+		}
 		// 텍스쳐를 통체로 읽어라.
-		if (!pInterfaceResourceInfo->byType)
-		{
+		if (!pInterfaceResourceInfo->byType) {
 			lpSpriteData->pSpr	= g_pRenderer->CreateSpriteObject(
 				GetFile(pInterfaceResourceInfo->szFileName, DATA_TYPE_UI), 0);
-		}
-		else
-		{
+		} else {
 			lpSpriteData->pSpr	= g_pRenderer->CreateSpriteObject(
 				GetFile(pInterfaceResourceInfo->szFileName, DATA_TYPE_UI),
 				pInterfaceResourceInfo->wLeft, pInterfaceResourceInfo->wTop, 
 				pInterfaceResourceInfo->wRight, pInterfaceResourceInfo->wBottom , 0);
 		}
 
-		g_pInterfaceSprHash->Insert( lpSpriteData, sInterfaceSprite[i].wID );
+		g_pInterfaceSprHash->Insert( lpSpriteData, resourceID);
 		
 		if (!lpSpriteData->pSpr)
 		{

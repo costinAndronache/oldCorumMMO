@@ -29,6 +29,7 @@
 #include <GdiPlusInit.h>
 #include "CustomUiKit/PagedTableWindow/PagedTableWindow.h"
 #include "../BaseLibrary/Timer.h"
+#include "DungeonInterfaceLayout.h"
 
 void message(char* const info) {
 	MessageBox(g_hMainWnd, info, "CorumOnlineProject", MB_OK);
@@ -84,7 +85,8 @@ int APIENTRY WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdL
 	int	flag = _CRTDBG_ALLOC_MEM_DF |_CRTDBG_LEAK_CHECK_DF;
 	_CrtSetDbgFlag(flag);
 #endif	
-		
+	
+	buildInterfaceLayoutPositions(windowWidth(), windowHeight());
 	if (!InitGame()) {
 		message("Could not initialise internals!");
 		return 0;

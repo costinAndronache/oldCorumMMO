@@ -458,7 +458,9 @@ void CMenu::Render()
 		if(m_sSprite_Data[i].dwId!=0xff && m_sSprite_Data[i].bRender)
 		{
 			LP_SPRITE_DATA lpSpriteData = g_pInterfaceSprHash->GetData(m_sSprite_Data[i].dwSprId);
-			
+			if (m_sSprite_Data[i].dwSprId == SPR_INTERFACE_UI_RIGHT) {
+				printf("Rendering UI RIGHT!");
+			}
 			if(lpSpriteData)
 			{	
 				VECTOR2 vPos;

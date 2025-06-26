@@ -834,22 +834,7 @@ BOOL InitGame()
 	
 	int nBGMVolume		= GetPPI("OPTION CONFIG", "BGMVOLUME", 50, szInfo);
 	int nEffectVolume	= GetPPI("OPTION CONFIG", "EFFECTVOLUME", 50, szInfo);
-	// sung-han 2005-04-01 채팅창의 라인수-----------------------------------------
-//	char szTmpDefault[0xff] = {0,};
-//	char szTmpReturn[0xff] = {0,};
-//	memset(szTmpDefault, 0, sizeof(szTmpReturn));
-//	memset(szTmpReturn, 0, sizeof(szTmpDefault));
-//	strcpy(szTmpReturn, "MIDDLE");
-//	GetPPS("OPTION CONFIG", "TEXTLINE", szTmpDefault, szTmpReturn, 256, szInfo);
-//	if(__strcmp(szTmpDefault, "SHORT")==0)
-//		g_byChatLineCnt = 1;
-//	else if(__strcmp(szTmpDefault, "MIDDLE")==0)
-//		g_byChatLineCnt = 2;
-//	else if(__strcmp(szTmpDefault, "LONG")==0)
-//		g_byChatLineCnt = 3;
-//	else
-//		g_byChatLineCnt = 2;
-	// ----------------------------------------------------------------------------
+
 	
 	g_fBGMVolume	= (float)nBGMVolume/100.0f;;
 	g_fEffectVolume = (float)nEffectVolume/100.0f;;
