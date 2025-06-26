@@ -72,38 +72,39 @@ bool pointInsideSquare(VECTOR2 point, VECTOR2 topLeft, int size) {
 }
 
 void buildInterfaceLayoutPositions(int width, int height) {
-	const VECTOR2 hudSIZE = { 370, 127 };
+	/*
+	* IMPORTANT:: these positions are defined in terms of the width and height
+	* of interface_left.tif / interface_right.tif in the UI.pak file
+	*/
+	const VECTOR2 hudSIZE = { 400, 121 };
 
-	leftHUD = { {0, height - hudSIZE.y },  hudSIZE };
+	leftHUD = { {0, height - hudSIZE.y - 3 },  hudSIZE };
 	// LEFT HUD
-	hp = { leftHUD.origin.x, leftHUD.origin.y + 69 };
-	btnItem = { leftHUD.origin.x + 83, leftHUD.origin.y + 44 }; // 684
-	btnStats = { leftHUD.origin.x + 164, leftHUD.origin.y + 44 };
-	btnSkill = { leftHUD.origin.x + 243, leftHUD.origin.y + 44 };
-	btnTrade = { leftHUD.origin.x, leftHUD.origin.y + 20 }; // 661
-	btnShop = { leftHUD.origin.x, leftHUD.origin.y + 40 }; // 679
-	btnPK = { leftHUD.origin.x + 333, leftHUD.origin.y + 90 }; // 731
-	expPos = { leftHUD.origin.x, leftHUD.origin.y + 85 }; // 725
+	hp = { leftHUD.origin.x, leftHUD.origin.y + 64 };
+	btnItem = { leftHUD.origin.x + 83, leftHUD.origin.y + 40 };
+	btnStats = { leftHUD.origin.x + 164, leftHUD.origin.y + 40 };
+	btnSkill = { leftHUD.origin.x + 243, leftHUD.origin.y + 40 };
+	btnTrade = { leftHUD.origin.x, leftHUD.origin.y + 15 };
+	btnShop = { leftHUD.origin.x, leftHUD.origin.y + 36 };
+	btnPK = { leftHUD.origin.x + 333, leftHUD.origin.y + 85 };
+	expPos = { leftHUD.origin.x, leftHUD.origin.y + 80 };
 
 	skillSelectionBottomRowStart = { leftHUD.origin.x + 116, leftHUD.origin.y };
-	leftSkillPos = { leftHUD.origin.x + 133, leftHUD.origin.y + 93 }; // 733
-	rightSkillPos = { leftHUD.origin.x + 248, leftHUD.origin.y + 93 };
-	guardianSkillPos = { leftHUD.origin.x + 209, leftHUD.origin.y + 93 };
+	leftSkillPos = { leftHUD.origin.x + 133, leftHUD.origin.y + 86 };
+	rightSkillPos = { leftHUD.origin.x + 248, leftHUD.origin.y + 86 };
+	guardianSkillPos = { leftHUD.origin.x + 209, leftHUD.origin.y + 88 };
 
-
-	const auto hudY = 640;
-
-	rightHUD = { {0, hudY }, hudSIZE };
+	rightHUD = { {width - hudSIZE.x, height - hudSIZE.y - 3 },  hudSIZE };
 	// RIGHT HUD
-	sp = { rightHUD.origin.x + 70, rightHUD.origin.y + 69 };
-	cool = { 723, rightHUD.origin.y + 85 };
-	beltItemsStart = { 727, rightHUD.origin.y + 93 };
-	btnGroup = { 747, rightHUD.origin.y + 44 };
-	btnLair = { 827, rightHUD.origin.y + 44 };
-	btnChat = { 907, rightHUD.origin.y + 44 };
-	btnOptions = { 659, rightHUD.origin.y + 90 };
-	btnRest = { 977, rightHUD.origin.y + 20 };
-	btnMatch = { 977, rightHUD.origin.y + 40 };
+	sp = { rightHUD.origin.x + 98, rightHUD.origin.y + 60 };
+	cool = { rightHUD.origin.x + 98, rightHUD.origin.y + 74 };
+	beltItemsStart = { rightHUD.origin.x + 102, rightHUD.origin.y + 84 };
+	btnGroup = { rightHUD.origin.x + 113, rightHUD.origin.y + 36 };
+	btnLair = { rightHUD.origin.x + 188, rightHUD.origin.y + 36 };
+	btnChat = { rightHUD.origin.x + 272, rightHUD.origin.y + 36 };
+	btnOptions = { rightHUD.origin.x + 34, rightHUD.origin.y + 83 };
+	btnRest = { rightHUD.origin.x + 348, rightHUD.origin.y + 14 };
+	btnMatch = { rightHUD.origin.x + 348, rightHUD.origin.y + 32 };;
 	
 	// MISC
 

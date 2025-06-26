@@ -44,6 +44,8 @@ extern Rect rightHUD;
 #define SKILL_ICON_SIZE					32
 #define SKILL_SELECTION_ROW_COUNT		5
 
+const float resourceBarMaxWidth = 300.0f;
+
 VECTOR2 beltItemPos(int index);
 int	beltItemIndexAt(VECTOR2 pos);
 

@@ -116,6 +116,7 @@ BEGIN_MESSAGE_MAP(CMy4DyuchiFilePackDlg, CDialog)
 	ON_BN_CLICKED(IDC_BUTTON_DELETE_PACKFILE, OnButtonDeletePackfile)
 	//}}AFX_MSG_MAP
 	ON_BN_CLICKED(IDC_BUTTON_REPACK, &CMy4DyuchiFilePackDlg::OnBnClickedButtonRepack)
+	ON_BN_CLICKED(ADD_NEW_FILE_INTO_CURRENT_PACK, &CMy4DyuchiFilePackDlg::OnBnClickedNewFileIntoCurrentPack)
 END_MESSAGE_MAP()
 
 /////////////////////////////////////////////////////////////////////////////
@@ -521,4 +522,10 @@ void CMy4DyuchiFilePackDlg::OnBnClickedButton1()
 
 void CMy4DyuchiFilePackDlg::OnBnClickedButtonRepack() {
 	Repack();
+}
+
+
+void CMy4DyuchiFilePackDlg::OnBnClickedNewFileIntoCurrentPack()
+{
+	// TODO: Add your control notification handler code here
 }

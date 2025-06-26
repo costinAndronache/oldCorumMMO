@@ -255,7 +255,7 @@ void CUserInterface::InsertUIData()
 	InsertData(SPR_OBJ_EN2, SPR_INTERFACE_EN2, hp.x, hp.y, 0.0f, 1.0f, Order + 1, FALSE, FALSE, FALSE);
 	InsertData(SPR_OBJ_EN1, SPR_INTERFACE_EN1, hp.x, hp.y, 0.0f, 1.0f, Order + 2, FALSE, FALSE, FALSE);
 	InsertData(SPR_OBJ_EXP, SPR_INTERFACE_EXP, expPos.x, expPos.y, 1.0f, 1.0f, Order + 3, FALSE, FALSE, FALSE);
-	InsertData(SPR_OBJ_MANA2, SPR_INTERFACE_MANA2, 1023, 709, 0.0f, 1.0f, Order + 1, FALSE, FALSE, FALSE);
+	InsertData(SPR_OBJ_MANA2, SPR_INTERFACE_MANA2, sp.x, sp.y, 0.0f, 1.0f, Order + 1, FALSE, FALSE, FALSE);
 	InsertData(SPR_OBJ_MANA1, SPR_INTERFACE_MANA1, sp.x, sp.y, 0.0f, 1.0f, Order + 2, FALSE, FALSE, FALSE);
 	InsertData(SPR_OBJ_CAST, SPR_INTERFACE_CAST, cool.x, cool.y, (float)g_pMainPlayer->percentageCoolPoints() * 300 / 2, 1.0f, Order + 3, FALSE, FALSE, FALSE);
 
@@ -952,6 +952,10 @@ void CUserInterface::Render()
 			{	
 				VECTOR2 vPos;
 
+				if (lpSpriteData->dwId == SPR_MANA1) {
+					printf("here");
+				}
+
 				if(!m_sSprite_Data[i].bPos)
 				{
 					vPos.x	= m_sSprite_Data[i].fPosX;
@@ -1120,40 +1124,43 @@ void CUserInterface::SetCool()
 {
 	float fSize = g_pMainPlayer->percentageCoolPoints();
 
-	SetScalingObj(SPR_OBJ_CAST, fSize *300/2, 1.0);
-	SetPosObjX(SPR_OBJ_CAST, 1023-fSize *300);
+	SetScalingObj(SPR_OBJ_CAST, fSize * resourceBarMaxWidth / 2, 1.0);
+	const auto size = fSize * resourceBarMaxWidth;
+	const auto maxSpace = (cool.x + resourceBarMaxWidth);
+	SetPosObjX(SPR_OBJ_CAST, maxSpace - size);
 }
 
 extern char globalDebugLine[255];
 
 
 void	CUserInterface::updateSPBar(float scale) {
-	SetScalingObj(SPR_OBJ_MANA2, scale * 300 / 2, 1.0);
-	SetPosObjX(SPR_OBJ_MANA2, 1023 - scale * 300);
+	const auto size = scale * resourceBarMaxWidth;
+	const auto maxSpace = sp.x + resourceBarMaxWidth;
 
-	SetScalingObj(SPR_OBJ_MANA1, scale * 300 / 2, 1.0);
-	SetPosObjX(SPR_OBJ_MANA1, 1023 - scale * 300);
+	SetScalingObj(SPR_OBJ_MANA2, scale * resourceBarMaxWidth / 2, 1.0);
+	SetPosObjX(SPR_OBJ_MANA2, maxSpace - size);
+
+	SetScalingObj(SPR_OBJ_MANA1, scale * resourceBarMaxWidth / 2, 1.0);
+	SetPosObjX(SPR_OBJ_MANA1, maxSpace - size);
 
 	SetRender(SPR_OBJ_MANA1, TRUE);
 	SetRender(SPR_OBJ_MANA2, TRUE);
 }
 
 void	CUserInterface::updateHPBar(float scale) {
-	SetScalingObj(SPR_OBJ_EN1, scale * 300 / 2, 1.0);
-	SetScalingObj(SPR_OBJ_EN2, scale * 300 / 2, 1.0);
+	SetScalingObj(SPR_OBJ_EN1, scale * resourceBarMaxWidth / 2, 1.0);
+	SetScalingObj(SPR_OBJ_EN2, scale * resourceBarMaxWidth / 2, 1.0);
 
 	SetRender(SPR_OBJ_EN1, TRUE);
 }
 
 void	CUserInterface::updateEXPBar(float scale) {
-	SetScalingObj(SPR_OBJ_EXP, scale * 300 / 2, 1.0);
+	SetScalingObj(SPR_OBJ_EXP, scale * resourceBarMaxWidth / 2, 1.0);
 	SetRender(SPR_OBJ_EXP, TRUE);
 }
 
 void	CUserInterface::updateCooldownBar(float scale) {
-	SetScalingObj(SPR_OBJ_CAST, scale * 300 / 2, 1.0);
-	SetPosObjX(SPR_OBJ_CAST, 1023 - scale * 300);
-	SetRender(SPR_OBJ_CAST, TRUE);
+	SetCool();
 }
 
 void CUserInterface::SetActive(BOOL bActive)

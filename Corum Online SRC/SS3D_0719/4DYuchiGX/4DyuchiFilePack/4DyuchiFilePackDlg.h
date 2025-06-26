@@ -70,6 +70,8 @@ protected:
 	afx_msg void OnBnClickedButtonRepack();
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
+public:
+	afx_msg void OnBnClickedNewFileIntoCurrentPack();
 };
 
 
