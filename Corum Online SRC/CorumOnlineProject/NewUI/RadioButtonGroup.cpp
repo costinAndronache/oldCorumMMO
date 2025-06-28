@@ -15,42 +15,42 @@ static void fillButtons(
 	}
 }
 
-RadioButtonGroup::RadioButtonGroup(std::vector<ButtonModel> models, Rect frame, unsigned int activeButtonIndex): 
+RadioButtonGroup::RadioButtonGroup(std::vector<ButtonModel> models, Rect frameInParent, unsigned int activeButtonIndex):
 	_activeButtonIndex(activeButtonIndex) {
 	_buttons.reserve(models.size());
-	_frame = frame;
+	_frameInParent = frameInParent;
 
 	std::function<ToggleButton* (int, Rect)> createFn = [&](int index, Rect btnFrame) {
 		return buildFromModelList(&models, index, btnFrame);
 	};
 
-	if (frame.size.width > frame.size.height) {
-		Size size = { frame.size.width / models.size(), frame.size.height };
-		fillButtons(_buttons, models.size(), frame.origin, size, size.width, 0, createFn);
+	if (frameInParent.size.width > frameInParent.size.height) {
+		Size size = { frameInParent.size.width / models.size(), frameInParent.size.height };
+		fillButtons(_buttons, models.size(), {0, 0}, size, size.width, 0, createFn);
 	}
 	else {
-		Size size = { frame.size.width, frame.size.height / models.size() };
-		fillButtons(_buttons, models.size(), frame.origin, size, 0, size.height, createFn);
+		Size size = { frameInParent.size.width, frameInParent.size.height / models.size() };
+		fillButtons(_buttons, models.size(), {0, 0}, size, 0, size.height, createFn);
 	}
 	adjustButtons(_activeButtonIndex);
 }
 
-RadioButtonGroup::RadioButtonGroup(std::vector<LabeledButtonModel> models, Rect frame, unsigned int activeButtonIndex):
+RadioButtonGroup::RadioButtonGroup(std::vector<LabeledButtonModel> models, Rect frameInParent, unsigned int activeButtonIndex):
 	_activeButtonIndex(activeButtonIndex) {
-	_frame = frame;
+	_frameInParent = frameInParent;
 
 	_buttons.reserve(models.size());
 	std::function<ToggleButton*(int, Rect)> createFn = [&](int index, Rect btnFrame) {
 		return buildFromLabeledModelList(&models, index, btnFrame);
 	};
 
-	if (frame.size.width > frame.size.height) {
-		Size size = { frame.size.width / models.size(), frame.size.height };
-		fillButtons(_buttons, models.size(), frame.origin, size, size.width, 0, createFn);
+	if (frameInParent.size.width > frameInParent.size.height) {
+		Size size = { frameInParent.size.width / models.size(), frameInParent.size.height };
+		fillButtons(_buttons, models.size(), {0, 0}, size, size.width, 0, createFn);
 	}
 	else {
-		Size size = { frame.size.width, frame.size.height / models.size() };
-		fillButtons(_buttons, models.size(), frame.origin, size, 0, size.height, createFn);
+		Size size = { frameInParent.size.width, frameInParent.size.height / models.size() };
+		fillButtons(_buttons, models.size(), {0, 0}, size, 0, size.height, createFn);
 	}
 	adjustButtons(_activeButtonIndex);
 }

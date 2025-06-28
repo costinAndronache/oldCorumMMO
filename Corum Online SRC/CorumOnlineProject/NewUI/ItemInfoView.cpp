@@ -27,9 +27,8 @@ void ItemInfoViewResources::initialize() {
 	}
 }
 
-ItemInfoView::ItemInfoView(Model model, Rect rect, SpriteModel backgroundSpriteModel) :
-	 _rect(rect), _model(model), _backgroundSpriteModel(backgroundSpriteModel) {
-	
+ItemInfoView::ItemInfoView(Model model, Rect frameInParent, SpriteModel backgroundSpriteModel): _model(model), _backgroundSpriteModel(backgroundSpriteModel) {
+	_frameInParent = frameInParent;
 }
 
 void ItemInfoView::updateModel(Model newModel) {
@@ -40,8 +39,9 @@ bool ItemInfoView::renderInfoIfMouseHover() {
 	if (_model.item == NULL) {
 		return false;
 	}
+	
 
-	if (_rect.isMouseInside(g_Mouse.MousePos)) {
+	if (globalFrame().isMouseInside(g_Mouse.MousePos)) {
 		CInterface::GetInstance()->ItemInfoRender(_model.item, FALSE);
 		return true;
 	}
@@ -50,6 +50,8 @@ bool ItemInfoView::renderInfoIfMouseHover() {
 }
 
 void ItemInfoView::renderWithRenderer(I4DyuchiGXRenderer* renderer, int order) {
+	auto _rect = globalFrame();
+
 	VECTOR2 vPos = { _rect.origin.x, _rect.origin.y };
 
 	VECTOR2 scale = _rect.size.divideBy(_backgroundSpriteModel.size);

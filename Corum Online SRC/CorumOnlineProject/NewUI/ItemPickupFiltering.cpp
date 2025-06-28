@@ -124,6 +124,16 @@ ItemPickupFilteringSystem* ItemPickupFilteringSystem::sharedInstance() {
 	return shared;
 }
 
+void ItemPickupFilteringSystem::offsetView(Point byOffsets) {
+	if (isViewActive()) {
+		auto current = _view->frameInParent();
+		_view->updateOriginInParent({
+			current.origin.x + byOffsets.x,
+			current.origin.y + byOffsets.y
+		});
+	}
+}
+
 bool ItemPickupFilteringSystem::swallowsMouse() {
 	return _view->swallowsMouse(g_Mouse.MousePos);
 }

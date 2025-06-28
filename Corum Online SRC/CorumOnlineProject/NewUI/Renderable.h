@@ -19,13 +19,24 @@ namespace CustomUI {
 
 		bool swallowsMouse(Point mouse);
 		bool swallowsKeyboard();
+
+		Rect globalFrame() const;
+		Rect frameInParent() const { return _frameInParent; }
+		Rect bounds() const { return Rect{ {0, 0}, _frameInParent.size }; }
+
+		void updateOriginInParent(Point newOrigin) {
+			_frameInParent.origin = newOrigin;
+		}
 	protected:
 		Renderable() {
 			_currentMouseState = MouseState::none;
 			_isHidden = false;
+			_parent = nullptr;
 		}
 
-		Rect _frame;
+		Rect _frameInParent;
+		Renderable* _parent;
+
 		MouseState _currentMouseState;
 
 		virtual void onMouseStateChange(MouseState newState, MouseState oldState) {}
@@ -38,6 +49,7 @@ namespace CustomUI {
 		T* registerChildRenderable(std::function<T*()> creatingFn) {
 			T* result = creatingFn();
 			_childRenderables.push_back(result);
+			result->_parent = this;
 			return result;
 		}
 

@@ -20,7 +20,7 @@ namespace ItemPickupFiltering {
 		private CustomUI::PagedItemViewTableClient,
 		public CustomUI::Renderable {
 	public:
-		ItemFilteringView(CustomUI::Rect frame, std::vector<CItem*>& allItems, std::set<DWORD>& selectedItemIDs, ItemFilteringViewClient* client);
+		ItemFilteringView(CustomUI::Rect frameInParent, std::vector<CItem*>& allItems, std::set<DWORD>& selectedItemIDs, ItemFilteringViewClient* client);
 		void renderWithRenderer(I4DyuchiGXRenderer* renderer, int order);
 
 		std::set<DWORD> currentSelectedIDs();

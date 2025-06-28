@@ -9,8 +9,8 @@ namespace CustomUI {
 		struct Appearance {
 			Color color;
 		};
-		SingleLineLabel(Rect frame, Appearance appearance, std::string& text);
-		SingleLineLabel(Rect frame, Appearance appearance, const char* text);
+		SingleLineLabel(Rect frameInParent, Appearance appearance, std::string& text);
+		SingleLineLabel(Rect frameInParent, Appearance appearance, const char* text);
 		void renderWithRenderer(I4DyuchiGXRenderer* renderer, int order) override;
 
 		static Size fittedSize(int charCount) {

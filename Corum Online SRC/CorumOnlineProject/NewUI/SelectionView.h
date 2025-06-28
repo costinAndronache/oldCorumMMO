@@ -6,8 +6,9 @@
 namespace CustomUI {
 	class SelectionView: public Renderable {
 	public:
+		typedef std::function<Renderable* (Rect)> RenderableCreateFn;
 		typedef std::function<void(bool)> SelectionStateChangeHandler;
-		SelectionView(Rect frame, Renderable* subView);
+		SelectionView(Rect frameInParent, RenderableCreateFn renderableCreate);
 		void renderWithRenderer(I4DyuchiGXRenderer* renderer, int order) override;
 		void setSelectionState(bool isSelected);
 		void setEnableSelection(bool selectionEnabled);
@@ -23,8 +24,6 @@ namespace CustomUI {
 	private:
 		Renderable* _renderable;
 		SelectionStateChangeHandler _handler;
-
-		Rect _checkmarkFrame;
 
 		bool _isSelected;
 		bool _selectionEnabled;

@@ -17,7 +17,7 @@ namespace ItemPickupFiltering {
 
 	class ItemCategoryFilterView : public CustomUI::Renderable {
 	public:
-		ItemCategoryFilterView(CustomUI::Rect frame, CategoryType currentSelectedCategory);
+		ItemCategoryFilterView(CustomUI::Rect frameInParent, CategoryType currentSelectedCategory);
 		void renderWithRenderer(I4DyuchiGXRenderer* renderer, int order) override;
 
 		void onCategoryUpdate(CategoryUpdateHandler handler) { _handler = handler; }

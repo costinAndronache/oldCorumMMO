@@ -6,13 +6,14 @@
 using namespace CustomUI;
 using namespace ItemPickupFiltering;
 
-ItemFilteringView::ItemFilteringView(Rect frame, std::vector<CItem*>& allItems, std::set<DWORD>& selectedItemIDs, ItemFilteringViewClient* client):
+ItemFilteringView::ItemFilteringView(Rect frameInParent, std::vector<CItem*>& allItems, std::set<DWORD>& selectedItemIDs, ItemFilteringViewClient* client):
 	 _allItems(allItems), _textFilteringSourceItems(allItems), _displayedItems(allItems), _selectedItemIDs(selectedItemIDs), _client(client) {
-	_frame = frame;
+	_frameInParent = frameInParent;
+	const auto _bounds = bounds();
 
 	Rect topContainer = {
-		{frame.origin.x + 5, frame.origin.y + 5},
-		{frame.size.width - 5, 30}
+		_bounds.origin.x + 5, _bounds.origin.y + 5,
+		{_bounds.size.width - 5, 30}
 	};
 
 	const char* title = "Item pick-up filtering";
@@ -22,7 +23,9 @@ ItemFilteringView::ItemFilteringView(Rect frame, std::vector<CItem*>& allItems, 
 
 	SingleLineLabel::Appearance titleAppearance = { {255,255,255,255 } };
 
-	_titleLabel = new SingleLineLabel(titleLabelRect, titleAppearance, title);
+	_titleLabel = registerChildRenderable<SingleLineLabel>([=]() {
+		return new SingleLineLabel(titleLabelRect, titleAppearance, title);
+	});
 
 	SpriteModel closeSpriteModel = { SpriteCollection::xClose, SpriteCollection::xCloseSize, 0 };
 	SpriteModel closePressedSpriteModel = { SpriteCollection::xClosePressed, SpriteCollection::xCloseSize, 0 };
@@ -71,7 +74,7 @@ ItemFilteringView::ItemFilteringView(Rect frame, std::vector<CItem*>& allItems, 
 	Rect tableContainer = Rect::zero()
 		.horizontallyAlignedWith(categoriesFilterContainer)
 		.positionedBelow(categoriesFilterContainer, 2)
-		.withHeight(frame.maxY() - categoriesFilterContainer.maxY() - 2);
+		.withHeight(_bounds.maxY() - categoriesFilterContainer.maxY() - 2);
 
 	tableContainer.size.height = PagedItemViewTable::fittedHeightWithin(tableContainer.size.height, 
 		ItemInfoViewResources::bgSpriteModel.size.height);
@@ -102,14 +105,9 @@ void ItemFilteringView::selectionViewDidChangeSelectionState(SelectionView* view
 }
 
 void ItemFilteringView::renderWithRenderer(I4DyuchiGXRenderer* renderer, int order) {
-	VECTOR2 scale = _frame.size.divideBy(PagedItemViewTableResources::bgSpriteModel.size);
-	VECTOR2 pos = { _frame.origin.x, _frame.origin.y };
-	Color c = { 255, 0, 255, 255 };
+	const auto _globalFrame = globalFrame();
 
-	renderer->RenderSprite(PagedItemViewTableResources::bgSpriteModel.sprite,
-		&scale, 0, &pos,
-		NULL, c.asDXColor(),
-		order, RENDER_TYPE_DISABLE_TEX_FILTERING);
+	PagedItemViewTableResources::bgSpriteModel.renderWith(renderer, _globalFrame, order);
 
 	_inputField->renderWithRenderer(renderer, order + 1);
 	_table->renderWithRenderer(renderer, order + 1);
@@ -138,8 +136,12 @@ Renderable* ItemFilteringView::buildRenderableForModelAtIndexWithFrame(int model
 	}
 
 	ItemInfoView::Model model = { current, ItemInfoViewResources::bgSpriteModel.size };
-	ItemInfoView* view = new ItemInfoView(model, frame, ItemInfoViewResources::bgSpriteModel);
-	SelectionView* sv = new SelectionView(frame, view);
+	SelectionView* sv = new SelectionView(frame, [=](Rect frameInsideSelectionView) {
+		return new ItemInfoView(model,
+			frameInsideSelectionView,
+			ItemInfoViewResources::bgSpriteModel);
+	});
+
 	sv->onSelectionStateChange([=](bool isSelected) {
 		selectionViewDidChangeSelectionState(sv, isSelected);
 	});

@@ -3,8 +3,8 @@
 using namespace CustomUI;
 using namespace ItemPickupFiltering;
 
-ItemCategoryFilterView::ItemCategoryFilterView(CustomUI::Rect frame, CategoryType currentSelectedCategory) {
-	_frame = frame;
+ItemCategoryFilterView::ItemCategoryFilterView(CustomUI::Rect frameInParent, CategoryType currentSelectedCategory) {
+	_frameInParent = frameInParent;
 
 	std::vector<RadioButtonGroup::LabeledButtonModel> models;
 	RadioButtonGroup::LabeledButtonModel specimen;
@@ -28,7 +28,7 @@ ItemCategoryFilterView::ItemCategoryFilterView(CustomUI::Rect frame, CategoryTyp
 	}
 
 	_radioButtonGroup = registerChildRenderable<RadioButtonGroup>([&]() {
-		return new RadioButtonGroup(models, frame, currentSelectedCategory);
+		return new RadioButtonGroup(models, bounds(), currentSelectedCategory);
 	});
 
 	_radioButtonGroup->onActiveIndexUpdate([&](unsigned int index) {

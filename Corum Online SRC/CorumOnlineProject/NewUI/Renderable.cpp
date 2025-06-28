@@ -2,6 +2,12 @@
 
 using namespace CustomUI;
 
+
+Rect Renderable::globalFrame() const {
+	if (_parent == nullptr) { return _frameInParent; }
+	return _frameInParent.withOriginOffsetBy(_parent->globalFrame().origin);
+}
+
 void Renderable::updateMouseState(MouseState newState) {
 	const auto old = _currentMouseState;
 	if (old == newState) { return; }
@@ -13,7 +19,7 @@ void Renderable::updateMouseState(MouseState newState) {
 void Renderable::handleMouseDown(Point mouse) {
 	if (_isHidden) { return; }
 	
-	if (!_frame.isMouseInside(mouse)) {
+	if (!globalFrame().isMouseInside(mouse)) {
 		updateMouseState(MouseState::none);
 		return;
 	}
@@ -28,7 +34,7 @@ void Renderable::handleMouseDown(Point mouse) {
 void Renderable::handleMouseUp(Point mouse) {
 	if (_isHidden) { return; }
 	updateMouseState(
-		_frame.isMouseInside(mouse) ? MouseState::hovering : MouseState::none
+		globalFrame().isMouseInside(mouse) ? MouseState::hovering : MouseState::none
 	);
 
 	if (swallowsMouseEvents()) { return; }
@@ -50,7 +56,7 @@ void Renderable::handleMouseMove(Point mouse) {
 	if (_currentMouseState == MouseState::pressedInside) { return; }
 
 	updateMouseState(
-		_frame.isMouseInside(mouse) ? MouseState::hovering: MouseState::none
+		globalFrame().isMouseInside(mouse) ? MouseState::hovering : MouseState::none
 	);
 }
 
@@ -76,7 +82,7 @@ void Renderable::handleKeyDown(WPARAM wparam, LPARAM lparam) {
 }
 
 bool Renderable::swallowsMouse(Point mouse) {
-	return !_isHidden && _frame.isMouseInside(mouse);
+	return !_isHidden && globalFrame().isMouseInside(mouse);
 }
 
 bool Renderable::swallowsKeyboard() {

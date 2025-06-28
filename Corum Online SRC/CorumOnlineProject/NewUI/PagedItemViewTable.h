@@ -13,7 +13,7 @@ namespace CustomUI {
 
 	class PagedItemViewTable: public Renderable {
 	public:
-		PagedItemViewTable(Rect frame, PagedItemViewTableClient* _client, Size viewsSize, int initialModelCount, SpriteModel bgSpriteModel);
+		PagedItemViewTable(Rect frameInParent, PagedItemViewTableClient* _client, Size viewsSize, int initialModelCount, SpriteModel bgSpriteModel);
 		void reloadData(int newItemsCount);
 		void refresh();
 		void renderWithRenderer(I4DyuchiGXRenderer* renderer, int order);

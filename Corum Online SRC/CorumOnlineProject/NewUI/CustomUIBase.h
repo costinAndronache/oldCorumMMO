@@ -114,6 +114,10 @@ namespace CustomUI {
 			return Rect{ origin, { (size.width) * xScale, (size.height) * yScale } };
 		}
 
+		Rect withOriginOffsetBy(Point offset) const {
+			return Rect{ {origin.x + offset.x, origin.y + offset.y }, size };
+		}
+
 		static Rect zero() {
 			Rect result = { {0,0}, {0,0} };
 			return result;
@@ -125,10 +129,10 @@ namespace CustomUI {
 		Size size;
 		float rotation;
 
-		void renderWith(I4DyuchiGXRenderer* renderer, Rect withinFrame, int order = 0) const {
+		void renderWith(I4DyuchiGXRenderer* renderer, Rect withinGlobalFrame, int order = 0) const {
 			if (!sprite) { return; }
-			VECTOR2 scale = withinFrame.size.divideBy(size);
-			VECTOR2 pos{ withinFrame.origin.x, withinFrame.origin.y };
+			VECTOR2 scale = withinGlobalFrame.size.divideBy(size);
+			VECTOR2 pos{ withinGlobalFrame.origin.x, withinGlobalFrame.origin.y };
 
 			renderer->RenderSprite(sprite, &scale, rotation, &pos, NULL, 0xffffffff, order, RENDER_TYPE_DISABLE_TEX_FILTERING);
 		}

@@ -19,18 +19,18 @@ void InputFieldResources::initialize() {
 	}
 }
 
-InputField::InputField(Rect frame, SpriteModel bgSpriteModel): _bgSpriteModel(bgSpriteModel) {
+InputField::InputField(Rect frameInParent, SpriteModel bgSpriteModel): _bgSpriteModel(bgSpriteModel) {
 	_isActive = false;
 	_caretStateON = false;
 	_lastCaretUpdateTime = 0;
 	InputFieldResources::initialize();
 	_buffer = "";
-	_frame = frame;
+	_frameInParent = frameInParent;
 	_clearButton = NULL;
 }
 
-InputField::InputField(Rect frame, SpriteModel bgSpriteModel, SpriteModel clearBtnModel, SpriteModel clearBtnPressedModel) : _bgSpriteModel(bgSpriteModel) {
-	_frame = frame;
+InputField::InputField(Rect frameInParent, SpriteModel bgSpriteModel, SpriteModel clearBtnModel, SpriteModel clearBtnPressedModel) : _bgSpriteModel(bgSpriteModel) {
+	_frameInParent = frameInParent;
 
 	_isActive = false;
 	_caretStateON = false;
@@ -38,11 +38,13 @@ InputField::InputField(Rect frame, SpriteModel bgSpriteModel, SpriteModel clearB
 	InputFieldResources::initialize();
 	_buffer = "";
 
-	Rect clearBtnFrame = frame
+	const auto _bounds = bounds();
+
+	Rect clearBtnFrame = _bounds
 		.fromMaxXOrigin(-clearBtnModel.size.width-5)
 		.withSize(clearBtnModel.size)
 		.scaled(0.8, 0.8)
-		.centeredVerticallyWith(frame);
+		.centeredVerticallyWith(_bounds);
 
 	_clearButton = registerChildRenderable<Button>([&]() {
 		return new Button(clearBtnModel, clearBtnPressedModel, clearBtnFrame);
@@ -116,13 +118,8 @@ void InputField::processKeyUp(WPARAM wparam, LPARAM lparam) {
 
 
 void InputField::renderWithRenderer(I4DyuchiGXRenderer* renderer, int order) {
-	VECTOR2 pos = { _frame.origin.x, _frame.origin.y };
-	VECTOR2 scale = _frame.size.divideBy(_bgSpriteModel.size);
-
-	renderer->RenderSprite(_bgSpriteModel.sprite,
-		&scale, 0, &pos,
-		NULL, 0xffffffff,
-		order, RENDER_TYPE_DISABLE_TEX_FILTERING);
+	const auto _globalFrame = globalFrame();
+	_bgSpriteModel.renderWith(renderer, _globalFrame, order);
 
 	char renderedText[maxChars + 1];
 	int count = _buffer.size();
@@ -133,12 +130,17 @@ void InputField::renderWithRenderer(I4DyuchiGXRenderer* renderer, int order) {
 		count += 1;
 	}
 
-	RECT rt = { _frame.origin.x + 5, _frame.origin.y + 5, _frame.maxX(), _frame.maxY() };
-	g_pGeometry->RenderFont(GetFont(), 
-							(TCHAR*)renderedText, count, 
-							&rt, WHITE(255), CHAR_CODE_TYPE_ASCII, 
-							order + 1, 0
-	);
+	RECT rt = { _globalFrame.origin.x + 5, _globalFrame.origin.y + 5, 
+		_globalFrame.maxX(), _globalFrame.maxY() };
+
+	renderer->RenderFont(GetFont(),
+		(TCHAR*)renderedText,
+		count,
+		&rt,
+		WHITE(255),
+		CHAR_CODE_TYPE_ASCII,
+		order + 1,
+		0);
 
 	if (_isActive) {
 		DWORD now = timeGetTime();

@@ -23,6 +23,8 @@ namespace ItemPickupFiltering {
 
 		bool swallowsMouse();
 		bool swallowsKeyboard();
+
+		void offsetView(CustomUI::Point byOffsets);
 	private:
 		ItemFilteringView* _view;
 		void itemFilteringViewDidUpdateSelection(ItemFilteringView*, std::set<DWORD> selectedItemIDs);

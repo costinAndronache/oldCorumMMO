@@ -23,12 +23,15 @@ int PagedItemViewTable::getCurrentModelIndexForDisplayedCell(int row, int column
 	return -1;
 }
 
-PagedItemViewTable::PagedItemViewTable(Rect frame, PagedItemViewTableClient* client, Size viewsSize, int initialModelCount, SpriteModel bgSpriteModel):
+PagedItemViewTable::PagedItemViewTable(Rect frameInParent, PagedItemViewTableClient* client, Size viewsSize, int initialModelCount, SpriteModel bgSpriteModel):
 	_bgSpriteModel(bgSpriteModel), _client(client), _viewsSize(viewsSize), _modelCount(initialModelCount) {
 
-	_frame = frame;
+	_frameInParent = frameInParent;
 	Size buttonsSize = { 28, 28 };
-	Size tableSize = { _frame.size.width - buttonsSize.width, _frame.size.height};
+	Size tableSize = { 
+		frameInParent.size.width - buttonsSize.width,
+		frameInParent.size.height
+	};
 
 	
 	const Size referenceSize = viewsSize;
@@ -43,8 +46,8 @@ PagedItemViewTable::PagedItemViewTable(Rect frame, PagedItemViewTableClient* cli
 		for (int j = 0; j < _numberOfColumns; j++) {
 			int index = getCurrentModelIndexForDisplayedCell(i, j, _modelCount);
 			Rect viewFrame = { { 
-					_frame.origin.x + (j * referenceSize.width),
-					_frame.origin.y + (i * referenceSize.height)
+					 (j * referenceSize.width),
+					 (i * referenceSize.height)
 				}, 
 				referenceSize
 			};
@@ -67,7 +70,8 @@ PagedItemViewTable::PagedItemViewTable(Rect frame, PagedItemViewTableClient* cli
 		0.0
 	};
 
-	Rect scrollDownBtnFrame = { {_frame.maxX() - buttonsSize.width, _frame.maxY() - buttonsSize.height}, buttonsSize };
+	const auto _bounds = bounds();
+	Rect scrollDownBtnFrame = { {_bounds.maxX() - buttonsSize.width, _bounds.maxY() - buttonsSize.height}, buttonsSize };
 	_scrollDownBtn = registerChildRenderable<Button>([&]() {
 		return new Button(scrollDownModel, scrollDownPressedModel, scrollDownBtnFrame);
 	});
@@ -79,7 +83,7 @@ PagedItemViewTable::PagedItemViewTable(Rect frame, PagedItemViewTableClient* cli
 
 	scrollDownModel.rotation = PI;
 	scrollDownPressedModel.rotation = PI;
-	Rect scrollUpBtnFrame = { {_frame.maxX() - buttonsSize.width, _frame.origin.y}, buttonsSize };
+	Rect scrollUpBtnFrame = { {_bounds.maxX() - buttonsSize.width, _bounds.origin.y}, buttonsSize };
 	_scrollUpBtn = registerChildRenderable<Button>([&]() {
 		return new Button(scrollDownModel, scrollDownPressedModel, scrollUpBtnFrame);
 	});
@@ -120,14 +124,10 @@ void PagedItemViewTable::scrollDown() {
 }
 
 void PagedItemViewTable::renderWithRenderer(I4DyuchiGXRenderer *renderer, int order) {
+	const auto _globalFrame = globalFrame();
+
 	if (_bgSpriteModel.sprite) {
-		VECTOR2 blackBackgroundScale = _frame.size.divideBy(_bgSpriteModel.size);
-		VECTOR2 pos = { _frame.origin.x, _frame.origin.y };
-
-		renderer->RenderSprite(_bgSpriteModel.sprite,
-			&blackBackgroundScale, 0.0f, &pos, 
-			NULL, 0xffffffff, order, RENDER_TYPE_DISABLE_TEX_FILTERING);
-
+		_bgSpriteModel.renderWith(renderer, _globalFrame, order);
 	}
 	
 	_scrollDownBtn->renderWithRenderer(g_pRenderer, order + 1);

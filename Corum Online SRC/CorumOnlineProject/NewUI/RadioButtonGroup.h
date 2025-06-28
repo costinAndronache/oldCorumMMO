@@ -16,8 +16,8 @@ namespace CustomUI {
 			Button::LabelModel labelModel;
 		};
 
-		RadioButtonGroup(std::vector<ButtonModel>, Rect frame, unsigned int activeButtonIndex);
-		RadioButtonGroup(std::vector<LabeledButtonModel>, Rect frame, unsigned int activeButtonIndex);
+		RadioButtonGroup(std::vector<ButtonModel>, Rect frameInParent, unsigned int activeButtonIndex);
+		RadioButtonGroup(std::vector<LabeledButtonModel>, Rect frameInParent, unsigned int activeButtonIndex);
 		void renderWithRenderer(I4DyuchiGXRenderer* renderer, int order) override;
 
 		void onActiveIndexUpdate(ActiveIndexUpdateHandler handler) { _handler = handler; };

@@ -13,31 +13,33 @@ void SelectionViewResources::initialize() {
 	}
 }
 
-SelectionView::SelectionView(Rect frame, Renderable* subView): _renderable(subView), _isSelected(false) {
+SelectionView::SelectionView(Rect frameInParent, RenderableCreateFn renderableCreate): _isSelected(false) {
 	SelectionViewResources::initialize();
-	_frame = frame;
+	_frameInParent = frameInParent;
+	const auto _bounds = bounds();
+
+	_renderable = registerChildRenderable<Renderable>([=]() {
+		return renderableCreate(_bounds);
+	});
 
 	_button = registerChildRenderable<Button>([=]() { 
-		return new Button(SpriteModel::zero, SpriteModel::zero, frame);
+		return new Button(SpriteModel::zero, SpriteModel::zero, bounds());
 	});
 
 	_button->onRelease([this]() {
 		onButtonPressRelease(_button);
 	});
 
-	_checkmarkFrame = frame.scaled(0.5, 0.5).centeredWith(frame);
 }
 
 void SelectionView::renderWithRenderer(I4DyuchiGXRenderer* renderer, int order) {
 	_renderable->renderWithRenderer(renderer, order);
+	const auto frame = globalFrame();
 
-	_button->renderWithRenderer(renderer, order);
+	auto _checkmarkFrame = bounds().scaled(0.5, 0.5).centeredWith(frame);
 
 	if (_isSelected) {
-		VECTOR2 scale = _checkmarkFrame.size.divideBy(SelectionViewResources::checkmarkSpriteModel.size);
-		VECTOR2 pos = { _checkmarkFrame.origin.x, _checkmarkFrame.origin.y };
-		renderer->RenderSprite(SelectionViewResources::checkmarkSpriteModel.sprite
-			, &scale, 0.0f, &pos, NULL, 0xffffffff, order, RENDER_TYPE_DISABLE_TEX_FILTERING);
+		SelectionViewResources::checkmarkSpriteModel.renderWith(renderer, _checkmarkFrame, order + 1);
 	}
 }
 

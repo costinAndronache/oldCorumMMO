@@ -3,18 +3,21 @@
 
 using namespace CustomUI;
 
-Button::Button(SpriteModel spriteModel, SpriteModel pressedSpriteModel, Rect frame) :
+Button::Button(SpriteModel spriteModel, SpriteModel pressedSpriteModel, Rect frameInParent) :
 			   _spriteModel(spriteModel), _pressedSpriteModel(pressedSpriteModel) {
-	_frame = frame;
+	_frameInParent = frameInParent;
 	_label = NULL;
 }
 
-Button::Button(SpriteModel spriteModel, SpriteModel pressedSpriteModel, LabelModel labelModel, Rect frame): 
+Button::Button(SpriteModel spriteModel, SpriteModel pressedSpriteModel, LabelModel labelModel, Rect frameInParent): 
 	_spriteModel(spriteModel), _pressedSpriteModel(pressedSpriteModel) {
-	_frame = frame;
-	Rect labelFrame{ frame.origin, SingleLineLabel::fittedSize(strlen(labelModel.text)) };
-	labelFrame = labelFrame.centeredWith(frame);
-	_label = new SingleLineLabel(labelFrame, labelModel.appearance, labelModel.text);
+	_frameInParent = frameInParent;
+
+	Rect labelFrame{ {0, 0}, SingleLineLabel::fittedSize(strlen(labelModel.text)) };
+	labelFrame = labelFrame.centeredWith(_frameInParent);
+	_label = registerChildRenderable<SingleLineLabel>([=]() {
+		return new SingleLineLabel(labelFrame, labelModel.appearance, labelModel.text);
+	});
 }
 
 void Button::updateSpriteModelTo(SpriteModel newModel) {
@@ -36,15 +39,15 @@ void Button::onMouseStateChange(MouseState newState, MouseState oldState) {
 }
 
 void Button::renderWithRenderer(I4DyuchiGXRenderer* renderer, int order) {
-	VECTOR2 pos = { _frame.origin.x, _frame.origin.y };
+	const auto frame = globalFrame();
 
 	switch (_currentMouseState) {
 	case MouseState::none:
 	case MouseState::hovering:
-		_spriteModel.renderWith(renderer, _frame, order);
+		_spriteModel.renderWith(renderer, frame, order);
 		break;
 	case MouseState::pressedInside:
-		_pressedSpriteModel.renderWith(renderer, _frame, order);
+		_pressedSpriteModel.renderWith(renderer, frame, order);
 
 	}
 

@@ -1983,6 +1983,7 @@ void OnKeyUpDungeon(WPARAM wParam, LPARAM lParam)
 
 	g_bKeyChkUp = FALSE;
 
+	const auto speed = 20;
 	switch( LOWORD(wParam) )
 	{
 		case VK_CONTROL:
@@ -1998,6 +1999,22 @@ void OnKeyUpDungeon(WPARAM wParam, LPARAM lParam)
 			SetRect( &g_rcSelectBox, 0, 0, 0, 0 );
 		}
 		break;
+
+		case VK_LEFT:
+			ItemPickupFilteringSystem::sharedInstance()->offsetView({ -speed, 0 });
+			break;
+
+		case VK_RIGHT:
+			ItemPickupFilteringSystem::sharedInstance()->offsetView({ speed, 0 });
+			break;
+		
+		case VK_UP:
+			ItemPickupFilteringSystem::sharedInstance()->offsetView({ 0, -speed });
+			break;
+
+		case VK_DOWN:
+			ItemPickupFilteringSystem::sharedInstance()->offsetView({ 0, speed });
+			break;
 	}
 }
 

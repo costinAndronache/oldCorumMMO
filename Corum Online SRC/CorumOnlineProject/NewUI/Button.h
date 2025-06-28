@@ -16,8 +16,8 @@ namespace CustomUI {
 			const char* text;
 			SingleLineLabel::Appearance appearance;
 		};
-		Button(SpriteModel spriteModel, SpriteModel pressedSpriteModel, Rect frame);
-		Button(SpriteModel spriteModel, SpriteModel pressedSpriteModel, LabelModel labelModel, Rect frame);
+		Button(SpriteModel spriteModel, SpriteModel pressedSpriteModel, Rect frameInParent);
+		Button(SpriteModel spriteModel, SpriteModel pressedSpriteModel, LabelModel labelModel, Rect frameInParent);
 
 		void updateSpriteModelTo(SpriteModel newModel);
 		void updatePressedSpriteModelTo(SpriteModel newPressedStateSpriteModel);

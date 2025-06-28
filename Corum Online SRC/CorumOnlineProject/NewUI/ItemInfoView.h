@@ -12,12 +12,11 @@ namespace CustomUI {
 			CItem* item;
 			Size itemResourceSize;
 		};
-		ItemInfoView(Model model, Rect frame, SpriteModel backgroundSpriteModel);
+		ItemInfoView(Model model, Rect frameInParent, SpriteModel backgroundSpriteModel);
 		void updateModel(Model newModel);
 		void renderWithRenderer(I4DyuchiGXRenderer* renderer, int order) override;
 		bool renderInfoIfMouseHover();
 	private:
-		const Rect _rect;
 		Model _model;
 		SpriteModel _backgroundSpriteModel;
 	};
