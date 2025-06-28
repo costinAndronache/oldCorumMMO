@@ -3,6 +3,7 @@ using namespace CustomUI;
 
 ToggleButton::ToggleButton(SpriteModel spriteModel, SpriteModel pressedSpriteModel, Button::LabelModel labelModel, Rect frame) : 
  _spriteModel(spriteModel), _pressedSpriteModel(pressedSpriteModel), _isToggled(false) {
+	_frame = frame;
 	_button = registerChildRenderable<Button>([=]() { return new Button(spriteModel, pressedSpriteModel, labelModel, frame); });
 
 	_button->onRelease([this]() {
@@ -12,6 +13,7 @@ ToggleButton::ToggleButton(SpriteModel spriteModel, SpriteModel pressedSpriteMod
 
 ToggleButton::ToggleButton(SpriteModel spriteModel, SpriteModel pressedSpriteModel, Rect frame) :
 	_spriteModel(spriteModel), _pressedSpriteModel(pressedSpriteModel), _isToggled(false) {
+	_frame = frame;
 	_button = registerChildRenderable<Button>([=]() { return new Button(spriteModel, pressedSpriteModel, frame); });
 
 	_button->onRelease([this]() {

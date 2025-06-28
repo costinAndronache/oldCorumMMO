@@ -41,10 +41,10 @@ void Button::renderWithRenderer(I4DyuchiGXRenderer* renderer, int order) {
 	switch (_currentMouseState) {
 	case MouseState::none:
 	case MouseState::hovering:
-		_spriteModel.renderWith(renderer, _frame);
+		_spriteModel.renderWith(renderer, _frame, order);
 		break;
 	case MouseState::pressedInside:
-		_pressedSpriteModel.renderWith(renderer, _frame);
+		_pressedSpriteModel.renderWith(renderer, _frame, order);
 
 	}
 

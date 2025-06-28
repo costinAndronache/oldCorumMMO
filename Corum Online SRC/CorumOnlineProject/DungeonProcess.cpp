@@ -1546,6 +1546,8 @@ void OnKeyDownDungeon(WPARAM wParam, LPARAM lParam)
 	if (CustomUI::safeToHandleKeyEvents()) {
 		ItemPickupFilteringSystem::sharedInstance()->handleKeyDown(wParam, lParam);
 
+		if (ItemPickupFilteringSystem::sharedInstance()->swallowsKeyboard()) { return; }
+
 		switch (ItemPickupFiltering::actionCodeFromKeyEvent(wParam, lParam)) {
 		case ActionCode::ActionCodeDroppedItemsTooltipRendering:
 			populateForTooltipRenderingAllDropped();
@@ -1959,6 +1961,7 @@ void OnKeyUpDungeon(WPARAM wParam, LPARAM lParam)
 {	
 	if (CustomUI::safeToHandleKeyEvents()) {
 		ItemPickupFilteringSystem::sharedInstance()->handleKeyUp(wParam, lParam);
+		if (ItemPickupFilteringSystem::sharedInstance()->swallowsKeyboard()) { return; }
 
 		switch (ItemPickupFiltering::actionCodeFromKeyEvent(wParam, lParam)) {
 		case ActionCode::ActionCodeDroppedItemsTooltipRendering:

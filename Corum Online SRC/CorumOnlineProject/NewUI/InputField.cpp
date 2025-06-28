@@ -53,13 +53,67 @@ InputField::InputField(Rect frame, SpriteModel bgSpriteModel, SpriteModel clearB
 	});
 }
 
+bool InputField::swallowsMouseEvents() { 
+	return _clearButton == nullptr;
+}
 
-void InputField::onButtonPress(Button* button) { }
 
 void InputField::onButtonPressRelease(Button* button) { 
 	_buffer.erase(_buffer.begin(), _buffer.end());
 	notifyClient();
 }
+
+
+void InputField::onMouseStateChange(MouseState newState, MouseState oldState) {
+	if (newState == MouseState::pressedInside) {
+		_isActive = true;
+		_caretStateON = true;
+	}
+
+	if (newState == MouseState::none) {
+		_isActive = false;
+		_caretStateON = false;
+	}
+}
+
+void InputField::processKeyUp(WPARAM wparam, LPARAM lparam) {
+	if (!_isActive) {
+		return;
+	}
+
+	if (wparam == VK_BACK) {
+		if (!_buffer.empty()) {
+			_buffer.erase(_buffer.end() - 1);
+			notifyClient();
+		}
+		return;
+	}
+
+	if (wparam == VK_SPACE) {
+		_buffer.append(" ");
+		notifyClient();
+		return;
+	}
+
+	const short asciiResult = getASCII(wparam, lparam);
+	if (asciiResult < 0) {
+		return;
+	}
+
+	char key = (char)asciiResult;
+
+	if (('a' <= key && key <= 'z') ||
+		('A' <= key && key <= 'Z') ||
+		('0' <= key && key <= '9')) {
+		char str[2] = { key, '\0' };
+
+		if (_buffer.size() < maxChars) {
+			_buffer.append(str);
+			notifyClient();
+		}
+	}
+}
+
 
 void InputField::renderWithRenderer(I4DyuchiGXRenderer* renderer, int order) {
 	VECTOR2 pos = { _frame.origin.x, _frame.origin.y };
@@ -86,17 +140,6 @@ void InputField::renderWithRenderer(I4DyuchiGXRenderer* renderer, int order) {
 							order + 1, 0
 	);
 
-	if (g_Mouse.bLDown) {
-		if (_frame.isMouseInside(g_Mouse.MousePos)) {
-			_isActive = true;
-			_caretStateON = true;
-		}
-		else {
-			_isActive = false;
-			_caretStateON = false;
-		}
-	}
-
 	if (_isActive) {
 		DWORD now = timeGetTime();
 		if (now - _lastCaretUpdateTime > 600) {
@@ -110,55 +153,11 @@ void InputField::renderWithRenderer(I4DyuchiGXRenderer* renderer, int order) {
 	}
 }
 
-bool InputField::handleKeyDown(WPARAM wparam, LPARAM lparam) {
-	return _isActive;
-} 
-
 void InputField::notifyClient() {
 	if (_handler) {
 		const char* text = _buffer.c_str();
 		_handler(text);
 	}
-}
-
-bool InputField::handleKeyUp(WPARAM wparam, LPARAM lParam) {
-	if (!_isActive) {
-		return false;
-	}
-
-	if (wparam == VK_BACK) {
-		if (!_buffer.empty()) {
-			_buffer.erase(_buffer.end() - 1);
-			notifyClient();
-		}
-		return true;
-	}
-
-	if (wparam == VK_SPACE) {
-		_buffer.append(" ");
-		notifyClient();
-		return true;
-	}
-
-	const short asciiResult = getASCII(wparam, lParam);
-	if (asciiResult < 0) {
-		return true;
-	}
-
-	char key = (char)asciiResult;
-
-	if (('a' <= key && key <= 'z') ||
-		('A' <= key && key <= 'Z') ||
-		('0' <= key && key <= '9')) {
-		char str[2] = { key, '\0' };
-
-		if (_buffer.size() < maxChars) {
-			_buffer.append(str);
-			notifyClient();
-		}
-	}
-
-	return true;
 }
 
 const char* InputField::currentText() {

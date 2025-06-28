@@ -128,6 +128,10 @@ bool ItemPickupFilteringSystem::swallowsMouse() {
 	return _view->swallowsMouse(g_Mouse.MousePos);
 }
 
+bool ItemPickupFilteringSystem::swallowsKeyboard() {
+	return _view->swallowsKeyboard();
+}
+
 void ItemPickupFilteringSystem::handleMouseDown() {
 	if (_view->getHidden()) { return; }
 	_view->handleMouseDown(g_Mouse.MousePos);

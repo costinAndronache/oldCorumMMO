@@ -22,8 +22,6 @@ namespace ItemPickupFiltering {
 	public:
 		ItemFilteringView(CustomUI::Rect frame, std::vector<CItem*>& allItems, std::set<DWORD>& selectedItemIDs, ItemFilteringViewClient* client);
 		void renderWithRenderer(I4DyuchiGXRenderer* renderer, int order);
-		bool handleKeyUp(WPARAM wparam, LPARAM lparam);
-		bool handleKeyDown(WPARAM wparam, LPARAM lparam);
 
 		std::set<DWORD> currentSelectedIDs();
 	private:

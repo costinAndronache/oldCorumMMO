@@ -22,6 +22,7 @@ namespace ItemPickupFiltering {
 		bool isViewActive();
 
 		bool swallowsMouse();
+		bool swallowsKeyboard();
 	private:
 		ItemFilteringView* _view;
 		void itemFilteringViewDidUpdateSelection(ItemFilteringView*, std::set<DWORD> selectedItemIDs);

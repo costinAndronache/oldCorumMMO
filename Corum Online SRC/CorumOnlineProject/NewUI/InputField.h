@@ -12,16 +12,18 @@ namespace CustomUI {
 		InputField(Rect frame, SpriteModel bgSpriteModel);
 		InputField(Rect frame, SpriteModel bgSpriteModel, SpriteModel clearButtonSprite, SpriteModel clearButtonPressedSprite);
 		void renderWithRenderer(I4DyuchiGXRenderer* renderer, int order);
-		bool handleKeyUp(WPARAM wparam, LPARAM lparam);
-		bool handleKeyDown(WPARAM wparam, LPARAM lparam);
-		
+
 		void onTextUpdate(InputTextUpdateHandler handler) { _handler = handler; }
 		const char* currentText();
 		static const int maxChars = 124;
-	private:
-		void onButtonPress(Button* button);
-		void onButtonPressRelease(Button* button);
 
+	protected:
+		void onMouseStateChange(MouseState newState, MouseState oldState) override;
+		void processKeyUp(WPARAM wparam, LPARAM lparam) override;
+		bool swallowsKeyEvents() override { return _isActive; }
+		bool swallowsMouseEvents() override;
+	private:
+		void onButtonPressRelease(Button* button);
 		void notifyClient();
 
 		std::string _buffer;

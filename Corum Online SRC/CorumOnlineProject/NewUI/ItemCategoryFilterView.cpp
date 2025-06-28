@@ -4,6 +4,8 @@ using namespace CustomUI;
 using namespace ItemPickupFiltering;
 
 ItemCategoryFilterView::ItemCategoryFilterView(CustomUI::Rect frame, CategoryType currentSelectedCategory) {
+	_frame = frame;
+
 	std::vector<RadioButtonGroup::LabeledButtonModel> models;
 	RadioButtonGroup::LabeledButtonModel specimen;
 	specimen.spriteModel.rotation = 0;

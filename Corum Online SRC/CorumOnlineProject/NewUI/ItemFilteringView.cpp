@@ -125,15 +125,6 @@ void ItemFilteringView::renderWithRenderer(I4DyuchiGXRenderer* renderer, int ord
 	}
 }
 
-
-bool ItemFilteringView::handleKeyDown(WPARAM wparam, LPARAM lparam) {
-	return !getHidden() && _inputField->handleKeyDown(wparam, lparam);
-}
-
-bool ItemFilteringView::handleKeyUp(WPARAM wparam, LPARAM lparam) {
-	return !getHidden() && _inputField->handleKeyUp(wparam, lparam);
-}
-
 std::vector<CItem*> itemsMatchingNameFilter(const std::vector<CItem*>& sourceItems, const char* nameFilter);
 void ItemFilteringView::onInputFieldTextChange(InputField* inputField, const char* text) {
 	_displayedItems = itemsMatchingNameFilter(_textFilteringSourceItems, text);
