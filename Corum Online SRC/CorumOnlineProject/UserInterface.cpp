@@ -40,6 +40,7 @@
 #include "ItemNative.h"
 #include "GuardianWnd.h"
 #include "SkillSelectionView.h"
+#include "NewHUD/LeftHUD.h"
 
 //////////////////////////////////////////////////////////////////////////
 // Temporary File for Interface Process
@@ -1080,7 +1081,7 @@ void CUserInterface::onDungeonJoin() {
 }
 
 void CUserInterface::updatedCurrentHP(CMainUser* player, DWORD oldValue, DWORD newValue) {
-	updateHPBar(newValue / (float)player->maxHP());
+	updateHPBar(player->percentageHP());
 }
 
 void CUserInterface::updatedMAXHP(CMainUser* player, DWORD oldValue, DWORD newValue) {
@@ -1088,7 +1089,8 @@ void CUserInterface::updatedMAXHP(CMainUser* player, DWORD oldValue, DWORD newVa
 }
 
 void CUserInterface::updatedCurrentSP(CMainUser* player, DWORD oldValue, DWORD newValue) {
-	updateSPBar(newValue / (float)player->maxSP());
+	updateSPBar(player->percentageMP());
+	LeftHUD::shared()->updateScale(player->percentageMP());
 }
 
 void CUserInterface::updatedMAXSP(CMainUser* player, DWORD oldValue, DWORD newValue) {

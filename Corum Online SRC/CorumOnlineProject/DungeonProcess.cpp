@@ -99,11 +99,12 @@
 #include "GuildWarRequest.h"
 #include "GuildWarFinalSettingWnd.h"
 #include "GuildWarStatusWnd.h"
-#include "ItemPickupFiltering/ItemPickupFiltering.h"
+#include "NewUI/ItemPickupFiltering.h"
 #include "../CommonServer/ItemManagerDefine.h"
 #include "MouseButtonLongPressRecognizer.h"
 #include "AppliedSkillsIconsView.h"
 #include "SkillSelectionView.h"
+#include "NewHUD/LeftHUD.h"
 
 using namespace ItemPickupFiltering;
 
@@ -1050,7 +1051,7 @@ DWORD __stdcall AfterRenderGameDungeon()
 	}
 
 	pInterface->Render();
-	
+	LeftHUD::shared()->renderWithRenderer(g_pRenderer);
 
 	g_pSprManager->RenderAllSprite();
 	pInterface->SetMiniMapPos();
@@ -1082,6 +1083,7 @@ DWORD __stdcall AfterRenderGameDungeon()
 
 	if( !g_pThisDungeon->IsStadium() || (g_pMainPlayer->m_dwGuildWarFlag != G_W_F_OBSERVER) )
 	{
+#pragma region 
 		// Hp, Sp //	
 		wsprintf(szInfo, g_Message[ETC_MESSAGE864].szMessage, g_pMainPlayer->currentHP(), g_pMainPlayer->maxHP());//"Hp:%d/%d"	
 		RenderFont(szInfo, 5, 100, 740, 752, 1);
@@ -1542,9 +1544,7 @@ DWORD __stdcall AfterRenderGameDungeon()
 void OnKeyDownDungeon(WPARAM wParam, LPARAM lParam)
 {	
 	if (CustomUI::safeToHandleKeyEvents()) {
-		if (ItemPickupFilteringSystem::sharedInstance()->handleKeyDown(wParam, lParam)) {
-			return;
-		}
+		ItemPickupFilteringSystem::sharedInstance()->handleKeyDown(wParam, lParam);
 
 		switch (ItemPickupFiltering::actionCodeFromKeyEvent(wParam, lParam)) {
 		case ActionCode::ActionCodeDroppedItemsTooltipRendering:
@@ -1958,9 +1958,7 @@ void OnKeyDownDungeon(WPARAM wParam, LPARAM lParam)
 void OnKeyUpDungeon(WPARAM wParam, LPARAM lParam)
 {	
 	if (CustomUI::safeToHandleKeyEvents()) {
-		if (ItemPickupFilteringSystem::sharedInstance()->handleKeyUp(wParam, lParam)) {
-			return;
-		}
+		ItemPickupFilteringSystem::sharedInstance()->handleKeyUp(wParam, lParam);
 
 		switch (ItemPickupFiltering::actionCodeFromKeyEvent(wParam, lParam)) {
 		case ActionCode::ActionCodeDroppedItemsTooltipRendering:
@@ -2002,8 +2000,9 @@ void OnKeyUpDungeon(WPARAM wParam, LPARAM lParam)
 
 BOOL OnLButtonDownInterfaceDungeon()
 {
-	if (ItemPickupFilteringSystem::sharedInstance()->handleMouseDown()) {
-		return TRUE;
+	ItemPickupFilteringSystem::sharedInstance()->handleMouseDown();
+	if (ItemPickupFilteringSystem::sharedInstance()->swallowsMouse()) { 
+		return TRUE; 
 	}
 
 	CInterface*			pInterface		= CInterface::GetInstance();
@@ -2071,12 +2070,6 @@ BOOL OnLButtonDownInterfaceDungeon()
 
 void OnLButtonDownDungeon(WPARAM wParam, LPARAM lParam)
 {
-
-	if (ItemPickupFilteringSystem::sharedInstance()->handleMouseDown()) {
-		printf("\nItemPickupFiltering handles it");
-		return;
-	}
-
 	CGroupWnd*		pGroupWnd		= CGroupWnd::GetInstance();
 	CUserInterface* pUserInterface	= CUserInterface::GetInstance();	
 	g_Mouse.dwLButtonDownTime		= g_dwCurTick;
@@ -2194,9 +2187,11 @@ lb_move:
 
 void OnLButtonUpDungeon(WPARAM wParam, LPARAM lParam)
 {
-	if (ItemPickupFilteringSystem::sharedInstance()->handleMouseUp()) {
-		return;
+	ItemPickupFilteringSystem::sharedInstance()->handleMouseUp();
+	if (ItemPickupFilteringSystem::sharedInstance()->swallowsMouse()) { 
+		return; 
 	}
+
 	CInterface*			pInterface			= CInterface::GetInstance();
 	CUserInterface*		pUserInterface		= CUserInterface::GetInstance();
 	CGroupWnd*			pGroupWnd			= CGroupWnd::GetInstance();
@@ -3471,7 +3466,7 @@ void OnTimerEventDungeon(DWORD dwTimerIndex)
 
 void MouseEventDungeon()
 {
-	if (ItemPickupFilteringSystem::sharedInstance()->isInterfaceFocused()) {
+	if (ItemPickupFilteringSystem::sharedInstance()->swallowsMouse()) {
 		return;
 	}
 

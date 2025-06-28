@@ -1,0 +1,113 @@
+#include "RadioButtonGroup.h"
+#include <functional>
+
+using namespace CustomUI;
+
+static void fillButtons(
+	std::vector<ToggleButton*>& buttonList, int count,
+	Point origin, Size buttonSize, int xStep, int yStep,
+	std::function<ToggleButton*(int, Rect)> createFn) {
+	for (int i = 0; i < count; i++) {
+		Rect btnFrame = { { origin.x + i * xStep, origin.y + i * yStep }, buttonSize };
+
+		ToggleButton* tgb = createFn(i, btnFrame);
+		buttonList.push_back(tgb);
+	}
+}
+
+RadioButtonGroup::RadioButtonGroup(std::vector<ButtonModel> models, Rect frame, unsigned int activeButtonIndex): 
+	_activeButtonIndex(activeButtonIndex) {
+	_buttons.reserve(models.size());
+	_frame = frame;
+
+	std::function<ToggleButton* (int, Rect)> createFn = [&](int index, Rect btnFrame) {
+		return buildFromModelList(&models, index, btnFrame);
+	};
+
+	if (frame.size.width > frame.size.height) {
+		Size size = { frame.size.width / models.size(), frame.size.height };
+		fillButtons(_buttons, models.size(), frame.origin, size, size.width, 0, createFn);
+	}
+	else {
+		Size size = { frame.size.width, frame.size.height / models.size() };
+		fillButtons(_buttons, models.size(), frame.origin, size, 0, size.height, createFn);
+	}
+	adjustButtons(_activeButtonIndex);
+}
+
+RadioButtonGroup::RadioButtonGroup(std::vector<LabeledButtonModel> models, Rect frame, unsigned int activeButtonIndex):
+	_activeButtonIndex(activeButtonIndex) {
+	_frame = frame;
+
+	_buttons.reserve(models.size());
+	std::function<ToggleButton*(int, Rect)> createFn = [&](int index, Rect btnFrame) {
+		return buildFromLabeledModelList(&models, index, btnFrame);
+	};
+
+	if (frame.size.width > frame.size.height) {
+		Size size = { frame.size.width / models.size(), frame.size.height };
+		fillButtons(_buttons, models.size(), frame.origin, size, size.width, 0, createFn);
+	}
+	else {
+		Size size = { frame.size.width, frame.size.height / models.size() };
+		fillButtons(_buttons, models.size(), frame.origin, size, 0, size.height, createFn);
+	}
+	adjustButtons(_activeButtonIndex);
+}
+
+void RadioButtonGroup::renderWithRenderer(I4DyuchiGXRenderer* renderer, int order) {
+	for (int i = 0; i < _buttons.size(); i++) {
+		_buttons[i]->renderWithRenderer(renderer, order);
+	}
+}
+
+void RadioButtonGroup::toggleButtonDidSwitchState(ToggleButton* button, bool isOn) {
+	auto it = std::find(_buttons.begin(), _buttons.end(), button);
+	if (it != _buttons.end()) {
+		const int index = it - _buttons.begin();
+
+		if (index == _activeButtonIndex) {
+			button->setState(true);
+			return;
+		}
+
+		_activeButtonIndex = index;
+		adjustButtons(_activeButtonIndex);
+		if (_handler) { _handler(_activeButtonIndex); }
+	}
+}
+
+void RadioButtonGroup::adjustButtons(const unsigned int activeButtonIndex) {
+	for (int i = 0; i < _buttons.size(); i++) {
+		_buttons[i]->setState(activeButtonIndex == i);
+	}
+}
+
+ToggleButton* RadioButtonGroup::buildFromModelList(const std::vector<ButtonModel>* models, int index, Rect frame) {
+	ButtonModel model = (*models)[index];
+	auto toggleButton = registerChildRenderable<ToggleButton>([=]() {
+		return new ToggleButton(model.spriteModel, model.pressedStateSpriteModel,
+                           frame);
+	});
+
+	toggleButton->onStateSwitch([this, toggleButton](bool isOn){
+		toggleButtonDidSwitchState(toggleButton, isOn);
+	});
+
+	return toggleButton;
+}
+
+ToggleButton *RadioButtonGroup::buildFromLabeledModelList(
+    const std::vector<LabeledButtonModel>* models, int index, Rect frame) {
+	LabeledButtonModel model = (*models)[index];
+
+	auto toggleButton = registerChildRenderable<ToggleButton>([=]() {
+		return new ToggleButton(model.spriteModel, model.pressedStateSpriteModel, model.labelModel, frame);
+	});
+
+	toggleButton->onStateSwitch([this, toggleButton](bool isOn) {
+		toggleButtonDidSwitchState(toggleButton, isOn);
+	});
+
+	return toggleButton;
+}

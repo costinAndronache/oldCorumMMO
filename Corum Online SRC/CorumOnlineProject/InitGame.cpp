@@ -56,6 +56,9 @@
 #include "IMEEdit.h"
 #endif 
 
+#include "NewHUD/HUDSpriteCollection.h"
+#include "NewUI/SpriteCollection.h"
+
 extern int windowWidth();
 extern int windowHeight();
 
@@ -849,7 +852,9 @@ BOOL InitGame()
 
 	InterfaceSprLoad(0);
 
-	PointerIntegrityCheck("In beginning end");
+	HUDSpriteCollection::initialize(g_pRenderer);
+	CustomUI::SpriteCollection::initialize(g_pRenderer);
+
 	
 
 	return TRUE;
@@ -2054,11 +2059,10 @@ void LoadItemResourceTable()
 				
 		lpItemResource->pSpr = g_pRenderer->CreateSpriteObject(GetFile(lpItemResource->szIconFileName, DATA_TYPE_UI), nPosX, nPosY, nWidth, nHeight, 0);
 
-		if(!lpItemResource->pSpr)
-		{
+		if(!lpItemResource->pSpr) {
 			char szTemp[0xff] = {0,};
 			wsprintf(szTemp, "file not found : %s", lpItemResource->szIconFileName);
-			MessageBox(g_hMainWnd, szTemp, "CorumOnline Error", MB_OK);
+			printf("\n%s", szTemp);
 		}
 					
 		g_pItemResourceHash->Insert(lpItemResource, lpItemResource->wID);		

@@ -1890,7 +1890,6 @@
       <BrowseInformation Condition="'$(Configuration)|$(Platform)'=='dev|Win32'">true</BrowseInformation>
     </ClCompile>
     <ClCompile Include="CustomDXDrawing\Renderer.cpp" />
-    <ClCompile Include="CustomUiKit\PagedTableWindow\PagedTableWindow.cpp" />
     <ClCompile Include="DamageNumber.cpp">
       <BasicRuntimeChecks Condition="'$(Configuration)|$(Platform)'=='CHINA_DEV|Win32'">EnableFastChecks</BasicRuntimeChecks>
       <BrowseInformation Condition="'$(Configuration)|$(Platform)'=='CHINA_DEV|Win32'">true</BrowseInformation>
@@ -4096,19 +4095,23 @@
       <BasicRuntimeChecks Condition="'$(Configuration)|$(Platform)'=='dev|Win32'">EnableFastChecks</BasicRuntimeChecks>
       <BrowseInformation Condition="'$(Configuration)|$(Platform)'=='dev|Win32'">true</BrowseInformation>
     </ClCompile>
-    <ClCompile Include="ItemPickupFiltering\Button.cpp" />
-    <ClCompile Include="ItemPickupFiltering\CustomUIBase.cpp" />
-    <ClCompile Include="ItemPickupFiltering\InputField.cpp" />
-    <ClCompile Include="ItemPickupFiltering\ItemCategoryFilterView.cpp" />
-    <ClCompile Include="ItemPickupFiltering\ItemFilteringView.cpp" />
-    <ClCompile Include="ItemPickupFiltering\ItemInfoView.cpp" />
-    <ClCompile Include="ItemPickupFiltering\ItemPickupFiltering.cpp" />
-    <ClCompile Include="ItemPickupFiltering\ItemPickupFilteringBase.cpp" />
-    <ClCompile Include="ItemPickupFiltering\Label.cpp" />
-    <ClCompile Include="ItemPickupFiltering\PagedItemViewTable.cpp" />
-    <ClCompile Include="ItemPickupFiltering\RadioButtonGroup.cpp" />
-    <ClCompile Include="ItemPickupFiltering\SelectionView.cpp" />
-    <ClCompile Include="ItemPickupFiltering\ToggleButton.cpp" />
+    <ClCompile Include="NewHUD\HUDSpriteCollection.cpp" />
+    <ClCompile Include="NewHUD\LeftHUD.cpp" />
+    <ClCompile Include="NewUI\Button.cpp" />
+    <ClCompile Include="NewUI\CustomUIBase.cpp" />
+    <ClCompile Include="NewUI\InputField.cpp" />
+    <ClCompile Include="NewUI\ItemCategoryFilterView.cpp" />
+    <ClCompile Include="NewUI\ItemFilteringView.cpp" />
+    <ClCompile Include="NewUI\ItemInfoView.cpp" />
+    <ClCompile Include="NewUI\ItemPickupFiltering.cpp" />
+    <ClCompile Include="NewUI\ItemPickupFilteringBase.cpp" />
+    <ClCompile Include="NewUI\Label.cpp" />
+    <ClCompile Include="NewUI\PagedItemViewTable.cpp" />
+    <ClCompile Include="NewUI\RadioButtonGroup.cpp" />
+    <ClCompile Include="NewUI\Renderable.cpp" />
+    <ClCompile Include="NewUI\SelectionView.cpp" />
+    <ClCompile Include="NewUI\SpriteCollection.cpp" />
+    <ClCompile Include="NewUI\ToggleButton.cpp" />
     <ClCompile Include="ItemShopWnd.cpp">
       <BasicRuntimeChecks Condition="'$(Configuration)|$(Platform)'=='CHINA_DEV|Win32'">EnableFastChecks</BasicRuntimeChecks>
       <BrowseInformation Condition="'$(Configuration)|$(Platform)'=='CHINA_DEV|Win32'">true</BrowseInformation>
@@ -5850,6 +5853,7 @@
       <BasicRuntimeChecks Condition="'$(Configuration)|$(Platform)'=='dev|Win32'">EnableFastChecks</BasicRuntimeChecks>
       <BrowseInformation Condition="'$(Configuration)|$(Platform)'=='dev|Win32'">true</BrowseInformation>
     </ClCompile>
+    <ClCompile Include="NewUI\HorizontalScalingBar.cpp" />
     <ClCompile Include="RivalGuildWar.cpp">
       <BasicRuntimeChecks Condition="'$(Configuration)|$(Platform)'=='CHINA_DEV|Win32'">EnableFastChecks</BasicRuntimeChecks>
       <BrowseInformation Condition="'$(Configuration)|$(Platform)'=='CHINA_DEV|Win32'">true</BrowseInformation>
@@ -6552,7 +6556,6 @@
     <ClInclude Include="AppliedSkillsIconsView.h" />
     <ClInclude Include="BaloonChat.h" />
     <ClInclude Include="BankWnd.h" />
-    <ClInclude Include="BaseNetworkInterface.h" />
     <ClInclude Include="BlockWnd.h" />
     <ClInclude Include="CDungeonInfoWnd.h" />
     <ClInclude Include="CDungeonManagerWnd.h" />
@@ -6592,9 +6595,6 @@
     <ClInclude Include="crtNode.h" />
     <ClInclude Include="CustomDXDrawing\Colors.h" />
     <ClInclude Include="CustomDXDrawing\Renderer.h" />
-    <ClInclude Include="CustomUiKit\Base.h" />
-    <ClInclude Include="CustomUiKit\PagedTableWindow\PagedTableWindow.h" />
-    <ClInclude Include="CustomUiKit\Renderer.h" />
     <ClInclude Include="DamageNumber.h" />
     <ClInclude Include="DebugLog.h" />
     <ClInclude Include="DefaultWnd.h" />
@@ -6678,19 +6678,24 @@
     <ClInclude Include="ItemMoveManager.h" />
     <ClInclude Include="ItemNative.h" />
     <ClInclude Include="ItemNativeManager.h" />
-    <ClInclude Include="ItemPickupFiltering\Button.h" />
-    <ClInclude Include="ItemPickupFiltering\CustomUIBase.h" />
-    <ClInclude Include="ItemPickupFiltering\InputField.h" />
-    <ClInclude Include="ItemPickupFiltering\ItemCategoryFilterView.h" />
-    <ClInclude Include="ItemPickupFiltering\ItemFilteringView.h" />
-    <ClInclude Include="ItemPickupFiltering\ItemInfoView.h" />
-    <ClInclude Include="ItemPickupFiltering\ItemPickupFiltering.h" />
-    <ClInclude Include="ItemPickupFiltering\ItemPickupFilteringBase.h" />
-    <ClInclude Include="ItemPickupFiltering\Label.h" />
-    <ClInclude Include="ItemPickupFiltering\PagedItemViewTable.h" />
-    <ClInclude Include="ItemPickupFiltering\RadioButtonGroup.h" />
-    <ClInclude Include="ItemPickupFiltering\SelectionView.h" />
-    <ClInclude Include="ItemPickupFiltering\ToggleButton.h" />
+    <ClInclude Include="NewHUD\HUDSpriteCollection.h" />
+    <ClInclude Include="NewHUD\LeftHUD.h" />
+    <ClInclude Include="NewUI\Button.h" />
+    <ClInclude Include="NewUI\CustomUIBase.h" />
+    <ClInclude Include="NewUI\InputField.h" />
+    <ClInclude Include="NewUI\ItemCategoryFilterView.h" />
+    <ClInclude Include="NewUI\ItemFilteringView.h" />
+    <ClInclude Include="NewUI\ItemInfoView.h" />
+    <ClInclude Include="NewUI\ItemPickupFiltering.h" />
+    <ClInclude Include="NewUI\ItemPickupFilteringBase.h" />
+    <ClInclude Include="NewUI\Label.h" />
+    <ClInclude Include="NewUI\PagedItemViewTable.h" />
+    <ClInclude Include="NewUI\RadioButtonGroup.h" />
+    <ClInclude Include="NewUI\HorizontalScalingBar.h" />
+    <ClInclude Include="NewUI\Renderable.h" />
+    <ClInclude Include="NewUI\SelectionView.h" />
+    <ClInclude Include="NewUI\SpriteCollection.h" />
+    <ClInclude Include="NewUI\ToggleButton.h" />
     <ClInclude Include="ItemShopWnd.h" />
     <ClInclude Include="ItemTradeShopWnd.h" />
     <ClInclude Include="ItemTradeWnd.h" />
@@ -6792,10 +6797,8 @@
     <ClInclude Include="WorldWnd.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="CommonServer.dll" />
     <None Include="CorumOnlineProject.dsp" />
     <None Include="CorumResource.erd" />
-    <None Include="CorumVerInfo.ver" />
     <None Include="crBaseMenu.inl" />
     <None Include="Data\Cursor\m_attack.cur" />
     <None Include="Data\Cursor\m_attack_c.cur" />
@@ -6818,22 +6821,13 @@
     <None Include="resource2.erl" />
     <None Include="resource3.erl" />
     <None Include="SoundLib.dll" />
-    <None Include="SS3DExecutiveForCorum.dll" />
-    <None Include="SS3DFileStorage.dll" />
-    <None Include="SS3DGeometryForCorum.dll" />
-    <None Include="SS3DGFunc.dll" />
-    <None Include="SS3DGFuncN.dll" />
-    <None Include="SS3DGFuncSSE.dll" />
-    <None Include="SS3DRendererForCorum.dll" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="corum.ico" />
   </ItemGroup>
   <ItemGroup>
-    <Library Include="CommonServer.lib" />
     <Library Include="NMCrypt.lib" />
     <Library Include="SoundLib.lib" />
-    <Library Include="SS3DGFunc.lib" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

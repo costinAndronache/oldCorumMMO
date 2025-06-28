@@ -27,7 +27,6 @@
 #include "ChinaHackToolBlock.h"
 #include <Windows.h>
 #include <GdiPlusInit.h>
-#include "CustomUiKit/PagedTableWindow/PagedTableWindow.h"
 #include "../BaseLibrary/Timer.h"
 #include "DungeonInterfaceLayout.h"
 

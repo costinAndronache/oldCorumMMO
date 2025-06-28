@@ -1,0 +1,39 @@
+#pragma once
+#include "CustomUIBase.h"
+#include "ToggleButton.h"
+#include <vector>
+namespace CustomUI {
+	class RadioButtonGroup: public Renderable {
+	public:
+		typedef std::function<void(unsigned int)> ActiveIndexUpdateHandler;
+
+		struct ButtonModel {
+			SpriteModel spriteModel;
+			SpriteModel pressedStateSpriteModel;
+		};
+
+		struct LabeledButtonModel: public ButtonModel {
+			Button::LabelModel labelModel;
+		};
+
+		RadioButtonGroup(std::vector<ButtonModel>, Rect frame, unsigned int activeButtonIndex);
+		RadioButtonGroup(std::vector<LabeledButtonModel>, Rect frame, unsigned int activeButtonIndex);
+		void renderWithRenderer(I4DyuchiGXRenderer* renderer, int order) override;
+
+		void onActiveIndexUpdate(ActiveIndexUpdateHandler handler) { _handler = handler; };
+	private:
+		void toggleButtonDidSwitchState(ToggleButton* button, bool isOn);
+
+		ToggleButton* buildFromModelList(const std::vector<ButtonModel>*, int index, Rect frame);
+		ToggleButton* buildFromLabeledModelList(const std::vector<LabeledButtonModel>*, int index, Rect frame);
+
+		void adjustButtons(const unsigned int activeButtonIndex);
+
+		ActiveIndexUpdateHandler _handler;
+		unsigned int _activeButtonIndex;
+		std::vector<ToggleButton*> _buttons;
+	};
+}
+
+
+
