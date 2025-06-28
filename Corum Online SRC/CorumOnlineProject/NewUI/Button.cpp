@@ -3,14 +3,12 @@
 
 using namespace CustomUI;
 
-Button::Button(SpriteModel spriteModel, SpriteModel pressedSpriteModel, Rect frameInParent) :
-			   _spriteModel(spriteModel), _pressedSpriteModel(pressedSpriteModel) {
+Button::Button(Sprites sprites, Rect frameInParent): _sprites(sprites) {
 	_frameInParent = frameInParent;
 	_label = NULL;
 }
 
-Button::Button(SpriteModel spriteModel, SpriteModel pressedSpriteModel, LabelModel labelModel, Rect frameInParent): 
-	_spriteModel(spriteModel), _pressedSpriteModel(pressedSpriteModel) {
+Button::Button(Sprites sprites, LabelModel labelModel, Rect frameInParent): _sprites(sprites) {
 	_frameInParent = frameInParent;
 
 	Rect labelFrame{ {0, 0}, SingleLineLabel::fittedSize(strlen(labelModel.text)) };
@@ -20,12 +18,8 @@ Button::Button(SpriteModel spriteModel, SpriteModel pressedSpriteModel, LabelMod
 	});
 }
 
-void Button::updateSpriteModelTo(SpriteModel newModel) {
-	_spriteModel = newModel;
-}
-
-void Button::updatePressedSpriteModelTo(SpriteModel newPressedStateSpriteModel) {
-	_pressedSpriteModel = newPressedStateSpriteModel;
+void Button::updateSpriteModelTo(Sprites newModel) {
+	_sprites = newModel;
 }
 
 void Button::onMouseStateChange(MouseState newState, MouseState oldState) {
@@ -43,12 +37,15 @@ void Button::renderWithRenderer(I4DyuchiGXRenderer* renderer, int order) {
 
 	switch (_currentMouseState) {
 	case MouseState::none:
+		_sprites.normal.renderWith(renderer, frame, order);
 	case MouseState::hovering:
-		_spriteModel.renderWith(renderer, frame, order);
+		_sprites.hovered.renderWith(renderer, frame, order);
+		if (!_sprites.hovered.sprite) {
+			_sprites.normal.renderWith(renderer, frame, order);
+		}
 		break;
 	case MouseState::pressedInside:
-		_pressedSpriteModel.renderWith(renderer, frame, order);
-
+		_sprites.pressed.renderWith(renderer, frame, order);
 	}
 
 	if (_label) {

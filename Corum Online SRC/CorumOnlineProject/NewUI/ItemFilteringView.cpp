@@ -34,7 +34,13 @@ ItemFilteringView::ItemFilteringView(Rect frameInParent, std::vector<CItem*>& al
 		.withWidth(30);
 
 	_closeButton = registerChildRenderable<Button>([=]() {
-		return new Button(closeSpriteModel, closePressedSpriteModel, closeButtonRect);
+		return new Button(
+			{
+				closeSpriteModel,
+				SpriteModel::zero,
+				closePressedSpriteModel
+			}, 
+			closeButtonRect);
 	});
 
 	_closeButton->onRelease([=]() {
@@ -51,7 +57,9 @@ ItemFilteringView::ItemFilteringView(Rect frameInParent, std::vector<CItem*>& al
 	SpriteModel clearBtnPressedModel = { SpriteCollection::xRedBlackPressed, SpriteCollection::xRedBlackSize, 0 };
 
 	_inputField = registerChildRenderable<InputField>([&]() {
-		return new InputField(inputFieldContainer, InputFieldResources::bgSpriteModel, clearBtnModel, clearBtnPressedModel);
+		return new InputField(inputFieldContainer, InputFieldResources::bgSpriteModel, {
+			clearBtnModel, SpriteModel::zero, clearBtnPressedModel
+		});
 	});
 
 	_inputField->onTextUpdate([&](const char* text) {

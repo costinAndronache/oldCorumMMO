@@ -29,7 +29,7 @@ InputField::InputField(Rect frameInParent, SpriteModel bgSpriteModel): _bgSprite
 	_clearButton = NULL;
 }
 
-InputField::InputField(Rect frameInParent, SpriteModel bgSpriteModel, SpriteModel clearBtnModel, SpriteModel clearBtnPressedModel) : _bgSpriteModel(bgSpriteModel) {
+InputField::InputField(Rect frameInParent, SpriteModel bgSpriteModel, Button::Sprites clearButtonSprites) : _bgSpriteModel(bgSpriteModel) {
 	_frameInParent = frameInParent;
 
 	_isActive = false;
@@ -39,15 +39,14 @@ InputField::InputField(Rect frameInParent, SpriteModel bgSpriteModel, SpriteMode
 	_buffer = "";
 
 	const auto _bounds = bounds();
-
+	const auto clearBtnSize = Size{ 25, 25 };
 	Rect clearBtnFrame = _bounds
-		.fromMaxXOrigin(-clearBtnModel.size.width-5)
-		.withSize(clearBtnModel.size)
-		.scaled(0.8, 0.8)
+		.fromMaxXOrigin(-(clearBtnSize.width+5))
+		.withSize(clearBtnSize)
 		.centeredVerticallyWith(_bounds);
 
 	_clearButton = registerChildRenderable<Button>([&]() {
-		return new Button(clearBtnModel, clearBtnPressedModel, clearBtnFrame);
+		return new Button(clearButtonSprites, clearBtnFrame);
 	});
 
 	_clearButton->onRelease([this]() {

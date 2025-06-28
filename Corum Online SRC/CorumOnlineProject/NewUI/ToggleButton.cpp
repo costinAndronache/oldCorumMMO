@@ -1,20 +1,19 @@
 #include "ToggleButton.h"
 using namespace CustomUI;
 
-ToggleButton::ToggleButton(SpriteModel spriteModel, SpriteModel pressedSpriteModel, Button::LabelModel labelModel, Rect frameInParent) :
- _spriteModel(spriteModel), _pressedSpriteModel(pressedSpriteModel), _isToggled(false) {
+ToggleButton::ToggleButton(Button::Sprites sprites, Button::LabelModel labelModel, Rect frameInParent): _sprites(sprites), _isToggled(false) {
 	_frameInParent = frameInParent;
-	_button = registerChildRenderable<Button>([=]() { return new Button(spriteModel, pressedSpriteModel, labelModel, bounds()); });
+	_button = registerChildRenderable<Button>([=]() { return new Button(sprites, labelModel, bounds()); });
 
 	_button->onRelease([this]() {
 		onButtonPressRelease(_button);
 	});
 }
 
-ToggleButton::ToggleButton(SpriteModel spriteModel, SpriteModel pressedSpriteModel, Rect frameInParent) :
-	_spriteModel(spriteModel), _pressedSpriteModel(pressedSpriteModel), _isToggled(false) {
+ToggleButton::ToggleButton(Button::Sprites sprites, Rect frameInParent) :
+	_sprites(sprites), _isToggled(false) {
 	_frameInParent = frameInParent;
-	_button = registerChildRenderable<Button>([=]() { return new Button(spriteModel, pressedSpriteModel, frameInParent); });
+	_button = registerChildRenderable<Button>([=]() { return new Button(sprites, frameInParent); });
 
 	_button->onRelease([this]() {
 		onButtonPressRelease(_button);
@@ -41,12 +40,14 @@ void ToggleButton::onButtonPressRelease(Button* button) {
 
 void ToggleButton::adjustButtonSprites(bool isToggled) {
 	if (isToggled) {
-		_button->updateSpriteModelTo(_pressedSpriteModel);
-		_button->updatePressedSpriteModelTo(_spriteModel);
+		_button->updateSpriteModelTo({
+			_sprites.pressed,
+			SpriteModel::zero,
+			_sprites.normal
+		});
 	}
 	else {
-		_button->updateSpriteModelTo(_spriteModel);
-		_button->updatePressedSpriteModelTo(_pressedSpriteModel);
+		_button->updateSpriteModelTo(_sprites);
 	}
 }
 

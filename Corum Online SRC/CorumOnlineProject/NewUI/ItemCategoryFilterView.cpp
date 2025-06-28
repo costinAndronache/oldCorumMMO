@@ -8,18 +8,25 @@ ItemCategoryFilterView::ItemCategoryFilterView(CustomUI::Rect frameInParent, Cat
 
 	std::vector<RadioButtonGroup::LabeledButtonModel> models;
 	RadioButtonGroup::LabeledButtonModel specimen;
-	specimen.spriteModel.rotation = 0;
-	specimen.spriteModel.sprite = SpriteCollection::genericBackground;
-	specimen.spriteModel.size = SpriteCollection::genericBackgroundSize;
-
-	specimen.pressedStateSpriteModel.sprite = SpriteCollection::genericPressedBackground;
-	specimen.pressedStateSpriteModel.size = SpriteCollection::genericBackgroundSize;
-	specimen.pressedStateSpriteModel.rotation = 0;
 
 	specimen.labelModel.appearance.color.a = 255;
 	specimen.labelModel.appearance.color.r = 201;
 	specimen.labelModel.appearance.color.g = 210;
 	specimen.labelModel.appearance.color.b = 250;
+
+	specimen.sprites = Button::Sprites{
+		{
+			SpriteCollection::genericBackground,
+			SpriteCollection::genericBackgroundSize,
+			0
+		},
+		SpriteModel::zero,
+		{
+			SpriteCollection::genericPressedBackground,
+			SpriteCollection::genericBackgroundSize,
+			0
+		},
+	};
 
 	const char* names[] = { "ALL", "WEAPON", "WEARABLE", "SMALL", "SELECTED" };
 	for (int i = 0; i < 5; i++) {

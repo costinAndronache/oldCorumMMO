@@ -73,7 +73,10 @@ PagedItemViewTable::PagedItemViewTable(Rect frameInParent, PagedItemViewTableCli
 	const auto _bounds = bounds();
 	Rect scrollDownBtnFrame = { {_bounds.maxX() - buttonsSize.width, _bounds.maxY() - buttonsSize.height}, buttonsSize };
 	_scrollDownBtn = registerChildRenderable<Button>([&]() {
-		return new Button(scrollDownModel, scrollDownPressedModel, scrollDownBtnFrame);
+		return new Button(
+			{ scrollDownModel, SpriteModel::zero, scrollDownPressedModel},
+			scrollDownBtnFrame
+		);
 	});
 	
 
@@ -85,7 +88,9 @@ PagedItemViewTable::PagedItemViewTable(Rect frameInParent, PagedItemViewTableCli
 	scrollDownPressedModel.rotation = PI;
 	Rect scrollUpBtnFrame = { {_bounds.maxX() - buttonsSize.width, _bounds.origin.y}, buttonsSize };
 	_scrollUpBtn = registerChildRenderable<Button>([&]() {
-		return new Button(scrollDownModel, scrollDownPressedModel, scrollUpBtnFrame);
+		return new Button(
+			{ scrollDownModel, SpriteModel::zero, scrollDownPressedModel },
+			scrollUpBtnFrame);
 	});
 
 	_scrollUpBtn->onRelease([this]() {

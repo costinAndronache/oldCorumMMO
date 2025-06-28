@@ -86,8 +86,7 @@ void RadioButtonGroup::adjustButtons(const unsigned int activeButtonIndex) {
 ToggleButton* RadioButtonGroup::buildFromModelList(const std::vector<ButtonModel>* models, int index, Rect frame) {
 	ButtonModel model = (*models)[index];
 	auto toggleButton = registerChildRenderable<ToggleButton>([=]() {
-		return new ToggleButton(model.spriteModel, model.pressedStateSpriteModel,
-                           frame);
+		return new ToggleButton(model.sprites, frame);
 	});
 
 	toggleButton->onStateSwitch([this, toggleButton](bool isOn){
@@ -102,7 +101,7 @@ ToggleButton *RadioButtonGroup::buildFromLabeledModelList(
 	LabeledButtonModel model = (*models)[index];
 
 	auto toggleButton = registerChildRenderable<ToggleButton>([=]() {
-		return new ToggleButton(model.spriteModel, model.pressedStateSpriteModel, model.labelModel, frame);
+		return new ToggleButton(model.sprites, model.labelModel, frame);
 	});
 
 	toggleButton->onStateSwitch([this, toggleButton](bool isOn) {

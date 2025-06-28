@@ -10,7 +10,7 @@ namespace CustomUI {
 		typedef std::function<void(const char*)> InputTextUpdateHandler;
 
 		InputField(Rect frameInParent, SpriteModel bgSpriteModel);
-		InputField(Rect frameInParent, SpriteModel bgSpriteModel, SpriteModel clearButtonSprite, SpriteModel clearButtonPressedSprite);
+		InputField(Rect frameInParent, SpriteModel bgSpriteModel, Button::Sprites clearButtonSprites);
 		void renderWithRenderer(I4DyuchiGXRenderer* renderer, int order);
 
 		void onTextUpdate(InputTextUpdateHandler handler) { _handler = handler; }

@@ -22,8 +22,10 @@ SelectionView::SelectionView(Rect frameInParent, RenderableCreateFn renderableCr
 		return renderableCreate(_bounds);
 	});
 
+	Button::Sprites sprites{ SpriteModel::zero, SpriteModel::zero, SpriteModel::zero };
+
 	_button = registerChildRenderable<Button>([=]() { 
-		return new Button(SpriteModel::zero, SpriteModel::zero, bounds());
+		return new Button(sprites, bounds());
 	});
 
 	_button->onRelease([this]() {

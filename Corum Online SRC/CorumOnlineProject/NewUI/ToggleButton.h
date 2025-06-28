@@ -9,8 +9,8 @@ namespace CustomUI {
 	public:
 		typedef std::function<void(bool)> StateSwitchHandler;
 
-		ToggleButton(SpriteModel spriteModel, SpriteModel pressedSpriteModel, Button::LabelModel labelModel, Rect frameInParent);
-		ToggleButton(SpriteModel spriteModel, SpriteModel pressedSpriteModel, Rect frameInParent);
+		ToggleButton(Button::Sprites _sprites, Button::LabelModel labelModel, Rect frameInParent);
+		ToggleButton(Button::Sprites _sprites, Rect frameInParent);
 		
 		void setState(bool isToggled);
 		void renderWithRenderer(I4DyuchiGXRenderer* renderer, int order);
@@ -23,7 +23,8 @@ namespace CustomUI {
 		void adjustButtonSprites(bool isToggled);
 
 		Button* _button;
-		SpriteModel _spriteModel, _pressedSpriteModel;
+		Button::Sprites _sprites;
+
 		bool _isToggled;
 
 		StateSwitchHandler _stateSwitchHandler;

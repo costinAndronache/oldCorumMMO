@@ -8,8 +8,7 @@ namespace CustomUI {
 		typedef std::function<void(unsigned int)> ActiveIndexUpdateHandler;
 
 		struct ButtonModel {
-			SpriteModel spriteModel;
-			SpriteModel pressedStateSpriteModel;
+			Button::Sprites sprites;
 		};
 
 		struct LabeledButtonModel: public ButtonModel {
