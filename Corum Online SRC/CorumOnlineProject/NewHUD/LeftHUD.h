@@ -4,23 +4,39 @@
 #include "../InterfaceSpr.h"
 #include "../NewUI/HorizontalScalingBar.h"
 #include "../NewUI/CustomUIBase.h"
+#include "../NewUI/Renderable.h"
+#include "HUDSpriteCollection.h"
+#include "../NewUI/ToggleButton.h"
 
+namespace NewInterface {
+	class LeftHUD : public CustomUI::Renderable {
+	public:
+		typedef std::function<void()> EventHandler;
+		typedef std::function<void(bool)> ToggleEventHandler;
 
-class LeftHUD {
-public:
-	void renderWithRenderer(I4DyuchiGXRenderer* renderer);
-	bool swallowsMouse(const MouseState mouse);
-	LeftHUD(CustomUI::Rect frame);
+		struct EventHandlers {
+			EventHandler tradeHandler, shopHandler, itemHandler, statsHandler, skillsHandler;
+			ToggleEventHandler pkHandler;
+		};
 
-private:
-	IDISpriteObject* _backgroundInterfaceLeftSprite;
-	CustomUI::HorizontalScalingBar _hpBar;
-	CustomUI::Rect _frame;
+		LeftHUD(CustomUI::Point originInParent);
+		virtual void renderWithRenderer(I4DyuchiGXRenderer* renderer, int zIndex) override;
 
-public:
-	static LeftHUD* shared();
-	void updateScale(float scale) { _hpBar.updateScale(scale); }
-};
+		void updatePKToggle(bool isON);
+		void updateEXPScale(float scale);
+		void updateHPScale(float scale);
+
+		void setEventHandlers(EventHandlers handlers);
+
+	private:
+		EventHandlers _handlers;
+		CustomUI::HorizontalScalingBar* _hpBar;
+		CustomUI::HorizontalScalingBar* _expBar;
+		CustomUI::Button *_tradeBtn, *_shopBtn, *_itemBtn, *_statsBtn, *_skillsBtn;
+		CustomUI::ToggleButton *_pkButton;
+	};
+}
+
 
 /*
 int Order = __ORDER_USERINTERFACE_START_;

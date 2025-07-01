@@ -49,7 +49,7 @@ InputField::InputField(Rect frameInParent, SpriteModel bgSpriteModel, Button::Sp
 		return new Button(clearButtonSprites, clearBtnFrame);
 	});
 
-	_clearButton->onRelease([this]() {
+	_clearButton->onClickEnd([this]() {
 		onButtonPressRelease(this->_clearButton);
 	});
 }

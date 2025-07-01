@@ -852,7 +852,7 @@ BOOL InitGame()
 
 	InterfaceSprLoad(0);
 
-	HUDSpriteCollection::initialize(g_pRenderer);
+	NewHUDResources::initialize(g_pRenderer);
 	CustomUI::SpriteCollection::initialize(g_pRenderer);
 
 	

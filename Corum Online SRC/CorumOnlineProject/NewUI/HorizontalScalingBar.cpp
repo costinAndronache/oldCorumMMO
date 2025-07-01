@@ -2,8 +2,8 @@
 
 using namespace CustomUI;
 
-void HorizontalScalingBar::renderWithRenderer(I4DyuchiGXRenderer* renderer) {
-	_barSprite.renderWith(renderer, _currentScaledRect);
+void HorizontalScalingBar::renderWithRenderer(I4DyuchiGXRenderer* renderer, int zIndex) {
+	_barSprite.renderWith(renderer, _currentScaledRect, zIndex);
 }
 
 void HorizontalScalingBar::updateScale(float scale) {

@@ -10,7 +10,7 @@ namespace CustomUI {
 	class Button: public Renderable
 	{
 	public:
-		typedef std::function<void()> Event;
+		typedef std::function<void()> EventHandler;
 
 		struct LabelModel {
 			const char* text;
@@ -21,6 +21,8 @@ namespace CustomUI {
 			SpriteModel normal;
 			SpriteModel hovered;
 			SpriteModel pressed;
+			
+			static Sprites allZero;
 		};
 
 		Button(Sprites sprites, Rect frameInParent);
@@ -31,15 +33,15 @@ namespace CustomUI {
 		void renderWithRenderer(I4DyuchiGXRenderer* renderer, int order);
 
 
-		void onPress(Event event) { _onPress = event;  }
-		void onRelease(Event event) { _onRelease = event; }
+		void onClickStart(EventHandler event) { _onPress = event;  }
+		void onClickEnd(EventHandler event) { _onRelease = event; }
 
 	protected:
 		void onMouseStateChange(MouseState newState, MouseState oldState) override;
 
 	private:
 		SingleLineLabel* _label;
-		Event _onPress, _onRelease;
+		EventHandler _onPress, _onRelease;
 		Sprites _sprites;
 
 	};

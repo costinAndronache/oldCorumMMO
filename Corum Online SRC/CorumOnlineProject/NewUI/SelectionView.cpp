@@ -28,7 +28,7 @@ SelectionView::SelectionView(Rect frameInParent, RenderableCreateFn renderableCr
 		return new Button(sprites, bounds());
 	});
 
-	_button->onRelease([this]() {
+	_button->onClickEnd([this]() {
 		onButtonPressRelease(_button);
 	});
 

@@ -825,6 +825,12 @@
     <ClCompile Include="NewUI\Renderable.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="NewUI\MatrixContainer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="NewHUD\NewSkillSelectionView.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MouseLib.h">
@@ -1551,6 +1557,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="NewUI\Renderable.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="NewUI\MatrixContainer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="NewHUD\NewSkillSelectionView.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

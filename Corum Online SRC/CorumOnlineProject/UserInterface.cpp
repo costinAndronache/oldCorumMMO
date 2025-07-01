@@ -1090,7 +1090,6 @@ void CUserInterface::updatedMAXHP(CMainUser* player, DWORD oldValue, DWORD newVa
 
 void CUserInterface::updatedCurrentSP(CMainUser* player, DWORD oldValue, DWORD newValue) {
 	updateSPBar(player->percentageMP());
-	LeftHUD::shared()->updateScale(player->percentageMP());
 }
 
 void CUserInterface::updatedMAXSP(CMainUser* player, DWORD oldValue, DWORD newValue) {

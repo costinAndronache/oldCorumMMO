@@ -125,6 +125,8 @@ namespace CustomUI {
 	};
 
 	struct SpriteModel {
+		static SpriteModel zero;
+
 		IDISpriteObject* sprite;
 		Size size;
 		float rotation;
@@ -137,7 +139,21 @@ namespace CustomUI {
 			renderer->RenderSprite(sprite, &scale, rotation, &pos, NULL, 0xffffffff, order, RENDER_TYPE_DISABLE_TEX_FILTERING);
 		}
 
-		static SpriteModel zero;
+		static SpriteModel from(I4DyuchiGXRenderer* renderer, 
+								const char* resourceFile, 
+								Rect frameInFile,
+								float rotation = 0.f) {
+			const auto sprite = renderer->CreateSpriteObject((char*)resourceFile,
+				(DWORD)frameInFile.origin.x, (DWORD)frameInFile.origin.y,
+				(DWORD)frameInFile.size.width, (DWORD)frameInFile.size.height,
+				0);
+			return {
+				sprite,
+				frameInFile.size,
+				rotation
+			};
+		}
+
 	};
 
 	struct Color {

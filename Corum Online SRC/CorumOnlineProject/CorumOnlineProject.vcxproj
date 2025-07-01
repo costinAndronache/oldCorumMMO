@@ -4097,7 +4097,9 @@
     </ClCompile>
     <ClCompile Include="NewHUD\HUDSpriteCollection.cpp" />
     <ClCompile Include="NewHUD\LeftHUD.cpp" />
+    <ClCompile Include="NewHUD\NewSkillSelectionView.cpp" />
     <ClCompile Include="NewUI\Button.cpp" />
+    <ClCompile Include="NewUI\MatrixContainer.cpp" />
     <ClCompile Include="NewUI\CustomUIBase.cpp" />
     <ClCompile Include="NewUI\InputField.cpp" />
     <ClCompile Include="NewUI\ItemCategoryFilterView.cpp" />
@@ -6680,7 +6682,9 @@
     <ClInclude Include="ItemNativeManager.h" />
     <ClInclude Include="NewHUD\HUDSpriteCollection.h" />
     <ClInclude Include="NewHUD\LeftHUD.h" />
+    <ClInclude Include="NewHUD\NewSkillSelectionView.h" />
     <ClInclude Include="NewUI\Button.h" />
+    <ClInclude Include="NewUI\MatrixContainer.h" />
     <ClInclude Include="NewUI\CustomUIBase.h" />
     <ClInclude Include="NewUI\InputField.h" />
     <ClInclude Include="NewUI\ItemCategoryFilterView.h" />

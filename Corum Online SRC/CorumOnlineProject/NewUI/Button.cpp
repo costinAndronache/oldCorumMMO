@@ -3,6 +3,12 @@
 
 using namespace CustomUI;
 
+Button::Sprites Button::Sprites::allZero{
+	SpriteModel::zero,
+	SpriteModel::zero,
+	SpriteModel::zero
+};
+
 Button::Button(Sprites sprites, Rect frameInParent): _sprites(sprites) {
 	_frameInParent = frameInParent;
 	_label = NULL;
@@ -46,6 +52,9 @@ void Button::renderWithRenderer(I4DyuchiGXRenderer* renderer, int order) {
 		break;
 	case MouseState::pressedInside:
 		_sprites.pressed.renderWith(renderer, frame, order);
+		if (!_sprites.pressed.sprite) {
+			_sprites.normal.renderWith(renderer, frame, order);
+		}
 	}
 
 	if (_label) {

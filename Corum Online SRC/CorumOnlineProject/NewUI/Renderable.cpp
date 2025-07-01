@@ -8,6 +8,27 @@ Rect Renderable::globalFrame() const {
 	return _frameInParent.withOriginOffsetBy(_parent->globalFrame().origin);
 }
 
+Rect Renderable::boundingBoxInParent() const {
+	if (_childRenderables.empty()) {
+		return _frameInParent;
+	}
+
+	int minX = INT_MAX, minY = INT_MAX, maxX = INT_MIN, maxY = INT_MIN;
+	
+	for (auto child : _childRenderables) {
+		if (child) {
+			const auto frame = child->frameInParent();
+			if (minX > frame.origin.x) { minX = frame.origin.x; }
+			if (minY > frame.origin.y) { minY = frame.origin.y; }
+
+			if (maxX < frame.maxX()) { maxX = frame.maxX(); }
+			if (maxY < frame.maxY()) { maxY = frame.maxY(); }
+		}
+	}
+
+	return Rect{ {minX, minY}, { (float)(maxX - minX), (float)(maxY - minY)} };
+}
+
 void Renderable::updateMouseState(MouseState newState) {
 	const auto old = _currentMouseState;
 	if (old == newState) { return; }
@@ -93,4 +114,19 @@ bool Renderable::swallowsKeyboard() {
 		if (child->swallowsKeyboard()) { return true; }
 	}
 	return false;
+}
+
+void Renderable::deconstructAllChildren() {
+	for (auto child : _childRenderables) {
+		if (child) { delete child; }
+	}
+	_childRenderables.clear();
+}
+
+void Renderable::renderWithRenderer(I4DyuchiGXRenderer* renderer, int zIndex) {
+	for (auto child : _childRenderables) {
+		if (child && !child->getHidden()) {
+			child->renderWithRenderer(renderer, zIndex);
+		}
+	}
 }

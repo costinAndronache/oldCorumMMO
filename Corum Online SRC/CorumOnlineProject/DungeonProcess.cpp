@@ -1051,7 +1051,6 @@ DWORD __stdcall AfterRenderGameDungeon()
 	}
 
 	pInterface->Render();
-	LeftHUD::shared()->renderWithRenderer(g_pRenderer);
 
 	g_pSprManager->RenderAllSprite();
 	pInterface->SetMiniMapPos();

@@ -80,7 +80,7 @@ PagedItemViewTable::PagedItemViewTable(Rect frameInParent, PagedItemViewTableCli
 	});
 	
 
-	_scrollDownBtn->onRelease([this]() {
+	_scrollDownBtn->onClickEnd([this]() {
 		onButtonPressRelease(_scrollDownBtn);
 	});
 
@@ -93,7 +93,7 @@ PagedItemViewTable::PagedItemViewTable(Rect frameInParent, PagedItemViewTableCli
 			scrollUpBtnFrame);
 	});
 
-	_scrollUpBtn->onRelease([this]() {
+	_scrollUpBtn->onClickEnd([this]() {
 		onButtonPressRelease(_scrollUpBtn);
 	});
 }

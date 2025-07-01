@@ -5,7 +5,7 @@ ToggleButton::ToggleButton(Button::Sprites sprites, Button::LabelModel labelMode
 	_frameInParent = frameInParent;
 	_button = registerChildRenderable<Button>([=]() { return new Button(sprites, labelModel, bounds()); });
 
-	_button->onRelease([this]() {
+	_button->onClickEnd([this]() {
 		onButtonPressRelease(_button);
 	});
 }
@@ -15,7 +15,7 @@ ToggleButton::ToggleButton(Button::Sprites sprites, Rect frameInParent) :
 	_frameInParent = frameInParent;
 	_button = registerChildRenderable<Button>([=]() { return new Button(sprites, frameInParent); });
 
-	_button->onRelease([this]() {
+	_button->onClickEnd([this]() {
 		onButtonPressRelease(_button);
 	});
 }
