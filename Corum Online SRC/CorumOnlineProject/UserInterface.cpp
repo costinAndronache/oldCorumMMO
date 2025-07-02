@@ -251,50 +251,28 @@ void CUserInterface::InsertUIData()
 {
 	int Order = __ORDER_USERINTERFACE_START_;
 
-	InsertData(SPR_OBJ_UI_LEFT, SPR_INTERFACE_UI_LEFT, leftHUD.origin.x, leftHUD.origin.y, 1.0f, 1.0f, Order, FALSE, FALSE, FALSE);
 	InsertData(SPR_OBJ_UI_RIGHT, SPR_INTERFACE_UI_RIGHT, rightHUD.origin.x, rightHUD.origin.y, 1.0f, 1.0f, Order, FALSE, FALSE, FALSE);
-	InsertData(SPR_OBJ_EN2, SPR_INTERFACE_EN2, hp.x, hp.y, 0.0f, 1.0f, Order + 1, FALSE, FALSE, FALSE);
-	InsertData(SPR_OBJ_EN1, SPR_INTERFACE_EN1, hp.x, hp.y, 0.0f, 1.0f, Order + 2, FALSE, FALSE, FALSE);
-	InsertData(SPR_OBJ_EXP, SPR_INTERFACE_EXP, expPos.x, expPos.y, 1.0f, 1.0f, Order + 3, FALSE, FALSE, FALSE);
 	InsertData(SPR_OBJ_MANA2, SPR_INTERFACE_MANA2, sp.x, sp.y, 0.0f, 1.0f, Order + 1, FALSE, FALSE, FALSE);
 	InsertData(SPR_OBJ_MANA1, SPR_INTERFACE_MANA1, sp.x, sp.y, 0.0f, 1.0f, Order + 2, FALSE, FALSE, FALSE);
 	InsertData(SPR_OBJ_CAST, SPR_INTERFACE_CAST, cool.x, cool.y, (float)g_pMainPlayer->percentageCoolPoints() * 300 / 2, 1.0f, Order + 3, FALSE, FALSE, FALSE);
 
-	InsertData(BUTTON_OBJ_ITEM1, BUTTON_INTERFACE_ITEM1, btnItem.x, btnItem.y, 1.0f, 1.0f, Order + 1, FALSE, FALSE, FALSE);
-	InsertData(BUTTON_OBJ_CHR1, BUTTON_INTERFACE_CHR1, btnStats.x, btnStats.y, 1.0f, 1.0f, Order + 1, FALSE, FALSE, FALSE);
-	InsertData(BUTTON_OBJ_SKILL1, BUTTON_INTERFACE_SKILL1, btnSkill.x, btnSkill.y, 1.0f, 1.0f, Order + 1, FALSE, FALSE, FALSE);
 	InsertData(BUTTON_OBJ_GUILD1, BUTTON_INTERFACE_GUILD1, btnGroup.x, btnGroup.y, 1.0f, 1.0f, Order + 1, FALSE, FALSE, FALSE);
 	InsertData(BUTTON_OBJ_PARTY1, BUTTON_INTERFACE_PARTY1, btnLair.x, btnLair.y, 1.0f, 1.0f, Order + 1, FALSE, FALSE, FALSE);
 	InsertData(BUTTON_OBJ_CHAT1, BUTTON_INTERFACE_CHAT1, btnChat.x, btnChat.y, 1.0f, 1.0f, Order + 1, FALSE, FALSE, FALSE);
-	InsertData(BUTTON_OBJ_ITEM2, BUTTON_INTERFACE_ITEM2, btnItem.x, btnItem.y, 1.0f, 1.0f, Order + 1, FALSE, FALSE, FALSE);
-	InsertData(BUTTON_OBJ_CHR2, BUTTON_INTERFACE_CHR2, btnStats.x, btnStats.y, 1.0f, 1.0f, Order + 1, FALSE, FALSE, FALSE);
-	InsertData(BUTTON_OBJ_SKILL2, BUTTON_INTERFACE_SKILL2, btnSkill.x, btnSkill.y, 1.0f, 1.0f, Order + 1, FALSE, FALSE, FALSE);
 	InsertData(BUTTON_OBJ_GUILD2, BUTTON_INTERFACE_GUILD2, btnGroup.x, btnGroup.y, 1.0f, 1.0f, Order + 1, FALSE, FALSE, FALSE);
 	InsertData(BUTTON_OBJ_PARTY2, BUTTON_INTERFACE_PARTY2, btnLair.x, btnLair.y, 1.0f, 1.0f, Order + 1, FALSE, FALSE, FALSE);
 	InsertData(BUTTON_OBJ_CHAT2, BUTTON_INTERFACE_CHAT2, btnChat.x, btnChat.y, 1.0f, 1.0f, Order + 1, FALSE, FALSE, FALSE);
 	InsertData(BUTTON_OBJ_SYSTEM1, BUTTON_INTERFACE_SYSTEM1, btnOptions.x, btnOptions.y, 1.0f, 1.0f, Order + 1, FALSE, FALSE, FALSE);
 	InsertData(BUTTON_OBJ_SYSTEM2, BUTTON_INTERFACE_SYSTEM2, btnOptions.x, btnOptions.y, 1.0f, 1.0f, Order + 1, FALSE, FALSE, FALSE);
-	InsertData(BUTTON_OBJ_PKON1, BUTTON_INTERFACE_PKON1, btnPK.x, btnPK.y, 1.0f, 1.0f, Order + 1, FALSE, FALSE, FALSE);
-	InsertData(BUTTON_OBJ_PKON2, BUTTON_INTERFACE_PKON2, btnPK.x, btnPK.y, 1.0f, 1.0f, Order + 1, FALSE, FALSE, FALSE);
-	InsertData(BUTTON_OBJ_PKOFF1, BUTTON_INTERFACE_PKOFF1, btnPK.x, btnPK.y, 1.0f, 1.0f, Order + 1, FALSE, FALSE, FALSE);
-	InsertData(BUTTON_OBJ_PKOFF2, BUTTON_INTERFACE_PKOFF2, btnPK.x, btnPK.y, 1.0f, 1.0f, Order + 1, FALSE, FALSE, FALSE);
 	InsertData(SPR_OBJ_MONSTERHP_BAR1, SPR_INTERFACE_MONSTERHP_BAR1, monsterHP1.x, monsterHP1.y, 1.0f, 1.0f, Order, FALSE, FALSE, FALSE);
 	InsertData(SPR_OBJ_MONSTERHP_BAR2, SPR_INTERFACE_MONSTERHP_BAR2, monsterHP2.x, monsterHP2.y, 1.0f, 1.0f, Order, FALSE, FALSE, FALSE);
 	InsertData(SPR_OBJ_MONSTER_GAGE1, SPR_INTERFACE_MONSTER_GAGE1, monsterGage.x, monsterGage.y, 1.0f, 1.0f, Order + 2, FALSE, FALSE, FALSE);
 	InsertData(SPR_OBJ_MONSTER_GAGE2, SPR_INTERFACE_MONSTER_GAGE2, monsterGage.x, monsterGage.y, 1.0f, 1.0f, Order + 1, FALSE, FALSE, FALSE);
 
-	InsertData(SPR_OBJ_USERHP_BAR1, SPR_INTERFACE_USERHP_BAR1, monsterHP1.x, monsterHP1.y, 1.0f, 1.0f, Order, FALSE, FALSE, FALSE);
-	InsertData(SPR_OBJ_USERHP_BAR2, SPR_INTERFACE_USERHP_BAR2, monsterHP2.x, monsterHP2.y, 1.0f, 1.0f, Order, FALSE, FALSE, FALSE);
 	InsertData(SPR_OBJ_USER_GAGE1, SPR_INTERFACE_USER_GAGE1, monsterGage.x, monsterGage.y, 1.0f, 1.0f, Order + 2, FALSE, FALSE, FALSE);
 	InsertData(SPR_OBJ_USER_GAGE2, SPR_INTERFACE_USER_GAGE2, monsterGage.x, monsterGage.y, 1.0f, 1.0f, Order + 1, FALSE, FALSE, FALSE);
 	InsertData(SPR_OBJ_GUARDIAN_WND1, SPR_INTERFACE_GUARDIAN_WND1, 0, 0, 1.0f, 1.0f, Order, FALSE, FALSE, FALSE);
 	InsertData(SPR_OBJ_GUARDIAN_EN, SPR_INTERFACE_GUARDIAN_EN, 0, 0, 1.0f, 1.0f, Order + 1, FALSE, FALSE, FALSE);
-	InsertData(SPR_OBJ_UI_TRADE1, SPR_INTERFACE_UI_TRADE1, btnTrade.x, btnTrade.y, 1.0f, 1.0f, Order + 1, FALSE, FALSE, FALSE);
-	InsertData(SPR_OBJ_UI_TRADE2, SPR_INTERFACE_UI_TRADE2, btnTrade.x, btnTrade.y, 1.0f, 1.0f, Order + 1, FALSE, FALSE, FALSE);
-	InsertData(SPR_OBJ_UI_TRADE3, SPR_INTERFACE_UI_TRADE3, btnTrade.x, btnTrade.y, 1.0f, 1.0f, Order + 1, FALSE, FALSE, FALSE);
-	InsertData(SPR_OBJ_UI_SHOP1, SPR_INTERFACE_UI_SHOP1, btnShop.x, btnShop.y, 1.0f, 1.0f, Order + 1, FALSE, FALSE, FALSE);
-	InsertData(SPR_OBJ_UI_SHOP2, SPR_INTERFACE_UI_SHOP2, btnShop.x, btnShop.y, 1.0f, 1.0f, Order + 1, FALSE, FALSE, FALSE);
-	InsertData(SPR_OBJ_UI_SHOP3, SPR_INTERFACE_UI_SHOP3, btnShop.x, btnShop.y, 1.0f, 1.0f, Order + 1, FALSE, FALSE, FALSE);
 
 	InsertData(SPR_OBJ_UI_REST1, SPR_INTERFACE_UI_REST1, btnRest.x, btnRest.y, 1.0f, 1.0f, Order+1, FALSE, FALSE, FALSE);	
 	InsertData(SPR_OBJ_UI_REST2, SPR_INTERFACE_UI_REST2, btnRest.x, btnRest.y, 1.0f, 1.0f, Order+1, FALSE, FALSE, FALSE);

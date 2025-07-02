@@ -4096,6 +4096,7 @@
       <BrowseInformation Condition="'$(Configuration)|$(Platform)'=='dev|Win32'">true</BrowseInformation>
     </ClCompile>
     <ClCompile Include="NewHUD\HUDSpriteCollection.cpp" />
+    <ClCompile Include="NewHUD\NewInterface.cpp" />
     <ClCompile Include="NewHUD\LeftHUD.cpp" />
     <ClCompile Include="NewHUD\NewSkillSelectionView.cpp" />
     <ClCompile Include="NewUI\Button.cpp" />
@@ -4113,6 +4114,7 @@
     <ClCompile Include="NewUI\Renderable.cpp" />
     <ClCompile Include="NewUI\SelectionView.cpp" />
     <ClCompile Include="NewUI\SpriteCollection.cpp" />
+    <ClCompile Include="NewUI\SpriteRenderable.cpp" />
     <ClCompile Include="NewUI\ToggleButton.cpp" />
     <ClCompile Include="ItemShopWnd.cpp">
       <BasicRuntimeChecks Condition="'$(Configuration)|$(Platform)'=='CHINA_DEV|Win32'">EnableFastChecks</BasicRuntimeChecks>
@@ -6681,6 +6683,7 @@
     <ClInclude Include="ItemNative.h" />
     <ClInclude Include="ItemNativeManager.h" />
     <ClInclude Include="NewHUD\HUDSpriteCollection.h" />
+    <ClInclude Include="NewHUD\NewInterface.h" />
     <ClInclude Include="NewHUD\LeftHUD.h" />
     <ClInclude Include="NewHUD\NewSkillSelectionView.h" />
     <ClInclude Include="NewUI\Button.h" />
@@ -6699,6 +6702,7 @@
     <ClInclude Include="NewUI\Renderable.h" />
     <ClInclude Include="NewUI\SelectionView.h" />
     <ClInclude Include="NewUI\SpriteCollection.h" />
+    <ClInclude Include="NewUI\SpriteRenderable.h" />
     <ClInclude Include="NewUI\ToggleButton.h" />
     <ClInclude Include="ItemShopWnd.h" />
     <ClInclude Include="ItemTradeShopWnd.h" />

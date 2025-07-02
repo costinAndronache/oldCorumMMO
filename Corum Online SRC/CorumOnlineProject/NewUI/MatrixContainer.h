@@ -17,8 +17,8 @@ namespace CustomUI {
 			deconstructAllChildren();
 			for (int i = 0; i < models.size(); i++) {
 				const auto currentFrame = Rect{ originForIndex(i, maxColumnsPerRow), _itemSize };
-				registerChildRenderable<Renderable>([=]() {
-					createFn(model, currentFrame);
+				registerChildRenderable<Renderable>([=]() -> Renderable* {
+					return createFn(models[i], currentFrame);
 				});
 			}
 

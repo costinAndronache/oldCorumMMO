@@ -201,6 +201,18 @@ void			CMainUser::updateCurrentEXP(DWORD exp) {
 	});
 }
 
+float			CMainUser::percentageEXP() const {
+	const auto level = this->currentLevel();
+	const auto cumulatedEXP = this->currentEXP();
+	const auto cumulatedExpForCurrentLevel = GetCumulatedExpByLevel(OBJECT_TYPE_PLAYER, level);
+	const auto cumulatedExpForNextLevel = GetCumulatedExpByLevel(OBJECT_TYPE_PLAYER, level + 1);
+	const auto toGather = cumulatedExpForNextLevel - cumulatedExpForCurrentLevel;
+	const DWORD gatheredSoFar = cumulatedEXP - cumulatedExpForCurrentLevel;
+	const auto scale = (float)gatheredSoFar / toGather;
+
+	return min(scale, 1.0);
+}
+
 DWORD			CMainUser::currentLevel() const {
 	return m_dwLevel;
 }

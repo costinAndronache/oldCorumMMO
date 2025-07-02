@@ -7,6 +7,9 @@
 #include "../NewUI/Renderable.h"
 #include "HUDSpriteCollection.h"
 #include "../NewUI/ToggleButton.h"
+#include "NewSkillSelectionView.h"
+#include "../CMainUserUpdateInterested.h"
+#include "../NewUI/SpriteRenderable.h"
 
 namespace NewInterface {
 	class LeftHUD : public CustomUI::Renderable {
@@ -14,26 +17,31 @@ namespace NewInterface {
 		typedef std::function<void()> EventHandler;
 		typedef std::function<void(bool)> ToggleEventHandler;
 
+		static CustomUI::Size preferredSize() { return NewHUDResources::newHUDSize; }
+
 		struct EventHandlers {
-			EventHandler tradeHandler, shopHandler, itemHandler, statsHandler, skillsHandler;
+			EventHandler tradeHandler, shopHandler, itemHandler, statsHandler, skillsHandler, leftSkillHandler, rightSkillHandler;
 			ToggleEventHandler pkHandler;
 		};
 
 		LeftHUD(CustomUI::Point originInParent);
-		virtual void renderWithRenderer(I4DyuchiGXRenderer* renderer, int zIndex) override;
-
 		void updatePKToggle(bool isON);
-		void updateEXPScale(float scale);
 		void updateHPScale(float scale);
+		void updateHPAttributes(DWORD currentHP, DWORD maxHP);
+		void updateSPAttributes(DWORD currentSP, DWORD maxSP);
+		void updateEXPScale(float expScale);
+		void updateSkillSpriteLEFT(CustomUI::SpriteModel leftSkillSprite);
+		void updateSkillSpriteRIGHT(CustomUI::SpriteModel rightSkillSprite);
 
 		void setEventHandlers(EventHandlers handlers);
-
 	private:
 		EventHandlers _handlers;
 		CustomUI::HorizontalScalingBar* _hpBar;
 		CustomUI::HorizontalScalingBar* _expBar;
 		CustomUI::Button *_tradeBtn, *_shopBtn, *_itemBtn, *_statsBtn, *_skillsBtn;
 		CustomUI::ToggleButton *_pkButton;
+		CustomUI::Button* _leftSkillBtn, *_rightSkillBtn;
+		CustomUI::SpriteRenderable* _leftHUDSprite;
 	};
 }
 

@@ -6,14 +6,18 @@
 using namespace CustomUI;
 using namespace NewInterface;
 
-LeftHUD::LeftHUD(Point originInParent) {
-	_frameInParent = { originInParent, NewHUDResources::newHUDSize };
+LeftHUD::LeftHUD(CustomUI::Point originInParent) {
+	_frameInParent = { originInParent, LeftHUD::preferredSize() };
+
+	_leftHUDSprite = registerChildRenderable<SpriteRenderable>([=]() {
+		return new SpriteRenderable(bounds(), NewHUDResources::leftInterfaceHUDSprite);
+	});
 
 	const auto hpBarFrame = Rect{ { 0, 60 }, {302, 13} };
 
 	_hpBar = registerChildRenderable<HorizontalScalingBar>([=]() {
 		return 	new HorizontalScalingBar(
-			NewHUDResources::spBarSprite,
+			NewHUDResources::hpBarSprite,
 			hpBarFrame,
 			HorizontalScalingBar::Direction::leftRight);
 	});
@@ -57,11 +61,18 @@ LeftHUD::LeftHUD(Point originInParent) {
 		return new ToggleButton(NewHUDResources::pk, pkBtnFrame);
 	});
 
-	_pkButton->setState(false);
-}
+	const auto leftSkillBtnFrame = Rect{ {132, 85}, {34, 34} };
+	_leftSkillBtn = registerChildRenderable<Button>([&]() {
+		return new Button(Button::Sprites::allZero, leftSkillBtnFrame);
+	});
 
-void LeftHUD::renderWithRenderer(I4DyuchiGXRenderer* renderer, int zIndex) {
-	
+	const auto rightSkillBtnFrame = Rect{ {247, 85}, {34, 34} };
+	_rightSkillBtn = registerChildRenderable<Button>([&]() {
+		return new Button(Button::Sprites::allZero, rightSkillBtnFrame);
+	});
+
+	_pkButton->setState(false);
+
 }
 
 void LeftHUD::updatePKToggle(bool isON) {
@@ -83,4 +94,32 @@ void LeftHUD::setEventHandlers(EventHandlers handlers) {
 	_statsBtn->onClickEnd(handlers.statsHandler);
 	_skillsBtn->onClickEnd(handlers.skillsHandler);
 	_pkButton->onStateSwitch(handlers.pkHandler);
+	_leftSkillBtn->onClickEnd(handlers.leftSkillHandler);
+	_rightSkillBtn->onClickEnd(handlers.rightSkillHandler);
+}
+
+
+void LeftHUD::updateHPAttributes(DWORD currentHP, DWORD maxHP) {
+	const auto scale = (float)currentHP / (float)maxHP;
+	_hpBar->updateScale(scale);
+}
+
+void LeftHUD::updateSPAttributes(DWORD currentSP, DWORD maxSP) {
+
+}
+
+void LeftHUD::updateSkillSpriteLEFT(CustomUI::SpriteModel leftSkillSprite) {
+	_leftSkillBtn->updateSpriteModelTo({
+		leftSkillSprite,
+		leftSkillSprite,
+		leftSkillSprite
+	});
+}
+
+void LeftHUD::updateSkillSpriteRIGHT(CustomUI::SpriteModel rightSkillSprite) {
+	_rightSkillBtn->updateSpriteModelTo({
+		rightSkillSprite,
+		rightSkillSprite,
+		rightSkillSprite
+	});
 }

@@ -7,7 +7,6 @@ static const Size iconsSize{ 40, 40 };
 
 NewSkillSelectionView::NewSkillSelectionView(CustomUI::Point growthOrigin,
 	CustomUI::MatrixContainer::VerticalGrowthDirection direction, SSKILL_LIST_MANAGER* skillListManager):
-	_activeSkillSelection(ActiveSkillSelection::none),
 	_skillListManager(skillListManager) {
 	
 	_leftSkillsContainer = registerChildRenderable<MatrixContainer>([=]() {
@@ -21,6 +20,8 @@ NewSkillSelectionView::NewSkillSelectionView(CustomUI::Point growthOrigin,
 	_guardianSkillsContainer = registerChildRenderable<MatrixContainer>([=]() {
 		return new MatrixContainer(growthOrigin, direction, iconsSize);
 	});
+
+	switchToActiveSelection(ActiveSkillSelection::none);
 }
 
 void NewSkillSelectionView::updateCurrentSkills(CurrentSkills cs) {
@@ -42,9 +43,30 @@ void NewSkillSelectionView::updateCurrentSkills(CurrentSkills cs) {
 		const auto sprites = spritesForSkill(skillKind);
 		auto button = new Button(sprites, frameInContainer);
 		button->onClickEnd([&]() {
-
+			this->_activeSkillSelection = ActiveSkillSelection::none;
+			this->_handlers.onLeftSkillSelection(skillKind);
 		});
 
+		return button;
+	});
+
+	_righttSkillsContainer->rebuild<BYTE>(cs.currentRightSkills, 4, [&](BYTE skillKind, Rect frameInContainer) {
+		const auto sprites = spritesForSkill(skillKind);
+		auto button = new Button(sprites, frameInContainer);
+		button->onClickEnd([&]() {
+			this->_activeSkillSelection = ActiveSkillSelection::none;
+			this->_handlers.onRightSkillSelection(skillKind);
+		});
+		return button;
+	});
+
+	_guardianSkillsContainer->rebuild<BYTE>(cs.currentGuardianSkills, 4, [&](BYTE skillKind, Rect frameInContainer) {
+		const auto sprites = spritesForSkill(skillKind);
+		auto button = new Button(sprites, frameInContainer);
+		button->onClickEnd([&]() {
+			this->_activeSkillSelection = ActiveSkillSelection::none;
+			this->_handlers.onGuardianSkillSelection(skillKind);
+		});
 		return button;
 	});
 }
@@ -54,17 +76,5 @@ void NewSkillSelectionView::switchToActiveSelection(ActiveSkillSelection selecti
 	_leftSkillsContainer->setHidden(selection != ActiveSkillSelection::leftSkills);
 	_righttSkillsContainer->setHidden(selection != ActiveSkillSelection::rightSkills);
 	_guardianSkillsContainer->setHidden(selection != ActiveSkillSelection::guardianSkills);
-
-}
-
-void NewSkillSelectionView::selectLeftSkill(BYTE skillKind) {
-
-}
-
-void NewSkillSelectionView::selectRightSkill(BYTE skillKind) {
-
-}
-
-void NewSkillSelectionView::selectGuardianSkill(BYTE skillKind) {
 
 }

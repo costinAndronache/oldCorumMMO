@@ -5,7 +5,7 @@
 namespace NewInterface {
 	class NewSkillSelectionView: public CustomUI::Renderable {
 	public:
-		typedef std::function<void(BYTE skillKind, int index)> SkillSelectionHandler;
+		typedef std::function<void(BYTE skillKind)> SkillSelectionHandler;
 
 		enum class ActiveSkillSelection { none, leftSkills, rightSkills, guardianSkills };
 
@@ -37,10 +37,6 @@ namespace NewInterface {
 		CustomUI::MatrixContainer* _leftSkillsContainer;
 		CustomUI::MatrixContainer* _righttSkillsContainer;
 		CustomUI::MatrixContainer* _guardianSkillsContainer;
-
-		void selectLeftSkill(BYTE skillKind);
-		void selectRightSkill(BYTE skillKind);
-		void selectGuardianSkill(BYTE skillKind);
 	};
 }
 

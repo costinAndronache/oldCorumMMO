@@ -13,7 +13,8 @@ ToggleButton::ToggleButton(Button::Sprites sprites, Button::LabelModel labelMode
 ToggleButton::ToggleButton(Button::Sprites sprites, Rect frameInParent) :
 	_sprites(sprites), _isToggled(false) {
 	_frameInParent = frameInParent;
-	_button = registerChildRenderable<Button>([=]() { return new Button(sprites, frameInParent); });
+	_button = registerChildRenderable<Button>([=]() { return new Button(sprites, bounds()); 
+	});
 
 	_button->onClickEnd([this]() {
 		onButtonPressRelease(_button);

@@ -6,6 +6,7 @@ SpriteModel NewHUDResources::spBarSprite;
 SpriteModel NewHUDResources::expBarSprite;
 SpriteModel NewHUDResources::cooldownBarSprite;
 SpriteModel NewHUDResources::attackSkillSprite;
+SpriteModel NewHUDResources::leftInterfaceHUDSprite;
 
 CustomUI::Button::Sprites
 NewHUDResources::trade, NewHUDResources::shop, NewHUDResources::item, 
@@ -18,8 +19,8 @@ Size NewHUDResources::newHUDSize{ 400, 121 };
 #define from SpriteModel::from
 
 static void initNewHUDElements(I4DyuchiGXRenderer* r) {
-	char* rf = GetFile("newHUDElements.tiff", DATA_TYPE_UI);
-	const auto smallerSize = Size{ 51, 18 };
+	char* rf = GetFile("newHUDElements.tif", DATA_TYPE_UI);
+	const auto smallerSize = Size{ 51, 20 };
 
 	NewHUDResources::trade = {
 		from(r, rf, { { 0, 0}, smallerSize}),
@@ -77,18 +78,6 @@ static void initNewHUDElements(I4DyuchiGXRenderer* r) {
 		from(r, rf, { { 177, 110}, biggerSize}),
 	};
 
-	NewHUDResources::match = {
-		from(r, rf, { { 229, 72}, biggerSize}),
-		from(r, rf, { { 229, 91}, biggerSize}),
-		from(r, rf, { { 229, 110}, biggerSize}),
-	};
-
-	NewHUDResources::match = {
-		from(r, rf, { { 229, 72}, biggerSize}),
-		from(r, rf, { { 229, 91}, biggerSize}),
-		from(r, rf, { { 229, 110}, biggerSize}),
-	};
-
 	const auto size3 = Size{ 30, 33 };
 	NewHUDResources::pk = {
 		from(r, rf, { { 0, 143}, {30, 33} }),
@@ -136,4 +125,9 @@ void NewHUDResources::initialize(I4DyuchiGXRenderer* renderer) {
 		0
 	};
 	
+	leftInterfaceHUDSprite = {
+		renderer->CreateSpriteObject(GetFile("newInterfaceLeft.tif", DATA_TYPE_UI), 0, 0, 400, 121, 0),
+		{ 400, 121},
+		0
+	};
 }

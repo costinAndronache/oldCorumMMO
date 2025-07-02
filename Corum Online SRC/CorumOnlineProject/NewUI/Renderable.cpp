@@ -4,8 +4,11 @@ using namespace CustomUI;
 
 
 Rect Renderable::globalFrame() const {
-	if (_parent == nullptr) { return _frameInParent; }
-	return _frameInParent.withOriginOffsetBy(_parent->globalFrame().origin);
+	if (_parent == nullptr) { 
+		return _frameInParent; 
+	}
+	const auto parentGlobalFrame = _parent->globalFrame();
+	return _frameInParent.withOriginOffsetBy(parentGlobalFrame.origin);
 }
 
 Rect Renderable::boundingBoxInParent() const {
@@ -124,9 +127,10 @@ void Renderable::deconstructAllChildren() {
 }
 
 void Renderable::renderWithRenderer(I4DyuchiGXRenderer* renderer, int zIndex) {
-	for (auto child : _childRenderables) {
+	for (int i = 0; i < _childRenderables.size(); i++) {
+		auto child = _childRenderables[i];
 		if (child && !child->getHidden()) {
-			child->renderWithRenderer(renderer, zIndex);
+			child->renderWithRenderer(renderer, zIndex + i);
 		}
 	}
 }

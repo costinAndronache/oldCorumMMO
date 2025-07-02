@@ -104,7 +104,9 @@
 #include "MouseButtonLongPressRecognizer.h"
 #include "AppliedSkillsIconsView.h"
 #include "SkillSelectionView.h"
-#include "NewHUD/LeftHUD.h"
+#include "NewHUD/NewInterface.h"
+#include "NewUI/SpriteRenderable.h"
+
 
 using namespace ItemPickupFiltering;
 
@@ -112,7 +114,9 @@ char globalDebugLine[255];
 
 static int _renderFPS = 30;
 std::shared_ptr<AppliedSkillsIconsView> _appliedSkillsIconsView(nullptr);
+std::shared_ptr<NewInterface::Interface> _newInterface(nullptr);
 
+static CustomUI::SpriteRenderable* _leftHudTest = nullptr;
 
 DWORD						g_dwMileHandleRefs	= 0;
 LPGlobalVariable_Dungeon	g_pGVDungeon		= NULL;
@@ -209,6 +213,17 @@ void cancelTooltipRenderingForAllDropped() {
 BOOL InitGameDungeon() {
 	ItemPickupFilteringSystem::sharedInstance()->setViewActive(false);
 	_appliedSkillsIconsView = std::make_shared<AppliedSkillsIconsView>();
+	_newInterface = std::make_shared<NewInterface::Interface>(
+		CustomUI::Size{ (float)windowWidth(), (float)windowHeight()},
+		g_pMainPlayer,
+		&g_sSkillListManager
+	);
+
+	_leftHudTest = new CustomUI::SpriteRenderable(
+		{ {0, 0}, {400, 121} },
+		NewHUDResources::leftInterfaceHUDSprite
+	);
+
 
 	CBankWnd::GetInstance()->Init();
 	// 카메라 이동에 관련된 플래그 세팅.
@@ -1050,7 +1065,11 @@ DWORD __stdcall AfterRenderGameDungeon()
 		RenderUserSelectRect();
 	}
 
-	pInterface->Render();
+	//pInterface->Render();
+	_newInterface->renderWithRenderer(g_pRenderer, __ORDER_INTERFACE_START__);
+
+	//_leftHudTest->renderWithRenderer(g_pRenderer, __ORDER_INTERFACE_START__);
+
 
 	g_pSprManager->RenderAllSprite();
 	pInterface->SetMiniMapPos();
@@ -2094,6 +2113,8 @@ void OnLButtonDownDungeon(WPARAM wParam, LPARAM lParam)
 	g_Mouse.dwLButtonDownTime		= g_dwCurTick;
 	g_pMainPlayer->m_i64PickupItem	= 0;
 
+	_newInterface->handleMouseDown(g_Mouse.MousePos);
+
 	if( GetAsyncKeyState(VK_SHIFT) & 0x800000 && g_bLshift )	
 	{
 		g_rcSelectBox.left	= g_Mouse.MousePos.x;
@@ -2206,6 +2227,8 @@ lb_move:
 
 void OnLButtonUpDungeon(WPARAM wParam, LPARAM lParam)
 {
+	_newInterface->handleMouseUp(g_Mouse.MousePos);
+
 	ItemPickupFilteringSystem::sharedInstance()->handleMouseUp();
 	if (ItemPickupFilteringSystem::sharedInstance()->swallowsMouse()) { 
 		return; 
@@ -2595,6 +2618,9 @@ void OnMouseMoveDungeon(WPARAM wParam, LPARAM lParam)
 	BOOL		bObejct		= FALSE;
 	CInterface* pInterface	= CInterface::GetInstance();
 	
+	_newInterface->handleMouseMove(g_Mouse.MousePos);
+
+
 	pInterface->SetUp(FALSE);
 	
 	if(pInterface->m_bActiveChk==FALSE)

@@ -256,6 +256,7 @@ public:
 
 	DWORD			currentEXP() const;
 	void			updateCurrentEXP(DWORD);
+	float			percentageEXP() const;
 
 	DWORD			currentLevel() const;
 	void			updateCurrentLevel(DWORD);
