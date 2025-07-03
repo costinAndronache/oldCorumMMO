@@ -118,6 +118,14 @@ namespace CustomUI {
 			return Rect{ {origin.x + offset.x, origin.y + offset.y }, size };
 		}
 
+		bool fullyContains(Rect other) const {
+			return (
+				(origin.x <= other.origin.x && other.origin.x <= maxX())
+				&&
+				(origin.y <= other.origin.y && other.origin.y <= maxY())
+			);
+		}
+
 		static Rect zero() {
 			Rect result = { {0,0}, {0,0} };
 			return result;
@@ -161,6 +169,7 @@ namespace CustomUI {
 		DWORD asDXColor() {
 			return D3DCOLOR_ARGB(a, r, g, b);
 		}
+		static Color white;
 	};
 
 	char getASCII(WPARAM wparam, LPARAM lParam); // 0 if not from keyboard

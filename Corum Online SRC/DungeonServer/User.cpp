@@ -2436,11 +2436,11 @@ void CUser::AddExp(int iExp, BOOL bAlphaExp)
 	{
 		// 기존최종획득경험치 * (100 + GLOBAL_EXP_GAIN + ITEM_ATTR_EXP_GAIN - ITEM_ATTR_EXP_LOSS) / 100
 		m_dwExp += DWORD(iExp*(1+m_bConnectToGameRoom*g_pThis->m_GLOBAL_EXP_GAIN_DOUBLE)
-			*(100+g_pThis->m_dwGLOBAL_EXP_GAIN + GetItemAttr(ITEM_ATTR_EXP_GAIN) - GetItemAttr(ITEM_ATTR_EXP_LOSS))/100.f) * 10000;
+			*(100+g_pThis->m_dwGLOBAL_EXP_GAIN + GetItemAttr(ITEM_ATTR_EXP_GAIN) - GetItemAttr(ITEM_ATTR_EXP_LOSS))/100.f) * 3;
 	}
 	else
 	{
-		m_dwExp += iExp * 1000;
+		m_dwExp += iExp * 3;
 	}
 	
 	// 내 가디언들의 경험치를 올려준다.

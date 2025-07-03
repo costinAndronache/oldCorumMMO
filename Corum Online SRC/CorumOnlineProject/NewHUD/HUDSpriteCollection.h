@@ -20,5 +20,7 @@ struct NewHUDResources {
 
 
 	static void initialize(I4DyuchiGXRenderer *renderer);
+
+	static CustomUI::SpriteModel spriteForSkill(BYTE skillKind, LP_SKILL_LIST_MANAGER skillListManager);
 };
 

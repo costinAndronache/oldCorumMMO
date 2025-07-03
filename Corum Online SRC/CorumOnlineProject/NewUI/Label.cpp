@@ -16,6 +16,8 @@ SingleLineLabel::SingleLineLabel(Rect frameInParent, Appearance appearance, cons
 
 void SingleLineLabel::renderWithRenderer(I4DyuchiGXRenderer* renderer, int order) {
 	const auto frame = globalFrame();
-	RECT r = { frame.origin.x, frame.origin.y - 5, frame.maxX(), frame.maxY() };
-	renderer->RenderFont(GetFont(), (char*)_text.c_str(), _text.size(), &r, _appearance.color.asDXColor(), CHAR_CODE_TYPE_ASCII, order, 0);
+	RECT r = { frame.origin.x, frame.origin.y, frame.maxX(), frame.maxY() };
+
+	IDIFontObject* font = _appearance.font ? _appearance.font : GetFont();
+	renderer->RenderFont(font, (char*)_text.c_str(), _text.size(), &r, _appearance.color.asDXColor(), CHAR_CODE_TYPE_ASCII, order, 0);
 }

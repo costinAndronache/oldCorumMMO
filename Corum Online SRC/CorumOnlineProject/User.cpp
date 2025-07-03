@@ -1691,6 +1691,10 @@ void CMainUser::SetSkillChangeLR(BYTE bySkillKind, BYTE byLR)
 	packet.bySelectSkillKind[1] = GetSkillKind(SELECT_ATTACK_TYPE_RBUTTON);
 	packet.bySelectSkillKind[0] = GetSkillKind(SELECT_ATTACK_TYPE_LBUTTON);
 	g_pNet->SendMsg((char*)&packet, packet.GetPacketSize(), SERVER_INDEX_ZONE);
+
+	listenersUpdate(_updateListeners, [=](CMainUserUpdateInterestedSharedRef listener) {
+		listener->updatedLeftRightSkillSelection(this);
+	});
 }
 
 BYTE CMainUser::GetSkillKind(BYTE byLR)

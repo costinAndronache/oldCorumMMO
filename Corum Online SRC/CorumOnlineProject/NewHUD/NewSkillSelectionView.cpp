@@ -1,24 +1,26 @@
 #include "NewSkillSelectionView.h"
+#include "HUDSpriteCollection.h"
 
 using namespace CustomUI;
 using namespace NewInterface;
 
 static const Size iconsSize{ 40, 40 };
 
-NewSkillSelectionView::NewSkillSelectionView(CustomUI::Point growthOrigin,
+NewSkillSelectionView::NewSkillSelectionView(CustomUI::Rect frameInParent,
 	CustomUI::MatrixContainer::VerticalGrowthDirection direction, SSKILL_LIST_MANAGER* skillListManager):
 	_skillListManager(skillListManager) {
-	
+	_frameInParent = frameInParent;
+
 	_leftSkillsContainer = registerChildRenderable<MatrixContainer>([=]() {
-		return new MatrixContainer(growthOrigin, direction, iconsSize);
+		return new MatrixContainer(bounds(), direction, iconsSize);
 	});
 
 	_righttSkillsContainer = registerChildRenderable<MatrixContainer>([=]() {
-		return new MatrixContainer(growthOrigin, direction, iconsSize);
+		return new MatrixContainer(bounds(), direction, iconsSize);
 	});
 
 	_guardianSkillsContainer = registerChildRenderable<MatrixContainer>([=]() {
-		return new MatrixContainer(growthOrigin, direction, iconsSize);
+		return new MatrixContainer(bounds(), direction, iconsSize);
 	});
 
 	switchToActiveSelection(ActiveSkillSelection::none);
@@ -29,20 +31,14 @@ void NewSkillSelectionView::updateCurrentSkills(CurrentSkills cs) {
 
 	std::function<Button::Sprites (BYTE)> spritesForSkill = [this](BYTE skillKind) {
 		Button::Sprites specimen = Button::Sprites::allZero;
-		if (!(0 <= skillKind && skillKind < MAX_SKILL)) { return specimen; }
-
-		auto sprite =  _skillListManager->spriteForSkillKind[skillKind];
-		specimen.normal.sprite = sprite;
-		specimen.normal.size = iconsSize;
-		specimen.normal.rotation = 0;
-
+		specimen.normal = NewHUDResources::spriteForSkill(skillKind, _skillListManager);
 		return specimen;
 	};
 
 	_leftSkillsContainer->rebuild<BYTE>(cs.currentLeftSkills, 4, [&](BYTE skillKind, Rect frameInContainer) {
 		const auto sprites = spritesForSkill(skillKind);
 		auto button = new Button(sprites, frameInContainer);
-		button->onClickEnd([&]() {
+		button->onClickEnd([=]() {
 			this->_activeSkillSelection = ActiveSkillSelection::none;
 			this->_handlers.onLeftSkillSelection(skillKind);
 		});
@@ -53,7 +49,7 @@ void NewSkillSelectionView::updateCurrentSkills(CurrentSkills cs) {
 	_righttSkillsContainer->rebuild<BYTE>(cs.currentRightSkills, 4, [&](BYTE skillKind, Rect frameInContainer) {
 		const auto sprites = spritesForSkill(skillKind);
 		auto button = new Button(sprites, frameInContainer);
-		button->onClickEnd([&]() {
+		button->onClickEnd([=]() {
 			this->_activeSkillSelection = ActiveSkillSelection::none;
 			this->_handlers.onRightSkillSelection(skillKind);
 		});
@@ -63,7 +59,7 @@ void NewSkillSelectionView::updateCurrentSkills(CurrentSkills cs) {
 	_guardianSkillsContainer->rebuild<BYTE>(cs.currentGuardianSkills, 4, [&](BYTE skillKind, Rect frameInContainer) {
 		const auto sprites = spritesForSkill(skillKind);
 		auto button = new Button(sprites, frameInContainer);
-		button->onClickEnd([&]() {
+		button->onClickEnd([=]() {
 			this->_activeSkillSelection = ActiveSkillSelection::none;
 			this->_handlers.onGuardianSkillSelection(skillKind);
 		});

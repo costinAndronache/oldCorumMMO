@@ -21,7 +21,7 @@ namespace NewInterface {
 			SkillSelectionHandler onGuardianSkillSelection;
 		};
 
-		NewSkillSelectionView(CustomUI::Point growthOrigin,
+		NewSkillSelectionView(CustomUI::Rect frameInParent,
 			CustomUI::MatrixContainer::VerticalGrowthDirection direction,
 			SSKILL_LIST_MANAGER* skillListManager);
 

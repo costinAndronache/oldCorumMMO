@@ -6,7 +6,7 @@ namespace CustomUI {
 	public:
 		enum class VerticalGrowthDirection {downwards, upwards};
 
-		MatrixContainer(Point growthOrigin, VerticalGrowthDirection direction, Size itemSize);
+		MatrixContainer(Rect frameInParent, VerticalGrowthDirection direction, Size itemSize);
 
 		template<typename Model>
 		void rebuild(
@@ -21,13 +21,15 @@ namespace CustomUI {
 					return createFn(models[i], currentFrame);
 				});
 			}
+		}
 
-			_frameInParent = boundingBoxInParent();
+		virtual void renderWithRenderer(I4DyuchiGXRenderer* renderer, int zIndex) override {
+			Renderable::renderWithRenderer(renderer, zIndex);
+			const auto gFrame = globalFrame();
 		}
 
 	private:
 		VerticalGrowthDirection _direction;
-		Point _growthOrigin;
 		Size _itemSize;
 		
 		Point originForIndex(int index, int maxColumnsPerRow);

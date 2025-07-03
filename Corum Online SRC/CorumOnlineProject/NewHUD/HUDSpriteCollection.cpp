@@ -1,4 +1,6 @@
 #include "HUDSpriteCollection.h"
+#include "../DungeonInterfaceLayout.h"
+
 using namespace CustomUI;
 
 SpriteModel NewHUDResources::hpBarSprite;
@@ -93,25 +95,25 @@ static void initNewHUDElements(I4DyuchiGXRenderer* r) {
 }
 
 static void initMenu1Elements(I4DyuchiGXRenderer* renderer) {
-	Size bigBarsSize{ 2, 15 };
-	Size smallBarsSize{ 4, 5 };
+	Size bigBarsSize{ 4, 15 };
+	Size smallBarsSize{ 2, 5 };
 
 	char* resourceFile = GetFile("menu_1.tga", DATA_TYPE_UI);
 
 	NewHUDResources::hpBarSprite = SpriteModel::from(renderer, resourceFile, {
-		{123, 33}, bigBarsSize
+		{123, 32}, bigBarsSize
 	});
 
 	NewHUDResources::spBarSprite = SpriteModel::from(renderer, resourceFile, {
-		{131, 33}, bigBarsSize
+		{131, 32}, bigBarsSize
 	});
 
 	NewHUDResources::expBarSprite = SpriteModel::from(renderer, resourceFile, {
-		{143, 32}, smallBarsSize
+		{144, 32}, smallBarsSize
 	});
 
 	NewHUDResources::cooldownBarSprite = SpriteModel::from(renderer, resourceFile, {
-		{149, 32}, smallBarsSize
+		{140, 32}, smallBarsSize
 	});
 }
 
@@ -121,13 +123,28 @@ void NewHUDResources::initialize(I4DyuchiGXRenderer* renderer) {
 
 	attackSkillSprite = {
 		renderer->CreateSpriteObject(GetFile("skill_icon1.tga", DATA_TYPE_UI), 0, 0, 32, 32, 0),
-		{ 32, 32},
+		{ SKILL_ICON_SIZE, SKILL_ICON_SIZE },
 		0
 	};
 	
 	leftInterfaceHUDSprite = {
 		renderer->CreateSpriteObject(GetFile("newInterfaceLeft.tif", DATA_TYPE_UI), 0, 0, 400, 121, 0),
 		{ 400, 121},
+		0
+	};
+}
+
+SpriteModel NewHUDResources::spriteForSkill(BYTE skillKind, LP_SKILL_LIST_MANAGER skillListManager) {
+	Button::Sprites specimen = Button::Sprites::allZero;
+	if (!(0 <= skillKind && skillKind < MAX_SKILL)) { return SpriteModel::zero; }
+
+	if (skillKind == __SKILL_ATTACK__) {
+		return NewHUDResources::attackSkillSprite;
+	}
+
+	return {
+		skillListManager->spriteForSkillKind[skillKind],
+		{SKILL_ICON_SIZE, SKILL_ICON_SIZE},
 		0
 	};
 }

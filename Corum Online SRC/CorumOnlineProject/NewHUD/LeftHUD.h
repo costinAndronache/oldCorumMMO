@@ -10,6 +10,7 @@
 #include "NewSkillSelectionView.h"
 #include "../CMainUserUpdateInterested.h"
 #include "../NewUI/SpriteRenderable.h"
+#include "../NewUI/Label.h"
 
 namespace NewInterface {
 	class LeftHUD : public CustomUI::Renderable {
@@ -42,6 +43,8 @@ namespace NewInterface {
 		CustomUI::ToggleButton *_pkButton;
 		CustomUI::Button* _leftSkillBtn, *_rightSkillBtn;
 		CustomUI::SpriteRenderable* _leftHUDSprite;
+		CustomUI::SingleLineLabel* _hpLabel;
+		CustomUI::SingleLineLabel* _spLabel;
 	};
 }
 

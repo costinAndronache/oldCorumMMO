@@ -2,8 +2,8 @@
 
 using namespace CustomUI;
 
-MatrixContainer::MatrixContainer(Point growthOrigin, VerticalGrowthDirection direction, Size itemSize) {
-	_growthOrigin = growthOrigin;
+MatrixContainer::MatrixContainer(Rect frameInParent, VerticalGrowthDirection direction, Size itemSize) {
+	_frameInParent = frameInParent;
 	_direction = direction;
 	_itemSize = itemSize;
 }
@@ -12,18 +12,20 @@ Point MatrixContainer::originForIndex(int index, int maxColumnsPerRow) {
 	const auto yCount = index / maxColumnsPerRow;
 	const auto xCount = index % maxColumnsPerRow;
 
-	const int ySign = [this]() {
+	const std::pair<int, Point> signAndGrowthOrigin = [this]() {
 		switch (_direction) {
 		case VerticalGrowthDirection::downwards:
-			return 1;
+			return std::make_pair<int, Point>(1, { 0, 0 });
 		case VerticalGrowthDirection::upwards:
-			return -1;
+			return std::make_pair<int, Point>(-1, 
+				{ 0, (long)(bounds().size.height - _itemSize.height) });
 		}
 	}();
+	
 
 	return Point {
-		xCount * (int)_itemSize.width + _growthOrigin.x,
-		(yCount * (int)_itemSize.width) * ySign + _growthOrigin.y
+		xCount * (int)_itemSize.width + signAndGrowthOrigin.second.x,
+		(yCount * (int)_itemSize.width) * signAndGrowthOrigin.first + signAndGrowthOrigin.second.y
 	};
 }
 

@@ -73,6 +73,27 @@ LeftHUD::LeftHUD(CustomUI::Point originInParent) {
 
 	_pkButton->setState(false);
 
+	const auto labelsSize = Size{ 100, 15 };
+	const auto labelsAppearance = SingleLineLabel::Appearance{
+		{ 255, 255, 255, 255}
+	};
+
+	_hpLabel = registerChildRenderable<SingleLineLabel>([=]() {
+		return new SingleLineLabel(
+			{ {0, 90 }, labelsSize },
+			labelsAppearance,
+			""
+		);
+	});
+
+	_spLabel = registerChildRenderable<SingleLineLabel>([=]() {
+		return new SingleLineLabel(
+			{ {0, 104 }, labelsSize },
+			labelsAppearance,
+			""
+		);
+	});
+
 }
 
 void LeftHUD::updatePKToggle(bool isON) {
@@ -102,10 +123,18 @@ void LeftHUD::setEventHandlers(EventHandlers handlers) {
 void LeftHUD::updateHPAttributes(DWORD currentHP, DWORD maxHP) {
 	const auto scale = (float)currentHP / (float)maxHP;
 	_hpBar->updateScale(scale);
+
+	char hpText[100] = { 0 };
+	wsprintf(hpText, "HP: %d / %d", currentHP, maxHP);
+	_hpLabel->updateTextTo(std::string(hpText));
 }
 
 void LeftHUD::updateSPAttributes(DWORD currentSP, DWORD maxSP) {
-
+	/*const auto scale = (float)currentSP / (float)maxSP;
+	_hpBar->updateScale(scale);*/
+	char hpText[100] = { 0 };
+	wsprintf(hpText, "SP: %d / %d", currentSP, maxSP);
+	_spLabel->updateTextTo(std::string(hpText));
 }
 
 void LeftHUD::updateSkillSpriteLEFT(CustomUI::SpriteModel leftSkillSprite) {
