@@ -13,13 +13,11 @@
 #include "../NewUI/Label.h"
 
 namespace NewInterface {
+	typedef std::function<void()> EventHandler;
+	typedef std::function<void(bool)> ToggleEventHandler;
+
 	class LeftHUD : public CustomUI::Renderable {
 	public:
-		typedef std::function<void()> EventHandler;
-		typedef std::function<void(bool)> ToggleEventHandler;
-
-		static CustomUI::Size preferredSize() { return NewHUDResources::newHUDSize; }
-
 		struct EventHandlers {
 			EventHandler tradeHandler, shopHandler, itemHandler, statsHandler, skillsHandler, leftSkillHandler, rightSkillHandler;
 			ToggleEventHandler pkHandler;

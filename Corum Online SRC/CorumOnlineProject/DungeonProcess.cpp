@@ -1094,20 +1094,13 @@ DWORD __stdcall AfterRenderGameDungeon()
 	}
 
 	ItemInfoRender();			// ItemInfo 	
-	ChatRender();				// 채팅출력 	
-	SkillRender();				// 스킬 출력 
-	
+	ChatRender();				// 채팅출력 		
 	char szInfo[0xff] = {0,};
 
 	if( !g_pThisDungeon->IsStadium() || (g_pMainPlayer->m_dwGuildWarFlag != G_W_F_OBSERVER) )
 	{
 #pragma region 
-		// Hp, Sp //	
-		wsprintf(szInfo, g_Message[ETC_MESSAGE864].szMessage, g_pMainPlayer->currentHP(), g_pMainPlayer->maxHP());//"Hp:%d/%d"	
-		RenderFont(szInfo, 5, 100, 740, 752, 1);
-
-		wsprintf(szInfo, g_Message[ETC_MESSAGE865].szMessage, g_pMainPlayer->currentSP(), g_pMainPlayer->maxSP());//"Sp:%d/%d"
-		RenderFont(szInfo, 5, 100, 755, 777, 1);	
+		// render hp and sp; 
 	}
 		
 	// INPUT BUFFER 체크
@@ -2250,7 +2243,7 @@ void OnLButtonUpDungeon(WPARAM wParam, LPARAM lParam)
 	}
 
 	pInterface->SetUp(TRUE);	
-	pInterface->InterfaceCheck();
+	//pInterface->InterfaceCheck();
 			
 	if(pInterface->GetClick())
 	{
@@ -5514,17 +5507,6 @@ lb_limit_chat_line_cnt:// sung-han 2005-03-30 노말채팅 라인수 1:5줄, 2:10줄, 3:1
 	else
 		SPR(SPR_MESSAGE_BOX)->ShowSprite(FALSE);
 		
-}
-
-void SkillRender()
-{
-	CSkillWnd*	pSkillWnd = CSkillWnd::GetInstance();
-//	Effect*		pEffect;
-	int			nOrder	= __ORDER_USERINTERFACE_START_+__ORDER_SKILL_KEY__;
-	CMonster *pGuardian = g_pMainPlayer->m_pGuardian[0];
-	
-	// Skill 작업 //
-
 }
 
 BOOL BeltCollision()

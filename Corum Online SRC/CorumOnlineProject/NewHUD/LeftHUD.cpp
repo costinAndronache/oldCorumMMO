@@ -7,7 +7,7 @@ using namespace CustomUI;
 using namespace NewInterface;
 
 LeftHUD::LeftHUD(CustomUI::Point originInParent) {
-	_frameInParent = { originInParent, LeftHUD::preferredSize() };
+	_frameInParent = { originInParent, NewHUDResources::newHUDSize };
 
 	_leftHUDSprite = registerChildRenderable<SpriteRenderable>([=]() {
 		return new SpriteRenderable(bounds(), NewHUDResources::leftInterfaceHUDSprite);

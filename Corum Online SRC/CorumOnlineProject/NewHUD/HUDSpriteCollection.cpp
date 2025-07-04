@@ -9,6 +9,7 @@ SpriteModel NewHUDResources::expBarSprite;
 SpriteModel NewHUDResources::cooldownBarSprite;
 SpriteModel NewHUDResources::attackSkillSprite;
 SpriteModel NewHUDResources::leftInterfaceHUDSprite;
+SpriteModel NewHUDResources::rightInterfaceHUDSprite;
 
 CustomUI::Button::Sprites
 NewHUDResources::trade, NewHUDResources::shop, NewHUDResources::item, 
@@ -129,6 +130,12 @@ void NewHUDResources::initialize(I4DyuchiGXRenderer* renderer) {
 	
 	leftInterfaceHUDSprite = {
 		renderer->CreateSpriteObject(GetFile("newInterfaceLeft.tif", DATA_TYPE_UI), 0, 0, 400, 121, 0),
+		{ 400, 121},
+		0
+	};
+
+	rightInterfaceHUDSprite = {
+		renderer->CreateSpriteObject(GetFile("newInterfaceRight.tif", DATA_TYPE_UI), 0, 0, 400, 121, 0),
 		{ 400, 121},
 		0
 	};

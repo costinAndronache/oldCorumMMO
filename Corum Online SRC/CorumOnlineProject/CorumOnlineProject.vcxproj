@@ -4099,6 +4099,7 @@
     <ClCompile Include="NewHUD\NewInterface.cpp" />
     <ClCompile Include="NewHUD\LeftHUD.cpp" />
     <ClCompile Include="NewHUD\NewSkillSelectionView.cpp" />
+    <ClCompile Include="NewHUD\RightHUD.cpp" />
     <ClCompile Include="NewUI\Button.cpp" />
     <ClCompile Include="NewUI\MatrixContainer.cpp" />
     <ClCompile Include="NewUI\CustomUIBase.cpp" />
@@ -6686,6 +6687,7 @@
     <ClInclude Include="NewHUD\NewInterface.h" />
     <ClInclude Include="NewHUD\LeftHUD.h" />
     <ClInclude Include="NewHUD\NewSkillSelectionView.h" />
+    <ClInclude Include="NewHUD\RightHUD.h" />
     <ClInclude Include="NewUI\Button.h" />
     <ClInclude Include="NewUI\MatrixContainer.h" />
     <ClInclude Include="NewUI\CustomUIBase.h" />

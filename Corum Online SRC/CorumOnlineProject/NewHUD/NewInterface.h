@@ -1,5 +1,6 @@
 #pragma once
 #include "LeftHUD.h"
+#include "RightHUD.h"
 
 namespace NewInterface {
 	class Interface: public CustomUI::Renderable, public CMainUserUpdateInterested {
@@ -22,6 +23,8 @@ namespace NewInterface {
 		void updatedLeftRightSkillSelection(CMainUser*) override;
 	private:
 		LeftHUD* _leftHUD;
+		RightHUD* _rightHUD;
+
 		NewSkillSelectionView* _skillSelectionView;
 		std::shared_ptr<Interface> _thisAsShared;
 
