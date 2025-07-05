@@ -49,7 +49,7 @@ InputField::InputField(Rect frameInParent, SpriteModel bgSpriteModel, Button::Sp
 		return new Button(clearButtonSprites, clearBtnFrame);
 	});
 
-	_clearButton->onClickEnd([this]() {
+	_clearButton->onClickEndLEFT([this]() {
 		onButtonPressRelease(this->_clearButton);
 	});
 }
@@ -66,7 +66,7 @@ void InputField::onButtonPressRelease(Button* button) {
 
 
 void InputField::onMouseStateChange(MouseState newState, MouseState oldState) {
-	if (newState == MouseState::pressedInside) {
+	if (newState == MouseState::leftButtonPressedInside) {
 		_isActive = true;
 		_caretStateON = true;
 	}

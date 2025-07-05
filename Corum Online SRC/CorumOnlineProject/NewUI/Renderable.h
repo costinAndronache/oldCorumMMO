@@ -5,12 +5,12 @@
 namespace CustomUI {
 	class Renderable {
 	public:
-		enum class MouseState { hovering, pressedInside, none };
-
+		enum class MouseButton { left, right};
+		enum class MouseState { hovering, leftButtonPressedInside, rightButtonPressedInside, none };
 		virtual void renderWithRenderer(I4DyuchiGXRenderer* renderer, int zIndex);
 
-		virtual void handleMouseDown(Point mouse);
-		virtual void handleMouseUp(Point mouse);
+		virtual void handleMouseDown(Point mouse, MouseButton button);
+		virtual void handleMouseUp(Point mouse, MouseButton button);
 		void handleMouseMove(Point mouse);
 		void handleKeyUp(WPARAM wparam, LPARAM lparam);
 		void handleKeyDown(WPARAM wparam, LPARAM lparam);

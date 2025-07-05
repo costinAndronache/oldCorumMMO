@@ -2106,7 +2106,7 @@ void OnLButtonDownDungeon(WPARAM wParam, LPARAM lParam)
 	g_Mouse.dwLButtonDownTime		= g_dwCurTick;
 	g_pMainPlayer->m_i64PickupItem	= 0;
 
-	_newInterface->handleMouseDown(g_Mouse.MousePos);
+	_newInterface->handleMouseDown(g_Mouse.MousePos, CustomUI::Renderable::MouseButton::left);
 
 	if( GetAsyncKeyState(VK_SHIFT) & 0x800000 && g_bLshift )	
 	{
@@ -2220,7 +2220,7 @@ lb_move:
 
 void OnLButtonUpDungeon(WPARAM wParam, LPARAM lParam)
 {
-	_newInterface->handleMouseUp(g_Mouse.MousePos);
+	_newInterface->handleMouseUp(g_Mouse.MousePos, CustomUI::Renderable::MouseButton::left);
 
 	ItemPickupFilteringSystem::sharedInstance()->handleMouseUp();
 	if (ItemPickupFilteringSystem::sharedInstance()->swallowsMouse()) { 

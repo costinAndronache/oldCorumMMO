@@ -18,7 +18,7 @@ Button::Button(Sprites sprites, LabelModel labelModel, Rect frameInParent): _spr
 	_frameInParent = frameInParent;
 
 	Rect labelFrame{ {0, 0}, SingleLineLabel::fittedSize(strlen(labelModel.text)) };
-	labelFrame = labelFrame.centeredWith(_frameInParent);
+	labelFrame = labelFrame.centeredWith(bounds());
 	_label = registerChildRenderable<SingleLineLabel>([=]() {
 		return new SingleLineLabel(labelFrame, labelModel.appearance, labelModel.text);
 	});
@@ -32,13 +32,26 @@ void Button::onMouseStateChange(MouseState newState, MouseState oldState) {
 	const auto frame = globalFrame();
 	printf("\nFor button(%d, %d) mouse state is: %d", frame.origin.x, frame.origin.y, newState);
 
-	if (newState == MouseState::pressedInside && _onPress) { 
-		_onPress();  
+	if (newState == MouseState::leftButtonPressedInside && _onPressLEFT) { 
+		_onPressLEFT();  
 	}
 
-	if (oldState == MouseState::pressedInside && _onRelease) { 
-		_onRelease(); 
+	if (newState == MouseState::rightButtonPressedInside && _onPressRIGHT) {
+		_onPressRIGHT();
 	}
+
+	if (oldState == MouseState::leftButtonPressedInside &&
+		newState != MouseState::rightButtonPressedInside &&
+		_onReleaseLEFT) { 
+		_onReleaseLEFT(); 
+	}
+
+	if (oldState == MouseState::rightButtonPressedInside &&
+		newState != MouseState::leftButtonPressedInside && 
+		_onReleaseRIGHT) {
+		_onReleaseRIGHT();
+	}
+
 }
 
 void Button::renderWithRenderer(I4DyuchiGXRenderer* renderer, int order) {
@@ -53,7 +66,8 @@ void Button::renderWithRenderer(I4DyuchiGXRenderer* renderer, int order) {
 			_sprites.normal.renderWith(renderer, frame, order);
 		}
 		break;
-	case MouseState::pressedInside:
+	case MouseState::leftButtonPressedInside:
+	case MouseState::rightButtonPressedInside:
 		_sprites.pressed.renderWith(renderer, frame, order);
 		if (!_sprites.pressed.sprite) {
 			_sprites.normal.renderWith(renderer, frame, order);

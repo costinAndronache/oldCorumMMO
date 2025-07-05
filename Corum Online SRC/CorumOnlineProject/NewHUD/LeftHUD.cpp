@@ -109,14 +109,14 @@ void LeftHUD::updateHPScale(float scale) {
 }
 
 void LeftHUD::setEventHandlers(EventHandlers handlers) {
-	_tradeBtn->onClickEnd(handlers.tradeHandler);
-	_shopBtn->onClickEnd(handlers.shopHandler);
-	_itemBtn->onClickEnd(handlers.itemHandler);
-	_statsBtn->onClickEnd(handlers.statsHandler);
-	_skillsBtn->onClickEnd(handlers.skillsHandler);
+	_tradeBtn->onClickEndLEFT(handlers.tradeHandler);
+	_shopBtn->onClickEndLEFT(handlers.shopHandler);
+	_itemBtn->onClickEndLEFT(handlers.itemHandler);
+	_statsBtn->onClickEndLEFT(handlers.statsHandler);
+	_skillsBtn->onClickEndLEFT(handlers.skillsHandler);
 	_pkButton->onStateSwitch(handlers.pkHandler);
-	_leftSkillBtn->onClickEnd(handlers.leftSkillHandler);
-	_rightSkillBtn->onClickEnd(handlers.rightSkillHandler);
+	_leftSkillBtn->onClickEndLEFT(handlers.leftSkillHandler);
+	_rightSkillBtn->onClickEndLEFT(handlers.rightSkillHandler);
 }
 
 

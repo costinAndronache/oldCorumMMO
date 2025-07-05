@@ -144,12 +144,13 @@ bool ItemPickupFilteringSystem::swallowsKeyboard() {
 
 void ItemPickupFilteringSystem::handleMouseDown() {
 	if (_view->getHidden()) { return; }
-	_view->handleMouseDown(g_Mouse.MousePos);
+	_view->handleMouseDown(g_Mouse.MousePos, 
+						   g_Mouse.bLDown ? Renderable::MouseButton::left : Renderable::MouseButton::right);
 }
 
 void ItemPickupFilteringSystem::handleMouseUp() {
 	if (_view->getHidden()) { return; }
-	_view->handleMouseUp(g_Mouse.MousePos);
+	_view->handleMouseUp(g_Mouse.MousePos, !g_Mouse.bLDown ? Renderable::MouseButton::left : Renderable::MouseButton::right);
 }
 
 void ItemPickupFilteringSystem::handleKeyUp(WPARAM wparam, LPARAM lparam) {

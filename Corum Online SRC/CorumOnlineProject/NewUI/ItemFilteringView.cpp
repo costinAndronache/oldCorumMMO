@@ -43,7 +43,7 @@ ItemFilteringView::ItemFilteringView(Rect frameInParent, std::vector<CItem*>& al
 			closeButtonRect);
 	});
 
-	_closeButton->onClickEnd([=]() {
+	_closeButton->onClickEndLEFT([=]() {
 		onButtonPressRelease(_closeButton);
 	});
 

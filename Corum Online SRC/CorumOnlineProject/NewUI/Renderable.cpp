@@ -40,22 +40,27 @@ void Renderable::updateMouseState(MouseState newState) {
 	onMouseStateChange(newState, old); 
 }
 
-void Renderable::handleMouseDown(Point mouse) {
+void Renderable::handleMouseDown(Point mouse, MouseButton button) {
 	if (_isHidden) { return; }
 	
 	if (!globalFrame().isMouseInside(mouse)) {
 		updateMouseState(MouseState::none);
 		return;
 	}
-	updateMouseState(MouseState::pressedInside);
+
+	updateMouseState(
+		button == MouseButton::left ? 
+			MouseState::leftButtonPressedInside : 
+			MouseState::rightButtonPressedInside
+	);
 
 	if (swallowsMouseEvents()) { return; }
 	for (auto child : _childRenderables) {
-		child->handleMouseDown(mouse);
+		child->handleMouseDown(mouse, button);
 	}
 }
 
-void Renderable::handleMouseUp(Point mouse) {
+void Renderable::handleMouseUp(Point mouse, MouseButton button) {
 	if (_isHidden) { return; }
 	updateMouseState(
 		globalFrame().isMouseInside(mouse) ? MouseState::hovering : MouseState::none
@@ -63,7 +68,7 @@ void Renderable::handleMouseUp(Point mouse) {
 
 	if (swallowsMouseEvents()) { return; }
 	for (auto child : _childRenderables) {
-		child->handleMouseUp(mouse);
+		child->handleMouseUp(mouse, button);
 	}
 }
 
@@ -77,7 +82,10 @@ void Renderable::handleMouseMove(Point mouse) {
 	}
 
 
-	if (_currentMouseState == MouseState::pressedInside) { return; }
+	if (_currentMouseState == MouseState::leftButtonPressedInside ||
+		_currentMouseState == MouseState::rightButtonPressedInside ) {
+		return; 
+	}
 
 	updateMouseState(
 		globalFrame().isMouseInside(mouse) ? MouseState::hovering : MouseState::none

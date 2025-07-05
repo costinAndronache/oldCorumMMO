@@ -34,15 +34,17 @@ namespace CustomUI {
 		void renderWithRenderer(I4DyuchiGXRenderer* renderer, int order);
 
 
-		void onClickStart(EventHandler event) { _onPress = event;  }
-		void onClickEnd(EventHandler event) { _onRelease = event; }
+		void onClickStartLEFT(EventHandler event) { _onPressLEFT = event;  }
+		void onClickEndLEFT(EventHandler event) { _onReleaseLEFT = event; }
 
 	protected:
 		void onMouseStateChange(MouseState newState, MouseState oldState) override;
 
 	private:
 		SingleLineLabel* _label;
-		EventHandler _onPress, _onRelease;
+		EventHandler _onPressLEFT, _onReleaseLEFT;
+		EventHandler _onPressRIGHT, _onReleaseRIGHT;
+
 		Sprites _sprites;
 
 	};
