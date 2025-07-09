@@ -216,7 +216,8 @@ BOOL InitGameDungeon() {
 	_newInterface = std::make_shared<NewInterface::Interface>(
 		CustomUI::Size{ (float)windowWidth(), (float)windowHeight()},
 		g_pMainPlayer,
-		&g_sSkillListManager
+		&g_sSkillListManager,
+		g_pItemResourceHash
 	);
 
 	_leftHudTest = new CustomUI::SpriteRenderable(
@@ -2425,26 +2426,26 @@ void OnRButtonDownDungeon(WPARAM wParam, LPARAM lParam)
 			return;
 
 		int nPosX	= (g_Mouse.MousePos.x-727)/37;
-		int nValue	= g_pMainPlayer->m_pBelt[nPosX].m_wItemID/ITEM_DISTRIBUTE;
+		//int nValue	= g_pMainPlayer->m_pBelt[nPosX].m_wItemID/ITEM_DISTRIBUTE;
 
-		if(nValue==ITEM_SUPPLIES_INDEX)
-		{
-			g_bBeltChk = TRUE;
-			return;
-		}
-		else if(nValue==ITEM_ZODIAC_INDEX)
-		{
-			if (TRUE == g_pMainPlayer->m_bInEventDungeon)
-			{			
-				//"이벤트 던전내에서 조디악 카드 사용은 금지되어 있습니다."
-				DisplayMessageAdd(g_Message[ETC_MESSAGE500].szMessage, 0xffff2cff);
-				return;
-			}
+		//if(nValue==ITEM_SUPPLIES_INDEX)
+		//{
+		//	g_bBeltChk = TRUE;
+		//	return;
+		//}
+		//else if(nValue==ITEM_ZODIAC_INDEX)
+		//{
+		//	if (TRUE == g_pMainPlayer->m_bInEventDungeon)
+		//	{			
+		//		//"이벤트 던전내에서 조디악 카드 사용은 금지되어 있습니다."
+		//		DisplayMessageAdd(g_Message[ETC_MESSAGE500].szMessage, 0xffff2cff);
+		//		return;
+		//	}
 
-			g_bRButton = TRUE;
+		//	g_bRButton = TRUE;
 
-			return;
-		}
+		//	return;
+		//}
 	}
 	
 	for(int i = 0; i < CUR_INTERFACE; i++)
@@ -2575,7 +2576,7 @@ void OnRButtonUpDungeon(WPARAM wParam, LPARAM lParam)
 	if(	g_Mouse.MousePos.x>=727		&&	g_Mouse.MousePos.x<=1024	&&
 		g_Mouse.MousePos.y>=733		&&	g_Mouse.MousePos.y<=768)
 	{
-		if(g_pMainPlayer->GetStatus()!=UNIT_STATUS_DEAD)
+		/*if(g_pMainPlayer->GetStatus()!=UNIT_STATUS_DEAD)
 		{
 			BYTE	byZipCode	= byte((g_Mouse.MousePos.x-727)/37);
 	
@@ -2590,7 +2591,7 @@ void OnRButtonUpDungeon(WPARAM wParam, LPARAM lParam)
 				bChk = ItemUsedZodiac(&g_pMainPlayer->m_pBelt[byZipCode], byZipCode, ZODIAC_USE_TYPE_BELT);							
 
 			bInter = TRUE;
-		}
+		}*/
 	}
 	
 	g_bBeltChk	= FALSE;
@@ -6163,12 +6164,12 @@ void SetKey(int nKey)
 
 							BOOL bChk = FALSE;
 							
-							if(!bChk)
-								bChk = ItemUsedSupplies(&g_pMainPlayer->m_pBelt[byZipCode], byZipCode, ZODIAC_USE_TYPE_BELT);
-							if(!bChk)
-								bChk = ItemUsedConsumable(&g_pMainPlayer->m_pBelt[byZipCode], byZipCode, ZODIAC_USE_TYPE_BELT);
-							if(!bChk)
-								bChk = ItemUsedZodiac(&g_pMainPlayer->m_pBelt[byZipCode], byZipCode, ZODIAC_USE_TYPE_BELT);
+							//if(!bChk)
+							//	bChk = ItemUsedSupplies(&g_pMainPlayer->m_pBelt[byZipCode], byZipCode, ZODIAC_USE_TYPE_BELT);
+							//if(!bChk)
+							//	bChk = ItemUsedConsumable(&g_pMainPlayer->m_pBelt[byZipCode], byZipCode, ZODIAC_USE_TYPE_BELT);
+							//if(!bChk)
+							//	bChk = ItemUsedZodiac(&g_pMainPlayer->m_pBelt[byZipCode], byZipCode, ZODIAC_USE_TYPE_BELT);
 						}
 					}
 				}

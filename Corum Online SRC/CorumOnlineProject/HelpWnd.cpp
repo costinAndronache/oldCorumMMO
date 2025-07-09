@@ -137,7 +137,7 @@ void CHelpWnd::SetActive(BOOL bActive)
 	{
 		if(g_pMainPlayer->m_byHelp[0]==6)
 		{	
-			for(int i = 0; i < MAX_INV_SMALL_POOL; i++)
+			/*for(int i = 0; i < MAX_INV_SMALL_POOL; i++)
 			{
 				int nValue = g_pMainPlayer->m_pInv_Small[i].GetID()/ITEM_DISTRIBUTE;
 
@@ -177,7 +177,7 @@ void CHelpWnd::SetActive(BOOL bActive)
 					}					
 					return;
 				}
-			}						
+			}*/						
 		}
 		m_bSoundChk	= FALSE;
 	

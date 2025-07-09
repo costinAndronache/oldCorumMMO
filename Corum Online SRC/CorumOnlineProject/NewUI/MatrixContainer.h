@@ -6,7 +6,7 @@ namespace CustomUI {
 	public:
 		enum class VerticalGrowthDirection {downwards, upwards};
 
-		MatrixContainer(Rect frameInParent, VerticalGrowthDirection direction, Size itemSize);
+		MatrixContainer(Rect frameInParent, VerticalGrowthDirection direction, Size itemSize, int spacing = 0);
 
 		template<typename Model>
 		void rebuild(
@@ -31,7 +31,7 @@ namespace CustomUI {
 	private:
 		VerticalGrowthDirection _direction;
 		Size _itemSize;
-		
+		int _spacing;
 		Point originForIndex(int index, int maxColumnsPerRow);
 	};
 }

@@ -13,7 +13,7 @@ void InputFieldResources::initialize() {
 		bgSpriteModel.sprite = g_pRenderer->CreateSpriteObject(
 			resourceFile,
 			74, 0,
-			bgSpriteModel.size.width, bgSpriteModel.size.height,
+			bgSpriteModel.naturalSize.width, bgSpriteModel.naturalSize.height,
 			0
 		);
 	}

@@ -5,7 +5,7 @@
 using namespace CustomUI;
 using namespace NewInterface;
 
-RightHUD::RightHUD(CustomUI::Point originInParent) {
+RightHUD::RightHUD(CustomUI::Point originInParent, const CItemResourceHash* resourceHash) {
 	_frameInParent = { originInParent, NewHUDResources::newHUDSize };
 
 	_rightHUDSprite = registerChildRenderable<SpriteRenderable>([=]() {
@@ -13,31 +13,31 @@ RightHUD::RightHUD(CustomUI::Point originInParent) {
 	});
 
 	const auto groupBtnSprites = NewHUDResources::group;
-	const auto groupBtnFrame = Rect{ {112, 35}, groupBtnSprites.normal.size };
+	const auto groupBtnFrame = Rect{ {112, 35}, groupBtnSprites.normal.naturalSize };
 	_groupBtn = registerChildRenderable<Button>([=]() {
 		return new Button(groupBtnSprites, groupBtnFrame);
 	});
 
 	const auto lairBtnSprites = NewHUDResources::lair;
-	const auto lairBtnFrame = Rect{ {189, 35}, lairBtnSprites.normal.size };
+	const auto lairBtnFrame = Rect{ {189, 35}, lairBtnSprites.normal.naturalSize };
 	_lairBtn = registerChildRenderable<Button>([=]() {
 		return new Button(lairBtnSprites, lairBtnFrame);
 	});
 
 	const auto chatBtnSprites = NewHUDResources::chat;
-	const auto chatBtnFrame = Rect{ {272, 35}, chatBtnSprites.normal.size };
+	const auto chatBtnFrame = Rect{ {272, 35}, chatBtnSprites.normal.naturalSize };
 	_chatBtn = registerChildRenderable<Button>([=]() {
 		return new Button(chatBtnSprites, chatBtnFrame);
 	});
 
 	const auto matchBtnSprites = NewHUDResources::match;
-	const auto matchBtnFrame = Rect{ {350, 33}, matchBtnSprites.normal.size };
+	const auto matchBtnFrame = Rect{ {350, 33}, matchBtnSprites.normal.naturalSize };
 	_matchBtn = registerChildRenderable<Button>([=]() {
 		return new Button(matchBtnSprites, matchBtnFrame);
 	});
 
 	const auto restBtnSprites = NewHUDResources::rest;
-	const auto restBtnFrame = Rect{ {350, 14}, restBtnSprites.normal.size };
+	const auto restBtnFrame = Rect{ {350, 14}, restBtnSprites.normal.naturalSize };
 	_restBtn = registerChildRenderable<Button>([=]() {
 		return new Button(restBtnSprites, restBtnFrame);
 	});
@@ -57,9 +57,21 @@ RightHUD::RightHUD(CustomUI::Point originInParent) {
 	});
 
 	const auto optionsBtnSprites = NewHUDResources::system;
-	const auto optionsBtnFrame = Rect{ {34, 84}, optionsBtnSprites.normal.size };
+	const auto optionsBtnFrame = Rect{ {34, 84}, optionsBtnSprites.normal.naturalSize };
 	_optionsBtn = registerChildRenderable<Button>([=]() {
 		return new Button(optionsBtnSprites, optionsBtnFrame);
+	});
+
+	const auto beltFrame = Rect{ {102, 85}, {300, 34} };
+	_beltItemsView = registerChildRenderable<BeltItemsView>([=]() {
+		return new BeltItemsView(
+			beltFrame,
+			resourceHash,
+			{
+				{ 34, 34},
+				3
+			}
+		);
 	});
 }
 
@@ -74,4 +86,8 @@ void RightHUD::updateSPScale(float scale) {
 
 void RightHUD::updateCooldownScale(float scale) {
 	_cooldownBar->updateScale(scale);
+}
+
+void RightHUD::updateWithItems(const CItem items[MAX_BELT_POOL]) {
+	_beltItemsView->updateWithItems(items);
 }

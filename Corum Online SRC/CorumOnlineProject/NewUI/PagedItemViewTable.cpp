@@ -10,7 +10,7 @@ void PagedItemViewTableResources::initialize() {
 		char* resourceFile = GetFile("speaking_box.tif", DATA_TYPE_UI);
 		bgSpriteModel.sprite = g_pRenderer->CreateSpriteObject(resourceFile,
 			0, 0,
-			bgSpriteModel.size.width, bgSpriteModel.size.height,
+			bgSpriteModel.naturalSize.width, bgSpriteModel.naturalSize.height,
 			0);
 	}
 }

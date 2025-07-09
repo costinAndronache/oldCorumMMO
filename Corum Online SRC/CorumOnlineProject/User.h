@@ -183,6 +183,13 @@ public:
 	BOOL				IsSameUser( CUser* pUser );		// added by minjin.
 	CUser();
 	~CUser();
+
+	protected:
+		CItem			m_pBelt[MAX_BELT_POOL];
+	public:
+		virtual CItem			beltItemAtIndex(int index);
+		virtual void			setBeltItem(CItem item, int index);
+		virtual void			nullifyBeltItemAtIndex(int index);
 };
 
 
@@ -291,7 +298,6 @@ public:
 	CItem			m_pEquip[ MAX_EQUIP_POOL ];
 	CItem			m_pInv_Large[ MAX_INV_LARGE_POOL ];
 	CItem			m_pInv_Small[ MAX_INV_SMALL_POOL ];
-	CItem			m_pBelt[ MAX_BELT_POOL ];
 	
 	DWORD			m_dwMoney;
 
@@ -438,5 +444,9 @@ public:
 	BYTE			GetSkillLevel(BYTE bSkillKind);
 	void			applyOffsetForSkills(int offset);
 
+public:
+	void			setBeltItem(CItem item, int index) override;
+	void			nullifyBeltItemAtIndex(int index) override;
+	void			copyBeltItemsInto(CItem items[MAX_BELT_POOL]) const;
 };
 

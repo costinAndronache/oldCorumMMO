@@ -840,6 +840,9 @@
     <ClCompile Include="NewHUD\RightHUD.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="NewHUD\BeltItemsView.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MouseLib.h">
@@ -1581,6 +1584,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="NewHUD\RightHUD.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="NewHUD\BeltItemsView.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

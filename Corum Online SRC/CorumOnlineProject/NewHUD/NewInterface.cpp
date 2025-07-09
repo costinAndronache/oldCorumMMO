@@ -9,7 +9,8 @@ using namespace NewInterface;
 
 Interface::Interface(CustomUI::Size screenSize,
 					 CMainUser* mainUser,
-					 LP_SKILL_LIST_MANAGER skillListManager) {
+					 const LP_SKILL_LIST_MANAGER skillListManager, 
+					 const CItemResourceHash* resourceHash) {
 	_mainUser = mainUser;
 	_skillListManager = skillListManager;
 	_frameInParent = CustomUI::Rect{ {0, 0}, screenSize };
@@ -22,7 +23,7 @@ Interface::Interface(CustomUI::Size screenSize,
 
 	const auto rightHudOriginX = (long)(screenSize.width - hudSize.width);
 	_rightHUD = registerChildRenderable<RightHUD>([=]() {
-		return new RightHUD({ rightHudOriginX, hudOriginY });
+		return new RightHUD({ rightHudOriginX, hudOriginY }, resourceHash);
 	});
 
 	_skillSelectionView = registerChildRenderable<NewSkillSelectionView>([&]() {
@@ -70,7 +71,7 @@ Interface::Interface(CustomUI::Size screenSize,
 
 	_leftHUD->setEventHandlers(handlers);
 	updateLeftHUDWithSelectedLeftRightSkills();
-
+	
 	_skillSelectionView->updateCurrentSkills({
 		mainUser->skillsAvailableOnLeft(),
 		mainUser->skillsAvailableOnRight(),
@@ -91,6 +92,9 @@ Interface::Interface(CustomUI::Size screenSize,
 			_skillSelectionView->switchToActiveSelection(NewSkillSelectionView::ActiveSkillSelection::none);
 		},
 	});
+
+	//
+	updatedBeltItems(mainUser);
 }
 
 void Interface::updateLeftHUDWithSelectedLeftRightSkills() {
@@ -124,6 +128,12 @@ void Interface::updatedSkills(CMainUser* mainUser) {
 		mainUser->skillsAvailableOnRight(),
 		std::vector<BYTE>()
 	});
+}
+
+void Interface::updatedBeltItems(CMainUser* user) {
+	CItem items[MAX_BELT_POOL];
+	user->copyBeltItemsInto(items);
+	_rightHUD->updateWithItems(items);
 }
 
 void Interface::updatedLeftRightSkillSelection(CMainUser*) {

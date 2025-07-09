@@ -83,6 +83,12 @@ namespace CustomUI {
 			return result;
 		}
 
+		Rect fromMaxYOrigin(int offset) const {
+			Rect result = *this;
+			result.origin.y = result.maxY() + offset;
+			return result;
+		}
+
 		Rect horizontallyAlignedWith(Rect other) const {
 			Rect result = { { other.origin.x, origin.y }, {other.size.width, size.height} };
 			return result;
@@ -136,12 +142,12 @@ namespace CustomUI {
 		static SpriteModel zero;
 
 		IDISpriteObject* sprite;
-		Size size;
+		Size naturalSize;
 		float rotation;
 
 		void renderWith(I4DyuchiGXRenderer* renderer, Rect withinGlobalFrame, int order = 0) const {
 			if (!sprite) { return; }
-			VECTOR2 scale = withinGlobalFrame.size.divideBy(size);
+			VECTOR2 scale = withinGlobalFrame.size.divideBy(naturalSize);
 			VECTOR2 pos{ withinGlobalFrame.origin.x, withinGlobalFrame.origin.y };
 
 			renderer->RenderSprite(sprite, &scale, rotation, &pos, NULL, 0xffffffff, order, RENDER_TYPE_DISABLE_TEX_FILTERING);

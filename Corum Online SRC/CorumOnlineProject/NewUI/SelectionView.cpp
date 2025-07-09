@@ -8,7 +8,7 @@ void SelectionViewResources::initialize() {
 		checkmarkSpriteModel.sprite = g_pRenderer->CreateSpriteObject(
 			GetFile("checkv1.tif", DATA_TYPE_UI),
 			0, 0,
-			checkmarkSpriteModel.size.width, checkmarkSpriteModel.size.height,
+			checkmarkSpriteModel.naturalSize.width, checkmarkSpriteModel.naturalSize.height,
 			0);
 	}
 }

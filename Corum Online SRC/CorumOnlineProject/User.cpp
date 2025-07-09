@@ -304,6 +304,24 @@ CMainUser::~CMainUser()
 	}
 }
 
+CItem CUser::beltItemAtIndex(int index) {
+	if (!(0 <= index && index < MAX_BELT_POOL)) {
+		return CItem::nullItem();
+	}
+	return m_pBelt[index];
+}
+
+void CUser::setBeltItem(CItem item, int index) {
+	if (!(0 <= index && index < MAX_BELT_POOL)) {
+		return;
+	}
+
+	m_pBelt[index] = item;
+}
+
+void CUser::nullifyBeltItemAtIndex(int index) {
+	setBeltItem(CItem::nullItem(), index);
+}
 
 void CMainUser::RegistItemNativeInfo()
 {
@@ -1924,4 +1942,24 @@ void CMainUser::applyOffsetForSkills(int offset) {
 	listenersUpdate(_updateListeners, [this](CMainUserUpdateInterestedSharedRef ref) {
 		ref->updatedSkills(this);
 	});
+}
+
+void CMainUser::setBeltItem(CItem item, int index) {
+	CUser::setBeltItem(item, index);
+	listenersUpdate(_updateListeners, [=](CMainUserUpdateInterestedSharedRef listener) {
+		listener->updatedBeltItems(this);
+	});
+}
+
+void CMainUser::nullifyBeltItemAtIndex(int index) {
+	CUser::nullifyBeltItemAtIndex(index);
+	listenersUpdate(_updateListeners, [=](CMainUserUpdateInterestedSharedRef listener) {
+		listener->updatedBeltItems(this);
+	});
+}
+
+void CMainUser::copyBeltItemsInto(CItem items[MAX_BELT_POOL]) const {
+	for (int i = 0; i < MAX_BELT_POOL; i++) {
+		items[i] = m_pBelt[i];
+	}
 }

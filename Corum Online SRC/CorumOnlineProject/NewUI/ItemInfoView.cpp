@@ -14,7 +14,7 @@ void ItemInfoViewResources::initialize() {
 		bgSpriteModel.sprite = g_pRenderer->CreateSpriteObject(
 			GetFile("menu_4.tif", DATA_TYPE_UI),
 			0, 0,
-			bgSpriteModel.size.width, bgSpriteModel.size.height,
+			bgSpriteModel.naturalSize.width, bgSpriteModel.naturalSize.height,
 			0);
 	}
 
@@ -22,7 +22,7 @@ void ItemInfoViewResources::initialize() {
 		unknownSpriteModel.sprite = g_pRenderer->CreateSpriteObject(
 			GetFile("menu_1.tga", DATA_TYPE_UI),
 			191, 185,
-			unknownSpriteModel.size.width, unknownSpriteModel.size.height,
+			unknownSpriteModel.naturalSize.width, unknownSpriteModel.naturalSize.height,
 			0);
 	}
 }
@@ -54,7 +54,7 @@ void ItemInfoView::renderWithRenderer(I4DyuchiGXRenderer* renderer, int order) {
 
 	VECTOR2 vPos = { _rect.origin.x, _rect.origin.y };
 
-	VECTOR2 scale = _rect.size.divideBy(_backgroundSpriteModel.size);
+	VECTOR2 scale = _rect.size.divideBy(_backgroundSpriteModel.naturalSize);
 	g_pRenderer->RenderSprite(
 		_backgroundSpriteModel.sprite,
 		&scale, 0.0f, &vPos, 
@@ -82,7 +82,7 @@ void ItemInfoView::renderWithRenderer(I4DyuchiGXRenderer* renderer, int order) {
 			, &itemScale, 0.0f, &vPos, NULL, 0xffffffff, order, RENDER_TYPE_DISABLE_TEX_FILTERING);
 	}
 	else {
-		VECTOR2 scale = _rect.size.divideBy(ItemInfoViewResources::unknownSpriteModel.size);
+		VECTOR2 scale = _rect.size.divideBy(ItemInfoViewResources::unknownSpriteModel.naturalSize);
 		renderer->RenderSprite(ItemInfoViewResources::unknownSpriteModel.sprite
 			, &scale, 0.0f, &vPos, NULL, 0xffffffff, order, RENDER_TYPE_DISABLE_TEX_FILTERING);
 	}

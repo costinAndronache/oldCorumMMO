@@ -516,12 +516,13 @@ BOOL ItemUsedConsumable(CItem* pItem, BYTE byZipcode, BYTE byType)
 		{
 			for(int i = 0; i < MAX_BELT_POOL; i++)
 			{
-				DWORD dwNewId = g_pMainPlayer->m_pBelt[i].GetID();
+				auto currentItem = g_pMainPlayer->beltItemAtIndex(i);
+				DWORD dwNewId = currentItem.GetID();
 				DWORD dwOldId = pItem->GetID();
 
 				if(dwNewId == dwOldId)
 				{
-					if(g_pMainPlayer->m_pBelt[i].m_Item_Consumable.bInvIndex>=1)
+					if(currentItem.m_Item_Consumable.bInvIndex>=1)
 					{
 						// "이미 사용중 입니다."					
 						DisplayMessageAdd(g_Message[ETC_MESSAGE848].szMessage, 0xffff2cff); 
@@ -529,9 +530,9 @@ BOOL ItemUsedConsumable(CItem* pItem, BYTE byZipcode, BYTE byType)
 					}
 				}
 
-				if(IsSamePropertyConsumableItem(&g_pMainPlayer->m_pBelt[i], pItem))
+				if(IsSamePropertyConsumableItem(&currentItem, pItem))
 				{
-					if(g_pMainPlayer->m_pBelt[i].m_Item_Consumable.bInvIndex>=1)
+					if(currentItem.m_Item_Consumable.bInvIndex>=1)
 					{
 						// "같은효과의 아이템이 사용중입니다."					
 						DisplayMessageAdd(g_Message[ETC_MESSAGE1431].szMessage, 0xffff2cff); 

@@ -85,13 +85,13 @@ ItemFilteringView::ItemFilteringView(Rect frameInParent, std::vector<CItem*>& al
 		.withHeight(_bounds.maxY() - categoriesFilterContainer.maxY() - 2);
 
 	tableContainer.size.height = PagedItemViewTable::fittedHeightWithin(tableContainer.size.height, 
-		ItemInfoViewResources::bgSpriteModel.size.height);
+		ItemInfoViewResources::bgSpriteModel.naturalSize.height);
 
 	ItemInfoViewResources::initialize();
 
 	PagedItemViewTableResources::initialize();
 	_table = registerChildRenderable<PagedItemViewTable>([&]() {
-		return new PagedItemViewTable(tableContainer, this, ItemInfoViewResources::bgSpriteModel.size, allItems.size(), SpriteModel::zero);
+		return new PagedItemViewTable(tableContainer, this, ItemInfoViewResources::bgSpriteModel.naturalSize, allItems.size(), SpriteModel::zero);
 	});
 	
 }
@@ -143,7 +143,7 @@ Renderable* ItemFilteringView::buildRenderableForModelAtIndexWithFrame(int model
 		current = _displayedItems[modelIndex];
 	}
 
-	ItemInfoView::Model model = { current, ItemInfoViewResources::bgSpriteModel.size };
+	ItemInfoView::Model model = { current, ItemInfoViewResources::bgSpriteModel.naturalSize };
 	SelectionView* sv = new SelectionView(frame, [=](Rect frameInsideSelectionView) {
 		return new ItemInfoView(model,
 			frameInsideSelectionView,
@@ -185,7 +185,7 @@ void ItemFilteringView::updateRenderableWithModelAtIndex(Renderable* renderable,
 		sv->setEnableSelection(false);
 	}
 
-	ItemInfoView::Model model = { current, ItemInfoViewResources::bgSpriteModel.size };
+	ItemInfoView::Model model = { current, ItemInfoViewResources::bgSpriteModel.naturalSize };
 	infoView->updateModel(model);
 }
 

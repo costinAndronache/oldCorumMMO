@@ -12,15 +12,15 @@ NewSkillSelectionView::NewSkillSelectionView(CustomUI::Rect frameInParent,
 	_frameInParent = frameInParent;
 
 	_leftSkillsContainer = registerChildRenderable<MatrixContainer>([=]() {
-		return new MatrixContainer(bounds(), direction, iconsSize);
+		return new MatrixContainer(bounds(), direction, iconsSize, 25);
 	});
 
 	_righttSkillsContainer = registerChildRenderable<MatrixContainer>([=]() {
-		return new MatrixContainer(bounds(), direction, iconsSize);
+		return new MatrixContainer(bounds(), direction, iconsSize, 25);
 	});
 
 	_guardianSkillsContainer = registerChildRenderable<MatrixContainer>([=]() {
-		return new MatrixContainer(bounds(), direction, iconsSize);
+		return new MatrixContainer(bounds(), direction, iconsSize, 25);
 	});
 
 	switchToActiveSelection(ActiveSkillSelection::none);

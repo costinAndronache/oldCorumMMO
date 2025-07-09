@@ -4095,6 +4095,7 @@
       <BasicRuntimeChecks Condition="'$(Configuration)|$(Platform)'=='dev|Win32'">EnableFastChecks</BasicRuntimeChecks>
       <BrowseInformation Condition="'$(Configuration)|$(Platform)'=='dev|Win32'">true</BrowseInformation>
     </ClCompile>
+    <ClCompile Include="NewHUD\BeltItemsView.cpp" />
     <ClCompile Include="NewHUD\HUDSpriteCollection.cpp" />
     <ClCompile Include="NewHUD\NewInterface.cpp" />
     <ClCompile Include="NewHUD\LeftHUD.cpp" />
@@ -6683,6 +6684,7 @@
     <ClInclude Include="ItemMoveManager.h" />
     <ClInclude Include="ItemNative.h" />
     <ClInclude Include="ItemNativeManager.h" />
+    <ClInclude Include="NewHUD\BeltItemsView.h" />
     <ClInclude Include="NewHUD\HUDSpriteCollection.h" />
     <ClInclude Include="NewHUD\NewInterface.h" />
     <ClInclude Include="NewHUD\LeftHUD.h" />

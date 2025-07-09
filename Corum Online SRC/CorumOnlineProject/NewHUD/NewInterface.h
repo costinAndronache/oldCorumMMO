@@ -7,7 +7,8 @@ namespace NewInterface {
 	public:
 		Interface(CustomUI::Size screenSize, 
 				  CMainUser* mainUser,
-				  LP_SKILL_LIST_MANAGER skillListManager);
+				  const LP_SKILL_LIST_MANAGER skillListManager,
+				  const CItemResourceHash* resourceHash);
 		void renderWithRenderer(I4DyuchiGXRenderer* renderer, int zIndex) override;
 	public:
 		void updatedCurrentHP(CMainUser*, DWORD oldValue, DWORD newValue) override;
@@ -21,6 +22,7 @@ namespace NewInterface {
 		void updatedLevel(CMainUser*, DWORD oldValue, DWORD newValue) override;
 		void updatedSkills(CMainUser*) override;
 		void updatedLeftRightSkillSelection(CMainUser*) override;
+		void updatedBeltItems(CMainUser*) override;
 	private:
 		LeftHUD* _leftHUD;
 		RightHUD* _rightHUD;
