@@ -29,6 +29,8 @@ namespace CustomUI {
 		void updateOriginInParent(Point newOrigin) {
 			_frameInParent.origin = newOrigin;
 		}
+
+		void updateFrameInParent(Rect newFrame) { _frameInParent = newFrame; }
 	protected:
 		Renderable() {
 			_currentMouseState = MouseState::none;

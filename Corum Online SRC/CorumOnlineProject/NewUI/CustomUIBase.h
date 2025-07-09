@@ -33,6 +33,9 @@ namespace CustomUI {
 	};
 
 	typedef POINT Point;
+	struct Insets {
+		int top, bottom, left, right;
+	};
 	struct Rect {
 		Point origin;
 		Size size;
@@ -130,6 +133,23 @@ namespace CustomUI {
 				&&
 				(origin.y <= other.origin.y && other.origin.y <= maxY())
 			);
+		}
+
+		Rect withInsets(Insets insets) const {
+			auto newOrigin = origin;
+			auto newSize = size; 
+
+			newOrigin.x += insets.left;
+			newSize.width -= insets.left;
+			
+			newSize.width -= insets.right;
+
+			newOrigin.y += insets.top;
+			newSize.height -= insets.top;
+
+			newSize.height -= insets.bottom;
+
+			return { newOrigin, newSize };
 		}
 
 		static Rect zero() {

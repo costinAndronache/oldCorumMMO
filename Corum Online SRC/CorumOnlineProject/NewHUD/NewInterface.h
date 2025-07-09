@@ -8,7 +8,7 @@ namespace NewInterface {
 		Interface(CustomUI::Size screenSize, 
 				  CMainUser* mainUser,
 				  const LP_SKILL_LIST_MANAGER skillListManager,
-				  const CItemResourceHash* resourceHash);
+				  CItemResourceHash* resourceHash);
 		void renderWithRenderer(I4DyuchiGXRenderer* renderer, int zIndex) override;
 	public:
 		void updatedCurrentHP(CMainUser*, DWORD oldValue, DWORD newValue) override;

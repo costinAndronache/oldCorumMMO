@@ -1,7 +1,7 @@
 #pragma once
 #include "LeftHUD.h"
 #include "HUDSpriteCollection.h"
-#include "BeltItemsView.h"
+#include "GenericItemsContainerView.h"
 
 namespace NewInterface {
 	class RightHUD: public CustomUI::Renderable {
@@ -10,7 +10,7 @@ namespace NewInterface {
 			EventHandler group, lair, chat, rest, match, options;
 		};
 	public:
-		RightHUD(CustomUI::Point originInParent, const CItemResourceHash* resourceHash);
+		RightHUD(CustomUI::Point originInParent, CItemResourceHash* resourceHash);
 
 
 		void setEventHandlers(EventHandlers handlers);
@@ -27,7 +27,7 @@ namespace NewInterface {
 
 		CustomUI::SpriteRenderable* _rightHUDSprite;
 
-		BeltItemsView* _beltItemsView;
+		GenericItemsContainerView* _beltItemsView;
 	};
 }
 

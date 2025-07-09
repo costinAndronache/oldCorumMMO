@@ -10,7 +10,7 @@ using namespace NewInterface;
 Interface::Interface(CustomUI::Size screenSize,
 					 CMainUser* mainUser,
 					 const LP_SKILL_LIST_MANAGER skillListManager, 
-					 const CItemResourceHash* resourceHash) {
+					 CItemResourceHash* resourceHash) {
 	_mainUser = mainUser;
 	_skillListManager = skillListManager;
 	_frameInParent = CustomUI::Rect{ {0, 0}, screenSize };

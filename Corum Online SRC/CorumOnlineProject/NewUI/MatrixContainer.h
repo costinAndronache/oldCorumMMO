@@ -22,12 +22,6 @@ namespace CustomUI {
 				});
 			}
 		}
-
-		virtual void renderWithRenderer(I4DyuchiGXRenderer* renderer, int zIndex) override {
-			Renderable::renderWithRenderer(renderer, zIndex);
-			const auto gFrame = globalFrame();
-		}
-
 	private:
 		VerticalGrowthDirection _direction;
 		Size _itemSize;

@@ -4095,8 +4095,9 @@
       <BasicRuntimeChecks Condition="'$(Configuration)|$(Platform)'=='dev|Win32'">EnableFastChecks</BasicRuntimeChecks>
       <BrowseInformation Condition="'$(Configuration)|$(Platform)'=='dev|Win32'">true</BrowseInformation>
     </ClCompile>
-    <ClCompile Include="NewHUD\BeltItemsView.cpp" />
+    <ClCompile Include="NewHUD\GenericItemsContainerView.cpp" />
     <ClCompile Include="NewHUD\HUDSpriteCollection.cpp" />
+    <ClCompile Include="NewHUD\ItemInventoryView.cpp" />
     <ClCompile Include="NewHUD\NewInterface.cpp" />
     <ClCompile Include="NewHUD\LeftHUD.cpp" />
     <ClCompile Include="NewHUD\NewSkillSelectionView.cpp" />
@@ -5192,6 +5193,8 @@
       <BasicRuntimeChecks Condition="'$(Configuration)|$(Platform)'=='dev|Win32'">EnableFastChecks</BasicRuntimeChecks>
       <BrowseInformation Condition="'$(Configuration)|$(Platform)'=='dev|Win32'">true</BrowseInformation>
     </ClCompile>
+    <ClCompile Include="PagedMatrixContainer.cpp" />
+    <ClCompile Include="PagerControl.cpp" />
     <ClCompile Include="parsing.cpp">
       <BasicRuntimeChecks Condition="'$(Configuration)|$(Platform)'=='CHINA_DEV|Win32'">EnableFastChecks</BasicRuntimeChecks>
       <BrowseInformation Condition="'$(Configuration)|$(Platform)'=='CHINA_DEV|Win32'">true</BrowseInformation>
@@ -6684,8 +6687,9 @@
     <ClInclude Include="ItemMoveManager.h" />
     <ClInclude Include="ItemNative.h" />
     <ClInclude Include="ItemNativeManager.h" />
-    <ClInclude Include="NewHUD\BeltItemsView.h" />
+    <ClInclude Include="NewHUD\GenericItemsContainerView.h" />
     <ClInclude Include="NewHUD\HUDSpriteCollection.h" />
+    <ClInclude Include="NewHUD\ItemInventoryView.h" />
     <ClInclude Include="NewHUD\NewInterface.h" />
     <ClInclude Include="NewHUD\LeftHUD.h" />
     <ClInclude Include="NewHUD\NewSkillSelectionView.h" />
@@ -6701,6 +6705,8 @@
     <ClInclude Include="NewUI\ItemPickupFilteringBase.h" />
     <ClInclude Include="NewUI\Label.h" />
     <ClInclude Include="NewUI\PagedItemViewTable.h" />
+    <ClInclude Include="NewUI\PagedMatrixContainer.h" />
+    <ClInclude Include="NewUI\PagerControl.h" />
     <ClInclude Include="NewUI\RadioButtonGroup.h" />
     <ClInclude Include="NewUI\HorizontalScalingBar.h" />
     <ClInclude Include="NewUI\Renderable.h" />

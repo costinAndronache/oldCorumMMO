@@ -10,6 +10,7 @@ SpriteModel NewHUDResources::cooldownBarSprite;
 SpriteModel NewHUDResources::attackSkillSprite;
 SpriteModel NewHUDResources::leftInterfaceHUDSprite;
 SpriteModel NewHUDResources::rightInterfaceHUDSprite;
+SpriteModel NewHUDResources::inventoryItemUnderlaySprite;
 
 CustomUI::Button::Sprites
 NewHUDResources::trade, NewHUDResources::shop, NewHUDResources::item, 
@@ -137,6 +138,13 @@ void NewHUDResources::initialize(I4DyuchiGXRenderer* renderer) {
 	rightInterfaceHUDSprite = {
 		renderer->CreateSpriteObject(GetFile("newInterfaceRight.tif", DATA_TYPE_UI), 0, 0, 400, 121, 0),
 		{ 400, 121},
+		0
+	};
+
+	auto menu_4 = GetFile("menu_4.tif", DATA_TYPE_UI);
+	inventoryItemUnderlaySprite = {
+		renderer->CreateSpriteObject(menu_4, 190, 115, 34, 34, 0),
+		{ 34, 34 },
 		0
 	};
 }

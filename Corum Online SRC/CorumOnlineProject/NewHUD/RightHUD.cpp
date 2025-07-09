@@ -5,7 +5,7 @@
 using namespace CustomUI;
 using namespace NewInterface;
 
-RightHUD::RightHUD(CustomUI::Point originInParent, const CItemResourceHash* resourceHash) {
+RightHUD::RightHUD(CustomUI::Point originInParent, CItemResourceHash* resourceHash) {
 	_frameInParent = { originInParent, NewHUDResources::newHUDSize };
 
 	_rightHUDSprite = registerChildRenderable<SpriteRenderable>([=]() {
@@ -63,13 +63,15 @@ RightHUD::RightHUD(CustomUI::Point originInParent, const CItemResourceHash* reso
 	});
 
 	const auto beltFrame = Rect{ {102, 85}, {300, 34} };
-	_beltItemsView = registerChildRenderable<BeltItemsView>([=]() {
-		return new BeltItemsView(
+	_beltItemsView = registerChildRenderable<GenericItemsContainerView>([=]() {
+		return new GenericItemsContainerView(
 			beltFrame,
 			resourceHash,
 			{
 				{ 34, 34},
-				3
+				3,
+				8,
+				SpriteModel::zero
 			}
 		);
 	});
@@ -89,5 +91,9 @@ void RightHUD::updateCooldownScale(float scale) {
 }
 
 void RightHUD::updateWithItems(const CItem items[MAX_BELT_POOL]) {
-	_beltItemsView->updateWithItems(items);
+	std::vector<CItem> temp;
+	for (int i = 0; i < MAX_BELT_POOL; i++) {
+		temp.push_back(items[i]);
+	}
+	_beltItemsView->updateWithItems(temp);
 }

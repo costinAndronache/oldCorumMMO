@@ -19,6 +19,7 @@ struct NewHUDResources {
 		trade, shop, item, stats, skill,
 		group, lair, chat, match, rest, pk, system;
 
+	static CUISpriteModel inventoryItemUnderlaySprite;
 
 	static void initialize(I4DyuchiGXRenderer *renderer);
 
