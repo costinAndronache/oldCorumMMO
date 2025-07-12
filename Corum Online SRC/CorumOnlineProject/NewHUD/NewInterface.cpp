@@ -49,9 +49,8 @@ Interface::Interface(CustomUI::Size screenSize,
 
 	};
 
-	handlers.itemHandler = []() {
-		CItemWnd* pItemWnd = CItemWnd::GetInstance();
-		pItemWnd->SetActive(!pItemWnd->GetActive());
+	handlers.itemHandler = [=]() {
+		_userSmallItemsInventoryView->setHidden(!_userSmallItemsInventoryView->getHidden());
 	};
 
 	handlers.skillsHandler = []() {
@@ -95,6 +94,34 @@ Interface::Interface(CustomUI::Size screenSize,
 
 	//
 	updatedBeltItems(mainUser);
+
+
+	const auto inventoryAppearance = MatrixContainer::Appearance{
+		MatrixContainer::VerticalGrowthDirection::downwards,
+		{
+			{34, 34},
+			8,
+			5,
+			5
+		}
+	};
+
+	const auto itemsPerInventoryPage = inventoryAppearance.sizes.columnsPerRow * 6;
+	const auto inventorySize = ItemInventoryView::appropriateSizeFor(inventoryAppearance.sizes, itemsPerInventoryPage);
+
+	const auto inventoryFrame = CustomUI::Rect{ {200, 200}, inventorySize };
+	_userSmallItemsInventoryView = registerChildRenderable<ItemInventoryView>([=]() {
+		return new ItemInventoryView(inventoryFrame, resourceHash, { inventoryAppearance, itemsPerInventoryPage});
+	});
+
+	std::vector<CItem> smallItems = std::vector<CItem>(
+		std::begin(mainUser->m_pInv_Small),
+		std::end(mainUser->m_pInv_Small)
+	);
+
+	_userSmallItemsInventoryView->rebuild(smallItems);
+	_userSmallItemsInventoryView->setHidden(true);
+	_userSmallItemsInventoryView->updateBackground(NewHUDResources::genericBackgroundSprite);
 }
 
 void Interface::updateLeftHUDWithSelectedLeftRightSkills() {

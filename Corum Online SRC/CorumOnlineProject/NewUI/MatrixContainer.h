@@ -5,27 +5,36 @@ namespace CustomUI {
 	class MatrixContainer: public Renderable {
 	public:
 		enum class VerticalGrowthDirection {downwards, upwards};
+		struct Sizes {
+			Size itemSize;
+			int columnsPerRow;
+			int spacingX;
+			int spacingY;
+		};
 
-		MatrixContainer(Rect frameInParent, VerticalGrowthDirection direction, Size itemSize, int spacing = 0);
+		struct Appearance {
+			VerticalGrowthDirection verticalGrowthDirection;
+			Sizes sizes;
+		};
+
+		static Size appropriateSizeFor(Sizes sizes, int elementsCount);
+		MatrixContainer(Rect frameInParent, Appearance appearance);
 
 		template<typename Model>
 		void rebuild(
 			const std::vector<Model>& models,
-			int maxColumnsPerRow,
-			std::function<Renderable* (Model model, Rect frameInContainer)> createFn
+			std::function<Renderable* (Model model, int index, Rect frameInContainer)> createFn
 		) {
 			deconstructAllChildren();
 			for (int i = 0; i < models.size(); i++) {
-				const auto currentFrame = Rect{ originForIndex(i, maxColumnsPerRow), _itemSize };
+				const auto currentFrame = Rect{ originForIndex(i, _appearance.sizes.columnsPerRow), _appearance.sizes.itemSize };
 				registerChildRenderable<Renderable>([=]() -> Renderable* {
-					return createFn(models[i], currentFrame);
+					return createFn(models[i], i, currentFrame);
 				});
 			}
 		}
 	private:
-		VerticalGrowthDirection _direction;
-		Size _itemSize;
-		int _spacing;
+		Appearance _appearance;
 		Point originForIndex(int index, int maxColumnsPerRow);
 	};
 }

@@ -30,7 +30,7 @@ void Button::updateSpriteModelTo(Sprites newModel) {
 
 void Button::onMouseStateChange(MouseState newState, MouseState oldState) {
 	const auto frame = globalFrame();
-	printf("\nFor button(%d, %d) mouse state is: %d", frame.origin.x, frame.origin.y, newState);
+	printf("\nFor button{(%d, %d), (%.1f, %.1f)} mouse state is: %d", frame.origin.x, frame.origin.y, frame.size.width, frame.size.height, newState);
 
 	if (newState == MouseState::leftButtonPressedInside && _onPressLEFT) { 
 		_onPressLEFT();  

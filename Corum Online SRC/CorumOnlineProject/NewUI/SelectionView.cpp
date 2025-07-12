@@ -2,7 +2,7 @@
 using namespace CustomUI;
 
 
-SpriteModel SelectionViewResources::checkmarkSpriteModel = { NULL, {14, 16}, 0 };
+SpriteModel SelectionViewResources::checkmarkSpriteModel = { NULL, {14, 16} };
 void SelectionViewResources::initialize() {
 	if (checkmarkSpriteModel.sprite == NULL) {
 		checkmarkSpriteModel.sprite = g_pRenderer->CreateSpriteObject(

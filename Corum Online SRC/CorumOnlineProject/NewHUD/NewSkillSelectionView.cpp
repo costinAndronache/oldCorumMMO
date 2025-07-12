@@ -11,16 +11,26 @@ NewSkillSelectionView::NewSkillSelectionView(CustomUI::Rect frameInParent,
 	_skillListManager(skillListManager) {
 	_frameInParent = frameInParent;
 
+	auto appearance = MatrixContainer::Appearance{
+		direction,
+		{
+			iconsSize,
+			4,
+			5,
+			5
+		}
+	};
+
 	_leftSkillsContainer = registerChildRenderable<MatrixContainer>([=]() {
-		return new MatrixContainer(bounds(), direction, iconsSize, 25);
+		return new MatrixContainer(bounds(), appearance);
 	});
 
 	_righttSkillsContainer = registerChildRenderable<MatrixContainer>([=]() {
-		return new MatrixContainer(bounds(), direction, iconsSize, 25);
+		return new MatrixContainer(bounds(), appearance);
 	});
 
 	_guardianSkillsContainer = registerChildRenderable<MatrixContainer>([=]() {
-		return new MatrixContainer(bounds(), direction, iconsSize, 25);
+		return new MatrixContainer(bounds(), appearance);
 	});
 
 	switchToActiveSelection(ActiveSkillSelection::none);
@@ -35,7 +45,7 @@ void NewSkillSelectionView::updateCurrentSkills(CurrentSkills cs) {
 		return specimen;
 	};
 
-	_leftSkillsContainer->rebuild<BYTE>(cs.currentLeftSkills, 4, [&](BYTE skillKind, Rect frameInContainer) {
+	_leftSkillsContainer->rebuild<BYTE>(cs.currentLeftSkills, [&](BYTE skillKind, int, Rect frameInContainer) {
 		const auto sprites = spritesForSkill(skillKind);
 		auto button = new Button(sprites, frameInContainer);
 		button->onClickEndLEFT([=]() {
@@ -46,7 +56,7 @@ void NewSkillSelectionView::updateCurrentSkills(CurrentSkills cs) {
 		return button;
 	});
 
-	_righttSkillsContainer->rebuild<BYTE>(cs.currentRightSkills, 4, [&](BYTE skillKind, Rect frameInContainer) {
+	_righttSkillsContainer->rebuild<BYTE>(cs.currentRightSkills, [&](BYTE skillKind, int, Rect frameInContainer) {
 		const auto sprites = spritesForSkill(skillKind);
 		auto button = new Button(sprites, frameInContainer);
 		button->onClickEndLEFT([=]() {
@@ -56,7 +66,7 @@ void NewSkillSelectionView::updateCurrentSkills(CurrentSkills cs) {
 		return button;
 	});
 
-	_guardianSkillsContainer->rebuild<BYTE>(cs.currentGuardianSkills, 4, [&](BYTE skillKind, Rect frameInContainer) {
+	_guardianSkillsContainer->rebuild<BYTE>(cs.currentGuardianSkills, [&](BYTE skillKind, int, Rect frameInContainer) {
 		const auto sprites = spritesForSkill(skillKind);
 		auto button = new Button(sprites, frameInContainer);
 		button->onClickEndLEFT([=]() {

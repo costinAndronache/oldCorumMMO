@@ -1,6 +1,7 @@
 #pragma once
 #include "LeftHUD.h"
 #include "RightHUD.h"
+#include "ItemInventoryView.h"
 
 namespace NewInterface {
 	class Interface: public CustomUI::Renderable, public CMainUserUpdateInterested {
@@ -28,6 +29,8 @@ namespace NewInterface {
 		RightHUD* _rightHUD;
 
 		NewSkillSelectionView* _skillSelectionView;
+		ItemInventoryView* _userSmallItemsInventoryView;
+
 		std::shared_ptr<Interface> _thisAsShared;
 
 		LP_SKILL_LIST_MANAGER _skillListManager;

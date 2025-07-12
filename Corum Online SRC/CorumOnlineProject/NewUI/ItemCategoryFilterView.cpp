@@ -17,14 +17,12 @@ ItemCategoryFilterView::ItemCategoryFilterView(CustomUI::Rect frameInParent, Cat
 	specimen.sprites = Button::Sprites{
 		{
 			SpriteCollection::genericBackground,
-			SpriteCollection::genericBackgroundSize,
-			0
+			SpriteCollection::genericBackgroundSize
 		},
 		SpriteModel::zero,
 		{
 			SpriteCollection::genericPressedBackground,
-			SpriteCollection::genericBackgroundSize,
-			0
+			SpriteCollection::genericBackgroundSize
 		},
 	};
 

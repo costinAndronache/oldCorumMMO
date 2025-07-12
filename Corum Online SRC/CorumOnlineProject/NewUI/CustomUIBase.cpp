@@ -4,7 +4,7 @@
 
 using namespace CustomUI;
 
-SpriteModel SpriteModel::zero = { NULL, { 0, 0 }, 0 };
+SpriteModel SpriteModel::zero = { NULL, { 0, 0 } };
 Color Color::white = { 255, 255, 255, 255 };
 
 char CustomUI::getASCII(WPARAM wparam, LPARAM lParam) {

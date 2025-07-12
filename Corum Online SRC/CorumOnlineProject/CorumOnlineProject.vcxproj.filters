@@ -846,10 +846,16 @@
     <ClCompile Include="NewHUD\ItemInventoryView.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="PagedMatrixContainer.cpp">
+    <ClCompile Include="NewUI\PagerControl.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="PagerControl.cpp">
+    <ClCompile Include="NewUI\PagedContainer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="NewUI\PagedMatrixContainer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Utils\Utils.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -1601,10 +1607,16 @@
     <ClInclude Include="NewHUD\ItemInventoryView.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="NewUI\PagerControl.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="NewUI\PagedContainer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="NewUI\PagedMatrixContainer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="NewUI\PagerControl.h">
+    <ClInclude Include="Utils\Utils.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

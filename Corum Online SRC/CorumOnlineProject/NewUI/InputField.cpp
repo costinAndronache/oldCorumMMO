@@ -4,7 +4,7 @@ using namespace CustomUI;
 
 #define WHITE(alpha)         D3DCOLOR_ARGB(alpha, 255, 255, 255)
 
-SpriteModel InputFieldResources::bgSpriteModel = { NULL, {53, 12}, 0 };
+SpriteModel InputFieldResources::bgSpriteModel = { NULL, {53, 12} };
 // menu1 tga, 74,0 53x12
 
 void InputFieldResources::initialize() {

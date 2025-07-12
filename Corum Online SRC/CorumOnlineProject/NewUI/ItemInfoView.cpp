@@ -6,8 +6,8 @@
 // 191 185, 32 32 menu1 tga
 using namespace CustomUI;
 
-SpriteModel ItemInfoViewResources::bgSpriteModel = { NULL, {38, 70}, 0 };
-SpriteModel ItemInfoViewResources::unknownSpriteModel = { NULL, {32, 32}, 0 };
+SpriteModel ItemInfoViewResources::bgSpriteModel = { NULL, {38, 70}, };
+SpriteModel ItemInfoViewResources::unknownSpriteModel = { NULL, {32, 32}, };
 
 void ItemInfoViewResources::initialize() {
 	if (bgSpriteModel.sprite == NULL) {

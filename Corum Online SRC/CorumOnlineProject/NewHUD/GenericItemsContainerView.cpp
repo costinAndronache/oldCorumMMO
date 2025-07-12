@@ -40,9 +40,15 @@ GenericItemsContainerView::GenericItemsContainerView(CustomUI::Rect frameInParen
 	_matrixContainer = registerChildRenderable<MatrixContainer>([=]() {
 		return new MatrixContainer(
 			bounds(),
-			MatrixContainer::VerticalGrowthDirection::downwards,
-			appearance.itemSize,
-			appearance.spacing
+			{
+				MatrixContainer::VerticalGrowthDirection::downwards,
+				{
+					appearance.itemSize,
+					appearance.itemsPerRow ? appearance.itemsPerRow : 8,
+					appearance.spacing,
+					appearance.spacing
+				}
+			}
 		);
 	});
 }
@@ -59,7 +65,7 @@ void GenericItemsContainerView::updateWithItems(const std::vector<CItem>& items)
 
 		if (lpItemResourceEx && lpItemResourceEx->pSpr) {
 			SpriteModel specimen = {
-				lpItemResourceEx->pSpr, _appearance.itemSize, 0
+				lpItemResourceEx->pSpr, _appearance.itemSize
 			};
 			return specimen;
 		} else {
@@ -69,8 +75,7 @@ void GenericItemsContainerView::updateWithItems(const std::vector<CItem>& items)
 
 	_matrixContainer->rebuild<CItem>(
 		items,
-		_appearance.itemsPerRow ? _appearance.itemsPerRow : 8,
-		[=](CItem item, Rect frame) {
+		[=](CItem item, int, Rect frame) {
 			auto result = new GenericItemView(frame, _appearance.itemUnderlay);
 			
 			const auto q = item.GetQuantity();

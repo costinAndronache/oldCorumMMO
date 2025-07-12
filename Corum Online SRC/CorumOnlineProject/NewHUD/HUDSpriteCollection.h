@@ -14,6 +14,7 @@ struct NewHUDResources {
 	static CUISpriteModel attackSkillSprite;
 	static CUISpriteModel leftInterfaceHUDSprite;
 	static CUISpriteModel rightInterfaceHUDSprite;
+	static CUISpriteModel genericBackgroundSprite;
 
 	static CustomUI::Button::Sprites
 		trade, shop, item, stats, skill,

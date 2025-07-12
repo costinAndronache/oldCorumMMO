@@ -4112,7 +4112,9 @@
     <ClCompile Include="NewUI\ItemPickupFiltering.cpp" />
     <ClCompile Include="NewUI\ItemPickupFilteringBase.cpp" />
     <ClCompile Include="NewUI\Label.cpp" />
+    <ClCompile Include="NewUI\PagedContainer.cpp" />
     <ClCompile Include="NewUI\PagedItemViewTable.cpp" />
+    <ClCompile Include="NewUI\PagedMatrixContainer.cpp" />
     <ClCompile Include="NewUI\RadioButtonGroup.cpp" />
     <ClCompile Include="NewUI\Renderable.cpp" />
     <ClCompile Include="NewUI\SelectionView.cpp" />
@@ -5193,8 +5195,7 @@
       <BasicRuntimeChecks Condition="'$(Configuration)|$(Platform)'=='dev|Win32'">EnableFastChecks</BasicRuntimeChecks>
       <BrowseInformation Condition="'$(Configuration)|$(Platform)'=='dev|Win32'">true</BrowseInformation>
     </ClCompile>
-    <ClCompile Include="PagedMatrixContainer.cpp" />
-    <ClCompile Include="PagerControl.cpp" />
+    <ClCompile Include="NewUI\PagerControl.cpp" />
     <ClCompile Include="parsing.cpp">
       <BasicRuntimeChecks Condition="'$(Configuration)|$(Platform)'=='CHINA_DEV|Win32'">EnableFastChecks</BasicRuntimeChecks>
       <BrowseInformation Condition="'$(Configuration)|$(Platform)'=='CHINA_DEV|Win32'">true</BrowseInformation>
@@ -6415,6 +6416,7 @@
       <BasicRuntimeChecks Condition="'$(Configuration)|$(Platform)'=='dev|Win32'">EnableFastChecks</BasicRuntimeChecks>
       <BrowseInformation Condition="'$(Configuration)|$(Platform)'=='dev|Win32'">true</BrowseInformation>
     </ClCompile>
+    <ClCompile Include="Utils\Utils.cpp" />
     <ClCompile Include="WorldMsg_jjw6263.cpp">
       <BasicRuntimeChecks Condition="'$(Configuration)|$(Platform)'=='CHINA_DEV|Win32'">EnableFastChecks</BasicRuntimeChecks>
       <BrowseInformation Condition="'$(Configuration)|$(Platform)'=='CHINA_DEV|Win32'">true</BrowseInformation>
@@ -6704,6 +6706,7 @@
     <ClInclude Include="NewUI\ItemPickupFiltering.h" />
     <ClInclude Include="NewUI\ItemPickupFilteringBase.h" />
     <ClInclude Include="NewUI\Label.h" />
+    <ClInclude Include="NewUI\PagedContainer.h" />
     <ClInclude Include="NewUI\PagedItemViewTable.h" />
     <ClInclude Include="NewUI\PagedMatrixContainer.h" />
     <ClInclude Include="NewUI\PagerControl.h" />
@@ -6806,6 +6809,7 @@
     <ClInclude Include="User.h" />
     <ClInclude Include="UserHash.h" />
     <ClInclude Include="UserInterface.h" />
+    <ClInclude Include="Utils\Utils.h" />
     <ClInclude Include="Version.h" />
     <ClInclude Include="WorldMsg.h" />
     <ClInclude Include="WorldMsg_jjw6263.h" />

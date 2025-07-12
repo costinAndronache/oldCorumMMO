@@ -4,7 +4,7 @@
 
 using namespace CustomUI;
 
-SpriteModel PagedItemViewTableResources::bgSpriteModel = { NULL, {2, 2}, 0 };
+SpriteModel PagedItemViewTableResources::bgSpriteModel = { NULL, {2, 2} };
 void PagedItemViewTableResources::initialize() {
 	if (bgSpriteModel.sprite == NULL) {
 		char* resourceFile = GetFile("speaking_box.tif", DATA_TYPE_UI);
@@ -60,14 +60,12 @@ PagedItemViewTable::PagedItemViewTable(Rect frameInParent, PagedItemViewTableCli
 
 	SpriteModel scrollDownModel = {
 		SpriteCollection::downArrow,
-		SpriteCollection::downArrowSize,
-		0.0
+		SpriteCollection::downArrowSize
 	};
 
 	SpriteModel scrollDownPressedModel = {
 		SpriteCollection::downArrowPressed,
-		SpriteCollection::downArrowSize,
-		0.0
+		SpriteCollection::downArrowSize
 	};
 
 	const auto _bounds = bounds();
@@ -84,8 +82,6 @@ PagedItemViewTable::PagedItemViewTable(Rect frameInParent, PagedItemViewTableCli
 		onButtonPressRelease(_scrollDownBtn);
 	});
 
-	scrollDownModel.rotation = PI;
-	scrollDownPressedModel.rotation = PI;
 	Rect scrollUpBtnFrame = { {_bounds.maxX() - buttonsSize.width, _bounds.origin.y}, buttonsSize };
 	_scrollUpBtn = registerChildRenderable<Button>([&]() {
 		return new Button(

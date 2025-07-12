@@ -11,6 +11,7 @@ SpriteModel NewHUDResources::attackSkillSprite;
 SpriteModel NewHUDResources::leftInterfaceHUDSprite;
 SpriteModel NewHUDResources::rightInterfaceHUDSprite;
 SpriteModel NewHUDResources::inventoryItemUnderlaySprite;
+SpriteModel NewHUDResources::genericBackgroundSprite;
 
 CustomUI::Button::Sprites
 NewHUDResources::trade, NewHUDResources::shop, NewHUDResources::item, 
@@ -125,27 +126,29 @@ void NewHUDResources::initialize(I4DyuchiGXRenderer* renderer) {
 
 	attackSkillSprite = {
 		renderer->CreateSpriteObject(GetFile("skill_icon1.tga", DATA_TYPE_UI), 0, 0, 32, 32, 0),
-		{ SKILL_ICON_SIZE, SKILL_ICON_SIZE },
-		0
+		{ SKILL_ICON_SIZE, SKILL_ICON_SIZE }
 	};
 	
 	leftInterfaceHUDSprite = {
 		renderer->CreateSpriteObject(GetFile("newInterfaceLeft.tif", DATA_TYPE_UI), 0, 0, 400, 121, 0),
-		{ 400, 121},
-		0
+		{ 400, 121}
 	};
 
 	rightInterfaceHUDSprite = {
 		renderer->CreateSpriteObject(GetFile("newInterfaceRight.tif", DATA_TYPE_UI), 0, 0, 400, 121, 0),
-		{ 400, 121},
-		0
+		{ 400, 121}
 	};
 
 	auto menu_4 = GetFile("menu_4.tif", DATA_TYPE_UI);
 	inventoryItemUnderlaySprite = {
 		renderer->CreateSpriteObject(menu_4, 190, 115, 34, 34, 0),
-		{ 34, 34 },
-		0
+		{ 34, 34 }
+	};
+
+	char* resourceFile = GetFile("speaking_box.tif", DATA_TYPE_UI);
+	genericBackgroundSprite = {
+		renderer->CreateSpriteObject(resourceFile, 0, 0, 2, 2, 0),
+		{ 2, 2 }
 	};
 }
 
@@ -159,7 +162,6 @@ SpriteModel NewHUDResources::spriteForSkill(BYTE skillKind, LP_SKILL_LIST_MANAGE
 
 	return {
 		skillListManager->spriteForSkillKind[skillKind],
-		{SKILL_ICON_SIZE, SKILL_ICON_SIZE},
-		0
+		{SKILL_ICON_SIZE, SKILL_ICON_SIZE}
 	};
 }

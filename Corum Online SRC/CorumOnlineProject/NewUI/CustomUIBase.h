@@ -108,6 +108,12 @@ namespace CustomUI {
 			return result;
 		}
 
+		Rect withHeightOffset(int offset) const {
+			Rect result = *this;
+			result.size.height += offset;
+			return result;
+		}
+
 		Rect withSize(Size otherSize) const {
 			Rect result = { origin, otherSize };
 			return result;
@@ -119,8 +125,20 @@ namespace CustomUI {
 			return result;
 		}
 
-		Rect scaled(float xScale, float yScale = 1.0) const {
-			return Rect{ origin, { (size.width) * xScale, (size.height) * yScale } };
+		Rect withX(int x) const {
+			Rect result = *this;
+			result.origin.x = x;
+			return result;
+		}
+
+		Rect withY(int y) const {
+			Rect result = *this;
+			result.origin.y = y;
+			return result;
+		}
+
+		Rect scaled(float widthScale, float heightScale = 1.0) const {
+			return Rect{ origin, { (size.width) * widthScale, (size.height) * heightScale } };
 		}
 
 		Rect withOriginOffsetBy(Point offset) const {
@@ -163,20 +181,20 @@ namespace CustomUI {
 
 		IDISpriteObject* sprite;
 		Size naturalSize;
-		float rotation;
 
 		void renderWith(I4DyuchiGXRenderer* renderer, Rect withinGlobalFrame, int order = 0) const {
 			if (!sprite) { return; }
+
+
 			VECTOR2 scale = withinGlobalFrame.size.divideBy(naturalSize);
 			VECTOR2 pos{ withinGlobalFrame.origin.x, withinGlobalFrame.origin.y };
 
-			renderer->RenderSprite(sprite, &scale, rotation, &pos, NULL, 0xffffffff, order, RENDER_TYPE_DISABLE_TEX_FILTERING);
+			renderer->RenderSprite(sprite, &scale, 0, &pos, NULL, 0xffffffff, order, RENDER_TYPE_DISABLE_TEX_FILTERING);
 		}
 
 		static SpriteModel from(I4DyuchiGXRenderer* renderer, 
 								const char* resourceFile, 
-								Rect frameInFile,
-								float rotation = 0.f) {
+								Rect frameInFile) {
 			const auto sprite = renderer->CreateSpriteObject((char*)resourceFile,
 				(DWORD)frameInFile.origin.x, (DWORD)frameInFile.origin.y,
 				(DWORD)frameInFile.size.width, (DWORD)frameInFile.size.height,
@@ -184,7 +202,6 @@ namespace CustomUI {
 			return {
 				sprite,
 				frameInFile.size,
-				rotation
 			};
 		}
 

@@ -27,8 +27,8 @@ ItemFilteringView::ItemFilteringView(Rect frameInParent, std::vector<CItem*>& al
 		return new SingleLineLabel(titleLabelRect, titleAppearance, title);
 	});
 
-	SpriteModel closeSpriteModel = { SpriteCollection::xClose, SpriteCollection::xCloseSize, 0 };
-	SpriteModel closePressedSpriteModel = { SpriteCollection::xClosePressed, SpriteCollection::xCloseSize, 0 };
+	SpriteModel closeSpriteModel = { SpriteCollection::xClose, SpriteCollection::xCloseSize };
+	SpriteModel closePressedSpriteModel = { SpriteCollection::xClosePressed, SpriteCollection::xCloseSize };
 	Rect closeButtonRect = topContainer
 		.fromMaxXOrigin(-30)
 		.withWidth(30);
@@ -53,8 +53,8 @@ ItemFilteringView::ItemFilteringView(Rect frameInParent, std::vector<CItem*>& al
 		.withHeight(30);
 
 	InputFieldResources::initialize();
-	SpriteModel clearBtnModel = { SpriteCollection::xRedBlack, SpriteCollection::xRedBlackSize, 0 };
-	SpriteModel clearBtnPressedModel = { SpriteCollection::xRedBlackPressed, SpriteCollection::xRedBlackSize, 0 };
+	SpriteModel clearBtnModel = { SpriteCollection::xRedBlack, SpriteCollection::xRedBlackSize };
+	SpriteModel clearBtnPressedModel = { SpriteCollection::xRedBlackPressed, SpriteCollection::xRedBlackSize };
 
 	_inputField = registerChildRenderable<InputField>([&]() {
 		return new InputField(inputFieldContainer, InputFieldResources::bgSpriteModel, {

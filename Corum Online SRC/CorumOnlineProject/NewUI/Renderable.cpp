@@ -134,7 +134,20 @@ void Renderable::deconstructAllChildren() {
 	_childRenderables.clear();
 }
 
+void Renderable::deconstructChildrenWhere(std::function<bool(Renderable*)> eligibleToDeconstruct) {
+	_childRenderables.erase(std::remove_if(
+		_childRenderables.begin(),
+		_childRenderables.end(),
+		eligibleToDeconstruct), 
+		_childRenderables.end()
+	);
+}
+
 void Renderable::renderWithRenderer(I4DyuchiGXRenderer* renderer, int zIndex) {
+	if (_backgroundSprite.sprite) {
+		_backgroundSprite.renderWith(renderer, globalFrame(), zIndex);
+	}
+
 	for (int i = 0; i < _childRenderables.size(); i++) {
 		auto child = _childRenderables[i];
 		if (child && !child->getHidden()) {
