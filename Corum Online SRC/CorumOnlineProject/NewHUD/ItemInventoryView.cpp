@@ -24,9 +24,7 @@ void ItemInventoryView::rebuild(const std::vector<CItem>& items) {
 		[=](Rect frame, std::vector<CItem>& modelsForCurrentPage, int currentPageIndex) {
 		auto mc = new GenericItemsContainerView(frame, _resourceHash, 
 			{
-				{ 34, 34},
-				3,
-				8,
+				_appearance.containerAppearance,
 				NewHUDResources::inventoryItemUnderlaySprite
 			}
 		);

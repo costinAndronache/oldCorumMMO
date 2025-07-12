@@ -50,7 +50,7 @@ Interface::Interface(CustomUI::Size screenSize,
 	};
 
 	handlers.itemHandler = [=]() {
-		_userSmallItemsInventoryView->setHidden(!_userSmallItemsInventoryView->getHidden());
+		_userItemsInventoryView->toggleHiddenState();
 	};
 
 	handlers.skillsHandler = []() {
@@ -96,22 +96,11 @@ Interface::Interface(CustomUI::Size screenSize,
 	updatedBeltItems(mainUser);
 
 
-	const auto inventoryAppearance = MatrixContainer::Appearance{
-		MatrixContainer::VerticalGrowthDirection::downwards,
-		{
-			{34, 34},
-			8,
-			5,
-			5
-		}
-	};
-
-	const auto itemsPerInventoryPage = inventoryAppearance.sizes.columnsPerRow * 6;
-	const auto inventorySize = ItemInventoryView::appropriateSizeFor(inventoryAppearance.sizes, itemsPerInventoryPage);
+	const auto inventorySize = GroupedItemInventoryView::preferredSize();
 
 	const auto inventoryFrame = CustomUI::Rect{ {200, 200}, inventorySize };
-	_userSmallItemsInventoryView = registerChildRenderable<ItemInventoryView>([=]() {
-		return new ItemInventoryView(inventoryFrame, resourceHash, { inventoryAppearance, itemsPerInventoryPage});
+	_userItemsInventoryView = registerChildRenderable<GroupedItemInventoryView>([=]() {
+		return new GroupedItemInventoryView(inventoryFrame, resourceHash);
 	});
 
 	std::vector<CItem> smallItems = std::vector<CItem>(
@@ -119,9 +108,14 @@ Interface::Interface(CustomUI::Size screenSize,
 		std::end(mainUser->m_pInv_Small)
 	);
 
-	_userSmallItemsInventoryView->rebuild(smallItems);
-	_userSmallItemsInventoryView->setHidden(true);
-	_userSmallItemsInventoryView->updateBackground(NewHUDResources::genericBackgroundSprite);
+	std::vector<CItem> largeItems = std::vector<CItem>(
+		std::begin(mainUser->m_pInv_Large),
+		std::end(mainUser->m_pInv_Large)
+	);
+
+	_userItemsInventoryView->rebuildWith(smallItems, largeItems);
+	_userItemsInventoryView->setHidden(true);
+	_userItemsInventoryView->updateBackground(NewHUDResources::genericBackgroundSprite);
 }
 
 void Interface::updateLeftHUDWithSelectedLeftRightSkills() {

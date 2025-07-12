@@ -16,9 +16,7 @@ namespace NewInterface {
 	class GenericItemsContainerView: public CustomUI::Renderable {
 	public:
 		struct Appearance {
-			CustomUI::Size itemSize;
-			int spacing;
-			int itemsPerRow;
+			CustomUI::MatrixContainer::Appearance containerAppearance;
 			CustomUI::SpriteModel itemUnderlay;
 		};
 		GenericItemsContainerView(CustomUI::Rect frameInParent, 

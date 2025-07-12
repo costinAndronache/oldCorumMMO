@@ -40,15 +40,7 @@ GenericItemsContainerView::GenericItemsContainerView(CustomUI::Rect frameInParen
 	_matrixContainer = registerChildRenderable<MatrixContainer>([=]() {
 		return new MatrixContainer(
 			bounds(),
-			{
-				MatrixContainer::VerticalGrowthDirection::downwards,
-				{
-					appearance.itemSize,
-					appearance.itemsPerRow ? appearance.itemsPerRow : 8,
-					appearance.spacing,
-					appearance.spacing
-				}
-			}
+			_appearance.containerAppearance
 		);
 	});
 }
@@ -65,7 +57,7 @@ void GenericItemsContainerView::updateWithItems(const std::vector<CItem>& items)
 
 		if (lpItemResourceEx && lpItemResourceEx->pSpr) {
 			SpriteModel specimen = {
-				lpItemResourceEx->pSpr, _appearance.itemSize
+				lpItemResourceEx->pSpr, _appearance.containerAppearance.sizes.itemSize
 			};
 			return specimen;
 		} else {

@@ -55,12 +55,6 @@ RadioButtonGroup::RadioButtonGroup(std::vector<LabeledButtonModel> models, Rect 
 	adjustButtons(_activeButtonIndex);
 }
 
-void RadioButtonGroup::renderWithRenderer(I4DyuchiGXRenderer* renderer, int order) {
-	for (int i = 0; i < _buttons.size(); i++) {
-		_buttons[i]->renderWithRenderer(renderer, order);
-	}
-}
-
 void RadioButtonGroup::toggleButtonDidSwitchState(ToggleButton* button, bool isOn) {
 	auto it = std::find(_buttons.begin(), _buttons.end(), button);
 	if (it != _buttons.end()) {
@@ -75,6 +69,11 @@ void RadioButtonGroup::toggleButtonDidSwitchState(ToggleButton* button, bool isO
 		adjustButtons(_activeButtonIndex);
 		if (_handler) { _handler(_activeButtonIndex); }
 	}
+}
+
+void RadioButtonGroup::setActiveButtonIndex(unsigned int activeButtonIndex) {
+	_activeButtonIndex = activeButtonIndex;
+	adjustButtons(_activeButtonIndex);
 }
 
 void RadioButtonGroup::adjustButtons(const unsigned int activeButtonIndex) {

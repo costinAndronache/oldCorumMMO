@@ -18,6 +18,8 @@ namespace CustomUI {
 		void setHidden(bool isHidden) { _isHidden = isHidden; };
 		bool getHidden() const { return _isHidden; }
 
+		void toggleHiddenState() { _isHidden = !_isHidden; }
+
 		bool swallowsMouse(Point mouse);
 		bool swallowsKeyboard();
 

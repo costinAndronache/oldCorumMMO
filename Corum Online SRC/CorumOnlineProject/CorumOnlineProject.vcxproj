@@ -4096,6 +4096,7 @@
       <BrowseInformation Condition="'$(Configuration)|$(Platform)'=='dev|Win32'">true</BrowseInformation>
     </ClCompile>
     <ClCompile Include="NewHUD\GenericItemsContainerView.cpp" />
+    <ClCompile Include="NewHUD\GroupedItemInventoryView.cpp" />
     <ClCompile Include="NewHUD\HUDSpriteCollection.cpp" />
     <ClCompile Include="NewHUD\ItemInventoryView.cpp" />
     <ClCompile Include="NewHUD\NewInterface.cpp" />
@@ -6690,6 +6691,7 @@
     <ClInclude Include="ItemNative.h" />
     <ClInclude Include="ItemNativeManager.h" />
     <ClInclude Include="NewHUD\GenericItemsContainerView.h" />
+    <ClInclude Include="NewHUD\GroupedItemInventoryView.h" />
     <ClInclude Include="NewHUD\HUDSpriteCollection.h" />
     <ClInclude Include="NewHUD\ItemInventoryView.h" />
     <ClInclude Include="NewHUD\NewInterface.h" />
