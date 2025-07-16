@@ -4095,6 +4095,7 @@
       <BasicRuntimeChecks Condition="'$(Configuration)|$(Platform)'=='dev|Win32'">EnableFastChecks</BasicRuntimeChecks>
       <BrowseInformation Condition="'$(Configuration)|$(Platform)'=='dev|Win32'">true</BrowseInformation>
     </ClCompile>
+    <ClCompile Include="NewHUD\DragNDrop\BeltDragNDropParticipant.cpp" />
     <ClCompile Include="NewHUD\GenericItemsContainerView.cpp" />
     <ClCompile Include="NewHUD\GroupedItemInventoryView.cpp" />
     <ClCompile Include="NewHUD\HUDSpriteCollection.cpp" />
@@ -4104,6 +4105,7 @@
     <ClCompile Include="NewHUD\NewSkillSelectionView.cpp" />
     <ClCompile Include="NewHUD\RightHUD.cpp" />
     <ClCompile Include="NewUI\Button.cpp" />
+    <ClCompile Include="NewUI\DragNDropSystem.cpp" />
     <ClCompile Include="NewUI\MatrixContainer.cpp" />
     <ClCompile Include="NewUI\CustomUIBase.cpp" />
     <ClCompile Include="NewUI\InputField.cpp" />
@@ -4113,6 +4115,7 @@
     <ClCompile Include="NewUI\ItemPickupFiltering.cpp" />
     <ClCompile Include="NewUI\ItemPickupFilteringBase.cpp" />
     <ClCompile Include="NewUI\Label.cpp" />
+    <ClCompile Include="NewUI\MouseTrackingSpriteRenderable.cpp" />
     <ClCompile Include="NewUI\PagedContainer.cpp" />
     <ClCompile Include="NewUI\PagedItemViewTable.cpp" />
     <ClCompile Include="NewUI\PagedMatrixContainer.cpp" />
@@ -6690,6 +6693,7 @@
     <ClInclude Include="ItemMoveManager.h" />
     <ClInclude Include="ItemNative.h" />
     <ClInclude Include="ItemNativeManager.h" />
+    <ClInclude Include="NewHUD\DragNDrop\BeltDragNDropParticipant.h" />
     <ClInclude Include="NewHUD\GenericItemsContainerView.h" />
     <ClInclude Include="NewHUD\GroupedItemInventoryView.h" />
     <ClInclude Include="NewHUD\HUDSpriteCollection.h" />
@@ -6699,6 +6703,7 @@
     <ClInclude Include="NewHUD\NewSkillSelectionView.h" />
     <ClInclude Include="NewHUD\RightHUD.h" />
     <ClInclude Include="NewUI\Button.h" />
+    <ClInclude Include="NewUI\DragNDropSystem.h" />
     <ClInclude Include="NewUI\MatrixContainer.h" />
     <ClInclude Include="NewUI\CustomUIBase.h" />
     <ClInclude Include="NewUI\InputField.h" />
@@ -6708,6 +6713,7 @@
     <ClInclude Include="NewUI\ItemPickupFiltering.h" />
     <ClInclude Include="NewUI\ItemPickupFilteringBase.h" />
     <ClInclude Include="NewUI\Label.h" />
+    <ClInclude Include="NewUI\MouseTrackingSpriteRenderable.h" />
     <ClInclude Include="NewUI\PagedContainer.h" />
     <ClInclude Include="NewUI\PagedItemViewTable.h" />
     <ClInclude Include="NewUI\PagedMatrixContainer.h" />

@@ -15,6 +15,10 @@ Interface::Interface(CustomUI::Size screenSize,
 	_skillListManager = skillListManager;
 	_frameInParent = CustomUI::Rect{ {0, 0}, screenSize };
 	
+	_mouseTracking = registerChildRenderable<MouseTrackingSpriteRenderable>([=]() {
+		return new MouseTrackingSpriteRenderable(bounds());
+	});
+
 	const auto hudSize = NewHUDResources::newHUDSize;
 	const auto hudOriginY = (long)(screenSize.height - hudSize.height);
 	_leftHUD = registerChildRenderable<LeftHUD>([&]() {
@@ -116,6 +120,11 @@ Interface::Interface(CustomUI::Size screenSize,
 	_userItemsInventoryView->rebuildWith(smallItems, largeItems);
 	_userItemsInventoryView->setHidden(true);
 	_userItemsInventoryView->updateBackground(NewHUDResources::genericBackgroundSprite);
+
+
+	SpriteRenderable* test = new SpriteRenderable(CustomUI::Rect{ {0, 0}, {50, 50} }, NewHUDResources::attackSkillSprite);
+	_mouseTracking->trackWithNewRenderable(test, nullptr);
+
 }
 
 void Interface::updateLeftHUDWithSelectedLeftRightSkills() {

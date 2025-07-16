@@ -145,6 +145,13 @@ namespace CustomUI {
 			return Rect{ {origin.x + offset.x, origin.y + offset.y }, size };
 		}
 
+		Rect centeredOnPoint(Point p) const {
+			return Rect{
+				{ p.x - (int)size.width / 2, p.y - (int)size.height / 2 },
+				size
+			};
+		}
+
 		bool fullyContains(Rect other) const {
 			return (
 				(origin.x <= other.origin.x && other.origin.x <= maxX())

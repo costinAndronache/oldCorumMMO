@@ -2,6 +2,7 @@
 #include "LeftHUD.h"
 #include "RightHUD.h"
 #include "GroupedItemInventoryView.h"
+#include "../NewUI/MouseTrackingSpriteRenderable.h"
 
 namespace NewInterface {
 	class Interface: public CustomUI::Renderable, public CMainUserUpdateInterested {
@@ -30,6 +31,8 @@ namespace NewInterface {
 
 		NewSkillSelectionView* _skillSelectionView;
 		GroupedItemInventoryView* _userItemsInventoryView;
+
+		CustomUI::MouseTrackingSpriteRenderable* _mouseTracking;
 
 		std::shared_ptr<Interface> _thisAsShared;
 

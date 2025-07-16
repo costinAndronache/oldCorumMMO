@@ -861,6 +861,15 @@
     <ClCompile Include="NewHUD\GroupedItemInventoryView.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="NewUI\DragNDropSystem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="NewUI\MouseTrackingSpriteRenderable.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="NewHUD\DragNDrop\BeltDragNDropParticipant.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MouseLib.h">
@@ -1623,6 +1632,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="NewHUD\GroupedItemInventoryView.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="NewUI\DragNDropSystem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="NewUI\MouseTrackingSpriteRenderable.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="NewHUD\DragNDrop\BeltDragNDropParticipant.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -9,9 +9,9 @@ namespace CustomUI {
 		enum class MouseState { hovering, leftButtonPressedInside, rightButtonPressedInside, none };
 		virtual void renderWithRenderer(I4DyuchiGXRenderer* renderer, int zIndex);
 
-		virtual void handleMouseDown(Point mouse, MouseButton button);
-		virtual void handleMouseUp(Point mouse, MouseButton button);
-		void handleMouseMove(Point mouse);
+		virtual void handleMouseDown(Point mouseGlobalOrigin, MouseButton button);
+		virtual void handleMouseUp(Point mouseGlobalOrigin, MouseButton button);
+		void handleMouseMove(Point mouseGlobalOrigin);
 		void handleKeyUp(WPARAM wparam, LPARAM lparam);
 		void handleKeyDown(WPARAM wparam, LPARAM lparam);
 
@@ -49,6 +49,7 @@ namespace CustomUI {
 		MouseState _currentMouseState;
 
 		virtual void onMouseStateChange(MouseState newState, MouseState oldState) {}
+		virtual void onMouseMove(Point mouseGlobalOrigin) { }
 		virtual void processKeyUp(WPARAM wparam, LPARAM lparam) {}
 		virtual void processKeyDown(WPARAM wparam, LPARAM lparam) {}
 		virtual bool swallowsKeyEvents() { return false; }

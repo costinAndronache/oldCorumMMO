@@ -81,6 +81,7 @@ void Renderable::handleMouseMove(Point mouse) {
 		}
 	}
 
+	onMouseMove(mouse);
 
 	if (_currentMouseState == MouseState::leftButtonPressedInside ||
 		_currentMouseState == MouseState::rightButtonPressedInside ) {
