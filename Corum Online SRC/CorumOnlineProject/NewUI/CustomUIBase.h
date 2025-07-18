@@ -45,9 +45,9 @@ namespace CustomUI {
 		float midX() const { return origin.x + (size.width / 2); }
 		float midY() const { return origin.y + (size.height / 2); }
 
-		bool isMouseInside(POINT mouse) const {
-			return (origin.x < mouse.x && mouse.x < maxX() &&
-					origin.y < mouse.y && mouse.y < maxY());
+		bool containsPoint(Point point) const {
+			return (origin.x < point.x && point.x < maxX() &&
+					origin.y < point.y && point.y < maxY());
 		}
 
 		Rect centeredWith(Rect other) const {
@@ -149,6 +149,13 @@ namespace CustomUI {
 			return Rect{
 				{ p.x - (int)size.width / 2, p.y - (int)size.height / 2 },
 				size
+			};
+		}
+
+		Point center() const {
+			return {
+				origin.x + (int)size.width / 2,
+				origin.y + (int)size.height / 2
 			};
 		}
 

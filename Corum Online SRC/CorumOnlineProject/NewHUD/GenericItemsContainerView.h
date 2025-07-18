@@ -15,6 +15,8 @@ namespace NewInterface {
 
 	class GenericItemsContainerView: public CustomUI::Renderable {
 	public:
+		using ItemLongPressHandlerLMB = std::function<void(CItem, CUISpriteModel, int index, CustomUI::Rect globalFrame)>;
+
 		struct Appearance {
 			CustomUI::MatrixContainer::Appearance containerAppearance;
 			CustomUI::SpriteModel itemUnderlay;
@@ -23,12 +25,21 @@ namespace NewInterface {
 					  CItemResourceHash* resourceHash,
 					  Appearance appearance);
 
-		void updateWithItems(const std::vector<CItem>& items);
+		void updateWithItems(
+			const std::vector<CItem>& items, 
+			ItemLongPressHandlerLMB onLongPressItemLMB = nullptr
+		);
+
+		int itemIndexForGlobalPoint(CustomUI::Point p); // -1 on not found
+		void setHiddenStateForItemAtIndex(int index, bool isHidden);
+
+
 	private:
 		CItemResourceHash* _resourceHash;
 		std::vector<GenericItemView*> _itemViews;
 		CustomUI::MatrixContainer* _matrixContainer;
 		Appearance _appearance;
+
 	};
 }
 

@@ -3,6 +3,7 @@
 #include "RightHUD.h"
 #include "GroupedItemInventoryView.h"
 #include "../NewUI/MouseTrackingSpriteRenderable.h"
+#include "../NewUI/DragNDropSystem.h"
 
 namespace NewInterface {
 	class Interface: public CustomUI::Renderable, public CMainUserUpdateInterested {

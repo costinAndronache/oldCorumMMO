@@ -870,6 +870,12 @@
     <ClCompile Include="NewHUD\DragNDrop\BeltDragNDropParticipant.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="NewHUD\DragNDrop\UserInventoryDragNDropParticipant.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="NewHUD\DragNDrop\DragNDropManagerFromBelt.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MouseLib.h">
@@ -1641,6 +1647,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="NewHUD\DragNDrop\BeltDragNDropParticipant.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="NewHUD\DragNDrop\UserInventoryDragNDropParticipant.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="NewHUD\DragNDrop\DragNDropManagerFromBelt.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

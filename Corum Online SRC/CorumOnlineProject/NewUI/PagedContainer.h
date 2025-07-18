@@ -26,7 +26,7 @@ namespace CustomUI {
 		}
 
 		void setActivePage(unsigned int pageIndexOneBased);
-
+		unsigned int activePageIndex() { return _pager->activePageIndex(); }
 	private:
 		PagerControl* _pager;
 		Rect _pageFrame;

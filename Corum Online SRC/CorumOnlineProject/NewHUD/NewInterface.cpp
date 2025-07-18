@@ -117,7 +117,7 @@ Interface::Interface(CustomUI::Size screenSize,
 		std::end(mainUser->m_pInv_Large)
 	);
 
-	_userItemsInventoryView->rebuildWith(smallItems, largeItems);
+	//_userItemsInventoryView->rebuildWith(smallItems, largeItems);
 	_userItemsInventoryView->setHidden(true);
 	_userItemsInventoryView->updateBackground(NewHUDResources::genericBackgroundSprite);
 

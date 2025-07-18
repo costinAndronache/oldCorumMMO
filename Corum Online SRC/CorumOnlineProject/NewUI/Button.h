@@ -1,5 +1,7 @@
 #pragma once
 #include "../InitGame.h"
+#include "../../BaseLibrary/Timer.h"
+
 #include "CustomUIBase.h"
 #include "Label.h"
 #include "SpriteCollection.h"
@@ -37,6 +39,10 @@ namespace CustomUI {
 		void onClickStartLEFT(EventHandler event) { _onPressLEFT = event;  }
 		void onClickEndLEFT(EventHandler event) { _onReleaseLEFT = event; }
 
+		void onLongPressDetectedLEFT(EventHandler event) {
+			_onLongPressDetectedLEFT = event;
+		}
+
 	protected:
 		void onMouseStateChange(MouseState newState, MouseState oldState) override;
 
@@ -44,9 +50,9 @@ namespace CustomUI {
 		SingleLineLabel* _label;
 		EventHandler _onPressLEFT, _onReleaseLEFT;
 		EventHandler _onPressRIGHT, _onReleaseRIGHT;
-
+		EventHandler _onLongPressDetectedLEFT;
 		Sprites _sprites;
-
+		Timer* _longPressTimerLEFT;
 	};
 
 }

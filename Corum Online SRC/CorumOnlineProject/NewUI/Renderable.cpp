@@ -43,7 +43,7 @@ void Renderable::updateMouseState(MouseState newState) {
 void Renderable::handleMouseDown(Point mouse, MouseButton button) {
 	if (_isHidden) { return; }
 	
-	if (!globalFrame().isMouseInside(mouse)) {
+	if (!globalFrame().containsPoint(mouse)) {
 		updateMouseState(MouseState::none);
 		return;
 	}
@@ -63,7 +63,7 @@ void Renderable::handleMouseDown(Point mouse, MouseButton button) {
 void Renderable::handleMouseUp(Point mouse, MouseButton button) {
 	if (_isHidden) { return; }
 	updateMouseState(
-		globalFrame().isMouseInside(mouse) ? MouseState::hovering : MouseState::none
+		globalFrame().containsPoint(mouse) ? MouseState::hovering : MouseState::none
 	);
 
 	if (swallowsMouseEvents()) { return; }
@@ -89,7 +89,7 @@ void Renderable::handleMouseMove(Point mouse) {
 	}
 
 	updateMouseState(
-		globalFrame().isMouseInside(mouse) ? MouseState::hovering : MouseState::none
+		globalFrame().containsPoint(mouse) ? MouseState::hovering : MouseState::none
 	);
 }
 
@@ -115,7 +115,7 @@ void Renderable::handleKeyDown(WPARAM wparam, LPARAM lparam) {
 }
 
 bool Renderable::swallowsMouse(Point mouse) {
-	return !_isHidden && globalFrame().isMouseInside(mouse);
+	return !_isHidden && globalFrame().containsPoint(mouse);
 }
 
 bool Renderable::swallowsKeyboard() {

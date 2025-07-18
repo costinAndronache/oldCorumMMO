@@ -45,8 +45,10 @@ GenericItemsContainerView::GenericItemsContainerView(CustomUI::Rect frameInParen
 	});
 }
 
-void GenericItemsContainerView::updateWithItems(const std::vector<CItem>& items) {
-	
+void GenericItemsContainerView::updateWithItems(
+	const std::vector<CItem>& items,
+	ItemLongPressHandlerLMB onLongPressItemLMB
+) {
 	const auto spriteModelForItem = [=](CItem item) -> SpriteModel {
 		if (item.m_wItemID == 0) {
 			return SpriteModel::zero;
@@ -65,9 +67,10 @@ void GenericItemsContainerView::updateWithItems(const std::vector<CItem>& items)
 		}
 	};
 
+	_itemViews.clear();
 	_matrixContainer->rebuild<CItem>(
 		items,
-		[=](CItem item, int, Rect frame) {
+		[=](CItem item, int index, Rect frame) {
 			auto result = new GenericItemView(frame, _appearance.itemUnderlay);
 			
 			const auto q = item.GetQuantity();
@@ -79,9 +82,30 @@ void GenericItemsContainerView::updateWithItems(const std::vector<CItem>& items)
 			const auto sprite = spriteModelForItem(item);
 			result->_button->updateSpriteModelTo({ sprite, sprite, sprite });
 
+			result->_button->onLongPressDetectedLEFT([=]() {
+				if (onLongPressItemLMB) {
+					onLongPressItemLMB(item, sprite, index, result->globalFrame());
+				}
+			});
+
+			_itemViews.push_back(result);
 			return result;
 		}
 	);
+}
 
+int GenericItemsContainerView::itemIndexForGlobalPoint(CustomUI::Point p) {
+	for (int i = 0; i < _itemViews.size(); i++) {
+		auto view = _itemViews[i];
+		if (view->globalFrame().containsPoint(p)) {
+			return i;
+		}
+	}
 
+	return -1;
+}
+
+void GenericItemsContainerView::setHiddenStateForItemAtIndex(int index, bool isHidden) {
+	if (!(0 <= index && index < _itemViews.size())) { return;  }
+	_itemViews[index]->setHidden(isHidden);
 }

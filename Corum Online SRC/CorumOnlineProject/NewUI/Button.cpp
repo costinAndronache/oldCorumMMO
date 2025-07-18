@@ -16,6 +16,7 @@ Button::Button(Sprites sprites, Rect frameInParent): _sprites(sprites) {
 
 Button::Button(Sprites sprites, LabelModel labelModel, Rect frameInParent): _sprites(sprites) {
 	_frameInParent = frameInParent;
+	_longPressTimerLEFT = new Timer(WorkQueue::mainThreadQueue());
 
 	Rect labelFrame{ {0, 0}, SingleLineLabel::fittedSize(strlen(labelModel.text)) };
 	labelFrame = labelFrame.centeredWith(bounds());
@@ -30,10 +31,16 @@ void Button::updateSpriteModelTo(Sprites newModel) {
 
 void Button::onMouseStateChange(MouseState newState, MouseState oldState) {
 	const auto frame = globalFrame();
-	printf("\nFor button{(%d, %d), (%.1f, %.1f)} mouse state is: %d", frame.origin.x, frame.origin.y, frame.size.width, frame.size.height, newState);
 
-	if (newState == MouseState::leftButtonPressedInside && _onPressLEFT) { 
-		_onPressLEFT();  
+	if (newState == MouseState::leftButtonPressedInside) {
+		if(_onPressLEFT) { _onPressLEFT(); }
+		if (_onLongPressDetectedLEFT) {
+			_longPressTimerLEFT->launchAfter(1500, false, [=]() {
+				if (_currentMouseState == MouseState::leftButtonPressedInside) {
+					_onLongPressDetectedLEFT();
+				}
+			});
+		}
 	}
 
 	if (newState == MouseState::rightButtonPressedInside && _onPressRIGHT) {

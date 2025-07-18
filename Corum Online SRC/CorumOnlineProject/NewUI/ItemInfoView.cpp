@@ -41,7 +41,7 @@ bool ItemInfoView::renderInfoIfMouseHover() {
 	}
 	
 
-	if (globalFrame().isMouseInside(g_Mouse.MousePos)) {
+	if (globalFrame().containsPoint(g_Mouse.MousePos)) {
 		CInterface::GetInstance()->ItemInfoRender(_model.item, FALSE);
 		return true;
 	}

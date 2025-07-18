@@ -103,10 +103,12 @@ GroupedItemInventoryView::GroupedItemInventoryView(CustomUI::Rect frameInParent,
 
 void GroupedItemInventoryView::rebuildWith(
 	const std::vector<CItem>& smallItems,
-	const std::vector<CItem>& largeItems
+	const std::vector<CItem>& largeItems,
+	ItemLongPressHandlerLMB onSmallItemLongPressLMB,
+	ItemLongPressHandlerLMB onLargeItemLongPressLMB
 ) {
-	_smallItemsInventory->rebuild(smallItems);
-	_largeItemsInventory->rebuild(largeItems);
+	_smallItemsInventory->rebuild(smallItems, onSmallItemLongPressLMB);
+	_largeItemsInventory->rebuild(largeItems, onLargeItemLongPressLMB);
 }
 
 void GroupedItemInventoryView::setActiveTab(Tab tab) {
@@ -121,4 +123,21 @@ void GroupedItemInventoryView::setActiveTab(Tab tab) {
 		}
 	}();
 	_radioButtonGroup->setActiveButtonIndex(index);
+}
+
+ItemInventoryView* GroupedItemInventoryView::inventoryViewFor(Tab tab) {
+	switch (tab) {
+	case Tab::smallItems:
+		return _smallItemsInventory;
+	case Tab::largeItems:
+		return _largeItemsInventory;
+	}
+}
+
+struct GroupedItemInventoryView::IndexResult GroupedItemInventoryView::itemIndexForGlobalPoint(CustomUI::Point p) {
+	return { inventoryViewFor(_activeTab)->itemIndexForGlobalPoint(p), _activeTab };
+}
+
+void GroupedItemInventoryView::setHiddenStateForItemAtIndex(int index, Tab tab, bool isHidden) {
+	inventoryViewFor(_activeTab)->setHiddenStateForItemAtIndex(index, isHidden);
 }

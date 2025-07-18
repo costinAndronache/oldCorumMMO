@@ -6,6 +6,7 @@
 namespace NewInterface {
 	class GroupedItemInventoryView: public CustomUI::Renderable {
 	public:
+		using ItemLongPressHandlerLMB = ItemInventoryView::ItemLongPressHandlerLMB;
 		enum class Tab { smallItems, largeItems};
 
 		static CustomUI::Size preferredSize();
@@ -13,15 +14,23 @@ namespace NewInterface {
 
 		void rebuildWith(
 			const std::vector<CItem>& smallItems,
-			const std::vector<CItem>& largeItems
+			const std::vector<CItem>& largeItems,
+			ItemLongPressHandlerLMB onSmallItemLongPressLMB,
+			ItemLongPressHandlerLMB onLargeItemLongPressLMB
 		);
 
 		void setActiveTab(Tab tab);
 		Tab activeTab() const { return _activeTab; }
+
+		struct IndexResult { int index; Tab tab; } itemIndexForGlobalPoint(CustomUI::Point p); // -1 on not found
+
+		void setHiddenStateForItemAtIndex(int index, Tab tab, bool isHidden);
 	private:
 		CustomUI::RadioButtonGroup* _radioButtonGroup;
 		ItemInventoryView *_smallItemsInventory, *_largeItemsInventory;
 		Tab _activeTab;
+
+		ItemInventoryView* inventoryViewFor(Tab);
 	};
 }
 

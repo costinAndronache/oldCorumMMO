@@ -19,6 +19,8 @@ namespace CustomUI {
 		void onPageScroll(PageScrollEventHandler handler) { _eventHandler = handler; }
 		void updatePageCount(unsigned int pageCount, unsigned int pageIndexOneBased);
 		void setActivePage(unsigned int pageIndexOneBased);
+
+		unsigned int activePageIndex() { return _activePageIndex; }
 	private:
 		unsigned int _pageCount, _activePageIndex;
 		Appearance _appearance;
