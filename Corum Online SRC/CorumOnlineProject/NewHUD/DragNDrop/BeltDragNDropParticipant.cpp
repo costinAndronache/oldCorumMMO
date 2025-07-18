@@ -29,3 +29,11 @@ void BeltDragNDropParticipant::resetIndexOnCurrentDragNDropItem() {
 	_managedBeltView->setHiddenStateForItemAtIndex(_indexOnCurrentDragNDropItem, false);
 	_indexOnCurrentDragNDropItem = -1;
 }
+
+void BeltDragNDropParticipant::updateBeltWithItems(const CItem items[MAX_BELT_POOL]) {
+	std::vector<CItem> temp;
+	for (int i = 0; i < MAX_BELT_POOL; i++) {
+		temp.push_back(items[i]);
+	}
+	updateBeltWithItems(temp);
+}

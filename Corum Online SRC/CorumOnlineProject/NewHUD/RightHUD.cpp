@@ -81,6 +81,8 @@ RightHUD::RightHUD(CustomUI::Point originInParent, CItemResourceHash* resourceHa
 			}
 		);
 	});
+
+	_beltDragNDropParticipant = new BeltDragNDropParticipant(_beltItemsView);
 }
 
 
@@ -94,12 +96,4 @@ void RightHUD::updateSPScale(float scale) {
 
 void RightHUD::updateCooldownScale(float scale) {
 	_cooldownBar->updateScale(scale);
-}
-
-void RightHUD::updateWithItems(const CItem items[MAX_BELT_POOL]) {
-	std::vector<CItem> temp;
-	for (int i = 0; i < MAX_BELT_POOL; i++) {
-		temp.push_back(items[i]);
-	}
-	_beltItemsView->updateWithItems(temp);
 }

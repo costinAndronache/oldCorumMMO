@@ -3,6 +3,7 @@
 #include "../SkillWnd.h"
 #include "../DungeonInterfaceLayout.h"
 #include "HUDSpriteCollection.h"
+#include "DragNDrop/DragNDropManagerFromBelt.h"
 
 using namespace CustomUI;
 using namespace NewInterface;
@@ -14,10 +15,6 @@ Interface::Interface(CustomUI::Size screenSize,
 	_mainUser = mainUser;
 	_skillListManager = skillListManager;
 	_frameInParent = CustomUI::Rect{ {0, 0}, screenSize };
-	
-	_mouseTracking = registerChildRenderable<MouseTrackingSpriteRenderable>([=]() {
-		return new MouseTrackingSpriteRenderable(bounds());
-	});
 
 	const auto hudSize = NewHUDResources::newHUDSize;
 	const auto hudOriginY = (long)(screenSize.height - hudSize.height);
@@ -70,8 +67,6 @@ Interface::Interface(CustomUI::Size screenSize,
 		_skillSelectionView->switchToActiveSelection(NewSkillSelectionView::ActiveSkillSelection::rightSkills);
 	};
 
-	
-
 	_leftHUD->setEventHandlers(handlers);
 	updateLeftHUDWithSelectedLeftRightSkills();
 	
@@ -122,9 +117,16 @@ Interface::Interface(CustomUI::Size screenSize,
 	_userItemsInventoryView->updateBackground(NewHUDResources::genericBackgroundSprite);
 
 
-	SpriteRenderable* test = new SpriteRenderable(CustomUI::Rect{ {0, 0}, {50, 50} }, NewHUDResources::attackSkillSprite);
-	_mouseTracking->trackWithNewRenderable(test, nullptr);
-
+	_mouseTracking = registerChildRenderable<MouseTrackingSpriteRenderable>([=]() {
+		return new MouseTrackingSpriteRenderable(bounds());
+	});
+	_dragNDropSystem = new DragNDropSystem(this);
+	DragNDropManagerFromBelt::setupRoutesFromBelt(
+		_dragNDropSystem,
+		mainUser,
+		_rightHUD->beltDragNDropParticipant(),
+		nullptr
+	);
 }
 
 void Interface::updateLeftHUDWithSelectedLeftRightSkills() {
@@ -163,7 +165,7 @@ void Interface::updatedSkills(CMainUser* mainUser) {
 void Interface::updatedBeltItems(CMainUser* user) {
 	CItem items[MAX_BELT_POOL];
 	user->copyBeltItemsInto(items);
-	_rightHUD->updateWithItems(items);
+	_rightHUD->beltDragNDropParticipant()->updateBeltWithItems(items);
 }
 
 void Interface::updatedLeftRightSkillSelection(CMainUser*) {
@@ -227,6 +229,18 @@ void Interface::renderWithRenderer(I4DyuchiGXRenderer* renderer, int zIndex) {
 	}
 }
 
+
+///
+
+void Interface::renderOnMouseCursorAvatar(Renderable* avatar,
+	std::function<void(CustomUI::Rect avatarCurrentGlobalFrame)> onLeftMouseButtonUP
+) {
+	_mouseTracking->trackWithNewRenderable(avatar, onLeftMouseButtonUP);
+}
+
+void Interface::clearCurrentMouseCursorAvatar() {
+	_mouseTracking->trackWithNewRenderable(nullptr, nullptr);
+}
 
 /*
 

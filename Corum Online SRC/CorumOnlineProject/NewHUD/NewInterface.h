@@ -4,9 +4,13 @@
 #include "GroupedItemInventoryView.h"
 #include "../NewUI/MouseTrackingSpriteRenderable.h"
 #include "../NewUI/DragNDropSystem.h"
+#include "DragNDrop/DragNDropManagerFromBelt.h"
 
 namespace NewInterface {
-	class Interface: public CustomUI::Renderable, public CMainUserUpdateInterested {
+	class Interface: 
+		public CustomUI::Renderable, 
+		public CMainUserUpdateInterested,
+		public CustomUI::DragNDropSystemRenderer {
 	public:
 		Interface(CustomUI::Size screenSize, 
 				  CMainUser* mainUser,
@@ -26,6 +30,12 @@ namespace NewInterface {
 		void updatedSkills(CMainUser*) override;
 		void updatedLeftRightSkillSelection(CMainUser*) override;
 		void updatedBeltItems(CMainUser*) override;
+
+	public:
+		virtual void renderOnMouseCursorAvatar(Renderable* avatar, 
+			std::function<void(CustomUI::Rect avatarCurrentGlobalFrame)> onLeftMouseButtonUP
+		);
+		virtual void clearCurrentMouseCursorAvatar();
 	private:
 		LeftHUD* _leftHUD;
 		RightHUD* _rightHUD;
@@ -39,6 +49,10 @@ namespace NewInterface {
 
 		LP_SKILL_LIST_MANAGER _skillListManager;
 		CMainUser* _mainUser;
+
+		BeltDragNDropParticipant* _beltDragNDropParticipant;
+		CustomUI::DragNDropSystem* _dragNDropSystem;
+
 		void updateLeftHUDWithSelectedLeftRightSkills();
 	};
 }

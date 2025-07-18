@@ -16,9 +16,8 @@ namespace CustomUI {
 
 	class DragNDropSystemRenderer {
 	public:
-		virtual void renderOnMouseCursorAvatar(Renderable* avatar) = 0;
+		virtual void renderOnMouseCursorAvatar(Renderable* avatar, std::function<void(Rect avatarCurrentGlobalFrame)> onLeftMouseButtonUP) = 0;
 		virtual void clearCurrentMouseCursorAvatar() = 0;
-		virtual void onLeftMouseButtonUp(std::function<void(Rect avatarCurrentGlobalFrame)>) = 0;
 	};
 
 	class DragNDropSystem {

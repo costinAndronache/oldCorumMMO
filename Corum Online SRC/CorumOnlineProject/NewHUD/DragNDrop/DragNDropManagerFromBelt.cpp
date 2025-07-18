@@ -12,6 +12,10 @@ void moveFromBeltToSmallItemsInventory(
 
 }
 
+void swapBeltItems(CMainUser* mainUser, int fromIndex, int toIndex) {
+	printf("\nSwapping belt items from: %d --> to: %d", fromIndex, toIndex);
+}
+
 void DragNDropManagerFromBelt::setupRoutesFromBelt(
 	CustomUI::DragNDropSystem* system,
 	CMainUser* mainUser,
@@ -19,15 +23,16 @@ void DragNDropManagerFromBelt::setupRoutesFromBelt(
 	UserInventoryDragNDropParticipant* toUserItemsInventory
 ) {
 
-	const auto toReceivers = std::vector<DragNDropReceiver*>{ toUserItemsInventory };
+	const auto toReceivers = std::vector<DragNDropReceiver*>{ fromBelt };
 	system->registerRoute(
 		fromBelt,
 		toReceivers,
-		[=](Rect frameOnEnd, std::set<unsigned int> indexesOfReceivers) {
-
-		},
-		[=]() {
-
-		}
+	[=](Rect frameOnEnd, std::set<unsigned int> indexesOfReceivers) {
+		const auto destIndex = fromBelt->itemIndexForGlobalPoint(frameOnEnd.center());
+		swapBeltItems(mainUser, fromBelt->indexOnCurrentDragNDropItem(), destIndex);
+	},
+	[=]() {
+		fromBelt->resetIndexOnCurrentDragNDropItem();
+	}
 	);
 }

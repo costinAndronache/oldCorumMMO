@@ -12,6 +12,8 @@ Button::Sprites Button::Sprites::allZero{
 Button::Button(Sprites sprites, Rect frameInParent): _sprites(sprites) {
 	_frameInParent = frameInParent;
 	_label = NULL;
+	_longPressTimerLEFT = new Timer(WorkQueue::mainThreadQueue());
+
 }
 
 Button::Button(Sprites sprites, LabelModel labelModel, Rect frameInParent): _sprites(sprites) {

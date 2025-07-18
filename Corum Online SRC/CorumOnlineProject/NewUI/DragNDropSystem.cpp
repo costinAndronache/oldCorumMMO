@@ -15,27 +15,28 @@ void DragNDropSystem::registerRoute(
 
 	sender->onLeftMouseDragStart([=](Renderable* avatar, Rect globalFrameStart) {
 		avatar->updateFrameInParent(globalFrameStart);
-		_renderer->renderOnMouseCursorAvatar(avatar);
-
-		_renderer->onLeftMouseButtonUp([=](Rect avatarCurrentGlobalFrame) {
-			std::set<unsigned int> foundReceiversIndexes;
-			for (int i = 0; i < allowedReceivers.size(); i++) {
-				auto receiver = allowedReceivers[i];
-				if (receiver->currentGlobalFrame()
-					.fullyContains(avatarCurrentGlobalFrame)) {
-					foundReceiversIndexes.insert(i);
+		_renderer->renderOnMouseCursorAvatar(
+			avatar,
+			[=](Rect avatarCurrentGlobalFrame) {
+				std::set<unsigned int> foundReceiversIndexes;
+				for (int i = 0; i < allowedReceivers.size(); i++) {
+					auto receiver = allowedReceivers[i];
+					if (receiver->currentGlobalFrame()
+						.fullyContains(avatarCurrentGlobalFrame)) {
+						foundReceiversIndexes.insert(i);
+					}
 				}
-			}
 
-			if (foundReceiversIndexes.empty()) {
-				onNoRouteMatched();
-			}
-			else {
-				onRouteMatch(avatarCurrentGlobalFrame, foundReceiversIndexes);
-			}
+				if (foundReceiversIndexes.empty()) {
+					onNoRouteMatched();
+				}
+				else {
+					onRouteMatch(avatarCurrentGlobalFrame, foundReceiversIndexes);
+				}
 
-			_renderer->clearCurrentMouseCursorAvatar();
-		});
+				_renderer->clearCurrentMouseCursorAvatar();
+			}
+		);
 	});
 
 }
