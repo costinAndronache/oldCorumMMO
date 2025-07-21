@@ -21,6 +21,8 @@ NewHUDResources::rest, NewHUDResources::pk, NewHUDResources::system;
 
 Size NewHUDResources::newHUDSize{ 400, 121 };
 
+NewHUDResources::InventoryItemUnderlays NewHUDResources::inventoryItemUnderlays;
+
 #define from SpriteModel::from
 
 static void initNewHUDElements(I4DyuchiGXRenderer* r) {
@@ -120,9 +122,36 @@ static void initMenu1Elements(I4DyuchiGXRenderer* renderer) {
 	});
 }
 
+void initInventoryUnderlayElements(I4DyuchiGXRenderer* r) {
+	char* rf = GetFile("newHUDElements.tif", DATA_TYPE_UI);
+	Size itemSize = { 33, 64 };
+	const auto y = 252;
+
+	NewHUDResources::inventoryItemUnderlays.sword = from(r, rf, { {0, y}, itemSize });
+	NewHUDResources::inventoryItemUnderlays.key = from(r, rf, { {34, y}, itemSize });
+	NewHUDResources::inventoryItemUnderlays.helm = from(r, rf, { {68, y}, itemSize });
+	NewHUDResources::inventoryItemUnderlays.doubleHelm = from(r, rf, { {102, y}, itemSize });
+	NewHUDResources::inventoryItemUnderlays.shield = from(r, rf, { {136, y}, itemSize });
+	NewHUDResources::inventoryItemUnderlays.gloveLeft = from(r, rf, { {170, y}, itemSize });
+	NewHUDResources::inventoryItemUnderlays.armor = from(r, rf, { {204, y}, itemSize });
+	NewHUDResources::inventoryItemUnderlays.doubleArmor = from(r, rf, { {238, y}, itemSize });
+	NewHUDResources::inventoryItemUnderlays.necklace = from(r, rf, { {272, y}, itemSize });
+	NewHUDResources::inventoryItemUnderlays.bag = from(r, rf, { {306, y}, itemSize });
+	NewHUDResources::inventoryItemUnderlays.belt = from(r, rf, { {340, y}, itemSize });
+	NewHUDResources::inventoryItemUnderlays.gloveRight = from(r, rf, { {374, y}, itemSize });
+	NewHUDResources::inventoryItemUnderlays.boot = from(r, rf, { {408, y}, itemSize });
+	NewHUDResources::inventoryItemUnderlays.ring = from(r, rf, { {442, y}, itemSize });
+
+
+	NewHUDResources::inventoryItemUnderlays.inventoryBackground = from(
+		r, rf, { {0, 317}, { 240, 205 } }
+	);
+}
+
 void NewHUDResources::initialize(I4DyuchiGXRenderer* renderer) {
 	initMenu1Elements(renderer);
 	initNewHUDElements(renderer);
+	initInventoryUnderlayElements(renderer);
 
 	attackSkillSprite = {
 		renderer->CreateSpriteObject(GetFile("skill_icon1.tga", DATA_TYPE_UI), 0, 0, 32, 32, 0),

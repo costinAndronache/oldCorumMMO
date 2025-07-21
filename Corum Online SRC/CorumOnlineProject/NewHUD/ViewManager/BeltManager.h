@@ -3,12 +3,12 @@
 #include "../../NewUI/DragNDropSystem.h"
 
 namespace NewInterface {
-	class BeltDragNDropParticipant: 
+	class BeltManager: 
 		public CustomUI::DragNDropReceiver,
 		public CustomUI::DragNDropSender {
 
 	public:
-		BeltDragNDropParticipant(GenericItemsContainerView* managedBeltView);
+		BeltManager(GenericItemsContainerView* managedBeltView);
 
 		void updateBeltWithItems(const std::vector<CItem>& items);
 		void updateBeltWithItems(const CItem items[MAX_BELT_POOL]);

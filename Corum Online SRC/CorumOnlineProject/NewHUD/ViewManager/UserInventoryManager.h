@@ -3,11 +3,11 @@
 #include "../../NewUI/DragNDropSystem.h"
 
 namespace NewInterface {
-	class UserInventoryDragNDropParticipant:
+	class UserInventoryManager:
 		public CustomUI::DragNDropReceiver,
 		public CustomUI::DragNDropSender {
 	public:
-		UserInventoryDragNDropParticipant(GroupedItemInventoryView* userInventoryView);
+		UserInventoryManager(GroupedItemInventoryView* userInventoryView);
 
 		void rebuildInventoryViewWith(
 			const std::vector<CItem>& smallItems,
@@ -20,6 +20,7 @@ namespace NewInterface {
 		}
 
 		void resetIndexOnCurrentDragNDropItem();
+		GroupedItemInventoryView::IndexResult itemIndexForGlobalPoint(CustomUI::Point);
 		GroupedItemInventoryView::IndexResult indexOnCurrentDragNDropItem() { return _indexOnCurrentDragNDropItem; };
 		CustomUI::Rect currentGlobalFrame() override { return _managedInventoryView->globalFrame(); }
 	private:

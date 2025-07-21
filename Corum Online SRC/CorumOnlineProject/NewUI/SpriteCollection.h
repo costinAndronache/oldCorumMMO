@@ -17,6 +17,9 @@ namespace CustomUI {
 		static IDISpriteObject* xClosePressed;
 		static Size xCloseSize;
 
+		static SpriteModel xCloseSprite;
+		static SpriteModel xClosePressedSprite;
+
 		static IDISpriteObject* xRedBlack;
 		static IDISpriteObject* xRedBlackPressed;
 		static Size xRedBlackSize;

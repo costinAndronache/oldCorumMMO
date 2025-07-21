@@ -3,7 +3,7 @@
 #include "../SkillWnd.h"
 #include "../DungeonInterfaceLayout.h"
 #include "HUDSpriteCollection.h"
-#include "DragNDrop/DragNDropManagerFromBelt.h"
+#include "ViewManager/DragNDropManager.h"
 
 using namespace CustomUI;
 using namespace NewInterface;
@@ -51,7 +51,7 @@ Interface::Interface(CustomUI::Size screenSize,
 	};
 
 	handlers.itemHandler = [=]() {
-		_userItemsInventoryView->toggleHiddenState();
+		_newItemsWindow->toggleHiddenState();
 	};
 
 	handlers.skillsHandler = []() {
@@ -92,41 +92,41 @@ Interface::Interface(CustomUI::Size screenSize,
 	});
 
 	//
-	updatedBeltItems(mainUser);
 
 
 	const auto inventorySize = GroupedItemInventoryView::preferredSize();
 
-	const auto inventoryFrame = CustomUI::Rect{ {200, 200}, inventorySize };
-	_userItemsInventoryView = registerChildRenderable<GroupedItemInventoryView>([=]() {
-		return new GroupedItemInventoryView(inventoryFrame, resourceHash);
+	_newItemsWindow = registerChildRenderable<NewItemsWindow>([=]() {
+		return new NewItemsWindow({ 200, 200 }, resourceHash);
 	});
 
-	std::vector<CItem> smallItems = std::vector<CItem>(
-		std::begin(mainUser->m_pInv_Small),
-		std::end(mainUser->m_pInv_Small)
-	);
+	_newItemsWindow->onClose([=]() {
+		_newItemsWindow->setHidden(true);
+	});
 
-	std::vector<CItem> largeItems = std::vector<CItem>(
-		std::begin(mainUser->m_pInv_Large),
-		std::end(mainUser->m_pInv_Large)
-	);
-
-	//_userItemsInventoryView->rebuildWith(smallItems, largeItems);
-	_userItemsInventoryView->setHidden(true);
-	_userItemsInventoryView->updateBackground(NewHUDResources::genericBackgroundSprite);
-
+	_newItemsWindow->setHidden(true);
 
 	_mouseTracking = registerChildRenderable<MouseTrackingSpriteRenderable>([=]() {
 		return new MouseTrackingSpriteRenderable(bounds());
 	});
+	_mouseTracking->updateZIndexOffsetForce(1000);
+
 	_dragNDropSystem = new DragNDropSystem(this);
-	DragNDropManagerFromBelt::setupRoutesFromBelt(
-		_dragNDropSystem,
+	_userInventoryManager = new UserInventoryManager(_newItemsWindow->groupedInventoryView());
+	_equipItemsManager = new EquipItemsManager(_newItemsWindow->equipItemsView());
+
+	_dragNDropManager = new DragNDropManager(
 		mainUser,
-		_rightHUD->beltDragNDropParticipant(),
-		nullptr
+		SharedNetwork::sharedInstance(),
+		_dragNDropSystem
 	);
+
+	_dragNDropManager->setupRoutes(
+		_rightHUD->beltDragNDropParticipant(),
+		_userInventoryManager,
+		_equipItemsManager
+	);
+	updatedItemInventory(mainUser);
 }
 
 void Interface::updateLeftHUDWithSelectedLeftRightSkills() {
@@ -162,10 +162,26 @@ void Interface::updatedSkills(CMainUser* mainUser) {
 	});
 }
 
-void Interface::updatedBeltItems(CMainUser* user) {
+void Interface::updatedItemInventory(CMainUser* user) {
 	CItem items[MAX_BELT_POOL];
 	user->copyBeltItemsInto(items);
 	_rightHUD->beltDragNDropParticipant()->updateBeltWithItems(items);
+
+	//
+	std::vector<CItem> inventoryItemsSMALL(
+		std::begin(user->m_pInv_Small), std::end(user->m_pInv_Small)
+	);
+
+	std::vector<CItem> inventoryItemsLARGE(
+		std::begin(user->m_pInv_Large), std::end(user->m_pInv_Large)
+	);
+
+	_userInventoryManager->rebuildInventoryViewWith(
+		inventoryItemsSMALL, inventoryItemsLARGE
+	);
+
+	//
+	_equipItemsManager->updateWithItems(user->m_pEquip);
 }
 
 void Interface::updatedLeftRightSkillSelection(CMainUser*) {

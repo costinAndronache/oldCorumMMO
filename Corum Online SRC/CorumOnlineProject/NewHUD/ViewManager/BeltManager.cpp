@@ -1,16 +1,17 @@
-#include "BeltDragNDropParticipant.h"
+#include "BeltManager.h"
 
 using namespace NewInterface;
 using namespace CustomUI;
 
-BeltDragNDropParticipant::BeltDragNDropParticipant(GenericItemsContainerView* managedBeltView) {
+BeltManager::BeltManager(GenericItemsContainerView* managedBeltView) {
 	_managedBeltView = managedBeltView;
 	_indexOnCurrentDragNDropItem = -1;
 }
 
-void BeltDragNDropParticipant::updateBeltWithItems(const std::vector<CItem>& items) {
+void BeltManager::updateBeltWithItems(const std::vector<CItem>& items) {
 	_managedBeltView->updateWithItems(
 		items,
+		NewHUDResources::inventoryItemUnderlaySprite,
 	[=](CItem item, SpriteModel sprite, int index, Rect globalFrame) {
 		if (item.m_wItemID == 0) { return;  } // empty item 
 		if (!_handler) { return; }
@@ -25,12 +26,12 @@ void BeltDragNDropParticipant::updateBeltWithItems(const std::vector<CItem>& ite
 	);
 }
 
-void BeltDragNDropParticipant::resetIndexOnCurrentDragNDropItem() {
+void BeltManager::resetIndexOnCurrentDragNDropItem() {
 	_managedBeltView->setHiddenStateForItemAtIndex(_indexOnCurrentDragNDropItem, false);
 	_indexOnCurrentDragNDropItem = -1;
 }
 
-void BeltDragNDropParticipant::updateBeltWithItems(const CItem items[MAX_BELT_POOL]) {
+void BeltManager::updateBeltWithItems(const CItem items[MAX_BELT_POOL]) {
 	std::vector<CItem> temp;
 	for (int i = 0; i < MAX_BELT_POOL; i++) {
 		temp.push_back(items[i]);

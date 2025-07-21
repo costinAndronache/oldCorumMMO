@@ -14,6 +14,9 @@ namespace NewInterface {
 
 		using Sizes = CustomUI::MatrixContainer::Sizes;
 
+		static Appearance smallInventoryAppearance;
+		static Appearance largeInventoryAppearance;
+
 		static CustomUI::Size appropriateSizeFor(Sizes sizes, int elementsCountPerPage);
 		ItemInventoryView(CustomUI::Rect frameInParent, CItemResourceHash* resourceHash, Appearance appearance);
 

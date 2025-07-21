@@ -18,6 +18,9 @@ IDISpriteObject* SpriteCollection::xRedBlack = NULL;
 IDISpriteObject* SpriteCollection::xRedBlackPressed = NULL;
 Size SpriteCollection::xRedBlackSize = { 33, 33 };
 
+SpriteModel SpriteCollection::xCloseSprite;
+SpriteModel SpriteCollection::xClosePressedSprite;
+
 void SpriteCollection::initialize(I4DyuchiGXRenderer* renderer) {
 	if (downArrow == NULL) {
 		char* resourceFile = GetFile("menu_1.tga", DATA_TYPE_UI);
@@ -66,4 +69,7 @@ void SpriteCollection::initialize(I4DyuchiGXRenderer* renderer) {
 			xRedBlackSize.width, 28,
 			0);
 	}
+
+	xCloseSprite = { xClose, xCloseSize };
+	xClosePressedSprite = { xClosePressed, xCloseSize };
 }

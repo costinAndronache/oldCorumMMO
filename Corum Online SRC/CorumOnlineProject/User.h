@@ -224,6 +224,9 @@ private:
 	BOOL			IsWithContinousSkillSelected();
 
 public:
+
+	void				notifyForInventoryUpdates();
+
 	std::vector<BYTE>	skillsAvailableOnLeft();
 	std::vector<BYTE>	skillsAvailableOnRight();
 

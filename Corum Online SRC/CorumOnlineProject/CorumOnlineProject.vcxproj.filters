@@ -867,13 +867,22 @@
     <ClCompile Include="NewUI\MouseTrackingSpriteRenderable.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="NewHUD\DragNDrop\BeltDragNDropParticipant.cpp">
+    <ClCompile Include="NewHUD\ViewManager\BeltManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="NewHUD\DragNDrop\UserInventoryDragNDropParticipant.cpp">
+    <ClCompile Include="NewHUD\ViewManager\UserInventoryManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="NewHUD\DragNDrop\DragNDropManagerFromBelt.cpp">
+    <ClCompile Include="NewHUD\ViewManager\DragNDropManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Networking\SharedNetwork.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="NewHUD\ViewManager\EquipItemsManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="NewHUD\UserInventoryView.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -1646,13 +1655,22 @@
     <ClInclude Include="NewUI\MouseTrackingSpriteRenderable.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="NewHUD\DragNDrop\BeltDragNDropParticipant.h">
+    <ClInclude Include="NewHUD\ViewManager\BeltManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="NewHUD\DragNDrop\UserInventoryDragNDropParticipant.h">
+    <ClInclude Include="NewHUD\ViewManager\UserInventoryManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="NewHUD\DragNDrop\DragNDropManagerFromBelt.h">
+    <ClInclude Include="NewHUD\ViewManager\DragNDropManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Networking\SharedNetwork.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="NewHUD\ViewManager\EquipItemsManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="NewHUD\UserInventoryView.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

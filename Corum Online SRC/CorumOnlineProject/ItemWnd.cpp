@@ -215,7 +215,7 @@ void CItemWnd::RenderText()//: 050111 hwoarang
 
 void CItemWnd::RenderItem()
 {
-	RenderItemEquip();
+	//RenderItemEquip();
 	RenderItemGuardian();
 
 	if(m_byItemChk==0)

@@ -17,16 +17,25 @@ namespace NewInterface {
 	public:
 		using ItemLongPressHandlerLMB = std::function<void(CItem, CUISpriteModel, int index, CustomUI::Rect globalFrame)>;
 
-		struct Appearance {
-			CustomUI::MatrixContainer::Appearance containerAppearance;
-			CustomUI::SpriteModel itemUnderlay;
-		};
+		using Appearance = CustomUI::MatrixContainer::Appearance; 
+	
 		GenericItemsContainerView(CustomUI::Rect frameInParent, 
 					  CItemResourceHash* resourceHash,
 					  Appearance appearance);
 
 		void updateWithItems(
-			const std::vector<CItem>& items, 
+			const std::vector<CItem>& items,
+			CustomUI::SpriteModel itemUnderlaySprite,
+			ItemLongPressHandlerLMB onLongPressItemLMB = nullptr
+		);
+
+		struct ItemWithUnderlay {
+			CItem item;
+			CustomUI::SpriteModel itemUnderlaySprite;
+		};
+
+		void updateWithItems(
+			const std::vector<ItemWithUnderlay>& items,
 			ItemLongPressHandlerLMB onLongPressItemLMB = nullptr
 		);
 

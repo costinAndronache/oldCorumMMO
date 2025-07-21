@@ -36,6 +36,12 @@ void listenersUpdate(const std::vector<CMainUserUpdateInterestedWeakRef>& listen
 	});
 }
 
+void CMainUser::notifyForInventoryUpdates() {
+	listenersUpdate(_updateListeners, [this](CMainUserUpdateInterestedSharedRef listener) {
+		listener->updatedItemInventory(this);
+	});
+}
+
 std::vector<BYTE>	CMainUser::skillsAvailableOnLeft() {
 	std::vector<BYTE> result;
 
@@ -370,6 +376,10 @@ const CItem* CMainUser::GetItem(ITEM_NATIVE eItemNative, BYTE bySlotIndex) const
 void CMainUser::SetItem(ITEM_NATIVE eItemNative, BYTE bySlotIndex, const CItem* pItem)
 {
 	m_pItemNativeManager->SetItem(BYTE(eItemNative), bySlotIndex, pItem);
+
+	listenersUpdate(_updateListeners, [=](CMainUserUpdateInterestedSharedRef ref) {
+		ref->updatedItemInventory(this);
+	});
 }
 
 
@@ -1947,14 +1957,14 @@ void CMainUser::applyOffsetForSkills(int offset) {
 void CMainUser::setBeltItem(CItem item, int index) {
 	CUser::setBeltItem(item, index);
 	listenersUpdate(_updateListeners, [=](CMainUserUpdateInterestedSharedRef listener) {
-		listener->updatedBeltItems(this);
+		listener->updatedItemInventory(this);
 	});
 }
 
 void CMainUser::nullifyBeltItemAtIndex(int index) {
 	CUser::nullifyBeltItemAtIndex(index);
 	listenersUpdate(_updateListeners, [=](CMainUserUpdateInterestedSharedRef listener) {
-		listener->updatedBeltItems(this);
+		listener->updatedItemInventory(this);
 	});
 }
 

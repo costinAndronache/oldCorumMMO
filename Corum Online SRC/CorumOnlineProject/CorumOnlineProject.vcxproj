@@ -4095,9 +4095,12 @@
       <BasicRuntimeChecks Condition="'$(Configuration)|$(Platform)'=='dev|Win32'">EnableFastChecks</BasicRuntimeChecks>
       <BrowseInformation Condition="'$(Configuration)|$(Platform)'=='dev|Win32'">true</BrowseInformation>
     </ClCompile>
-    <ClCompile Include="NewHUD\DragNDrop\BeltDragNDropParticipant.cpp" />
-    <ClCompile Include="NewHUD\DragNDrop\DragNDropManagerFromBelt.cpp" />
-    <ClCompile Include="NewHUD\DragNDrop\UserInventoryDragNDropParticipant.cpp" />
+    <ClCompile Include="Networking\SharedNetwork.cpp" />
+    <ClCompile Include="NewHUD\UserInventoryView.cpp" />
+    <ClCompile Include="NewHUD\ViewManager\BeltManager.cpp" />
+    <ClCompile Include="NewHUD\ViewManager\DragNDropManager.cpp" />
+    <ClCompile Include="NewHUD\ViewManager\EquipItemsManager.cpp" />
+    <ClCompile Include="NewHUD\ViewManager\UserInventoryManager.cpp" />
     <ClCompile Include="NewHUD\GenericItemsContainerView.cpp" />
     <ClCompile Include="NewHUD\GroupedItemInventoryView.cpp" />
     <ClCompile Include="NewHUD\HUDSpriteCollection.cpp" />
@@ -6695,9 +6698,12 @@
     <ClInclude Include="ItemMoveManager.h" />
     <ClInclude Include="ItemNative.h" />
     <ClInclude Include="ItemNativeManager.h" />
-    <ClInclude Include="NewHUD\DragNDrop\BeltDragNDropParticipant.h" />
-    <ClInclude Include="NewHUD\DragNDrop\DragNDropManagerFromBelt.h" />
-    <ClInclude Include="NewHUD\DragNDrop\UserInventoryDragNDropParticipant.h" />
+    <ClInclude Include="Networking\SharedNetwork.h" />
+    <ClInclude Include="NewHUD\UserInventoryView.h" />
+    <ClInclude Include="NewHUD\ViewManager\BeltManager.h" />
+    <ClInclude Include="NewHUD\ViewManager\DragNDropManager.h" />
+    <ClInclude Include="NewHUD\ViewManager\EquipItemsManager.h" />
+    <ClInclude Include="NewHUD\ViewManager\UserInventoryManager.h" />
     <ClInclude Include="NewHUD\GenericItemsContainerView.h" />
     <ClInclude Include="NewHUD\GroupedItemInventoryView.h" />
     <ClInclude Include="NewHUD\HUDSpriteCollection.h" />

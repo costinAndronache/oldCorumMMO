@@ -2373,6 +2373,8 @@ void CmdPickupItem( char* pMsg, DWORD dwLen )
 
 	g_pMainPlayer->WeightProcess(TRUE, wWeight);	
 	g_pMainPlayer->GetCheckUpgrade();
+
+	g_pMainPlayer->notifyForInventoryUpdates();
 }
 
 

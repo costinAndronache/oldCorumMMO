@@ -68,21 +68,17 @@ RightHUD::RightHUD(CustomUI::Point originInParent, CItemResourceHash* resourceHa
 			beltFrame,
 			resourceHash,
 			{
+				MatrixContainer::VerticalGrowthDirection::downwards,
 				{
-					MatrixContainer::VerticalGrowthDirection::downwards,
-					{
-						{ 34, 34},
-						3, 3,
-						8
-					}
-				},
-				SpriteModel::zero
-
+					{ 34, 34},
+					8,
+					3, 3
+				}
 			}
 		);
 	});
 
-	_beltDragNDropParticipant = new BeltDragNDropParticipant(_beltItemsView);
+	_beltDragNDropParticipant = new BeltManager(_beltItemsView);
 }
 
 

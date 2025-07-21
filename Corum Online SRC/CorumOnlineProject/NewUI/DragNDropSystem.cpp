@@ -22,7 +22,7 @@ void DragNDropSystem::registerRoute(
 				for (int i = 0; i < allowedReceivers.size(); i++) {
 					auto receiver = allowedReceivers[i];
 					if (receiver->currentGlobalFrame()
-						.fullyContains(avatarCurrentGlobalFrame)) {
+						.containsPoint(avatarCurrentGlobalFrame.center())) {
 						foundReceiversIndexes.insert(i);
 					}
 				}

@@ -32,6 +32,10 @@ namespace CustomUI {
 			_frameInParent.origin = newOrigin;
 		}
 
+		void updateZIndexOffsetForce(int offset) {
+			_zIndexOffsetForce = offset;
+		}
+
 		void updateFrameInParent(Rect newFrame) { _frameInParent = newFrame; }
 		void updateBackground(SpriteModel backgroundSprite) { _backgroundSprite = backgroundSprite; }
 		virtual ~Renderable() { deconstructAllChildren(); }
@@ -41,6 +45,7 @@ namespace CustomUI {
 			_isHidden = false;
 			_parent = nullptr;
 			_backgroundSprite = SpriteModel::zero;
+			_zIndexOffsetForce = 0;
 		}
 
 		Rect _frameInParent;
@@ -65,6 +70,8 @@ namespace CustomUI {
 
 		void deconstructAllChildren();
 		void deconstructChildrenWhere(std::function<bool(Renderable*)> eligibleToDeconstruct);
+
+		int _zIndexOffsetForce;
 	private:
 		bool _isHidden;
 		std::vector<Renderable*> _childRenderables;

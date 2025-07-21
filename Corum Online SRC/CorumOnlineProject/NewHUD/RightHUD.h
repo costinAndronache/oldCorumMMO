@@ -2,7 +2,7 @@
 #include "LeftHUD.h"
 #include "HUDSpriteCollection.h"
 #include "GenericItemsContainerView.h"
-#include "DragNDrop/BeltDragNDropParticipant.h"
+#include "ViewManager/BeltManager.h"
 
 namespace NewInterface {
 	class RightHUD: public CustomUI::Renderable {
@@ -18,7 +18,7 @@ namespace NewInterface {
 		void updateSPScale(float scale);
 		void updateCooldownScale(float scale);
 
-		BeltDragNDropParticipant* beltDragNDropParticipant() { return _beltDragNDropParticipant; }
+		BeltManager* beltDragNDropParticipant() { return _beltDragNDropParticipant; }
 
 	private:
 		EventHandlers _handlers;
@@ -30,7 +30,7 @@ namespace NewInterface {
 		CustomUI::SpriteRenderable* _rightHUDSprite;
 
 		GenericItemsContainerView* _beltItemsView;
-		BeltDragNDropParticipant* _beltDragNDropParticipant;
+		BeltManager* _beltDragNDropParticipant;
 	};
 }
 

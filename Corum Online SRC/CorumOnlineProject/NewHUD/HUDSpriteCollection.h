@@ -22,6 +22,13 @@ struct NewHUDResources {
 
 	static CUISpriteModel inventoryItemUnderlaySprite;
 
+	static struct InventoryItemUnderlays {
+		CUISpriteModel sword, key, helm, doubleHelm,
+			shield, gloveLeft, armor, doubleArmor,
+			necklace, bag, belt, gloveRight, boot, ring,
+			inventoryBackground;
+	} inventoryItemUnderlays ;
+
 	static void initialize(I4DyuchiGXRenderer *renderer);
 
 	static CustomUI::SpriteModel spriteForSkill(BYTE skillKind, LP_SKILL_LIST_MANAGER skillListManager);

@@ -37,7 +37,7 @@ void Button::onMouseStateChange(MouseState newState, MouseState oldState) {
 	if (newState == MouseState::leftButtonPressedInside) {
 		if(_onPressLEFT) { _onPressLEFT(); }
 		if (_onLongPressDetectedLEFT) {
-			_longPressTimerLEFT->launchAfter(1500, false, [=]() {
+			_longPressTimerLEFT->launchAfter(500, false, [=]() {
 				if (_currentMouseState == MouseState::leftButtonPressedInside) {
 					_onLongPressDetectedLEFT();
 				}

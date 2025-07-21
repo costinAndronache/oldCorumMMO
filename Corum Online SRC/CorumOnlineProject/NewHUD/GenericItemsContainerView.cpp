@@ -40,13 +40,29 @@ GenericItemsContainerView::GenericItemsContainerView(CustomUI::Rect frameInParen
 	_matrixContainer = registerChildRenderable<MatrixContainer>([=]() {
 		return new MatrixContainer(
 			bounds(),
-			_appearance.containerAppearance
+			_appearance
 		);
 	});
 }
 
 void GenericItemsContainerView::updateWithItems(
 	const std::vector<CItem>& items,
+	CustomUI::SpriteModel itemUnderlaySprite,
+	ItemLongPressHandlerLMB onLongPressItemLMB
+) {
+	std::vector<ItemWithUnderlay> withUnderlay(items.size());
+	std::transform(
+		std::begin(items),
+		std::end(items),
+		std::begin(withUnderlay),
+		[=](CItem item) -> ItemWithUnderlay { return { item, itemUnderlaySprite }; }
+	);
+
+	updateWithItems(withUnderlay, onLongPressItemLMB);
+}
+
+void GenericItemsContainerView::updateWithItems(
+	const std::vector<ItemWithUnderlay>& items,
 	ItemLongPressHandlerLMB onLongPressItemLMB
 ) {
 	const auto spriteModelForItem = [=](CItem item) -> SpriteModel {
@@ -59,45 +75,47 @@ void GenericItemsContainerView::updateWithItems(
 
 		if (lpItemResourceEx && lpItemResourceEx->pSpr) {
 			SpriteModel specimen = {
-				lpItemResourceEx->pSpr, _appearance.containerAppearance.sizes.itemSize
+				lpItemResourceEx->pSpr, _appearance.sizes.itemSize
 			};
 			return specimen;
-		} else {
+		}
+		else {
 			return SpriteModel::zero;
 		}
 	};
 
 	_itemViews.clear();
-	_matrixContainer->rebuild<CItem>(
+	_matrixContainer->rebuild<ItemWithUnderlay>(
 		items,
-		[=](CItem item, int index, Rect frame) {
-			auto result = new GenericItemView(frame, _appearance.itemUnderlay);
-			
-			const auto q = item.GetQuantity();
-			if (q > 1) {
-				char text[50];
-				wsprintf(text, "%d", q);
-				result->_instanceCountLabel->updateTextTo(std::string(text));
-			}
-			const auto sprite = spriteModelForItem(item);
-			result->_button->updateSpriteModelTo({ sprite, sprite, sprite });
+		[=](ItemWithUnderlay item, int index, Rect frame) {
+		auto result = new GenericItemView(frame, item.itemUnderlaySprite);
 
-			result->_button->onLongPressDetectedLEFT([=]() {
-				if (onLongPressItemLMB) {
-					onLongPressItemLMB(item, sprite, index, result->globalFrame());
-				}
-			});
-
-			_itemViews.push_back(result);
-			return result;
+		const auto q = item.item.GetQuantity();
+		if (q > 1) {
+			char text[50];
+			wsprintf(text, "%d", q);
+			result->_instanceCountLabel->updateTextTo(std::string(text));
 		}
+		const auto sprite = spriteModelForItem(item.item);
+		result->_button->updateSpriteModelTo({ sprite, sprite, sprite });
+
+		result->_button->onLongPressDetectedLEFT([=]() {
+			if (onLongPressItemLMB) {
+				onLongPressItemLMB(item.item, sprite, index, result->globalFrame());
+			}
+		});
+
+		_itemViews.push_back(result);
+		return result;
+	}
 	);
 }
 
 int GenericItemsContainerView::itemIndexForGlobalPoint(CustomUI::Point p) {
 	for (int i = 0; i < _itemViews.size(); i++) {
 		auto view = _itemViews[i];
-		if (view->globalFrame().containsPoint(p)) {
+		const auto viewGlobalFrame = view->globalFrame();
+		if (viewGlobalFrame.containsPoint(p)) {
 			return i;
 		}
 	}

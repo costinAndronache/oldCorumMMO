@@ -5,6 +5,32 @@
 using namespace CustomUI;
 using namespace NewInterface;
 
+ItemInventoryView::Appearance ItemInventoryView::smallInventoryAppearance{
+	{
+		MatrixContainer::VerticalGrowthDirection::downwards,
+		{
+			{ 40, 40},
+			7,
+			5,
+			5
+		}
+	},
+	48
+};
+
+ItemInventoryView::Appearance ItemInventoryView::largeInventoryAppearance {
+	{
+		MatrixContainer::VerticalGrowthDirection::downwards,
+		{
+			{ 40, 80},
+			7,
+			5,
+			5
+		}
+	},
+	24
+};
+
 Size ItemInventoryView::appropriateSizeFor(Sizes sizes, int elementsCountPerPage) {
 	return PagedMatrixContainer::appropriateSizeFor(sizes, elementsCountPerPage);
 }
@@ -24,14 +50,14 @@ void ItemInventoryView::rebuild(const std::vector<CItem>& items, ItemLongPressHa
 	auto split = splitVector<CItem>(items, _appearance.elementsCountPerPage);
 	_pagedContainer->rebuildPages< std::vector<CItem> >(split,
 		[=](Rect frame, std::vector<CItem>& modelsForCurrentPage, int currentPageIndex) {
-		auto mc = new GenericItemsContainerView(frame, _resourceHash, 
-			{
-				_appearance.containerAppearance,
-				NewHUDResources::inventoryItemUnderlaySprite
-			}
+		auto mc = new GenericItemsContainerView(
+			frame, _resourceHash, _appearance.containerAppearance
 		);
 
-		mc->updateWithItems(modelsForCurrentPage, [=](CItem item, CUISpriteModel sprite, int index, Rect globalFrame) {
+		mc->updateWithItems(
+			modelsForCurrentPage, 
+			NewHUDResources::inventoryItemUnderlaySprite,
+			[=](CItem item, CUISpriteModel sprite, int index, Rect globalFrame) {
 			const auto indexInOriginal = _appearance.elementsCountPerPage * currentPageIndex + index;
 			onLongPressItemLMB(item, sprite, index, globalFrame);
 		});
@@ -44,7 +70,7 @@ void ItemInventoryView::rebuild(const std::vector<CItem>& items, ItemLongPressHa
 }
 
 int ItemInventoryView::itemIndexForGlobalPoint(CustomUI::Point p) { // -1 on not found 
-	const auto activePageIndex = _pagedContainer->activePageIndex();
+	const auto activePageIndex = _pagedContainer->activePageIndex() - 1;
 	const auto view = _pages[activePageIndex];
 
 	const auto localIndex = view->itemIndexForGlobalPoint(p);
