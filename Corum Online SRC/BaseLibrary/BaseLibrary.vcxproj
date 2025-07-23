@@ -308,6 +308,7 @@
     <ClInclude Include="datastructure\win32_mutex.h" />
     <ClInclude Include="pattern\FastDelegate.h" />
     <ClInclude Include="Pattern\Singleton.hpp" />
+    <ClInclude Include="RunLoop.h" />
     <ClInclude Include="Thread\Lock.hpp" />
     <ClInclude Include="Thread\Thread.h" />
     <ClInclude Include="Thread\ThreadManager.h" />
@@ -370,6 +371,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="datastructure\template.cpp" />
+    <ClCompile Include="RunLoop.cpp" />
     <ClCompile Include="Thread\ThreadManager.cpp" />
     <ClCompile Include="Timer.cpp" />
     <ClCompile Include="Utility\Script\Delimiter.cpp" />

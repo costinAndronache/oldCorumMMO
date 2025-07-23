@@ -1859,6 +1859,8 @@ struct DSTC_GUILDUSER_FLAG : public DUNGEON_PACKET_HEADER
 
 struct	DSTC_ITEM_MOVE : public DUNGEON_PACKET_HEADER
 {
+	const static BYTE ERROR_CODE_NO_ERROR = 0xff;
+
 	BYTE	bSrc;
 	BYTE	bDest;	
 	BYTE	bSrcIndex;
@@ -1884,7 +1886,7 @@ struct	DSTC_ITEM_MOVE : public DUNGEON_PACKET_HEADER
 		bSectionNum = 0;
 		dwMoney		= 0;
 		memset(&Item,0,sizeof(CItem));
-		bErrorCode	= 0xff;
+		bErrorCode	= ERROR_CODE_NO_ERROR;
 		bQuantity	= 0;
 	}
 

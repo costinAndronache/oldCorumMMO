@@ -52,7 +52,7 @@ static void buildUnderlays() {
 	put(EQUIP_TYPE_LGLOVE, underlaySprites.gloveLeft);
 	put(EQUIP_TYPE_RGLOVE, underlaySprites.gloveRight);
 	put(EQUIP_TYPE_ARMOR, underlaySprites.armor);
-	put(EQUIP_TYPE_AMULE3, underlaySprites.necklace);
+	put(EQUIP_TYPE_AMULE2, underlaySprites.necklace);
 	put(EQUIP_TYPE_BAG, underlaySprites.bag);
 	put(EQUIP_TYPE_BELT, underlaySprites.belt);
 	put(EQUIP_TYPE_BOOTS, underlaySprites.boot);

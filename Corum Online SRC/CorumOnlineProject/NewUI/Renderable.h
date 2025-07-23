@@ -20,7 +20,7 @@ namespace CustomUI {
 
 		void toggleHiddenState() { _isHidden = !_isHidden; }
 
-		bool swallowsMouse(Point mouse);
+		virtual bool swallowsMouse(Point mouse);
 		bool swallowsKeyboard();
 
 		Rect globalFrame() const;
@@ -72,9 +72,10 @@ namespace CustomUI {
 		void deconstructChildrenWhere(std::function<bool(Renderable*)> eligibleToDeconstruct);
 
 		int _zIndexOffsetForce;
+		std::vector<Renderable*> _childRenderables;
+
 	private:
 		bool _isHidden;
-		std::vector<Renderable*> _childRenderables;
 		void updateMouseState(MouseState newState);
 		SpriteModel _backgroundSprite;
 	};

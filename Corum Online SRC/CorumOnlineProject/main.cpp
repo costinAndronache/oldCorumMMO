@@ -150,6 +150,7 @@ lb_Process:
 		delete msg;
 
 		WorkQueue::mainThreadQueue()->processCurrentWorkItems();
+		RunLoop::mainRunLoop()->step(g_dwCurTick);
 	}
 
 	return 0L;

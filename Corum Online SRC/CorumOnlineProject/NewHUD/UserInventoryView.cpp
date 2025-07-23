@@ -77,6 +77,7 @@ NewItemsWindow::NewItemsWindow(CustomUI::Point originInParent, CItemResourceHash
 
 	_groupedInventoryView->updateBackground(NewHUDResources::inventoryItemUnderlays.inventoryBackground);
 
+	_groupedInventoryView->setActiveTab(GroupedItemInventoryView::Tab::smallItems);
 	updateBackground(NewHUDResources::genericBackgroundSprite);
 }
 

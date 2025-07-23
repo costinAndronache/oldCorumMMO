@@ -68,6 +68,9 @@ namespace NewInterface {
 			UserInventoryManager* toInventory,
 			CustomUI::Rect dragNDropEndFrame
 		);
+
+		void dropOnTileFromBelt(BeltManager* belt);
+		void dropOnTileFromUserInventory(UserInventoryManager* inventory);
 	};
 }
 

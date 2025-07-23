@@ -23,6 +23,8 @@ namespace CustomUI {
 			registerChildRenderable<Renderable>([=]() { return  newAvatar;});
 		}
 
+		bool isCurrentlyTracking() { return _mouseAvatar != nullptr; }
+
 	protected:
 		void onMouseMove(Point mouseGlobalOrigin) override {
 			if (_mouseAvatar) {

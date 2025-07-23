@@ -25,6 +25,23 @@ static CTDS_ITEM_MOVE movePacket(
 	return packet;
 }
 
+static CTDS_ITEM_MOVE dropToTilePacket(ITEM_NATIVE from, int fromIndex, int quantity) {
+	CTDS_ITEM_MOVE packet;
+
+	packet.bSrc = from;
+	packet.bDest = ITEM_NATIVE_TILE;
+	packet.bSrcIndex = fromIndex;
+	packet.bDestIndex = 0xff;
+
+	packet.bSectionNum = 1;
+	packet.bQuantity = quantity;
+	packet.dwUnitID = 0;
+	packet.dwMoney = 0;
+	packet.wPlayerShopItemID = 0;
+
+	return packet;
+}
+
 DragNDropManager::DragNDropManager(
 	CMainUser* mainUser, 
 	SharedNetwork* network, 
@@ -49,8 +66,8 @@ void DragNDropManager::setupRoutesFromBelt(
 	UserInventoryManager* toUserItemsInventory
 ) {
 	const auto toReceivers = std::vector<DragNDropReceiver*>{ fromBelt, toUserItemsInventory };
-	auto onCancel = [=]() -> void {
-		fromBelt->resetIndexOnCurrentDragNDropItem();
+	auto onNoRouteMatched = [=]() -> void {
+		dropOnTileFromBelt(fromBelt);
 	};
 
 	_dragNDropSystem->registerRoute(
@@ -74,9 +91,9 @@ void DragNDropManager::setupRoutesFromBelt(
 
 		}
 
-		onCancel();
+		onNoRouteMatched();
 	},
-		onCancel
+		onNoRouteMatched
 	);
 }
 
@@ -86,8 +103,8 @@ void DragNDropManager::setupRoutesFromUserInventory(
 	EquipItemsManager* toEquipItems
 ) {
 	const auto toReceivers = std::vector<DragNDropReceiver*>{ fromUserItemsInventory, toBelt, toEquipItems };
-	auto onCancel = [=]() -> void {
-		fromUserItemsInventory->resetIndexOnCurrentDragNDropItem();
+	auto onNoRouteMatched = [=]() -> void {
+		dropOnTileFromUserInventory(fromUserItemsInventory);
 	};
 
 	_dragNDropSystem->registerRoute(
@@ -113,9 +130,9 @@ void DragNDropManager::setupRoutesFromUserInventory(
 
 		}
 
-		onCancel();
+		onNoRouteMatched();
 	},
-		onCancel
+		onNoRouteMatched
 	);
 
 }
@@ -125,14 +142,14 @@ void DragNDropManager::setupRoutesFromEquipInventory(
 	UserInventoryManager* toInventory
 ) {
 	const auto toReceivers = std::vector<DragNDropReceiver*>{ toInventory };
-	auto onCancel = [=]() -> void {
+	auto onNoRouteMatched = [=]() -> void {
 		fromEquipItems->resetIndexOnCurrentDragNDropItem();
 	};
 
 	_dragNDropSystem->registerRoute(
 		fromEquipItems,
 		toReceivers,
-	[=](Rect frameOnEnd, std::set<unsigned int> indexesOfReceivers) {
+		[=](Rect frameOnEnd, std::set<unsigned int> indexesOfReceivers) {
 		for (auto index : indexesOfReceivers) {
 			const auto r = toReceivers[index];
 			if (r == toInventory) {
@@ -141,9 +158,9 @@ void DragNDropManager::setupRoutesFromEquipInventory(
 			}
 		}
 
-		onCancel();
+		onNoRouteMatched();
 	},
-	onCancel
+		onNoRouteMatched
 	);
 
 }
@@ -159,6 +176,12 @@ void DragNDropManager::swapBeltItems(BeltManager* belt, Rect dragNDropEndFrame) 
 
 	const auto item = _mainUser->beltItemAtIndex(fromIndex);
 	auto packet = movePacket(ITEM_NATIVE_BELT, fromIndex, ITEM_NATIVE_BELT, toIndex, item.GetQuantity());
+
+	_network->onNextItemMove([=](DSTC_ITEM_MOVE incomingPacket) {
+		if (incomingPacket.bErrorCode != DSTC_ITEM_MOVE::ERROR_CODE_NO_ERROR) {
+			belt->resetIndexOnCurrentDragNDropItem();
+		}
+	});
 	_network->send(packet);
 }
 
@@ -180,6 +203,12 @@ void DragNDropManager::moveFromBeltToSmallItemsInventory(
 		ITEM_NATIVE_INV_SMALL, toIndex.index, 
 		item.GetQuantity()
 	);
+
+	_network->onNextItemMove([=](DSTC_ITEM_MOVE incomingPacket) {
+		if (incomingPacket.bErrorCode != DSTC_ITEM_MOVE::ERROR_CODE_NO_ERROR) {
+			belt->resetIndexOnCurrentDragNDropItem();
+		}
+	});
 	_network->send(packet);
 }
 
@@ -213,6 +242,11 @@ void DragNDropManager::swapUserInventoryITems(
 		}
 	}();
 
+	_network->onNextItemMove([=](DSTC_ITEM_MOVE incomingPacket) {
+		if (incomingPacket.bErrorCode != DSTC_ITEM_MOVE::ERROR_CODE_NO_ERROR) {
+			inv->resetIndexOnCurrentDragNDropItem();
+		}
+	});
 	_network->send(packet);
 }
 
@@ -236,6 +270,12 @@ void DragNDropManager::moveFromUserInventoryToBelt(
 		ITEM_NATIVE_BELT, toIndex,
 		item.GetQuantity()
 	);
+
+	_network->onNextItemMove([=](DSTC_ITEM_MOVE incomingPacket) {
+		if (incomingPacket.bErrorCode != DSTC_ITEM_MOVE::ERROR_CODE_NO_ERROR) {
+			inv->resetIndexOnCurrentDragNDropItem();
+		}
+	});
 	_network->send(packet);
 }
 
@@ -261,6 +301,11 @@ void DragNDropManager::moveFromUserInventoryToEquip(
 		item.GetQuantity()
 	);
 
+	_network->onNextItemMove([=](DSTC_ITEM_MOVE incomingPacket) {
+		if (incomingPacket.bErrorCode != DSTC_ITEM_MOVE::ERROR_CODE_NO_ERROR) {
+			inv->resetIndexOnCurrentDragNDropItem();
+		}
+	});
 	_network->send(packet);
 }
 
@@ -284,6 +329,44 @@ void DragNDropManager::moveFromEquipToItemInventory(
 		ITEM_NATIVE_EQUIP, fromIndex,
 		ITEM_NATIVE_INV_LARGE, toIndex.index,
 		item.GetQuantity()
+	);
+
+	_network->send(packet);
+}
+
+void DragNDropManager::dropOnTileFromBelt(BeltManager* belt) {
+	const auto fromIndex = belt->indexOnCurrentDragNDropItem();
+	if (!(fromIndex >= 0)) { return;  }
+	const auto item = _mainUser->beltItemAtIndex(fromIndex);
+
+	auto packet = dropToTilePacket(
+		ITEM_NATIVE_BELT, fromIndex, item.GetQuantity()
+	);
+
+	_network->send(packet);
+}
+
+void DragNDropManager::dropOnTileFromUserInventory(UserInventoryManager* inventory) {
+	const auto fromIndex = inventory->indexOnCurrentDragNDropItem();
+	if (!(fromIndex.index >= 0)) { return; }
+	
+	typedef struct { ITEM_NATIVE source; CItem item; } Data;
+
+	auto data = [=]() -> Data {
+		switch (fromIndex.tab) {
+		case GroupedItemInventoryView::Tab::smallItems:
+			return {
+				ITEM_NATIVE_INV_SMALL, _mainUser->m_pInv_Small[fromIndex.index]
+			};
+		case GroupedItemInventoryView::Tab::largeItems:
+			return {
+				ITEM_NATIVE_INV_LARGE, _mainUser->m_pInv_Large[fromIndex.index]
+			};
+		}
+	}();
+
+	auto packet = dropToTilePacket(
+		data.source, fromIndex.index, data.item.GetQuantity()
 	);
 
 	_network->send(packet);

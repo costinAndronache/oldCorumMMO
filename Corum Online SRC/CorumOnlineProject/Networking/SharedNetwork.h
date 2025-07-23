@@ -10,8 +10,9 @@ public:
 	static SharedNetwork* sharedInstance();
 
 	void send(CTDS_ITEM_MOVE);
-
+	void process(DSTC_ITEM_MOVE packet);
+	void onNextItemMove(PacketIncomingEventHandler<DSTC_ITEM_MOVE> handler);
 private:
-	
+	PacketIncomingEventHandler<DSTC_ITEM_MOVE> _incomingItemMoveHandler;
 };
 

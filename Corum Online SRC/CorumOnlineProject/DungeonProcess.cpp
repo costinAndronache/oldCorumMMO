@@ -2037,6 +2037,10 @@ BOOL OnLButtonDownInterfaceDungeon()
 		return TRUE; 
 	}
 
+	if (_newInterface->swallowsMouse(g_Mouse.MousePos)) {
+		return TRUE;
+	}
+
 	CInterface*			pInterface		= CInterface::GetInstance();
 
 	if( g_pThisDungeon->IsStadium() && g_pMainPlayer->m_dwGuildWarFlag == G_W_F_OBSERVER )
@@ -2108,6 +2112,10 @@ void OnLButtonDownDungeon(WPARAM wParam, LPARAM lParam)
 	g_pMainPlayer->m_i64PickupItem	= 0;
 
 	_newInterface->handleMouseDown(g_Mouse.MousePos, CustomUI::Renderable::MouseButton::left);
+
+	if (_newInterface->swallowsMouse(g_Mouse.MousePos)) {
+		return; 
+	}
 
 	if( GetAsyncKeyState(VK_SHIFT) & 0x800000 && g_bLshift )	
 	{
@@ -2222,6 +2230,8 @@ lb_move:
 void OnLButtonUpDungeon(WPARAM wParam, LPARAM lParam)
 {
 	_newInterface->handleMouseUp(g_Mouse.MousePos, CustomUI::Renderable::MouseButton::left);
+
+	if (_newInterface->swallowsMouse(g_Mouse.MousePos)) { return; }
 
 	ItemPickupFilteringSystem::sharedInstance()->handleMouseUp();
 	if (ItemPickupFilteringSystem::sharedInstance()->swallowsMouse()) { 
@@ -2352,9 +2362,14 @@ void OnLButtonUpDungeon(WPARAM wParam, LPARAM lParam)
 	}
 }
 
-
 void OnRButtonDownDungeon(WPARAM wParam, LPARAM lParam)
 {	
+	_newInterface->handleMouseDown(g_Mouse.MousePos, CustomUI::Renderable::MouseButton::right);
+
+	if (_newInterface->swallowsMouse(g_Mouse.MousePos)) { 
+		return; 
+	}
+
 	if( g_pThisDungeon->IsStadium() && g_pMainPlayer->m_dwGuildWarFlag == G_W_F_OBSERVER )
 		return;
 
@@ -3506,6 +3521,10 @@ void OnTimerEventDungeon(DWORD dwTimerIndex)
 void MouseEventDungeon()
 {
 	if (ItemPickupFilteringSystem::sharedInstance()->swallowsMouse()) {
+		return;
+	}
+
+	if (_newInterface->swallowsMouse(g_Mouse.MousePos)) {
 		return;
 	}
 

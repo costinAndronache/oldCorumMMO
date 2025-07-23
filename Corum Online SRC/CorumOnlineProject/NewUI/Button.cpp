@@ -12,13 +12,13 @@ Button::Sprites Button::Sprites::allZero{
 Button::Button(Sprites sprites, Rect frameInParent): _sprites(sprites) {
 	_frameInParent = frameInParent;
 	_label = NULL;
-	_longPressTimerLEFT = new Timer(WorkQueue::mainThreadQueue());
+	_longPressTimerLEFT = std::make_shared<Timer>(RunLoop::mainRunLoop());
 
 }
 
 Button::Button(Sprites sprites, LabelModel labelModel, Rect frameInParent): _sprites(sprites) {
 	_frameInParent = frameInParent;
-	_longPressTimerLEFT = new Timer(WorkQueue::mainThreadQueue());
+	_longPressTimerLEFT = std::make_shared<Timer>(RunLoop::mainRunLoop());
 
 	Rect labelFrame{ {0, 0}, SingleLineLabel::fittedSize(strlen(labelModel.text)) };
 	labelFrame = labelFrame.centeredWith(bounds());
@@ -37,7 +37,7 @@ void Button::onMouseStateChange(MouseState newState, MouseState oldState) {
 	if (newState == MouseState::leftButtonPressedInside) {
 		if(_onPressLEFT) { _onPressLEFT(); }
 		if (_onLongPressDetectedLEFT) {
-			_longPressTimerLEFT->launchAfter(500, false, [=]() {
+			_longPressTimerLEFT->launchAfter(300, false, [=]() {
 				if (_currentMouseState == MouseState::leftButtonPressedInside) {
 					_onLongPressDetectedLEFT();
 				}

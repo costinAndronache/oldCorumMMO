@@ -13,3 +13,13 @@ SharedNetwork* SharedNetwork::sharedInstance() {
 void SharedNetwork::send(CTDS_ITEM_MOVE itemMove) {
 	g_pNet->SendMsg((char*)&itemMove, itemMove.GetPacketSize(), SERVER_INDEX_ZONE);
 }
+
+void SharedNetwork::process(DSTC_ITEM_MOVE packet) {
+	if (_incomingItemMoveHandler) {
+		_incomingItemMoveHandler(packet);
+		_incomingItemMoveHandler = nullptr;
+	}
+}
+void SharedNetwork::onNextItemMove(PacketIncomingEventHandler<DSTC_ITEM_MOVE> handler) {
+	_incomingItemMoveHandler = handler;
+}

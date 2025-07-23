@@ -93,9 +93,6 @@ Interface::Interface(CustomUI::Size screenSize,
 
 	//
 
-
-	const auto inventorySize = GroupedItemInventoryView::preferredSize();
-
 	_newItemsWindow = registerChildRenderable<NewItemsWindow>([=]() {
 		return new NewItemsWindow({ 200, 200 }, resourceHash);
 	});
@@ -229,6 +226,17 @@ void Interface::updatedLevel(CMainUser* mainUser, DWORD oldValue, DWORD newValue
 }
 
 ///
+bool Interface::swallowsMouse(CustomUI::Point mouse) {
+	if (_mouseTracking->isCurrentlyTracking()) { return true; }
+
+	for (auto child : _childRenderables) {
+		if (child->swallowsMouse(mouse) && child != _mouseTracking) {
+			return true;
+		}
+	}
+	return false;
+}
+
 void Interface::renderWithRenderer(I4DyuchiGXRenderer* renderer, int zIndex) {
 	Renderable::renderWithRenderer(renderer, zIndex);
 

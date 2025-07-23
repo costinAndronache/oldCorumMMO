@@ -52,7 +52,7 @@ namespace CustomUI {
 		EventHandler _onPressRIGHT, _onReleaseRIGHT;
 		EventHandler _onLongPressDetectedLEFT;
 		Sprites _sprites;
-		Timer* _longPressTimerLEFT;
+		std::shared_ptr<Timer> _longPressTimerLEFT;
 	};
 
 }

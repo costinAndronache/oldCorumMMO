@@ -298,7 +298,7 @@ CMainUser::CMainUser() {
 	
 	m_bMoveType					= UNIT_STATUS_WALKING;
 	m_bInEventDungeon			= FALSE;
-	continousSkillCastSPUpdateTimer = new Timer(WorkQueue::mainThreadQueue());
+	continousSkillCastSPUpdateTimer = new Timer(RunLoop::mainRunLoop());
 }
 
 CMainUser::~CMainUser()
@@ -358,12 +358,15 @@ DWORD CMainUser::GetItemTotalSize(ITEM_NATIVE eItemNative) const
 void CMainUser::RemoveItem(ITEM_NATIVE eItemNative, BYTE bySlotIndex)
 {
 	m_pItemNativeManager->RemoveItem(BYTE(eItemNative), bySlotIndex);
+
+	notifyForInventoryUpdates();
 }
 
 
 void CMainUser::ConvertItem(ITEM_NATIVE eItemNative, BYTE bySlotIndex)
 {
 	m_pItemNativeManager->ConvertItem(m_pItemNativeManager->GetItem(BYTE(eItemNative), bySlotIndex));
+	notifyForInventoryUpdates();
 }
 
 
@@ -376,10 +379,7 @@ const CItem* CMainUser::GetItem(ITEM_NATIVE eItemNative, BYTE bySlotIndex) const
 void CMainUser::SetItem(ITEM_NATIVE eItemNative, BYTE bySlotIndex, const CItem* pItem)
 {
 	m_pItemNativeManager->SetItem(BYTE(eItemNative), bySlotIndex, pItem);
-
-	listenersUpdate(_updateListeners, [=](CMainUserUpdateInterestedSharedRef ref) {
-		ref->updatedItemInventory(this);
-	});
+	notifyForInventoryUpdates();
 }
 
 

@@ -19,6 +19,7 @@ namespace NewInterface {
 				  const LP_SKILL_LIST_MANAGER skillListManager,
 				  CItemResourceHash* resourceHash);
 		void renderWithRenderer(I4DyuchiGXRenderer* renderer, int zIndex) override;
+		bool swallowsMouse(CustomUI::Point mouse) override;
 	public:
 		void updatedCurrentHP(CMainUser*, DWORD oldValue, DWORD newValue) override;
 		void updatedCurrentSP(CMainUser*, DWORD oldValue, DWORD newValue) override;

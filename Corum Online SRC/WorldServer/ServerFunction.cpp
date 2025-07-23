@@ -1924,7 +1924,7 @@ void QueryAllServer()
 		DUNGEON_DATA_EX* pDungeon = g_pDungeonTable->AllocNewDungeon( (WORD)rs[i].m_dwID );
 		memcpy((DUNGEON_DATA*)pDungeon, &rs[i], sizeof(DUNGEON_DATA));
 		
-		if (pDungeon->m_dwID == 3004 || pDungeon->m_dwID == 3002) {
+		if (pDungeon->m_dwID >= 3001 || pDungeon->m_dwID <= 3014) {
 			rs[i].m_dwPort = 16204;
 		}
 
