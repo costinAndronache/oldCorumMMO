@@ -4095,7 +4095,8 @@
       <BasicRuntimeChecks Condition="'$(Configuration)|$(Platform)'=='dev|Win32'">EnableFastChecks</BasicRuntimeChecks>
       <BrowseInformation Condition="'$(Configuration)|$(Platform)'=='dev|Win32'">true</BrowseInformation>
     </ClCompile>
-    <ClCompile Include="Networking\SharedNetwork.cpp" />
+    <ClCompile Include="NewHelpers\ItemUsageManager.cpp" />
+    <ClCompile Include="NewHelpers\SharedNetwork.cpp" />
     <ClCompile Include="NewHUD\UserInventoryView.cpp" />
     <ClCompile Include="NewHUD\ViewManager\BeltManager.cpp" />
     <ClCompile Include="NewHUD\ViewManager\DragNDropManager.cpp" />
@@ -6698,7 +6699,8 @@
     <ClInclude Include="ItemMoveManager.h" />
     <ClInclude Include="ItemNative.h" />
     <ClInclude Include="ItemNativeManager.h" />
-    <ClInclude Include="Networking\SharedNetwork.h" />
+    <ClInclude Include="NewHelpers\ItemUsageManager.h" />
+    <ClInclude Include="NewHelpers\SharedNetwork.h" />
     <ClInclude Include="NewHUD\UserInventoryView.h" />
     <ClInclude Include="NewHUD\ViewManager\BeltManager.h" />
     <ClInclude Include="NewHUD\ViewManager\DragNDropManager.h" />

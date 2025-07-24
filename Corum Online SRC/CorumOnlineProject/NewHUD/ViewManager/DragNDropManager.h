@@ -4,7 +4,7 @@
 #include "UserInventoryManager.h"
 #include "EquipItemsManager.h"
 
-#include "../../Networking/SharedNetwork.h"
+#include "../../NewHelpers/SharedNetwork.h"
 
 
 namespace NewInterface {

@@ -7,6 +7,7 @@ namespace NewInterface {
 	class GroupedItemInventoryView: public CustomUI::Renderable {
 	public:
 		using ItemLongPressHandlerLMB = ItemInventoryView::ItemLongPressHandlerLMB;
+		using HandlerItemClickRIGHT = ItemInventoryView::HandlerItemClickRIGHT;
 		enum class Tab { smallItems, largeItems};
 
 		static CustomUI::Size preferredSize();
@@ -16,7 +17,8 @@ namespace NewInterface {
 			const std::vector<CItem>& smallItems,
 			const std::vector<CItem>& largeItems,
 			ItemLongPressHandlerLMB onSmallItemLongPressLMB,
-			ItemLongPressHandlerLMB onLargeItemLongPressLMB
+			ItemLongPressHandlerLMB onLargeItemLongPressLMB,
+			HandlerItemClickRIGHT onRightClickSmallItem
 		);
 
 		void setActiveTab(Tab tab);

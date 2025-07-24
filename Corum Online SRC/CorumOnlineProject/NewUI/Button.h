@@ -38,10 +38,11 @@ namespace CustomUI {
 
 		void onClickStartLEFT(EventHandler event) { _onPressLEFT = event;  }
 		void onClickEndLEFT(EventHandler event) { _onReleaseLEFT = event; }
-
 		void onLongPressDetectedLEFT(EventHandler event) {
 			_onLongPressDetectedLEFT = event;
 		}
+
+		void onClickEndRIGHT(EventHandler handler) { _onReleaseRIGHT = handler; }
 
 	protected:
 		void onMouseStateChange(MouseState newState, MouseState oldState) override;

@@ -26,10 +26,6 @@
 #define GM_COMMAND_RECALL		5
 #define GM_COMMAND_USERPOTAL	6
 
-#define ZODIAC_USE_TYPE_INVENTORY	0
-#define ZODIAC_USE_TYPE_BELT		1
-
-
 //////////////////////////////////////////////////////////////////////////
 // enums
 enum DUNGEON_LAYER_PROPERTY

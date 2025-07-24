@@ -2527,6 +2527,15 @@ void OnRButtonDownDungeon(WPARAM wParam, LPARAM lParam)
 
 void OnRButtonUpDungeon(WPARAM wParam, LPARAM lParam)
 {
+	_newInterface->handleMouseUp(
+		g_Mouse.MousePos,
+		CustomUI::Renderable::MouseButton::right
+	);
+
+	if (_newInterface->swallowsMouse(g_Mouse.MousePos)) {
+		return;
+	}
+
 	CInterface* pInterface	= CInterface::GetInstance();
 	
 	pInterface->SetUp(FALSE);
@@ -2570,17 +2579,17 @@ void OnRButtonUpDungeon(WPARAM wParam, LPARAM lParam)
 						return;
 
 					if(!bChk)
-						bChk = ItemUsedSupplies(&g_pMainPlayer->m_pInv_Small[byZipCode], byZipCode, ZODIAC_USE_TYPE_INVENTORY);
+						bChk = ItemUsedSupplies(&g_pMainPlayer->m_pInv_Small[byZipCode], byZipCode, ITEM_USE_FROM_SMALL_INVENTORY);
 					if(!bChk)
-						bChk = ItemUsedConsumable(&g_pMainPlayer->m_pInv_Small[byZipCode], byZipCode, ZODIAC_USE_TYPE_INVENTORY);
+						bChk = ItemUsedConsumable(&g_pMainPlayer->m_pInv_Small[byZipCode], byZipCode, ITEM_USE_FROM_SMALL_INVENTORY);
 					if(!bChk)
-						bChk = ItemUsedSpecial(&g_pMainPlayer->m_pInv_Small[byZipCode], byZipCode, ZODIAC_USE_TYPE_INVENTORY);
+						bChk = ItemUsedSpecial(&g_pMainPlayer->m_pInv_Small[byZipCode], byZipCode, ITEM_USE_FROM_SMALL_INVENTORY);
 					if(!bChk)
-						bChk = ItemUsedMagicArray(&g_pMainPlayer->m_pInv_Small[byZipCode], byZipCode, ZODIAC_USE_TYPE_INVENTORY);
+						bChk = ItemUsedMagicArray(&g_pMainPlayer->m_pInv_Small[byZipCode], byZipCode, ITEM_USE_FROM_SMALL_INVENTORY);
 					if(!bChk)
-						bChk = ItemUsedZodiac(&g_pMainPlayer->m_pInv_Small[byZipCode], byZipCode, ZODIAC_USE_TYPE_INVENTORY);
+						bChk = ItemUsedZodiac(&g_pMainPlayer->m_pInv_Small[byZipCode], byZipCode, ITEM_USE_FROM_SMALL_INVENTORY);
 					if(!bChk)
-						bChk = ItemUsedZodianInsurance(&g_pMainPlayer->m_pInv_Small[byZipCode], byZipCode, ZODIAC_USE_TYPE_INVENTORY);
+						bChk = ItemUsedZodianInsurance(&g_pMainPlayer->m_pInv_Small[byZipCode], byZipCode, ITEM_USE_FROM_SMALL_INVENTORY);
 
 					bInter = TRUE;
 				}

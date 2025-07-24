@@ -876,13 +876,16 @@
     <ClCompile Include="NewHUD\ViewManager\DragNDropManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Networking\SharedNetwork.cpp">
+    <ClCompile Include="NewHelpers\SharedNetwork.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="NewHUD\ViewManager\EquipItemsManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="NewHUD\UserInventoryView.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="NewHelpers\ItemUsageManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -1664,13 +1667,16 @@
     <ClInclude Include="NewHUD\ViewManager\DragNDropManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Networking\SharedNetwork.h">
+    <ClInclude Include="NewHelpers\SharedNetwork.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="NewHUD\ViewManager\EquipItemsManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="NewHUD\UserInventoryView.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="NewHelpers\ItemUsageManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

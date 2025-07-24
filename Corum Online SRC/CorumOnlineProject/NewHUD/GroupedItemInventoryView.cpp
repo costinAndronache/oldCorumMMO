@@ -78,9 +78,10 @@ void GroupedItemInventoryView::rebuildWith(
 	const std::vector<CItem>& smallItems,
 	const std::vector<CItem>& largeItems,
 	ItemLongPressHandlerLMB onSmallItemLongPressLMB,
-	ItemLongPressHandlerLMB onLargeItemLongPressLMB
+	ItemLongPressHandlerLMB onLargeItemLongPressLMB,
+	HandlerItemClickRIGHT onRightClickSmallItem
 ) {
-	_smallItemsInventory->rebuild(smallItems, onSmallItemLongPressLMB);
+	_smallItemsInventory->rebuild(smallItems, onSmallItemLongPressLMB, onRightClickSmallItem);
 	_largeItemsInventory->rebuild(largeItems, onLargeItemLongPressLMB);
 }
 

@@ -109,7 +109,10 @@ Interface::Interface(CustomUI::Size screenSize,
 	_mouseTracking->updateZIndexOffsetForce(1000);
 
 	_dragNDropSystem = new DragNDropSystem(this);
-	_userInventoryManager = new UserInventoryManager(_newItemsWindow->groupedInventoryView());
+	_userInventoryManager = new UserInventoryManager(
+		_newItemsWindow->groupedInventoryView(),
+		ItemUsageManager::sharedInstance()
+	);
 	_equipItemsManager = new EquipItemsManager(_newItemsWindow->equipItemsView());
 
 	_dragNDropManager = new DragNDropManager(

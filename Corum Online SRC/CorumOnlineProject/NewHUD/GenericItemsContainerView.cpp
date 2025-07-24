@@ -48,7 +48,8 @@ GenericItemsContainerView::GenericItemsContainerView(CustomUI::Rect frameInParen
 void GenericItemsContainerView::updateWithItems(
 	const std::vector<CItem>& items,
 	CustomUI::SpriteModel itemUnderlaySprite,
-	ItemLongPressHandlerLMB onLongPressItemLMB
+	HandlerItemLongClickLEFT onLongPressItemLMB,
+	HandlerItemClickRIGHT onRightClick
 ) {
 	std::vector<ItemWithUnderlay> withUnderlay(items.size());
 	std::transform(
@@ -58,12 +59,13 @@ void GenericItemsContainerView::updateWithItems(
 		[=](CItem item) -> ItemWithUnderlay { return { item, itemUnderlaySprite }; }
 	);
 
-	updateWithItems(withUnderlay, onLongPressItemLMB);
+	updateWithItems(withUnderlay, onLongPressItemLMB, onRightClick);
 }
 
 void GenericItemsContainerView::updateWithItems(
 	const std::vector<ItemWithUnderlay>& items,
-	ItemLongPressHandlerLMB onLongPressItemLMB
+	HandlerItemLongClickLEFT onLongPressItemLMB,
+	HandlerItemClickRIGHT onRightClick
 ) {
 	const auto spriteModelForItem = [=](CItem item) -> SpriteModel {
 		if (item.m_wItemID == 0) {
@@ -99,12 +101,18 @@ void GenericItemsContainerView::updateWithItems(
 		const auto sprite = spriteModelForItem(item.item);
 		result->_button->updateSpriteModelTo({ sprite, sprite, sprite });
 
-		result->_button->onLongPressDetectedLEFT([=]() {
-			if (onLongPressItemLMB) {
+		if (onLongPressItemLMB) {
+			result->_button->onLongPressDetectedLEFT([=]() {
 				onLongPressItemLMB(item.item, sprite, index, result->globalFrame());
-			}
-		});
+			});
+		}
 
+		if (onRightClick) {
+			result->_button->onClickEndRIGHT([=]() {
+				onRightClick(item.item, index);
+			});
+		}
+		
 		_itemViews.push_back(result);
 		return result;
 	}

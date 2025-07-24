@@ -1,13 +1,14 @@
 #pragma once
 #include "../GroupedItemInventoryView.h"
 #include "../../NewUI/DragNDropSystem.h"
+#include "../../NewHelpers/ItemUsageManager.h"
 
 namespace NewInterface {
 	class UserInventoryManager:
 		public CustomUI::DragNDropReceiver,
 		public CustomUI::DragNDropSender {
 	public:
-		UserInventoryManager(GroupedItemInventoryView* userInventoryView);
+		UserInventoryManager(GroupedItemInventoryView* userInventoryView, ItemUsageManager* itemUsageManager);
 
 		void rebuildInventoryViewWith(
 			const std::vector<CItem>& smallItems,
@@ -27,6 +28,7 @@ namespace NewInterface {
 		GroupedItemInventoryView::IndexResult _indexOnCurrentDragNDropItem;
 		GroupedItemInventoryView* _managedInventoryView;
 		std::function<void(CustomUI::Renderable*, CustomUI::Rect globalFrameStart)> _handler;
+		ItemUsageManager* _itemUsageManager;
 	};
 }
 

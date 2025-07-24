@@ -44,7 +44,11 @@ ItemInventoryView::ItemInventoryView(CustomUI::Rect frameInParent, CItemResource
 	});
 }
 
-void ItemInventoryView::rebuild(const std::vector<CItem>& items, ItemLongPressHandlerLMB onLongPressItemLMB) {
+void ItemInventoryView::rebuild(
+	const std::vector<CItem>& items, 
+	ItemLongPressHandlerLMB onLongPressItemLMB,
+	HandlerItemClickRIGHT onRightClickItem) 
+{
 	_pages.clear();
 
 	auto split = splitVector<CItem>(items, _appearance.elementsCountPerPage);
@@ -57,9 +61,17 @@ void ItemInventoryView::rebuild(const std::vector<CItem>& items, ItemLongPressHa
 		mc->updateWithItems(
 			modelsForCurrentPage, 
 			NewHUDResources::inventoryItemUnderlaySprite,
-			[=](CItem item, CUISpriteModel sprite, int index, Rect globalFrame) {
+		[=](CItem item, CUISpriteModel sprite, int index, Rect globalFrame) {
 			const auto indexInOriginal = _appearance.elementsCountPerPage * currentPageIndex + index;
-			onLongPressItemLMB(item, sprite, index, globalFrame);
+			if (onLongPressItemLMB) {
+				onLongPressItemLMB(item, sprite, index, globalFrame);
+			}
+		},
+		[=](CItem item, int index) {
+			const auto indexInOriginal = _appearance.elementsCountPerPage * currentPageIndex + index;
+			if (onRightClickItem) {
+				onRightClickItem(item, indexInOriginal);
+			}
 		});
 
 		_pages.push_back(mc);

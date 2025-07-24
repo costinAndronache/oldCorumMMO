@@ -3,8 +3,11 @@
 using namespace NewInterface;
 using namespace CustomUI;
 
-UserInventoryManager::UserInventoryManager(GroupedItemInventoryView* userInventoryView) {
+UserInventoryManager::UserInventoryManager(
+	GroupedItemInventoryView* userInventoryView, ItemUsageManager* itemUsageManager
+) {
 	_managedInventoryView = userInventoryView;
+	_itemUsageManager = itemUsageManager;
 	_indexOnCurrentDragNDropItem = { -1, GroupedItemInventoryView::Tab::smallItems };
 }
 
@@ -20,7 +23,7 @@ void UserInventoryManager::rebuildInventoryViewWith(
 	const std::vector<CItem>& largeItems
 ) {
 
-	GroupedItemInventoryView::ItemLongPressHandlerLMB handler = [=](CItem item, CUISpriteModel sprite, int index, Rect globalFrame) {
+	GroupedItemInventoryView::ItemLongPressHandlerLMB longClickHandlerLEFT = [=](CItem item, CUISpriteModel sprite, int index, Rect globalFrame) {
 		if (item.m_wItemID == 0) { return; }
 		if (!_handler) { return; }
 
@@ -31,7 +34,17 @@ void UserInventoryManager::rebuildInventoryViewWith(
 		_handler(sprr, globalFrame);
 	};
 
-	_managedInventoryView->rebuildWith(smallItems, largeItems, handler, handler);
+	GroupedItemInventoryView::HandlerItemClickRIGHT rightClickHandler = [=](CItem item, int index) {
+		auto result = _itemUsageManager->tryUseSmallInventoryItem(item, index);
+	};
+
+	_managedInventoryView->rebuildWith(
+		smallItems, 
+		largeItems, 
+		longClickHandlerLEFT,
+		longClickHandlerLEFT,
+		rightClickHandler
+	);
 }
 
 GroupedItemInventoryView::IndexResult UserInventoryManager::itemIndexForGlobalPoint(CustomUI::Point point) {

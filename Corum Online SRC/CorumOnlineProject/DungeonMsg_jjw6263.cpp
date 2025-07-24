@@ -20,7 +20,7 @@
 #include "ItemMoveManager.h"
 #include "QuantityWnd.h"
 #include "ItemNative.h"
-#include "Networking/SharedNetwork.h"
+#include "NewHelpers/SharedNetwork.h"
 
 void InitPacketProcDungeonJJW6263()
 {
