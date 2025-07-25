@@ -12,12 +12,15 @@ SpriteModel NewHUDResources::leftInterfaceHUDSprite;
 SpriteModel NewHUDResources::rightInterfaceHUDSprite;
 SpriteModel NewHUDResources::inventoryItemUnderlaySprite;
 SpriteModel NewHUDResources::genericBackgroundSprite;
+CUISpriteModel NewHUDResources::borderedBlackBackgroundSolid;
+CUISpriteModel NewHUDResources::borderedBlackBackgroundFaded;
 
 CustomUI::Button::Sprites
-NewHUDResources::trade, NewHUDResources::shop, NewHUDResources::item, 
-NewHUDResources::stats, NewHUDResources::skill, NewHUDResources::group, 
-NewHUDResources::lair, NewHUDResources::chat, NewHUDResources::match, 
-NewHUDResources::rest, NewHUDResources::pk, NewHUDResources::system;
+NewHUDResources::trade, NewHUDResources::shop, NewHUDResources::item,
+NewHUDResources::stats, NewHUDResources::skill, NewHUDResources::group,
+NewHUDResources::lair, NewHUDResources::chat, NewHUDResources::match,
+NewHUDResources::rest, NewHUDResources::pk, NewHUDResources::system,
+NewHUDResources::plus, NewHUDResources::up, NewHUDResources::xClose;
 
 Size NewHUDResources::newHUDSize{ 400, 121 };
 
@@ -28,6 +31,18 @@ NewHUDResources::InventoryItemUnderlays NewHUDResources::inventoryItemUnderlays;
 static void initNewHUDElements(I4DyuchiGXRenderer* r) {
 	char* rf = GetFile("newHUDElements.tif", DATA_TYPE_UI);
 	const auto smallerSize = Size{ 51, 20 };
+
+	NewHUDResources::plus = {
+		from(r, rf, {{63, 523}, {9, 9}}),
+		from(r, rf, {{63, 523}, {9, 9}}),
+		from(r, rf, {{73, 523}, {9, 8}})
+	};
+
+	NewHUDResources::up = {
+		from(r, rf, {{0, 565}, {32, 16}}),
+		from(r, rf, {{0, 565}, {32, 16}}),
+		from(r, rf, {{33, 565}, {32, 16}})
+	};
 
 	NewHUDResources::trade = {
 		from(r, rf, { { 0, 0}, smallerSize}),
@@ -96,6 +111,15 @@ static void initNewHUDElements(I4DyuchiGXRenderer* r) {
 		from(r, rf, { { 0, 180}, {32, 32} }),
 		from(r, rf, { { 34, 180}, {32, 32} }),
 		from(r, rf, { { 68, 180}, {32, 32} }),
+	};
+
+	NewHUDResources::borderedBlackBackgroundSolid = from(r, rf, { {0, 523}, {62, 20} });
+	NewHUDResources::borderedBlackBackgroundFaded = from(r, rf, { {0, 544}, {166, 20} });
+
+	NewHUDResources::xClose = {
+		{ SpriteCollection::xClose, SpriteCollection::xCloseSize},
+		{ SpriteCollection::xClose, SpriteCollection::xCloseSize},
+		{ SpriteCollection::xClosePressed, SpriteCollection::xCloseSize}
 	};
 }
 

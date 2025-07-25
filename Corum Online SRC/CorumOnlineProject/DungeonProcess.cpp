@@ -1914,58 +1914,6 @@ void OnKeyDownDungeon(WPARAM wParam, LPARAM lParam)
 			break;
 		#endif		
 	}
-
-	if(bHanMode==TRUE)
-	{	
-		if(!g_pGVDungeon->bChatMode)
-		{
-			char szKey[0xff] = {0,};
-			GetKeyNameText(lParam, szKey, 10);
-
-			if(__strcmp(szKey, "R")==0)
-			{		
-				if(g_bKeyChkUp==FALSE)
-				{
-					if( g_pMainPlayer ) 
-					{
-						if( g_pMainPlayer->m_bMoveType == UNIT_STATUS_WALKING )
-							g_pMainPlayer->m_bMoveType = UNIT_STATUS_RUNNING;
-						else
-							g_pMainPlayer->m_bMoveType = UNIT_STATUS_WALKING;
-						
-						if( g_pMainPlayer->GetStatus()==UNIT_STATUS_WALKING ||
-							g_pMainPlayer->GetStatus()==UNIT_STATUS_RUNNING)
-						{
-							if( g_pMainPlayer->GetStatus()==UNIT_STATUS_WALKING )
-							{
-								g_pMainPlayer->SetMotion( MOTION_TYPE_WALK, 0, ACTION_LOOP );
-								g_pMainPlayer->SetStatus(g_pMainPlayer->m_bMoveType);
-								SendMovePacket();
-							}
-							else if( g_pMainPlayer->GetStatus()==UNIT_STATUS_RUNNING)
-							{
-								g_pMainPlayer->SetMotion( MOTION_TYPE_RUN, 0, ACTION_LOOP );								
-								SendMovePacket();
-							}
-
-							g_pMainPlayer->SetStatus(g_pMainPlayer->m_bMoveType);
-						}
-					}
-
-					g_bKeyChkUp = TRUE;
-				}					
-			}
-
-			for(int i = 0; i < 25; i++)
-			{
-				if(__strcmp(szKey, g_pszKeyArray[i])==0)
-				{
-					ConvertKeyDown(szKey);
-					break;
-				}
-			}
-		}		
-	}	
 }
 
 

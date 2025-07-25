@@ -14,7 +14,7 @@ GenericItemView::GenericItemView(Rect frameInParent, CustomUI::SpriteModel under
 	}
 
 	_button = registerChildRenderable<Button>([=]() {
-		return new Button(Button::Sprites::allZero, bounds().withInsets(insets));
+		return new Button(Button::Sprites::allZero, bounds());
 	});
 
 	const auto labelFittedHeight = SingleLineLabel::fittedSize(1).height;

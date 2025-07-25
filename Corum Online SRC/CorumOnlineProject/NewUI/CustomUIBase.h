@@ -102,13 +102,13 @@ namespace CustomUI {
 			return result;
 		}
 
-		Rect withHeight(int height) const {
+		Rect withHeight(float height) const {
 			Rect result = *this;
 			result.size.height = height;
 			return result;
 		}
 
-		Rect withHeightOffset(int offset) const {
+		Rect withHeightOffset(float offset) const {
 			Rect result = *this;
 			result.size.height += offset;
 			return result;
@@ -119,9 +119,15 @@ namespace CustomUI {
 			return result;
 		}
 
-		Rect withWidth(int width) const {
+		Rect withWidth(float width) const {
 			Rect result = *this;
 			result.size.width = width;
+			return result;
+		}
+
+		Rect withWidthOffset(float offset) const {
+			Rect result = *this;
+			result.size.width += offset;
 			return result;
 		}
 

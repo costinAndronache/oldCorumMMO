@@ -1,12 +1,31 @@
 #include "NewInterface.h"
 #include "../ItemWnd.h"
 #include "../SkillWnd.h"
+#include "../CharWnd.h"
 #include "../DungeonInterfaceLayout.h"
 #include "HUDSpriteCollection.h"
 #include "ViewManager/DragNDropManager.h"
 
 using namespace CustomUI;
 using namespace NewInterface;
+
+static void checkOldInterfaces(std::vector<CMenu*> oldInterfaces) {
+	for (auto intf : oldInterfaces) {
+		if (intf->GetActive()) {
+			intf->Render();
+			intf->RenderText();
+		}
+	}
+}
+
+static void renderOldInterfaces(std::vector<CMenu*> oldInterfaces) {
+	for (auto intf : oldInterfaces) {
+		if (intf->GetActive()) {
+			intf->Render();
+			intf->RenderText();
+		}
+	}
+}
 
 Interface::Interface(CustomUI::Size screenSize,
 					 CMainUser* mainUser,
@@ -46,8 +65,8 @@ Interface::Interface(CustomUI::Size screenSize,
 	_leftHUD->updateHPAttributes(mainUser->currentHP(), mainUser->maxHP());
 
 	LeftHUD::EventHandlers handlers;
-	handlers.tradeHandler = []() {
-
+	handlers.statsHandler = [=]() {
+		_statsView->toggleHiddenState();
 	};
 
 	handlers.itemHandler = [=]() {
@@ -127,6 +146,19 @@ Interface::Interface(CustomUI::Size screenSize,
 		_equipItemsManager
 	);
 	updatedItemInventory(mainUser);
+
+	_oldInterfaces = { CSkillWnd::GetInstance(), CCharWnd::GetInstance() };
+
+	auto entriesCount = CharacterStatsManager::entryCount();
+	_statsView = registerChildRenderable<CharacterStatsView>([=]() {
+		return new CharacterStatsView({
+			{ 200, 200}, 
+			{ 300, CharacterStatsView::appropriateSizeForElementsCount(entriesCount)}
+		});
+	});
+
+	_statsManager = new CharacterStatsManager(_statsView, _mainUser);
+	_statsManager->refreshCharacterStats(nullptr);
 }
 
 void Interface::updateLeftHUDWithSelectedLeftRightSkills() {
@@ -193,7 +225,6 @@ void Interface::updatedCurrentHP(CMainUser* mainUser, DWORD oldValue, DWORD newV
 }
 
 
-
 void Interface::updatedMAXHP(CMainUser* mainUser, DWORD oldValue, DWORD newValue) {
 	_leftHUD->updateHPAttributes(mainUser->currentHP(), mainUser->maxHP());
 }
@@ -229,6 +260,22 @@ void Interface::updatedLevel(CMainUser* mainUser, DWORD oldValue, DWORD newValue
 }
 
 ///
+
+void Interface::handleMouseDown(Point mouseGlobalOrigin, MouseButton button) {
+	Renderable::handleMouseDown(mouseGlobalOrigin, button);
+	checkOldInterfaces(_oldInterfaces);
+}
+
+void Interface::handleMouseUp(Point mouseGlobalOrigin, MouseButton button) {
+	Renderable::handleMouseUp(mouseGlobalOrigin, button);
+	checkOldInterfaces(_oldInterfaces);
+}
+
+void Interface::handleMouseMove(Point mouseGlobalOrigin) {
+	Renderable::handleMouseMove(mouseGlobalOrigin);
+	checkOldInterfaces(_oldInterfaces);
+}
+
 bool Interface::swallowsMouse(CustomUI::Point mouse) {
 	if (_mouseTracking->isCurrentlyTracking()) { return true; }
 
@@ -242,18 +289,7 @@ bool Interface::swallowsMouse(CustomUI::Point mouse) {
 
 void Interface::renderWithRenderer(I4DyuchiGXRenderer* renderer, int zIndex) {
 	Renderable::renderWithRenderer(renderer, zIndex);
-
-	CItemWnd* pItemWnd = CItemWnd::GetInstance();
-	if (pItemWnd->GetActive()) {
-		pItemWnd->Render();
-		pItemWnd->RenderText();
-	}
-
-	CSkillWnd* skillWnd = CSkillWnd::GetInstance();
-	if (skillWnd->GetActive()) {
-		skillWnd->Render();
-		skillWnd->RenderText();
-	}
+	renderOldInterfaces(_oldInterfaces);
 }
 
 

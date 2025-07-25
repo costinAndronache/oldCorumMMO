@@ -7,12 +7,13 @@ namespace CustomUI {
 	class SingleLineLabel: public Renderable {
 	public:
 		struct Appearance {
-			Appearance(Color c, IDIFontObject* f = nullptr): color(c), font(f) { }
+			Appearance(Color c, IDIFontObject* f = nullptr, Point offsets = { 0, 0}): color(c), font(f), offsets(offsets)  {}
 			Color color;
 			IDIFontObject* font;
+			Point offsets;
 		};
-		SingleLineLabel(Rect frameInParent, Appearance appearance, std::string& text);
-		SingleLineLabel(Rect frameInParent, Appearance appearance, const char* text);
+		SingleLineLabel(const Rect frameInParent, const Appearance appearance, const std::string& text);
+		SingleLineLabel(const Rect frameInParent, const Appearance appearance, const char* text);
 		void renderWithRenderer(I4DyuchiGXRenderer* renderer, int order) override;
 
 		static Size fittedSize(int charCount) {

@@ -888,6 +888,12 @@
     <ClCompile Include="NewHelpers\ItemUsageManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="NewHUD\CharacterStatsView.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="NewHUD\ViewManager\CharacterStatsManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MouseLib.h">
@@ -1677,6 +1683,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="NewHelpers\ItemUsageManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="NewHUD\CharacterStatsView.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="NewHUD\ViewManager\CharacterStatsManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

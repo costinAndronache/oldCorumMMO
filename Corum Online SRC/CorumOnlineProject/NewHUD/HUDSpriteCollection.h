@@ -15,10 +15,14 @@ struct NewHUDResources {
 	static CUISpriteModel leftInterfaceHUDSprite;
 	static CUISpriteModel rightInterfaceHUDSprite;
 	static CUISpriteModel genericBackgroundSprite;
+	static CUISpriteModel borderedBlackBackgroundSolid;
+	static CUISpriteModel borderedBlackBackgroundFaded;
 
 	static CustomUI::Button::Sprites
 		trade, shop, item, stats, skill,
 		group, lair, chat, match, rest, pk, system;
+
+	static CustomUI::Button::Sprites plus, up, xClose;
 
 	static CUISpriteModel inventoryItemUnderlaySprite;
 

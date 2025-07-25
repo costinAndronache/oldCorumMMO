@@ -7,6 +7,7 @@
 #include "ViewManager/DragNDropManager.h"
 #include "UserInventoryView.h"
 #include "ViewManager/EquipItemsManager.h"
+#include "ViewManager/CharacterStatsManager.h"
 
 namespace NewInterface {
 	class Interface: 
@@ -20,6 +21,9 @@ namespace NewInterface {
 				  CItemResourceHash* resourceHash);
 		void renderWithRenderer(I4DyuchiGXRenderer* renderer, int zIndex) override;
 		bool swallowsMouse(CustomUI::Point mouse) override;
+		void handleMouseDown(CustomUI::Point mouseGlobalOrigin, MouseButton button) override;
+		void handleMouseUp(CustomUI::Point mouseGlobalOrigin, MouseButton button) override;
+		void handleMouseMove(CustomUI::Point mouseGlobalOrigin) override;
 	public:
 		void updatedCurrentHP(CMainUser*, DWORD oldValue, DWORD newValue) override;
 		void updatedCurrentSP(CMainUser*, DWORD oldValue, DWORD newValue) override;
@@ -59,6 +63,10 @@ namespace NewInterface {
 		DragNDropManager* _dragNDropManager;
 		EquipItemsManager* _equipItemsManager;
 
+		CharacterStatsView* _statsView;
+		CharacterStatsManager* _statsManager;
+
+		std::vector<CMenu*> _oldInterfaces;
 		void updateLeftHUDWithSelectedLeftRightSkills();
 	};
 }

@@ -11,7 +11,7 @@ namespace CustomUI {
 
 		virtual void handleMouseDown(Point mouseGlobalOrigin, MouseButton button);
 		virtual void handleMouseUp(Point mouseGlobalOrigin, MouseButton button);
-		void handleMouseMove(Point mouseGlobalOrigin);
+		virtual void handleMouseMove(Point mouseGlobalOrigin);
 		void handleKeyUp(WPARAM wparam, LPARAM lparam);
 		void handleKeyDown(WPARAM wparam, LPARAM lparam);
 

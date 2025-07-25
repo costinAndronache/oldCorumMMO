@@ -4097,8 +4097,10 @@
     </ClCompile>
     <ClCompile Include="NewHelpers\ItemUsageManager.cpp" />
     <ClCompile Include="NewHelpers\SharedNetwork.cpp" />
+    <ClCompile Include="NewHUD\CharacterStatsView.cpp" />
     <ClCompile Include="NewHUD\UserInventoryView.cpp" />
     <ClCompile Include="NewHUD\ViewManager\BeltManager.cpp" />
+    <ClCompile Include="NewHUD\ViewManager\CharacterStatsManager.cpp" />
     <ClCompile Include="NewHUD\ViewManager\DragNDropManager.cpp" />
     <ClCompile Include="NewHUD\ViewManager\EquipItemsManager.cpp" />
     <ClCompile Include="NewHUD\ViewManager\UserInventoryManager.cpp" />
@@ -6701,8 +6703,10 @@
     <ClInclude Include="ItemNativeManager.h" />
     <ClInclude Include="NewHelpers\ItemUsageManager.h" />
     <ClInclude Include="NewHelpers\SharedNetwork.h" />
+    <ClInclude Include="NewHUD\CharacterStatsView.h" />
     <ClInclude Include="NewHUD\UserInventoryView.h" />
     <ClInclude Include="NewHUD\ViewManager\BeltManager.h" />
+    <ClInclude Include="NewHUD\ViewManager\CharacterStatsManager.h" />
     <ClInclude Include="NewHUD\ViewManager\DragNDropManager.h" />
     <ClInclude Include="NewHUD\ViewManager\EquipItemsManager.h" />
     <ClInclude Include="NewHUD\ViewManager\UserInventoryManager.h" />
