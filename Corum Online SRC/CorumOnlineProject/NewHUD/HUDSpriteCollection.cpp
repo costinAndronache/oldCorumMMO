@@ -20,7 +20,8 @@ NewHUDResources::trade, NewHUDResources::shop, NewHUDResources::item,
 NewHUDResources::stats, NewHUDResources::skill, NewHUDResources::group,
 NewHUDResources::lair, NewHUDResources::chat, NewHUDResources::match,
 NewHUDResources::rest, NewHUDResources::pk, NewHUDResources::system,
-NewHUDResources::plus, NewHUDResources::up, NewHUDResources::xClose;
+NewHUDResources::plus, NewHUDResources::up, NewHUDResources::xClose,
+NewHUDResources::next, NewHUDResources::previous;
 
 Size NewHUDResources::newHUDSize{ 400, 121 };
 
@@ -120,6 +121,18 @@ static void initNewHUDElements(I4DyuchiGXRenderer* r) {
 		{ SpriteCollection::xClose, SpriteCollection::xCloseSize},
 		{ SpriteCollection::xClose, SpriteCollection::xCloseSize},
 		{ SpriteCollection::xClosePressed, SpriteCollection::xCloseSize}
+	};
+
+	NewHUDResources::next = {
+		from(r, rf, {{85, 524}, {16, 17}}),
+		from(r, rf, {{85, 524}, {16, 17}}),
+		from(r, rf, {{102, 524}, {16, 17}})
+	};
+
+	NewHUDResources::previous = {
+		from(r, rf, {{119, 524}, {16, 17}}),
+		from(r, rf, {{119, 524}, {16, 17}}),
+		from(r, rf, {{136, 524}, {16, 17}})
 	};
 }
 

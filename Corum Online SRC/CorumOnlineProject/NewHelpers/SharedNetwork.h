@@ -12,6 +12,8 @@ public:
 	void send(CTDS_ITEM_MOVE);
 	void process(DSTC_ITEM_MOVE packet);
 	void onNextItemMove(PacketIncomingEventHandler<DSTC_ITEM_MOVE> handler);
+
+	void send(CTDS_CHAR_LEVELUP);
 private:
 	PacketIncomingEventHandler<DSTC_ITEM_MOVE> _incomingItemMoveHandler;
 };

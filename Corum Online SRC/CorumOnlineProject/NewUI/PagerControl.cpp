@@ -1,34 +1,14 @@
 #include "PagerControl.h"
+#include "../NewHUD/HUDSpriteCollection.h"
 
 using namespace CustomUI;
 
 PagerControl::Appearance PagerControl::Appearance::defaultAppearance() {
-	SpriteModel scrollDownModel = {
-		SpriteCollection::downArrow,
-		SpriteCollection::downArrowSize
-	};
-
-	SpriteModel scrollDownPressedModel = {
-		SpriteCollection::downArrowPressed,
-		SpriteCollection::downArrowSize
-	};
-
-	// LEFT
-	SpriteModel previousPage = scrollDownModel;
-
-	SpriteModel previousPagePressed = scrollDownPressedModel;
-
-	// RIGHT
-	SpriteModel nextPage = scrollDownModel;
-
-	SpriteModel nextPagePressed = scrollDownPressedModel;
-
-	auto appearance = SingleLineLabel::Appearance(Color::white);
-
-	return Appearance{
-		{previousPage, previousPage, previousPagePressed},
-		{nextPage, nextPage, nextPagePressed},
-		appearance
+	auto labelAppearance = SingleLineLabel::Appearance(Color::white);
+	return Appearance {
+		NewHUDResources::previous,
+		NewHUDResources::next,
+		labelAppearance
 	};
 }
 

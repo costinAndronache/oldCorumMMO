@@ -153,12 +153,21 @@ Interface::Interface(CustomUI::Size screenSize,
 	_statsView = registerChildRenderable<CharacterStatsView>([=]() {
 		return new CharacterStatsView({
 			{ 200, 200}, 
-			{ 300, CharacterStatsView::appropriateSizeForElementsCountOnPage(entriesCount)}
+			{ 400, CharacterStatsView::appropriateSizeForElementsCountOnPage(entriesCount)}
 		});
 	});
 
-	_statsManager = new CharacterStatsManager(_statsView, _mainUser);
-	_statsManager->refreshCharacterStats(nullptr);
+	_statsView->onClose([=]() {
+		_statsView->setHidden(true);
+	});
+	_statsView->setHidden(true);
+
+	auto statusPointManager = new StatusPointManager(SharedNetwork::sharedInstance());
+	_statsManager = new CharacterStatsManager(
+		_statsView, statusPointManager, _mainUser
+	);
+
+	_statsManager->refreshCharacterStats();
 }
 
 void Interface::updateLeftHUDWithSelectedLeftRightSkills() {
@@ -218,33 +227,38 @@ void Interface::updatedItemInventory(CMainUser* user) {
 
 void Interface::updatedLeftRightSkillSelection(CMainUser*) {
 	updateLeftHUDWithSelectedLeftRightSkills();
+	_statsManager->refreshCharacterStats();
 }
 
 void Interface::updatedCurrentHP(CMainUser* mainUser, DWORD oldValue, DWORD newValue) {
 	_leftHUD->updateHPAttributes(mainUser->currentHP(), mainUser->maxHP());
+	_statsManager->refreshCharacterStats();
 }
 
 
 void Interface::updatedMAXHP(CMainUser* mainUser, DWORD oldValue, DWORD newValue) {
 	_leftHUD->updateHPAttributes(mainUser->currentHP(), mainUser->maxHP());
+	_statsManager->refreshCharacterStats();
 }
 
 void Interface::updatedCurrentSP(CMainUser* mainUser, DWORD oldValue, DWORD newValue) {
 	_leftHUD->updateSPAttributes(mainUser->currentSP(), mainUser->maxSP());
 	_rightHUD->updateSPScale(mainUser->percentageMP());
+	_statsManager->refreshCharacterStats();
 }
 
 void Interface::updatedMAXSP(CMainUser* mainUser, DWORD oldValue, DWORD newValue) {
 	_leftHUD->updateSPAttributes(mainUser->currentSP(), mainUser->maxSP());
-
+	_statsManager->refreshCharacterStats();
 }
 
 void Interface::updatedEXP(CMainUser* mainUser, DWORD oldValue, DWORD newValue) {
 	_leftHUD->updateEXPScale(mainUser->percentageEXP());
+	_statsManager->refreshCharacterStats();
 }
 
 void Interface::updatedStatPoints(CMainUser*, DWORD oldValue, DWORD newValue) {
-
+	_statsManager->refreshCharacterStats();
 }
 
 void Interface::updatedSkillPoints(CMainUser*, DWORD oldValue, DWORD newValue) {
@@ -253,10 +267,12 @@ void Interface::updatedSkillPoints(CMainUser*, DWORD oldValue, DWORD newValue) {
 
 void Interface::updatedCoolPoints(CMainUser* mainUser, float oldValue, float newValue) {
 	_rightHUD->updateCooldownScale(mainUser->percentageCoolPoints());
+	_statsManager->refreshCharacterStats();
 }
 
 void Interface::updatedLevel(CMainUser* mainUser, DWORD oldValue, DWORD newValue) {
 	_leftHUD->updateEXPScale(mainUser->percentageEXP());
+	_statsManager->refreshCharacterStats();
 }
 
 ///

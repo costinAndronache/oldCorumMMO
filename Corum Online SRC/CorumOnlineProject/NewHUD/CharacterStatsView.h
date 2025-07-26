@@ -28,7 +28,8 @@ namespace NewInterface {
 		CharacterStatsView(CustomUI::Rect frameInParent);
 
 		void rebuildWithModels(
-			const std::vector< std::vector<Model> >& pageModels
+			const std::vector< std::vector<Model> >& pageModels,
+			int availableStatPoints
 		);
 		void onClose(std::function<void()> handler);
 

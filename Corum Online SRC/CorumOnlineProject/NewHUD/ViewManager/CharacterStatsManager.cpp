@@ -25,9 +25,20 @@ int CharacterStatsManager::maxEntryCount() {
 	return *std::max_element(std::begin(sizes), std::end(sizes));
 }
 
-CharacterStatsManager::CharacterStatsManager(CharacterStatsView* managedView, CMainUser* mainUser) {
+CharacterStatsManager::CharacterStatsManager(
+	CharacterStatsView* managedView,
+	StatusPointManager* statusPointManager,
+	CMainUser* mainUser
+) {
+	_statusPointManager = statusPointManager;
 	_managedView = managedView;
 	_mainUser = mainUser;
+}
+
+void CharacterStatsManager::refreshCharacterStats() {
+	refreshCharacterStats([=](IncreasedAttribute attr) {
+		_statusPointManager->increasePlayerStatusPoint(attr);
+	});
 }
 
 void CharacterStatsManager::refreshCharacterStats(AttributeIncreaseHandler handler) {
@@ -52,7 +63,7 @@ void CharacterStatsManager::refreshCharacterStats(AttributeIncreaseHandler handl
 		}
 	);
 
-	_managedView->rebuildWithModels(models);
+	_managedView->rebuildWithModels(models, _mainUser->currentStatPoints());
 }
 
 const std::vector<std::vector<ModelCreate>>& entriesGenerators() {
@@ -69,7 +80,7 @@ const std::vector<std::vector<ModelCreate>>& entriesGenerators() {
 	) -> ModelCreate {
 		return [=](CMainUser* user, IncreaseFn inc) {
 			char value[50] = { 0 };
-			wsprintf(value, "%d", propertyValueExtract(user));
+			sprintf(value, "%d", propertyValueExtract(user));
 
 			return Model{
 				std::string(propertyName),
@@ -87,7 +98,27 @@ const std::vector<std::vector<ModelCreate>>& entriesGenerators() {
 	) -> ModelCreate {
 		return [=](CMainUser* user, IncreaseFn inc) {
 			char value[50] = { 0 };
-			wsprintf(value, "%d", propertyValueExtract(user));
+			sprintf(value, "%d", propertyValueExtract(user));
+
+			return Model{
+				std::string(propertyName),
+				std::string(value),
+				nullptr
+			};
+		};
+	};
+
+	auto makeFloatCurrentMaxPropertyModelCreate = [=](
+		std::function<float(CMainUser*)> propertyValueExtractCurrent,
+		std::function<float(CMainUser*)> propertyValueExtractMax,
+		const char* propertyName
+		) -> ModelCreate {
+		return [=](CMainUser* user, IncreaseFn inc) {
+			char value[50] = { 0 };
+			sprintf(value, "%.2f / %.2f",
+				propertyValueExtractCurrent(user),
+				propertyValueExtractMax(user)
+			);
 
 			return Model{
 				std::string(propertyName),
@@ -103,7 +134,7 @@ const std::vector<std::vector<ModelCreate>>& entriesGenerators() {
 		) -> ModelCreate {
 		return [=](CMainUser* user, IncreaseFn inc) {
 			char value[50] = { 0 };
-			wsprintf(value, "%s", propertyValueExtract(user));
+			sprintf(value, "%s", propertyValueExtract(user));
 
 			return Model{
 				std::string(propertyName),
@@ -120,7 +151,7 @@ const std::vector<std::vector<ModelCreate>>& entriesGenerators() {
 		) -> ModelCreate {
 		return [=](CMainUser* user, IncreaseFn inc) {
 			char value[50] = { 0 };
-			wsprintf(value, "%d / %d", 
+			sprintf(value, "%d / %d", 
 				propertyValueExtractCurrent(user),
 				propertyValueExtractMax(user)
 			);
@@ -172,7 +203,7 @@ const std::vector<std::vector<ModelCreate>>& entriesGenerators() {
 		makeIntegerCurrentMaxPropertyModelCreate(
 			[=](CMainUser* user) { return user->currentEXP();},
 			[=](CMainUser* user) {
-				return GetExpTableOfLevel(OBJECT_TYPE_PLAYER, user->currentLevel() + 1);
+				return GetCumulatedExpByLevel(OBJECT_TYPE_PLAYER, user->currentLevel() + 1);
 			},
 			"EXP:"
 		)
@@ -182,31 +213,31 @@ const std::vector<std::vector<ModelCreate>>& entriesGenerators() {
 		makeIncreasablePropertyModelCreate(
 			[=](CMainUser* user) { return user->currentEGO(); },
 			"EGO:",
-			Attr::ego
+			Attr::STATUS_POINT_KIND_EGO
 		),
 
 		makeIncreasablePropertyModelCreate(
 			[=](CMainUser* user) { return user->currentDEX(); },
 			"DEX:",
-			Attr::dex
+			Attr::STATUS_POINT_KIND_DEX
 		),
 
 		makeIncreasablePropertyModelCreate(
 			[=](CMainUser* user) { return user->currentSTR(); },
 			"STR:",
-			Attr::str
+			Attr::STATUS_POINT_KIND_STR
 		),
 
 		makeIncreasablePropertyModelCreate(
 			[=](CMainUser* user) { return user->currentINT(); },
 			"INT:",
-			Attr::intt
+			Attr::STATUS_POINT_KIND_INT
 		),
 
 		makeIncreasablePropertyModelCreate(
 			[=](CMainUser* user) { return user->currentVIT(); },
 			"VIT:",
-			Attr::vit
+			Attr::STATUS_POINT_KIND_VIT
 		),
 
 		makeIntegerCurrentMaxPropertyModelCreate(
@@ -221,11 +252,17 @@ const std::vector<std::vector<ModelCreate>>& entriesGenerators() {
 			"SP:"
 		),
 
+		makeFloatCurrentMaxPropertyModelCreate(
+			[=](CMainUser* user) { return user->currentCoolPoints();},
+			[=](CMainUser* user) { return user->maxCoolPoints();},
+			"Cool points:"
+		),
+
 		[=](CMainUser* user, IncreaseFn) -> Model {
 			WORD dmgMin = 0, dmgMax = 0;
 			user->GetAttackDamage_L(dmgMin, dmgMax);
 			char value[50] = { 0 };
-			wsprintf(value, "%d ~~~> %d", dmgMin, dmgMax);
+			sprintf(value, "%d <--> %d", dmgMin, dmgMax);
 			return Model{
 				"L Damage:",
 				value,
@@ -237,7 +274,7 @@ const std::vector<std::vector<ModelCreate>>& entriesGenerators() {
 			WORD dmgMin = 0, dmgMax = 0;
 			user->GetAttackDamage_R(dmgMin, dmgMax);
 			char value[50] = { 0 };
-			wsprintf(value, "%d ~~~> %d", dmgMin, dmgMax);
+			sprintf(value, "%d <--> %d", dmgMin, dmgMax);
 			return Model{
 				"R Damage:",
 				value,

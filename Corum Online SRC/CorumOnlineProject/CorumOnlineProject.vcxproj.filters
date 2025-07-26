@@ -894,6 +894,9 @@
     <ClCompile Include="NewHUD\ViewManager\CharacterStatsManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="NewHelpers\StatusPointManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MouseLib.h">
@@ -1689,6 +1692,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="NewHUD\ViewManager\CharacterStatsManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="NewHelpers\StatusPointManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

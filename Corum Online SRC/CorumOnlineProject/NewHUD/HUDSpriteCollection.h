@@ -22,7 +22,7 @@ struct NewHUDResources {
 		trade, shop, item, stats, skill,
 		group, lair, chat, match, rest, pk, system;
 
-	static CustomUI::Button::Sprites plus, up, xClose;
+	static CustomUI::Button::Sprites plus, up, xClose, next, previous;
 
 	static CUISpriteModel inventoryItemUnderlaySprite;
 

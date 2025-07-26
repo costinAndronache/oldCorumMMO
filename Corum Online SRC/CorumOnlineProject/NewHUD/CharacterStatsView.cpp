@@ -4,7 +4,7 @@
 using namespace CustomUI;
 using namespace NewInterface;
 
-static const int entryHeight = 40;
+static const int entryHeight = 30;
 
 CharacterAttributeView::CharacterAttributeView(CustomUI::Rect frameInParent, Model model) {
 	_frameInParent = frameInParent;
@@ -86,7 +86,8 @@ CharacterStatsView::CharacterStatsView(CustomUI::Rect frameInParent) {
 }
 
 void CharacterStatsView::rebuildWithModels(
-	const std::vector< std::vector<Model> >& pageModels
+	const std::vector< std::vector<Model> >& pageModels,
+	int availableStatPoints
 ) {
 	auto appearance = MatrixContainer::Appearance{
 		MatrixContainer::VerticalGrowthDirection::downwards,
@@ -113,6 +114,15 @@ void CharacterStatsView::rebuildWithModels(
 		}
 	);
 	_container->setActivePage(current);
+
+	char title[50] = { 0 };
+	if (availableStatPoints > 0) {
+		wsprintf(title, "Character (%d)", availableStatPoints);
+	} else {
+		wsprintf(title, "Character");
+	}
+
+	_titleLabel->updateTextTo(std::string(title));
 }
 
 void CharacterStatsView::onClose(std::function<void()> handler) {
