@@ -10,9 +10,11 @@ CharacterAttributeView::CharacterAttributeView(CustomUI::Rect frameInParent, Mod
 	_frameInParent = frameInParent;
 	const auto _bounds = bounds();
 
-	auto appearance = SingleLineLabel::Appearance(CustomUI::Color::white, GetFont(), {5, entryHeight / 3 - 1});
+	auto appearance = SingleLineLabel::Appearance(
+		CustomUI::Color::white, GetFont(), {15, entryHeight / 3 - 1}
+	);
 
-	const auto nameFrame = _bounds.withWidth(100);
+	const auto nameFrame = _bounds.withWidth(130);
 
 	_nameLabel = registerChildRenderable<SingleLineLabel>([=]() {
 		return new SingleLineLabel(nameFrame, appearance, model.name);
@@ -48,8 +50,9 @@ CharacterAttributeView::CharacterAttributeView(CustomUI::Rect frameInParent, Mod
 
 static const int spacing = 3;
 static const int closeButtonHeight = 30;
-float CharacterStatsView::appropriateSizeForElementsCount(int count) {
-	return closeButtonHeight + count * (entryHeight + spacing) - spacing;
+float CharacterStatsView::appropriateSizeForElementsCountOnPage(int count) {
+	const auto pageHeight = count * (entryHeight + spacing) - spacing;
+	return closeButtonHeight + PagedContainer::appropriateHeightFor(pageHeight);
 }
 
 CharacterStatsView::CharacterStatsView(CustomUI::Rect frameInParent) {
@@ -71,30 +74,45 @@ CharacterStatsView::CharacterStatsView(CustomUI::Rect frameInParent) {
 		return new Button(NewHUDResources::xClose, closeBtnFrame);
 	});
 
-	auto appearance = MatrixContainer::Appearance{
-		MatrixContainer::VerticalGrowthDirection::downwards,
-		{
-			{_bounds.size.width, entryHeight},
-			1,
-			0,
-			spacing
-		}
-	};
-	auto containerFrame = _bounds.withOriginOffsetBy({ 0, (int)closeBtnFrame.size.height });
-	_mc = registerChildRenderable<MatrixContainer>([=]() {
-		return new MatrixContainer(containerFrame, appearance);
+	auto containerFrame = _bounds
+		.withOriginOffsetBy({ 0, (int)closeBtnFrame.size.height })
+		.withHeightOffset(-closeBtnFrame.size.height);
+
+	_container = registerChildRenderable<PagedContainer>([=]() {
+		return new PagedContainer(containerFrame);
 	});
 
 	updateBackground(NewHUDResources::genericBackgroundSprite);
 }
 
-void CharacterStatsView::rebuildWithModels(const std::vector<Model>& models) {
-	_mc->rebuild<Model>(
-		models,
-		[=](Model m, int, Rect frame) {
-			return new CharacterAttributeView(frame, m);
+void CharacterStatsView::rebuildWithModels(
+	const std::vector< std::vector<Model> >& pageModels
+) {
+	auto appearance = MatrixContainer::Appearance{
+		MatrixContainer::VerticalGrowthDirection::downwards,
+		{
+			{bounds().size.width, entryHeight},
+			1,
+			0,
+			spacing
+		}
+	};
+
+	auto current = _container->activePageIndex();
+	_container->rebuildPages<std::vector<Model>>(
+		pageModels,
+		[=](Rect frameInParent, std::vector<Model> modelsForPage, int) {
+			auto mc = new MatrixContainer(frameInParent, appearance);
+			mc->rebuild<Model>(
+				modelsForPage,
+				[=](Model model, int, Rect itemFrame) {
+					return new CharacterAttributeView(itemFrame, model);
+				}
+			);
+			return mc;
 		}
 	);
+	_container->setActivePage(current);
 }
 
 void CharacterStatsView::onClose(std::function<void()> handler) {

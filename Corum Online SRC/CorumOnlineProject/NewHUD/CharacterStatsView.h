@@ -2,6 +2,8 @@
 #include "../NewUI/Label.h"
 #include "../NewUI/Button.h"
 #include "../NewUI/MatrixContainer.h"
+#include "../NewUI/PagedContainer.h"
+
 namespace NewInterface {
 
 	class CharacterAttributeView : public CustomUI::Renderable {
@@ -22,16 +24,18 @@ namespace NewInterface {
 	class CharacterStatsView: public CustomUI::Renderable {
 	public:
 		using Model = CharacterAttributeView::Model;
-		static float appropriateSizeForElementsCount(int count);
+		static float appropriateSizeForElementsCountOnPage(int count);
 		CharacterStatsView(CustomUI::Rect frameInParent);
 
-		void rebuildWithModels(const std::vector<Model>& models);
+		void rebuildWithModels(
+			const std::vector< std::vector<Model> >& pageModels
+		);
 		void onClose(std::function<void()> handler);
 
 	private:
 		CustomUI::SingleLineLabel* _titleLabel;
 		CustomUI::Button* _closeButton;
-		CustomUI::MatrixContainer* _mc;
+		CustomUI::PagedContainer* _container;
 	};
 }
 

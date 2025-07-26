@@ -149,11 +149,11 @@ Interface::Interface(CustomUI::Size screenSize,
 
 	_oldInterfaces = { CSkillWnd::GetInstance(), CCharWnd::GetInstance() };
 
-	auto entriesCount = CharacterStatsManager::entryCount();
+	auto entriesCount = CharacterStatsManager::maxEntryCount();
 	_statsView = registerChildRenderable<CharacterStatsView>([=]() {
 		return new CharacterStatsView({
 			{ 200, 200}, 
-			{ 300, CharacterStatsView::appropriateSizeForElementsCount(entriesCount)}
+			{ 300, CharacterStatsView::appropriateSizeForElementsCountOnPage(entriesCount)}
 		});
 	});
 

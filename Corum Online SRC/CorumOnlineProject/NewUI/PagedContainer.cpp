@@ -30,7 +30,12 @@ PagedContainer::PagedContainer(Rect frameInParent) {
 
 void PagedContainer::setActivePage(unsigned int pageIndexOneBased) {
 	for (auto page : _pages) { page->setHidden(true); }
-	if (!(1 <= pageIndexOneBased && pageIndexOneBased <= _pages.size())) { return;  }
+	if (!(1 <= pageIndexOneBased && pageIndexOneBased <= _pages.size())) { 
+		if (_pages.size() > 0) {
+			setActivePage(1);
+		}
+		return;  
+	}
 
 	_pages[pageIndexOneBased - 1]->setHidden(false);
 	_pager->setActivePage(pageIndexOneBased);

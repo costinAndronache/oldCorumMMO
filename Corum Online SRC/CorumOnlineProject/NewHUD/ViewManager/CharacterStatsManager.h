@@ -15,7 +15,7 @@ namespace NewInterface {
 
 		void refreshCharacterStats(AttributeIncreaseHandler handler);
 
-		static int entryCount();
+		static int maxEntryCount();
 	private:
 
 		CharacterStatsView* _managedView;
