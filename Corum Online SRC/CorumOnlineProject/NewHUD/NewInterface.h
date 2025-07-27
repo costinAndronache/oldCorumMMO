@@ -8,6 +8,7 @@
 #include "UserInventoryView.h"
 #include "ViewManager/EquipItemsManager.h"
 #include "ViewManager/CharacterStatsManager.h"
+#include "ViewManager/UserSkillsManager.h"
 
 namespace NewInterface {
 	class Interface: 
@@ -57,16 +58,18 @@ namespace NewInterface {
 		CustomUI::DragNDropSystem* _dragNDropSystem;
 		CustomUI::MouseTrackingSpriteRenderable* _mouseTracking;
 
-		
+		DragNDropManager* _dragNDropManager;
+
 		NewItemsWindow* _newItemsWindow;
 		UserInventoryManager* _userInventoryManager;
-		DragNDropManager* _dragNDropManager;
 		EquipItemsManager* _equipItemsManager;
 
 		CharacterStatsView* _statsView;
 		CharacterStatsManager* _statsManager;
 
-		std::vector<CMenu*> _oldInterfaces;
+		UserSkillsView* _userSkillsView;
+		UserSkillsManager* _userSkillsManager;
+
 		void updateLeftHUDWithSelectedLeftRightSkills();
 	};
 }

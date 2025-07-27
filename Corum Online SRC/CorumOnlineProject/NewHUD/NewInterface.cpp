@@ -27,10 +27,11 @@ static void renderOldInterfaces(std::vector<CMenu*> oldInterfaces) {
 	}
 }
 
+#pragma region Constructor
 Interface::Interface(CustomUI::Size screenSize,
-					 CMainUser* mainUser,
-					 const LP_SKILL_LIST_MANAGER skillListManager, 
-					 CItemResourceHash* resourceHash) {
+	CMainUser* mainUser,
+	const LP_SKILL_LIST_MANAGER skillListManager,
+	CItemResourceHash* resourceHash) {
 	_mainUser = mainUser;
 	_skillListManager = skillListManager;
 	_frameInParent = CustomUI::Rect{ {0, 0}, screenSize };
@@ -38,7 +39,7 @@ Interface::Interface(CustomUI::Size screenSize,
 	const auto hudSize = NewHUDResources::newHUDSize;
 	const auto hudOriginY = (long)(screenSize.height - hudSize.height);
 	_leftHUD = registerChildRenderable<LeftHUD>([&]() {
-		return new LeftHUD(Point{ 0,  hudOriginY});
+		return new LeftHUD(Point{ 0,  hudOriginY });
 	});
 
 	const auto rightHudOriginX = (long)(screenSize.width - hudSize.width);
@@ -73,9 +74,8 @@ Interface::Interface(CustomUI::Size screenSize,
 		_newItemsWindow->toggleHiddenState();
 	};
 
-	handlers.skillsHandler = []() {
-		CSkillWnd* skillWnd = CSkillWnd::GetInstance();
-		skillWnd->SetActive(!skillWnd->GetActive());
+	handlers.skillsHandler = [=]() {
+		_userSkillsView->toggleHiddenState();
 	};
 
 	handlers.leftSkillHandler = [=]() {
@@ -88,12 +88,12 @@ Interface::Interface(CustomUI::Size screenSize,
 
 	_leftHUD->setEventHandlers(handlers);
 	updateLeftHUDWithSelectedLeftRightSkills();
-	
+
 	_skillSelectionView->updateCurrentSkills({
 		mainUser->skillsAvailableOnLeft(),
 		mainUser->skillsAvailableOnRight(),
 		std::vector<BYTE>()
-	});
+		});
 
 	_skillSelectionView->setHandlers({
 		[=](BYTE leftSkillKind) {
@@ -105,10 +105,10 @@ Interface::Interface(CustomUI::Size screenSize,
 			_skillSelectionView->switchToActiveSelection(NewSkillSelectionView::ActiveSkillSelection::none);
 		},
 		[=](BYTE guardianSkillKind) {
-			// not yet
-			_skillSelectionView->switchToActiveSelection(NewSkillSelectionView::ActiveSkillSelection::none);
-		},
-	});
+		// not yet
+		_skillSelectionView->switchToActiveSelection(NewSkillSelectionView::ActiveSkillSelection::none);
+	},
+		});
 
 	//
 
@@ -147,14 +147,12 @@ Interface::Interface(CustomUI::Size screenSize,
 	);
 	updatedItemInventory(mainUser);
 
-	_oldInterfaces = { CSkillWnd::GetInstance(), CCharWnd::GetInstance() };
-
 	auto entriesCount = CharacterStatsManager::maxEntryCount();
 	_statsView = registerChildRenderable<CharacterStatsView>([=]() {
 		return new CharacterStatsView({
-			{ 200, 200}, 
+			{ 200, 200},
 			{ 400, CharacterStatsView::appropriateSizeForElementsCountOnPage(entriesCount)}
-		});
+			});
 	});
 
 	_statsView->onClose([=]() {
@@ -168,8 +166,31 @@ Interface::Interface(CustomUI::Size screenSize,
 	);
 
 	_statsManager->refreshCharacterStats();
+
+	/// test skills
+	auto skillsViewSize = UserSkillsView::appropriateSizeForMaxNumberOfSkillsPerList(UserSkillsManager::maxNumOfSkillsInList());
+
+	_userSkillsView = registerChildRenderable<UserSkillsView>([=]() {
+		return new UserSkillsView({ {200, 200}, skillsViewSize });
+	});
+
+	_userSkillsView->onClose([=]() {
+		_userSkillsView->setHidden(true);
+	});
+
+	_userSkillsManager = new UserSkillsManager(
+		_userSkillsView, 
+		_mainUser, 
+		SharedNetwork::sharedInstance(), 
+		&g_sSkillListManager,
+		g_pEffectLayer
+	);
+
+	_userSkillsManager->refreshUserSkillsView();
 }
 
+
+#pragma region Internals
 void Interface::updateLeftHUDWithSelectedLeftRightSkills() {
 	int nOrder = __ORDER_USERINTERFACE_START_ + 4;
 
@@ -199,8 +220,10 @@ void Interface::updatedSkills(CMainUser* mainUser) {
 	_skillSelectionView->updateCurrentSkills({
 		mainUser->skillsAvailableOnLeft(),
 		mainUser->skillsAvailableOnRight(),
-		std::vector<BYTE>()
+		std::vector<BYTE>() // guardian skills handled later
 	});
+
+	_userSkillsManager->refreshUserSkillsView();
 }
 
 void Interface::updatedItemInventory(CMainUser* user) {
@@ -262,7 +285,7 @@ void Interface::updatedStatPoints(CMainUser*, DWORD oldValue, DWORD newValue) {
 }
 
 void Interface::updatedSkillPoints(CMainUser*, DWORD oldValue, DWORD newValue) {
-
+	_userSkillsManager->refreshUserSkillsView();
 }
 
 void Interface::updatedCoolPoints(CMainUser* mainUser, float oldValue, float newValue) {
@@ -279,17 +302,14 @@ void Interface::updatedLevel(CMainUser* mainUser, DWORD oldValue, DWORD newValue
 
 void Interface::handleMouseDown(Point mouseGlobalOrigin, MouseButton button) {
 	Renderable::handleMouseDown(mouseGlobalOrigin, button);
-	checkOldInterfaces(_oldInterfaces);
 }
 
 void Interface::handleMouseUp(Point mouseGlobalOrigin, MouseButton button) {
 	Renderable::handleMouseUp(mouseGlobalOrigin, button);
-	checkOldInterfaces(_oldInterfaces);
 }
 
 void Interface::handleMouseMove(Point mouseGlobalOrigin) {
 	Renderable::handleMouseMove(mouseGlobalOrigin);
-	checkOldInterfaces(_oldInterfaces);
 }
 
 bool Interface::swallowsMouse(CustomUI::Point mouse) {
@@ -305,7 +325,6 @@ bool Interface::swallowsMouse(CustomUI::Point mouse) {
 
 void Interface::renderWithRenderer(I4DyuchiGXRenderer* renderer, int zIndex) {
 	Renderable::renderWithRenderer(renderer, zIndex);
-	renderOldInterfaces(_oldInterfaces);
 }
 
 

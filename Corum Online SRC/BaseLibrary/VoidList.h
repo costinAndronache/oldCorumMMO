@@ -132,6 +132,17 @@ public:
 
     typedef std::function<bool(void*)> FilterConditionFn;
     std::vector<void*> filterWith(FilterConditionFn filterFn);
+
+    template<typename T>
+    std::vector<T> transform(std::function<T(void*, unsigned int)> transformFn) {
+        std::vector<T> result; 
+        iterateWith([&](void* value, unsigned int index) {
+            T item = transformFn(value, index);
+            result.push_back(item);
+        });
+
+        return result;
+    }
 };
 
 

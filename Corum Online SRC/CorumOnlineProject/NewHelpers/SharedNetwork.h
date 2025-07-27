@@ -14,6 +14,7 @@ public:
 	void onNextItemMove(PacketIncomingEventHandler<DSTC_ITEM_MOVE> handler);
 
 	void send(CTDS_CHAR_LEVELUP);
+	void send(CTDS_SKILL_LEVELUP);
 private:
 	PacketIncomingEventHandler<DSTC_ITEM_MOVE> _incomingItemMoveHandler;
 };

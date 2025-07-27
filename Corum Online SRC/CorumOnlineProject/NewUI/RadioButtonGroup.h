@@ -13,6 +13,8 @@ namespace CustomUI {
 
 		struct LabeledButtonModel: public ButtonModel {
 			Button::LabelModel labelModel;
+
+			static LabeledButtonModel defaultWith(std::string text);
 		};
 
 		RadioButtonGroup(std::vector<ButtonModel>, Rect frameInParent, unsigned int activeButtonIndex);

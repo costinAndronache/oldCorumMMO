@@ -58,6 +58,7 @@
 
 #include "NewHUD/HUDSpriteCollection.h"
 #include "NewUI/SpriteCollection.h"
+#include "DungeonInterfaceLayout.h"
 
 extern int windowWidth();
 extern int windowHeight();
@@ -356,6 +357,41 @@ void	(*OnChar[MAX_UPDATE_GAME])			(BYTE bCh);
 // Global Variable : 여기다가 이쁘게 선언할것 딴데다가 하지마셈 
 //==================================================================================
 
+
+void CreateSkillResourceSpr(COnlyList* pSkillList) {
+	int nPosX = 0;
+	int nPosY = 0;
+
+	POSITION_ pos = pSkillList->GetHeadPosition();
+
+	while (pos)
+	{
+		LP_SKILL_RESOURCE_EX lpSkillResourceNode = (LP_SKILL_RESOURCE_EX)pSkillList->GetAndAdvance(pos);
+
+		nPosX = lpSkillResourceNode->wIndex % 8 * SKILL_ICON_SIZE;
+		nPosY = lpSkillResourceNode->wIndex / 8 * SKILL_ICON_SIZE;
+		lpSkillResourceNode->pSpr = g_pRenderer->CreateSpriteObject(GetFile(lpSkillResourceNode->szFileName, DATA_TYPE_UI)
+			, nPosX, nPosY, SKILL_ICON_SIZE, SKILL_ICON_SIZE, 0);
+
+		nPosX = lpSkillResourceNode->wIndexAct % 8 * SKILL_ICON_SIZE;
+		nPosY = lpSkillResourceNode->wIndexAct / 8 * SKILL_ICON_SIZE;
+
+		lpSkillResourceNode->pSprAct = g_pRenderer->CreateSpriteObject(GetFile(lpSkillResourceNode->szFileNameAct, DATA_TYPE_UI)
+			, nPosX, nPosY, SKILL_ICON_SIZE, SKILL_ICON_SIZE, 0);
+
+		g_sSkillListManager.spriteForSkillKind[lpSkillResourceNode->wId] = lpSkillResourceNode->pSpr;
+	}
+}
+
+void populateSkillListManagerWithSprites() {
+	for (int i = SkillType::fighter; i <= SkillType::sorceress; i++)
+	{
+		CreateSkillResourceSpr(g_sSkillListManager.pSkillList[i].pActiveList);		// Active Skill
+		CreateSkillResourceSpr(g_sSkillListManager.pSkillList[i].pMasteryList);		// Mastery Skill
+		CreateSkillResourceSpr(g_sSkillListManager.pSkillList[i].pPassiveList);		// Passive Skill
+		CreateSkillResourceSpr(g_sSkillListManager.pSkillList[i].pOverDriveList);
+	}
+}
 
 DWORD GetEncryptedVersion(char* szSource)
 {
@@ -854,10 +890,10 @@ BOOL InitGame()
 
 	CustomUI::SpriteCollection::initialize(g_pRenderer);
 	NewHUDResources::initialize(g_pRenderer);
+	populateSkillListManagerWithSprites();
 
 	return TRUE;
 }
-
 
 void ReleaseGame()
 {

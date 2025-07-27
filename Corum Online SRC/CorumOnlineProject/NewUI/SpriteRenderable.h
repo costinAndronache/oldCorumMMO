@@ -13,6 +13,7 @@ namespace CustomUI {
 			_sprite.renderWith(renderer, globalFrame(), zIndex);
 		}
 
+		void updateSprite(SpriteModel newSprite) { _sprite = newSprite; }
 
 	private:
 		SpriteModel _sprite;

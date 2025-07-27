@@ -23,6 +23,10 @@
 #define DARKERGRAY(alpha)    D3DCOLOR_ARGB(alpha, 31, 31, 31)
 
 namespace CustomUI {
+	struct Insets {
+		int top, bottom, left, right;
+	};
+
 	struct Size { 
 		float width; 
 		float height;
@@ -30,12 +34,16 @@ namespace CustomUI {
 			VECTOR2 result = { (float)width / other.width, (float)height / other.height };
 			return result;
 		}
+
+		Size toCoverInsets(Insets insets) const {
+			return {
+				width + insets.left + insets.right,
+				height + insets.top + insets.bottom
+			};
+		}
 	};
 
 	typedef POINT Point;
-	struct Insets {
-		int top, bottom, left, right;
-	};
 	struct Rect {
 		Point origin;
 		Size size;

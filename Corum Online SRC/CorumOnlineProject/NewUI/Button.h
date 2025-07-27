@@ -16,7 +16,7 @@ namespace CustomUI {
 
 		struct LabelModel {
 			LabelModel(): text(""), appearance(Color::white) {}
-			const char* text;
+			std::string text;
 			SingleLineLabel::Appearance appearance;
 		};
 

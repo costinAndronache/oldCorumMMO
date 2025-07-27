@@ -20,11 +20,13 @@ Button::Button(Sprites sprites, LabelModel labelModel, Rect frameInParent): _spr
 	_frameInParent = frameInParent;
 	_longPressTimerLEFT = std::make_shared<Timer>(RunLoop::mainRunLoop());
 
-	Rect labelFrame{ {0, 0}, SingleLineLabel::fittedSize(strlen(labelModel.text)) };
-	labelFrame = labelFrame.centeredWith(bounds());
+	auto labelFrame = bounds();
+
 	_label = registerChildRenderable<SingleLineLabel>([=]() {
 		return new SingleLineLabel(labelFrame, labelModel.appearance, labelModel.text);
 	});
+	_label->updateRenderingModeToCentered();
+
 }
 
 void Button::updateSpriteModelTo(Sprites newModel) {

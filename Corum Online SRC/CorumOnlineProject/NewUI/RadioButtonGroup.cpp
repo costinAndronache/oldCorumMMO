@@ -3,6 +3,30 @@
 
 using namespace CustomUI;
 
+RadioButtonGroup::LabeledButtonModel RadioButtonGroup::LabeledButtonModel::defaultWith(std::string text) {
+	RadioButtonGroup::LabeledButtonModel specimen;
+	specimen.labelModel.appearance.color.a = 255;
+	specimen.labelModel.appearance.color.r = 201;
+	specimen.labelModel.appearance.color.g = 210;
+	specimen.labelModel.appearance.color.b = 250;
+
+	specimen.sprites = Button::Sprites{
+		{
+			SpriteCollection::genericButtonBackground,
+			SpriteCollection::genericButtonBackgroundSize
+		},
+		SpriteModel::zero,
+		{
+			SpriteCollection::genericButtonPressedBackground,
+			SpriteCollection::genericButtonBackgroundSize
+		},
+	};
+
+	specimen.labelModel.text = text;
+
+	return specimen;
+}
+
 static void fillButtons(
 	std::vector<ToggleButton*>& buttonList, int count,
 	Point origin, Size buttonSize, int xStep, int yStep,

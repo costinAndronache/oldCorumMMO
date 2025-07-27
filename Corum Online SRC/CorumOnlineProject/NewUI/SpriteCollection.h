@@ -9,9 +9,9 @@ namespace CustomUI {
 		static IDISpriteObject* downArrowPressed;
 		static Size downArrowSize;
 
-		static IDISpriteObject* genericBackground;
-		static IDISpriteObject* genericPressedBackground;
-		static Size genericBackgroundSize;
+		static IDISpriteObject* genericButtonBackground;
+		static IDISpriteObject* genericButtonPressedBackground;
+		static Size genericButtonBackgroundSize;
 
 		static IDISpriteObject* xClose;
 		static IDISpriteObject* xClosePressed;

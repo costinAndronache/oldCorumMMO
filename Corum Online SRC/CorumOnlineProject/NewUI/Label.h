@@ -6,11 +6,15 @@
 namespace CustomUI {
 	class SingleLineLabel: public Renderable {
 	public:
+		enum class TextRenderingMode { withInsets, centered };
 		struct Appearance {
-			Appearance(Color c, IDIFontObject* f = nullptr, Point offsets = { 0, 0}): color(c), font(f), offsets(offsets)  {}
+			Appearance(Color c, IDIFontObject* f = nullptr): color(c), font(f)  {}
 			Color color;
 			IDIFontObject* font;
-			Point offsets;
+
+			static Appearance defaultAppearance() {
+				return Appearance(Color::white, nullptr);
+			}
 		};
 		SingleLineLabel(const Rect frameInParent, const Appearance appearance, const std::string& text);
 		SingleLineLabel(const Rect frameInParent, const Appearance appearance, const char* text);
@@ -21,10 +25,17 @@ namespace CustomUI {
 			return result;
 		}
 
-		void updateTextTo(std::string newText) { _text = newText; }
+		void updateTextTo(std::string newText);
+		void updateRenderingModeToCentered();
+		void updateRenderingModeToInsets(Insets insets);
 	private:
+		TextRenderingMode _mode;
+		Insets _insetsForInsetMode;
 		std::string _text;
 		Appearance _appearance;
+		Rect _renderingFrame;
+
+		Rect renderingFrameForCurrentTextAndMode();
 	};
 }
 

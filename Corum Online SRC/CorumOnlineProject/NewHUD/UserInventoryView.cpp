@@ -38,6 +38,15 @@ NewItemsWindow::NewItemsWindow(CustomUI::Point originInParent, CItemResourceHash
 
 	const auto _bounds = bounds();
 
+	auto labelFrame = _bounds.withHeight(btnSize.height);
+	_titleLabel = registerChildRenderable<SingleLineLabel>([=]() {
+		return new SingleLineLabel(
+			labelFrame,
+			SingleLineLabel::Appearance::defaultAppearance(),
+			"INVENTORY"
+		);
+	});
+
 	const auto btnFrame = _bounds
 		.fromMaxXOrigin(-btnSize.width)
 		.withSize(btnSize);

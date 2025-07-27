@@ -11,15 +11,15 @@ CharacterAttributeView::CharacterAttributeView(CustomUI::Rect frameInParent, Mod
 	const auto _bounds = bounds();
 
 	auto appearance = SingleLineLabel::Appearance(
-		CustomUI::Color::white, GetFont(), {15, entryHeight / 3 - 1}
+		CustomUI::Color::white, GetFont()
 	);
+
 
 	const auto nameFrame = _bounds.withWidth(130);
 
 	_nameLabel = registerChildRenderable<SingleLineLabel>([=]() {
 		return new SingleLineLabel(nameFrame, appearance, model.name);
 	});
-
 	const auto valueFrame = _bounds
 		.withOriginOffsetBy({ (int)nameFrame.size.width, 0 })
 		.withWidthOffset(-nameFrame.size.width);
@@ -45,6 +45,10 @@ CharacterAttributeView::CharacterAttributeView(CustomUI::Rect frameInParent, Mod
 
 	_nameLabel->updateBackground(NewHUDResources::borderedBlackBackgroundSolid);
 	_valueLabel->updateBackground(NewHUDResources::borderedBlackBackgroundFaded);
+
+	_nameLabel->updateRenderingModeToCentered();
+	_valueLabel->updateRenderingModeToCentered();
+
 }
 
 
@@ -62,10 +66,12 @@ CharacterStatsView::CharacterStatsView(CustomUI::Rect frameInParent) {
 	_titleLabel = registerChildRenderable<SingleLineLabel>([=]() {
 		return new SingleLineLabel(
 			_bounds.withHeight(closeButtonHeight),
-			SingleLineLabel::Appearance(Color::white, nullptr, { 3, 1 }),
+			SingleLineLabel::Appearance(Color::white, nullptr),
 			"Character"
 		);
 	});
+	_titleLabel->updateRenderingModeToCentered();
+
 	auto closeBtnFrame = _bounds
 		.fromMaxXOrigin(-closeButtonHeight)
 		.withHeight(closeButtonHeight)

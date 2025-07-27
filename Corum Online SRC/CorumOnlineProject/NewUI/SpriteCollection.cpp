@@ -6,9 +6,9 @@ IDISpriteObject* SpriteCollection::downArrow = NULL;
 IDISpriteObject* SpriteCollection::downArrowPressed = NULL;
 Size SpriteCollection::downArrowSize = { 14, 14 };
 
-IDISpriteObject* SpriteCollection::genericBackground = NULL;
-IDISpriteObject* SpriteCollection::genericPressedBackground = NULL;
-Size SpriteCollection::genericBackgroundSize = { 62, 19 };
+IDISpriteObject* SpriteCollection::genericButtonBackground = NULL;
+IDISpriteObject* SpriteCollection::genericButtonPressedBackground = NULL;
+Size SpriteCollection::genericButtonBackgroundSize = { 62, 18 };
 
 IDISpriteObject* SpriteCollection::xClose = NULL;
 IDISpriteObject* SpriteCollection::xClosePressed = NULL;
@@ -34,15 +34,15 @@ void SpriteCollection::initialize(I4DyuchiGXRenderer* renderer) {
 			0);
 	}
 
-	if (genericBackground == NULL) {
+	if (genericButtonBackground == NULL) {
 		char* resourceFile = GetFile("menu_7.tga", DATA_TYPE_UI);
-		genericBackground = renderer->CreateSpriteObject(resourceFile,
+		genericButtonBackground = renderer->CreateSpriteObject(resourceFile,
 			194, 175,
-			genericBackgroundSize.width, genericBackgroundSize.height,
+			genericButtonBackgroundSize.width, genericButtonBackgroundSize.height,
 			0);
-		genericPressedBackground = renderer->CreateSpriteObject(resourceFile,
+		genericButtonPressedBackground = renderer->CreateSpriteObject(resourceFile,
 			194, 191,
-			genericBackgroundSize.width, genericBackgroundSize.height,
+			genericButtonBackgroundSize.width, genericButtonBackgroundSize.height,
 			0);
 	}
 

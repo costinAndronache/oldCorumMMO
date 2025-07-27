@@ -34,13 +34,13 @@ GroupedItemInventoryView::GroupedItemInventoryView(CustomUI::Rect frameInParent,
 
 	specimen.sprites = Button::Sprites{
 		{
-			SpriteCollection::genericBackground,
-			SpriteCollection::genericBackgroundSize
+			SpriteCollection::genericButtonBackground,
+			SpriteCollection::genericButtonBackgroundSize
 		},
 		SpriteModel::zero,
 		{
-			SpriteCollection::genericPressedBackground,
-			SpriteCollection::genericBackgroundSize
+			SpriteCollection::genericButtonPressedBackground,
+			SpriteCollection::genericButtonBackgroundSize
 		},
 	};
 
