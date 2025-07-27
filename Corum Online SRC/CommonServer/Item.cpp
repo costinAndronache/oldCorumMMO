@@ -7,6 +7,11 @@
 
 extern LPBASEITEM_HASH g_pBaseItemHash;
 
+CItem CItem::nullItem() {
+	auto result = CItem();
+	memset(&result, 0, sizeof(CItem));
+	return result;
+}
 
 WORD CItem::GetID()	const
 {

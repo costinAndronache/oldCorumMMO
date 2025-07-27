@@ -105,13 +105,7 @@ BOOL CSkillWnd::Init()
 	
 	//	int nOrder = GetStartOrder();	Disabled by minjin. for Removing Unrefferneced Variable
 
-	// Skill Icon Loading
-	for(int i = SkillType::fighter; i <= SkillType::sorceress; i++)
-	{
-		CreateSkillResourceSpr( g_sSkillListManager.pSkillList[i].pActiveList );		// Active Skill
-		CreateSkillResourceSpr( g_sSkillListManager.pSkillList[i].pMasteryList );		// Mastery Skill
-		CreateSkillResourceSpr( g_sSkillListManager.pSkillList[i].pPassiveList );		// Passive Skill
-		CreateSkillResourceSpr( g_sSkillListManager.pSkillList[i].pOverDriveList );		// OverDrive Skill
+	// Skill Icon Loading		// OverDrive Skill
 		
 /*		// modified by minjin. for more simple sentense
 		// Active //
@@ -178,7 +172,7 @@ BOOL CSkillWnd::Init()
 
 			g_sSkillListManager.pSpr[lpSkillResourceNode->wId]	= lpSkillResourceNode->pSpr;
 		}	//*/
-	}
+	
 	
 	InsertCheckInterface(306, 4, 318, 16, 2, CHECK_CLOSE);
 	InsertCheckInterface(0, 0, 306, 20, 3, CHECK_MOVEWND);
@@ -208,31 +202,7 @@ BOOL CSkillWnd::Init()
 }
 
 // 스킬 스프라이트 정보를 등록한다
-void CSkillWnd::CreateSkillResourceSpr( COnlyList* pSkillList )
-{
-	int nPosX = 0;
-	int nPosY = 0;
 
-	POSITION_ pos = pSkillList->GetHeadPosition();
-
-	while(pos)
-	{
-		LP_SKILL_RESOURCE_EX lpSkillResourceNode = (LP_SKILL_RESOURCE_EX)pSkillList->GetAndAdvance(pos);
-				
-		nPosX = lpSkillResourceNode->wIndex % 8 * SKILL_ICON_SIZE;
-		nPosY = lpSkillResourceNode->wIndex / 8 * SKILL_ICON_SIZE;
-		lpSkillResourceNode->pSpr		= g_pRenderer->CreateSpriteObject( GetFile(lpSkillResourceNode->szFileName, DATA_TYPE_UI)
-																			, nPosX, nPosY, SKILL_ICON_SIZE, SKILL_ICON_SIZE, 0 );
-
-		nPosX = lpSkillResourceNode->wIndexAct % 8 * SKILL_ICON_SIZE;
-		nPosY = lpSkillResourceNode->wIndexAct / 8 * SKILL_ICON_SIZE;			
-
-		lpSkillResourceNode->pSprAct	= g_pRenderer->CreateSpriteObject( GetFile(lpSkillResourceNode->szFileNameAct, DATA_TYPE_UI)
-																			, nPosX, nPosY, SKILL_ICON_SIZE, SKILL_ICON_SIZE, 0 );
-
-		g_sSkillListManager.spriteForSkillKind[lpSkillResourceNode->wId]	= lpSkillResourceNode->pSpr;
-	}
-}
 
 // 스킬 스프라이트 정보를 제거한다
 void CSkillWnd::ReleaseSkillResourceSpr( COnlyList* pSkillList )

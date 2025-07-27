@@ -80,7 +80,7 @@
       <OutputFile>$(OutDir)SS3DGeometryForCorum.dll</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <ModuleDefinitionFile>.\4DyuchiGXGEOMETRY.def</ModuleDefinitionFile>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <GenerateDebugInformation>DebugFull</GenerateDebugInformation>
       <ProgramDatabaseFile>$(OutDir)SS3DGeometryForCorum.pdb</ProgramDatabaseFile>
       <GenerateMapFile>true</GenerateMapFile>
       <MapFileName>$(OutDir)SS3DGeometryForCorum.map</MapFileName>

@@ -1754,90 +1754,90 @@ void ItemChk()
 		if(bItemLand==FALSE)
 		{
 			// 물약 //						
-			int nPosX = (g_Mouse.MousePos.x-727)/37;
+			 int nPosX = (g_Mouse.MousePos.x-727)/37;
 
-			if(nPosX<MAX_BELT_POOL)
-			{
-				int nValue = g_pMainPlayer->m_MouseItem.GetID()/ITEM_DISTRIBUTE;
-				
-				if(g_ItemMoveManager.GetNewItemMoveMode())
-				{
-					WORD wMouseID = g_ItemMoveManager.GetMouseItemID();
-					if(!wMouseID)
-						return;
-					nValue =  wMouseID / ITEM_DISTRIBUTE;	
-				}
-												
-				if(GetType(nValue)==ITEM_SMALL)
-				{
-					if(g_pMainPlayer->m_pBelt[nPosX].m_wItemID==0)
-					{
-						SetItemPacket(&ItemPickup, 3, nPosX, 0, 0, 0);
-					}
-					else
-					{
-						BOOL bChk = FALSE;
+			//if(nPosX<MAX_BELT_POOL)
+			//{
+			//	int nValue = g_pMainPlayer->m_MouseItem.GetID()/ITEM_DISTRIBUTE;
+			//	
+			//	if(g_ItemMoveManager.GetNewItemMoveMode())
+			//	{
+			//		WORD wMouseID = g_ItemMoveManager.GetMouseItemID();
+			//		if(!wMouseID)
+			//			return;
+			//		nValue =  wMouseID / ITEM_DISTRIBUTE;	
+			//	}
+			//									
+			//	if(GetType(nValue)==ITEM_SMALL)
+			//	{
+			//		if(g_pMainPlayer->m_pBelt[nPosX].m_wItemID==0)
+			//		{
+			//			SetItemPacket(&ItemPickup, 3, nPosX, 0, 0, 0);
+			//		}
+			//		else
+			//		{
+			//			BOOL bChk = FALSE;
 
-						if(g_pMainPlayer->m_pBelt[nPosX].m_Item_Supplies.bQuantity<100)
-						{
-							SetItemPacket(&ItemPickup, 3, nPosX, 0, 0, 0);
-						}
-						else
-						{
-							for(int i = 0; i < MAX_BELT_POOL; i++)
-							{
-								if(g_pMainPlayer->m_pBelt[i].m_wItemID==0)
-								{
-									SetItemPacket(&ItemPickup, 3, i, 0, 0, 0);
-									bChk = TRUE;
-									break;
-								}
-								else
-								{
-									if(g_pMainPlayer->m_pBelt[nPosX].m_Item_Supplies.bQuantity<100)
-									{
-										SetItemPacket(&ItemPickup, 3, nPosX, 0, 0, 0);
-										bChk = TRUE;
-										break;
-									}
-								}
-							}
+			//			if(g_pMainPlayer->m_pBelt[nPosX].m_Item_Supplies.bQuantity<100)
+			//			{
+			//				SetItemPacket(&ItemPickup, 3, nPosX, 0, 0, 0);
+			//			}
+			//			else
+			//			{
+			//				for(int i = 0; i < MAX_BELT_POOL; i++)
+			//				{
+			//					if(g_pMainPlayer->m_pBelt[i].m_wItemID==0)
+			//					{
+			//						SetItemPacket(&ItemPickup, 3, i, 0, 0, 0);
+			//						bChk = TRUE;
+			//						break;
+			//					}
+			//					else
+			//					{
+			//						if(g_pMainPlayer->m_pBelt[nPosX].m_Item_Supplies.bQuantity<100)
+			//						{
+			//							SetItemPacket(&ItemPickup, 3, nPosX, 0, 0, 0);
+			//							bChk = TRUE;
+			//							break;
+			//						}
+			//					}
+			//				}
 
-							for(int i = 0; i < MAX_INV_SMALL_POOL; i++)
-							{
-								if(g_pMainPlayer->m_pInv_Small[i].m_wItemID==0)
-								{
-									SetItemPacket(&ItemPickup, 14, i, 0, 0, 0);
-									g_pNet->SendMsg( (char*)&ItemPickup, ItemPickup.GetPacketSize(), SERVER_INDEX_ZONE);
-									return;
-								}
-							}
+			//				for(int i = 0; i < MAX_INV_SMALL_POOL; i++)
+			//				{
+			//					if(g_pMainPlayer->m_pInv_Small[i].m_wItemID==0)
+			//					{
+			//						SetItemPacket(&ItemPickup, 14, i, 0, 0, 0);
+			//						g_pNet->SendMsg( (char*)&ItemPickup, ItemPickup.GetPacketSize(), SERVER_INDEX_ZONE);
+			//						return;
+			//					}
+			//				}
 
-							// 물약 바닥에 버리기 //
-							if(bChk==FALSE)
-							{
-								SetItemPacket(&ItemPickup, 4, 0, 0, 0, 0);
-							}
-						}
-					}
-					
-					g_pNet->SendMsg((char*)&ItemPickup, ItemPickup.GetPacketSize(), SERVER_INDEX_ZONE);
+			//				// 물약 바닥에 버리기 //
+			//				if(bChk==FALSE)
+			//				{
+			//					SetItemPacket(&ItemPickup, 4, 0, 0, 0, 0);
+			//				}
+			//			}
+			//		}
+			//		
+			//		g_pNet->SendMsg((char*)&ItemPickup, ItemPickup.GetPacketSize(), SERVER_INDEX_ZONE);
 
-					if(g_ItemMoveManager.GetNewItemMoveMode())
-					{
-						ITEM_NATIVE_INFO ItemNativeInfo;
-						ItemNativeInfo.eSlotID = (ITEM_NATIVE)g_ItemMoveManager.GetNativeSrc();
-						ItemNativeInfo.bySlotIndex = g_ItemMoveManager.GetNativeSrcIndex();
+			//		if(g_ItemMoveManager.GetNewItemMoveMode())
+			//		{
+			//			ITEM_NATIVE_INFO ItemNativeInfo;
+			//			ItemNativeInfo.eSlotID = (ITEM_NATIVE)g_ItemMoveManager.GetNativeSrc();
+			//			ItemNativeInfo.bySlotIndex = g_ItemMoveManager.GetNativeSrcIndex();
 
-						CItem cItem;
-						memcpy(&cItem, GetItemNative(&ItemNativeInfo), sizeof(CItem));
-						BYTE byCnt = cItem.GetQuantity();
-						g_ItemMoveManager.SetLButtonUpItem(ITEM_NATIVE_BELT,nPosX,1,byCnt);
-					}
+			//			CItem cItem;
+			//			memcpy(&cItem, GetItemNative(&ItemNativeInfo), sizeof(CItem));
+			//			BYTE byCnt = cItem.GetQuantity();
+			//			g_ItemMoveManager.SetLButtonUpItem(ITEM_NATIVE_BELT,nPosX,1,byCnt);
+			//		}
 
-					return;
-				}				
-			}			
+			//		return;
+			//	}				
+			//}			
 		}
 	}
 
@@ -2363,20 +2363,19 @@ void ItemInfoRender()
 
 		const int nPosX	= (g_Mouse.MousePos.x-727)/37;
 
-		if( MAX_BELT_POOL > nPosX 
-		&& 0 <= nPosX)//: 050110 hwoarang 
-		{		
-			if(g_pMainPlayer->m_pBelt[nPosX].m_wItemID==0)
-				return;
-			else if(g_pMainPlayer->m_pBelt[nPosX].GetType()!=ITEM_SMALL)
-				return;
-			if(nPosX>MAX_BELT_POOL)
-				return;
-			
-			pItemInfo	= &g_pMainPlayer->m_pBelt[nPosX];
-					
-			CInterface::GetInstance()->ItemInfoRender(pItemInfo, FALSE);		
-		}
+		//if( MAX_BELT_POOL > nPosX && 0 <= nPosX)//: 050110 hwoarang 
+		//{		
+		//	if(g_pMainPlayer->m_pBelt[nPosX].m_wItemID==0)
+		//		return;
+		//	else if(g_pMainPlayer->m_pBelt[nPosX].GetType()!=ITEM_SMALL)
+		//		return;
+		//	if(nPosX>MAX_BELT_POOL)
+		//		return;
+		//	
+		//	pItemInfo	= &g_pMainPlayer->m_pBelt[nPosX];
+		//			
+		//	CInterface::GetInstance()->ItemInfoRender(pItemInfo, FALSE);		
+		//}
 	}	
 }
 
@@ -2968,7 +2967,7 @@ void SendPickupItem(ITEM* pItem, BOOL bActive, BOOL bType)
 					
 				int nMaxQuantity = lpItemTable->GetMaxQuantity();				
 					
-				for(int i = 0; i < MAX_BELT_POOL; i++)
+				/*for(int i = 0; i < MAX_BELT_POOL; i++)
 				{
 					if(g_pMainPlayer->m_pBelt[i].m_wItemID==0)
 					{						
@@ -2988,7 +2987,7 @@ void SendPickupItem(ITEM* pItem, BOOL bActive, BOOL bType)
 							}
 						}
 					}									
-				}
+				}*/
 				
 				if(bChk)
 				{
@@ -3455,7 +3454,7 @@ BYTE Insert_SmallBankItem(CItem* pItem, BYTE bZipCode, BYTE byPackCnt)
 
 void Insert_SmallBeltItem(CItem* pItem, BYTE bZipCode, BYTE byPackCnt, BOOL bChk)
 {
-	if(!pItem)
+	/*if(!pItem)
 		return;
 
 	if(pItem->GetType()==ITEM_LARGE)
@@ -3547,7 +3546,7 @@ void Insert_SmallBeltItem(CItem* pItem, BYTE bZipCode, BYTE byPackCnt, BOOL bChk
 				}
 			}
 		}
-	}
+	}*/
 }
 
 BYTE Insert_SmallInvItem(CItem* pItem, BYTE bZipCode, BYTE byPackCnt)

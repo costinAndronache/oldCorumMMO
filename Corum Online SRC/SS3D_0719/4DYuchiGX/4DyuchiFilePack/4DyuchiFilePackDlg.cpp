@@ -5,6 +5,7 @@
 #include "4DyuchiFilePack.h"
 #include "4DyuchiFilePackDlg.h"
 #include "../4DyuchiGXGFunc/global.h"
+#include <string>
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -12,7 +13,6 @@
 static char THIS_FILE[] = __FILE__;
 #endif
 
-#pragma comment(lib, "./../../4DYuchiDLL/SS3DGFunc.lib")
 
 DWORD __stdcall UnlocProgresskProc(DWORD dwCurCount,DWORD dwTotalCount,void* pArg);
 
@@ -115,6 +115,8 @@ BEGIN_MESSAGE_MAP(CMy4DyuchiFilePackDlg, CDialog)
 	ON_BN_CLICKED(IDC_BUTTON_SELECT_PACKFILE, OnButtonSelectPackfile)
 	ON_BN_CLICKED(IDC_BUTTON_DELETE_PACKFILE, OnButtonDeletePackfile)
 	//}}AFX_MSG_MAP
+	ON_BN_CLICKED(IDC_BUTTON_REPACK, &CMy4DyuchiFilePackDlg::OnBnClickedButtonRepack)
+	ON_BN_CLICKED(ADD_NEW_FILE_INTO_CURRENT_PACK, &CMy4DyuchiFilePackDlg::OnBnClickedNewFileIntoCurrentPack)
 END_MESSAGE_MAP()
 
 /////////////////////////////////////////////////////////////////////////////
@@ -161,36 +163,23 @@ BOOL CMy4DyuchiFilePackDlg::OnInitDialog()
 	g_pDlg = this;
 	CoInitialize(NULL);
 	
-	HRESULT hr;
+	
+	CREATE_INSTANCE_FUNC	pFunc;
 
-	hr = CoCreateInstance(
-           CLSID_4DyuchiFileStorage,
-           NULL,
-           CLSCTX_INPROC_SERVER,
-           IID_4DyuchiFileStorage,
-           (void**)&m_pStorage);
+	BOOL	bResult = FALSE;
 
-	if (hr != S_OK)
-		__asm int 3
-		
+	const auto dllHandle = LoadLibrary("SS3DFileStorage.dll");
+	
+	pFunc = (CREATE_INSTANCE_FUNC)GetProcAddress(dllHandle, "DllCreateInstance");
+	const auto hr = pFunc((void**)&m_pStorage);
+
+	if (hr != S_OK) {
+		return FALSE;
+	}
+	
 	g_pStorage = m_pStorage;
 	m_pStorage->Initialize(MAX_FILE_ATOM_NUM,1024,64,FILE_ACCESS_METHOD_ONLY_FILE);
 	
-/*
-	void* pFP = m_pStorage->FSOpenFile("fighter.chr",1);
-	if (pFP)
-	{
-
-
-		char	buf[256];
-		while (m_pStorage->FSScanf(pFP,"%s",buf) != EOF)
-		{
-			__asm nop
-
-		}
-		m_pStorage->FSCloseFile(pFP);
-	}
-*/
 	return TRUE;  // return TRUE  unless you set the focus to a control
 }
 
@@ -304,6 +293,39 @@ DWORD CMy4DyuchiFilePackDlg::UnlockProc(DWORD dwCurCount,DWORD dwTotalCount,void
 
 	return 0;
 
+}
+
+void CMy4DyuchiFilePackDlg::Repack() {
+	if (!(m_pFileInfoList && m_dwFileInfoNum > 0)) {
+		AfxMessageBox("Internal error, file list is not known");
+		return; 
+	}
+
+	AfxMessageBox("Make sure you extracted them from the pack first!");
+
+	std::string s(m_strFullPathFileName);
+	s += ".repacked.pak";
+
+	char currentDirectory[255];
+	GetCurrentDirectory(254, currentDirectory);
+	std::string sCurrentDir(currentDirectory);
+	
+
+	auto handle = m_pStorage->MapPackFile((char*)s.c_str());
+
+	m_pStorage->LockPackFile(handle, 0);
+
+	for (int i = 0; i < m_dwFileInfoNum; i++) {
+		const auto currentFile = std::string(m_pFileInfoList[i].pszFileName);
+		const auto withFullPath = sCurrentDir + "\\" + currentFile;
+		m_pStorage->InsertFileToPackFile(handle, (char*)withFullPath.c_str());
+	}
+
+	m_pStorage->UnlockPackFile(handle, 0);
+
+	AfxMessageBox(s.c_str());
+
+	m_pStorage->UnmapPackFile(handle);
 }
 
 void CMy4DyuchiFilePackDlg::UpdateFileViewDisplay()
@@ -489,4 +511,21 @@ void CMy4DyuchiFilePackDlg::OnButtonDeletePackfile()
 		ClearFileViewDisplay();
 	}
 
+}
+
+
+void CMy4DyuchiFilePackDlg::OnBnClickedButton1()
+{
+	// TODO: Add your control notification handler code here
+}
+
+
+void CMy4DyuchiFilePackDlg::OnBnClickedButtonRepack() {
+	Repack();
+}
+
+
+void CMy4DyuchiFilePackDlg::OnBnClickedNewFileIntoCurrentPack()
+{
+	// TODO: Add your control notification handler code here
 }

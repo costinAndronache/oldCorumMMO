@@ -302,10 +302,17 @@ lb_load_tga:
 				dwWidth = dwWidthHeight;
 				dwHeight = dwWidthHeight;
 			}
-			else 
-			{
-				Set2PowValueLess(&dwWidth,image.GetWidth());
-				Set2PowValueLess(&dwHeight,image.GetHeight());
+			else {
+				/*
+				* Pre-2006 or so graphic cards required texture sizes to be powers of 2 for optimization purposes.
+				*/
+				
+				//Set2PowValueLess(&dwWidth,image.GetWidth());
+				//Set2PowValueLess(&dwHeight,image.GetHeight());
+
+				// But for nowadays I'm just gonna skip it
+				dwWidth = image.GetWidth();
+				dwHeight = image.GetHeight();
 			}
 			if (!m_pResourceManager->CreateTextureWithBitmap(
 				&pTex,

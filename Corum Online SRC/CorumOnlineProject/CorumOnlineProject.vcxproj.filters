@@ -166,6 +166,9 @@
     <Filter Include="CommonServer">
       <UniqueIdentifier>{105619e5-244b-4be8-9885-62c2edb0e533}</UniqueIdentifier>
     </Filter>
+    <Filter Include="CustomUI">
+      <UniqueIdentifier>{fedbc50b-6ae2-425a-856a-7448c59f8dd7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ChrInfo.cpp">
@@ -753,49 +756,46 @@
     <ClCompile Include="InterfaceProcTemp.cpp">
       <Filter>minjin</Filter>
     </ClCompile>
-    <ClCompile Include="CustomUiKit\PagedTableWindow\PagedTableWindow.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="CustomDXDrawing\Renderer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ItemPickupFiltering\ItemInfoView.cpp">
+    <ClCompile Include="NewUI\ItemInfoView.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ItemPickupFiltering\ItemPickupFiltering.cpp">
+    <ClCompile Include="NewUI\ItemPickupFiltering.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ItemPickupFiltering\PagedItemViewTable.cpp">
+    <ClCompile Include="NewUI\PagedItemViewTable.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ItemPickupFiltering\Button.cpp">
+    <ClCompile Include="NewUI\Button.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ItemPickupFiltering\CustomUIBase.cpp">
+    <ClCompile Include="NewUI\CustomUIBase.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ItemPickupFiltering\InputField.cpp">
+    <ClCompile Include="NewUI\InputField.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ItemPickupFiltering\ItemFilteringView.cpp">
+    <ClCompile Include="NewUI\ItemFilteringView.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ItemPickupFiltering\SelectionView.cpp">
+    <ClCompile Include="NewUI\SelectionView.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ItemPickupFiltering\Label.cpp">
+    <ClCompile Include="NewUI\Label.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ItemPickupFiltering\ToggleButton.cpp">
+    <ClCompile Include="NewUI\ToggleButton.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ItemPickupFiltering\RadioButtonGroup.cpp">
+    <ClCompile Include="NewUI\RadioButtonGroup.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ItemPickupFiltering\ItemCategoryFilterView.cpp">
+    <ClCompile Include="NewUI\ItemCategoryFilterView.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ItemPickupFiltering\ItemPickupFilteringBase.cpp">
+    <ClCompile Include="NewUI\ItemPickupFilteringBase.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="MouseButtonLongPressRecognizer.cpp">
@@ -810,13 +810,103 @@
     <ClCompile Include="DungeonInterfaceLayout.cpp">
       <Filter>Header Files</Filter>
     </ClCompile>
+    <ClCompile Include="NewUI\SpriteCollection.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="NewHUD\LeftHUD.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="NewUI\HorizontalScalingBar.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="NewHUD\HUDSpriteCollection.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="NewUI\Renderable.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="NewUI\MatrixContainer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="NewHUD\NewSkillSelectionView.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="NewHUD\NewInterface.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="NewUI\SpriteRenderable.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="NewHUD\RightHUD.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="NewHUD\GenericItemsContainerView.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="NewHUD\ItemInventoryView.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="NewUI\PagerControl.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="NewUI\PagedContainer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="NewUI\PagedMatrixContainer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Utils\Utils.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="NewHUD\GroupedItemInventoryView.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="NewUI\DragNDropSystem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="NewUI\MouseTrackingSpriteRenderable.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="NewHUD\ViewManager\BeltManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="NewHUD\ViewManager\UserInventoryManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="NewHUD\ViewManager\DragNDropManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="NewHelpers\SharedNetwork.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="NewHUD\ViewManager\EquipItemsManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="NewHUD\UserInventoryView.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="NewHelpers\ItemUsageManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="NewHUD\CharacterStatsView.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="NewHUD\ViewManager\CharacterStatsManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="NewHelpers\StatusPointManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="NewHUD\UserSkillsView.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="NewHUD\ViewManager\UserSkillsManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MouseLib.h">
       <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="BaseNetworkInterface.h">
-      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ChrInfo.h">
       <Filter>Header Files</Filter>
@@ -1466,58 +1556,49 @@
     <ClInclude Include="InterfaceProcTemp.h">
       <Filter>minjin</Filter>
     </ClInclude>
-    <ClInclude Include="CustomUiKit\PagedTableWindow\PagedTableWindow.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="CustomUiKit\Renderer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="CustomUiKit\Base.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="CustomDXDrawing\Colors.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="CustomDXDrawing\Renderer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ItemPickupFiltering\ItemInfoView.h">
+    <ClInclude Include="NewUI\ItemInfoView.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ItemPickupFiltering\ItemPickupFiltering.h">
+    <ClInclude Include="NewUI\ItemPickupFiltering.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ItemPickupFiltering\PagedItemViewTable.h">
+    <ClInclude Include="NewUI\PagedItemViewTable.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ItemPickupFiltering\Button.h">
+    <ClInclude Include="NewUI\Button.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ItemPickupFiltering\CustomUIBase.h">
+    <ClInclude Include="NewUI\CustomUIBase.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ItemPickupFiltering\InputField.h">
+    <ClInclude Include="NewUI\InputField.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ItemPickupFiltering\ItemFilteringView.h">
+    <ClInclude Include="NewUI\ItemFilteringView.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ItemPickupFiltering\SelectionView.h">
+    <ClInclude Include="NewUI\SelectionView.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ItemPickupFiltering\Label.h">
+    <ClInclude Include="NewUI\Label.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ItemPickupFiltering\ToggleButton.h">
+    <ClInclude Include="NewUI\ToggleButton.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ItemPickupFiltering\RadioButtonGroup.h">
+    <ClInclude Include="NewUI\RadioButtonGroup.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ItemPickupFiltering\ItemCategoryFilterView.h">
+    <ClInclude Include="NewUI\ItemCategoryFilterView.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ItemPickupFiltering\ItemPickupFilteringBase.h">
+    <ClInclude Include="NewUI\ItemPickupFilteringBase.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="CMainUserUpdateInterested.h">
@@ -1533,6 +1614,99 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="DungeonInterfaceLayout.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="NewUI\SpriteCollection.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="NewHUD\LeftHUD.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="NewUI\HorizontalScalingBar.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="NewHUD\HUDSpriteCollection.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="NewUI\Renderable.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="NewUI\MatrixContainer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="NewHUD\NewSkillSelectionView.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="NewHUD\NewInterface.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="NewUI\SpriteRenderable.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="NewHUD\RightHUD.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="NewHUD\GenericItemsContainerView.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="NewHUD\ItemInventoryView.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="NewUI\PagerControl.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="NewUI\PagedContainer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="NewUI\PagedMatrixContainer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\Utils.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="NewHUD\GroupedItemInventoryView.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="NewUI\DragNDropSystem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="NewUI\MouseTrackingSpriteRenderable.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="NewHUD\ViewManager\BeltManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="NewHUD\ViewManager\UserInventoryManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="NewHUD\ViewManager\DragNDropManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="NewHelpers\SharedNetwork.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="NewHUD\ViewManager\EquipItemsManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="NewHUD\UserInventoryView.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="NewHelpers\ItemUsageManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="NewHUD\CharacterStatsView.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="NewHUD\ViewManager\CharacterStatsManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="NewHelpers\StatusPointManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="NewHUD\UserSkillsView.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="NewHUD\ViewManager\UserSkillsManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -1606,32 +1780,7 @@
     <None Include="SoundLib.dll">
       <Filter>sound</Filter>
     </None>
-    <None Include="SS3DExecutiveForCorum.dll">
-      <Filter>SS3DEngine</Filter>
-    </None>
-    <None Include="SS3DFileStorage.dll">
-      <Filter>SS3DEngine</Filter>
-    </None>
-    <None Include="SS3DGeometryForCorum.dll">
-      <Filter>SS3DEngine</Filter>
-    </None>
-    <None Include="SS3DGFunc.dll">
-      <Filter>SS3DEngine</Filter>
-    </None>
-    <None Include="SS3DGFuncN.dll">
-      <Filter>SS3DEngine</Filter>
-    </None>
-    <None Include="SS3DGFuncSSE.dll">
-      <Filter>SS3DEngine</Filter>
-    </None>
-    <None Include="SS3DRendererForCorum.dll">
-      <Filter>SS3DEngine</Filter>
-    </None>
-    <None Include="CommonServer.dll">
-      <Filter>CommonServer</Filter>
-    </None>
     <None Include="CorumOnlineProject.dsp" />
-    <None Include="CorumVerInfo.ver" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="corum.ico">
@@ -1642,14 +1791,8 @@
     <Library Include="SoundLib.lib">
       <Filter>sound</Filter>
     </Library>
-    <Library Include="SS3DGFunc.lib">
-      <Filter>SS3DEngine</Filter>
-    </Library>
     <Library Include="NMCrypt.lib">
       <Filter>Netmarble</Filter>
-    </Library>
-    <Library Include="CommonServer.lib">
-      <Filter>CommonServer</Filter>
     </Library>
   </ItemGroup>
 </Project>

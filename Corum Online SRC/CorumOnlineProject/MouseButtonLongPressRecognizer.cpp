@@ -1,8 +1,8 @@
 #include "MouseButtonLongPressRecognizer.h"
 
-MouseButtonLongPressRecognizer::MouseButtonLongPressRecognizer(std::shared_ptr<WorkQueue> workQueue, DWORD minimumPressDurationMilliseconds):
- _leftButtonLongPressTimer(workQueue), 
- _rightButtonLongPresstimer(workQueue), 
+MouseButtonLongPressRecognizer::MouseButtonLongPressRecognizer(std::shared_ptr<RunLoop> runLoop, DWORD minimumPressDurationMilliseconds):
+ _leftButtonLongPressTimer(runLoop), 
+ _rightButtonLongPresstimer(runLoop), 
  _minimumPressDurationMilliseconds(minimumPressDurationMilliseconds) {
 
 }

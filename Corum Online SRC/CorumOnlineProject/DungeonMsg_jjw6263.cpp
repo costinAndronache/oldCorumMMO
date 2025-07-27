@@ -20,7 +20,7 @@
 #include "ItemMoveManager.h"
 #include "QuantityWnd.h"
 #include "ItemNative.h"
-
+#include "NewHelpers/SharedNetwork.h"
 
 void InitPacketProcDungeonJJW6263()
 {
@@ -123,6 +123,9 @@ BOOL IsUltra()
 //----------------------------------------------------------------------------
 void CmdItemMove( char* pMsg, DWORD dwLen )
 {
+	DSTC_ITEM_MOVE* pItemMove = (DSTC_ITEM_MOVE*)pMsg;
+	SharedNetwork::sharedInstance()->process(*pItemMove);
+
 	g_ItemMoveManager.Process(pMsg,dwLen);
 	g_ItemMoveManager.Initialize();
 

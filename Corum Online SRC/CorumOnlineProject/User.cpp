@@ -36,6 +36,12 @@ void listenersUpdate(const std::vector<CMainUserUpdateInterestedWeakRef>& listen
 	});
 }
 
+void CMainUser::notifyForInventoryUpdates() {
+	listenersUpdate(_updateListeners, [this](CMainUserUpdateInterestedSharedRef listener) {
+		listener->updatedItemInventory(this);
+	});
+}
+
 std::vector<BYTE>	CMainUser::skillsAvailableOnLeft() {
 	std::vector<BYTE> result;
 
@@ -201,6 +207,18 @@ void			CMainUser::updateCurrentEXP(DWORD exp) {
 	});
 }
 
+float			CMainUser::percentageEXP() const {
+	const auto level = this->currentLevel();
+	const auto cumulatedEXP = this->currentEXP();
+	const auto cumulatedExpForCurrentLevel = GetCumulatedExpByLevel(OBJECT_TYPE_PLAYER, level);
+	const auto cumulatedExpForNextLevel = GetCumulatedExpByLevel(OBJECT_TYPE_PLAYER, level + 1);
+	const auto toGather = cumulatedExpForNextLevel - cumulatedExpForCurrentLevel;
+	const DWORD gatheredSoFar = cumulatedEXP - cumulatedExpForCurrentLevel;
+	const auto scale = (float)gatheredSoFar / toGather;
+
+	return min(scale, 1.0);
+}
+
 DWORD			CMainUser::currentLevel() const {
 	return m_dwLevel;
 }
@@ -280,7 +298,7 @@ CMainUser::CMainUser() {
 	
 	m_bMoveType					= UNIT_STATUS_WALKING;
 	m_bInEventDungeon			= FALSE;
-	continousSkillCastSPUpdateTimer = new Timer(WorkQueue::mainThreadQueue());
+	continousSkillCastSPUpdateTimer = new Timer(RunLoop::mainRunLoop());
 }
 
 CMainUser::~CMainUser()
@@ -292,6 +310,24 @@ CMainUser::~CMainUser()
 	}
 }
 
+CItem CUser::beltItemAtIndex(int index) {
+	if (!(0 <= index && index < MAX_BELT_POOL)) {
+		return CItem::nullItem();
+	}
+	return m_pBelt[index];
+}
+
+void CUser::setBeltItem(CItem item, int index) {
+	if (!(0 <= index && index < MAX_BELT_POOL)) {
+		return;
+	}
+
+	m_pBelt[index] = item;
+}
+
+void CUser::nullifyBeltItemAtIndex(int index) {
+	setBeltItem(CItem::nullItem(), index);
+}
 
 void CMainUser::RegistItemNativeInfo()
 {
@@ -322,12 +358,15 @@ DWORD CMainUser::GetItemTotalSize(ITEM_NATIVE eItemNative) const
 void CMainUser::RemoveItem(ITEM_NATIVE eItemNative, BYTE bySlotIndex)
 {
 	m_pItemNativeManager->RemoveItem(BYTE(eItemNative), bySlotIndex);
+
+	notifyForInventoryUpdates();
 }
 
 
 void CMainUser::ConvertItem(ITEM_NATIVE eItemNative, BYTE bySlotIndex)
 {
 	m_pItemNativeManager->ConvertItem(m_pItemNativeManager->GetItem(BYTE(eItemNative), bySlotIndex));
+	notifyForInventoryUpdates();
 }
 
 
@@ -340,6 +379,7 @@ const CItem* CMainUser::GetItem(ITEM_NATIVE eItemNative, BYTE bySlotIndex) const
 void CMainUser::SetItem(ITEM_NATIVE eItemNative, BYTE bySlotIndex, const CItem* pItem)
 {
 	m_pItemNativeManager->SetItem(BYTE(eItemNative), bySlotIndex, pItem);
+	notifyForInventoryUpdates();
 }
 
 
@@ -1679,6 +1719,10 @@ void CMainUser::SetSkillChangeLR(BYTE bySkillKind, BYTE byLR)
 	packet.bySelectSkillKind[1] = GetSkillKind(SELECT_ATTACK_TYPE_RBUTTON);
 	packet.bySelectSkillKind[0] = GetSkillKind(SELECT_ATTACK_TYPE_LBUTTON);
 	g_pNet->SendMsg((char*)&packet, packet.GetPacketSize(), SERVER_INDEX_ZONE);
+
+	listenersUpdate(_updateListeners, [=](CMainUserUpdateInterestedSharedRef listener) {
+		listener->updatedLeftRightSkillSelection(this);
+	});
 }
 
 BYTE CMainUser::GetSkillKind(BYTE byLR)
@@ -1908,4 +1952,24 @@ void CMainUser::applyOffsetForSkills(int offset) {
 	listenersUpdate(_updateListeners, [this](CMainUserUpdateInterestedSharedRef ref) {
 		ref->updatedSkills(this);
 	});
+}
+
+void CMainUser::setBeltItem(CItem item, int index) {
+	CUser::setBeltItem(item, index);
+	listenersUpdate(_updateListeners, [=](CMainUserUpdateInterestedSharedRef listener) {
+		listener->updatedItemInventory(this);
+	});
+}
+
+void CMainUser::nullifyBeltItemAtIndex(int index) {
+	CUser::nullifyBeltItemAtIndex(index);
+	listenersUpdate(_updateListeners, [=](CMainUserUpdateInterestedSharedRef listener) {
+		listener->updatedItemInventory(this);
+	});
+}
+
+void CMainUser::copyBeltItemsInto(CItem items[MAX_BELT_POOL]) const {
+	for (int i = 0; i < MAX_BELT_POOL; i++) {
+		items[i] = m_pBelt[i];
+	}
 }

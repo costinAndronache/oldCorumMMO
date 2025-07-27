@@ -22,267 +22,268 @@
 
 int CUserInterface::BeltProcForInterface()
 {
-	const int beltItemIndex = beltItemIndexAt({ (float)g_Mouse.MousePos.x, (float)g_Mouse.MousePos.y });
-	if (!(0 <= beltItemIndex && beltItemIndex <= 7)) { return 0; }
-
-	const int nValue = g_pMainPlayer->m_pBelt[beltItemIndex].m_wItemID / ITEM_DISTRIBUTE;
-
-
-	if ( g_Mouse.bLDown )
-	{
-		if ( g_pMainPlayer->m_bMatching ) {
-			// "대전중에 벨트 아이템을 사용하지 못합니다."
-			DisplayMessageAdd(g_Message[ETC_MESSAGE520].szMessage, 0xFFFF0000 );
-			return 0;
-		}
-
-		if ( nValue == 0 ) {
-			SetPointer( __MOUSE_POINTER_DEFAULTCLICK__ );
-			return 0;
-		}
-
-		CTDS_ITEM_PICKUP		ItemPickup;
-		ItemPickup.bInv			= 16;
-		ItemPickup.bSectionNum	= 1;
-		ItemPickup.i64ItemID	= 0;
-		ItemPickup.bZipCode		= (BYTE)beltItemIndex;
-		ItemPickup.bEquipCode	= 0;
-		g_pNet->SendMsg((char*)&ItemPickup, ItemPickup.GetPacketSize(), SERVER_INDEX_ZONE);
-		
-		if ( g_ItemMoveManager.GetNewItemMoveMode() )
-		{
-			if ( g_ItemMoveManager.GetNativeSrc() == 0xff )
-			{
-				WORD wID = g_pMainPlayer->m_pBelt[beltItemIndex].m_wItemID;
-				g_ItemMoveManager.SetLButtonDownItem( ITEM_NATIVE_BELT, BYTE(beltItemIndex), wID, 0 );
-			}
-		}
-	}
-	else if ( g_Mouse.bRDown && !m_bSmall )
-	{
-		if(	g_pMainPlayer->GetStatus() != UNIT_STATUS_DEAD &&
-			g_pMainPlayer->GetStatus() != UNIT_STATUS_CASTING ) {
-
-			if(g_pMainPlayer->m_bMatching) {
-				// "대결 중에는 사용할 수 없습니다."
-				DisplayMessageAdd(g_Message[ETC_MESSAGE501].szMessage, 0xFFFF2CFF);
-				return 0;
-			}
-
-			CTDS_ITEM_USED pPacket;
-			pPacket.bInv	= 2;
-			
-			if(nValue == 50) {
-				BOOL	bChk			= TRUE;
-				WORD	wSumWeight		= g_pMainPlayer->GetSumWeight();
-				WORD	wAllSumWeight	= g_pMainPlayer->GetAllSumWeight();
-				float	fPerWeight		= ((float)wSumWeight/(float)wAllSumWeight)*100;
-
-				if(fPerWeight >= WEIGTH_100PER_OVER)
-				{
-					time_t now;
-				
-					time(&now);
-					localtime(&now);
-
-					int nTime = (int)difftime(now, g_pMainPlayer->m_PotionTime);																		
-
-					if( !( nTime >= fPerWeight * 0.03 ) )
-					{		
-						bChk = FALSE;
-						//"포화무게한도에 도달하여 달리기가 안되며, 포션의 사용 딜레이가 증가합니다."
-						DisplayMessageAdd(g_Message[ETC_MESSAGE986].szMessage, 0xffff0000);								
-					}					
-				}						
-
-				if(bChk)
-				{
-					// 물약 사용하기 //
-					pPacket.bZipCode = BYTE(beltItemIndex);
-					g_pNet->SendMsg((char*)&pPacket, pPacket.GetPacketSize(), SERVER_INDEX_ZONE);
-
-					time(&g_pMainPlayer->m_PotionTime);
-					localtime(&g_pMainPlayer->m_PotionTime);
-				}
-			}
-			else if(nValue==ITEM_ZODIAC_INDEX)
-			{					
-				// 조디악 카드 사용하기 //
-				// 마을 귀환 스크롤 추가 2005.02.14 김영대 
-				WORD wItemID = g_pMainPlayer->m_pBelt[beltItemIndex].GetID();
-				if(wItemID >= __ITEM_PORTAL_VILL1__ && wItemID <= __ITEM_PORTAL_VILL6__)
-				{
-					CMiniMapWnd* pMiniMapWnd = CMiniMapWnd::GetInstance();
-
-					if(	(pMiniMapWnd->m_wMapId!=g_pMainPlayer->m_pBelt[beltItemIndex].m_Item_Zodiac.wMapId) ||
-						(pMiniMapWnd->m_byMapLayer!=g_pMainPlayer->m_pBelt[beltItemIndex].m_Item_Zodiac.bLayer))
-					{
-						CTDS_ITEM_PICKUP pPacket;
-						pPacket.bSectionNum	= 1;
-						pPacket.i64ItemID	= 0;
-						SetItemPacket(&pPacket, 53, BYTE(beltItemIndex), 0, 0, 0);
-						g_pNet->SendMsg((char*)&pPacket, pPacket.GetPacketSize(), SERVER_INDEX_ZONE);
-					}
-					else 
-					{
-						// "같은 지역에서는 이동할수가 없습니다."
-						DisplayMessageAdd(g_Message[ETC_MESSAGE503].szMessage, 0xFFFF2CFF); 
-					}
-				}
-				else if(g_pMainPlayer->m_pBelt[beltItemIndex].GetID()==__ITEM_PORTAL_INDEX__)
-				{ 
-					if(g_pMainPlayer->m_pBelt[beltItemIndex].m_Item_Zodiac.bType==0)
-					{
-						if(g_pMainPlayer->m_pBelt[beltItemIndex].m_wItemID==__ITEM_PORTAL_INDEX__)
-						{		
-							if(g_pMainPlayer->m_pBelt[beltItemIndex].m_Item_Zodiac.bType==0)
-							{
-
-// 조디악 카드 버그 수정 
-// 조디악 쌍둥이를 벨트 에 올려 놓고 사용하면 좌표 저장 되던 버그 수정
-// 2005.01.31 김영대 
-								int nZodiacMapId = g_pMainPlayer->m_pBelt[beltItemIndex].m_Item_Zodiac.wMapId;
-
-#if IS_TAIWAN_LOCALIZING()	
-								if (nZodiacMapId > 10)
-#else
-								if (nZodiacMapId >=2000 && nZodiacMapId < 4000)
-#endif
-								{
-									if(g_pMainPlayer->m_pBelt[beltItemIndex].m_Item_Zodiac.bLayer !=0)
-									{
-										//"저장된 지역으로는 현재 이동이 불가능합니다."
-										DisplayMessageAdd(g_Message[ETC_MESSAGE988].szMessage, 0xffff0000);
-									}
-									else
-									{
-										CTDS_ITEM_PICKUP pPacket;
-										pPacket.bSectionNum	= 1;
-										pPacket.i64ItemID	= 0;
-										SetItemPacket(&pPacket, 55, BYTE(beltItemIndex), 0, 0, 0);
-										g_pNet->SendMsg((char*)&pPacket, pPacket.GetPacketSize(), SERVER_INDEX_ZONE);							
-									}
-								}
-								else
-								{
-									//"저장된 지역으로는 현재 이동이 불가능합니다."
-									DisplayMessageAdd(g_Message[ETC_MESSAGE988].szMessage, 0xffff0000);
-								}
-							}
-							else
-							{
-								// "이곳은 조디악카드에 위치를 기억시킬 수 없습니다."
-								DisplayMessageAdd(g_Message[ETC_MESSAGE987].szMessage, 0xffff0000);
-							}							
-						}
-						else
-						{
-							// "아이템이 없습니다."
-							DisplayMessageAdd(g_Message[ETC_MESSAGE144].szMessage, 0xFF21DBFF); 
-						}
-					}
-					else if(g_pMainPlayer->m_pBelt[beltItemIndex].m_Item_Zodiac.bType==1)
-					{
-						CMiniMapWnd* pMiniMapWnd = CMiniMapWnd::GetInstance();
-
-						if(g_pMainPlayer->m_pBelt[beltItemIndex].GetID()==__ITEM_PORTAL_INDEX__)
-						{
-							for(int i = 0; i < MAX_INV_SMALL_POOL; i++)
-							{
-								if(g_pMainPlayer->m_pInv_Small[i].GetID()==__ITEM_PORTALUSED_INDEX__)
-								{
-									if( ( pMiniMapWnd->m_wMapId != g_pMainPlayer->m_pBelt[beltItemIndex].m_Item_Zodiac.wMapId )
-									 || ( pMiniMapWnd->m_byMapLayer != g_pMainPlayer->m_pBelt[beltItemIndex].m_Item_Zodiac.bLayer ) )
-									{
-									//	CMiniMapWnd*		pMiniMapWnd		= CMiniMapWnd::GetInstance();
-										CDungeonInfoWnd*	pDungeonInfoWnd = CDungeonInfoWnd::GetInstance();
-
-										BOOL bPortalChk = FALSE;														
-										BOOL bOnwerChk	= FALSE;
-
-										POSITION_ pos = pDungeonInfoWnd->m_pPageList->GetHeadPosition();
-
-										while(pos)
-										{
-											DUNGEON_DATA_EX* pDungeon = (DUNGEON_DATA_EX*)g_pDungeonTable->m_pReceivedDungeonList->GetAndAdvance(pos);
-
-											if(pDungeon)
-											{
-												if(pDungeon->IsDungeonOwner(g_pMainPlayer))
-													bOnwerChk = TRUE;
-											}
-										}
-
-										if(!bOnwerChk)
-										{
-											if(	g_pMainPlayer->m_pBelt[beltItemIndex].m_Item_Zodiac.wMapId >= 2000 &&
-												g_pMainPlayer->m_pBelt[beltItemIndex].m_Item_Zodiac.wMapId < 4000)
-											{
-												if ( g_pMainPlayer->m_pBelt[beltItemIndex].m_Item_Zodiac.bLayer == 0 )
-												{
-													bPortalChk = TRUE;
-												}
-												else
-												{
-													//"저장된 지역으로는 현재 이동이 불가능합니다."
-													DisplayMessageAdd(g_Message[ETC_MESSAGE988].szMessage, 0xffff0000);
-												}
-											}
-											else
-											{
-												// "저장된 지역으로는 현재 이동이 불가능합니다."
-												DisplayMessageAdd(g_Message[ETC_MESSAGE988].szMessage, 0xffff0000);
-											}
-										}
-										else
-										{
-											bPortalChk = TRUE;
-										}
-
-										if ( bPortalChk )
-										{
-											CTDS_ITEM_PICKUP pPacket;
-											pPacket.bSectionNum	= 1;
-											pPacket.i64ItemID	= 0;
-											SetItemPacket(&pPacket, 54, BYTE(beltItemIndex), BYTE(i), 0, 0);
-											g_pNet->SendMsg((char*)&pPacket, pPacket.GetPacketSize(), SERVER_INDEX_ZONE);
-										}
-										break;
-									}
-									else
-									{
-										// "같은 지역에서는 이동을 할수가 없습니다."
-										DisplayMessageAdd(g_Message[ETC_MESSAGE503].szMessage, 0xFFFF2CFF); 
-									}
-								}
-							}
-						}
-						else
-						{
-							// "사용할 수 있는 아이템이 없습니다."
-							DisplayMessageAdd(g_Message[ETC_MESSAGE52].szMessage, 0xFFFF2CFF); 
-						}
-					}
-				}
-				else
-				{
-					// "사용할 수 있는 아이템이 없습니다."
-					DisplayMessageAdd(g_Message[ETC_MESSAGE52].szMessage, 0xFFFF2CFF); 
-				}
-			}
-
-			m_bSmall = TRUE;
-		}
-	}
-	else if(!g_Mouse.bLDown) {
-
-		if(nValue == 0)
-			SetPointer(__MOUSE_POINTER_DEFAULT__);
-		else
-			SetPointer(__MOUSE_POINTER_ITEM__);
-	}
-	
-	return 1;
+	return 0;
+//	const int beltItemIndex = beltItemIndexAt({ (float)g_Mouse.MousePos.x, (float)g_Mouse.MousePos.y });
+//	if (!(0 <= beltItemIndex && beltItemIndex <= 7)) { return 0; }
+//
+//	const int nValue = g_pMainPlayer->m_pBelt[beltItemIndex].m_wItemID / ITEM_DISTRIBUTE;
+//
+//
+//	if ( g_Mouse.bLDown )
+//	{
+//		if ( g_pMainPlayer->m_bMatching ) {
+//			// "대전중에 벨트 아이템을 사용하지 못합니다."
+//			DisplayMessageAdd(g_Message[ETC_MESSAGE520].szMessage, 0xFFFF0000 );
+//			return 0;
+//		}
+//
+//		if ( nValue == 0 ) {
+//			SetPointer( __MOUSE_POINTER_DEFAULTCLICK__ );
+//			return 0;
+//		}
+//
+//		CTDS_ITEM_PICKUP		ItemPickup;
+//		ItemPickup.bInv			= 16;
+//		ItemPickup.bSectionNum	= 1;
+//		ItemPickup.i64ItemID	= 0;
+//		ItemPickup.bZipCode		= (BYTE)beltItemIndex;
+//		ItemPickup.bEquipCode	= 0;
+//		g_pNet->SendMsg((char*)&ItemPickup, ItemPickup.GetPacketSize(), SERVER_INDEX_ZONE);
+//		
+//		if ( g_ItemMoveManager.GetNewItemMoveMode() )
+//		{
+//			if ( g_ItemMoveManager.GetNativeSrc() == 0xff )
+//			{
+//				WORD wID = g_pMainPlayer->m_pBelt[beltItemIndex].m_wItemID;
+//				g_ItemMoveManager.SetLButtonDownItem( ITEM_NATIVE_BELT, BYTE(beltItemIndex), wID, 0 );
+//			}
+//		}
+//	}
+//	else if ( g_Mouse.bRDown && !m_bSmall )
+//	{
+//		if(	g_pMainPlayer->GetStatus() != UNIT_STATUS_DEAD &&
+//			g_pMainPlayer->GetStatus() != UNIT_STATUS_CASTING ) {
+//
+//			if(g_pMainPlayer->m_bMatching) {
+//				// "대결 중에는 사용할 수 없습니다."
+//				DisplayMessageAdd(g_Message[ETC_MESSAGE501].szMessage, 0xFFFF2CFF);
+//				return 0;
+//			}
+//
+//			CTDS_ITEM_USED pPacket;
+//			pPacket.bInv	= 2;
+//			
+//			if(nValue == 50) {
+//				BOOL	bChk			= TRUE;
+//				WORD	wSumWeight		= g_pMainPlayer->GetSumWeight();
+//				WORD	wAllSumWeight	= g_pMainPlayer->GetAllSumWeight();
+//				float	fPerWeight		= ((float)wSumWeight/(float)wAllSumWeight)*100;
+//
+//				if(fPerWeight >= WEIGTH_100PER_OVER)
+//				{
+//					time_t now;
+//				
+//					time(&now);
+//					localtime(&now);
+//
+//					int nTime = (int)difftime(now, g_pMainPlayer->m_PotionTime);																		
+//
+//					if( !( nTime >= fPerWeight * 0.03 ) )
+//					{		
+//						bChk = FALSE;
+//						//"포화무게한도에 도달하여 달리기가 안되며, 포션의 사용 딜레이가 증가합니다."
+//						DisplayMessageAdd(g_Message[ETC_MESSAGE986].szMessage, 0xffff0000);								
+//					}					
+//				}						
+//
+//				if(bChk)
+//				{
+//					// 물약 사용하기 //
+//					pPacket.bZipCode = BYTE(beltItemIndex);
+//					g_pNet->SendMsg((char*)&pPacket, pPacket.GetPacketSize(), SERVER_INDEX_ZONE);
+//
+//					time(&g_pMainPlayer->m_PotionTime);
+//					localtime(&g_pMainPlayer->m_PotionTime);
+//				}
+//			}
+//			else if(nValue==ITEM_ZODIAC_INDEX)
+//			{					
+//				// 조디악 카드 사용하기 //
+//				// 마을 귀환 스크롤 추가 2005.02.14 김영대 
+//				WORD wItemID = g_pMainPlayer->m_pBelt[beltItemIndex].GetID();
+//				if(wItemID >= __ITEM_PORTAL_VILL1__ && wItemID <= __ITEM_PORTAL_VILL6__)
+//				{
+//					CMiniMapWnd* pMiniMapWnd = CMiniMapWnd::GetInstance();
+//
+//					if(	(pMiniMapWnd->m_wMapId!=g_pMainPlayer->m_pBelt[beltItemIndex].m_Item_Zodiac.wMapId) ||
+//						(pMiniMapWnd->m_byMapLayer!=g_pMainPlayer->m_pBelt[beltItemIndex].m_Item_Zodiac.bLayer))
+//					{
+//						CTDS_ITEM_PICKUP pPacket;
+//						pPacket.bSectionNum	= 1;
+//						pPacket.i64ItemID	= 0;
+//						SetItemPacket(&pPacket, 53, BYTE(beltItemIndex), 0, 0, 0);
+//						g_pNet->SendMsg((char*)&pPacket, pPacket.GetPacketSize(), SERVER_INDEX_ZONE);
+//					}
+//					else 
+//					{
+//						// "같은 지역에서는 이동할수가 없습니다."
+//						DisplayMessageAdd(g_Message[ETC_MESSAGE503].szMessage, 0xFFFF2CFF); 
+//					}
+//				}
+//				else if(g_pMainPlayer->m_pBelt[beltItemIndex].GetID()==__ITEM_PORTAL_INDEX__)
+//				{ 
+//					if(g_pMainPlayer->m_pBelt[beltItemIndex].m_Item_Zodiac.bType==0)
+//					{
+//						if(g_pMainPlayer->m_pBelt[beltItemIndex].m_wItemID==__ITEM_PORTAL_INDEX__)
+//						{		
+//							if(g_pMainPlayer->m_pBelt[beltItemIndex].m_Item_Zodiac.bType==0)
+//							{
+//
+//// 조디악 카드 버그 수정 
+//// 조디악 쌍둥이를 벨트 에 올려 놓고 사용하면 좌표 저장 되던 버그 수정
+//// 2005.01.31 김영대 
+//								int nZodiacMapId = g_pMainPlayer->m_pBelt[beltItemIndex].m_Item_Zodiac.wMapId;
+//
+//#if IS_TAIWAN_LOCALIZING()	
+//								if (nZodiacMapId > 10)
+//#else
+//								if (nZodiacMapId >=2000 && nZodiacMapId < 4000)
+//#endif
+//								{
+//									if(g_pMainPlayer->m_pBelt[beltItemIndex].m_Item_Zodiac.bLayer !=0)
+//									{
+//										//"저장된 지역으로는 현재 이동이 불가능합니다."
+//										DisplayMessageAdd(g_Message[ETC_MESSAGE988].szMessage, 0xffff0000);
+//									}
+//									else
+//									{
+//										CTDS_ITEM_PICKUP pPacket;
+//										pPacket.bSectionNum	= 1;
+//										pPacket.i64ItemID	= 0;
+//										SetItemPacket(&pPacket, 55, BYTE(beltItemIndex), 0, 0, 0);
+//										g_pNet->SendMsg((char*)&pPacket, pPacket.GetPacketSize(), SERVER_INDEX_ZONE);							
+//									}
+//								}
+//								else
+//								{
+//									//"저장된 지역으로는 현재 이동이 불가능합니다."
+//									DisplayMessageAdd(g_Message[ETC_MESSAGE988].szMessage, 0xffff0000);
+//								}
+//							}
+//							else
+//							{
+//								// "이곳은 조디악카드에 위치를 기억시킬 수 없습니다."
+//								DisplayMessageAdd(g_Message[ETC_MESSAGE987].szMessage, 0xffff0000);
+//							}							
+//						}
+//						else
+//						{
+//							// "아이템이 없습니다."
+//							DisplayMessageAdd(g_Message[ETC_MESSAGE144].szMessage, 0xFF21DBFF); 
+//						}
+//					}
+//					else if(g_pMainPlayer->m_pBelt[beltItemIndex].m_Item_Zodiac.bType==1)
+//					{
+//						CMiniMapWnd* pMiniMapWnd = CMiniMapWnd::GetInstance();
+//
+//						if(g_pMainPlayer->m_pBelt[beltItemIndex].GetID()==__ITEM_PORTAL_INDEX__)
+//						{
+//							for(int i = 0; i < MAX_INV_SMALL_POOL; i++)
+//							{
+//								if(g_pMainPlayer->m_pInv_Small[i].GetID()==__ITEM_PORTALUSED_INDEX__)
+//								{
+//									if( ( pMiniMapWnd->m_wMapId != g_pMainPlayer->m_pBelt[beltItemIndex].m_Item_Zodiac.wMapId )
+//									 || ( pMiniMapWnd->m_byMapLayer != g_pMainPlayer->m_pBelt[beltItemIndex].m_Item_Zodiac.bLayer ) )
+//									{
+//									//	CMiniMapWnd*		pMiniMapWnd		= CMiniMapWnd::GetInstance();
+//										CDungeonInfoWnd*	pDungeonInfoWnd = CDungeonInfoWnd::GetInstance();
+//
+//										BOOL bPortalChk = FALSE;														
+//										BOOL bOnwerChk	= FALSE;
+//
+//										POSITION_ pos = pDungeonInfoWnd->m_pPageList->GetHeadPosition();
+//
+//										while(pos)
+//										{
+//											DUNGEON_DATA_EX* pDungeon = (DUNGEON_DATA_EX*)g_pDungeonTable->m_pReceivedDungeonList->GetAndAdvance(pos);
+//
+//											if(pDungeon)
+//											{
+//												if(pDungeon->IsDungeonOwner(g_pMainPlayer))
+//													bOnwerChk = TRUE;
+//											}
+//										}
+//
+//										if(!bOnwerChk)
+//										{
+//											if(	g_pMainPlayer->m_pBelt[beltItemIndex].m_Item_Zodiac.wMapId >= 2000 &&
+//												g_pMainPlayer->m_pBelt[beltItemIndex].m_Item_Zodiac.wMapId < 4000)
+//											{
+//												if ( g_pMainPlayer->m_pBelt[beltItemIndex].m_Item_Zodiac.bLayer == 0 )
+//												{
+//													bPortalChk = TRUE;
+//												}
+//												else
+//												{
+//													//"저장된 지역으로는 현재 이동이 불가능합니다."
+//													DisplayMessageAdd(g_Message[ETC_MESSAGE988].szMessage, 0xffff0000);
+//												}
+//											}
+//											else
+//											{
+//												// "저장된 지역으로는 현재 이동이 불가능합니다."
+//												DisplayMessageAdd(g_Message[ETC_MESSAGE988].szMessage, 0xffff0000);
+//											}
+//										}
+//										else
+//										{
+//											bPortalChk = TRUE;
+//										}
+//
+//										if ( bPortalChk )
+//										{
+//											CTDS_ITEM_PICKUP pPacket;
+//											pPacket.bSectionNum	= 1;
+//											pPacket.i64ItemID	= 0;
+//											SetItemPacket(&pPacket, 54, BYTE(beltItemIndex), BYTE(i), 0, 0);
+//											g_pNet->SendMsg((char*)&pPacket, pPacket.GetPacketSize(), SERVER_INDEX_ZONE);
+//										}
+//										break;
+//									}
+//									else
+//									{
+//										// "같은 지역에서는 이동을 할수가 없습니다."
+//										DisplayMessageAdd(g_Message[ETC_MESSAGE503].szMessage, 0xFFFF2CFF); 
+//									}
+//								}
+//							}
+//						}
+//						else
+//						{
+//							// "사용할 수 있는 아이템이 없습니다."
+//							DisplayMessageAdd(g_Message[ETC_MESSAGE52].szMessage, 0xFFFF2CFF); 
+//						}
+//					}
+//				}
+//				else
+//				{
+//					// "사용할 수 있는 아이템이 없습니다."
+//					DisplayMessageAdd(g_Message[ETC_MESSAGE52].szMessage, 0xFFFF2CFF); 
+//				}
+//			}
+//
+//			m_bSmall = TRUE;
+//		}
+//	}
+//	else if(!g_Mouse.bLDown) {
+//
+//		if(nValue == 0)
+//			SetPointer(__MOUSE_POINTER_DEFAULT__);
+//		else
+//			SetPointer(__MOUSE_POINTER_ITEM__);
+//	}
+//	
+//	return 1;
 }
 
 

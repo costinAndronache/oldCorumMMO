@@ -178,7 +178,7 @@ struct ITEM_LAND
 class DECLSPECIFIER CItem
 {
 public:
-
+	static CItem nullItem();
 	WORD			m_wItemID;				//<-- 2Byte
 	ITEM_SERIAL		m_Serial;				//<-- 8Byte
 

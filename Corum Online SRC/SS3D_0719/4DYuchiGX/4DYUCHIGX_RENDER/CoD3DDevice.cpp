@@ -43,11 +43,8 @@ DWORD __stdcall DefaultErrorHandleProc(
 	char	txt[512];
 	memset(txt,0,512);
 
-	wsprintf(txt,"File not found, %s\n",szStr);
+	wsprintf(txt,"ERROR::\nFile not found, %s\n",szStr);
 	OutputDebugString(txt);
-
-	if (!dwErrorPriority)
-		__asm int 3
 
 	return 0;
 }

@@ -1,4 +1,4 @@
-//Microsoft Developer Studio generated resource script.
+// Microsoft Visual C++ generated resource script.
 //
 #include "resource.h"
 
@@ -13,13 +13,11 @@
 #undef APSTUDIO_READONLY_SYMBOLS
 
 /////////////////////////////////////////////////////////////////////////////
-// Korean resources
+// Korean (Korea) resources
 
 #if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_KOR)
-#ifdef _WIN32
 LANGUAGE LANG_KOREAN, SUBLANG_DEFAULT
 #pragma code_page(949)
-#endif //_WIN32
 
 #ifdef APSTUDIO_INVOKED
 /////////////////////////////////////////////////////////////////////////////
@@ -27,18 +25,18 @@ LANGUAGE LANG_KOREAN, SUBLANG_DEFAULT
 // TEXTINCLUDE
 //
 
-1 TEXTINCLUDE DISCARDABLE 
+1 TEXTINCLUDE 
 BEGIN
     "resource.h\0"
 END
 
-2 TEXTINCLUDE DISCARDABLE 
+2 TEXTINCLUDE 
 BEGIN
     "#include ""afxres.h""\r\n"
     "\0"
 END
 
-3 TEXTINCLUDE DISCARDABLE 
+3 TEXTINCLUDE 
 BEGIN
     "#define _AFX_NO_SPLITTER_RESOURCES\r\n"
     "#define _AFX_NO_OLE_RESOURCES\r\n"
@@ -66,53 +64,51 @@ END
 
 // Icon with lowest ID value placed first to ensure application icon
 // remains consistent on all systems.
-IDR_MAINFRAME           ICON    DISCARDABLE     "res\\4DyuchiFilePack.ico"
+IDR_MAINFRAME           ICON                    "res\\4DyuchiFilePack.ico"
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
 // Dialog
 //
 
-IDD_ABOUTBOX DIALOG DISCARDABLE  0, 0, 235, 55
-STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+IDD_ABOUTBOX DIALOG 0, 0, 235, 55
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "4DyuchiFilePack 정보"
 FONT 9, "굴림"
 BEGIN
     ICON            IDR_MAINFRAME,IDC_STATIC,11,17,20,20
-    LTEXT           "4DyuchiFilePack 버전 1.0",IDC_STATIC,40,10,119,8,
-                    SS_NOPREFIX
+    LTEXT           "4DyuchiFilePack 버전 1.0",IDC_STATIC,40,10,119,8,SS_NOPREFIX
     LTEXT           "Copyright (C) 2003",IDC_STATIC,40,25,119,8
     DEFPUSHBUTTON   "확인",IDOK,178,7,50,14,WS_GROUP
 END
 
 IDD_MY4DYUCHIFILEPACK_DIALOG DIALOGEX 0, 0, 367, 439
-STYLE DS_MODALFRAME | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
+STYLE DS_SETFONT | DS_MODALFRAME | DS_3DLOOK | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
 EXSTYLE WS_EX_ACCEPTFILES | WS_EX_APPWINDOW
 CAPTION "4DyuchiFilePack"
 FONT 9, "굴림", 0, 0, 0x1
 BEGIN
     EDITTEXT        IDC_EDIT_FULLPATHNAME,7,7,253,16,ES_AUTOHSCROLL
     PUSHBUTTON      "Browse",IDC_BUTTON_BROWSE_FILE,262,7,30,16
-    LISTBOX         IDC_LIST1,7,27,251,310,LBS_SORT | LBS_MULTIPLESEL | 
-                    LBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_TABSTOP
-    PUSHBUTTON      "Map to Storage",IDC_BUTTON_MAP_TO_STORAGE,294,7,54,16
-    PUSHBUTTON      "Delete",IDC_BUTTON_DELETE,266,39,36,16
-    GROUPBOX        "Per PackFile",IDC_STATIC,262,29,90,90
-    PUSHBUTTON      "ExtractAll",IDC_BUTTON_EXTRACT_ALL,266,57,36,16
-    GROUPBOX        "Per FileStorage",IDC_STATIC,262,123,90,90
-    PUSHBUTTON      "ExtractAll",IDC_BUTTON_EXTRACT_ALL_IN_STORAGE,266,137,
-                    36,16
+    LISTBOX         IDC_LIST1,7,27,251,310,LBS_SORT | LBS_MULTIPLESEL | LBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_TABSTOP
+    PUSHBUTTON      "Load",IDC_BUTTON_MAP_TO_STORAGE,294,7,54,16
+    PUSHBUTTON      "Delete selected files",IDC_BUTTON_DELETE,267,39,74,16
+    GROUPBOX        "Per PackFile",IDC_STATIC,262,29,90,115
+    PUSHBUTTON      "ExtractAll",IDC_BUTTON_EXTRACT_ALL,268,59,36,16
+    GROUPBOX        "Per FileStorage",IDC_STATIC,261,166,90,90
     CONTROL         "Warning Existing File",IDC_CHECK_WARNING_EXISTING_FILE,
                     "Button",BS_AUTOCHECKBOX | WS_TABSTOP,266,197,81,12
-    LISTBOX         IDC_LIST2,7,357,251,68,LBS_SORT | LBS_NOINTEGRALHEIGHT | 
-                    WS_VSCROLL | WS_TABSTOP
+    LISTBOX         IDC_LIST2,7,357,251,68,LBS_SORT | LBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_TABSTOP
     PUSHBUTTON      "Select",IDC_BUTTON_SELECT_PACKFILE,266,361,36,16
-    PUSHBUTTON      "Delete",IDC_BUTTON_DELETE_PACKFILE,305,361,36,16
+    PUSHBUTTON      "Unload",IDC_BUTTON_DELETE_PACKFILE,305,361,47,16
     LTEXT           "",IDC_STATIC_PROGRESS,268,318,34,15,0,WS_EX_CLIENTEDGE
+    PUSHBUTTON      "ExtractAll",IDC_BUTTON_EXTRACT_ALL_IN_STORAGE2,266,178,36,16
+    PUSHBUTTON      "Repack into new pak",IDC_BUTTON_REPACK,265,83,78,14
+    CTEXT           "Use drag and drop to insert new files",IDC_STATIC,267,106,75,30
 END
 
 
-#ifndef _MAC
 /////////////////////////////////////////////////////////////////////////////
 //
 // Version
@@ -135,18 +131,14 @@ BEGIN
     BEGIN
         BLOCK "041204b0"
         BEGIN
-            VALUE "Comments", "build 2004.07.19\0"
-            VALUE "CompanyName", "\0"
-            VALUE "FileDescription", "4DyuchiFilePack MFC 응용 프로그램\0"
-            VALUE "FileVersion", "1, 0, 0, 96\0"
-            VALUE "InternalName", "4DyuchiFilePack\0"
-            VALUE "LegalCopyright", "esofnet engine dev. Copyright (C) 2003\0"
-            VALUE "LegalTrademarks", "\0"
-            VALUE "OriginalFilename", "4DyuchiFilePack.EXE\0"
-            VALUE "PrivateBuild", "\0"
-            VALUE "ProductName", "4DyuchiFilePack 응용 프로그램\0"
-            VALUE "ProductVersion", "1, 0, 0, 96\0"
-            VALUE "SpecialBuild", "\0"
+            VALUE "Comments", "build 2004.07.19"
+            VALUE "FileDescription", "4DyuchiFilePack MFC 응용 프로그램"
+            VALUE "FileVersion", "1, 0, 0, 96"
+            VALUE "InternalName", "4DyuchiFilePack"
+            VALUE "LegalCopyright", "esofnet engine dev. Copyright (C) 2003"
+            VALUE "OriginalFilename", "4DyuchiFilePack.EXE"
+            VALUE "ProductName", "4DyuchiFilePack 응용 프로그램"
+            VALUE "ProductVersion", "1, 0, 0, 96"
         END
     END
     BLOCK "VarFileInfo"
@@ -155,8 +147,6 @@ BEGIN
     END
 END
 
-#endif    // !_MAC
-
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -164,7 +154,7 @@ END
 //
 
 #ifdef APSTUDIO_INVOKED
-GUIDELINES DESIGNINFO DISCARDABLE 
+GUIDELINES DESIGNINFO
 BEGIN
     IDD_ABOUTBOX, DIALOG
     BEGIN
@@ -187,15 +177,26 @@ END
 
 /////////////////////////////////////////////////////////////////////////////
 //
+// AFX_DIALOG_LAYOUT
+//
+
+IDD_MY4DYUCHIFILEPACK_DIALOG AFX_DIALOG_LAYOUT
+BEGIN
+    0
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
 // String Table
 //
 
-STRINGTABLE DISCARDABLE 
+STRINGTABLE
 BEGIN
     IDS_ABOUTBOX            "4DyuchiFilePack 정보(&A)..."
 END
 
-#endif    // Korean resources
+#endif    // Korean (Korea) resources
 /////////////////////////////////////////////////////////////////////////////
 
 

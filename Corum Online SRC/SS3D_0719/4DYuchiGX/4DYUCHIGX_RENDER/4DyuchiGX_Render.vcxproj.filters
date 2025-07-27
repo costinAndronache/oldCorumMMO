@@ -221,6 +221,9 @@
     <ClCompile Include="ProjectionLight.cpp">
       <Filter>ProjectionLight</Filter>
     </ClCompile>
+    <ClCompile Include="stb_image.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Script1.rc">

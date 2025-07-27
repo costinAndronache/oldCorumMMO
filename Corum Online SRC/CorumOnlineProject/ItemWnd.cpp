@@ -215,7 +215,7 @@ void CItemWnd::RenderText()//: 050111 hwoarang
 
 void CItemWnd::RenderItem()
 {
-	RenderItemEquip();
+	//RenderItemEquip();
 	RenderItemGuardian();
 
 	if(m_byItemChk==0)
@@ -227,34 +227,7 @@ void CItemWnd::RenderItem()
 
 void CItemWnd::RenderItemBelt()
 {	
-	VECTOR2	vPos;						
-
-	for(int i= 0; i < MAX_BELT_POOL; i++)
-	{
-		if(g_pMainPlayer->m_pBelt[i].m_wItemID!=0)
-		{
-			if(g_ItemMoveManager.GetNewItemMoveMode())
-			{
-				if(g_ItemMoveManager.GetNativeSrc() == ITEM_NATIVE_BELT &&	i == g_ItemMoveManager.GetNativeSrcIndex())
-				{
-					continue;
-				}
-			}
-
-			LP_ITEM_RESOURCE_EX lpItemResourceEx =
-				g_pItemResourceHash->GetData(g_pMainPlayer->m_pBelt[i].m_wItemID);
-
-			if(lpItemResourceEx)
-			{
-				int nPosX = (int)727+(i*37);
-				int nPosY = (int)733;
-
-				vPos.x	= (float)nPosX;
-				vPos.y	= (float)nPosY;
-				g_pRenderer->RenderSprite(lpItemResourceEx->pSpr, NULL, 0.0f, &vPos, NULL, 0xffffffff, __ORDER_USER_BLET__, RENDER_TYPE_DISABLE_TEX_FILTERING);
-			}			
-		}
-	}
+	
 }
 
 void CItemWnd::RenderItemGuardian()
@@ -549,27 +522,8 @@ void CItemWnd::RenderItemMouse()
 }
 
 void CItemWnd::RenderBelt()// : 050110 hwoarang
-{	
-	for(int i = 0;  i < MAX_BELT_POOL; i++)	
-	{
-		if(g_ItemMoveManager.GetNewItemMoveMode())
-		{
-			if(	g_ItemMoveManager.GetNativeSrc() == ITEM_NATIVE_BELT &&
-				i == g_ItemMoveManager.GetNativeSrcIndex())
-			{
-				continue;
-			}
-		}
-		auto item = g_pMainPlayer->m_pBelt[i];
-		const int iQuantity = item.GetQuantity();
-		if(1 < iQuantity)
-		{
-			wsprintf(m_szInfo, "%d", iQuantity );
+{
 
-			int nSize = lstrlen(m_szInfo);
-			RenderFont(m_szInfo, 755+i*37-(nSize*7), 755+i*37, 733+19, 745+19, __ORDER_USER_BLET__+1);
-		}
-	}
 }
 
 void CItemWnd::RenderItemInfo()

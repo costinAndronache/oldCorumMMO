@@ -1,5 +1,6 @@
 setlocal ENABLEDELAYEDEXPANSION
 
+call .\scripts\setDirectoryVariables.bat
 call .\scripts\solutionEnvironment.bat
 
 echo %VSSDKDIR%

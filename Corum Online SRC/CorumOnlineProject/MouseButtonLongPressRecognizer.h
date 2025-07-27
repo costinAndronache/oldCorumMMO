@@ -12,7 +12,7 @@ public:
 		const EventListener onEnd;
 	};
 
-	MouseButtonLongPressRecognizer(std::shared_ptr<WorkQueue> workQueue, DWORD minimumPressDurationMilliseconds);
+	MouseButtonLongPressRecognizer(std::shared_ptr<RunLoop> runLoop, DWORD minimumPressDurationMilliseconds);
 	EventListenerHandle addLeftButtonListeners(EventListeners listeners);
 	EventListenerHandle addRightButtonListeners(EventListeners listeners);
 

@@ -99,11 +99,14 @@
 #include "GuildWarRequest.h"
 #include "GuildWarFinalSettingWnd.h"
 #include "GuildWarStatusWnd.h"
-#include "ItemPickupFiltering/ItemPickupFiltering.h"
+#include "NewUI/ItemPickupFiltering.h"
 #include "../CommonServer/ItemManagerDefine.h"
 #include "MouseButtonLongPressRecognizer.h"
 #include "AppliedSkillsIconsView.h"
 #include "SkillSelectionView.h"
+#include "NewHUD/NewInterface.h"
+#include "NewUI/SpriteRenderable.h"
+
 
 using namespace ItemPickupFiltering;
 
@@ -111,7 +114,9 @@ char globalDebugLine[255];
 
 static int _renderFPS = 30;
 std::shared_ptr<AppliedSkillsIconsView> _appliedSkillsIconsView(nullptr);
+std::shared_ptr<NewInterface::Interface> _newInterface(nullptr);
 
+static CustomUI::SpriteRenderable* _leftHudTest = nullptr;
 
 DWORD						g_dwMileHandleRefs	= 0;
 LPGlobalVariable_Dungeon	g_pGVDungeon		= NULL;
@@ -208,6 +213,18 @@ void cancelTooltipRenderingForAllDropped() {
 BOOL InitGameDungeon() {
 	ItemPickupFilteringSystem::sharedInstance()->setViewActive(false);
 	_appliedSkillsIconsView = std::make_shared<AppliedSkillsIconsView>();
+	_newInterface = std::make_shared<NewInterface::Interface>(
+		CustomUI::Size{ (float)windowWidth(), (float)windowHeight()},
+		g_pMainPlayer,
+		&g_sSkillListManager,
+		g_pItemResourceHash
+	);
+
+	_leftHudTest = new CustomUI::SpriteRenderable(
+		{ {0, 0}, {400, 121} },
+		NewHUDResources::leftInterfaceHUDSprite
+	);
+
 
 	CBankWnd::GetInstance()->Init();
 	// 카메라 이동에 관련된 플래그 세팅.
@@ -1049,8 +1066,11 @@ DWORD __stdcall AfterRenderGameDungeon()
 		RenderUserSelectRect();
 	}
 
-	pInterface->Render();
-	
+	//pInterface->Render();
+	_newInterface->renderWithRenderer(g_pRenderer, __ORDER_INTERFACE_START__);
+
+	//_leftHudTest->renderWithRenderer(g_pRenderer, __ORDER_INTERFACE_START__);
+
 
 	g_pSprManager->RenderAllSprite();
 	pInterface->SetMiniMapPos();
@@ -1075,19 +1095,13 @@ DWORD __stdcall AfterRenderGameDungeon()
 	}
 
 	ItemInfoRender();			// ItemInfo 	
-	ChatRender();				// 채팅출력 	
-	SkillRender();				// 스킬 출력 
-	
+	ChatRender();				// 채팅출력 		
 	char szInfo[0xff] = {0,};
 
 	if( !g_pThisDungeon->IsStadium() || (g_pMainPlayer->m_dwGuildWarFlag != G_W_F_OBSERVER) )
 	{
-		// Hp, Sp //	
-		wsprintf(szInfo, g_Message[ETC_MESSAGE864].szMessage, g_pMainPlayer->currentHP(), g_pMainPlayer->maxHP());//"Hp:%d/%d"	
-		RenderFont(szInfo, 5, 100, 740, 752, 1);
-
-		wsprintf(szInfo, g_Message[ETC_MESSAGE865].szMessage, g_pMainPlayer->currentSP(), g_pMainPlayer->maxSP());//"Sp:%d/%d"
-		RenderFont(szInfo, 5, 100, 755, 777, 1);	
+#pragma region 
+		// render hp and sp; 
 	}
 		
 	// INPUT BUFFER 체크
@@ -1542,9 +1556,9 @@ DWORD __stdcall AfterRenderGameDungeon()
 void OnKeyDownDungeon(WPARAM wParam, LPARAM lParam)
 {	
 	if (CustomUI::safeToHandleKeyEvents()) {
-		if (ItemPickupFilteringSystem::sharedInstance()->handleKeyDown(wParam, lParam)) {
-			return;
-		}
+		ItemPickupFilteringSystem::sharedInstance()->handleKeyDown(wParam, lParam);
+
+		if (ItemPickupFilteringSystem::sharedInstance()->swallowsKeyboard()) { return; }
 
 		switch (ItemPickupFiltering::actionCodeFromKeyEvent(wParam, lParam)) {
 		case ActionCode::ActionCodeDroppedItemsTooltipRendering:
@@ -1900,67 +1914,14 @@ void OnKeyDownDungeon(WPARAM wParam, LPARAM lParam)
 			break;
 		#endif		
 	}
-
-	if(bHanMode==TRUE)
-	{	
-		if(!g_pGVDungeon->bChatMode)
-		{
-			char szKey[0xff] = {0,};
-			GetKeyNameText(lParam, szKey, 10);
-
-			if(__strcmp(szKey, "R")==0)
-			{		
-				if(g_bKeyChkUp==FALSE)
-				{
-					if( g_pMainPlayer ) 
-					{
-						if( g_pMainPlayer->m_bMoveType == UNIT_STATUS_WALKING )
-							g_pMainPlayer->m_bMoveType = UNIT_STATUS_RUNNING;
-						else
-							g_pMainPlayer->m_bMoveType = UNIT_STATUS_WALKING;
-						
-						if( g_pMainPlayer->GetStatus()==UNIT_STATUS_WALKING ||
-							g_pMainPlayer->GetStatus()==UNIT_STATUS_RUNNING)
-						{
-							if( g_pMainPlayer->GetStatus()==UNIT_STATUS_WALKING )
-							{
-								g_pMainPlayer->SetMotion( MOTION_TYPE_WALK, 0, ACTION_LOOP );
-								g_pMainPlayer->SetStatus(g_pMainPlayer->m_bMoveType);
-								SendMovePacket();
-							}
-							else if( g_pMainPlayer->GetStatus()==UNIT_STATUS_RUNNING)
-							{
-								g_pMainPlayer->SetMotion( MOTION_TYPE_RUN, 0, ACTION_LOOP );								
-								SendMovePacket();
-							}
-
-							g_pMainPlayer->SetStatus(g_pMainPlayer->m_bMoveType);
-						}
-					}
-
-					g_bKeyChkUp = TRUE;
-				}					
-			}
-
-			for(int i = 0; i < 25; i++)
-			{
-				if(__strcmp(szKey, g_pszKeyArray[i])==0)
-				{
-					ConvertKeyDown(szKey);
-					break;
-				}
-			}
-		}		
-	}	
 }
 
 
 void OnKeyUpDungeon(WPARAM wParam, LPARAM lParam)
 {	
 	if (CustomUI::safeToHandleKeyEvents()) {
-		if (ItemPickupFilteringSystem::sharedInstance()->handleKeyUp(wParam, lParam)) {
-			return;
-		}
+		ItemPickupFilteringSystem::sharedInstance()->handleKeyUp(wParam, lParam);
+		if (ItemPickupFilteringSystem::sharedInstance()->swallowsKeyboard()) { return; }
 
 		switch (ItemPickupFiltering::actionCodeFromKeyEvent(wParam, lParam)) {
 		case ActionCode::ActionCodeDroppedItemsTooltipRendering:
@@ -1982,6 +1943,7 @@ void OnKeyUpDungeon(WPARAM wParam, LPARAM lParam)
 
 	g_bKeyChkUp = FALSE;
 
+	const auto speed = 20;
 	switch( LOWORD(wParam) )
 	{
 		case VK_CONTROL:
@@ -1997,12 +1959,33 @@ void OnKeyUpDungeon(WPARAM wParam, LPARAM lParam)
 			SetRect( &g_rcSelectBox, 0, 0, 0, 0 );
 		}
 		break;
+
+		case VK_LEFT:
+			ItemPickupFilteringSystem::sharedInstance()->offsetView({ -speed, 0 });
+			break;
+
+		case VK_RIGHT:
+			ItemPickupFilteringSystem::sharedInstance()->offsetView({ speed, 0 });
+			break;
+		
+		case VK_UP:
+			ItemPickupFilteringSystem::sharedInstance()->offsetView({ 0, -speed });
+			break;
+
+		case VK_DOWN:
+			ItemPickupFilteringSystem::sharedInstance()->offsetView({ 0, speed });
+			break;
 	}
 }
 
 BOOL OnLButtonDownInterfaceDungeon()
 {
-	if (ItemPickupFilteringSystem::sharedInstance()->handleMouseDown()) {
+	ItemPickupFilteringSystem::sharedInstance()->handleMouseDown();
+	if (ItemPickupFilteringSystem::sharedInstance()->swallowsMouse()) { 
+		return TRUE; 
+	}
+
+	if (_newInterface->swallowsMouse(g_Mouse.MousePos)) {
 		return TRUE;
 	}
 
@@ -2071,16 +2054,16 @@ BOOL OnLButtonDownInterfaceDungeon()
 
 void OnLButtonDownDungeon(WPARAM wParam, LPARAM lParam)
 {
-
-	if (ItemPickupFilteringSystem::sharedInstance()->handleMouseDown()) {
-		printf("\nItemPickupFiltering handles it");
-		return;
-	}
-
 	CGroupWnd*		pGroupWnd		= CGroupWnd::GetInstance();
 	CUserInterface* pUserInterface	= CUserInterface::GetInstance();	
 	g_Mouse.dwLButtonDownTime		= g_dwCurTick;
 	g_pMainPlayer->m_i64PickupItem	= 0;
+
+	_newInterface->handleMouseDown(g_Mouse.MousePos, CustomUI::Renderable::MouseButton::left);
+
+	if (_newInterface->swallowsMouse(g_Mouse.MousePos)) {
+		return; 
+	}
 
 	if( GetAsyncKeyState(VK_SHIFT) & 0x800000 && g_bLshift )	
 	{
@@ -2194,9 +2177,15 @@ lb_move:
 
 void OnLButtonUpDungeon(WPARAM wParam, LPARAM lParam)
 {
-	if (ItemPickupFilteringSystem::sharedInstance()->handleMouseUp()) {
-		return;
+	_newInterface->handleMouseUp(g_Mouse.MousePos, CustomUI::Renderable::MouseButton::left);
+
+	if (_newInterface->swallowsMouse(g_Mouse.MousePos)) { return; }
+
+	ItemPickupFilteringSystem::sharedInstance()->handleMouseUp();
+	if (ItemPickupFilteringSystem::sharedInstance()->swallowsMouse()) { 
+		return; 
 	}
+
 	CInterface*			pInterface			= CInterface::GetInstance();
 	CUserInterface*		pUserInterface		= CUserInterface::GetInstance();
 	CGroupWnd*			pGroupWnd			= CGroupWnd::GetInstance();
@@ -2213,7 +2202,7 @@ void OnLButtonUpDungeon(WPARAM wParam, LPARAM lParam)
 	}
 
 	pInterface->SetUp(TRUE);	
-	pInterface->InterfaceCheck();
+	//pInterface->InterfaceCheck();
 			
 	if(pInterface->GetClick())
 	{
@@ -2321,9 +2310,14 @@ void OnLButtonUpDungeon(WPARAM wParam, LPARAM lParam)
 	}
 }
 
-
 void OnRButtonDownDungeon(WPARAM wParam, LPARAM lParam)
 {	
+	_newInterface->handleMouseDown(g_Mouse.MousePos, CustomUI::Renderable::MouseButton::right);
+
+	if (_newInterface->swallowsMouse(g_Mouse.MousePos)) { 
+		return; 
+	}
+
 	if( g_pThisDungeon->IsStadium() && g_pMainPlayer->m_dwGuildWarFlag == G_W_F_OBSERVER )
 		return;
 
@@ -2395,26 +2389,26 @@ void OnRButtonDownDungeon(WPARAM wParam, LPARAM lParam)
 			return;
 
 		int nPosX	= (g_Mouse.MousePos.x-727)/37;
-		int nValue	= g_pMainPlayer->m_pBelt[nPosX].m_wItemID/ITEM_DISTRIBUTE;
+		//int nValue	= g_pMainPlayer->m_pBelt[nPosX].m_wItemID/ITEM_DISTRIBUTE;
 
-		if(nValue==ITEM_SUPPLIES_INDEX)
-		{
-			g_bBeltChk = TRUE;
-			return;
-		}
-		else if(nValue==ITEM_ZODIAC_INDEX)
-		{
-			if (TRUE == g_pMainPlayer->m_bInEventDungeon)
-			{			
-				//"이벤트 던전내에서 조디악 카드 사용은 금지되어 있습니다."
-				DisplayMessageAdd(g_Message[ETC_MESSAGE500].szMessage, 0xffff2cff);
-				return;
-			}
+		//if(nValue==ITEM_SUPPLIES_INDEX)
+		//{
+		//	g_bBeltChk = TRUE;
+		//	return;
+		//}
+		//else if(nValue==ITEM_ZODIAC_INDEX)
+		//{
+		//	if (TRUE == g_pMainPlayer->m_bInEventDungeon)
+		//	{			
+		//		//"이벤트 던전내에서 조디악 카드 사용은 금지되어 있습니다."
+		//		DisplayMessageAdd(g_Message[ETC_MESSAGE500].szMessage, 0xffff2cff);
+		//		return;
+		//	}
 
-			g_bRButton = TRUE;
+		//	g_bRButton = TRUE;
 
-			return;
-		}
+		//	return;
+		//}
 	}
 	
 	for(int i = 0; i < CUR_INTERFACE; i++)
@@ -2481,6 +2475,15 @@ void OnRButtonDownDungeon(WPARAM wParam, LPARAM lParam)
 
 void OnRButtonUpDungeon(WPARAM wParam, LPARAM lParam)
 {
+	_newInterface->handleMouseUp(
+		g_Mouse.MousePos,
+		CustomUI::Renderable::MouseButton::right
+	);
+
+	if (_newInterface->swallowsMouse(g_Mouse.MousePos)) {
+		return;
+	}
+
 	CInterface* pInterface	= CInterface::GetInstance();
 	
 	pInterface->SetUp(FALSE);
@@ -2524,17 +2527,17 @@ void OnRButtonUpDungeon(WPARAM wParam, LPARAM lParam)
 						return;
 
 					if(!bChk)
-						bChk = ItemUsedSupplies(&g_pMainPlayer->m_pInv_Small[byZipCode], byZipCode, ZODIAC_USE_TYPE_INVENTORY);
+						bChk = ItemUsedSupplies(&g_pMainPlayer->m_pInv_Small[byZipCode], byZipCode, ITEM_USE_FROM_SMALL_INVENTORY);
 					if(!bChk)
-						bChk = ItemUsedConsumable(&g_pMainPlayer->m_pInv_Small[byZipCode], byZipCode, ZODIAC_USE_TYPE_INVENTORY);
+						bChk = ItemUsedConsumable(&g_pMainPlayer->m_pInv_Small[byZipCode], byZipCode, ITEM_USE_FROM_SMALL_INVENTORY);
 					if(!bChk)
-						bChk = ItemUsedSpecial(&g_pMainPlayer->m_pInv_Small[byZipCode], byZipCode, ZODIAC_USE_TYPE_INVENTORY);
+						bChk = ItemUsedSpecial(&g_pMainPlayer->m_pInv_Small[byZipCode], byZipCode, ITEM_USE_FROM_SMALL_INVENTORY);
 					if(!bChk)
-						bChk = ItemUsedMagicArray(&g_pMainPlayer->m_pInv_Small[byZipCode], byZipCode, ZODIAC_USE_TYPE_INVENTORY);
+						bChk = ItemUsedMagicArray(&g_pMainPlayer->m_pInv_Small[byZipCode], byZipCode, ITEM_USE_FROM_SMALL_INVENTORY);
 					if(!bChk)
-						bChk = ItemUsedZodiac(&g_pMainPlayer->m_pInv_Small[byZipCode], byZipCode, ZODIAC_USE_TYPE_INVENTORY);
+						bChk = ItemUsedZodiac(&g_pMainPlayer->m_pInv_Small[byZipCode], byZipCode, ITEM_USE_FROM_SMALL_INVENTORY);
 					if(!bChk)
-						bChk = ItemUsedZodianInsurance(&g_pMainPlayer->m_pInv_Small[byZipCode], byZipCode, ZODIAC_USE_TYPE_INVENTORY);
+						bChk = ItemUsedZodianInsurance(&g_pMainPlayer->m_pInv_Small[byZipCode], byZipCode, ITEM_USE_FROM_SMALL_INVENTORY);
 
 					bInter = TRUE;
 				}
@@ -2545,7 +2548,7 @@ void OnRButtonUpDungeon(WPARAM wParam, LPARAM lParam)
 	if(	g_Mouse.MousePos.x>=727		&&	g_Mouse.MousePos.x<=1024	&&
 		g_Mouse.MousePos.y>=733		&&	g_Mouse.MousePos.y<=768)
 	{
-		if(g_pMainPlayer->GetStatus()!=UNIT_STATUS_DEAD)
+		/*if(g_pMainPlayer->GetStatus()!=UNIT_STATUS_DEAD)
 		{
 			BYTE	byZipCode	= byte((g_Mouse.MousePos.x-727)/37);
 	
@@ -2560,7 +2563,7 @@ void OnRButtonUpDungeon(WPARAM wParam, LPARAM lParam)
 				bChk = ItemUsedZodiac(&g_pMainPlayer->m_pBelt[byZipCode], byZipCode, ZODIAC_USE_TYPE_BELT);							
 
 			bInter = TRUE;
-		}
+		}*/
 	}
 	
 	g_bBeltChk	= FALSE;
@@ -2581,6 +2584,9 @@ void OnMouseMoveDungeon(WPARAM wParam, LPARAM lParam)
 	BOOL		bObejct		= FALSE;
 	CInterface* pInterface	= CInterface::GetInstance();
 	
+	_newInterface->handleMouseMove(g_Mouse.MousePos);
+
+
 	pInterface->SetUp(FALSE);
 	
 	if(pInterface->m_bActiveChk==FALSE)
@@ -3471,7 +3477,11 @@ void OnTimerEventDungeon(DWORD dwTimerIndex)
 
 void MouseEventDungeon()
 {
-	if (ItemPickupFilteringSystem::sharedInstance()->isInterfaceFocused()) {
+	if (ItemPickupFilteringSystem::sharedInstance()->swallowsMouse()) {
+		return;
+	}
+
+	if (_newInterface->swallowsMouse(g_Mouse.MousePos)) {
 		return;
 	}
 
@@ -5476,17 +5486,6 @@ lb_limit_chat_line_cnt:// sung-han 2005-03-30 노말채팅 라인수 1:5줄, 2:10줄, 3:1
 		
 }
 
-void SkillRender()
-{
-	CSkillWnd*	pSkillWnd = CSkillWnd::GetInstance();
-//	Effect*		pEffect;
-	int			nOrder	= __ORDER_USERINTERFACE_START_+__ORDER_SKILL_KEY__;
-	CMonster *pGuardian = g_pMainPlayer->m_pGuardian[0];
-	
-	// Skill 작업 //
-
-}
-
 BOOL BeltCollision()
 {
 	CInterface*		pInterface		= CInterface::GetInstance();
@@ -6141,12 +6140,12 @@ void SetKey(int nKey)
 
 							BOOL bChk = FALSE;
 							
-							if(!bChk)
-								bChk = ItemUsedSupplies(&g_pMainPlayer->m_pBelt[byZipCode], byZipCode, ZODIAC_USE_TYPE_BELT);
-							if(!bChk)
-								bChk = ItemUsedConsumable(&g_pMainPlayer->m_pBelt[byZipCode], byZipCode, ZODIAC_USE_TYPE_BELT);
-							if(!bChk)
-								bChk = ItemUsedZodiac(&g_pMainPlayer->m_pBelt[byZipCode], byZipCode, ZODIAC_USE_TYPE_BELT);
+							//if(!bChk)
+							//	bChk = ItemUsedSupplies(&g_pMainPlayer->m_pBelt[byZipCode], byZipCode, ZODIAC_USE_TYPE_BELT);
+							//if(!bChk)
+							//	bChk = ItemUsedConsumable(&g_pMainPlayer->m_pBelt[byZipCode], byZipCode, ZODIAC_USE_TYPE_BELT);
+							//if(!bChk)
+							//	bChk = ItemUsedZodiac(&g_pMainPlayer->m_pBelt[byZipCode], byZipCode, ZODIAC_USE_TYPE_BELT);
 						}
 					}
 				}

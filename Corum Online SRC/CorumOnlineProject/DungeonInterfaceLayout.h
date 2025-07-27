@@ -6,8 +6,7 @@ struct Rect {
 	VECTOR2 size;
 };
 
-extern VECTOR2 hudLeft;
-extern VECTOR2 hudRight;
+
 extern VECTOR2 hp;
 extern VECTOR2 sp;
 extern VECTOR2 expPos;
@@ -45,9 +44,13 @@ extern Rect rightHUD;
 #define SKILL_ICON_SIZE					32
 #define SKILL_SELECTION_ROW_COUNT		5
 
+const float resourceBarMaxWidth = 300.0f;
+
 VECTOR2 beltItemPos(int index);
 int	beltItemIndexAt(VECTOR2 pos);
 
 bool pointInsideRect(VECTOR2 point, VECTOR2 rectTopLeft, int w = 50, int h = 14);
 bool pointInsideRect(VECTOR2 point, Rect rect);
 bool pointInsideSquare(VECTOR2 point, VECTOR2 topLeft, int size = SKILL_ICON_SIZE);
+
+void buildInterfaceLayoutPositions(int width, int height);

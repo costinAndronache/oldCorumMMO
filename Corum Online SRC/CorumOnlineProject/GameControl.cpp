@@ -470,21 +470,18 @@ BOOL SetGameStatus( UPDATE_GAME_STATUS bStatus )
 	if( bStatus >= MAX_UPDATE_GAME ) 
 		return false;
 
-	PointerIntegrityCheck("::before releasing previous status");
 	(*ReleaseGameProcess[GetGameStatus()])();
 
 	if (g_pEffectHash) {
 		g_pEffectHash->GetHead();
 	}
 
-	PointerIntegrityCheck("::before initializing new status::");
 	BOOL bRes = (*InitGameProcess[ bStatus ])();
 
 	if (g_pEffectHash) {
 		g_pEffectHash->GetHead();
 	}
 
-	PointerIntegrityCheck("::after initializing new status::");
 	
 	if( bRes ) 
 	{
@@ -784,6 +781,11 @@ char* FILEDEF(BYTE bResType, DWORD dwResUID)
 char* GetFile( char* szFileName, BYTE bDataType )
 {
 	memset(g_szTempFileName, 0, sizeof(g_szTempFileName));
+	if (strstr(szFileName, "interface_left")) {
+		printf("HERE!");
+	}
+
+	printf("\n%s", szFileName);
 
 	char szDataPath[_MAX_PATH]={0,};
 	memset(szDataPath, 0, _MAX_PATH);

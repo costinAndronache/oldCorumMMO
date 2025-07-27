@@ -497,7 +497,8 @@ void CmdPickupItem( char* pMsg, DWORD dwLen )
 				g_pMainPlayer->m_nItemSelect = 1;
 
 			memcpy(&g_pMainPlayer->m_MouseItem, &pPacket->Item, sizeof(CItem));
-			memset(&g_pMainPlayer->m_pBelt[pPacket->bZipCode], 0, sizeof(CItem));					
+			g_pMainPlayer->nullifyBeltItemAtIndex(pPacket->bZipCode);
+
 		}
 		break;
 	case 17:	// Item Swap //
@@ -623,7 +624,8 @@ void CmdPickupItem( char* pMsg, DWORD dwLen )
 		break;
 	case 21:	// 소비 아이템사용.
 		{
-			memcpy(&g_pMainPlayer->m_pBelt[pPacket->bZipCode], &pPacket->Item, sizeof(CItem));			
+		g_pMainPlayer->setBeltItem(pPacket->Item, pPacket->bZipCode);
+			//memcpy(&g_pMainPlayer->m_pBelt[pPacket->bZipCode], &pPacket->Item, sizeof(CItem));			
 		}
 		break;
 	case 22:	// 마우스에서 던전관리창으로
@@ -1597,8 +1599,9 @@ void CmdPickupItem( char* pMsg, DWORD dwLen )
 					}
 					else 
 					{
-						if(pPacket->Item.m_Item_Zodiac.bType==1)
-							memcpy(&g_pMainPlayer->m_pBelt[pPacket->bZipCode], &pPacket->Item, sizeof(CItem));						
+						if (pPacket->Item.m_Item_Zodiac.bType == 1) {
+							g_pMainPlayer->setBeltItem(pPacket->Item, pPacket->bZipCode);
+						}
 					}					
 				}				
 			}
@@ -1648,7 +1651,8 @@ void CmdPickupItem( char* pMsg, DWORD dwLen )
 					}	
 					else
 					{
-						WORD wToDungeonID = g_pMainPlayer->m_pBelt[pPacket->bEquipCode].m_Item_Zodiac.wMapId;	
+						const auto item = g_pMainPlayer->beltItemAtIndex(pPacket->bEquipCode);
+						WORD wToDungeonID = item.m_Item_Zodiac.wMapId;
 						SendPacketRequestDungeonInfo(wToDungeonID);						
 						
 						g_pMainPlayer->SetMotion(36);
@@ -1658,10 +1662,10 @@ void CmdPickupItem( char* pMsg, DWORD dwLen )
 
 						CTDS_PORTAL_MOVE packet;			
 						packet.wPortalItemID    = (WORD)pPacket->dwMoney;
-						packet.wToDungeonID		= g_pMainPlayer->m_pBelt[pPacket->bEquipCode].m_Item_Zodiac.wMapId;
-						packet.bLayerNo			= g_pMainPlayer->m_pBelt[pPacket->bEquipCode].m_Item_Zodiac.bLayer;
-						packet.v2Pos.x			= (float)g_pMainPlayer->m_pBelt[pPacket->bEquipCode].m_Item_Zodiac.wPosX;
-						packet.v2Pos.y			= (float)g_pMainPlayer->m_pBelt[pPacket->bEquipCode].m_Item_Zodiac.wPosZ;
+						packet.wToDungeonID		= item.m_Item_Zodiac.wMapId;
+						packet.bLayerNo			= item.m_Item_Zodiac.bLayer;
+						packet.v2Pos.x			= (float)item.m_Item_Zodiac.wPosX;
+						packet.v2Pos.y			= (float)item.m_Item_Zodiac.wPosZ;
 
 						g_pNet->SendMsg((char*)&packet, packet.GetPacketSize
 							(), SERVER_INDEX_ZONE);
@@ -1727,14 +1731,12 @@ void CmdPickupItem( char* pMsg, DWORD dwLen )
 					}	
 					else
 					{
-						if(pPacket->Item.GetQuantity()>1)
-						{
-							memcpy(&g_pMainPlayer->m_pBelt[pPacket->bZipCode], &pPacket->Item, sizeof(CItem));
+						if(pPacket->Item.GetQuantity() > 1) {
+							g_pMainPlayer->setBeltItem(pPacket->Item, pPacket->bZipCode);
 							g_pMainPlayer->m_pInv_Small[pPacket->bZipCode].SetQuantity(BYTE(pPacket->Item.GetQuantity()-1));
 						}
-						else
-						{
-							memset(&g_pMainPlayer->m_pBelt[pPacket->bZipCode], 0, sizeof(CItem));						
+						else {
+							g_pMainPlayer->nullifyBeltItemAtIndex(pPacket->bZipCode);
 						}
 					}
 
@@ -2104,8 +2106,9 @@ void CmdPickupItem( char* pMsg, DWORD dwLen )
 		{
 			if(pPacket->bEquipCode==0)
 				memcpy(&g_pMainPlayer->m_pInv_Small[pPacket->bZipCode], &pPacket->Item, sizeof(CItem));
-			else if(pPacket->bEquipCode==1)
-				memcpy(&g_pMainPlayer->m_pBelt[pPacket->bZipCode], &pPacket->Item, sizeof(CItem));
+			else if (pPacket->bEquipCode == 1) {
+				g_pMainPlayer->setBeltItem(pPacket->Item, pPacket->bZipCode);
+			}
 		}
 		break;
 	case 75:
@@ -2121,10 +2124,12 @@ void CmdPickupItem( char* pMsg, DWORD dwLen )
 		break;
 	case 77:
 		{
-			if(pPacket->bEqiupCode2 == 1)
-				memcpy(&g_pMainPlayer->m_pBelt[pPacket->bZipCode], &pPacket->Item, sizeof(CItem));
-			else
+			if (pPacket->bEqiupCode2 == 1) {
+				g_pMainPlayer->setBeltItem(pPacket->Item, pPacket->bZipCode);
+			} else {
 				memcpy(&g_pMainPlayer->m_pInv_Small[pPacket->bZipCode], &pPacket->Item, sizeof(CItem));
+			}
+
 		}
 		break;
 
@@ -2368,6 +2373,8 @@ void CmdPickupItem( char* pMsg, DWORD dwLen )
 
 	g_pMainPlayer->WeightProcess(TRUE, wWeight);	
 	g_pMainPlayer->GetCheckUpgrade();
+
+	g_pMainPlayer->notifyForInventoryUpdates();
 }
 
 
@@ -2529,8 +2536,9 @@ void CmdJoinDungeon( char* pMsg, DWORD dwLen )
 		memcpy(&g_pMainPlayer->m_pInv_Guardian[i], &pJoin->pInv_Guardian[i], sizeof(CItem));	
 	SetProgressBar(dwTotalProgress, ++dwCurProgress);
 
-	for(i = 0; i < MAX_BELT_POOL; i++)
-		memcpy(&g_pMainPlayer->m_pBelt[i], &pJoin->pBelt[i], sizeof(CItem));
+	for (i = 0; i < MAX_BELT_POOL; i++) {
+		g_pMainPlayer->setBeltItem(pJoin->pBelt[i], i);
+	}
 	SetProgressBar(dwTotalProgress, ++dwCurProgress);
 
 	memset(&g_pMainPlayer->m_GuardianItem, 0, sizeof(CItem));
@@ -2716,7 +2724,8 @@ void CmdJoinDungeon( char* pMsg, DWORD dwLen )
 
 							for(int i = 0; i < MAX_BELT_POOL; i++)
 							{
-								if(g_pMainPlayer->m_pBelt[i].GetID()/ITEM_DISTRIBUTE==ITEM_SUPPLIES_INDEX)
+								const auto item = g_pMainPlayer->beltItemAtIndex(i);
+								if(item.GetID()/ITEM_DISTRIBUTE==ITEM_SUPPLIES_INDEX)
 								{
 									bChk = TRUE;
 									break;

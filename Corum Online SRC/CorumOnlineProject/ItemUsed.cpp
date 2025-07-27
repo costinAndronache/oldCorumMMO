@@ -23,7 +23,7 @@
 DWORD g_dwMagicArrayTick = 0;
 
 
-BOOL ItemUsedZodianInsurance(CItem* pItem, BYTE byZipcode, BYTE byType)
+BOOL ItemUsedZodianInsurance(CItem* pItem, BYTE indexInSource, ITEM_USE_SOURCE source)
 {
 	int	nValue	= pItem->GetID() / ITEM_DISTRIBUTE;
 
@@ -59,12 +59,12 @@ BOOL ItemUsedZodianInsurance(CItem* pItem, BYTE byZipcode, BYTE byType)
 					CTDS_ITEM_PICKUP pPacket;
 					pPacket.bSectionNum	= 1;
 					pPacket.i64ItemID	= 0;
-					SetItemPacket(&pPacket, 100, byZipcode, 0, 0, 0);
+					SetItemPacket(&pPacket, 100, indexInSource, 0, 0, 0);
 					g_pNet->SendMsg((char*)&pPacket, pPacket.GetPacketSize(), SERVER_INDEX_ZONE);
 					
 					if(g_ItemMoveManager.GetNewItemMoveMode())
 					{
-						g_ItemUsedManager.SendItemUsedNativePacket(ITEM_NATIVE_INV_SMALL,byZipcode,0xff);
+						g_ItemUsedManager.SendItemUsedNativePacket(ITEM_NATIVE_INV_SMALL,indexInSource,0xff);
 					}
 
 					g_bRButton	= FALSE;
@@ -78,7 +78,7 @@ BOOL ItemUsedZodianInsurance(CItem* pItem, BYTE byZipcode, BYTE byType)
 }
 
 
-BOOL ItemUsedZodiac(CItem* pItem, BYTE byZipcode, BYTE byType)
+BOOL ItemUsedZodiac(CItem* pItem, BYTE indexInSource, ITEM_USE_SOURCE source)
 {	
 	CItemTradeShopWnd*	pItemTradeShopWnd	= CItemTradeShopWnd::GetInstance();
 	CStoreWnd*			pStoreWnd			= CStoreWnd::GetInstance();
@@ -176,23 +176,23 @@ BOOL ItemUsedZodiac(CItem* pItem, BYTE byZipcode, BYTE byType)
 
 						if(bPortalChk)
 						{				
-							if(byType==ZODIAC_USE_TYPE_INVENTORY)
+							if(source==ITEM_USE_FROM_SMALL_INVENTORY)
 							{
 								pOkWnd->SetActive(TRUE);
-								pOkWnd->m_bZipCode	= byZipcode;	
+								pOkWnd->m_bZipCode	= indexInSource;	
 								pOkWnd->m_bType		= __OKWND_TYPE_POTAL_SAVE;
 							}	
-							else if(byType==ZODIAC_USE_TYPE_BELT)
+							else if(source==ITEM_USE_FROM_BELT)
 							{
 								CTDS_ITEM_PICKUP pPacket;
 								pPacket.bSectionNum	= 1;
 								pPacket.i64ItemID	= 0;
-								SetItemPacket(&pPacket, 55, byZipcode, 0, 0, 0);
+								SetItemPacket(&pPacket, 55, indexInSource, 0, 0, 0);
 								g_pNet->SendMsg((char*)&pPacket, pPacket.GetPacketSize(), SERVER_INDEX_ZONE);
 								
 								if(g_ItemMoveManager.GetNewItemMoveMode())
 								{
-									g_ItemUsedManager.SendItemUsedNativePacket(ITEM_NATIVE_BELT,byZipcode,0xff);
+									g_ItemUsedManager.SendItemUsedNativePacket(ITEM_NATIVE_BELT,indexInSource,0xff);
 								}
 							}
 						}
@@ -267,10 +267,10 @@ BOOL ItemUsedZodiac(CItem* pItem, BYTE byZipcode, BYTE byType)
 
 						if(bPortalChk)
 						{
-							if(byType==ZODIAC_USE_TYPE_INVENTORY)
+							if(source==ITEM_USE_FROM_SMALL_INVENTORY)
 							{
 								pOkWnd->m_dwDungeonID	= pItem->m_Item_Zodiac.wMapId;							
-								pOkWnd->m_bZipCode		= byZipcode;
+								pOkWnd->m_bZipCode		= indexInSource;
 
 								if(	g_pThisDungeon->m_dwID != pItem->m_Item_Zodiac.wMapId	&&
 									pItem->m_Item_Zodiac.wMapId > 4000						&&
@@ -286,25 +286,25 @@ BOOL ItemUsedZodiac(CItem* pItem, BYTE byZipcode, BYTE byType)
 								pOkWnd->SetActive(TRUE);
 								SendPacketRequestDungeonInfo(pItem->m_Item_Zodiac.wMapId);							
 							}					
-							else if(byType==ZODIAC_USE_TYPE_BELT)
+							else if(source==ITEM_USE_FROM_BELT)
 							{
 
 								for(BYTE i = 0; i < MAX_INV_SMALL_POOL; i++)
 								{
 									if(g_pMainPlayer->m_pInv_Small[i].GetID()==__ITEM_PORTALUSED_INDEX__)
 									{
-										if(	(pMiniMapWnd->m_wMapId != g_pMainPlayer->m_pInv_Small[byZipcode].m_Item_Zodiac.wMapId) ||
-											(pMiniMapWnd->m_byMapLayer!=g_pMainPlayer->m_pInv_Small[byZipcode].m_Item_Zodiac.bLayer))
+										if(	(pMiniMapWnd->m_wMapId != g_pMainPlayer->m_pInv_Small[indexInSource].m_Item_Zodiac.wMapId) ||
+											(pMiniMapWnd->m_byMapLayer!=g_pMainPlayer->m_pInv_Small[indexInSource].m_Item_Zodiac.bLayer))
 										{
 											CTDS_ITEM_PICKUP pPacket;
 											pPacket.bSectionNum	= 1;
 											pPacket.i64ItemID	= 0;
-											SetItemPacket(&pPacket, 54, byZipcode, i, 0, 0);
+											SetItemPacket(&pPacket, 54, indexInSource, i, 0, 0);
 											g_pNet->SendMsg((char*)&pPacket, pPacket.GetPacketSize(), SERVER_INDEX_ZONE);
 
 											if(g_ItemMoveManager.GetNewItemMoveMode())
 											{
-												g_ItemUsedManager.SendItemUsedNativePacket(ITEM_NATIVE_INV_SMALL,byZipcode,i);
+												g_ItemUsedManager.SendItemUsedNativePacket(ITEM_NATIVE_INV_SMALL,indexInSource,i);
 											}
 											break;
 
@@ -347,23 +347,23 @@ BOOL ItemUsedZodiac(CItem* pItem, BYTE byZipcode, BYTE byType)
 						WORD wItemID = pItem->GetID();
 						if(wItemID >= __ITEM_PORTAL_VILL1__ && wItemID <= __ITEM_PORTAL_VILL6__)
 						{							
-							if(byType==ZODIAC_USE_TYPE_INVENTORY)
+							if(source==ITEM_USE_FROM_SMALL_INVENTORY)
 							{								
-								pOkWnd->m_bZipCode	= byZipcode;	
+								pOkWnd->m_bZipCode	= indexInSource;	
 								pOkWnd->m_bType		= __OKWND_TYPE_POTAL_VILLAGE_USE;
 								pOkWnd->SetActive(TRUE);
 							}
-							else if(byType==ZODIAC_USE_TYPE_BELT)
+							else if(source==ITEM_USE_FROM_BELT)
 							{
 								CTDS_ITEM_PICKUP pPacket;
 								pPacket.bSectionNum	= 1;
 								pPacket.i64ItemID	= 0;
-								SetItemPacket(&pPacket, 53, byZipcode, 0, 0, 0);
+								SetItemPacket(&pPacket, 53, indexInSource, 0, 0, 0);
 								g_pNet->SendMsg((char*)&pPacket, pPacket.GetPacketSize(), SERVER_INDEX_ZONE);
 								
 								if(g_ItemMoveManager.GetNewItemMoveMode())
 								{
-									g_ItemUsedManager.SendItemUsedNativePacket(ITEM_NATIVE_BELT,byZipcode,0xff);
+									g_ItemUsedManager.SendItemUsedNativePacket(ITEM_NATIVE_BELT,indexInSource,0xff);
 								}
 							}
 
@@ -396,7 +396,7 @@ BOOL ItemUsedZodiac(CItem* pItem, BYTE byZipcode, BYTE byType)
 }
 
 
-BOOL ItemUsedSupplies(CItem* pItem, BYTE byZipcode, BYTE byType)
+BOOL ItemUsedSupplies(CItem* pItem, BYTE indexInSource, ITEM_USE_SOURCE source)
 {
 	WORD	wSumWeight		= g_pMainPlayer->GetSumWeight();
 	WORD	wAllSumWeight	= g_pMainPlayer->GetAllSumWeight();
@@ -419,17 +419,6 @@ BOOL ItemUsedSupplies(CItem* pItem, BYTE byZipcode, BYTE byType)
 		// "대결 중에는 사용할 수 없습니다."
 		DisplayMessageAdd(g_Message[ETC_MESSAGE501].szMessage, 0xFFFF2CFF); 
 		return TRUE;
-	}
-
-	if ( byType == ZODIAC_USE_TYPE_INVENTORY )
-	{		
-		if ( !g_bBeltChk )
-		{
-			g_bBeltChk = FALSE;
-			return FALSE;
-		}
-
-		g_bBeltChk = FALSE;
 	}
 	
 	if ( fPerWeight >= WEIGTH_100PER_OVER )
@@ -464,13 +453,13 @@ BOOL ItemUsedSupplies(CItem* pItem, BYTE byZipcode, BYTE byType)
 	{
 		// 물약 사용하기 //
 		CTDS_ITEM_USED pPacket;
-		pPacket.bZipCode = byZipcode;
+		pPacket.bZipCode = indexInSource;
 
-		if ( byType == ZODIAC_USE_TYPE_BELT )
+		if ( source == ITEM_USE_FROM_BELT )
 		{
 			pPacket.bInv = 2;
 		}
-		else if ( byType == ZODIAC_USE_TYPE_INVENTORY )
+		else if ( source == ITEM_USE_FROM_SMALL_INVENTORY )
 		{
 			pPacket.bInv = 1;
 		}
@@ -480,12 +469,12 @@ BOOL ItemUsedSupplies(CItem* pItem, BYTE byZipcode, BYTE byType)
 		if(g_ItemMoveManager.GetNewItemMoveMode())
 		{
 			BYTE bSrc = 0;
-			if(byType == ZODIAC_USE_TYPE_INVENTORY)
+			if(source == ITEM_USE_FROM_SMALL_INVENTORY)
 				bSrc = ITEM_NATIVE_INV_SMALL;
-			else if(byType == ZODIAC_USE_TYPE_BELT)
+			else if(source == ITEM_USE_FROM_BELT)
 				bSrc = ITEM_NATIVE_BELT;
 
-			g_ItemUsedManager.SendItemUsedNativePacket(bSrc,byZipcode,0xff);
+			g_ItemUsedManager.SendItemUsedNativePacket(bSrc,indexInSource,0xff);
 		}
 
 		time(&g_pMainPlayer->m_PotionTime);
@@ -498,7 +487,7 @@ BOOL ItemUsedSupplies(CItem* pItem, BYTE byZipcode, BYTE byType)
 }
 
 
-BOOL ItemUsedConsumable(CItem* pItem, BYTE byZipcode, BYTE byType)
+BOOL ItemUsedConsumable(CItem* pItem, BYTE indexInSource, ITEM_USE_SOURCE source)
 {
 	int		nValue	= pItem->GetID() / ITEM_DISTRIBUTE;
 	BYTE	byInv	= 0;
@@ -512,16 +501,17 @@ BOOL ItemUsedConsumable(CItem* pItem, BYTE byZipcode, BYTE byType)
 			return TRUE;
 		}
 		
-		if(byType == ZODIAC_USE_TYPE_BELT)
+		if(source == ITEM_USE_FROM_BELT)
 		{
 			for(int i = 0; i < MAX_BELT_POOL; i++)
 			{
-				DWORD dwNewId = g_pMainPlayer->m_pBelt[i].GetID();
+				auto currentItem = g_pMainPlayer->beltItemAtIndex(i);
+				DWORD dwNewId = currentItem.GetID();
 				DWORD dwOldId = pItem->GetID();
 
 				if(dwNewId == dwOldId)
 				{
-					if(g_pMainPlayer->m_pBelt[i].m_Item_Consumable.bInvIndex>=1)
+					if(currentItem.m_Item_Consumable.bInvIndex>=1)
 					{
 						// "이미 사용중 입니다."					
 						DisplayMessageAdd(g_Message[ETC_MESSAGE848].szMessage, 0xffff2cff); 
@@ -529,9 +519,9 @@ BOOL ItemUsedConsumable(CItem* pItem, BYTE byZipcode, BYTE byType)
 					}
 				}
 
-				if(IsSamePropertyConsumableItem(&g_pMainPlayer->m_pBelt[i], pItem))
+				if(IsSamePropertyConsumableItem(&currentItem, pItem))
 				{
-					if(g_pMainPlayer->m_pBelt[i].m_Item_Consumable.bInvIndex>=1)
+					if(currentItem.m_Item_Consumable.bInvIndex>=1)
 					{
 						// "같은효과의 아이템이 사용중입니다."					
 						DisplayMessageAdd(g_Message[ETC_MESSAGE1431].szMessage, 0xffff2cff); 
@@ -571,17 +561,17 @@ BOOL ItemUsedConsumable(CItem* pItem, BYTE byZipcode, BYTE byType)
 		CTDS_ITEM_PICKUP pPacket;
 		pPacket.bSectionNum	= 1;
 		pPacket.i64ItemID	= 0;			
-		SetItemPacket(&pPacket, 74, byZipcode, byInv, 0, 0);
+		SetItemPacket(&pPacket, 74, indexInSource, byInv, 0, 0);
 		g_pNet->SendMsg((char*)&pPacket, pPacket.GetPacketSize(), SERVER_INDEX_ZONE);
 		
 		if(g_ItemMoveManager.GetNewItemMoveMode())
 		{
 			BYTE bSrc = 0;
-			if(byType == ZODIAC_USE_TYPE_INVENTORY)
+			if(source == ITEM_USE_FROM_SMALL_INVENTORY)
 				bSrc = ITEM_NATIVE_INV_SMALL;
-			else if(byType == ZODIAC_USE_TYPE_BELT)
+			else if(source == ITEM_USE_FROM_BELT)
 				bSrc = ITEM_NATIVE_BELT;
-			g_ItemUsedManager.SendItemUsedNativePacket(bSrc,byZipcode,0xff);
+			g_ItemUsedManager.SendItemUsedNativePacket(bSrc,indexInSource,0xff);
 		}
 
 		return TRUE;
@@ -639,7 +629,7 @@ BOOL IsSamePropertyConsumableItem(CItem* pSrc, CItem* pDst)
 	*/
 }
 
-BOOL ItemUsedSpecial(CItem* pItem, BYTE byZipcode, BYTE byType)
+BOOL ItemUsedSpecial(CItem* pItem, BYTE indexInSource, ITEM_USE_SOURCE source)
 {
 	int					nValue				= pItem->GetID() / ITEM_DISTRIBUTE;
 	COkWnd*				pOkWnd				= COkWnd::GetInstance();
@@ -680,14 +670,14 @@ BOOL ItemUsedSpecial(CItem* pItem, BYTE byZipcode, BYTE byType)
 							else
 							{
 								CTDS_GUILD_ITEM pPacket;				
-								pPacket.bZipCode = byZipcode;
+								pPacket.bZipCode = indexInSource;
 
 								if(pItem->m_wItemID==__ITEM_GUILD_INDEX__)
 									pPacket.bGuildType = __GCTYPE_GUILD__;
 								if(pItem->m_wItemID==__ITEM_CLEN_INDEX__)
 									pPacket.bGuildType = __GCTYPE_CLEN__;
 								
-								pGuildWnd->m_bZipCode	= byZipcode;
+								pGuildWnd->m_bZipCode	= indexInSource;
 								g_pNet->SendMsg((char*)&pPacket, pPacket.GetPacketSize(), SERVER_INDEX_ZONE);
 							}
 						}
@@ -705,7 +695,7 @@ BOOL ItemUsedSpecial(CItem* pItem, BYTE byZipcode, BYTE byType)
 							return TRUE;
 						}
 						
-						pInitItemWnd->m_byIndex	= byZipcode;
+						pInitItemWnd->m_byIndex	= indexInSource;
 						
 						if(	wItemId==__ITEM_STATUS_INT__ ||
 							(wItemId>=__ITEM_STATUS_INTSTART__ && wItemId<=__ITEM_STATUS_INTEND__))
@@ -727,7 +717,7 @@ BOOL ItemUsedSpecial(CItem* pItem, BYTE byZipcode, BYTE byType)
 						// 선물상자 이벤트 2002.02.02 김영대
 						//태극기 아이템(선물상자)
 						//영웅의 증표 아이템(선물상자)
-						pOkWnd->m_bZipCode	= byZipcode;	
+						pOkWnd->m_bZipCode	= indexInSource;	
 						pOkWnd->m_bType		= __OKWND_TYPE_UNPACK_PRESENT_BOX;
 						pOkWnd->m_dwDungeonID = 0;	//인벤에서 사용 						
 						pOkWnd->SetActive(TRUE);
@@ -753,7 +743,7 @@ BOOL ItemUsedSpecial(CItem* pItem, BYTE byZipcode, BYTE byType)
 }
 
 
-BOOL ItemUsedMagicArray(CItem* pItem, BYTE byZipcode, BYTE byType)
+BOOL ItemUsedMagicArray(CItem* pItem, BYTE indexInSource, ITEM_USE_SOURCE source)
 {
 	CGroupWnd*	pGroupWnd		= CGroupWnd::GetInstance();
 	char		szInfo[0xff]	= {0,};
@@ -802,7 +792,7 @@ BOOL ItemUsedMagicArray(CItem* pItem, BYTE byZipcode, BYTE byType)
 									memset(pPacket.szName, 0, sizeof(pPacket.szName));
 									__lstrcpyn(pPacket.szName, g_pMainPlayer->m_szName, sizeof(g_pMainPlayer->m_szName));
 									
-									pPacket.byZipCode			= byZipcode;
+									pPacket.byZipCode = indexInSource;
 									pPacket.dwPartyId			= g_pMainPlayer->m_dwPartyId;
 									pPacket.dwUserIndex			= g_pMainPlayer->m_dwUserIndex;
 									pPacket.dwPartalUserIndex	= sPartyNode->dwUserIndex;
@@ -811,7 +801,7 @@ BOOL ItemUsedMagicArray(CItem* pItem, BYTE byZipcode, BYTE byType)
 									if(g_ItemMoveManager.GetNewItemMoveMode())
 									{
 										g_ItemUsedManager.SendItemUsedNativePacket(ITEM_NATIVE_INV_SMALL
-											, byZipcode
+											, indexInSource
 											, 0xff
 											, g_pMainPlayer->m_dwPartyId
 											, sPartyNode->dwUserIndex);
@@ -885,12 +875,12 @@ BOOL ItemUsedMagicArray(CItem* pItem, BYTE byZipcode, BYTE byType)
 							pPacket.bSectionNum	= 1;
 							pPacket.i64ItemID	= 0;
 							pPacket.bInv		= 62;
-							pPacket.bZipCode	= byZipcode;
+							pPacket.bZipCode	= indexInSource;
 							g_pNet->SendMsg((char*)&pPacket, pPacket.GetPacketSize(), SERVER_INDEX_ZONE);
 
 							if(g_ItemMoveManager.GetNewItemMoveMode())
 							{
-								g_ItemUsedManager.SendItemUsedNativePacket(ITEM_NATIVE_INV_SMALL, byZipcode, 0xff);
+								g_ItemUsedManager.SendItemUsedNativePacket(ITEM_NATIVE_INV_SMALL, indexInSource, 0xff);
 							}
 
 							break;
@@ -935,12 +925,12 @@ BOOL ItemUsedMagicArray(CItem* pItem, BYTE byZipcode, BYTE byType)
 					pPacket.bInv		= 61;
 					pPacket.bSectionNum	= 1;
 					pPacket.i64ItemID	= 0;
-					pPacket.bZipCode	= byZipcode;
+					pPacket.bZipCode	= indexInSource;
 					g_pNet->SendMsg((char*)&pPacket, pPacket.GetPacketSize(), SERVER_INDEX_ZONE);
 
 					if(g_ItemMoveManager.GetNewItemMoveMode())
 					{
-						g_ItemUsedManager.SendItemUsedNativePacket(ITEM_NATIVE_INV_SMALL, byZipcode, 0xff);
+						g_ItemUsedManager.SendItemUsedNativePacket(ITEM_NATIVE_INV_SMALL, indexInSource, 0xff);
 					}
 
 					return TRUE;			
@@ -978,12 +968,12 @@ BOOL ItemUsedMagicArray(CItem* pItem, BYTE byZipcode, BYTE byType)
 					pPacket.bInv		= 61;
 					pPacket.bSectionNum	= 1;
 					pPacket.i64ItemID	= 0;
-					pPacket.bZipCode	= byZipcode;
+					pPacket.bZipCode	= indexInSource;
 					g_pNet->SendMsg((char*)&pPacket, pPacket.GetPacketSize(), SERVER_INDEX_ZONE);
 
 					if(g_ItemMoveManager.GetNewItemMoveMode())
 					{
-						g_ItemUsedManager.SendItemUsedNativePacket(ITEM_NATIVE_INV_SMALL, byZipcode, 0xff);
+						g_ItemUsedManager.SendItemUsedNativePacket(ITEM_NATIVE_INV_SMALL, indexInSource, 0xff);
 					}
 					
 					return TRUE;
@@ -1021,12 +1011,12 @@ BOOL ItemUsedMagicArray(CItem* pItem, BYTE byZipcode, BYTE byType)
 					pPacket.bInv		= 61;
 					pPacket.bSectionNum	= 1;
 					pPacket.i64ItemID	= 0;
-					pPacket.bZipCode	= byZipcode;
+					pPacket.bZipCode	= indexInSource;
 					g_pNet->SendMsg((char*)&pPacket, pPacket.GetPacketSize(), SERVER_INDEX_ZONE);
 
 					if(g_ItemMoveManager.GetNewItemMoveMode())
 					{
-						g_ItemUsedManager.SendItemUsedNativePacket(ITEM_NATIVE_INV_SMALL, byZipcode, 0xff);
+						g_ItemUsedManager.SendItemUsedNativePacket(ITEM_NATIVE_INV_SMALL, indexInSource, 0xff);
 					}
 
 					return TRUE;								
@@ -1063,14 +1053,14 @@ BOOL ItemUsedMagicArray(CItem* pItem, BYTE byZipcode, BYTE byType)
 }
 
 
-BOOL ItemUsedPresentBox(CItem* pItem, BYTE byZipcode, BYTE byType)
+BOOL ItemUsedPresentBox(CItem* pItem, BYTE indexInSource, ITEM_USE_SOURCE source)
 {
 	int	nValue = pItem->GetID() / ITEM_DISTRIBUTE;
 
 	if(nValue == ITEM_PRESENT_BOX_INDEX)
 	{
 		COkWnd* pOkWnd = COkWnd::GetInstance();		
-		pOkWnd->m_bZipCode		= byZipcode;	
+		pOkWnd->m_bZipCode		= indexInSource;	
 		pOkWnd->m_bType			= __OKWND_TYPE_UNPACK_PRESENT_BOX;
 		pOkWnd->m_dwDungeonID	= 1;	//벨트에서 사용 
 		pOkWnd->SetActive(TRUE);

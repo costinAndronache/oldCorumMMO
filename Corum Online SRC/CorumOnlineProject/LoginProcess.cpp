@@ -28,10 +28,9 @@
 #include "Interface.h"
 #include "PacketEncrypt.h"
 #include "GuildWarFinalSettingWnd.h"
-#include "CustomUiKit/PagedTableWindow/PagedTableWindow.h"
-#include "CustomUiKitGXRenderer.h"
 
-#include "ItemPickupFiltering/ItemPickupFiltering.h"
+
+#include "NewUI/ItemPickupFiltering.h"
 
 
 LPGlobalVariable_Login	g_pGVLogin = NULL;

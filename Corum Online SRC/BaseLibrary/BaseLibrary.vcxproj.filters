@@ -292,6 +292,7 @@
     <ClInclude Include="WorkQueue.h" />
     <ClInclude Include="Timer.h" />
     <ClInclude Include="VoidList.h" />
+    <ClInclude Include="RunLoop.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="datastructure\template.cpp">
@@ -403,5 +404,6 @@
     <ClCompile Include="WorkQueue.cpp" />
     <ClCompile Include="Timer.cpp" />
     <ClCompile Include="Voidlist.cpp" />
+    <ClCompile Include="RunLoop.cpp" />
   </ItemGroup>
 </Project>

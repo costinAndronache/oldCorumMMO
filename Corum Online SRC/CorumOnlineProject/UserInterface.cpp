@@ -40,6 +40,7 @@
 #include "ItemNative.h"
 #include "GuardianWnd.h"
 #include "SkillSelectionView.h"
+#include "NewHUD/LeftHUD.h"
 
 //////////////////////////////////////////////////////////////////////////
 // Temporary File for Interface Process
@@ -250,50 +251,28 @@ void CUserInterface::InsertUIData()
 {
 	int Order = __ORDER_USERINTERFACE_START_;
 
-	InsertData(SPR_OBJ_UI_LEFT, SPR_INTERFACE_UI_LEFT, hudLeft.x, hudLeft.y, 1.0f, 1.0f, Order, FALSE, FALSE, FALSE);
-	InsertData(SPR_OBJ_UI_RIGHT, SPR_INTERFACE_UI_RIGHT, hudRight.x, hudRight.y, 1.0f, 1.0f, Order, FALSE, FALSE, FALSE);
-	InsertData(SPR_OBJ_EN2, SPR_INTERFACE_EN2, hp.x, hp.y, 0.0f, 1.0f, Order + 1, FALSE, FALSE, FALSE);
-	InsertData(SPR_OBJ_EN1, SPR_INTERFACE_EN1, hp.x, hp.y, 0.0f, 1.0f, Order + 2, FALSE, FALSE, FALSE);
-	InsertData(SPR_OBJ_EXP, SPR_INTERFACE_EXP, expPos.x, expPos.y, 1.0f, 1.0f, Order + 3, FALSE, FALSE, FALSE);
-	InsertData(SPR_OBJ_MANA2, SPR_INTERFACE_MANA2, 1023, 709, 0.0f, 1.0f, Order + 1, FALSE, FALSE, FALSE);
+	InsertData(SPR_OBJ_UI_RIGHT, SPR_INTERFACE_UI_RIGHT, rightHUD.origin.x, rightHUD.origin.y, 1.0f, 1.0f, Order, FALSE, FALSE, FALSE);
+	InsertData(SPR_OBJ_MANA2, SPR_INTERFACE_MANA2, sp.x, sp.y, 0.0f, 1.0f, Order + 1, FALSE, FALSE, FALSE);
 	InsertData(SPR_OBJ_MANA1, SPR_INTERFACE_MANA1, sp.x, sp.y, 0.0f, 1.0f, Order + 2, FALSE, FALSE, FALSE);
 	InsertData(SPR_OBJ_CAST, SPR_INTERFACE_CAST, cool.x, cool.y, (float)g_pMainPlayer->percentageCoolPoints() * 300 / 2, 1.0f, Order + 3, FALSE, FALSE, FALSE);
 
-	InsertData(BUTTON_OBJ_ITEM1, BUTTON_INTERFACE_ITEM1, btnItem.x, btnItem.y, 1.0f, 1.0f, Order + 1, FALSE, FALSE, FALSE);
-	InsertData(BUTTON_OBJ_CHR1, BUTTON_INTERFACE_CHR1, btnStats.x, btnStats.y, 1.0f, 1.0f, Order + 1, FALSE, FALSE, FALSE);
-	InsertData(BUTTON_OBJ_SKILL1, BUTTON_INTERFACE_SKILL1, btnSkill.x, btnSkill.y, 1.0f, 1.0f, Order + 1, FALSE, FALSE, FALSE);
 	InsertData(BUTTON_OBJ_GUILD1, BUTTON_INTERFACE_GUILD1, btnGroup.x, btnGroup.y, 1.0f, 1.0f, Order + 1, FALSE, FALSE, FALSE);
 	InsertData(BUTTON_OBJ_PARTY1, BUTTON_INTERFACE_PARTY1, btnLair.x, btnLair.y, 1.0f, 1.0f, Order + 1, FALSE, FALSE, FALSE);
 	InsertData(BUTTON_OBJ_CHAT1, BUTTON_INTERFACE_CHAT1, btnChat.x, btnChat.y, 1.0f, 1.0f, Order + 1, FALSE, FALSE, FALSE);
-	InsertData(BUTTON_OBJ_ITEM2, BUTTON_INTERFACE_ITEM2, btnItem.x, btnItem.y, 1.0f, 1.0f, Order + 1, FALSE, FALSE, FALSE);
-	InsertData(BUTTON_OBJ_CHR2, BUTTON_INTERFACE_CHR2, btnStats.x, btnStats.y, 1.0f, 1.0f, Order + 1, FALSE, FALSE, FALSE);
-	InsertData(BUTTON_OBJ_SKILL2, BUTTON_INTERFACE_SKILL2, btnSkill.x, btnSkill.y, 1.0f, 1.0f, Order + 1, FALSE, FALSE, FALSE);
 	InsertData(BUTTON_OBJ_GUILD2, BUTTON_INTERFACE_GUILD2, btnGroup.x, btnGroup.y, 1.0f, 1.0f, Order + 1, FALSE, FALSE, FALSE);
 	InsertData(BUTTON_OBJ_PARTY2, BUTTON_INTERFACE_PARTY2, btnLair.x, btnLair.y, 1.0f, 1.0f, Order + 1, FALSE, FALSE, FALSE);
 	InsertData(BUTTON_OBJ_CHAT2, BUTTON_INTERFACE_CHAT2, btnChat.x, btnChat.y, 1.0f, 1.0f, Order + 1, FALSE, FALSE, FALSE);
 	InsertData(BUTTON_OBJ_SYSTEM1, BUTTON_INTERFACE_SYSTEM1, btnOptions.x, btnOptions.y, 1.0f, 1.0f, Order + 1, FALSE, FALSE, FALSE);
 	InsertData(BUTTON_OBJ_SYSTEM2, BUTTON_INTERFACE_SYSTEM2, btnOptions.x, btnOptions.y, 1.0f, 1.0f, Order + 1, FALSE, FALSE, FALSE);
-	InsertData(BUTTON_OBJ_PKON1, BUTTON_INTERFACE_PKON1, btnPK.x, btnPK.y, 1.0f, 1.0f, Order + 1, FALSE, FALSE, FALSE);
-	InsertData(BUTTON_OBJ_PKON2, BUTTON_INTERFACE_PKON2, btnPK.x, btnPK.y, 1.0f, 1.0f, Order + 1, FALSE, FALSE, FALSE);
-	InsertData(BUTTON_OBJ_PKOFF1, BUTTON_INTERFACE_PKOFF1, btnPK.x, btnPK.y, 1.0f, 1.0f, Order + 1, FALSE, FALSE, FALSE);
-	InsertData(BUTTON_OBJ_PKOFF2, BUTTON_INTERFACE_PKOFF2, btnPK.x, btnPK.y, 1.0f, 1.0f, Order + 1, FALSE, FALSE, FALSE);
 	InsertData(SPR_OBJ_MONSTERHP_BAR1, SPR_INTERFACE_MONSTERHP_BAR1, monsterHP1.x, monsterHP1.y, 1.0f, 1.0f, Order, FALSE, FALSE, FALSE);
 	InsertData(SPR_OBJ_MONSTERHP_BAR2, SPR_INTERFACE_MONSTERHP_BAR2, monsterHP2.x, monsterHP2.y, 1.0f, 1.0f, Order, FALSE, FALSE, FALSE);
 	InsertData(SPR_OBJ_MONSTER_GAGE1, SPR_INTERFACE_MONSTER_GAGE1, monsterGage.x, monsterGage.y, 1.0f, 1.0f, Order + 2, FALSE, FALSE, FALSE);
 	InsertData(SPR_OBJ_MONSTER_GAGE2, SPR_INTERFACE_MONSTER_GAGE2, monsterGage.x, monsterGage.y, 1.0f, 1.0f, Order + 1, FALSE, FALSE, FALSE);
 
-	InsertData(SPR_OBJ_USERHP_BAR1, SPR_INTERFACE_USERHP_BAR1, monsterHP1.x, monsterHP1.y, 1.0f, 1.0f, Order, FALSE, FALSE, FALSE);
-	InsertData(SPR_OBJ_USERHP_BAR2, SPR_INTERFACE_USERHP_BAR2, monsterHP2.x, monsterHP2.y, 1.0f, 1.0f, Order, FALSE, FALSE, FALSE);
 	InsertData(SPR_OBJ_USER_GAGE1, SPR_INTERFACE_USER_GAGE1, monsterGage.x, monsterGage.y, 1.0f, 1.0f, Order + 2, FALSE, FALSE, FALSE);
 	InsertData(SPR_OBJ_USER_GAGE2, SPR_INTERFACE_USER_GAGE2, monsterGage.x, monsterGage.y, 1.0f, 1.0f, Order + 1, FALSE, FALSE, FALSE);
 	InsertData(SPR_OBJ_GUARDIAN_WND1, SPR_INTERFACE_GUARDIAN_WND1, 0, 0, 1.0f, 1.0f, Order, FALSE, FALSE, FALSE);
 	InsertData(SPR_OBJ_GUARDIAN_EN, SPR_INTERFACE_GUARDIAN_EN, 0, 0, 1.0f, 1.0f, Order + 1, FALSE, FALSE, FALSE);
-	InsertData(SPR_OBJ_UI_TRADE1, SPR_INTERFACE_UI_TRADE1, btnTrade.x, btnTrade.y, 1.0f, 1.0f, Order + 1, FALSE, FALSE, FALSE);
-	InsertData(SPR_OBJ_UI_TRADE2, SPR_INTERFACE_UI_TRADE2, btnTrade.x, btnTrade.y, 1.0f, 1.0f, Order + 1, FALSE, FALSE, FALSE);
-	InsertData(SPR_OBJ_UI_TRADE3, SPR_INTERFACE_UI_TRADE3, btnTrade.x, btnTrade.y, 1.0f, 1.0f, Order + 1, FALSE, FALSE, FALSE);
-	InsertData(SPR_OBJ_UI_SHOP1, SPR_INTERFACE_UI_SHOP1, btnShop.x, btnShop.y, 1.0f, 1.0f, Order + 1, FALSE, FALSE, FALSE);
-	InsertData(SPR_OBJ_UI_SHOP2, SPR_INTERFACE_UI_SHOP2, btnShop.x, btnShop.y, 1.0f, 1.0f, Order + 1, FALSE, FALSE, FALSE);
-	InsertData(SPR_OBJ_UI_SHOP3, SPR_INTERFACE_UI_SHOP3, btnShop.x, btnShop.y, 1.0f, 1.0f, Order + 1, FALSE, FALSE, FALSE);
 
 	InsertData(SPR_OBJ_UI_REST1, SPR_INTERFACE_UI_REST1, btnRest.x, btnRest.y, 1.0f, 1.0f, Order+1, FALSE, FALSE, FALSE);	
 	InsertData(SPR_OBJ_UI_REST2, SPR_INTERFACE_UI_REST2, btnRest.x, btnRest.y, 1.0f, 1.0f, Order+1, FALSE, FALSE, FALSE);
@@ -952,6 +931,10 @@ void CUserInterface::Render()
 			{	
 				VECTOR2 vPos;
 
+				if (lpSpriteData->dwId == SPR_MANA1) {
+					printf("here");
+				}
+
 				if(!m_sSprite_Data[i].bPos)
 				{
 					vPos.x	= m_sSprite_Data[i].fPosX;
@@ -1076,7 +1059,7 @@ void CUserInterface::onDungeonJoin() {
 }
 
 void CUserInterface::updatedCurrentHP(CMainUser* player, DWORD oldValue, DWORD newValue) {
-	updateHPBar(newValue / (float)player->maxHP());
+	updateHPBar(player->percentageHP());
 }
 
 void CUserInterface::updatedMAXHP(CMainUser* player, DWORD oldValue, DWORD newValue) {
@@ -1084,7 +1067,7 @@ void CUserInterface::updatedMAXHP(CMainUser* player, DWORD oldValue, DWORD newVa
 }
 
 void CUserInterface::updatedCurrentSP(CMainUser* player, DWORD oldValue, DWORD newValue) {
-	updateSPBar(newValue / (float)player->maxSP());
+	updateSPBar(player->percentageMP());
 }
 
 void CUserInterface::updatedMAXSP(CMainUser* player, DWORD oldValue, DWORD newValue) {
@@ -1120,40 +1103,43 @@ void CUserInterface::SetCool()
 {
 	float fSize = g_pMainPlayer->percentageCoolPoints();
 
-	SetScalingObj(SPR_OBJ_CAST, fSize *300/2, 1.0);
-	SetPosObjX(SPR_OBJ_CAST, 1023-fSize *300);
+	SetScalingObj(SPR_OBJ_CAST, fSize * resourceBarMaxWidth / 2, 1.0);
+	const auto size = fSize * resourceBarMaxWidth;
+	const auto maxSpace = (cool.x + resourceBarMaxWidth);
+	SetPosObjX(SPR_OBJ_CAST, maxSpace - size);
 }
 
 extern char globalDebugLine[255];
 
 
 void	CUserInterface::updateSPBar(float scale) {
-	SetScalingObj(SPR_OBJ_MANA2, scale * 300 / 2, 1.0);
-	SetPosObjX(SPR_OBJ_MANA2, 1023 - scale * 300);
+	const auto size = scale * resourceBarMaxWidth;
+	const auto maxSpace = sp.x + resourceBarMaxWidth;
 
-	SetScalingObj(SPR_OBJ_MANA1, scale * 300 / 2, 1.0);
-	SetPosObjX(SPR_OBJ_MANA1, 1023 - scale * 300);
+	SetScalingObj(SPR_OBJ_MANA2, scale * resourceBarMaxWidth / 2, 1.0);
+	SetPosObjX(SPR_OBJ_MANA2, maxSpace - size);
+
+	SetScalingObj(SPR_OBJ_MANA1, scale * resourceBarMaxWidth / 2, 1.0);
+	SetPosObjX(SPR_OBJ_MANA1, maxSpace - size);
 
 	SetRender(SPR_OBJ_MANA1, TRUE);
 	SetRender(SPR_OBJ_MANA2, TRUE);
 }
 
 void	CUserInterface::updateHPBar(float scale) {
-	SetScalingObj(SPR_OBJ_EN1, scale * 300 / 2, 1.0);
-	SetScalingObj(SPR_OBJ_EN2, scale * 300 / 2, 1.0);
+	SetScalingObj(SPR_OBJ_EN1, scale * resourceBarMaxWidth / 2, 1.0);
+	SetScalingObj(SPR_OBJ_EN2, scale * resourceBarMaxWidth / 2, 1.0);
 
 	SetRender(SPR_OBJ_EN1, TRUE);
 }
 
 void	CUserInterface::updateEXPBar(float scale) {
-	SetScalingObj(SPR_OBJ_EXP, scale * 300 / 2, 1.0);
+	SetScalingObj(SPR_OBJ_EXP, scale * resourceBarMaxWidth / 2, 1.0);
 	SetRender(SPR_OBJ_EXP, TRUE);
 }
 
 void	CUserInterface::updateCooldownBar(float scale) {
-	SetScalingObj(SPR_OBJ_CAST, scale * 300 / 2, 1.0);
-	SetPosObjX(SPR_OBJ_CAST, 1023 - scale * 300);
-	SetRender(SPR_OBJ_CAST, TRUE);
+	SetCool();
 }
 
 void CUserInterface::SetActive(BOOL bActive)

@@ -92,11 +92,11 @@ void QueryTypeLoginFree(DBRECEIVEDATA* pResult)
 	case 3: //비밀번호 틀림
 		{
 			SendToUserLoginFailPacket( pUser, (BYTE)dwResult, NULL );
-			
+			const auto connIndex = pUser->GetConnectionIndex();
 			pUser->m_dwStatus = 0;
 			memset(pUser->m_szLoginID, 0, MAX_ID_LENGTH);			
 			g_pUserTable->FreeUser(pUser);
-			g_pNet->SetUserInfo(pUser->GetConnectionIndex(), NULL);
+			g_pNet->SetUserInfo(connIndex, NULL);
 		}
 		break;
 
