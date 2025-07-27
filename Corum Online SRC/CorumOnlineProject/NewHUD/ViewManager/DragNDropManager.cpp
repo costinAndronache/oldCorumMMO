@@ -45,10 +45,13 @@ static CTDS_ITEM_MOVE dropToTilePacket(ITEM_NATIVE from, int fromIndex, int quan
 DragNDropManager::DragNDropManager(
 	CMainUser* mainUser, 
 	SharedNetwork* network, 
-	CustomUI::DragNDropSystem* dragNDropSystem) {
+	CustomUI::DragNDropSystem* dragNDropSystem,
+	SoundLibrary* soundLibrary
+) {
 	_mainUser = mainUser;
 	_network = network;
 	_dragNDropSystem = dragNDropSystem;
+	_soundLibrary = soundLibrary;
 }
 
 void DragNDropManager::setupRoutes(
@@ -207,6 +210,8 @@ void DragNDropManager::moveFromBeltToSmallItemsInventory(
 	_network->onNextItemMove([=](DSTC_ITEM_MOVE incomingPacket) {
 		if (incomingPacket.bErrorCode != DSTC_ITEM_MOVE::ERROR_CODE_NO_ERROR) {
 			belt->resetIndexOnCurrentDragNDropItem();
+			_soundLibrary->playItemMouseDropInInterface();
+
 		}
 	});
 	_network->send(packet);
@@ -245,9 +250,11 @@ void DragNDropManager::swapUserInventoryITems(
 	_network->onNextItemMove([=](DSTC_ITEM_MOVE incomingPacket) {
 		if (incomingPacket.bErrorCode != DSTC_ITEM_MOVE::ERROR_CODE_NO_ERROR) {
 			inv->resetIndexOnCurrentDragNDropItem();
+			_soundLibrary->playItemMouseDropInInterface();
 		}
 	});
 	_network->send(packet);
+
 }
 
 void DragNDropManager::moveFromUserInventoryToBelt(
@@ -274,6 +281,7 @@ void DragNDropManager::moveFromUserInventoryToBelt(
 	_network->onNextItemMove([=](DSTC_ITEM_MOVE incomingPacket) {
 		if (incomingPacket.bErrorCode != DSTC_ITEM_MOVE::ERROR_CODE_NO_ERROR) {
 			inv->resetIndexOnCurrentDragNDropItem();
+			_soundLibrary->playItemMouseDropInInterface();
 		}
 	});
 	_network->send(packet);
@@ -304,6 +312,8 @@ void DragNDropManager::moveFromUserInventoryToEquip(
 	_network->onNextItemMove([=](DSTC_ITEM_MOVE incomingPacket) {
 		if (incomingPacket.bErrorCode != DSTC_ITEM_MOVE::ERROR_CODE_NO_ERROR) {
 			inv->resetIndexOnCurrentDragNDropItem();
+			_soundLibrary->playItemMouseDropInInterface();
+
 		}
 	});
 	_network->send(packet);
@@ -332,6 +342,7 @@ void DragNDropManager::moveFromEquipToItemInventory(
 	);
 
 	_network->send(packet);
+	_soundLibrary->playItemMouseDropInInterface();
 }
 
 void DragNDropManager::dropOnTileFromBelt(BeltManager* belt) {
@@ -344,6 +355,7 @@ void DragNDropManager::dropOnTileFromBelt(BeltManager* belt) {
 	);
 
 	_network->send(packet);
+	_soundLibrary->playItemMouseDropInTile();
 }
 
 void DragNDropManager::dropOnTileFromUserInventory(UserInventoryManager* inventory) {
@@ -370,4 +382,6 @@ void DragNDropManager::dropOnTileFromUserInventory(UserInventoryManager* invento
 	);
 
 	_network->send(packet);
+	_soundLibrary->playItemMouseDropInTile();
+
 }

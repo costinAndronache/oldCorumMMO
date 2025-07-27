@@ -28,16 +28,19 @@ int CharacterStatsManager::maxEntryCount() {
 CharacterStatsManager::CharacterStatsManager(
 	CharacterStatsView* managedView,
 	StatusPointManager* statusPointManager,
-	CMainUser* mainUser
+	CMainUser* mainUser,
+	SoundLibrary* soundLibrary
 ) {
 	_statusPointManager = statusPointManager;
 	_managedView = managedView;
 	_mainUser = mainUser;
+	_soundLibrary = soundLibrary;
 }
 
 void CharacterStatsManager::refreshCharacterStats() {
 	refreshCharacterStats([=](IncreasedAttribute attr) {
 		_statusPointManager->increasePlayerStatusPoint(attr);
+		_soundLibrary->playStatPointUp();
 	});
 }
 

@@ -4097,6 +4097,7 @@
     </ClCompile>
     <ClCompile Include="NewHelpers\ItemUsageManager.cpp" />
     <ClCompile Include="NewHelpers\SharedNetwork.cpp" />
+    <ClCompile Include="NewHelpers\SoundLibrary.cpp" />
     <ClCompile Include="NewHelpers\StatusPointManager.cpp" />
     <ClCompile Include="NewHUD\CharacterStatsView.cpp" />
     <ClCompile Include="NewHUD\UserInventoryView.cpp" />
@@ -6706,6 +6707,7 @@
     <ClInclude Include="ItemNativeManager.h" />
     <ClInclude Include="NewHelpers\ItemUsageManager.h" />
     <ClInclude Include="NewHelpers\SharedNetwork.h" />
+    <ClInclude Include="NewHelpers\SoundLibrary.h" />
     <ClInclude Include="NewHelpers\StatusPointManager.h" />
     <ClInclude Include="NewHUD\CharacterStatsView.h" />
     <ClInclude Include="NewHUD\UserInventoryView.h" />

@@ -753,20 +753,20 @@ BOOL InitGame()
 		OutputDebugString("Could not create sound library\n");
 	}
 
-	//if (g_pSoundLib)
-	//{
-	//	SOUND_ERROR_CODE sResult = g_pSoundLib->Init( 6000, 1000, "redist", FALSE, TRUE);
-	//	if( sResult != SOUND_ERROR_NOERROR )
-	//	{
-	//		OutputDebugString("Sound Library Init Failed!\n");
-	//		g_pSoundLib->Delete();
-	//		g_pSoundLib = NULL;
-	//	}
-	//	else
-	//	{
-	//		g_pSoundLib->SetMaxVoiceCount(8);
-	//	}
-	//}
+	if (g_pSoundLib)
+	{
+		SOUND_ERROR_CODE sResult = g_pSoundLib->Init( 6000, 1000, "redist", FALSE, TRUE);
+		if( sResult != SOUND_ERROR_NOERROR )
+		{
+			OutputDebugString("Sound Library Init Failed!\n");
+			g_pSoundLib->Delete();
+			g_pSoundLib = NULL;
+		}
+		else
+		{
+			g_pSoundLib->SetMaxVoiceCount(8);
+		}
+	}
 	
 	g_pGeometry->GetCameraDesc(&g_Camera.CameraDesc, 0);
 	g_Camera.v3Angle.x =  g_Camera.CameraDesc.fXRot;
@@ -891,6 +891,9 @@ BOOL InitGame()
 	CustomUI::SpriteCollection::initialize(g_pRenderer);
 	NewHUDResources::initialize(g_pRenderer);
 	populateSkillListManagerWithSprites();
+
+	g_fBGMVolume = 0.8;
+	g_fEffectVolume = 0.7;
 
 	return TRUE;
 }

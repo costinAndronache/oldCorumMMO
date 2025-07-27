@@ -5,7 +5,11 @@
 using namespace CustomUI;
 using namespace NewInterface;
 
-RightHUD::RightHUD(CustomUI::Point originInParent, CItemResourceHash* resourceHash) {
+RightHUD::RightHUD(
+	CustomUI::Point originInParent, 
+	CItemResourceHash* resourceHash,
+	ItemUsageManager* itemUsageManager
+) {
 	_frameInParent = { originInParent, NewHUDResources::newHUDSize };
 
 	_rightHUDSprite = registerChildRenderable<SpriteRenderable>([=]() {
@@ -78,7 +82,10 @@ RightHUD::RightHUD(CustomUI::Point originInParent, CItemResourceHash* resourceHa
 		);
 	});
 
-	_beltDragNDropParticipant = new BeltManager(_beltItemsView);
+	_beltDragNDropParticipant = new BeltManager(
+		_beltItemsView,
+		itemUsageManager
+	);
 }
 
 

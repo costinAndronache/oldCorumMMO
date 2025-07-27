@@ -19,12 +19,15 @@ namespace NewInterface {
 		Interface(CustomUI::Size screenSize, 
 				  CMainUser* mainUser,
 				  const LP_SKILL_LIST_MANAGER skillListManager,
-				  CItemResourceHash* resourceHash);
+				  CItemResourceHash* resourceHash,
+				  SoundLibrary* soundLibrary,
+				  SharedNetwork* sharedNetwork);
 		void renderWithRenderer(I4DyuchiGXRenderer* renderer, int zIndex) override;
 		bool swallowsMouse(CustomUI::Point mouse) override;
 		void handleMouseDown(CustomUI::Point mouseGlobalOrigin, MouseButton button) override;
 		void handleMouseUp(CustomUI::Point mouseGlobalOrigin, MouseButton button) override;
 		void handleMouseMove(CustomUI::Point mouseGlobalOrigin) override;
+		void processKeyDown(WPARAM wparam, LPARAM lparam) override;
 	public:
 		void updatedCurrentHP(CMainUser*, DWORD oldValue, DWORD newValue) override;
 		void updatedCurrentSP(CMainUser*, DWORD oldValue, DWORD newValue) override;
@@ -70,7 +73,11 @@ namespace NewInterface {
 		UserSkillsView* _userSkillsView;
 		UserSkillsManager* _userSkillsManager;
 
+		SoundLibrary* _soundLibrary;
 		void updateLeftHUDWithSelectedLeftRightSkills();
+
+		void toggleWindow(Renderable*);
+		void hideWindow(Renderable*);
 	};
 }
 

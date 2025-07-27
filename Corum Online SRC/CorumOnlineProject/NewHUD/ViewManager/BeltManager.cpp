@@ -3,12 +3,22 @@
 using namespace NewInterface;
 using namespace CustomUI;
 
-BeltManager::BeltManager(GenericItemsContainerView* managedBeltView) {
+BeltManager::BeltManager(
+	GenericItemsContainerView* managedBeltView,
+	ItemUsageManager* itemUsageManager
+) 
+{
 	_managedBeltView = managedBeltView;
+	_itemUsageManager = itemUsageManager;
 	_indexOnCurrentDragNDropItem = -1;
 }
 
 void BeltManager::updateBeltWithItems(const std::vector<CItem>& items) {
+	_currentItems = items;
+
+	GenericItemsContainerView::HandlerItemClickRIGHT rightClickHandler = [=](CItem item, int index) {
+		auto result = _itemUsageManager->tryUseBeltItem(item, index);
+	};
 	_managedBeltView->updateWithItems(
 		items,
 		NewHUDResources::inventoryItemUnderlaySprite,
@@ -22,8 +32,16 @@ void BeltManager::updateBeltWithItems(const std::vector<CItem>& items) {
 		SpriteRenderable* sprr = new SpriteRenderable(globalFrame, sprite);
 		_handler(sprr, globalFrame);
 		
-	}
+	},
+		rightClickHandler
 	);
+}
+
+void BeltManager::tryUseItemAtIndex(int index) {
+	if (!(0 <= index && index < _currentItems.size())) { return; }
+	auto item = _currentItems[index];
+
+	_itemUsageManager->tryUseBeltItem(item, index);
 }
 
 void BeltManager::resetIndexOnCurrentDragNDropItem() {

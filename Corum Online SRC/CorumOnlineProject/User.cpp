@@ -1968,6 +1968,13 @@ void CMainUser::nullifyBeltItemAtIndex(int index) {
 	});
 }
 
+std::vector<CItem> CMainUser::currentBeltItems() {
+	std::vector<CItem> result(
+		std::begin(m_pBelt), std::end(m_pBelt)
+	);
+	return result;
+}
+
 void CMainUser::copyBeltItemsInto(CItem items[MAX_BELT_POOL]) const {
 	for (int i = 0; i < MAX_BELT_POOL; i++) {
 		items[i] = m_pBelt[i];

@@ -11,7 +11,11 @@ namespace NewInterface {
 			EventHandler group, lair, chat, rest, match, options;
 		};
 	public:
-		RightHUD(CustomUI::Point originInParent, CItemResourceHash* resourceHash);
+		RightHUD(
+			CustomUI::Point originInParent,
+			CItemResourceHash* resourceHash,
+			ItemUsageManager* itemUsageManager
+		);
 
 
 		void setEventHandlers(EventHandlers handlers);

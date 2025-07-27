@@ -1,7 +1,7 @@
 #pragma once
 #include "Renderable.h"
 #include <set>
-
+#include "../../NewHelpers/SoundLibrary.h"
 namespace CustomUI {
 	
 	class DragNDropSender {
@@ -22,7 +22,7 @@ namespace CustomUI {
 
 	class DragNDropSystem {
 	public:
-		DragNDropSystem(DragNDropSystemRenderer* renderer);
+		DragNDropSystem(DragNDropSystemRenderer* renderer, SoundLibrary* soundLibrary);
 
 		void registerRoute(
 			DragNDropSender* sender,
@@ -33,6 +33,7 @@ namespace CustomUI {
 
 	private:
 		DragNDropSystemRenderer* _renderer;
+		SoundLibrary* _soundLibrary;
 	};
 }
 

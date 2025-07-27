@@ -2,8 +2,9 @@
 
 using namespace CustomUI;
 
-DragNDropSystem::DragNDropSystem(DragNDropSystemRenderer* renderer) {
+DragNDropSystem::DragNDropSystem(DragNDropSystemRenderer* renderer, SoundLibrary* soundLibrary) {
 	_renderer = renderer;
+	_soundLibrary = soundLibrary;
 }
 
 void DragNDropSystem::registerRoute(
@@ -15,6 +16,8 @@ void DragNDropSystem::registerRoute(
 
 	sender->onLeftMouseDragStart([=](Renderable* avatar, Rect globalFrameStart) {
 		avatar->updateFrameInParent(globalFrameStart);
+		_soundLibrary->playItemMousePickUp();
+
 		_renderer->renderOnMouseCursorAvatar(
 			avatar,
 			[=](Rect avatarCurrentGlobalFrame) {

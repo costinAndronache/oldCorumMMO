@@ -451,5 +451,6 @@ public:
 	void			setBeltItem(CItem item, int index) override;
 	void			nullifyBeltItemAtIndex(int index) override;
 	void			copyBeltItemsInto(CItem items[MAX_BELT_POOL]) const;
+	std::vector<CItem> currentBeltItems();
 };
 

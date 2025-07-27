@@ -5,12 +5,17 @@
 #include "EquipItemsManager.h"
 
 #include "../../NewHelpers/SharedNetwork.h"
-
+#include "../../NewHelpers/SoundLibrary.h"
 
 namespace NewInterface {
 	class DragNDropManager {
 	public:
-		DragNDropManager(CMainUser*, SharedNetwork*, CustomUI::DragNDropSystem*);
+		DragNDropManager(
+			CMainUser*, 
+			SharedNetwork*, 
+			CustomUI::DragNDropSystem*,
+			SoundLibrary*
+		);
 
 		void setupRoutes(
 			BeltManager* belt,
@@ -21,6 +26,7 @@ namespace NewInterface {
 	private:
 		CMainUser* _mainUser;
 		SharedNetwork* _network;
+		SoundLibrary* _soundLibrary;
 		CustomUI::DragNDropSystem* _dragNDropSystem;
 
 		void setupRoutesFromBelt(

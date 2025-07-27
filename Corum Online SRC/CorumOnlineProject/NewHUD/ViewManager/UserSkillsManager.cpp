@@ -69,13 +69,15 @@ UserSkillsManager::UserSkillsManager(
 	CMainUser* mainUser,
 	SharedNetwork* network,
 	SSKILL_LIST_MANAGER* skillListManager,
-	EffectLayer* effectLayer
+	EffectLayer* effectLayer,
+	SoundLibrary* soundLibrary
 ) {
 	_managedView = managedView;
 	_mainUser = mainUser;
 	_skillListManager = skillListManager;
 	_network = network;
 	_effectLayer = effectLayer;
+	_soundLibrary = soundLibrary;
 }
 
 void UserSkillsManager::refreshUserSkillsView() {
@@ -148,6 +150,7 @@ GenericSkillView::Model UserSkillsManager::buildModelFor(LP_SKILL_RESOURCE_EX sk
 				CTDS_SKILL_LEVELUP levelUpSkill;
 				levelUpSkill.nSkillIndex = skillResource->wId;
 				_network->send(levelUpSkill);
+				_soundLibrary->playSkillPointUp();
 			};
 		} else {
 			return nullptr;

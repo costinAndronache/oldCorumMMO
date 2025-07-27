@@ -217,14 +217,10 @@ BOOL InitGameDungeon() {
 		CustomUI::Size{ (float)windowWidth(), (float)windowHeight()},
 		g_pMainPlayer,
 		&g_sSkillListManager,
-		g_pItemResourceHash
+		g_pItemResourceHash,
+		SoundLibrary::sharedInstance(),
+		SharedNetwork::sharedInstance()
 	);
-
-	_leftHudTest = new CustomUI::SpriteRenderable(
-		{ {0, 0}, {400, 121} },
-		NewHUDResources::leftInterfaceHUDSprite
-	);
-
 
 	CBankWnd::GetInstance()->Init();
 	// 카메라 이동에 관련된 플래그 세팅.
@@ -1566,6 +1562,8 @@ void OnKeyDownDungeon(WPARAM wParam, LPARAM lParam)
 			break;
 		}
 	}
+
+	_newInterface->handleKeyDown(wParam, lParam);
 
 	BOOL bHanMode = TRUE;
 	

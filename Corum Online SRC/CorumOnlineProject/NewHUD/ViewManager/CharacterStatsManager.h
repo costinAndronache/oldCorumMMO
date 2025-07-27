@@ -3,6 +3,7 @@
 #include "../CharacterStatsView.h"
 #include "../../InitGame.h"
 #include "../../NewHelpers/StatusPointManager.h"
+#include "../../NewHelpers/SoundLibrary.h"
 namespace NewInterface {
 
 
@@ -14,7 +15,8 @@ namespace NewInterface {
 		CharacterStatsManager(
 			CharacterStatsView* managedView,
 			StatusPointManager* _statusPointManager,
-			CMainUser* mainUser
+			CMainUser* mainUser,
+			SoundLibrary* soundLibrary
 		);
 
 		void refreshCharacterStats();
@@ -23,7 +25,7 @@ namespace NewInterface {
 		StatusPointManager* _statusPointManager;
 		CharacterStatsView* _managedView;
 		CMainUser* _mainUser;
-
+		SoundLibrary* _soundLibrary;
 		void refreshCharacterStats(AttributeIncreaseHandler handler);
 	};
 }

@@ -28,12 +28,18 @@ static void renderOldInterfaces(std::vector<CMenu*> oldInterfaces) {
 }
 
 #pragma region Constructor
-Interface::Interface(CustomUI::Size screenSize,
+Interface::Interface(
+	CustomUI::Size screenSize,
 	CMainUser* mainUser,
 	const LP_SKILL_LIST_MANAGER skillListManager,
-	CItemResourceHash* resourceHash) {
+	CItemResourceHash* resourceHash,
+	SoundLibrary* soundLibrary,
+	SharedNetwork* sharedNetwork) 
+{
 	_mainUser = mainUser;
 	_skillListManager = skillListManager;
+	_soundLibrary = soundLibrary;
+
 	_frameInParent = CustomUI::Rect{ {0, 0}, screenSize };
 
 	const auto hudSize = NewHUDResources::newHUDSize;
@@ -44,7 +50,7 @@ Interface::Interface(CustomUI::Size screenSize,
 
 	const auto rightHudOriginX = (long)(screenSize.width - hudSize.width);
 	_rightHUD = registerChildRenderable<RightHUD>([=]() {
-		return new RightHUD({ rightHudOriginX, hudOriginY }, resourceHash);
+		return new RightHUD({ rightHudOriginX, hudOriginY }, resourceHash, ItemUsageManager::sharedInstance());
 	});
 
 	_skillSelectionView = registerChildRenderable<NewSkillSelectionView>([&]() {
@@ -67,23 +73,25 @@ Interface::Interface(CustomUI::Size screenSize,
 
 	LeftHUD::EventHandlers handlers;
 	handlers.statsHandler = [=]() {
-		_statsView->toggleHiddenState();
+		toggleWindow(_statsView);
 	};
 
 	handlers.itemHandler = [=]() {
-		_newItemsWindow->toggleHiddenState();
+		toggleWindow(_newItemsWindow);
 	};
 
 	handlers.skillsHandler = [=]() {
-		_userSkillsView->toggleHiddenState();
+		toggleWindow(_userSkillsView);
 	};
 
 	handlers.leftSkillHandler = [=]() {
 		_skillSelectionView->switchToActiveSelection(NewSkillSelectionView::ActiveSkillSelection::leftSkills);
+		_soundLibrary->playWindowOpen();
 	};
 
 	handlers.rightSkillHandler = [=]() {
 		_skillSelectionView->switchToActiveSelection(NewSkillSelectionView::ActiveSkillSelection::rightSkills);
+		_soundLibrary->playWindowOpen();
 	};
 
 	_leftHUD->setEventHandlers(handlers);
@@ -93,20 +101,23 @@ Interface::Interface(CustomUI::Size screenSize,
 		mainUser->skillsAvailableOnLeft(),
 		mainUser->skillsAvailableOnRight(),
 		std::vector<BYTE>()
-		});
+	});
 
 	_skillSelectionView->setHandlers({
 		[=](BYTE leftSkillKind) {
 			_mainUser->SetSkillChangeLR(leftSkillKind, 0);
 			_skillSelectionView->switchToActiveSelection(NewSkillSelectionView::ActiveSkillSelection::none);
+			_soundLibrary->playWindowClose();
 		},
 		[=](BYTE rightSkillKind) {
 			_mainUser->SetSkillChangeLR(rightSkillKind, 1);
 			_skillSelectionView->switchToActiveSelection(NewSkillSelectionView::ActiveSkillSelection::none);
+			_soundLibrary->playWindowClose();
 		},
 		[=](BYTE guardianSkillKind) {
 		// not yet
 		_skillSelectionView->switchToActiveSelection(NewSkillSelectionView::ActiveSkillSelection::none);
+		_soundLibrary->playWindowClose();
 	},
 		});
 
@@ -117,7 +128,7 @@ Interface::Interface(CustomUI::Size screenSize,
 	});
 
 	_newItemsWindow->onClose([=]() {
-		_newItemsWindow->setHidden(true);
+		hideWindow(_newItemsWindow);
 	});
 
 	_newItemsWindow->setHidden(true);
@@ -127,7 +138,7 @@ Interface::Interface(CustomUI::Size screenSize,
 	});
 	_mouseTracking->updateZIndexOffsetForce(1000);
 
-	_dragNDropSystem = new DragNDropSystem(this);
+	_dragNDropSystem = new DragNDropSystem(this, SoundLibrary::sharedInstance());
 	_userInventoryManager = new UserInventoryManager(
 		_newItemsWindow->groupedInventoryView(),
 		ItemUsageManager::sharedInstance()
@@ -136,8 +147,9 @@ Interface::Interface(CustomUI::Size screenSize,
 
 	_dragNDropManager = new DragNDropManager(
 		mainUser,
-		SharedNetwork::sharedInstance(),
-		_dragNDropSystem
+		sharedNetwork,
+		_dragNDropSystem,
+		soundLibrary
 	);
 
 	_dragNDropManager->setupRoutes(
@@ -160,9 +172,9 @@ Interface::Interface(CustomUI::Size screenSize,
 	});
 	_statsView->setHidden(true);
 
-	auto statusPointManager = new StatusPointManager(SharedNetwork::sharedInstance());
+	auto statusPointManager = new StatusPointManager(sharedNetwork);
 	_statsManager = new CharacterStatsManager(
-		_statsView, statusPointManager, _mainUser
+		_statsView, statusPointManager, _mainUser, soundLibrary
 	);
 
 	_statsManager->refreshCharacterStats();
@@ -175,20 +187,37 @@ Interface::Interface(CustomUI::Size screenSize,
 	});
 
 	_userSkillsView->onClose([=]() {
-		_userSkillsView->setHidden(true);
+		hideWindow(_userSkillsView);
 	});
+
+	_userSkillsView->setHidden(true);
 
 	_userSkillsManager = new UserSkillsManager(
 		_userSkillsView, 
 		_mainUser, 
 		SharedNetwork::sharedInstance(), 
 		&g_sSkillListManager,
-		g_pEffectLayer
+		g_pEffectLayer,
+		soundLibrary
 	);
 
 	_userSkillsManager->refreshUserSkillsView();
 }
 
+void Interface::toggleWindow(Renderable* window) {
+	if (window->getHidden()) {
+		_soundLibrary->playWindowOpen();
+	} else {
+		_soundLibrary->playWindowClose();
+	}
+
+	window->toggleHiddenState();
+}
+
+void Interface::hideWindow(Renderable* window) {
+	_soundLibrary->playWindowClose();
+	window->setHidden(true);
+}
 
 #pragma region Internals
 void Interface::updateLeftHUDWithSelectedLeftRightSkills() {
@@ -310,6 +339,29 @@ void Interface::handleMouseUp(Point mouseGlobalOrigin, MouseButton button) {
 
 void Interface::handleMouseMove(Point mouseGlobalOrigin) {
 	Renderable::handleMouseMove(mouseGlobalOrigin);
+}
+
+void Interface::processKeyDown(WPARAM wparam, LPARAM lparam) {
+	Renderable::processKeyDown(wparam, lparam);
+	auto ascii = CustomUI::getASCII(wparam, lparam);
+	 // dirty hack for shortcuts for now
+
+	if ('1' <= ascii && ascii <= '8') {
+		auto index = ascii - '1';
+		_rightHUD->beltDragNDropParticipant()->tryUseItemAtIndex(index);
+	}
+
+	if (tolower(ascii) == 'a') {
+		toggleWindow(_statsView);
+	}
+
+	if (tolower(ascii) == 't') {
+		toggleWindow(_newItemsWindow);
+	}
+
+	if (tolower(ascii) == 's') {
+		toggleWindow(_userSkillsView);
+	}
 }
 
 bool Interface::swallowsMouse(CustomUI::Point mouse) {
