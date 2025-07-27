@@ -2440,7 +2440,7 @@ void CUser::AddExp(int iExp, BOOL bAlphaExp)
 	}
 	else
 	{
-		m_dwExp += iExp * 1000;
+		m_dwExp += iExp;
 	}
 	
 	// 내 가디언들의 경험치를 올려준다.
