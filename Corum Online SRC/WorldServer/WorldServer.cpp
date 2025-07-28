@@ -10,7 +10,7 @@
 #include "Party.h"
 #include "Messenger.h"
 #include "NTOS.h"
-
+#include "../BaseLibrary/mdump.h"
 
 #include "RivalGUildWar.h"
 
@@ -350,6 +350,7 @@ void SetLocalData()
 
 int main(int argc, char* argv[])
 {
+	static auto minidumper = new MiniDumper("WORLD_CRASH");
 	char dir[255];
 	GetCurrentDirectory(255, dir);
 	if(!g_Local.LoadFromINI(".\\Local.ini"))// Local Info ¼ÂÆÃ : 050102 hwoarang

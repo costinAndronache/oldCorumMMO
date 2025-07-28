@@ -42,7 +42,7 @@ static MiniDumper* _miniDumpCrashHandler;
 
 int APIENTRY WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nShowCmd )
 {
-	_miniDumpCrashHandler = new MiniDumper("CORUM CRASH");
+	_miniDumpCrashHandler = new MiniDumper("CLIENT_CRASH");
 
 	AllocConsole();
 	freopen("CONOUT$", "w", stdout);

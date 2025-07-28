@@ -10,7 +10,7 @@
 #include "ChinaBillingProc.h"
 #include "LicensingProc.h"
 #include "Filter.h"
-
+#include "../BaseLibrary/mdump.h"
 
 CNTNetWork			*g_pNet				= NULL;
 IOleDBThread		*g_pDb				= NULL;
@@ -245,6 +245,8 @@ void SetDBInfo()
 
 int main(int argc, char* argv[])
 {
+	static auto minidumper = new MiniDumper("LOGIN_CRASH");
+
 	if(!g_Local.LoadFromINI("./Local.ini"))// Local Info ¼ÂÆÃ : 050102 hwoarang
 	{
 		assert(NULL && "local.ini not exist");

@@ -308,7 +308,7 @@
       <LanguageStandard>stdcpp14</LanguageStandard>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>odbc32.lib;odbccp32.lib;WS2_32.lib;%(AdditionalDependencies);SS3DGFunc.lib;CommonServer.lib</AdditionalDependencies>
+      <AdditionalDependencies>odbc32.lib;odbccp32.lib;WS2_32.lib;%(AdditionalDependencies);BaseLibrary.lib;SS3DGFunc.lib;CommonServer.lib</AdditionalDependencies>
       <OutputFile>.\Debug\WorldServerResult.exe</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <GenerateDebugInformation>true</GenerateDebugInformation>

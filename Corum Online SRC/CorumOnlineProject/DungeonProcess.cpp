@@ -112,7 +112,7 @@ using namespace ItemPickupFiltering;
 
 char globalDebugLine[255];
 
-static int _renderFPS = 30;
+static int _renderFPS = 60;
 std::shared_ptr<AppliedSkillsIconsView> _appliedSkillsIconsView(nullptr);
 std::shared_ptr<NewInterface::Interface> _newInterface(nullptr);
 
@@ -230,7 +230,7 @@ BOOL InitGameDungeon() {
 	SetRenderMode(RENDER_MODE_NORMAL);
 	
 	g_pExecutive->SetLogicFPS(30);
-	g_pExecutive->SetRenderFPS(20);
+	g_pExecutive->SetRenderFPS(60);
 	
 	srand( g_dwCurTick );
 	
@@ -1531,9 +1531,6 @@ DWORD __stdcall AfterRenderGameDungeon()
 	
 	sprintf(szTempEx, "%ld, %ld,", g_Mouse.MousePos.x, g_Mouse.MousePos.y);
 	RenderFont(szTempEx, 500, 1200, 100, 150, 0);
-
-	sprintf(globalDebugLine, "FPS:: %d", _renderFPS);
-	RenderFont((char*)globalDebugLine, 500, 1200, 50, 90, 0);
 
 	if (pTile)
 	{

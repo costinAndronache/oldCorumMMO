@@ -21,6 +21,7 @@
 #include "EventDungeonManager.h"
 #include "../BaseLibrary/Utility/Debugging/ExceptionReport.h" // MiniDump : jaewon 050120
 
+#include "../BaseLibrary/mdump.h"
 
 CNTNetWork	*				g_pNet							= NULL;
 IOleDBThread*				g_pDb							= NULL;
@@ -218,8 +219,12 @@ void SetDBInfo()
 }
 */
 
+
+
 int main(int argc, char* argv[])
 {
+	static auto minidumper = new MiniDumper("DUNGEON_CRASH");
+
 #ifdef _DEBUG
 	_CrtSetReportFile( _CRT_WARN, _CRTDBG_FILE_STDERR );
 //	_CrtSetReportMode( _CRT_WARN, _CRTDBG_MODE_FILE   );
