@@ -29,6 +29,8 @@
 #include <GdiPlusInit.h>
 #include "../BaseLibrary/Timer.h"
 #include "DungeonInterfaceLayout.h"
+#include "../BaseLibrary/mdump.h"
+
 
 void message(char* const info) {
 	MessageBox(g_hMainWnd, info, "CorumOnlineProject", MB_OK);
@@ -36,8 +38,12 @@ void message(char* const info) {
 
 static Timer* testTimer = nullptr;
 
+static MiniDumper* _miniDumpCrashHandler;
+
 int APIENTRY WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nShowCmd )
 {
+	_miniDumpCrashHandler = new MiniDumper("CORUM CRASH");
+
 	AllocConsole();
 	freopen("CONOUT$", "w", stdout);
 

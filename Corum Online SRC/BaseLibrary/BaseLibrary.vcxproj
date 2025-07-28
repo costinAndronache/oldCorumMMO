@@ -306,6 +306,7 @@
     <ClInclude Include="datastructure\TSTL.h" />
     <ClInclude Include="datastructure\tstl_wmrg.h" />
     <ClInclude Include="datastructure\win32_mutex.h" />
+    <ClInclude Include="mdump.h" />
     <ClInclude Include="pattern\FastDelegate.h" />
     <ClInclude Include="Pattern\Singleton.hpp" />
     <ClInclude Include="RunLoop.h" />
@@ -371,6 +372,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="datastructure\template.cpp" />
+    <ClCompile Include="mdump.cpp" />
     <ClCompile Include="RunLoop.cpp" />
     <ClCompile Include="Thread\ThreadManager.cpp" />
     <ClCompile Include="Timer.cpp" />
