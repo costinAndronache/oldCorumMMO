@@ -131,8 +131,6 @@ struct	ChrInfoLayer;
 #define	MAX_SNOW_EFFECT				100
 #define WINDOW_CLASS_NAME			"Corum Online Project"
 #define WINDOW_TITLE_NAME			"Corum Online Project"
-#define SCREEN_WIDTH				1024
-#define SCREEN_HEIGHT				768
 #define MAX_AUDIO_OBJECT_NUM		128
 #define MAX_OBJECT_NUM				1000	
 #define MAX_FONT_NUM				4

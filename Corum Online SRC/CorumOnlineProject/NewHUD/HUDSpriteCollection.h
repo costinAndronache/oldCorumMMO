@@ -1,6 +1,7 @@
 #pragma once
 #include "../NewUI/CustomUIBase.h"
 #include "../NewUI/Button.h"
+#include "../NewUI/BorderRenderable.h"
 
 typedef CustomUI::SpriteModel CUISpriteModel;
 
@@ -17,6 +18,8 @@ struct NewHUDResources {
 	static CUISpriteModel genericBackgroundSprite;
 	static CUISpriteModel borderedBlackBackgroundSolid;
 	static CUISpriteModel borderedBlackBackgroundFaded;
+	static CUISpriteModel blueDot;
+	static CustomUI::BorderRenderable::BorderLineSprites goldBorder;
 
 	static CustomUI::Button::Sprites
 		trade, shop, item, stats, skill,

@@ -9,6 +9,7 @@
 #include "ViewManager/EquipItemsManager.h"
 #include "ViewManager/CharacterStatsManager.h"
 #include "ViewManager/UserSkillsManager.h"
+#include "DynamicInfoBox.h"
 
 namespace NewInterface {
 	class Interface: 
@@ -48,32 +49,28 @@ namespace NewInterface {
 		);
 		virtual void clearCurrentMouseCursorAvatar();
 	private:
-		LeftHUD* _leftHUD;
-		RightHUD* _rightHUD;
-
-		NewSkillSelectionView* _skillSelectionView;
-
 		std::shared_ptr<Interface> _thisAsShared;
-
 		LP_SKILL_LIST_MANAGER _skillListManager;
 		CMainUser* _mainUser;
+		SoundLibrary* _soundLibrary;
+
+		LeftHUD* _leftHUD;
+		RightHUD* _rightHUD;
+		NewItemsWindow* _newItemsWindow;
+		CharacterStatsView* _statsView;
+		UserSkillsView* _userSkillsView;
+		NewSkillSelectionView* _skillSelectionView;
+		DynamicInfoBox* _dynamicInfoBox;
+
 
 		CustomUI::DragNDropSystem* _dragNDropSystem;
 		CustomUI::MouseTrackingSpriteRenderable* _mouseTracking;
-
 		DragNDropManager* _dragNDropManager;
-
-		NewItemsWindow* _newItemsWindow;
 		UserInventoryManager* _userInventoryManager;
 		EquipItemsManager* _equipItemsManager;
-
-		CharacterStatsView* _statsView;
 		CharacterStatsManager* _statsManager;
-
-		UserSkillsView* _userSkillsView;
 		UserSkillsManager* _userSkillsManager;
 
-		SoundLibrary* _soundLibrary;
 		void updateLeftHUDWithSelectedLeftRightSkills();
 
 		void toggleWindow(Renderable*);

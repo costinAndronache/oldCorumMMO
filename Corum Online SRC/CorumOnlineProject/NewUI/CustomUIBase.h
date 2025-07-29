@@ -236,11 +236,22 @@ namespace CustomUI {
 	};
 
 	struct Color {
-		unsigned char a, r, g, b;
-		DWORD asDXColor() {
+		unsigned char r, g, b, a;
+		
+		DWORD asDXColor() const {
 			return D3DCOLOR_ARGB(a, r, g, b);
 		}
+
+		Color withAlpha(unsigned char alpha) const {
+			return { r, g, b, alpha };
+		}
+
 		static Color white;
+		static Color red;
+		static Color green;
+		static Color blue;
+		static Color yellow;
+		static Color magenta;
 	};
 
 	char getASCII(WPARAM wparam, LPARAM lParam); // 0 if not from keyboard

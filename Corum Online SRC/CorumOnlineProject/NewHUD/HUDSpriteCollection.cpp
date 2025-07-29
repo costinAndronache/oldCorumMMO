@@ -12,8 +12,10 @@ SpriteModel NewHUDResources::leftInterfaceHUDSprite;
 SpriteModel NewHUDResources::rightInterfaceHUDSprite;
 SpriteModel NewHUDResources::inventoryItemUnderlaySprite;
 SpriteModel NewHUDResources::genericBackgroundSprite;
-CUISpriteModel NewHUDResources::borderedBlackBackgroundSolid;
-CUISpriteModel NewHUDResources::borderedBlackBackgroundFaded;
+SpriteModel NewHUDResources::borderedBlackBackgroundSolid;
+SpriteModel NewHUDResources::borderedBlackBackgroundFaded;
+SpriteModel NewHUDResources::blueDot;
+BorderRenderable::BorderLineSprites NewHUDResources::goldBorder;
 
 CustomUI::Button::Sprites
 NewHUDResources::trade, NewHUDResources::shop, NewHUDResources::item,
@@ -114,6 +116,11 @@ static void initNewHUDElements(I4DyuchiGXRenderer* r) {
 		from(r, rf, { { 68, 180}, {32, 32} }),
 	};
 
+	NewHUDResources::goldBorder = {
+		from(r, rf, { {0, 316}, {240, 1} }),
+		from(r, rf, { {0, 316}, {1, 206} })
+	};
+	
 	NewHUDResources::borderedBlackBackgroundSolid = from(r, rf, { {0, 523}, {62, 20} });
 	NewHUDResources::borderedBlackBackgroundFaded = from(r, rf, { {0, 544}, {166, 20} });
 
@@ -134,6 +141,9 @@ static void initNewHUDElements(I4DyuchiGXRenderer* r) {
 		from(r, rf, {{119, 524}, {16, 17}}),
 		from(r, rf, {{136, 524}, {16, 17}})
 	};
+
+	char* menu4 = GetFile("menu_4.tif", DATA_TYPE_UI);
+	NewHUDResources::blueDot = from(r, menu4, { {1, 96}, {2, 2} });
 }
 
 static void initMenu1Elements(I4DyuchiGXRenderer* renderer) {

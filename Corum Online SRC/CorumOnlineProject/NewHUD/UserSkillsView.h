@@ -4,6 +4,7 @@
 #include "../NewUI/Button.h"
 #include "../NewUI/SpriteRenderable.h"
 #include "../NewUI/RadioButtonGroup.h"
+#include "../NewUI/BorderRenderable.h"
 
 namespace NewInterface {
 	class GenericSkillView : public CustomUI::Renderable {
@@ -37,6 +38,7 @@ namespace NewInterface {
 	private:
 		CustomUI::SingleLineLabel* _titleLabel;
 		CustomUI::MatrixContainer* _container;
+		CustomUI::BorderRenderable* _border;
 	};
 
 	class SkillSheetView: public CustomUI::Renderable {

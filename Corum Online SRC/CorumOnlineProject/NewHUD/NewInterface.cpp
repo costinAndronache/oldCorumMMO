@@ -9,6 +9,8 @@
 using namespace CustomUI;
 using namespace NewInterface;
 
+static Point defaultWindowOrigin{ 20, 20 };
+
 static void checkOldInterfaces(std::vector<CMenu*> oldInterfaces) {
 	for (auto intf : oldInterfaces) {
 		if (intf->GetActive()) {
@@ -124,7 +126,7 @@ Interface::Interface(
 	//
 
 	_newItemsWindow = registerChildRenderable<NewItemsWindow>([=]() {
-		return new NewItemsWindow({ 200, 200 }, resourceHash);
+		return new NewItemsWindow(defaultWindowOrigin, resourceHash);
 	});
 
 	_newItemsWindow->onClose([=]() {
@@ -162,7 +164,7 @@ Interface::Interface(
 	auto entriesCount = CharacterStatsManager::maxEntryCount();
 	_statsView = registerChildRenderable<CharacterStatsView>([=]() {
 		return new CharacterStatsView({
-			{ 200, 200},
+			defaultWindowOrigin,
 			{ 400, CharacterStatsView::appropriateSizeForElementsCountOnPage(entriesCount)}
 			});
 	});
@@ -171,6 +173,7 @@ Interface::Interface(
 		_statsView->setHidden(true);
 	});
 	_statsView->setHidden(true);
+	_statsView->updateZIndexOffsetForce(1000);
 
 	auto statusPointManager = new StatusPointManager(sharedNetwork);
 	_statsManager = new CharacterStatsManager(
@@ -183,7 +186,7 @@ Interface::Interface(
 	auto skillsViewSize = UserSkillsView::appropriateSizeForMaxNumberOfSkillsPerList(UserSkillsManager::maxNumOfSkillsInList());
 
 	_userSkillsView = registerChildRenderable<UserSkillsView>([=]() {
-		return new UserSkillsView({ {200, 200}, skillsViewSize });
+		return new UserSkillsView({ defaultWindowOrigin, skillsViewSize });
 	});
 
 	_userSkillsView->onClose([=]() {
@@ -202,6 +205,20 @@ Interface::Interface(
 	);
 
 	_userSkillsManager->refreshUserSkillsView();
+	updateZIndexOffsetForce(1000);
+
+	_dynamicInfoBox = registerChildRenderable<DynamicInfoBox>([=]() {
+		return new DynamicInfoBox({ 200, 200 });
+	});
+
+	_dynamicInfoBox->updateWithLines({
+		{ "First line", Color::white},
+		{ "Second lineasaasdsdf", Color::red},
+		{ "Third line", Color::green},
+		{ "Fourth line", Color::magenta},
+		{ "FIFTH line", Color::yellow},
+	});
+
 }
 
 void Interface::toggleWindow(Renderable* window) {

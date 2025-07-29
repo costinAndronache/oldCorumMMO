@@ -64,13 +64,11 @@ extern int windowWidth();
 extern int windowHeight();
 
 int windowWidth() {
-	int w = GetSystemMetrics(SM_CXSCREEN);
-	return w;
+	return 1280;
 }
 
 int windowHeight() {
-	int h = GetSystemMetrics(SM_CYSCREEN);
-	return h;
+	return 768;
 }
 
 std::vector<ITEM*> selectedItemsForTooltipRendering;
@@ -1594,8 +1592,8 @@ BOOL InitCOMObject()
 	}
 	
 	DISPLAY_INFO dispInfo;
-	dispInfo.dwWidth		= SCREEN_WIDTH;
-	dispInfo.dwHeight		= SCREEN_HEIGHT;
+	dispInfo.dwWidth = windowWidth();;
+	dispInfo.dwHeight		= windowHeight();
 	dispInfo.dwBPS			= 2;
 	
 #ifndef DEVELOP_MODE	
@@ -1832,8 +1830,8 @@ HWND InitInstance(HINSTANCE hInstance, int nCmdShow)
 	RECT rc;
 	rc.left		= 0;
 	rc.top		= 0;
-	rc.right	= SCREEN_WIDTH;
-	rc.bottom	= SCREEN_HEIGHT;
+	rc.right	= windowWidth();
+	rc.bottom	= windowHeight();
 	AdjustWindowRect( &rc, WS_OVERLAPPEDWINDOW, FALSE );
 
 #ifndef DEVELOP_MODE
@@ -1881,11 +1879,6 @@ ATOM RegisterWindowClass(HINSTANCE hInstance)
 
 void CentreWindow(HWND hwnd)
 {
-
-	SetWindowLongPtr(hwnd, GWL_STYLE, WS_VISIBLE | WS_POPUP);
-	SetWindowPos(hwnd, HWND_TOP, 0, 0, windowWidth(), windowHeight(), SWP_FRAMECHANGED);
-
-	return;
 
     RECT winrect, workrect;
     
