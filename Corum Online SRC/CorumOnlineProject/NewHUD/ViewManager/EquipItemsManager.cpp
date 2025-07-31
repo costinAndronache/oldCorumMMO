@@ -21,9 +21,9 @@ void EquipItemsManager::updateWithItems(const CItem equipVector[MAX_EQUIP_POOL])
 		models.push_back({ equipVector[i], underlays[i] });
 	}
 
-	_managedView->updateWithItems(
-		models,
-	[=](CItem item, SpriteModel sprite, int index, Rect globalFrame) {
+	using LongClickLEFT = GenericItemsContainerView::HandlerItemLongClickLEFT;
+
+	LongClickLEFT longClickLEFT = [=](CItem item, SpriteModel sprite, int index, Rect globalFrame) {
 		if (item.m_wItemID == 0) { return; } // empty item 
 		if (!_handler) { return; }
 
@@ -32,7 +32,11 @@ void EquipItemsManager::updateWithItems(const CItem equipVector[MAX_EQUIP_POOL])
 
 		SpriteRenderable* sprr = new SpriteRenderable(globalFrame, sprite);
 		_handler(sprr, globalFrame);
-	}
+	};
+
+	_managedView->updateWithItems(
+		models,
+		{longClickLEFT, nullptr, nullptr, nullptr}
 	);
 }
 

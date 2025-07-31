@@ -77,12 +77,11 @@ GroupedItemInventoryView::GroupedItemInventoryView(CustomUI::Rect frameInParent,
 void GroupedItemInventoryView::rebuildWith(
 	const std::vector<CItem>& smallItems,
 	const std::vector<CItem>& largeItems,
-	ItemLongPressHandlerLMB onSmallItemLongPressLMB,
-	ItemLongPressHandlerLMB onLargeItemLongPressLMB,
-	HandlerItemClickRIGHT onRightClickSmallItem
+	Handlers smallItemHandlers,
+	Handlers largeItemHandlers
 ) {
-	_smallItemsInventory->rebuild(smallItems, onSmallItemLongPressLMB, onRightClickSmallItem);
-	_largeItemsInventory->rebuild(largeItems, onLargeItemLongPressLMB);
+	_smallItemsInventory->rebuild(smallItems, smallItemHandlers);
+	_largeItemsInventory->rebuild(largeItems, largeItemHandlers);
 }
 
 void GroupedItemInventoryView::setActiveTab(Tab tab) {

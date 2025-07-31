@@ -46,14 +46,46 @@ ItemInventoryView::ItemInventoryView(CustomUI::Rect frameInParent, CItemResource
 
 void ItemInventoryView::rebuild(
 	const std::vector<CItem>& items, 
-	ItemLongPressHandlerLMB onLongPressItemLMB,
-	HandlerItemClickRIGHT onRightClickItem) 
+	Handlers handlers
+)
 {
 	_pages.clear();
 
 	auto split = splitVector<CItem>(items, _appearance.elementsCountPerPage);
 	_pagedContainer->rebuildPages< std::vector<CItem> >(split,
 		[=](Rect frame, std::vector<CItem>& modelsForCurrentPage, int currentPageIndex) {
+
+		auto indexInInputArray = [=](int indexInCurrentPage) {
+			return _appearance.elementsCountPerPage* currentPageIndex + indexInCurrentPage;
+		};
+
+		auto augmentedHandlers = Handlers{
+			[=](CItem item, CUISpriteModel sprite, int index, Rect globalFrame) {
+			const auto indexInOriginal = indexInInputArray(index);
+
+			if (handlers.longClickLEFT) {
+				handlers.longClickLEFT(item, sprite, indexInOriginal, globalFrame);
+			}
+		},
+			[=](CItem item, int index) {
+			const auto indexInOriginal = indexInInputArray(index);
+			if (handlers.clickRIGHT) {
+				handlers.clickRIGHT(item, indexInOriginal);
+			}
+		},
+			[=](CItem item, int index, Point mouseGlobalCoords) {
+			const auto indexInOriginal = indexInInputArray(index);
+			if (handlers.hovering) {
+				handlers.hovering(item, indexInOriginal, mouseGlobalCoords);
+			}
+		},
+			[=](CItem item, int index) {
+			if (handlers.hoveringEnd) {
+				handlers.hoveringEnd(item, index);
+			}
+			}
+		};
+
 		auto mc = new GenericItemsContainerView(
 			frame, _resourceHash, _appearance.containerAppearance
 		);
@@ -61,18 +93,8 @@ void ItemInventoryView::rebuild(
 		mc->updateWithItems(
 			modelsForCurrentPage, 
 			NewHUDResources::inventoryItemUnderlaySprite,
-		[=](CItem item, CUISpriteModel sprite, int index, Rect globalFrame) {
-			const auto indexInOriginal = _appearance.elementsCountPerPage * currentPageIndex + index;
-			if (onLongPressItemLMB) {
-				onLongPressItemLMB(item, sprite, index, globalFrame);
-			}
-		},
-		[=](CItem item, int index) {
-			const auto indexInOriginal = _appearance.elementsCountPerPage * currentPageIndex + index;
-			if (onRightClickItem) {
-				onRightClickItem(item, indexInOriginal);
-			}
-		});
+			augmentedHandlers
+		);
 
 		_pages.push_back(mc);
 		return mc;

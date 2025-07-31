@@ -22,8 +22,10 @@ void UserInventoryManager::rebuildInventoryViewWith(
 	const std::vector<CItem>& smallItems,
 	const std::vector<CItem>& largeItems
 ) {
+	using LongClickLEFT = GenericItemsContainerView::HandlerItemLongClickLEFT;
+	using ClickRIGHT = GenericItemsContainerView::HandlerItemClickRIGHT;
 
-	GroupedItemInventoryView::ItemLongPressHandlerLMB longClickHandlerLEFT = [=](CItem item, CUISpriteModel sprite, int index, Rect globalFrame) {
+	LongClickLEFT longClickHandlerLEFT = [=](CItem item, CUISpriteModel sprite, int index, Rect globalFrame) {
 		if (item.m_wItemID == 0) { return; }
 		if (!_handler) { return; }
 
@@ -34,16 +36,15 @@ void UserInventoryManager::rebuildInventoryViewWith(
 		_handler(sprr, globalFrame);
 	};
 
-	GroupedItemInventoryView::HandlerItemClickRIGHT rightClickHandler = [=](CItem item, int index) {
+	ClickRIGHT rightClickHandler = [=](CItem item, int index) {
 		auto result = _itemUsageManager->tryUseSmallInventoryItem(item, index);
 	};
 
 	_managedInventoryView->rebuildWith(
 		smallItems, 
 		largeItems, 
-		longClickHandlerLEFT,
-		longClickHandlerLEFT,
-		rightClickHandler
+		{longClickHandlerLEFT, nullptr, nullptr, nullptr },
+		{longClickHandlerLEFT, rightClickHandler, nullptr, nullptr}
 	);
 }
 

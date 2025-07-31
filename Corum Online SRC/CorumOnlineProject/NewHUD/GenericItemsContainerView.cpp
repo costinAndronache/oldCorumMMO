@@ -30,6 +30,33 @@ GenericItemView::GenericItemView(Rect frameInParent, CustomUI::SpriteModel under
 	});
 }
 
+void GenericItemView::onHover(
+	std::function<void(CustomUI::Point globalMousePoint)> onHovering,
+	std::function<void()> onHoveringEnd
+) {
+	_onMouseStateChange = [=](MouseState newState) {
+		if (newState == MouseState::none) {
+			_onMouseMove = nullptr;
+			if(onHoveringEnd) { onHoveringEnd(); }
+		} else {
+			_onMouseMove = onHovering;
+		}
+	};
+}
+
+void GenericItemView::onMouseStateChange(MouseState newState, MouseState oldState) { 
+	if (_onMouseStateChange) {
+		_onMouseStateChange(newState);
+	}
+}
+
+void GenericItemView::onMouseMove(Point mouseGlobalOrigin) {
+	if (_onMouseMove) {
+		_onMouseMove(mouseGlobalOrigin);
+	}
+}
+
+
 GenericItemsContainerView::GenericItemsContainerView(CustomUI::Rect frameInParent, 
 							 CItemResourceHash* resourceHash,
 							 Appearance appearance) {
@@ -48,8 +75,7 @@ GenericItemsContainerView::GenericItemsContainerView(CustomUI::Rect frameInParen
 void GenericItemsContainerView::updateWithItems(
 	const std::vector<CItem>& items,
 	CustomUI::SpriteModel itemUnderlaySprite,
-	HandlerItemLongClickLEFT onLongPressItemLMB,
-	HandlerItemClickRIGHT onRightClick
+	Handlers handlers
 ) {
 	std::vector<ItemWithUnderlay> withUnderlay(items.size());
 	std::transform(
@@ -59,13 +85,12 @@ void GenericItemsContainerView::updateWithItems(
 		[=](CItem item) -> ItemWithUnderlay { return { item, itemUnderlaySprite }; }
 	);
 
-	updateWithItems(withUnderlay, onLongPressItemLMB, onRightClick);
+	updateWithItems(withUnderlay, handlers);
 }
 
 void GenericItemsContainerView::updateWithItems(
 	const std::vector<ItemWithUnderlay>& items,
-	HandlerItemLongClickLEFT onLongPressItemLMB,
-	HandlerItemClickRIGHT onRightClick
+	Handlers handlers
 ) {
 	const auto spriteModelForItem = [=](CItem item) -> SpriteModel {
 		if (item.m_wItemID == 0) {
@@ -101,18 +126,29 @@ void GenericItemsContainerView::updateWithItems(
 		const auto sprite = spriteModelForItem(item.item);
 		result->_button->updateSpriteModelTo({ sprite, sprite, sprite });
 
-		if (onLongPressItemLMB) {
+		if (handlers.longClickLEFT) {
 			result->_button->onLongPressDetectedLEFT([=]() {
-				onLongPressItemLMB(item.item, sprite, index, result->globalFrame());
+				handlers.longClickLEFT(item.item, sprite, index, result->globalFrame());
 			});
 		}
 
-		if (onRightClick) {
+		if (handlers.clickRIGHT) {
 			result->_button->onClickEndRIGHT([=]() {
-				onRightClick(item.item, index);
+				handlers.clickRIGHT(item.item, index);
 			});
 		}
-		
+
+		if (handlers.hovering && handlers.hoveringEnd) {
+			result->onHover(
+				[=](Point globalMousePoint) {
+				handlers.hovering(item.item, index, globalMousePoint);
+			}, 
+				[=]() {
+				handlers.hoveringEnd(item.item, index);
+			}
+			);
+		}
+
 		_itemViews.push_back(result);
 		return result;
 	}
