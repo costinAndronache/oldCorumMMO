@@ -7,30 +7,37 @@
 
 namespace NewInterface {
 	class TooltipHelper {
+	public:
 		TooltipHelper(
-			CMessagePool* messagePool,
+			CMessagePool& messagePool,
 			CMainUser* mainPlayer,
 			CItemOptionHash* itemOptionHash,
 			EffectLayer* effectLayer,
 			CItemAttrLayer* itemAttrLayer,
-			CDungeonTable* _dungeonTable
+			CDungeonTable* _dungeonTable,
+			CSetItemInfoHash* setItemInfoHash,
+			LPBASEITEM_HASH itemTableHash
 		);
 
-		std::vector<DynamicInfoBox::InfoLine> generateItemTooltip(const CItem& item);
+		std::vector<DynamicInfoBox::InfoLine> tooltipForItem(const CItem& item);
+		std::vector<DynamicInfoBox::InfoLine> tooltipForEquippedItem(const CItem& item, BYTE EQUIP_TYPE);
 
+		std::vector<DynamicInfoBox::InfoLine> tooltipForSoldItem(const CItem& item, int sellerPrice);
 
 	private:
-		CMessagePool* _messagePool;
+		CMessagePool& _messagePool;
 		CMainUser* _mainUser;
 		CItemOptionHash* _itemOptionHash;
 		EffectLayer* _effectLayer;
 		CItemAttrLayer* _itemAttrLayer;
 		CDungeonTable* _dungeonTable;
+		CSetItemInfoHash* _setItemInfoHash;
+		LPBASEITEM_HASH _itemTableHash;
 
 	private:
-		void	ItemInfoRender(CItem* pItem, BOOL isEquip, BOOL bPrice = FALSE, DWORD dwPrice = 0, BYTE byZipCode = 0, BYTE byOption = 0);
+		std::vector<DynamicInfoBox::InfoLine>	ItemInfoRender(CItem* pItem, BOOL isCurrentlyEquipped, BOOL isCurrentlySold = FALSE, DWORD dwPrice = 0, BYTE EQUIP_TYPE = 0, BYTE playerEquipUpgradeLevel = 0);
 		void	ItemInfoRender_Weapon(char szItemInfo[100][255], int* iInfoRow, CItem* pItem, CBaseItem* pItemInfo, LPSET_ITEM_INFO pSetItemInfo, DWORD dwItemSetID, DWORD dwSetNum, DWORD* pdwTextColor, BOOL isEquip, int iOption, int* nMaxSize);
-		void	ItemInfoRender_Armor(char szItemInfo[100][255], int* iInfoRow, CItem* pItem, CBaseItem* pItemInfo, LPSET_ITEM_INFO pSetItemInfo, DWORD dwItemSetID, DWORD dwSetNum, DWORD* pdwTextColor, BOOL isEquip, int iOption, int* nMaxSize, BYTE byZipCode);
+		void	ItemInfoRender_Armor(char szItemInfo[100][255], int* iInfoRow, CItem* pItem, CBaseItem* pItemInfo, LPSET_ITEM_INFO pSetItemInfo, DWORD dwItemSetID, DWORD dwSetNum, DWORD* pdwTextColor, BOOL isEquip, int iOption, int* nMaxSize, BYTE EQUIP_TYPE);
 		void	ItemInfoRender_Guardian(char szItemInfo[100][255], int* iInfoRow, CItem* pItem, CBaseItem* pItemInfo, DWORD* pdwTextColor, int* nMaxSize);
 		void	ItemInfoRender_Supplies(char szItemInfo[100][255], int* iInfoRow, CItem* pItem, CBaseItem* pItemInfo, DWORD* pdwTextColor, int* nMaxSize);
 		void	ItemInfoRender_Consumable(char szItemInfo[100][255], int* iInfoRow, CItem* pItem, CBaseItem* pItemInfo, DWORD* pdwTextColor, int* nMaxSize);

@@ -115,8 +115,7 @@ char globalDebugLine[255];
 static int _renderFPS = 60;
 std::shared_ptr<AppliedSkillsIconsView> _appliedSkillsIconsView(nullptr);
 std::shared_ptr<NewInterface::Interface> _newInterface(nullptr);
-
-static CustomUI::SpriteRenderable* _leftHudTest = nullptr;
+static NewInterface::TooltipHelper* _tooltipHelper;
 
 DWORD						g_dwMileHandleRefs	= 0;
 LPGlobalVariable_Dungeon	g_pGVDungeon		= NULL;
@@ -213,13 +212,25 @@ void cancelTooltipRenderingForAllDropped() {
 BOOL InitGameDungeon() {
 	ItemPickupFilteringSystem::sharedInstance()->setViewActive(false);
 	_appliedSkillsIconsView = std::make_shared<AppliedSkillsIconsView>();
+
+	_tooltipHelper = new NewInterface::TooltipHelper(
+		g_Message,
+		g_pMainPlayer,
+		g_pItemOptionHash,
+		g_pEffectLayer,
+		g_pItemAttrLayer,
+		g_pDungeonTable,
+		g_pSetItemInfoHash,
+		g_pItemTableHash_get()
+	);
 	_newInterface = std::make_shared<NewInterface::Interface>(
 		CustomUI::Size{ (float)windowWidth(), (float)windowHeight()},
 		g_pMainPlayer,
 		&g_sSkillListManager,
 		g_pItemResourceHash,
 		SoundLibrary::sharedInstance(),
-		SharedNetwork::sharedInstance()
+		SharedNetwork::sharedInstance(),
+		_tooltipHelper
 	);
 
 	CBankWnd::GetInstance()->Init();

@@ -918,6 +918,9 @@
     <ClCompile Include="NewHUD\ViewManager\TooltipHelper.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="NewHUD\ViewManager\TooltipManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MouseLib.h">
@@ -1737,6 +1740,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="NewHUD\ViewManager\TooltipHelper.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="NewHUD\ViewManager\TooltipManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

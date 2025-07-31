@@ -238,13 +238,9 @@ namespace CustomUI {
 	struct Color {
 		unsigned char r, g, b, a;
 		
-		DWORD asDXColor() const {
-			return D3DCOLOR_ARGB(a, r, g, b);
-		}
-
-		Color withAlpha(unsigned char alpha) const {
-			return { r, g, b, alpha };
-		}
+		DWORD asDXColor() const;
+		Color withAlpha(unsigned char alpha) const;
+		static Color fromARGB(DWORD argb);
 
 		static Color white;
 		static Color red;
@@ -256,5 +252,7 @@ namespace CustomUI {
 
 	char getASCII(WPARAM wparam, LPARAM lParam); // 0 if not from keyboard
 	bool safeToHandleKeyEvents();
+
+	std::vector<std::string> strtok(const std::string& text, const char* byChars);
 }
 

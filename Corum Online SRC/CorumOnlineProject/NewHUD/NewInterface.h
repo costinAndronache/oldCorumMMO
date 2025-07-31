@@ -10,6 +10,8 @@
 #include "ViewManager/CharacterStatsManager.h"
 #include "ViewManager/UserSkillsManager.h"
 #include "DynamicInfoBox.h"
+#include "ViewManager/TooltipHelper.h"
+
 
 namespace NewInterface {
 	class Interface: 
@@ -17,12 +19,15 @@ namespace NewInterface {
 		public CMainUserUpdateInterested,
 		public CustomUI::DragNDropSystemRenderer {
 	public:
-		Interface(CustomUI::Size screenSize, 
-				  CMainUser* mainUser,
-				  const LP_SKILL_LIST_MANAGER skillListManager,
-				  CItemResourceHash* resourceHash,
-				  SoundLibrary* soundLibrary,
-				  SharedNetwork* sharedNetwork);
+		Interface(
+			CustomUI::Size screenSize,
+			CMainUser* mainUser,
+			const LP_SKILL_LIST_MANAGER skillListManager,
+			CItemResourceHash* resourceHash,
+			SoundLibrary* soundLibrary,
+			SharedNetwork* sharedNetwork,
+			TooltipHelper* tooltipHelper
+		);
 		void renderWithRenderer(I4DyuchiGXRenderer* renderer, int zIndex) override;
 		bool swallowsMouse(CustomUI::Point mouse) override;
 		void handleMouseDown(CustomUI::Point mouseGlobalOrigin, MouseButton button) override;
@@ -71,6 +76,8 @@ namespace NewInterface {
 		CharacterStatsManager* _statsManager;
 		UserSkillsManager* _userSkillsManager;
 
+		TooltipHelper* _tooltipHelper;
+		TooltipLayer* _tooltipLayer;
 		void updateLeftHUDWithSelectedLeftRightSkills();
 
 		void toggleWindow(Renderable*);

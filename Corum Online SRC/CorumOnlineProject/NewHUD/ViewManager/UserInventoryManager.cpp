@@ -4,11 +4,17 @@ using namespace NewInterface;
 using namespace CustomUI;
 
 UserInventoryManager::UserInventoryManager(
-	GroupedItemInventoryView* userInventoryView, ItemUsageManager* itemUsageManager
+	GroupedItemInventoryView* userInventoryView, 
+	ItemUsageManager* itemUsageManager,
+	TooltipLayer* toolTipLayer,
+	TooltipHelper* toolTipHelper
 ) {
 	_managedInventoryView = userInventoryView;
 	_itemUsageManager = itemUsageManager;
 	_indexOnCurrentDragNDropItem = { -1, GroupedItemInventoryView::Tab::smallItems };
+
+	_toolTipHelper = toolTipHelper;
+	_toolTipLayer = toolTipLayer;
 }
 
 void UserInventoryManager::resetIndexOnCurrentDragNDropItem() {
@@ -40,12 +46,33 @@ void UserInventoryManager::rebuildInventoryViewWith(
 		auto result = _itemUsageManager->tryUseSmallInventoryItem(item, index);
 	};
 
+	_smallItemsTooltipManager = new TooltipManager(
+		_toolTipLayer,
+		[=](int smallItemIndex) -> TooltipManager::InfoLines {
+			return _toolTipHelper->tooltipForItem(smallItems[smallItemIndex]);
+		}
+	);
+
+	GenericItemsContainerView::HandlerItemHovering smallItemHovering =
+		[=](CItem item, int index, Point mouseCoordsGlobal) {
+		if (item.m_wItemID == 0) { return; }
+		_smallItemsTooltipManager->handleHoveringEvent(index, mouseCoordsGlobal);
+	};
+
+	GenericItemsContainerView::HandlerItemHoveringEnd smallItemHoveringEnd =
+		[=](CItem item, int index) {
+		if (item.m_wItemID == 0) { return; }
+		_smallItemsTooltipManager->handleHoveringEndEvent(index);
+	};
+
 	_managedInventoryView->rebuildWith(
 		smallItems, 
 		largeItems, 
-		{longClickHandlerLEFT, nullptr, nullptr, nullptr },
-		{longClickHandlerLEFT, rightClickHandler, nullptr, nullptr}
+		{longClickHandlerLEFT, rightClickHandler, smallItemHovering, smallItemHoveringEnd },
+		{longClickHandlerLEFT, nullptr, nullptr, nullptr}
 	);
+
+
 }
 
 GroupedItemInventoryView::IndexResult UserInventoryManager::itemIndexForGlobalPoint(CustomUI::Point point) {

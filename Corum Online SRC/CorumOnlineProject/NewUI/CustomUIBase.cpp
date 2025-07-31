@@ -4,6 +4,19 @@
 
 using namespace CustomUI;
 
+DWORD Color::asDXColor() const {
+	return D3DCOLOR_ARGB(a, r, g, b);
+}
+
+Color Color::withAlpha(unsigned char alpha) const {
+	return { r, g, b, alpha };
+}
+
+Color Color::fromARGB(DWORD argb) {
+	unsigned char* charv = (unsigned char*)&argb;
+	return Color{ charv[1], charv[2], charv[3] , charv[0] };
+}
+
 SpriteModel SpriteModel::zero = { NULL, { 0, 0 } };
 Color Color::white = { 255, 255, 255, 255 };
 Color Color::red = { 255, 0, 0, 255 };
@@ -27,4 +40,19 @@ char CustomUI::getASCII(WPARAM wparam, LPARAM lParam) {
 
 bool CustomUI::safeToHandleKeyEvents() {
 	return (!g_pGVDungeon->bChatMode && !CQuantityWnd::GetInstance()->GetActive());
+}
+
+std::vector<std::string> CustomUI::strtok(const std::string& text, const char* byChars) {
+	char* copy = new char[text.size() + 1];
+	memcpy(copy, text.c_str(), text.size());
+
+	std::vector<std::string> result;
+
+	char* next = ::strtok(copy, byChars);
+	while (next != nullptr) {
+		result.push_back(std::string(next));
+		next = ::strtok(nullptr, byChars);
+	}
+
+	return result;
 }

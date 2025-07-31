@@ -17,6 +17,7 @@ namespace NewInterface {
 		void updateTooltipPosition(Handle handle, CustomUI::Point position);
 		void removeTooltip(Handle handle);
 
+		virtual bool swallowsMouse(CustomUI::Point) override { return false; }
 	private:
 		Handle _internalCounter;
 		std::map<Handle, DynamicInfoBox*> _currentInfoBoxes;

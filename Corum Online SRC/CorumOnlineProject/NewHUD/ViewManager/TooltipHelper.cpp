@@ -7,31 +7,64 @@ using namespace NewInterface;
 
 
 TooltipHelper::TooltipHelper(
-	CMessagePool* messagePool,
+	CMessagePool& messagePool,
 	CMainUser* mainPlayer,
 	CItemOptionHash* itemOptionHash,
 	EffectLayer* effectLayer,
 	CItemAttrLayer* itemAttrLayer,
-	CDungeonTable* dungeonTable
-) {
-	_messagePool = messagePool;
+	CDungeonTable* dungeonTable,
+	CSetItemInfoHash* setItemInfoHash,
+	LPBASEITEM_HASH itemTableHash
+): _messagePool(messagePool) {
 	_mainUser = mainPlayer;
 	_itemOptionHash = itemOptionHash;
 	_effectLayer = _effectLayer;
 	_itemAttrLayer = _itemAttrLayer;
 	_dungeonTable = dungeonTable;
+	_setItemInfoHash = setItemInfoHash;
+	_itemTableHash = itemTableHash;
 }
 
-std::vector<DynamicInfoBox::InfoLine> TooltipHelper::generateItemTooltip(const CItem& item) {
+static std::vector<DynamicInfoBox::InfoLine> cleanupInitialEmptyLines(std::vector<DynamicInfoBox::InfoLine> infoLines) {
+	while (infoLines.begin() != infoLines.end() && infoLines.begin()->text.empty()) {
+		infoLines.erase(infoLines.begin());
+	}
 
-
-
+	return infoLines;
 }
 
+std::vector<DynamicInfoBox::InfoLine> TooltipHelper::tooltipForItem(const CItem& item) {
+	auto result = ItemInfoRender(
+		(CItem*)&item,
+		false,
+		false, 0,
+		0, 0
+	);
+
+	return result;
+}
+
+std::vector<DynamicInfoBox::InfoLine> TooltipHelper::tooltipForEquippedItem(const CItem& item, BYTE EQUIP_TYPE) {
+	return ItemInfoRender(
+		(CItem*)&item,
+		true,
+		false, 0,
+		EQUIP_TYPE, _mainUser->m_byUpgrade
+	);
+}
+
+std::vector<DynamicInfoBox::InfoLine> TooltipHelper::tooltipForSoldItem(const CItem& item, int sellerPrice) {
+	return ItemInfoRender(
+		(CItem*)&item,
+		false,
+		true, sellerPrice,
+		0, 0
+	);
+}
 
 //
 static void GetDueDayText(char* pszItemInfo, DWORD dwDueDay);
-
+static int GetSizeType(WORD itemID);
 
 void TooltipHelper::ItemInfoRender_Weapon(char szItemInfo[100][255], int* iInfoRow, CItem* pItem, CBaseItem* pItemInfo, LPSET_ITEM_INFO pSetItemInfo
 	, DWORD dwItemSetID, DWORD dwSetNum, DWORD* pdwTextColor, BOOL isEquip, int iOption, int* nMaxSize)
@@ -100,7 +133,7 @@ void TooltipHelper::ItemInfoRender_Weapon(char szItemInfo[100][255], int* iInfoR
 	if (pItemInfo->GetMovable() != 0)// (귀속아이템) 표시
 	{
 		*iInfoRow += 1;
-		strcpy(szItemInfo[*iInfoRow], g_Message[ETC_MESSAGE1428].szMessage);
+		strcpy(szItemInfo[*iInfoRow], _messagePool[ETC_MESSAGE1428].szMessage);
 		pdwTextColor[*iInfoRow] = TEXT_COLOR_RED;
 		nSize = lstrlen(szItemInfo[*iInfoRow]);
 		if (*nMaxSize < nSize)
@@ -117,19 +150,19 @@ void TooltipHelper::ItemInfoRender_Weapon(char szItemInfo[100][255], int* iInfoR
 	{
 		BOOL bClass = FALSE;
 
-		if (g_pMainPlayer && pItemInfo->BaseItem_Weapon.bClassID & (BYTE)(1 << (g_pMainPlayer->m_wClass - 1)))
+		if (_mainUser && pItemInfo->BaseItem_Weapon.bClassID & (BYTE)(1 << (_mainUser->m_wClass - 1)))
 			bClass = TRUE;
 
 		if (bClass)
 		{
 			// "클래스착용 가능"
-			strcpy(szItemInfo[*iInfoRow], g_Message[ETC_MESSAGE995].szMessage);
+			strcpy(szItemInfo[*iInfoRow], _messagePool[ETC_MESSAGE995].szMessage);
 			pdwTextColor[*iInfoRow] = 0xffffffff;
 		}
 		else
 		{
 			// "클래스착용 불가"
-			strcpy(szItemInfo[*iInfoRow], g_Message[ETC_MESSAGE996].szMessage);
+			strcpy(szItemInfo[*iInfoRow], _messagePool[ETC_MESSAGE996].szMessage);
 			pdwTextColor[*iInfoRow] = TEXT_COLOR_RED;
 			pdwTextColor[*iInfoRow - 2] = TEXT_COLOR_RED;
 		}
@@ -152,7 +185,7 @@ void TooltipHelper::ItemInfoRender_Weapon(char szItemInfo[100][255], int* iInfoR
 	*iInfoRow += 1;
 
 	// "Damage %d ~ %d"
-	wsprintf(szItemInfo[*iInfoRow], g_Message[ETC_MESSAGE858].szMessage
+	wsprintf(szItemInfo[*iInfoRow], _messagePool[ETC_MESSAGE858].szMessage
 		, (int)pItem->m_Item_Weapon.wMin_Damage, (int)pItem->m_Item_Weapon.wMax_Damage);
 
 	nSize = lstrlen(szItemInfo[*iInfoRow]);
@@ -163,7 +196,7 @@ void TooltipHelper::ItemInfoRender_Weapon(char szItemInfo[100][255], int* iInfoR
 	*iInfoRow += 1;
 
 	// "Grade : %u"
-	wsprintf(szItemInfo[*iInfoRow], g_Message[ETC_MESSAGE997].szMessage
+	wsprintf(szItemInfo[*iInfoRow], _messagePool[ETC_MESSAGE997].szMessage
 		, pItemInfo->BaseItem_Weapon.bItemGrade);
 
 	nSize = lstrlen(szItemInfo[*iInfoRow]);
@@ -174,7 +207,7 @@ void TooltipHelper::ItemInfoRender_Weapon(char szItemInfo[100][255], int* iInfoR
 	*iInfoRow += 1;
 
 	// "스킬공격력 : %u"
-	wsprintf(szItemInfo[*iInfoRow], g_Message[ETC_MESSAGE998].szMessage, pItem->m_Item_Weapon.wMana_Damage);
+	wsprintf(szItemInfo[*iInfoRow], _messagePool[ETC_MESSAGE998].szMessage, pItem->m_Item_Weapon.wMana_Damage);
 	nSize = lstrlen(szItemInfo[*iInfoRow]);
 
 	if (*nMaxSize < nSize)
@@ -183,7 +216,7 @@ void TooltipHelper::ItemInfoRender_Weapon(char szItemInfo[100][255], int* iInfoR
 	*iInfoRow += 1;
 
 	// "Slot : %u"
-	wsprintf(szItemInfo[*iInfoRow], g_Message[ETC_MESSAGE860].szMessage, pItem->m_bSlot.uMaxSlot);
+	wsprintf(szItemInfo[*iInfoRow], _messagePool[ETC_MESSAGE860].szMessage, pItem->m_bSlot.uMaxSlot);
 	nSize = lstrlen(szItemInfo[*iInfoRow]);
 
 	if (*nMaxSize < nSize)
@@ -192,7 +225,7 @@ void TooltipHelper::ItemInfoRender_Weapon(char szItemInfo[100][255], int* iInfoR
 	*iInfoRow += 1;
 
 	// "무게 : %u"
-	wsprintf(szItemInfo[*iInfoRow], g_Message[ETC_MESSAGE999].szMessage, pItemInfo->GetWeight());
+	wsprintf(szItemInfo[*iInfoRow], _messagePool[ETC_MESSAGE999].szMessage, pItemInfo->GetWeight());
 	nSize = lstrlen(szItemInfo[*iInfoRow]);
 
 	if (*nMaxSize < nSize)
@@ -201,7 +234,7 @@ void TooltipHelper::ItemInfoRender_Weapon(char szItemInfo[100][255], int* iInfoR
 	*iInfoRow += 1;
 
 #ifdef __USE_STAT_LIMIT					
-	if (g_pMainPlayer->m_dwLevel >= pItemInfo->BaseItem_Weapon.wMin_Level)
+	if (_mainUser->m_dwLevel >= pItemInfo->BaseItem_Weapon.wMin_Level)
 		pdwTextColor[*iInfoRow] = 0xffffffff;
 	else
 		pdwTextColor[*iInfoRow] = TEXT_COLOR_RED;
@@ -214,7 +247,7 @@ void TooltipHelper::ItemInfoRender_Weapon(char szItemInfo[100][255], int* iInfoR
 
 	*iInfoRow += 1;
 
-	if (g_pMainPlayer->m_dwStr >= pItemInfo->BaseItem_Weapon.wMin_Str)
+	if (_mainUser->m_dwStr >= pItemInfo->BaseItem_Weapon.wMin_Str)
 		pdwTextColor[*iInfoRow] = 0xffffffff;
 	else
 		pdwTextColor[*iInfoRow] = TEXT_COLOR_RED;
@@ -311,7 +344,7 @@ void TooltipHelper::ItemInfoRender_Armor(char szItemInfo[100][255], int* iInfoRo
 	if (pItemInfo->GetMovable() != 0)// (귀속아이템) 표시
 	{
 		*iInfoRow += 1;
-		strcpy(szItemInfo[*iInfoRow], g_Message[ETC_MESSAGE1428].szMessage);
+		strcpy(szItemInfo[*iInfoRow], _messagePool[ETC_MESSAGE1428].szMessage);
 		pdwTextColor[*iInfoRow] = TEXT_COLOR_RED;
 		nSize = lstrlen(szItemInfo[*iInfoRow]);
 		if (*nMaxSize < nSize)
@@ -328,18 +361,18 @@ void TooltipHelper::ItemInfoRender_Armor(char szItemInfo[100][255], int* iInfoRo
 	{
 		BOOL bClass = FALSE;
 
-		if (g_pMainPlayer && pItemInfo->BaseItem_Armor.bClassID & (BYTE)(1 << (g_pMainPlayer->m_wClass - 1)))
+		if (_mainUser && pItemInfo->BaseItem_Armor.bClassID & (BYTE)(1 << (_mainUser->m_wClass - 1)))
 			bClass = TRUE;
 
 		if (bClass)
 		{
 			// "클래스착용 가능"
-			strcpy(szItemInfo[*iInfoRow], g_Message[ETC_MESSAGE995].szMessage);
+			strcpy(szItemInfo[*iInfoRow], _messagePool[ETC_MESSAGE995].szMessage);
 			pdwTextColor[*iInfoRow] = 0xffffffff;
 		}
 		else
 		{
-			strcpy(szItemInfo[*iInfoRow], g_Message[ETC_MESSAGE996].szMessage);
+			strcpy(szItemInfo[*iInfoRow], _messagePool[ETC_MESSAGE996].szMessage);
 			pdwTextColor[*iInfoRow] = TEXT_COLOR_RED;
 			pdwTextColor[*iInfoRow - 2] = TEXT_COLOR_RED;
 		}
@@ -362,7 +395,7 @@ void TooltipHelper::ItemInfoRender_Armor(char szItemInfo[100][255], int* iInfoRo
 	*iInfoRow += 1;
 
 	// MSG_ID : 104 ; Defense %d
-	wsprintf(szItemInfo[*iInfoRow], g_Message[ETC_MESSAGE104].szMessage, pItem->m_Item_Armor.wDefense);
+	wsprintf(szItemInfo[*iInfoRow], _messagePool[ETC_MESSAGE104].szMessage, pItem->m_Item_Armor.wDefense);
 	nSize = lstrlen(szItemInfo[*iInfoRow]);
 
 	if (*nMaxSize < nSize)
@@ -371,7 +404,7 @@ void TooltipHelper::ItemInfoRender_Armor(char szItemInfo[100][255], int* iInfoRo
 	*iInfoRow += 1;
 
 	// "Grade : %u"
-	wsprintf(szItemInfo[*iInfoRow], g_Message[ETC_MESSAGE997].szMessage, pItemInfo->BaseItem_Armor.bItemGrade);
+	wsprintf(szItemInfo[*iInfoRow], _messagePool[ETC_MESSAGE997].szMessage, pItemInfo->BaseItem_Armor.bItemGrade);
 	nSize = lstrlen(szItemInfo[*iInfoRow]);
 
 	if (*nMaxSize < nSize)
@@ -380,7 +413,7 @@ void TooltipHelper::ItemInfoRender_Armor(char szItemInfo[100][255], int* iInfoRo
 	*iInfoRow += 1;
 
 	// "Slot : %u"
-	wsprintf(szItemInfo[*iInfoRow], g_Message[ETC_MESSAGE860].szMessage, pItem->m_bSlot.uMaxSlot);
+	wsprintf(szItemInfo[*iInfoRow], _messagePool[ETC_MESSAGE860].szMessage, pItem->m_bSlot.uMaxSlot);
 	nSize = lstrlen(szItemInfo[*iInfoRow]);
 
 	if (*nMaxSize < nSize)
@@ -389,7 +422,7 @@ void TooltipHelper::ItemInfoRender_Armor(char szItemInfo[100][255], int* iInfoRo
 	*iInfoRow += 1;
 
 	// "무게 : %u"
-	wsprintf(szItemInfo[*iInfoRow], g_Message[ETC_MESSAGE999].szMessage, pItemInfo->GetWeight());
+	wsprintf(szItemInfo[*iInfoRow], _messagePool[ETC_MESSAGE999].szMessage, pItemInfo->GetWeight());
 	nSize = lstrlen(szItemInfo[*iInfoRow]);
 
 	if (*nMaxSize < nSize)
@@ -398,7 +431,7 @@ void TooltipHelper::ItemInfoRender_Armor(char szItemInfo[100][255], int* iInfoRo
 	*iInfoRow += 1;
 
 #ifdef __USE_STAT_LIMIT						
-	if (g_pMainPlayer->m_dwLevel >= pItemInfo->BaseItem_Armor.wMin_Level)
+	if (_mainUser->m_dwLevel >= pItemInfo->BaseItem_Armor.wMin_Level)
 		pdwTextColor[*iInfoRow] = 0xffffffff;
 	else
 		pdwTextColor[*iInfoRow] = TEXT_COLOR_RED;
@@ -412,7 +445,7 @@ void TooltipHelper::ItemInfoRender_Armor(char szItemInfo[100][255], int* iInfoRo
 
 	*iInfoRow += 1;
 
-	if (g_pMainPlayer->m_dwStr >= pItemInfo->BaseItem_Armor.wMin_Str)
+	if (_mainUser->m_dwStr >= pItemInfo->BaseItem_Armor.wMin_Str)
 		pdwTextColor[*iInfoRow] = 0xffffffff;
 	else
 		pdwTextColor[*iInfoRow] = TEXT_COLOR_RED;
@@ -442,7 +475,7 @@ void TooltipHelper::ItemInfoRender_Guardian(char szItemInfo[100][255], int* iInf
 	if (pItemInfo->GetMovable() != 0)// (귀속아이템) 표시
 	{
 		*iInfoRow += 1;
-		strcpy(szItemInfo[*iInfoRow], g_Message[ETC_MESSAGE1428].szMessage);
+		strcpy(szItemInfo[*iInfoRow], _messagePool[ETC_MESSAGE1428].szMessage);
 		pdwTextColor[*iInfoRow] = TEXT_COLOR_RED;
 		nSize = lstrlen(szItemInfo[*iInfoRow]);
 		if (*nMaxSize < nSize)
@@ -456,7 +489,7 @@ void TooltipHelper::ItemInfoRender_Guardian(char szItemInfo[100][255], int* iInf
 	}
 
 	// "무게 : %u"
-	wsprintf(szItemInfo[*iInfoRow], g_Message[ETC_MESSAGE999].szMessage, pItemInfo->GetWeight());
+	wsprintf(szItemInfo[*iInfoRow], _messagePool[ETC_MESSAGE999].szMessage, pItemInfo->GetWeight());
 	nSize = lstrlen(szItemInfo[*iInfoRow]);
 
 	if (*nMaxSize < nSize)
@@ -469,7 +502,7 @@ void TooltipHelper::ItemInfoRender_Guardian(char szItemInfo[100][255], int* iInf
 		if (isCurrentGuardian)
 		{
 			// "부화중입니다..."
-			lstrcpy(szItemInfo[*iInfoRow], g_Message[ETC_MESSAGE1250].szMessage);
+			lstrcpy(szItemInfo[*iInfoRow], _messagePool[ETC_MESSAGE1250].szMessage);
 			pdwTextColor[*iInfoRow] = TEXT_COLOR_YELLOW;
 			nSize = lstrlen(szItemInfo[*iInfoRow]);
 
@@ -480,7 +513,7 @@ void TooltipHelper::ItemInfoRender_Guardian(char szItemInfo[100][255], int* iInf
 		}
 
 		// "부화율 %d%%"
-		wsprintf(szItemInfo[*iInfoRow], g_Message[ETC_MESSAGE1251].szMessage
+		wsprintf(szItemInfo[*iInfoRow], _messagePool[ETC_MESSAGE1251].szMessage
 			, DWORD((float)pItem->m_Item_Guardian.dwCompleteTime / pItemInfo->BaseItem_Guardian.wCompleteTime * 100.f));
 		nSize = lstrlen(szItemInfo[*iInfoRow]);
 
@@ -514,7 +547,7 @@ void TooltipHelper::ItemInfoRender_Guardian(char szItemInfo[100][255], int* iInf
 		*iInfoRow += 1;
 
 		// "경험치 %d/%d"
-		wsprintf(szItemInfo[*iInfoRow], g_Message[ETC_MESSAGE1252].szMessage, pItem->m_Item_Guardian.dwCompleteTime
+		wsprintf(szItemInfo[*iInfoRow], _messagePool[ETC_MESSAGE1252].szMessage, pItem->m_Item_Guardian.dwCompleteTime
 			, GetExpTableOfLevel(OBJECT_TYPE_MONSTER, dwGuardianLevel + 1));
 		nSize = lstrlen(szItemInfo[*iInfoRow]);
 
@@ -554,14 +587,14 @@ void TooltipHelper::ItemInfoRender_Guardian(char szItemInfo[100][255], int* iInf
 				bLevel = 1;
 
 			pdwTextColor[*iInfoRow] = TEXT_COLOR_GREEN;
-			wsprintf(szItemInfo[*iInfoRow], "%s Lv. %d", g_pEffectLayer->m_Effect[bKind].szName, bLevel);
+			wsprintf(szItemInfo[*iInfoRow], "%s Lv. %d", _effectLayer->m_Effect[bKind].szName, bLevel);
 			*iInfoRow += 1;
 		}
 
 		*iInfoRow += 1;
 	}
 
-	LP_ITEM_OPTION lpItemOption = (LP_ITEM_OPTION)g_pItemOptionHash->GetData(pItem->GetID());
+	LP_ITEM_OPTION lpItemOption = (LP_ITEM_OPTION)_itemOptionHash->GetData(pItem->GetID());
 
 	if (lpItemOption)
 	{
@@ -593,7 +626,7 @@ void TooltipHelper::ItemInfoRender_Supplies(char szItemInfo[100][255], int* iInf
 	if (pItemInfo->GetMovable() != 0)// (귀속아이템) 표시
 	{
 		*iInfoRow += 1;
-		strcpy(szItemInfo[*iInfoRow], g_Message[ETC_MESSAGE1428].szMessage);
+		strcpy(szItemInfo[*iInfoRow], _messagePool[ETC_MESSAGE1428].szMessage);
 		pdwTextColor[*iInfoRow] = TEXT_COLOR_RED;
 		nSize = lstrlen(szItemInfo[*iInfoRow]);
 		if (*nMaxSize < nSize)
@@ -608,7 +641,7 @@ void TooltipHelper::ItemInfoRender_Supplies(char szItemInfo[100][255], int* iInf
 
 	if (pItemInfo->BaseItem_Supplies.bType == 7)
 	{
-		wsprintf(szItemInfo[*iInfoRow], g_Message[ETC_MESSAGE1419].szMessage
+		wsprintf(szItemInfo[*iInfoRow], _messagePool[ETC_MESSAGE1419].szMessage
 			, pItemInfo->BaseItem_Supplies.wMin_Lev);
 	}
 	else if (pItemInfo->BaseItem_Supplies.bType == 1 && pItemInfo->BaseItem_Supplies.bType == 2)
@@ -630,7 +663,7 @@ void TooltipHelper::ItemInfoRender_Supplies(char szItemInfo[100][255], int* iInf
 	*iInfoRow += 1;
 
 	// "무게 : %u"
-	wsprintf(szItemInfo[*iInfoRow], g_Message[ETC_MESSAGE999].szMessage, pItemInfo->GetWeight());
+	wsprintf(szItemInfo[*iInfoRow], _messagePool[ETC_MESSAGE999].szMessage, pItemInfo->GetWeight());
 	nSize = lstrlen(szItemInfo[*iInfoRow]);
 
 	if (*nMaxSize < nSize)
@@ -638,7 +671,7 @@ void TooltipHelper::ItemInfoRender_Supplies(char szItemInfo[100][255], int* iInf
 
 	*iInfoRow += 1;
 
-	LP_ITEM_OPTION lpItemOption = (LP_ITEM_OPTION)g_pItemOptionHash->GetData(pItem->GetID());
+	LP_ITEM_OPTION lpItemOption = (LP_ITEM_OPTION)_itemOptionHash->GetData(pItem->GetID());
 
 	if (lpItemOption)
 	{
@@ -670,7 +703,7 @@ void TooltipHelper::ItemInfoRender_Consumable(char szItemInfo[100][255], int* iI
 	if (pItemInfo->GetMovable() != 0)// (귀속아이템) 표시
 	{
 		*iInfoRow += 1;
-		strcpy(szItemInfo[*iInfoRow], g_Message[ETC_MESSAGE1428].szMessage);
+		strcpy(szItemInfo[*iInfoRow], _messagePool[ETC_MESSAGE1428].szMessage);
 		pdwTextColor[*iInfoRow] = TEXT_COLOR_RED;
 		nSize = lstrlen(szItemInfo[*iInfoRow]);
 		if (*nMaxSize < nSize)
@@ -684,7 +717,7 @@ void TooltipHelper::ItemInfoRender_Consumable(char szItemInfo[100][255], int* iI
 	}
 
 	// "무게 : %u"
-	wsprintf(szItemInfo[*iInfoRow], g_Message[ETC_MESSAGE999].szMessage, pItemInfo->GetWeight());
+	wsprintf(szItemInfo[*iInfoRow], _messagePool[ETC_MESSAGE999].szMessage, pItemInfo->GetWeight());
 	nSize = lstrlen(szItemInfo[*iInfoRow]);
 
 	if (*nMaxSize < nSize)
@@ -695,7 +728,7 @@ void TooltipHelper::ItemInfoRender_Consumable(char szItemInfo[100][255], int* iI
 	if (pItem->m_Item_Consumable.bInvIndex)
 	{
 		// "사용중입니다."
-		__lstrcpyn(szItemInfo[*iInfoRow], g_Message[ETC_MESSAGE844].szMessage, 0xff);
+		__lstrcpyn(szItemInfo[*iInfoRow], _messagePool[ETC_MESSAGE844].szMessage, 0xff);
 		nSize = lstrlen(szItemInfo[*iInfoRow]);
 		pdwTextColor[*iInfoRow] = TEXT_COLOR_ORANGE;
 
@@ -719,13 +752,13 @@ void TooltipHelper::ItemInfoRender_Consumable(char szItemInfo[100][255], int* iI
 		}
 	}
 
-	LP_ITEM_OPTION lpItemOption = (LP_ITEM_OPTION)g_pItemOptionHash->GetData(pItem->GetID());
+	LP_ITEM_OPTION lpItemOption = (LP_ITEM_OPTION)_itemOptionHash->GetData(pItem->GetID());
 
 	if (lpItemOption)
 	{
 		for (int i = 0; i < lpItemOption->byCount; i++)
 		{
-			__lstrcpyn(szItemInfo[*iInfoRow], g_pItemAttrLayer->GetItemDescription(pItem->GetID(), i), 0xff);
+			__lstrcpyn(szItemInfo[*iInfoRow], _itemAttrLayer->GetItemDescription(pItem->GetID(), i), 0xff);
 
 			nSize = lstrlen(szItemInfo[*iInfoRow]);
 
@@ -751,7 +784,7 @@ void TooltipHelper::ItemInfoRender_Zodiac(char szItemInfo[100][255], int* iInfoR
 	if (pItemInfo->GetMovable() != 0)// (귀속아이템) 표시
 	{
 		*iInfoRow += 1;
-		strcpy(szItemInfo[*iInfoRow], g_Message[ETC_MESSAGE1428].szMessage);
+		strcpy(szItemInfo[*iInfoRow], _messagePool[ETC_MESSAGE1428].szMessage);
 		pdwTextColor[*iInfoRow] = TEXT_COLOR_RED;
 		nSize = lstrlen(szItemInfo[*iInfoRow]);
 		if (*nMaxSize < nSize)
@@ -765,7 +798,7 @@ void TooltipHelper::ItemInfoRender_Zodiac(char szItemInfo[100][255], int* iInfoR
 	}
 
 	// "무게 : %u"
-	wsprintf(szItemInfo[*iInfoRow], g_Message[ETC_MESSAGE999].szMessage, pItemInfo->GetWeight());
+	wsprintf(szItemInfo[*iInfoRow], _messagePool[ETC_MESSAGE999].szMessage, pItemInfo->GetWeight());
 	nSize = lstrlen(szItemInfo[*iInfoRow]);
 
 	if (*nMaxSize < nSize)
@@ -779,7 +812,7 @@ void TooltipHelper::ItemInfoRender_Zodiac(char szItemInfo[100][255], int* iInfoR
 		{
 			// 아이템 보험 사용중일때의 메시지출력
 			// "사용중입니다."
-			__lstrcpyn(szItemInfo[*iInfoRow], g_Message[ETC_MESSAGE844].szMessage, 0xff);
+			__lstrcpyn(szItemInfo[*iInfoRow], _messagePool[ETC_MESSAGE844].szMessage, 0xff);
 			nSize = lstrlen(szItemInfo[*iInfoRow]);
 			pdwTextColor[*iInfoRow] = TEXT_COLOR_ORANGE;
 			if (*nMaxSize < nSize)
@@ -798,7 +831,7 @@ void TooltipHelper::ItemInfoRender_Zodiac(char szItemInfo[100][255], int* iInfoR
 		if (pItem->m_Item_Zodiac.bType == 0)
 		{
 			// "기록된 좌표 없음"
-			strcpy(szItemInfo[*iInfoRow], g_Message[ETC_MESSAGE462].szMessage);
+			strcpy(szItemInfo[*iInfoRow], _messagePool[ETC_MESSAGE462].szMessage);
 			nSize = lstrlen(szItemInfo[*iInfoRow]);
 
 			if (*nMaxSize < nSize)
@@ -808,7 +841,7 @@ void TooltipHelper::ItemInfoRender_Zodiac(char szItemInfo[100][255], int* iInfoR
 		}
 		else
 		{
-			DUNGEON_DATA_EX* pDungeonInfo = g_pDungeonTable->GetDungeonInfo(pItem->m_Item_Zodiac.wMapId);
+			DUNGEON_DATA_EX* pDungeonInfo = _dungeonTable->GetDungeonInfo(pItem->m_Item_Zodiac.wMapId);
 
 			if (pDungeonInfo)
 			{
@@ -831,13 +864,13 @@ void TooltipHelper::ItemInfoRender_Zodiac(char szItemInfo[100][255], int* iInfoR
 					if (pItem->m_Item_Zodiac.bLayer == 0)
 					{
 						// MSG_ID : 16 ; 지상 1층
-						strcpy(szItemInfo[*iInfoRow], g_Message[ETC_MESSAGE16].szMessage);
+						strcpy(szItemInfo[*iInfoRow], _messagePool[ETC_MESSAGE16].szMessage);
 					}
 					else
 					{
 						// MSG_ID : 17 ; 지하 %d층
 						wsprintf(szItemInfo[*iInfoRow]
-							, g_Message[ETC_MESSAGE17].szMessage, pItem->m_Item_Zodiac.bLayer);
+							, _messagePool[ETC_MESSAGE17].szMessage, pItem->m_Item_Zodiac.bLayer);
 					}
 
 					nSize = lstrlen(szItemInfo[*iInfoRow]);
@@ -851,7 +884,7 @@ void TooltipHelper::ItemInfoRender_Zodiac(char szItemInfo[100][255], int* iInfoR
 				if (pItem->GetID() == __ITEM_PORTAL_INDEX__)
 				{
 					// "X : %u, Y : %u"
-					wsprintf(szItemInfo[*iInfoRow], g_Message[ETC_MESSAGE867].szMessage, pItem->m_Item_Zodiac.wPosX, pItem->m_Item_Zodiac.wPosZ);
+					wsprintf(szItemInfo[*iInfoRow], _messagePool[ETC_MESSAGE867].szMessage, pItem->m_Item_Zodiac.wPosX, pItem->m_Item_Zodiac.wPosZ);
 					nSize = lstrlen(szItemInfo[*iInfoRow]);
 
 					if (*nMaxSize < nSize)
@@ -863,7 +896,7 @@ void TooltipHelper::ItemInfoRender_Zodiac(char szItemInfo[100][255], int* iInfoR
 			else
 			{
 				// "사용할 수 없습니다."
-				strcpy(szItemInfo[*iInfoRow], g_Message[ETC_MESSAGE211].szMessage);
+				strcpy(szItemInfo[*iInfoRow], _messagePool[ETC_MESSAGE211].szMessage);
 				nSize = lstrlen(szItemInfo[*iInfoRow]);
 
 				if (*nMaxSize < nSize)
@@ -875,7 +908,7 @@ void TooltipHelper::ItemInfoRender_Zodiac(char szItemInfo[100][255], int* iInfoR
 	}
 	else
 	{
-		LP_ITEM_OPTION lpItemOption = (LP_ITEM_OPTION)g_pItemOptionHash->GetData(pItem->GetID());
+		LP_ITEM_OPTION lpItemOption = (LP_ITEM_OPTION)_itemOptionHash->GetData(pItem->GetID());
 
 		if (lpItemOption)
 		{
@@ -908,7 +941,7 @@ void TooltipHelper::ItemInfoRender_Default(char szItemInfo[100][255], int* iInfo
 	if (pItemInfo->GetMovable() != 0)// (귀속아이템) 표시
 	{
 		*iInfoRow += 1;
-		strcpy(szItemInfo[*iInfoRow], g_Message[ETC_MESSAGE1428].szMessage);
+		strcpy(szItemInfo[*iInfoRow], _messagePool[ETC_MESSAGE1428].szMessage);
 		pdwTextColor[*iInfoRow] = TEXT_COLOR_RED;
 		nSize = lstrlen(szItemInfo[*iInfoRow]);
 		if (*nMaxSize < nSize)
@@ -922,36 +955,36 @@ void TooltipHelper::ItemInfoRender_Default(char szItemInfo[100][255], int* iInfo
 	}
 
 	// "무게 : %u"
-	//wsprintf( szItemInfo[*iInfoRow], g_Message[ETC_MESSAGE999].szMessage,  pItemInfo->GetWeight()); 
+	//wsprintf( szItemInfo[*iInfoRow], _messagePool[ETC_MESSAGE999].szMessage,  pItemInfo->GetWeight()); 
 	if ((pItem->m_wItemID >= BAG_ITEM_NUM_FRIST && pItem->m_wItemID <= BAG_ITEM_NUM_LAST))
 	{
 		switch (pItem->m_Item_Bag.bType)
 		{
 		case ITEM_BAG_TYPE_DECREASE_SMALL_BAG:
 		{
-			wsprintf(szItemInfo[*iInfoRow], g_Message[ETC_MESSAGE1412].szMessage, pItem->m_Item_Bag.wProbability);
+			wsprintf(szItemInfo[*iInfoRow], _messagePool[ETC_MESSAGE1412].szMessage, pItem->m_Item_Bag.wProbability);
 		}
 		break;
 		case ITEM_BAG_TYPE_INCREASE_TOTAL_BAG:
 		{
-			wsprintf(szItemInfo[*iInfoRow], g_Message[ETC_MESSAGE1413].szMessage, pItem->m_Item_Bag.wProbability);
+			wsprintf(szItemInfo[*iInfoRow], _messagePool[ETC_MESSAGE1413].szMessage, pItem->m_Item_Bag.wProbability);
 		}
 		break;
 		case ITEM_BAG_TYPE_INCREASE_TOTALPER_BAG:
 		{
-			wsprintf(szItemInfo[*iInfoRow], g_Message[ETC_MESSAGE1414].szMessage, pItem->m_Item_Bag.wProbability);
+			wsprintf(szItemInfo[*iInfoRow], _messagePool[ETC_MESSAGE1414].szMessage, pItem->m_Item_Bag.wProbability);
 		}
 		break;
 		default:
 		{
-			wsprintf(szItemInfo[*iInfoRow], g_Message[ETC_MESSAGE999].szMessage, pItem->m_Item_Bag.wProbability);
+			wsprintf(szItemInfo[*iInfoRow], _messagePool[ETC_MESSAGE999].szMessage, pItem->m_Item_Bag.wProbability);
 		}
 		}
 		nSize = lstrlen(szItemInfo[*iInfoRow]);
 	}
 	else
 	{
-		wsprintf(szItemInfo[*iInfoRow], g_Message[ETC_MESSAGE999].szMessage, pItem->m_Item_Bag.wProbability);
+		wsprintf(szItemInfo[*iInfoRow], _messagePool[ETC_MESSAGE999].szMessage, pItem->m_Item_Bag.wProbability);
 		nSize = lstrlen(szItemInfo[*iInfoRow]);
 	}
 
@@ -962,7 +995,7 @@ void TooltipHelper::ItemInfoRender_Default(char szItemInfo[100][255], int* iInfo
 
 	*iInfoRow += 2;
 
-	LP_ITEM_OPTION lpItemOption = (LP_ITEM_OPTION)g_pItemOptionHash->GetData(pItem->GetID());
+	LP_ITEM_OPTION lpItemOption = (LP_ITEM_OPTION)_itemOptionHash->GetData(pItem->GetID());
 
 	if (lpItemOption)
 	{
@@ -980,8 +1013,8 @@ void TooltipHelper::ItemInfoRender_Default(char szItemInfo[100][255], int* iInfo
 	}
 	if ((pItem->m_wItemID >= BAG_ITEM_NUM_FRIST && pItem->m_wItemID <= BAG_ITEM_NUM_LAST))
 	{
-		wsprintf(szItemInfo[*iInfoRow], g_Message[ETC_MESSAGE347].szMessage, pItemInfo->BaseItem_Bag.wMin_Lev);
-		if (g_pMainPlayer && g_pMainPlayer->currentLevel() < pItemInfo->BaseItem_Bag.wMin_Lev)	pdwTextColor[*iInfoRow] = TEXT_COLOR_RED;
+		wsprintf(szItemInfo[*iInfoRow], _messagePool[ETC_MESSAGE347].szMessage, pItemInfo->BaseItem_Bag.wMin_Lev);
+		if (_mainUser && _mainUser->currentLevel() < pItemInfo->BaseItem_Bag.wMin_Lev)	pdwTextColor[*iInfoRow] = TEXT_COLOR_RED;
 		*iInfoRow += 1;
 		nSize = lstrlen(szItemInfo[*iInfoRow]);
 		if (*nMaxSize < nSize)	*nMaxSize = nSize;
@@ -1011,7 +1044,7 @@ void TooltipHelper::ItemInfoRender_Option(char szItemInfo[100][255], int* iInfoR
 			if (0 == pItem->wAttr[i].uValue) continue;
 
 			__lstrcpyn(szItemInfo[*iInfoRow]
-				, g_pItemAttrLayer->GetAttrOptionDescription(pItem->wAttr[i].uCode, pItem->wAttr[i].uValue), 0xff);
+				, _itemAttrLayer->GetAttrOptionDescription(pItem->wAttr[i].uCode, pItem->wAttr[i].uValue), 0xff);
 
 			pdwTextColor[*iInfoRow] = TEXT_COLOR_BLUE;
 			nSize = lstrlen(szItemInfo[*iInfoRow]);
@@ -1037,7 +1070,7 @@ void TooltipHelper::ItemInfoRender_SetItemBonusOption(char szItemInfo[100][255],
 		if (dwSetNum >= 2)
 		{
 			// "추가 옵션"
-			wsprintf(szItemInfo[*iInfoRow], g_Message[ETC_MESSAGE589].szMessage);
+			wsprintf(szItemInfo[*iInfoRow], _messagePool[ETC_MESSAGE589].szMessage);
 			pdwTextColor[*iInfoRow] = TEXT_COLOR_ORANGE;
 			*iInfoRow += 1;
 
@@ -1059,7 +1092,7 @@ void TooltipHelper::ItemInfoRender_SetItemBonusOption(char szItemInfo[100][255],
 					if (pItemInfo->BaseItem_Weapon.pPartOption[i].wValue == 0)	continue;
 
 					__lstrcpyn(szItemInfo[*iInfoRow]
-						, g_pItemAttrLayer->GetAttrOptionDescription(pItemInfo->BaseItem_Weapon.pPartOption[i].wKind
+						, _itemAttrLayer->GetAttrOptionDescription(pItemInfo->BaseItem_Weapon.pPartOption[i].wKind
 							, pItemInfo->BaseItem_Weapon.pPartOption[i].wValue), 0xff);
 
 					pdwTextColor[*iInfoRow] = TEXT_COLOR_GREEN;
@@ -1082,7 +1115,7 @@ void TooltipHelper::ItemInfoRender_SetItemBonusOption(char szItemInfo[100][255],
 					}
 
 					__lstrcpyn(szItemInfo[*iInfoRow]
-						, g_pItemAttrLayer->GetAttrOptionDescription(pItemInfo->BaseItem_Armor.pPartOption[i].wKind
+						, _itemAttrLayer->GetAttrOptionDescription(pItemInfo->BaseItem_Armor.pPartOption[i].wKind
 							, pItemInfo->BaseItem_Armor.pPartOption[i].wValue), 0xff);
 
 					pdwTextColor[*iInfoRow] = TEXT_COLOR_GREEN;
@@ -1107,7 +1140,7 @@ void TooltipHelper::ItemInfoRender_SetItemBonusOption(char szItemInfo[100][255],
 			*iInfoRow += 1;
 
 			// "세트아이템 보너스 옵션"
-			wsprintf(szItemInfo[*iInfoRow], g_Message[ETC_MESSAGE590].szMessage);
+			wsprintf(szItemInfo[*iInfoRow], _messagePool[ETC_MESSAGE590].szMessage);
 			pdwTextColor[*iInfoRow] = TEXT_COLOR_ORANGE;
 			nSize = lstrlen(szItemInfo[*iInfoRow]);
 
@@ -1124,7 +1157,7 @@ void TooltipHelper::ItemInfoRender_SetItemBonusOption(char szItemInfo[100][255],
 				if (pSetItemInfo->pBonusOption[i][0].wKind != 0 && pSetItemInfo->pBonusOption[i][0].wValue != 0)
 				{
 					__lstrcpyn(szItemInfo[*iInfoRow]
-						, g_pItemAttrLayer->GetAttrOptionDescription(pSetItemInfo->pBonusOption[i][0].wKind
+						, _itemAttrLayer->GetAttrOptionDescription(pSetItemInfo->pBonusOption[i][0].wKind
 							, pSetItemInfo->pBonusOption[i][0].wValue), 0xff);
 
 					pdwTextColor[*iInfoRow] = TEXT_COLOR_GREEN;
@@ -1139,7 +1172,7 @@ void TooltipHelper::ItemInfoRender_SetItemBonusOption(char szItemInfo[100][255],
 				if (pSetItemInfo->pBonusOption[i][1].wKind != 0 && pSetItemInfo->pBonusOption[i][0].wValue != 0)
 				{
 					__lstrcpyn(szItemInfo[*iInfoRow]
-						, g_pItemAttrLayer->GetAttrOptionDescription(pSetItemInfo->pBonusOption[i][1].wKind
+						, _itemAttrLayer->GetAttrOptionDescription(pSetItemInfo->pBonusOption[i][1].wKind
 							, pSetItemInfo->pBonusOption[i][1].wValue), 0xff);
 
 					pdwTextColor[*iInfoRow] = TEXT_COLOR_GREEN;
@@ -1160,7 +1193,7 @@ void TooltipHelper::ItemInfoRender_SetItemBonusOption(char szItemInfo[100][255],
 					if (pSetItemInfo->pFullOption[i].wKind != 0 && pSetItemInfo->pFullOption[i].wValue != 0)
 					{
 						__lstrcpyn(szItemInfo[*iInfoRow]
-							, g_pItemAttrLayer->GetAttrOptionDescription(pSetItemInfo->pFullOption[i].wKind
+							, _itemAttrLayer->GetAttrOptionDescription(pSetItemInfo->pFullOption[i].wKind
 								, pSetItemInfo->pFullOption[i].wValue), 0xff);
 
 						pdwTextColor[*iInfoRow] = TEXT_COLOR_GREEN;
@@ -1178,7 +1211,7 @@ void TooltipHelper::ItemInfoRender_SetItemBonusOption(char szItemInfo[100][255],
 }
 
 
-void TooltipHelper::ItemInfoRender(CItem* pItem, BOOL isEquip, BOOL bPrice, DWORD dwPrice, BYTE byZipCode, BYTE byOption)
+std::vector<DynamicInfoBox::InfoLine> TooltipHelper::ItemInfoRender(CItem* pItem, BOOL isCurrentlyEquipped, BOOL isCurrentlySold, DWORD dwPrice, BYTE EQUIP_TYPE, BYTE playerEquipUpgradeLevel)
 {
 	char			szItemInfo[100][255] = { 0, };
 	char			szUpgradeOption[10][255] = { 0, };
@@ -1200,38 +1233,36 @@ void TooltipHelper::ItemInfoRender(CItem* pItem, BOOL isEquip, BOOL bPrice, DWOR
 	LPSET_ITEM_INFO pSetItemInfo = NULL;
 	CBaseItem* pItemTmp = NULL;
 
-	if (g_Mouse.bLDown == TRUE)
-		return;
 
 	for (int i = 0; i < 50; i++)
 		memset(szItemInfo[i], 0, sizeof(szItemInfo[i]));
 	memset(dwSetID, 0, sizeof(dwSetID));
 	memset(pdwTextColor, 0xff, sizeof(DWORD) * 50);
 
-	pItemInfo = g_pItemTableHash_get()->GetData(pItem->m_wItemID);
+	pItemInfo = _itemTableHash->GetData(pItem->m_wItemID);
 	if (NULL == pItemInfo)
-		return;
+		return {};
 
 	if (pItem->GetType() == ITEM_LARGE)
 		dwItemSetID = pItemInfo->GetSetID();
 
 	if (dwItemSetID != 0 && dwItemSetID != 32767)
 	{
-		pSetItemInfo = g_pSetItemInfoHash->GetData(dwItemSetID);
+		pSetItemInfo = _setItemInfoHash->GetData(dwItemSetID);
 
-		if (isEquip)
+		if (isCurrentlyEquipped)
 		{
 			BOOL isChk = FALSE;
 			memset(dwSetID, 0, sizeof(DWORD) * 10);
 
 			for (int i = 0; i < MAX_EQUIP_POOL; i++)
 			{
-				if (g_pMainPlayer && g_pMainPlayer->m_bCurrnetHand == 1)
+				if (_mainUser && _mainUser->m_bCurrnetHand == 1)
 				{
 					if (i == EQUIP_TYPE_RHAND2 || i == EQUIP_TYPE_LHAND2)
 						continue;
 				}
-				else if (g_pMainPlayer && g_pMainPlayer->m_bCurrnetHand == 2)
+				else if (_mainUser && _mainUser->m_bCurrnetHand == 2)
 				{
 					if (i == EQUIP_TYPE_RHAND1 || i == EQUIP_TYPE_LHAND1)
 						continue;
@@ -1241,13 +1272,13 @@ void TooltipHelper::ItemInfoRender(CItem* pItem, BOOL isEquip, BOOL bPrice, DWOR
 					i == EQUIP_TYPE_LRING2 || i == EQUIP_TYPE_LRING3)
 					continue;
 
-				if (g_pMainPlayer && g_pMainPlayer->CheckItem(&g_pMainPlayer->m_pEquip[i]) == FALSE)
+				if (_mainUser && _mainUser->CheckItem(&_mainUser->m_pEquip[i]) == FALSE)
 					continue;
 
-				if (g_pMainPlayer && g_pMainPlayer->m_pEquip[i].m_wItemID == NULL)
+				if (_mainUser && _mainUser->m_pEquip[i].m_wItemID == NULL)
 					continue;
 
-				pItemTmp = g_pItemTableHash_get()->GetData(g_pMainPlayer->m_pEquip[i].m_wItemID);
+				pItemTmp = _itemTableHash->GetData(_mainUser->m_pEquip[i].m_wItemID);
 				dwEquipSetID = pItemTmp->GetSetID();
 
 				if (dwItemSetID != dwEquipSetID) continue;
@@ -1287,11 +1318,11 @@ void TooltipHelper::ItemInfoRender(CItem* pItem, BOOL isEquip, BOOL bPrice, DWOR
 	{
 	case ITEM_KIND_WEAPON:
 		ItemInfoRender_Weapon(szItemInfo, &iInfoRow, pItem, pItemInfo, pSetItemInfo
-			, dwItemSetID, dwSetNum, pdwTextColor, isEquip, iOption, &nMaxSize);
+			, dwItemSetID, dwSetNum, pdwTextColor, isCurrentlyEquipped, iOption, &nMaxSize);
 		break;
 	case ITEM_KIND_AROMR:
 		ItemInfoRender_Armor(szItemInfo, &iInfoRow, pItem, pItemInfo, pSetItemInfo
-			, dwItemSetID, dwSetNum, pdwTextColor, isEquip, iOption, &nMaxSize, byZipCode);
+			, dwItemSetID, dwSetNum, pdwTextColor, isCurrentlyEquipped, iOption, &nMaxSize, EQUIP_TYPE);
 		break;
 	case ITEM_KIND_GUARDIAN:
 		ItemInfoRender_Guardian(szItemInfo, &iInfoRow, pItem, pItemInfo, pdwTextColor, &nMaxSize);
@@ -1318,12 +1349,12 @@ void TooltipHelper::ItemInfoRender(CItem* pItem, BOOL isEquip, BOOL bPrice, DWOR
 		ItemInfoRender_Default(szItemInfo, &iInfoRow, pItem, pItemInfo, pdwTextColor, &nMaxSize);
 		break;
 	default:
-		return;
+		return { };
 	}
 
 	if (pItemInfo->GetMovable() != 0)// (귀속아이템) 표시
 	{
-		strcpy(szItemInfo[iInfoRow], g_Message[ETC_MESSAGE1429].szMessage);//본인계정 외 캐릭터에게는 양도가 금지됩니다.
+		strcpy(szItemInfo[iInfoRow], _messagePool[ETC_MESSAGE1429].szMessage);//본인계정 외 캐릭터에게는 양도가 금지됩니다.
 		nSize = lstrlen(szItemInfo[iInfoRow]);
 		if (nMaxSize < nSize)
 			nMaxSize = nSize;
@@ -1336,13 +1367,13 @@ void TooltipHelper::ItemInfoRender(CItem* pItem, BOOL isEquip, BOOL bPrice, DWOR
 		ItemInfoRender_Option(szItemInfo, &iInfoRow, pItem, pItemInfo, pdwTextColor, &nMaxSize, &iOption);
 	}
 
-	ItemInfoRender_SetItemBonusOption(szItemInfo, &iInfoRow, pItem, pItemInfo, pdwTextColor, &nMaxSize, isEquip, dwItemSetID, dwSetNum, pSetItemInfo);
+	ItemInfoRender_SetItemBonusOption(szItemInfo, &iInfoRow, pItem, pItemInfo, pdwTextColor, &nMaxSize, isCurrentlyEquipped, dwItemSetID, dwSetNum, pSetItemInfo);
 
-	if (isEquip && byOption)
+	if (isCurrentlyEquipped && playerEquipUpgradeLevel > 0)
 	{
 		BYTE byOptionValue[10] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 
-		switch (byOption)
+		switch (playerEquipUpgradeLevel)
 		{
 		case 6:
 			byOptionValue[0] = 31;	byOptionValue[1] = 10;	byOptionValue[2] = 12;	byOptionValue[3] = 5;	byOptionValue[4] = 14;	byOptionValue[5] = 5;
@@ -1372,7 +1403,7 @@ void TooltipHelper::ItemInfoRender(CItem* pItem, BOOL isEquip, BOOL bPrice, DWOR
 				continue;
 
 			__lstrcpyn(szUpgradeOption[dwUpgradeIndex]
-				, g_pItemAttrLayer->GetAttrOptionDescription(byOptionValue[i * 2], byOptionValue[i * 2 + 1]), 0xff);
+				, _itemAttrLayer->GetAttrOptionDescription(byOptionValue[i * 2], byOptionValue[i * 2 + 1]), 0xff);
 
 			dwUpgradeTextColor[dwUpgradeIndex] = TEXT_COLOR_GREEN;
 
@@ -1385,9 +1416,7 @@ void TooltipHelper::ItemInfoRender(CItem* pItem, BOOL isEquip, BOOL bPrice, DWOR
 		}
 	}
 
-	CStoreWnd* pStoreWnd = CStoreWnd::GetInstance();
-
-	if (pStoreWnd->GetActive() == TRUE)
+	if (true)
 	{
 		char		szInfo[0xff] = { 0, };
 		char		szPrice[0xff] = { 0, };
@@ -1397,7 +1426,7 @@ void TooltipHelper::ItemInfoRender(CItem* pItem, BOOL isEquip, BOOL bPrice, DWOR
 		::GetNumberFormat(NULL, NULL, szInfo, &nFmt, szPrice, 15);
 
 		// "%s Karz"
-		wsprintf(szItemInfo[iInfoRow], g_Message[ETC_MESSAGE870].szMessage, szPrice);
+		wsprintf(szItemInfo[iInfoRow], "NPC STORE %s", szPrice);
 
 		if (pItemInfo->dwCode_ID != ITEM_KIND_RIDE)
 		{
@@ -1414,10 +1443,10 @@ void TooltipHelper::ItemInfoRender(CItem* pItem, BOOL isEquip, BOOL bPrice, DWOR
 	int nOverYSize = 0;
 	int nInfoIndex = iInfoRow;
 
-	if (bPrice)
+	if (isCurrentlySold)
 		nInfoIndex += 2;
 
-	if (isEquip && byOption)
+	if (isCurrentlySold && playerEquipUpgradeLevel)
 		nInfoIndex += 8;
 
 	if (g_Mouse.MousePos.y + 5 + (nInfoIndex * 18) + 14 > windowHeight())
@@ -1426,7 +1455,7 @@ void TooltipHelper::ItemInfoRender(CItem* pItem, BOOL isEquip, BOOL bPrice, DWOR
 	if ((g_Mouse.MousePos.x + ITEMINFO_RENDER_POSITION) + (float)(nMaxSize * 6.5f + 10) > windowWidth())
 		nOverXSize = (int)((g_Mouse.MousePos.x + ITEMINFO_RENDER_POSITION) + (float)(nMaxSize * 6.5f + 10) - windowWidth());
 
-	if (bPrice)
+	if (isCurrentlySold)
 	{
 		iInfoRow++;
 
@@ -1437,15 +1466,15 @@ void TooltipHelper::ItemInfoRender(CItem* pItem, BOOL isEquip, BOOL bPrice, DWOR
 		wsprintf(szInfo, "%u", dwPrice);
 		::GetNumberFormat(NULL, NULL, szInfo, &nFmt, szPrice, 15);
 
-		if (GetType(pItem->GetID() / ITEM_DISTRIBUTE) == ITEM_SMALL)
+		if (GetSizeType(pItem->GetID()) == ITEM_SMALL)
 		{
 			// "1 개당 %s Karz"
-			wsprintf(szItemInfo[iInfoRow], g_Message[ETC_MESSAGE812].szMessage, szPrice);
+			wsprintf(szItemInfo[iInfoRow], _messagePool[ETC_MESSAGE812].szMessage, szPrice);
 		}
 		else
 		{
 			// "%s Karz"
-			wsprintf(szItemInfo[iInfoRow], g_Message[ETC_MESSAGE870].szMessage, szPrice);
+			wsprintf(szItemInfo[iInfoRow], _messagePool[ETC_MESSAGE870].szMessage, szPrice);
 		}
 
 		nSize = lstrlen(szItemInfo[iInfoRow]);
@@ -1456,75 +1485,65 @@ void TooltipHelper::ItemInfoRender(CItem* pItem, BOOL isEquip, BOOL bPrice, DWOR
 		iInfoRow++;
 	}
 
-	for (i = 0; i < iInfoRow; i++)
-	{
-		if (__strcmp(szItemInfo[i], "") != 0)
-		{
-			nSize = lstrlen(szItemInfo[i]);
+	std::vector<DynamicInfoBox::InfoLine> result(iInfoRow);
+	for (int i = 0; i < iInfoRow; i++) {
+		result.push_back({
+			std::string(szItemInfo[i]), Color::fromARGB(pdwTextColor[i])
+		});
+	}
 
-			RenderFont(szItemInfo[i]
-				, g_Mouse.MousePos.x + 10 + ITEMINFO_RENDER_POSITION - nOverXSize
-				, g_Mouse.MousePos.x + 10 + ITEMINFO_RENDER_POSITION + nSize * 7 - nOverXSize
-				, g_Mouse.MousePos.y + 5 + (i * 18) - nOverYSize
-				, g_Mouse.MousePos.y + 5 + (i * 18) + 14 - nOverYSize
-				, __ORDER_ITEM_DESC__ + 3
-				, pdwTextColor[i]);
+	if (isCurrentlyEquipped && playerEquipUpgradeLevel)
+	{
+		switch (playerEquipUpgradeLevel)
+		{
+		case 6:		wsprintf(szUpgradeOption[9], _messagePool[ETC_MESSAGE1132].szMessage);		break; // "+6 페오 마스터"
+		case 7:		wsprintf(szUpgradeOption[9], _messagePool[ETC_MESSAGE1133].szMessage);		break; // "+7 윈 마스터"
+		case 8:		wsprintf(szUpgradeOption[9], _messagePool[ETC_MESSAGE1134].szMessage);		break; // "+8 오셀 마스터"
+		case 9:		wsprintf(szUpgradeOption[9], _messagePool[ETC_MESSAGE1135].szMessage);		break; // "+9 제라 마스터"
+		case 10:	wsprintf(szUpgradeOption[9], _messagePool[ETC_MESSAGE1136].szMessage);		break; // "+10 베오르크 마스터"
+		default:
+			wsprintf(szUpgradeOption[9], "UNKNOWN ERROR"); break;
+		}
+
+		result.push_back({
+			std::string(szUpgradeOption[9]), Color::fromARGB(TEXT_COLOR_GREEN)
+		});
+
+		for (int i = 0; i < dwUpgradeIndex; i++) {
+			result.push_back({
+				std::string(szUpgradeOption[i]), Color::fromARGB(dwUpgradeTextColor[i])
+			});
 		}
 	}
 
-	if (isEquip && byOption)
-	{
-		switch (byOption)
-		{
-		case 6:		wsprintf(szUpgradeOption[9], g_Message[ETC_MESSAGE1132].szMessage);		break; // "+6 페오 마스터"
-		case 7:		wsprintf(szUpgradeOption[9], g_Message[ETC_MESSAGE1133].szMessage);		break; // "+7 윈 마스터"
-		case 8:		wsprintf(szUpgradeOption[9], g_Message[ETC_MESSAGE1134].szMessage);		break; // "+8 오셀 마스터"
-		case 9:		wsprintf(szUpgradeOption[9], g_Message[ETC_MESSAGE1135].szMessage);		break; // "+9 제라 마스터"
-		case 10:	wsprintf(szUpgradeOption[9], g_Message[ETC_MESSAGE1136].szMessage);		break; // "+10 베오르크 마스터"
-		}
-
-		nSize = lstrlen(szUpgradeOption[9]);
-
-		RenderFont(szUpgradeOption[9]
-			, g_Mouse.MousePos.x + 10 + ITEMINFO_RENDER_POSITION - nOverXSize
-			, g_Mouse.MousePos.x + 10 + ITEMINFO_RENDER_POSITION + nSize * 7 - nOverXSize
-			, g_Mouse.MousePos.y + 5 + ((iInfoRow + 1) * 18) - nOverYSize
-			, g_Mouse.MousePos.y + 5 + ((iInfoRow + 1) * 18) + 14 - nOverYSize
-			, __ORDER_ITEM_DESC__ + 3
-			, TEXT_COLOR_GREEN);
-
-		if (nMaxSize < nSize)
-			nMaxSize = nSize;
-
-		iInfoRow += 2;
-
-		for (i = iInfoRow + 1; i < iInfoRow + 6; i++)
-		{
-			if (__strcmp(szUpgradeOption[i - (iInfoRow + 1)], "") != 0)
-			{
-				nSize = lstrlen(szUpgradeOption[i - (iInfoRow + 1)]);
-
-				RenderFont(szUpgradeOption[i - (iInfoRow + 1)]
-					, g_Mouse.MousePos.x + 10 + ITEMINFO_RENDER_POSITION - nOverXSize
-					, g_Mouse.MousePos.x + 10 + ITEMINFO_RENDER_POSITION + nSize * 7 - nOverXSize
-					, g_Mouse.MousePos.y + 5 + (i * 18) - nOverYSize
-					, g_Mouse.MousePos.y + 5 + (i * 18) + 14 - nOverYSize
-					, __ORDER_ITEM_DESC__ + 3
-					, dwUpgradeTextColor[i - (iInfoRow + 1)]);
-			}
-		}
-
-		iInfoRow += 6;
-	}
-
-	RenderInfoBox(float(g_Mouse.MousePos.x + ITEMINFO_RENDER_POSITION) - nOverXSize
-		, float(g_Mouse.MousePos.y - 5) - nOverYSize
-		, (float)(nMaxSize * 6.5f + 10)
-		, (float)(iInfoRow * 18 + 10)
-		, __ORDER_ITEM_DESC__);
+	return cleanupInitialEmptyLines(result);
 }
 
+static int GetSizeType(WORD wId)
+{
+	int nValue = wId;
 
+	if ((nValue >= ITEM_WEAPONST_INDEX && nValue <= ITEM_WEAPONEND_INDEX) ||
+		(nValue >= ITEM_ARMORST_INDEX && nValue <= ITEM_ARMOREND_INDEX) ||
+		nValue == ITEM_GUARDIAN_INDEX || nValue == ITEM_RIDE_INDEX || nValue == ITEM_BAG_INDEX)
+	{
+		return ITEM_LARGE;
+	}
+	else if ((nValue >= ITEM_MATERIALST_INDEX && nValue <= ITEM_MATERIALEND_INDEX)
+		|| (nValue >= ITEM_SPECIALST_INDEX && nValue <= ITEM_SPECIALEND_INDEX)
+		|| (nValue >= ITEM_MIXUPGRADEST_INDEX && nValue <= ITEM_MIXUPGRADEEND_INDEX)
+		|| (nValue >= ITEM_CONSUMABLEST_INDEX && nValue <= ITEM_CONSUMABLEEND_INDEX)
+		|| nValue == ITEM_SUPPLIES_INDEX || nValue == ITEM_ZODIAC_INDEX
+		|| nValue == ITEM_MAGICARRAY_INDEX || nValue == ITEM_MAGICFIELDARRAY_INDEX
+		|| nValue == ITEM_UPGRADE_INDEX || nValue == ITEM_LIQUID_INDEX || nValue == ITEM_EDITION_INDEX)
+	{
+		return ITEM_SMALL;
+	}
+	else
+	{
+		return ITEM_NONE;
+	}
+}
 
 static void GetDueDayText(char* pszItemInfo, DWORD dwDueDay)
 {
@@ -1534,6 +1553,6 @@ static void GetDueDayText(char* pszItemInfo, DWORD dwDueDay)
 	if (when)//널 포인터 참조 수정 : 050103 hwoarang
 	{
 		// "유효기간 %04d/%02d/%02d %02d:%02d분까지입니다."
-		wsprintf(pszItemInfo, g_Message[ETC_MESSAGE845].szMessage, when->tm_year + 1900, when->tm_mon + 1, when->tm_mday, when->tm_hour, when->tm_min);
+		wsprintf(pszItemInfo, "EXPIRES ON: %d - %d - %d %d:%d", when->tm_year + 1900, when->tm_mon + 1, when->tm_mday, when->tm_hour, when->tm_min);
 	}
 }

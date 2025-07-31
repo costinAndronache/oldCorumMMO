@@ -36,11 +36,14 @@ Interface::Interface(
 	const LP_SKILL_LIST_MANAGER skillListManager,
 	CItemResourceHash* resourceHash,
 	SoundLibrary* soundLibrary,
-	SharedNetwork* sharedNetwork) 
+	SharedNetwork* sharedNetwork,
+	TooltipHelper* tooltipHelper
+) 
 {
 	_mainUser = mainUser;
 	_skillListManager = skillListManager;
 	_soundLibrary = soundLibrary;
+	_tooltipHelper = tooltipHelper;
 
 	_frameInParent = CustomUI::Rect{ {0, 0}, screenSize };
 
@@ -140,10 +143,17 @@ Interface::Interface(
 	});
 	_mouseTracking->updateZIndexOffsetForce(1000);
 
+	_tooltipLayer = registerChildRenderable<TooltipLayer>([=]() {
+		return new TooltipLayer(bounds());
+	});
+	_tooltipLayer->updateZIndexOffsetForce(1000);
+
 	_dragNDropSystem = new DragNDropSystem(this, SoundLibrary::sharedInstance());
 	_userInventoryManager = new UserInventoryManager(
 		_newItemsWindow->groupedInventoryView(),
-		ItemUsageManager::sharedInstance()
+		ItemUsageManager::sharedInstance(),
+		_tooltipLayer,
+		tooltipHelper
 	);
 	_equipItemsManager = new EquipItemsManager(_newItemsWindow->equipItemsView());
 
@@ -206,19 +216,6 @@ Interface::Interface(
 
 	_userSkillsManager->refreshUserSkillsView();
 	updateZIndexOffsetForce(1000);
-
-	_dynamicInfoBox = registerChildRenderable<DynamicInfoBox>([=]() {
-		return new DynamicInfoBox({ 200, 200 });
-	});
-
-	_dynamicInfoBox->updateWithLines({
-		{ "First line", Color::white},
-		{ "Second lineasaasdsdf", Color::red},
-		{ "Third line", Color::green},
-		{ "Fourth line", Color::magenta},
-		{ "FIFTH line", Color::yellow},
-	});
-
 }
 
 void Interface::toggleWindow(Renderable* window) {
@@ -385,7 +382,7 @@ bool Interface::swallowsMouse(CustomUI::Point mouse) {
 	if (_mouseTracking->isCurrentlyTracking()) { return true; }
 
 	for (auto child : _childRenderables) {
-		if (child->swallowsMouse(mouse) && child != _mouseTracking) {
+		if (child->swallowsMouse(mouse)) {
 			return true;
 		}
 	}

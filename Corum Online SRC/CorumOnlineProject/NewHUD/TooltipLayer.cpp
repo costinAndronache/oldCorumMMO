@@ -5,6 +5,7 @@ using namespace NewInterface;
 
 TooltipLayer::TooltipLayer(CustomUI::Rect frameInParent) {
 	_frameInParent = frameInParent;
+	_internalCounter = 0;
 }
 
 TooltipLayer::Handle TooltipLayer::addTooltip(const std::vector<InfoLine>& infoLines) {
@@ -44,8 +45,6 @@ void TooltipLayer::removeTooltip(Handle handle) {
 	if (_currentInfoBoxes.find(handle) != _currentInfoBoxes.end()) {
 		auto infoBox = _currentInfoBoxes[handle];
 		infoBox->setHidden(true);
-
-		_currentInfoBoxes.erase(handle);
 		_freeHandles.insert(handle);
 	}
 }
