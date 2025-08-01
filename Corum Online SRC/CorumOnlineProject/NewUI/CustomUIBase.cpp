@@ -43,8 +43,10 @@ bool CustomUI::safeToHandleKeyEvents() {
 }
 
 std::vector<std::string> CustomUI::strtok(const std::string& text, const char* byChars) {
-	char* copy = new char[text.size() + 1];
-	memcpy(copy, text.c_str(), text.size());
+	static char copy[255] = { 0 };
+
+	memset(copy, 0, 255);
+	strncpy(copy, text.c_str(), min(text.size(), 254));
 
 	std::vector<std::string> result;
 
@@ -53,6 +55,5 @@ std::vector<std::string> CustomUI::strtok(const std::string& text, const char* b
 		result.push_back(std::string(next));
 		next = ::strtok(nullptr, byChars);
 	}
-
 	return result;
 }

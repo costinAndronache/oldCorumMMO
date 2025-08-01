@@ -13,7 +13,7 @@ static MatrixContainer::Appearance appearance(Size oneLineSize) {
 			oneLineSize,
 			1,
 			0,
-			2
+			5
 		}
 	};
 };
@@ -29,9 +29,7 @@ void DynamicInfoBox::updateWithLines(const std::vector<InfoLine>& lines) {
 	const auto maxElement = std::max_element(
 		std::begin(lines),
 		std::end(lines),
-		[=](const InfoLine& a, const InfoLine& b) {
-			return a.text.size() < b.text.size();
-		}
+		[=](const InfoLine& a, const InfoLine& b) { return a.text.size() < b.text.size(); }
 	);
 
 	if (maxElement == std::end(lines)) { return; }
@@ -39,7 +37,7 @@ void DynamicInfoBox::updateWithLines(const std::vector<InfoLine>& lines) {
 	auto bigInsets = Insets{ 5, 5, 5, 5 };
 	auto smallInsets = Insets{ 2, 2, 2, 2 };
 
-	const auto maxLineSize = SingleLineLabel::fittedSize((*maxElement).text.size());
+	const auto maxLineSize = SingleLineLabel::fittedSize((*maxElement).text);
 	const auto containerAppearance = appearance(maxLineSize);
 	const auto totalSize = MatrixContainer::appropriateSizeFor(
 		containerAppearance.sizes, lines.size()

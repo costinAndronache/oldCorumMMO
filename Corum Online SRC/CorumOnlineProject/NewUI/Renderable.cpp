@@ -135,6 +135,16 @@ void Renderable::deconstructAllChildren() {
 	_childRenderables.clear();
 }
 
+void Renderable::updateParentTo(Renderable* parent) {
+	_parent = parent;
+	handleRenderableHierarchyUpdateEvent();
+	for (auto child : _childRenderables) {
+		child->handleRenderableHierarchyUpdateEvent();
+	}
+}
+
+void Renderable::handleRenderableHierarchyUpdateEvent() { }
+
 void Renderable::deconstructChildrenWhere(std::function<bool(Renderable*)> eligibleToDeconstruct) {
 	_childRenderables.erase(std::remove_if(
 		_childRenderables.begin(),

@@ -25,9 +25,13 @@ TooltipHelper::TooltipHelper(
 	_itemTableHash = itemTableHash;
 }
 
-static std::vector<DynamicInfoBox::InfoLine> cleanupInitialEmptyLines(std::vector<DynamicInfoBox::InfoLine> infoLines) {
+static std::vector<DynamicInfoBox::InfoLine> cleanup(std::vector<DynamicInfoBox::InfoLine> infoLines) {
 	while (infoLines.begin() != infoLines.end() && infoLines.begin()->text.empty()) {
 		infoLines.erase(infoLines.begin());
+	}
+
+	for (auto& line : infoLines) {
+		CustomUI::rtrim(line.text);
 	}
 
 	return infoLines;
@@ -1426,21 +1430,11 @@ std::vector<DynamicInfoBox::InfoLine> TooltipHelper::ItemInfoRender(CItem* pItem
 		::GetNumberFormat(NULL, NULL, szInfo, &nFmt, szPrice, 15);
 
 		// "%s Karz"
-		wsprintf(szItemInfo[iInfoRow], "NPC STORE %s", szPrice);
-
-		if (pItemInfo->dwCode_ID != ITEM_KIND_RIDE)
-		{
-			nSize = lstrlen(szItemInfo[iInfoRow]);
-
-			if (nMaxSize < nSize)
-				nMaxSize = nSize;
-
-			iInfoRow++;
-		}
+		wsprintf(szItemInfo[iInfoRow++], "");
+		wsprintf(szItemInfo[iInfoRow++], "NPC STORE %s", szPrice);
 	}
 
-	int nOverXSize = 0;
-	int nOverYSize = 0;
+
 	int nInfoIndex = iInfoRow;
 
 	if (isCurrentlySold)
@@ -1448,12 +1442,6 @@ std::vector<DynamicInfoBox::InfoLine> TooltipHelper::ItemInfoRender(CItem* pItem
 
 	if (isCurrentlySold && playerEquipUpgradeLevel)
 		nInfoIndex += 8;
-
-	if (g_Mouse.MousePos.y + 5 + (nInfoIndex * 18) + 14 > windowHeight())
-		nOverYSize = g_Mouse.MousePos.y + 5 + (nInfoIndex * 18) + 14 - windowHeight();
-
-	if ((g_Mouse.MousePos.x + ITEMINFO_RENDER_POSITION) + (float)(nMaxSize * 6.5f + 10) > windowWidth())
-		nOverXSize = (int)((g_Mouse.MousePos.x + ITEMINFO_RENDER_POSITION) + (float)(nMaxSize * 6.5f + 10) - windowWidth());
 
 	if (isCurrentlySold)
 	{
@@ -1516,7 +1504,7 @@ std::vector<DynamicInfoBox::InfoLine> TooltipHelper::ItemInfoRender(CItem* pItem
 		}
 	}
 
-	return cleanupInitialEmptyLines(result);
+	return cleanup(result);
 }
 
 static int GetSizeType(WORD wId)

@@ -64,7 +64,7 @@ namespace CustomUI {
 		T* __ownedByRenderable registerChildRenderable(std::function<T*()> creatingFn) {
 			T* result = creatingFn();
 			_childRenderables.push_back(result);
-			result->_parent = this;
+			result->updateParentTo(this);
 			return result;
 		}
 
@@ -74,10 +74,13 @@ namespace CustomUI {
 		int _zIndexOffsetForce;
 		std::vector<Renderable*> _childRenderables;
 
+		virtual void handleRenderableHierarchyUpdateEvent();
 	private:
 		bool _isHidden;
 		void updateMouseState(MouseState newState);
 		SpriteModel _backgroundSprite;
+
+		void updateParentTo(Renderable* parent); 
 	};
 
 }

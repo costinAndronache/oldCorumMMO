@@ -26,7 +26,7 @@ PagerControl::PagerControl(Rect frameInParent, Appearance appearance):
 		.withX(prevPageBtnFrame.maxX());
 
 	const auto labelFrame = Rect{ {0, 0},
-		SingleLineLabel::fittedSize(5)
+		SingleLineLabel::fittedSize("100/100")
 	}.centeredWith(labelDedidcatedArea);
 
 	const auto nextPageBtnFrame = bounds()

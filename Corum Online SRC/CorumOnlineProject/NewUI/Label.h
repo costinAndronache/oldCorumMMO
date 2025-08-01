@@ -25,12 +25,15 @@ namespace CustomUI {
 		void updateTextTo(std::string newText);
 		void updateRenderingModeToCentered();
 		void updateRenderingModeToInsets(Insets insets);
+
+	protected:
+		void handleRenderableHierarchyUpdateEvent() override;
 	private:
 		TextRenderingMode _mode;
 		Insets _insetsForInsetMode;
 		std::string _text;
 		Appearance _appearance;
-		Rect _renderingFrame;
+		Size _renderingSize;
 
 		Rect renderingFrameForCurrentTextAndMode();
 	};
