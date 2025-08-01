@@ -15,6 +15,9 @@ UserInventoryManager::UserInventoryManager(
 
 	_toolTipHelper = toolTipHelper;
 	_toolTipLayer = toolTipLayer;
+
+	_smallItemsTooltipManager = nullptr;
+	_largeItemsTooltipManager = nullptr;
 }
 
 void UserInventoryManager::resetIndexOnCurrentDragNDropItem() {
@@ -28,12 +31,18 @@ void UserInventoryManager::rebuildInventoryViewWith(
 	const std::vector<CItem>& smallItems,
 	const std::vector<CItem>& largeItems
 ) {
+	if (_smallItemsTooltipManager) { _smallItemsTooltipManager->clearAllTooltips(); }
+	if (_largeItemsTooltipManager) { _largeItemsTooltipManager->clearAllTooltips(); }
+
 	using LongClickLEFT = GenericItemsContainerView::HandlerItemLongClickLEFT;
 	using ClickRIGHT = GenericItemsContainerView::HandlerItemClickRIGHT;
 
 	LongClickLEFT longClickHandlerLEFT = [=](CItem item, CUISpriteModel sprite, int index, Rect globalFrame) {
 		if (item.m_wItemID == 0) { return; }
 		if (!_handler) { return; }
+
+		_largeItemsTooltipManager->clearAllTooltips();
+		_smallItemsTooltipManager->clearAllTooltips();
 
 		_indexOnCurrentDragNDropItem = { index, _managedInventoryView->activeTab() };
 		SpriteRenderable* sprr = new SpriteRenderable(globalFrame, sprite);
@@ -53,6 +62,13 @@ void UserInventoryManager::rebuildInventoryViewWith(
 		}
 	);
 
+	_largeItemsTooltipManager = new TooltipManager(
+		_toolTipLayer,
+		[=](int largeItemIndex) -> TooltipManager::InfoLines {
+		return _toolTipHelper->tooltipForItem(largeItems[largeItemIndex]);
+	}
+	);
+
 	GenericItemsContainerView::HandlerItemHovering smallItemHovering =
 		[=](CItem item, int index, Point mouseCoordsGlobal) {
 		if (item.m_wItemID == 0) { return; }
@@ -65,14 +81,24 @@ void UserInventoryManager::rebuildInventoryViewWith(
 		_smallItemsTooltipManager->handleHoveringEndEvent(index);
 	};
 
+	GenericItemsContainerView::HandlerItemHovering largeItemHovering =
+		[=](CItem item, int index, Point mouseCoordsGlobal) {
+		if (item.m_wItemID == 0) { return; }
+		_largeItemsTooltipManager->handleHoveringEvent(index, mouseCoordsGlobal);
+	};
+
+	GenericItemsContainerView::HandlerItemHoveringEnd largeItemHoveringEnd =
+		[=](CItem item, int index) {
+		if (item.m_wItemID == 0) { return; }
+		_largeItemsTooltipManager->handleHoveringEndEvent(index);
+	};
+
 	_managedInventoryView->rebuildWith(
 		smallItems, 
 		largeItems, 
 		{longClickHandlerLEFT, rightClickHandler, smallItemHovering, smallItemHoveringEnd },
-		{longClickHandlerLEFT, nullptr, nullptr, nullptr}
+		{longClickHandlerLEFT, nullptr, largeItemHovering, largeItemHoveringEnd}
 	);
-
-
 }
 
 GroupedItemInventoryView::IndexResult UserInventoryManager::itemIndexForGlobalPoint(CustomUI::Point point) {

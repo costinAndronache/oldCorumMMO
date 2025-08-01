@@ -5,7 +5,8 @@
 using namespace CustomUI;
 
 DWORD Color::asDXColor() const {
-	return D3DCOLOR_ARGB(a, r, g, b);
+	DWORD result = D3DCOLOR_ARGB((int)a, (int)r, (int)g, (int)b);
+	return result;
 }
 
 Color Color::withAlpha(unsigned char alpha) const {
@@ -14,7 +15,7 @@ Color Color::withAlpha(unsigned char alpha) const {
 
 Color Color::fromARGB(DWORD argb) {
 	unsigned char* charv = (unsigned char*)&argb;
-	return Color{ charv[1], charv[2], charv[3] , charv[0] };
+	return Color{ charv[2], charv[1], charv[0] , charv[3] };
 }
 
 SpriteModel SpriteModel::zero = { NULL, { 0, 0 } };

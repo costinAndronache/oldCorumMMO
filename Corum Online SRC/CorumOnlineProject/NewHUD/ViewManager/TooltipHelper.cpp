@@ -18,8 +18,8 @@ TooltipHelper::TooltipHelper(
 ): _messagePool(messagePool) {
 	_mainUser = mainPlayer;
 	_itemOptionHash = itemOptionHash;
-	_effectLayer = _effectLayer;
-	_itemAttrLayer = _itemAttrLayer;
+	_effectLayer = effectLayer;
+	_itemAttrLayer = itemAttrLayer;
 	_dungeonTable = dungeonTable;
 	_setItemInfoHash = setItemInfoHash;
 	_itemTableHash = itemTableHash;
@@ -116,7 +116,7 @@ void TooltipHelper::ItemInfoRender_Weapon(char szItemInfo[100][255], int* iInfoR
 			pdwTextColor[*iInfoRow] = TEXT_COLOR_BLUE;
 		break;
 	case 2:
-		pdwTextColor[*iInfoRow] = TEXT_COLOR_GREEN;
+		pdwTextColor[*iInfoRow] = Color::green.asDXColor();
 		break;
 	case 3:
 		pdwTextColor[*iInfoRow] = TEXT_COLOR_YELLOW;

@@ -70,6 +70,7 @@ void SingleLineLabel::renderWithRenderer(I4DyuchiGXRenderer* renderer, int order
 		renderingFrame.maxX(),
 		renderingFrame.maxY()
 	};
+
 	IDIFontObject* font = _appearance.font ? _appearance.font : GetFont();
 	renderer->RenderFont(font, (char*)_text.c_str(), _text.size(), &r, _appearance.color.asDXColor(), CHAR_CODE_TYPE_ASCII, order + 1, 0);
 }

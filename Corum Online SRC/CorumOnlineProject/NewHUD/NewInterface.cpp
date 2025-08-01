@@ -155,7 +155,11 @@ Interface::Interface(
 		_tooltipLayer,
 		tooltipHelper
 	);
-	_equipItemsManager = new EquipItemsManager(_newItemsWindow->equipItemsView());
+	_equipItemsManager = new EquipItemsManager(
+		_newItemsWindow->equipItemsView(),
+		_tooltipLayer,
+		tooltipHelper
+	);
 
 	_dragNDropManager = new DragNDropManager(
 		mainUser,

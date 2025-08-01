@@ -8,14 +8,24 @@ static SpriteModel underlays[MAX_EQUIP_POOL] = { SpriteModel::zero };
 
 static void buildUnderlays();
 
-EquipItemsManager::EquipItemsManager(GenericItemsContainerView* managedView) {
+EquipItemsManager::EquipItemsManager(
+	GenericItemsContainerView* managedView,
+	TooltipLayer* toolTipLayer,
+	TooltipHelper* toolTipHelper
+) {
 	_managedView = managedView;
 	_indexOnCurrentDragNDropItem = -1;
+	_toolTipHelper = toolTipHelper;
+	_toolTipLayer = toolTipLayer;
+
 	buildUnderlays();
 }
 
 
 void EquipItemsManager::updateWithItems(const CItem equipVector[MAX_EQUIP_POOL]) {
+
+	if (_equipTooltipManager) { _equipTooltipManager->clearAllTooltips(); }
+
 	std::vector<GenericItemsContainerView::ItemWithUnderlay> models;
 	for (int i = 0; i < MAX_EQUIP_POOL; i++) {
 		models.push_back({ equipVector[i], underlays[i] });
@@ -27,6 +37,7 @@ void EquipItemsManager::updateWithItems(const CItem equipVector[MAX_EQUIP_POOL])
 		if (item.m_wItemID == 0) { return; } // empty item 
 		if (!_handler) { return; }
 
+		_equipTooltipManager->clearAllTooltips();
 		_indexOnCurrentDragNDropItem = index;
 		_managedView->setHiddenStateForItemAtIndex(index, true);
 
@@ -34,9 +45,28 @@ void EquipItemsManager::updateWithItems(const CItem equipVector[MAX_EQUIP_POOL])
 		_handler(sprr, globalFrame);
 	};
 
+	_equipTooltipManager = new TooltipManager(
+		_toolTipLayer,
+		[=](int equipItemIndex) -> TooltipManager::InfoLines {
+		return _toolTipHelper->tooltipForEquippedItem(models[equipItemIndex].item, equipItemIndex);
+	}
+	);
+
+	GenericItemsContainerView::HandlerItemHovering itemHovering =
+		[=](CItem item, int index, Point mouseCoordsGlobal) {
+		if (item.m_wItemID == 0) { return; }
+		_equipTooltipManager->handleHoveringEvent(index, mouseCoordsGlobal);
+	};
+
+	GenericItemsContainerView::HandlerItemHoveringEnd itemHoveringEND =
+		[=](CItem item, int index) {
+		if (item.m_wItemID == 0) { return; }
+		_equipTooltipManager->handleHoveringEndEvent(index);
+	};
+
 	_managedView->updateWithItems(
 		models,
-		{longClickLEFT, nullptr, nullptr, nullptr}
+		{longClickLEFT, nullptr, itemHovering, itemHoveringEND}
 	);
 }
 
