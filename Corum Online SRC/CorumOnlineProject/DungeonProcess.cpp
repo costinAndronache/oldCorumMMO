@@ -221,7 +221,8 @@ BOOL InitGameDungeon() {
 		g_pItemAttrLayer,
 		g_pDungeonTable,
 		g_pSetItemInfoHash,
-		g_pItemTableHash_get()
+		g_pItemTableHash_get(),
+		g_sSkillInfoDP
 	);
 	_newInterface = std::make_shared<NewInterface::Interface>(
 		CustomUI::Size{ (float)windowWidth(), (float)windowHeight()},

@@ -5,14 +5,18 @@
 #include "../NewUI/SpriteRenderable.h"
 #include "../NewUI/RadioButtonGroup.h"
 #include "../NewUI/BorderRenderable.h"
+#include "../NewUI/Hoverable.h"
 
 namespace NewInterface {
-	class GenericSkillView : public CustomUI::Renderable {
+	class GenericSkillView : public CustomUI::Hoverable {
 	public:
 		struct Model {
 			CustomUI::SpriteModel spriteModel;
 			std::string levelInfo;
 			std::function<void()> increaseHandler;
+
+			CustomUI::Hoverable::OnHovering onHovering;
+			CustomUI::Hoverable::OnHoveringEnd onHoveringEnd;
 
 			static Model zero();
 		};

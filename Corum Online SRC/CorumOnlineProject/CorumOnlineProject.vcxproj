@@ -4123,6 +4123,7 @@
     <ClCompile Include="NewUI\BorderRenderable.cpp" />
     <ClCompile Include="NewUI\Button.cpp" />
     <ClCompile Include="NewUI\DragNDropSystem.cpp" />
+    <ClCompile Include="NewUI\Hoverable.cpp" />
     <ClCompile Include="NewUI\MatrixContainer.cpp" />
     <ClCompile Include="NewUI\CustomUIBase.cpp" />
     <ClCompile Include="NewUI\InputField.cpp" />
@@ -6738,6 +6739,7 @@
     <ClInclude Include="NewUI\BorderRenderable.h" />
     <ClInclude Include="NewUI\Button.h" />
     <ClInclude Include="NewUI\DragNDropSystem.h" />
+    <ClInclude Include="NewUI\Hoverable.h" />
     <ClInclude Include="NewUI\MatrixContainer.h" />
     <ClInclude Include="NewUI\CustomUIBase.h" />
     <ClInclude Include="NewUI\InputField.h" />

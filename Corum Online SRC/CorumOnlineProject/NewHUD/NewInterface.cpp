@@ -215,7 +215,9 @@ Interface::Interface(
 		SharedNetwork::sharedInstance(), 
 		&g_sSkillListManager,
 		g_pEffectLayer,
-		soundLibrary
+		soundLibrary,
+		tooltipHelper,
+		_tooltipLayer
 	);
 
 	_userSkillsManager->refreshUserSkillsView();

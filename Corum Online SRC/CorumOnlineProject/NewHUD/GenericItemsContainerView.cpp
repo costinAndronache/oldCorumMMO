@@ -30,32 +30,6 @@ GenericItemView::GenericItemView(Rect frameInParent, CustomUI::SpriteModel under
 	});
 }
 
-void GenericItemView::onHover(
-	std::function<void(CustomUI::Point globalMousePoint)> onHovering,
-	std::function<void()> onHoveringEnd
-) {
-	_onMouseStateChange = [=](MouseState newState) {
-		if (newState == MouseState::none) {
-			_onMouseMove = nullptr;
-			if(onHoveringEnd) { onHoveringEnd(); }
-		} else {
-			_onMouseMove = onHovering;
-		}
-	};
-}
-
-void GenericItemView::onMouseStateChange(MouseState newState, MouseState oldState) { 
-	if (_onMouseStateChange) {
-		_onMouseStateChange(newState);
-	}
-}
-
-void GenericItemView::onMouseMove(Point mouseGlobalOrigin) {
-	if (_onMouseMove) {
-		_onMouseMove(mouseGlobalOrigin);
-	}
-}
-
 
 GenericItemsContainerView::GenericItemsContainerView(CustomUI::Rect frameInParent, 
 							 CItemResourceHash* resourceHash,

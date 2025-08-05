@@ -55,6 +55,8 @@ void GenericSkillView::updateModel(Model model) {
 
 	_levelInfoLabel->updateTextTo(model.levelInfo);
 	_spriteRenderable->updateSprite(model.spriteModel);
+
+	onHover(model.onHovering, model.onHoveringEnd);
 }
 
 static int titleHeight = 30;

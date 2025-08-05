@@ -1,26 +1,14 @@
 #pragma once
 #include "LeftHUD.h"
 #include "../NewUI/MatrixContainer.h"
+#include "../NewUI/Hoverable.h"
 #include <vector>
 
 namespace NewInterface {
-	class GenericItemView : public CustomUI::Renderable {
+	class GenericItemView : public CustomUI::Hoverable {
 	public:
 		GenericItemView(CustomUI::Rect frameInParent, CustomUI::SpriteModel underlay);
 
-		void onHover(
-			std::function<void(CustomUI::Point globalMousePoint)> onHovering,
-			std::function<void()> onHoveringEnd
-		);
-	protected:
-		void onMouseStateChange(
-			CustomUI::Renderable::MouseState newState, 
-			CustomUI::Renderable::MouseState oldState
-		) override;
-		void onMouseMove(CustomUI::Point mouseGlobalOrigin) override;
-	public:
-		std::function<void(CustomUI::Point)> _onMouseMove;
-		std::function<void(CustomUI::Renderable::MouseState)> _onMouseStateChange;
 		CustomUI::Button* _button;
 		CustomUI::SingleLineLabel* _instanceCountLabel;
 	};

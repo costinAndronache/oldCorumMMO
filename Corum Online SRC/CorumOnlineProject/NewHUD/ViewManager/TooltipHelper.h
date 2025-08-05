@@ -16,7 +16,8 @@ namespace NewInterface {
 			CItemAttrLayer* itemAttrLayer,
 			CDungeonTable* _dungeonTable,
 			CSetItemInfoHash* setItemInfoHash,
-			LPBASEITEM_HASH itemTableHash
+			LPBASEITEM_HASH itemTableHash,
+			SSKILL_DPINFO sSkillInfoDP[MAX_SKILL]
 		);
 
 		std::vector<DynamicInfoBox::InfoLine> tooltipForItem(const CItem& item);
@@ -24,6 +25,7 @@ namespace NewInterface {
 
 		std::vector<DynamicInfoBox::InfoLine> tooltipForSoldItem(const CItem& item, int sellerPrice);
 
+		std::vector<DynamicInfoBox::InfoLine> tooltipForSkill(BYTE skillKIND);
 	private:
 		CMessagePool& _messagePool;
 		CMainUser* _mainUser;
@@ -33,6 +35,7 @@ namespace NewInterface {
 		CDungeonTable* _dungeonTable;
 		CSetItemInfoHash* _setItemInfoHash;
 		LPBASEITEM_HASH _itemTableHash;
+		SSKILL_DPINFO* _sSkillInfoDP;
 
 	private:
 		std::vector<DynamicInfoBox::InfoLine>	ItemInfoRender(CItem* pItem, BOOL isCurrentlyEquipped, BOOL isCurrentlySold = FALSE, DWORD dwPrice = 0, BYTE EQUIP_TYPE = 0, BYTE playerEquipUpgradeLevel = 0);

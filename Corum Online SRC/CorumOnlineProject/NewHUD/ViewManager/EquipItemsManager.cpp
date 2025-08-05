@@ -17,6 +17,7 @@ EquipItemsManager::EquipItemsManager(
 	_indexOnCurrentDragNDropItem = -1;
 	_toolTipHelper = toolTipHelper;
 	_toolTipLayer = toolTipLayer;
+	_equipTooltipManager = nullptr;
 
 	buildUnderlays();
 }

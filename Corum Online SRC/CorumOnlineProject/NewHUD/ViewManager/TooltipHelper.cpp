@@ -14,7 +14,8 @@ TooltipHelper::TooltipHelper(
 	CItemAttrLayer* itemAttrLayer,
 	CDungeonTable* dungeonTable,
 	CSetItemInfoHash* setItemInfoHash,
-	LPBASEITEM_HASH itemTableHash
+	LPBASEITEM_HASH itemTableHash,
+	SSKILL_DPINFO sSkillInfoDP[MAX_SKILL]
 ): _messagePool(messagePool) {
 	_mainUser = mainPlayer;
 	_itemOptionHash = itemOptionHash;
@@ -23,6 +24,7 @@ TooltipHelper::TooltipHelper(
 	_dungeonTable = dungeonTable;
 	_setItemInfoHash = setItemInfoHash;
 	_itemTableHash = itemTableHash;
+	_sSkillInfoDP = sSkillInfoDP;
 }
 
 static std::vector<DynamicInfoBox::InfoLine> cleanup(std::vector<DynamicInfoBox::InfoLine> infoLines) {
@@ -69,6 +71,179 @@ std::vector<DynamicInfoBox::InfoLine> TooltipHelper::tooltipForSoldItem(const CI
 //
 static void GetDueDayText(char* pszItemInfo, DWORD dwDueDay);
 static int GetSizeType(WORD itemID);
+
+std::vector<DynamicInfoBox::InfoLine> TooltipHelper::tooltipForSkill(BYTE skillKIND) {
+	std::vector<DynamicInfoBox::InfoLine> result{};
+
+	const auto	nSkillId = skillKIND;
+	char* pToken = NULL;
+	int		nVal[__MAX_SKILLINFO_VAL__] = { 0, };
+	BYTE	byIndex = 0;
+	char	szInfo[0xff] = { 0, };
+	
+
+	int nLevel = _mainUser->GetSkillLevel(nSkillId);
+
+	// 이름 //
+	Effect* pEffect = _effectLayer->GetEffectInfo(nSkillId);
+
+	if (pEffect->skillKind == 0) { return result;  }
+
+	auto gray = Color::white;
+
+	wsprintf(szInfo, "%s(id=%d)", pEffect->szName, nSkillId);
+	result.push_back({ szInfo, Color::green });
+	result.push_back({ "", gray });
+
+	for (int i = 0; i < 2; i++)
+	{
+		int nLen = lstrlen(pEffect->szDescription2[i]);
+
+		if (nLen) {
+			result.push_back({ pEffect->szDescription2[i], Color::white });
+		}
+
+	}
+
+	result.push_back({ "", gray });
+
+	if (nLevel == 0)
+	{
+		char szInfo[0xff] = { 0, };
+		wsprintf(szInfo, _messagePool[ETC_MESSAGE644].szMessage, _sSkillInfoDP[nSkillId].wSkillLevel); // "필요한 마스터리 양 : %u"
+		result.push_back({ szInfo, gray });
+		result.push_back({ "", gray });
+		result.push_back({ "", gray });
+	}
+
+	if (nLevel > 0)
+	{
+		// 현재 레벨 //
+		for (int i = 0; i < _sSkillInfoDP[nSkillId].byIndex; i++)
+		{
+			switch (_sSkillInfoDP[nSkillId].enSkillInfo[i])
+			{
+			case SKILLINFO_LEVEL:	nVal[i] = g_pMainPlayer->GetSkillLevel(nSkillId);								break;
+			case SKILLINFO_MIN:		nVal[i] = g_pEffectLayer->m_Effect[nSkillId].Value[nLevel - 1].nMin;				break;
+			case SKILLINFO_MAX:		nVal[i] = g_pEffectLayer->m_Effect[nSkillId].Value[nLevel - 1].nMax;				break;
+			case SKILLINFO_DUR:		nVal[i] = g_pEffectLayer->m_Effect[nSkillId].Value[nLevel - 1].nDuration / 1000;	break;
+			case SKILLINFO_PBT:		nVal[i] = g_pEffectLayer->m_Effect[nSkillId].Value[nLevel - 1].nProbability;		break;
+			case SKILLINFO_SP:		nVal[i] = g_pEffectLayer->m_Effect[nSkillId].Value[nLevel - 1].nMana;				break;
+			case SKILLINFO_CPS:		nVal[i] = g_pEffectLayer->m_Effect[nSkillId].Value[nLevel - 1].nCompass;			break;
+			}
+
+			if (nVal[i] < 0)
+				nVal[i] = abs(nVal[i]);
+		}
+
+		switch (_sSkillInfoDP[nSkillId].byIndex)
+		{
+		case 1: wsprintf(szInfo, _sSkillInfoDP[nSkillId].szInfo, nVal[0]);													break;
+		case 2:	wsprintf(szInfo, _sSkillInfoDP[nSkillId].szInfo, nVal[0], nVal[1]);										break;
+		case 3:	wsprintf(szInfo, _sSkillInfoDP[nSkillId].szInfo, nVal[0], nVal[1], nVal[2]);								break;
+		case 4: wsprintf(szInfo, _sSkillInfoDP[nSkillId].szInfo, nVal[0], nVal[1], nVal[2], nVal[3]);						break;
+		case 5: wsprintf(szInfo, _sSkillInfoDP[nSkillId].szInfo, nVal[0], nVal[1], nVal[2], nVal[3], nVal[4]);				break;
+		case 6: wsprintf(szInfo, _sSkillInfoDP[nSkillId].szInfo, nVal[0], nVal[1], nVal[2], nVal[3], nVal[4], nVal[5]);	break;
+		}
+
+
+		result.push_back({ _messagePool[ETC_MESSAGE645].szMessage , gray });
+	
+		pToken = strtok(szInfo, ",");
+
+		if (pToken != NULL)
+		{
+
+			if (!IsEmptyString(pToken)) {
+				result.push_back({ pToken , gray });
+			}
+
+			while (pToken != NULL)
+			{
+				pToken = strtok(NULL, ",");
+
+				if (pToken != NULL)
+				{
+					int nDstSize = 0;
+
+					nDstSize = lstrlen(pToken);
+
+					if (!IsEmptyString(pToken)) {
+						result.push_back({ pToken , gray });
+					}
+				}
+			}
+		}
+
+	}
+
+	result.push_back({ "" , gray });
+
+	WORD wMaxLevel = 0;
+
+	if (skillKIND % 30 == 1)
+		wMaxLevel = __MAX_MASTERYSKILL_UP__;
+	else
+		wMaxLevel = __MAX_SKILL_UP__;
+
+	if (nLevel < wMaxLevel)
+	{
+		// 다음 레벨 //
+		for (int i = 0; i < _sSkillInfoDP[nSkillId].byIndex; i++)
+		{
+			switch (_sSkillInfoDP[nSkillId].enSkillInfo[i])
+			{
+			case SKILLINFO_LEVEL:	nVal[i] = g_pMainPlayer->GetSkillLevel(nSkillId) + 1;							break;
+			case SKILLINFO_MIN:		nVal[i] = g_pEffectLayer->m_Effect[nSkillId].Value[nLevel].nMin;			break;
+			case SKILLINFO_MAX:		nVal[i] = g_pEffectLayer->m_Effect[nSkillId].Value[nLevel].nMax;			break;
+			case SKILLINFO_DUR:		nVal[i] = g_pEffectLayer->m_Effect[nSkillId].Value[nLevel].nDuration / 1000;	break;
+			case SKILLINFO_PBT:		nVal[i] = g_pEffectLayer->m_Effect[nSkillId].Value[nLevel].nProbability;	break;
+			case SKILLINFO_SP:		nVal[i] = g_pEffectLayer->m_Effect[nSkillId].Value[nLevel].nMana;			break;
+			case SKILLINFO_CPS:		nVal[i] = g_pEffectLayer->m_Effect[nSkillId].Value[nLevel].nCompass;		break;
+			}
+
+			if (nVal[i] < 0)
+				nVal[i] = abs(nVal[i]);
+		}
+
+		switch (_sSkillInfoDP[nSkillId].byIndex)
+		{
+		case 1: wsprintf(szInfo, _sSkillInfoDP[nSkillId].szInfo, nVal[0]);													break;
+		case 2:	wsprintf(szInfo, _sSkillInfoDP[nSkillId].szInfo, nVal[0], nVal[1]);										break;
+		case 3:	wsprintf(szInfo, _sSkillInfoDP[nSkillId].szInfo, nVal[0], nVal[1], nVal[2]);								break;
+		case 4: wsprintf(szInfo, _sSkillInfoDP[nSkillId].szInfo, nVal[0], nVal[1], nVal[2], nVal[3]);						break;
+		case 5: wsprintf(szInfo, _sSkillInfoDP[nSkillId].szInfo, nVal[0], nVal[1], nVal[2], nVal[3], nVal[4]);				break;
+		case 6: wsprintf(szInfo, _sSkillInfoDP[nSkillId].szInfo, nVal[0], nVal[1], nVal[2], nVal[3], nVal[4], nVal[5]);	break;
+		}
+
+		result.push_back({ _messagePool[ETC_MESSAGE646].szMessage, Color::white });
+
+		pToken = strtok(szInfo, ",");
+
+		if (pToken != NULL) {
+
+			if (!IsEmptyString(pToken)) {
+				result.push_back({ pToken, gray });
+			}
+
+			while (pToken != NULL)
+			{
+				pToken = strtok(NULL, ",");
+
+				if (pToken != NULL)
+				{
+
+					if (!IsEmptyString(pToken)) {
+						result.push_back({ pToken, gray });
+					}
+				}
+			}
+		}
+	}
+
+	return result;
+}
+
 
 void TooltipHelper::ItemInfoRender_Weapon(char szItemInfo[100][255], int* iInfoRow, CItem* pItem, CBaseItem* pItemInfo, LPSET_ITEM_INFO pSetItemInfo
 	, DWORD dwItemSetID, DWORD dwSetNum, DWORD* pdwTextColor, BOOL isEquip, int iOption, int* nMaxSize)

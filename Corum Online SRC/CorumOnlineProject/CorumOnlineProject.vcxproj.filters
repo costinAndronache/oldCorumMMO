@@ -921,6 +921,9 @@
     <ClCompile Include="NewHUD\ViewManager\TooltipManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="NewUI\Hoverable.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MouseLib.h">
@@ -1743,6 +1746,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="NewHUD\ViewManager\TooltipManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="NewUI\Hoverable.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
