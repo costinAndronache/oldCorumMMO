@@ -8,7 +8,7 @@
 #include "../NewUI/Hoverable.h"
 
 namespace NewInterface {
-	class GenericSkillView : public CustomUI::Hoverable {
+	class GenericSkillView : public CustomUI::Renderable {
 	public:
 		struct Model {
 			CustomUI::SpriteModel spriteModel;
@@ -29,6 +29,7 @@ namespace NewInterface {
 		CustomUI::SpriteRenderable* _spriteRenderable;
 		CustomUI::Button* _increaseButton;
 		CustomUI::SingleLineLabel* _levelInfoLabel;
+		CustomUI::Hoverable* _hoverableOverSprite;
 	};
 
 	class SkillsContainerView: public CustomUI::Renderable {

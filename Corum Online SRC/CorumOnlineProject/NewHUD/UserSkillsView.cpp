@@ -26,6 +26,10 @@ GenericSkillView::GenericSkillView(CustomUI::Rect frameInParent) {
 		return new SpriteRenderable(skillSpriteFrame, SpriteModel::zero);
 	});
 
+	_hoverableOverSprite = registerChildRenderable<Hoverable>([=]() {
+		return new Hoverable(skillSpriteFrame);
+	});
+
 	auto labelFrame =
 		skillSpriteFrame
 		.fromMaxXOrigin(0)
@@ -56,7 +60,7 @@ void GenericSkillView::updateModel(Model model) {
 	_levelInfoLabel->updateTextTo(model.levelInfo);
 	_spriteRenderable->updateSprite(model.spriteModel);
 
-	onHover(model.onHovering, model.onHoveringEnd);
+	_hoverableOverSprite->onHover(model.onHovering, model.onHoveringEnd);
 }
 
 static int titleHeight = 30;

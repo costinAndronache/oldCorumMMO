@@ -187,7 +187,6 @@ Interface::Interface(
 		_statsView->setHidden(true);
 	});
 	_statsView->setHidden(true);
-	_statsView->updateZIndexOffsetForce(1000);
 
 	auto statusPointManager = new StatusPointManager(sharedNetwork);
 	_statsManager = new CharacterStatsManager(

@@ -7,7 +7,7 @@ namespace CustomUI {
 	public:
 		using OnHovering = std::function<void(CustomUI::Point globalMousePoint)>;
 		using OnHoveringEnd = std::function<void()>;
-		Hoverable();
+		Hoverable(Rect frameInParent);
 		void onHover(
 			OnHovering onHovering,
 			OnHoveringEnd onHoveringEnd

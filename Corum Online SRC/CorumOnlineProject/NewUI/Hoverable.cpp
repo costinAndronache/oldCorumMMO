@@ -2,9 +2,10 @@
 
 using namespace CustomUI;
 
-Hoverable::Hoverable() {
+Hoverable::Hoverable(Rect frameInParent) {
 	_onMouseMove = nullptr;
 	_onMouseStateChange = nullptr;
+	_frameInParent = frameInParent;
 }
 
 void Hoverable::onHover(

@@ -3,8 +3,9 @@
 using namespace CustomUI;
 using namespace NewInterface;
 
-GenericItemView::GenericItemView(Rect frameInParent, CustomUI::SpriteModel underlay) {
-	_frameInParent = frameInParent;
+GenericItemView::GenericItemView(Rect frameInParent, CustomUI::SpriteModel underlay):
+	Hoverable(frameInParent) 
+{
 	auto insets = Insets{ 0, 0, 0, 0 };
 	if (underlay.sprite) {
 		insets = { 2, 2, 2, 2 };
