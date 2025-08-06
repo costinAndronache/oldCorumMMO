@@ -120,7 +120,7 @@ bool UserSkillsManager::canIncreaseLevelForThis(BYTE skillKind) {
 	auto m_byBitClassType = (BYTE)pow((float)2, (float)(_mainUser->m_wClass - 1));
 	if (pEffect->bAbleClass & m_byBitClassType)
 	{
-		if (_mainUser->GetSkillLevel(skillKind) < MAX_SKILL_LEVEL)
+		if (_mainUser->GetSkillLevel(skillKind) < MAX_SKILL_LEVEL_MANUAL_INCREASE)
 		{
 			int		nMaxLevel = 0;
 			BYTE	byMastery = _effectLayer->GetSkillMasteryKind(skillKind);

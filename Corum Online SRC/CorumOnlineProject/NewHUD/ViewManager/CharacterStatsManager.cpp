@@ -2,14 +2,24 @@
 
 using namespace NewInterface;
 
-using IncreaseFn = CharacterStatsManager::AttributeIncreaseHandler;
-using Model = CharacterStatsView::Model;
-using ModelCreate = std::function<Model(CMainUser*, IncreaseFn)>;
+CharacterStatsManager::OneAttributeUpdater::OneAttributeUpdater(ModelCreate modelCreate) {
+	_modelCreate = modelCreate;
+	_characterAttributeProxy = new CharacterAttributeView::UpdateProxy();
 
-using Attr = CharacterStatsManager::IncreasedAttribute;
+}
 
-static std::vector<std::vector<ModelCreate>> _entriesGenerators;
-const std::vector<std::vector<ModelCreate>>& entriesGenerators();
+CharacterAttributeView::UpdateProxy *
+CharacterStatsManager::OneAttributeUpdater::characterAttributeProxy() {
+	return _characterAttributeProxy;
+}
+
+void CharacterStatsManager::OneAttributeUpdater::refresh(
+    CMainUser *user, AttributeIncreaseHandler increaseFn) {
+	if(_modelCreate) {
+		auto model = _modelCreate(user, increaseFn);
+		_characterAttributeProxy->update(model);
+	}
+}
 
 int CharacterStatsManager::maxEntryCount() {
 	auto generators = entriesGenerators();
@@ -35,6 +45,47 @@ CharacterStatsManager::CharacterStatsManager(
 	_managedView = managedView;
 	_mainUser = mainUser;
 	_soundLibrary = soundLibrary;
+
+	auto& generators = entriesGenerators();
+
+	std::transform(
+		std::begin(generators),
+		std::end(generators),
+		std::back_inserter(_attributeUpdaters),
+		[=](std::vector<ModelCreate> genFnArray) -> std::vector<OneAttributeUpdater> {
+			std::vector<OneAttributeUpdater> currentUpdaters;
+			std::transform(
+				std::begin(genFnArray),
+				std::end(genFnArray),
+				std::back_inserter(currentUpdaters),
+				[=](ModelCreate genFn) {
+					return OneAttributeUpdater(genFn);
+				}
+			);
+			return currentUpdaters;
+		}
+	);
+
+	std::vector<std::vector<CharacterAttributeView::UpdateProxy*>> justProxies;
+	std::transform(
+		std::begin(_attributeUpdaters),
+		std::end(_attributeUpdaters),
+		std::back_inserter(justProxies),
+		[=](std::vector<OneAttributeUpdater> updaters) -> std::vector<CharacterAttributeView::UpdateProxy*> {
+            std::vector<CharacterAttributeView::UpdateProxy *> result;
+			std::transform(
+				std::begin(updaters),
+				std::end(updaters),
+				std::back_inserter(result),
+				[=](OneAttributeUpdater updater) -> CharacterAttributeView::UpdateProxy* { 
+					return updater.characterAttributeProxy(); 
+				}
+			);
+			return result;
+		}
+	);
+
+	_managedView->rebuildWithProxies(justProxies);
 }
 
 void CharacterStatsManager::refreshCharacterStats() {
@@ -44,32 +95,24 @@ void CharacterStatsManager::refreshCharacterStats() {
 	});
 }
 
-void CharacterStatsManager::refreshCharacterStats(AttributeIncreaseHandler handler) {
-	std::vector<std::vector<Model>> models;
-	auto generators = entriesGenerators();
+void CharacterStatsManager::refreshCharacterStats(AttributeIncreaseHandler increaseAttribFn) {
+	_managedView->updateAvailableStatPointsCount(_mainUser->currentStatPoints());
 
-	std::transform(
-		std::begin(generators),
-		std::end(generators),
-		std::back_inserter(models),
-		[=](std::vector<ModelCreate> genFnArray) -> std::vector<Model> {
-			std::vector<Model> currentModels;
-			std::transform(
-				std::begin(genFnArray),
-				std::end(genFnArray),
-				std::back_inserter(currentModels),
-				[=](ModelCreate genFn) {
-					return genFn(_mainUser, handler);
-				}
-			);
-			return currentModels;
+	for(auto& updateList: _attributeUpdaters) {
+		for(auto& attributeUpdater: updateList) {
+			attributeUpdater.refresh(_mainUser, increaseAttribFn);
 		}
-	);
-
-	_managedView->rebuildWithModels(models, _mainUser->currentStatPoints());
+	}
 }
 
-const std::vector<std::vector<ModelCreate>>& entriesGenerators() {
+using Attr = CharacterStatsManager::IncreasedAttribute;
+using IncreaseFn = CharacterStatsManager::AttributeIncreaseHandler;
+
+std::vector<std::vector<CharacterStatsManager::ModelCreate>> CharacterStatsManager::_entriesGenerators;
+
+const std::vector<
+	std::vector<CharacterStatsManager::ModelCreate>
+>& CharacterStatsManager::entriesGenerators() {
 	if (!_entriesGenerators.empty()) { return _entriesGenerators; }
 
 	auto putIncreaseFnIfStatPoints = [=](CMainUser* user, std::function<void()> fn) -> std::function<void()> {

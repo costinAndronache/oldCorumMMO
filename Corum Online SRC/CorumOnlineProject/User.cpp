@@ -190,6 +190,8 @@ DWORD			CMainUser::currentSkillPoints() const {
 void			CMainUser::updateCurrentSkillPoints(DWORD skillPoints) {
 	const auto oldValue = m_dwPointSkill;
 	m_dwPointSkill = skillPoints;
+	if (oldValue == skillPoints) { return; }
+
 	listenersUpdate(_updateListeners, [this, oldValue, skillPoints](CMainUserUpdateInterestedSharedRef listener) {
 		listener->updatedSkillPoints(this, oldValue, skillPoints);
 	});
@@ -1921,11 +1923,14 @@ void CMainUser::WeightProcess(BOOL bChk, WORD wWeight)
 	}
 }
 
-void CMainUser::initializeSkillLevelsFrom(const BYTE skillLevels[MAX_SKILL]) {
+void CMainUser::initializeSkillLevelsFrom(const BYTE input[MAX_SKILL]) {
+	bool updated = false;
 	for (int i = 0; i < MAX_SKILL; i++) {
-		_skillLevel[i] = skillLevels[i];
+		if (_skillLevel[i] != input[i]) { updated = true; }
+		_skillLevel[i] = input[i];
 	}
 
+	if (!updated) { return; }
 	listenersUpdate(_updateListeners, [this](CMainUserUpdateInterestedSharedRef ref) {
 		ref->updatedSkills(this);
 	});

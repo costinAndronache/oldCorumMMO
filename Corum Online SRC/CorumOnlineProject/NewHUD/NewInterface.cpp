@@ -91,12 +91,12 @@ Interface::Interface(
 
 	handlers.leftSkillHandler = [=]() {
 		_skillSelectionView->switchToActiveSelection(NewSkillSelectionView::ActiveSkillSelection::leftSkills);
-		_soundLibrary->playWindowOpen();
+		showWindow(_skillSelectionView);
 	};
 
 	handlers.rightSkillHandler = [=]() {
 		_skillSelectionView->switchToActiveSelection(NewSkillSelectionView::ActiveSkillSelection::rightSkills);
-		_soundLibrary->playWindowOpen();
+		showWindow(_skillSelectionView);
 	};
 
 	_leftHUD->setEventHandlers(handlers);
@@ -112,19 +112,19 @@ Interface::Interface(
 		[=](BYTE leftSkillKind) {
 			_mainUser->SetSkillChangeLR(leftSkillKind, 0);
 			_skillSelectionView->switchToActiveSelection(NewSkillSelectionView::ActiveSkillSelection::none);
-			_soundLibrary->playWindowClose();
+			hideWindow(_skillSelectionView);
 		},
 		[=](BYTE rightSkillKind) {
 			_mainUser->SetSkillChangeLR(rightSkillKind, 1);
 			_skillSelectionView->switchToActiveSelection(NewSkillSelectionView::ActiveSkillSelection::none);
-			_soundLibrary->playWindowClose();
+			hideWindow(_skillSelectionView);
 		},
 		[=](BYTE guardianSkillKind) {
 		// not yet
-		_skillSelectionView->switchToActiveSelection(NewSkillSelectionView::ActiveSkillSelection::none);
-		_soundLibrary->playWindowClose();
-	},
-		});
+			_skillSelectionView->switchToActiveSelection(NewSkillSelectionView::ActiveSkillSelection::none);
+			hideWindow(_skillSelectionView);
+		},
+	});
 
 	//
 
@@ -184,7 +184,7 @@ Interface::Interface(
 	});
 
 	_statsView->onClose([=]() {
-		_statsView->setHidden(true);
+		hideWindow(_statsView);
 	});
 	_statsView->setHidden(true);
 
@@ -225,17 +225,20 @@ Interface::Interface(
 
 void Interface::toggleWindow(Renderable* window) {
 	if (window->getHidden()) {
-		_soundLibrary->playWindowOpen();
+		showWindow(window);
 	} else {
-		_soundLibrary->playWindowClose();
+		hideWindow(window);
 	}
-
-	window->toggleHiddenState();
 }
 
 void Interface::hideWindow(Renderable* window) {
 	_soundLibrary->playWindowClose();
 	window->setHidden(true);
+}
+
+void Interface::showWindow(Renderable* window) {
+	_soundLibrary->playWindowOpen();
+	window->setHidden(false);
 }
 
 #pragma region Internals

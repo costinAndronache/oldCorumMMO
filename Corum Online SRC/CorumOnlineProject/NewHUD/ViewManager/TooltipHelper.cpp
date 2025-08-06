@@ -241,6 +241,13 @@ std::vector<DynamicInfoBox::InfoLine> TooltipHelper::tooltipForSkill(BYTE skillK
 		}
 	}
 
+	char coolPointRequirement[100] = { 0 };
+	snprintf(coolPointRequirement, 99, 
+		"REQUIRED COOL POINTS: %.1f", millisecondsToSeconds(pEffect->dwCoolTimeMilliseconds)
+	);
+
+	result.push_back({"", gray});
+	result.push_back({ coolPointRequirement, Color::yellow });
 	return result;
 }
 

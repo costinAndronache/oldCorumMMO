@@ -6837,14 +6837,12 @@ void CmdSkillLevelUp( DWORD dwConnectionIndex, char* pMsg, DWORD dwLength )
 		BYTE bSkillMastery = g_pEffectLayer->GetSkillMasteryKind((BYTE)pPacket->nSkillIndex);
 		Effect* pEffectTar	= g_pEffectLayer->GetEffectInfo(bSkillMastery);
 
-#ifndef __SKILL_MASTERY_ENABLE
-	if (bSkillMastery == pEffectUp->skillKind)
-		return;
-#endif
+		if (bSkillMastery == pEffectUp->skillKind) { return; }
+
 		if(pEffectUp->dwMinMastery <=(DWORD)pEffectTar->GetMaxMastery(pUser->GetLevel(), pUser->m_pwSkillLevel[bSkillMastery], pUser->GetClass()))
 		{
 			
-			if(pUser->m_pwSkillLevel[pPacket->nSkillIndex]<((bSkillMastery == pPacket->nSkillIndex)?255:25))
+			if(pUser->m_pwSkillLevel[pPacket->nSkillIndex] < MAX_SKILL_LEVEL_MANUAL_INCREASE)
 			{
 				pUser->m_wPointSkill	-= 1;
 				pUser->m_pwSkillLevel[pPacket->nSkillIndex] += 1;

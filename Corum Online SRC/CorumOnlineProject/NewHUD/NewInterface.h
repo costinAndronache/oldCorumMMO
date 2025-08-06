@@ -82,6 +82,7 @@ namespace NewInterface {
 
 		void toggleWindow(Renderable*);
 		void hideWindow(Renderable*);
+		void showWindow(Renderable*);
 	};
 }
 

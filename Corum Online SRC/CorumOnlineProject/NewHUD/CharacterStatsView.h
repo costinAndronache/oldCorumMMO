@@ -5,7 +5,6 @@
 #include "../NewUI/PagedContainer.h"
 
 namespace NewInterface {
-
 	class CharacterAttributeView : public CustomUI::Renderable {
 	public:
 		struct Model {
@@ -13,9 +12,21 @@ namespace NewInterface {
 			std::function<void()> increaseAction;
 		};
 
-		CharacterAttributeView(CustomUI::Rect frameInParent, Model model);
+		class UpdateProxy {
+		public:
+			friend class CharacterAttributeView;
+			UpdateProxy(): _update(nullptr) { }
+
+			void update(Model model) { if(_update) { _update(model); }}
+
+        private:
+			std::function<void(Model model)> _update;
+		};
+
+		CharacterAttributeView(CustomUI::Rect frameInParent, UpdateProxy *updateProxy);
 
 	private:
+		UpdateProxy* _updateProxy;
 		CustomUI::SingleLineLabel* _nameLabel;
 		CustomUI::SingleLineLabel* _valueLabel;
 		CustomUI::Button* _increaseButton;
@@ -23,14 +34,12 @@ namespace NewInterface {
 
 	class CharacterStatsView: public CustomUI::Renderable {
 	public:
-		using Model = CharacterAttributeView::Model;
+		using UpdateProxy = CharacterAttributeView::UpdateProxy;
 		static float appropriateSizeForElementsCountOnPage(int count);
 		CharacterStatsView(CustomUI::Rect frameInParent);
 
-		void rebuildWithModels(
-			const std::vector< std::vector<Model> >& pageModels,
-			int availableStatPoints
-		);
+		void rebuildWithProxies( const std::vector< std::vector<UpdateProxy*> >& pageModels);
+		void updateAvailableStatPointsCount(int availableStatPoints);
 		void onClose(std::function<void()> handler);
 
 	private:
