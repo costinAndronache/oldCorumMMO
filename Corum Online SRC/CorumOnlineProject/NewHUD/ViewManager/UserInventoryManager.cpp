@@ -7,7 +7,8 @@ UserInventoryManager::UserInventoryManager(
 	GroupedItemInventoryView* userInventoryView, 
 	ItemUsageManager* itemUsageManager,
 	TooltipLayer* toolTipLayer,
-	TooltipHelper* toolTipHelper
+	TooltipHelper* toolTipHelper,
+	SoundLibrary* soundLibrary
 ) {
 	_managedInventoryView = userInventoryView;
 	_itemUsageManager = itemUsageManager;
@@ -15,9 +16,14 @@ UserInventoryManager::UserInventoryManager(
 
 	_toolTipHelper = toolTipHelper;
 	_toolTipLayer = toolTipLayer;
+	_soundLibrary = soundLibrary;
 
 	_smallItemsTooltipManager = nullptr;
 	_largeItemsTooltipManager = nullptr;
+
+	_managedInventoryView->onActiveTabSwitch([=](auto){
+		_soundLibrary->playButtonClick();
+	});
 }
 
 void UserInventoryManager::resetIndexOnCurrentDragNDropItem() {

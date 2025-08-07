@@ -6,6 +6,7 @@
 #include "../NewUI/RadioButtonGroup.h"
 #include "../NewUI/BorderRenderable.h"
 #include "../NewUI/Hoverable.h"
+#include "DisplacementHandleRenderable.h"
 
 namespace NewInterface {
 	class GenericSkillView : public CustomUI::Renderable {
@@ -77,6 +78,7 @@ namespace NewInterface {
 			SkillSheetView::Model sorceressSkills;
 			int availableSkillPoints;
 		};
+		using ClassSheetSwitchHandler = std::function<void(CLASS_TYPE to)>;
 
 		static CustomUI::Size appropriateSizeForMaxNumberOfSkillsPerList(int maxNumOfSkills);
 		
@@ -84,13 +86,16 @@ namespace NewInterface {
 		
 		void onClose(CustomUI::Button::EventHandler handler);
 		void refreshWith(Model model);
+		void onClassSheetSwitch(ClassSheetSwitchHandler handler) { _classSwitchHandler = handler;}
 
+		DisplacementHandleRenderable* displacementHandle() { return _displacementHandle;}
 	private:
+		DisplacementHandleRenderable* _displacementHandle;
 		CustomUI::SingleLineLabel* _titleLabel;
 		CustomUI::Button *_closeButton;
 		CustomUI::RadioButtonGroup* _radioGroup;
 		std::vector<SkillSheetView*> _skillSheetViews;
-
+		ClassSheetSwitchHandler _classSwitchHandler;
 		void setVisibleSkillSheetAtIndex(int index);
 	};
 }

@@ -86,6 +86,11 @@ CharacterStatsView::CharacterStatsView(CustomUI::Rect frameInParent) {
 		return new Button(NewHUDResources::xClose, closeBtnFrame);
 	});
 
+	auto displacementHandleFrame = _bounds.withSize(closeBtnFrame.size);
+	_displacementHandle = registerChildRenderable<DisplacementHandleRenderable>([=](){
+		return new DisplacementHandleRenderable(displacementHandleFrame);
+	});
+
 	auto containerFrame = _bounds
 		.withOriginOffsetBy({ 0, (int)closeBtnFrame.size.height })
 		.withHeightOffset(-closeBtnFrame.size.height);

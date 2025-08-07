@@ -44,6 +44,12 @@ namespace CustomUI {
 	};
 
 	typedef POINT Point;
+	inline Point operator+(const Point& lhs, const Point& rhs) {
+		return {
+			lhs.x + rhs.x, lhs.y + rhs.y
+		};
+	}
+
 	struct Rect {
 		Point origin;
 		Size size;

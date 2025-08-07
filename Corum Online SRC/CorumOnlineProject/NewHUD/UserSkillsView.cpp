@@ -229,6 +229,8 @@ Size UserSkillsView::appropriateSizeForMaxNumberOfSkillsPerList(int maxNumOfSkil
 
 UserSkillsView::UserSkillsView(CustomUI::Rect frameInParent) {
 	_frameInParent = frameInParent;
+	_classSwitchHandler = nullptr;
+
 	updateBackground(NewHUDResources::genericBackgroundSprite);
 
 	auto labelFrame = bounds()
@@ -250,7 +252,10 @@ UserSkillsView::UserSkillsView(CustomUI::Rect frameInParent) {
 		return new Button(NewHUDResources::xClose, closeBtnFrame);
 	});
 
-
+	auto displacementHandleFrame = Rect{{0, 0}, closeBtnFrame.size};
+	_displacementHandle = registerChildRenderable<DisplacementHandleRenderable>([=](){
+		return new DisplacementHandleRenderable(displacementHandleFrame);
+	});
 
 	using LabeledButtonModel = RadioButtonGroup::LabeledButtonModel;
 	std::vector<LabeledButtonModel> buttonModels = {
@@ -293,6 +298,9 @@ UserSkillsView::UserSkillsView(CustomUI::Rect frameInParent) {
 	setVisibleSkillSheetAtIndex(0);
 
 	_radioGroup->onActiveIndexUpdate([=](unsigned int index) {
+		if(_classSwitchHandler) {
+			_classSwitchHandler(CLASS_TYPE(index + 1));
+		}
 		setVisibleSkillSheetAtIndex(index);
 	});
 }

@@ -7,8 +7,8 @@ namespace NewInterface {
 	class GroupedItemInventoryView: public CustomUI::Renderable {
 	public:
 		using Handlers = GenericItemsContainerView::Handlers;
-
 		enum class Tab { smallItems, largeItems};
+		using ActiveTabSwitchHandler = std::function<void(Tab)>;
 
 		static CustomUI::Size preferredSize();
 		GroupedItemInventoryView(CustomUI::Rect frameInParent, CItemResourceHash* resourceHash);
@@ -22,7 +22,7 @@ namespace NewInterface {
 
 		void setActiveTab(Tab tab);
 		Tab activeTab() const { return _activeTab; }
-
+		void onActiveTabSwitch(ActiveTabSwitchHandler handler) { _tabSwitchHandler = handler; }
 		struct IndexResult { int index; Tab tab; } itemIndexForGlobalPoint(CustomUI::Point p); // -1 on not found
 
 		void setHiddenStateForItemAtIndex(int index, Tab tab, bool isHidden);
@@ -30,7 +30,7 @@ namespace NewInterface {
 		CustomUI::RadioButtonGroup* _radioButtonGroup;
 		ItemInventoryView *_smallItemsInventory, *_largeItemsInventory;
 		Tab _activeTab;
-
+		ActiveTabSwitchHandler _tabSwitchHandler;
 		ItemInventoryView* inventoryViewFor(Tab);
 	};
 }

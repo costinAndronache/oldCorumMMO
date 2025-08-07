@@ -23,7 +23,7 @@ void Hoverable::onHover(
 	};
 }
 
-void Hoverable::onMouseStateChange(MouseState newState, MouseState oldState) {
+void Hoverable::onMouseStateChange(MouseState newState, MouseState oldState, Point) {
 	if (_onMouseStateChange) {
 		_onMouseStateChange(newState);
 	}

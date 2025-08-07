@@ -3,6 +3,7 @@
 #include "../NewUI/Button.h"
 #include "../NewUI/MatrixContainer.h"
 #include "../NewUI/PagedContainer.h"
+#include "DisplacementHandleRenderable.h"
 
 namespace NewInterface {
 	class CharacterAttributeView : public CustomUI::Renderable {
@@ -42,7 +43,9 @@ namespace NewInterface {
 		void updateAvailableStatPointsCount(int availableStatPoints);
 		void onClose(std::function<void()> handler);
 
+		DisplacementHandleRenderable* displacementHandle() { return _displacementHandle;}
 	private:
+		DisplacementHandleRenderable* _displacementHandle;
 		CustomUI::SingleLineLabel* _titleLabel;
 		CustomUI::Button* _closeButton;
 		CustomUI::PagedContainer* _container;

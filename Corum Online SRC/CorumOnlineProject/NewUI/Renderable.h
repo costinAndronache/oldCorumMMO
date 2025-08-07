@@ -53,7 +53,7 @@ namespace CustomUI {
 
 		MouseState _currentMouseState;
 
-		virtual void onMouseStateChange(MouseState newState, MouseState oldState) {}
+		virtual void onMouseStateChange(MouseState newState, MouseState oldState, Point atMouseGlobalCoords) {}
 		virtual void onMouseMove(Point mouseGlobalOrigin) { }
 		virtual void processKeyUp(WPARAM wparam, LPARAM lparam) {}
 		virtual void processKeyDown(WPARAM wparam, LPARAM lparam) {}
@@ -77,7 +77,7 @@ namespace CustomUI {
 		virtual void handleRenderableHierarchyUpdateEvent();
 	private:
 		bool _isHidden;
-		void updateMouseState(MouseState newState);
+		void updateMouseState(MouseState newState, Point mouseGlobalCoords);
 		SpriteModel _backgroundSprite;
 
 		void updateParentTo(Renderable* parent); 

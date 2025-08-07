@@ -4100,6 +4100,7 @@
     <ClCompile Include="NewHelpers\SoundLibrary.cpp" />
     <ClCompile Include="NewHelpers\StatusPointManager.cpp" />
     <ClCompile Include="NewHUD\CharacterStatsView.cpp" />
+    <ClCompile Include="NewHUD\DisplacementHandleRenderable.cpp" />
     <ClCompile Include="NewHUD\DynamicInfoBox.cpp" />
     <ClCompile Include="NewHUD\TooltipLayer.cpp" />
     <ClCompile Include="NewHUD\UserInventoryView.cpp" />
@@ -6716,6 +6717,7 @@
     <ClInclude Include="NewHelpers\SoundLibrary.h" />
     <ClInclude Include="NewHelpers\StatusPointManager.h" />
     <ClInclude Include="NewHUD\CharacterStatsView.h" />
+    <ClInclude Include="NewHUD\DisplacementHandleRenderable.h" />
     <ClInclude Include="NewHUD\DynamicInfoBox.h" />
     <ClInclude Include="NewHUD\TooltipLayer.h" />
     <ClInclude Include="NewHUD\UserInventoryView.h" />

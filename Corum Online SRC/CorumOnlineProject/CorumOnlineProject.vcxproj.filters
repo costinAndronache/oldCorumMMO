@@ -924,6 +924,9 @@
     <ClCompile Include="NewUI\Hoverable.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="NewHUD\DisplacementHandleRenderable.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MouseLib.h">
@@ -1749,6 +1752,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="NewUI\Hoverable.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="NewHUD\DisplacementHandleRenderable.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

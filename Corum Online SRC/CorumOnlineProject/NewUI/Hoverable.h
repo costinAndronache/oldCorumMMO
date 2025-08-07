@@ -15,7 +15,8 @@ namespace CustomUI {
 	protected:
 		void onMouseStateChange(
 			CustomUI::Renderable::MouseState newState,
-			CustomUI::Renderable::MouseState oldState
+			CustomUI::Renderable::MouseState oldState,
+			CustomUI::Point
 		) override;
 		void onMouseMove(CustomUI::Point mouseGlobalOrigin) override;
 	private:

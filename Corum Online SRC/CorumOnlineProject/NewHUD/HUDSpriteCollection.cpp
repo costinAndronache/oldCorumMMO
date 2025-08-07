@@ -15,6 +15,7 @@ SpriteModel NewHUDResources::genericBackgroundSprite;
 SpriteModel NewHUDResources::borderedBlackBackgroundSolid;
 SpriteModel NewHUDResources::borderedBlackBackgroundFaded;
 SpriteModel NewHUDResources::blueDot;
+SpriteModel NewHUDResources::displacementIcon;
 BorderRenderable::BorderLineSprites NewHUDResources::goldBorder;
 
 CustomUI::Button::Sprites
@@ -144,6 +145,9 @@ static void initNewHUDElements(I4DyuchiGXRenderer* r) {
 
 	char* menu4 = GetFile("menu_4.tif", DATA_TYPE_UI);
 	NewHUDResources::blueDot = from(r, menu4, { {1, 96}, {2, 2} });
+
+	char* menu5 = GetFile("menu_5.tga", DATA_TYPE_UI);
+	NewHUDResources::displacementIcon = from(r, menu5, {{225, 163}, {30, 31}});
 }
 
 static void initMenu1Elements(I4DyuchiGXRenderer* renderer) {

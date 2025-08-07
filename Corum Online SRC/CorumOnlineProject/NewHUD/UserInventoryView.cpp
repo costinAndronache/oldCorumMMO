@@ -38,6 +38,12 @@ NewItemsWindow::NewItemsWindow(CustomUI::Point originInParent, CItemResourceHash
 
 	const auto _bounds = bounds();
 
+	auto displacementHandleFrame = Rect{{0, 0}, btnSize};
+
+	_displacementHandle = registerChildRenderable<DisplacementHandleRenderable>([=](){
+		return new DisplacementHandleRenderable(displacementHandleFrame);
+	});
+
 	auto labelFrame = _bounds.withHeight(btnSize.height);
 	_titleLabel = registerChildRenderable<SingleLineLabel>([=]() {
 		return new SingleLineLabel(
@@ -46,6 +52,7 @@ NewItemsWindow::NewItemsWindow(CustomUI::Point originInParent, CItemResourceHash
 			"INVENTORY"
 		);
 	});
+	_titleLabel->updateRenderingModeToCentered();
 
 	const auto btnFrame = _bounds
 		.fromMaxXOrigin(-btnSize.width)

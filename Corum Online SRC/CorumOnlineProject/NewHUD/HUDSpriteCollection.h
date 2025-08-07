@@ -19,6 +19,7 @@ struct NewHUDResources {
 	static CUISpriteModel borderedBlackBackgroundSolid;
 	static CUISpriteModel borderedBlackBackgroundFaded;
 	static CUISpriteModel blueDot;
+	static CUISpriteModel displacementIcon;
 	static CustomUI::BorderRenderable::BorderLineSprites goldBorder;
 
 	static CustomUI::Button::Sprites

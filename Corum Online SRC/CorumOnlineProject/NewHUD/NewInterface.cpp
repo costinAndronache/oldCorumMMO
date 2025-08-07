@@ -153,7 +153,8 @@ Interface::Interface(
 		_newItemsWindow->groupedInventoryView(),
 		ItemUsageManager::sharedInstance(),
 		_tooltipLayer,
-		tooltipHelper
+		tooltipHelper,
+		soundLibrary
 	);
 	_equipItemsManager = new EquipItemsManager(
 		_newItemsWindow->equipItemsView(),
@@ -221,6 +222,18 @@ Interface::Interface(
 
 	_userSkillsManager->refreshUserSkillsView();
 	updateZIndexOffsetForce(1000);
+
+	setupDisplacement(_newItemsWindow->displacementHandle(), _newItemsWindow);
+	setupDisplacement(_statsView->displacementHandle(), _statsView);
+	setupDisplacement(_userSkillsView->displacementHandle(), _userSkillsView);
+}
+
+void Interface::setupDisplacement(DisplacementHandleRenderable *handle, Renderable *forWindow) {
+  handle->onDisplacement([=](auto dx, auto dy) {
+	  forWindow->updateOriginInParent(
+		  forWindow->frameInParent().origin + Point{dx, dy}
+	  );
+  });
 }
 
 void Interface::toggleWindow(Renderable* window) {

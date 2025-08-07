@@ -3,6 +3,7 @@
 #include "../../NewUI/DragNDropSystem.h"
 #include "../../NewHelpers/ItemUsageManager.h"
 #include "TooltipManager.h"
+#include "../../NewHelpers/SoundLibrary.h"
 
 namespace NewInterface {
 	class UserInventoryManager:
@@ -13,7 +14,8 @@ namespace NewInterface {
 			GroupedItemInventoryView* userInventoryView, 
 			ItemUsageManager* itemUsageManager,
 			TooltipLayer* toolTipLayer,
-			TooltipHelper* toolTipHelper
+			TooltipHelper* toolTipHelper,
+			SoundLibrary* soundLibrary
 		);
 
 		void rebuildInventoryViewWith(
@@ -40,6 +42,7 @@ namespace NewInterface {
 		TooltipHelper* _toolTipHelper;
 		TooltipManager* _smallItemsTooltipManager;
 		TooltipManager* _largeItemsTooltipManager;
+		SoundLibrary* _soundLibrary;
 	};
 }
 

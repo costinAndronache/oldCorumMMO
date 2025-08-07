@@ -83,6 +83,10 @@ UserSkillsManager::UserSkillsManager(
 	_tooltipHelper = tooltipHelper;
 	_tooltipLayer = tooltipLayer;
 	_tooltipManager = nullptr;
+
+	_managedView->onClassSheetSwitch([=](auto) {
+		_soundLibrary->playButtonClick();
+	});
 }
 
 void UserSkillsManager::refreshUserSkillsView() {
