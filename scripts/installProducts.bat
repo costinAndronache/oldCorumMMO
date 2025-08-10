@@ -71,6 +71,8 @@ call :CENTRALIZED_TO_FILEPACK SS3DFileStorage.dll
 call :CENTRALIZED_TO_FILEPACK 4DyuchiFilePack.exe
 call :CENTRALIZED_TO_FILEPACK 4DyuchiFilePack.pdb
 
+call :CENTRALIZED_TO_CORUMONLINEPROJECT CorumPreferences.lib
+call :CENTRALIZED_TO_CORUMONLINEPROJECT CorumPreferences.pdb
 
 echo "copying done"
 pause
