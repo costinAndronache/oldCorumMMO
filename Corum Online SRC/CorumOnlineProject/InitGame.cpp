@@ -63,12 +63,25 @@
 extern int windowWidth();
 extern int windowHeight();
 
+using namespace CorumPreferences;
+std::shared_ptr<CorumPreferences::Preferences> corumPreferences() {
+	static std::shared_ptr<CorumPreferences::Preferences> _corumPreferences(nullptr);
+	if(!_corumPreferences) {
+		auto instance = Preferences::buildFromFile(Preferences::defaultFileName()); 
+		if(!instance) { instance = new Preferences();}
+
+		_corumPreferences = std::shared_ptr<Preferences>(instance);
+	}
+
+	return _corumPreferences;
+}
+
 int windowWidth() {
-	return 1280;
+	return corumPreferences()->resolution().width;
 }
 
 int windowHeight() {
-	return 768;
+	return corumPreferences()->resolution().height;
 }
 
 std::vector<ITEM*> selectedItemsForTooltipRendering;

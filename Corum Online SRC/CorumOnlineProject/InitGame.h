@@ -10,6 +10,8 @@
 #include "./../SS3D_0719/4dyuchigx/4DyuchiGXGFunc/global.h"
 #endif
 
+
+#include "../CorumPreferences/CorumPreferences.h"
 #include "LogWnd.h"
 #include "HashTable.h"
 #include "MessagePool.h"
@@ -264,6 +266,8 @@ extern ChrInfoLayer*				g_pChrInfoEffect;
 
 extern CItemMoveManager				g_ItemMoveManager;
 extern CItemUsedManager				g_ItemUsedManager;
+
+extern std::shared_ptr<CorumPreferences::Preferences> corumPreferences(); 
 
 extern void	(*OnKeyDown[ MAX_UPDATE_GAME ])		(WPARAM wParam, LPARAM lParam);
 extern void	(*OnKeyUp[ MAX_UPDATE_GAME ])		(WPARAM wParam, LPARAM lParam);

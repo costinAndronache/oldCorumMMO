@@ -24,9 +24,12 @@ Preferences::Preferences() {
 Preferences Preferences::defaults() { return Preferences(); }
 
 Preferences* Preferences::buildFromData(const Data& data) {
-	if(!json::accept(data)) { return nullptr; }
+	auto jsonString = std::string(std::begin(data), std::end(data));
 
-	json fromJSON = json::from_bson(data);
+	json fromJSON = json::parse(jsonString, nullptr, false);
+
+	if(fromJSON.is_discarded()) { return nullptr;}
+
 	auto* result = new Preferences();
 	auto def = defaults();
 
@@ -60,11 +63,12 @@ Preferences* Preferences::buildFromFile(const char* filePath) {
 Data Preferences::serialize() const {
 	json serialized {
 		{ "windowMode", _windowMode }, 
-		{ "width", _resolution.width }, 
-		{ "height", _resolution.height}
+		{ "resWidth", _resolution.width }, 
+		{ "resHeight", _resolution.height}
 	};
 
-	return json::to_bson(serialized);
+	auto toString = to_string(serialized);
+	return Data(std::begin(toString), std::end(toString));
 }
 
 void Preferences::serializeToFile(const char* filePath) const {

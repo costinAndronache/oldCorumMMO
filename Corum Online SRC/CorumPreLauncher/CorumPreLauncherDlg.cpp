@@ -35,6 +35,8 @@ BEGIN_MESSAGE_MAP(CCorumPreLauncherDlg, CDialogEx)
 	ON_WM_PAINT()
 	ON_WM_QUERYDRAGICON()
         ON_BN_CLICKED(IDC_BUTTON1, &CCorumPreLauncherDlg::OnBnClickedButton1)
+        ON_BN_CLICKED(IDC_EXITBUTTON,
+                      &CCorumPreLauncherDlg::OnBnClickedExitbutton)
         END_MESSAGE_MAP()
 
 
@@ -154,4 +156,9 @@ std::vector<CCorumPreLauncherDlg::ResolutionsListItemModel> CCorumPreLauncherDlg
 
 void CCorumPreLauncherDlg::OnBnClickedButton1() {
 	storeCurrentPreferences();
+	ShellExecute(NULL, L"open", L"CorumOnlineResult.exe", NULL, NULL, 0);
+}
+
+void CCorumPreLauncherDlg::OnBnClickedExitbutton() {
+  PostQuitMessage(0);
 }

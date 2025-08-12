@@ -47,4 +47,7 @@ protected:
 		void setupFromStoredPreferences();
 		void storeCurrentPreferences();
 		static std::vector<ResolutionsListItemModel> resolutionsListModels();
+
+              public:
+                afx_msg void OnBnClickedExitbutton();
 };

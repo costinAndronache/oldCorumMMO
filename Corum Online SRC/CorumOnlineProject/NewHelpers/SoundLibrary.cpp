@@ -1,5 +1,5 @@
 #include "SoundLibrary.h"
-#include "../../DungeonProcess_Sound.h"
+#include "../DungeonProcess_Sound.h"
 
 SoundLibrary* SoundLibrary::sharedInstance() {
 	static SoundLibrary* shared = nullptr;
