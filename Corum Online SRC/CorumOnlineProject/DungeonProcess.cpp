@@ -115,8 +115,7 @@ char globalDebugLine[255];
 static int _renderFPS = 60;
 std::shared_ptr<AppliedSkillsIconsView> _appliedSkillsIconsView(nullptr);
 std::shared_ptr<NewInterface::Interface> _newInterface(nullptr);
-
-static CustomUI::SpriteRenderable* _leftHudTest = nullptr;
+static NewInterface::TooltipHelper* _tooltipHelper;
 
 DWORD						g_dwMileHandleRefs	= 0;
 LPGlobalVariable_Dungeon	g_pGVDungeon		= NULL;
@@ -213,13 +212,26 @@ void cancelTooltipRenderingForAllDropped() {
 BOOL InitGameDungeon() {
 	ItemPickupFilteringSystem::sharedInstance()->setViewActive(false);
 	_appliedSkillsIconsView = std::make_shared<AppliedSkillsIconsView>();
+
+	_tooltipHelper = new NewInterface::TooltipHelper(
+		g_Message,
+		g_pMainPlayer,
+		g_pItemOptionHash,
+		g_pEffectLayer,
+		g_pItemAttrLayer,
+		g_pDungeonTable,
+		g_pSetItemInfoHash,
+		g_pItemTableHash_get(),
+		g_sSkillInfoDP
+	);
 	_newInterface = std::make_shared<NewInterface::Interface>(
 		CustomUI::Size{ (float)windowWidth(), (float)windowHeight()},
 		g_pMainPlayer,
 		&g_sSkillListManager,
 		g_pItemResourceHash,
 		SoundLibrary::sharedInstance(),
-		SharedNetwork::sharedInstance()
+		SharedNetwork::sharedInstance(),
+		_tooltipHelper
 	);
 
 	CBankWnd::GetInstance()->Init();
@@ -6089,104 +6101,6 @@ void SetKey(int nKey)
 				}
 			}
 
-			// Belt //
-			if(	nKey==g_sKeyConfig.snKey[__KEY_ITEM_BELT1__] ||
-				nKey==g_sKeyConfig.snKey[__KEY_ITEM_BELT2__] ||
-				nKey==g_sKeyConfig.snKey[__KEY_ITEM_BELT3__] ||
-				nKey==g_sKeyConfig.snKey[__KEY_ITEM_BELT4__] ||
-				nKey==g_sKeyConfig.snKey[__KEY_ITEM_BELT5__] ||
-				nKey==g_sKeyConfig.snKey[__KEY_ITEM_BELT6__] ||
-				nKey==g_sKeyConfig.snKey[__KEY_ITEM_BELT7__] ||
-				nKey==g_sKeyConfig.snKey[__KEY_ITEM_BELT8__])
-			{
-				if(g_pMainPlayer->GetStatus()!=UNIT_STATUS_DEAD)
-				{
-					if(g_pMainPlayer->GetStatus()!=UNIT_STATUS_PORTAL_MOVING)
-					{
-						if(!g_pGVDungeon->bChatMode)
-						{	
-							if (g_pMainPlayer->m_bMatching)
-							{
-								//"대전중에 벨트 아이템을 사용하지 못합니다."
-								DisplayMessageAdd(g_Message[ETC_MESSAGE520].szMessage, 0xFFFF0000 );
-								return;
-							}
-
-							BYTE bKeyItemBelt = 0;
-
-							if(nKey==g_sKeyConfig.snKey[__KEY_ITEM_BELT1__])
-								bKeyItemBelt = __KEY_ITEM_BELT1__;
-							else if(nKey==g_sKeyConfig.snKey[__KEY_ITEM_BELT2__])
-								bKeyItemBelt = __KEY_ITEM_BELT2__;
-							else if(nKey==g_sKeyConfig.snKey[__KEY_ITEM_BELT3__])
-								bKeyItemBelt = __KEY_ITEM_BELT3__;
-							else if(nKey==g_sKeyConfig.snKey[__KEY_ITEM_BELT4__])
-								bKeyItemBelt = __KEY_ITEM_BELT4__;
-							else if(nKey==g_sKeyConfig.snKey[__KEY_ITEM_BELT5__])
-								bKeyItemBelt = __KEY_ITEM_BELT5__;
-							else if(nKey==g_sKeyConfig.snKey[__KEY_ITEM_BELT6__])
-								bKeyItemBelt = __KEY_ITEM_BELT6__;						
-							else if(nKey==g_sKeyConfig.snKey[__KEY_ITEM_BELT7__])
-								bKeyItemBelt = __KEY_ITEM_BELT7__;								
-							else if(nKey==g_sKeyConfig.snKey[__KEY_ITEM_BELT8__])
-								bKeyItemBelt = __KEY_ITEM_BELT8__;
-
-							BYTE byZipCode = BYTE(bKeyItemBelt-__KEY_ITEM_BELT1__);
-
-							BOOL bChk = FALSE;
-							
-							//if(!bChk)
-							//	bChk = ItemUsedSupplies(&g_pMainPlayer->m_pBelt[byZipCode], byZipCode, ZODIAC_USE_TYPE_BELT);
-							//if(!bChk)
-							//	bChk = ItemUsedConsumable(&g_pMainPlayer->m_pBelt[byZipCode], byZipCode, ZODIAC_USE_TYPE_BELT);
-							//if(!bChk)
-							//	bChk = ItemUsedZodiac(&g_pMainPlayer->m_pBelt[byZipCode], byZipCode, ZODIAC_USE_TYPE_BELT);
-						}
-					}
-				}
-				else
-				{
-					// "포탈 이동 중에는 사용할 수 없습니다."
-					DisplayMessageAdd(g_Message[ETC_MESSAGE502].szMessage, 0xFFFF2CFF); 
-				}
-			}
-
-			if(nKey==g_sKeyConfig.snKey[__KEY_ITEM_GUARDIAN__])
-			{			
-				if(g_pMainPlayer->GetStatus()!=UNIT_STATUS_PORTAL_MOVING)
-				{
-					// 가디언 물약 사용할 때 //
-					if(CUserInterface::GetInstance()->m_bGuardian==TRUE)
-					{
-						int nVal = g_pMainPlayer->m_GuardianItem.m_wItemID/ITEM_DISTRIBUTE;
-
-						if(nVal==ITEM_SUPPLIES_INDEX)
-						{
-							CTDS_ITEM_PICKUP	ItemPickup;
-							ItemPickup.bInv			= 44;
-							ItemPickup.bSectionNum	= 1;
-							ItemPickup.i64ItemID	= 0;
-							ItemPickup.bZipCode		= 0;				
-							g_pNet->SendMsg((char*)&ItemPickup, ItemPickup.GetPacketSize(), SERVER_INDEX_ZONE);
-						}
-					}
-				}
-				else
-				{
-					// "포탈 이동 중에는 사용할 수 없습니다."
-					DisplayMessageAdd(g_Message[ETC_MESSAGE502].szMessage, 0xFFFF2CFF); 
-				}
-			}
-
-			if(nKey==g_sKeyConfig.snKey[__KEY_SKILL_OPEN__])
-			{	
-				if(!g_pGVDungeon->bChatMode)
-				{
-					pSkillWnd->SetActive(!pSkillWnd->GetActive());
-					pUserInterface->m_byOrderCheck = SKILL_WND;
-				}
-			}
-			
 			if(nKey==g_sKeyConfig.snKey[__KEY_ITEM__])
 			{	
 				std::set<DWORD> filterIDs = ItemPickupFilteringSystem::sharedInstance()->currentSelectedIDs();
@@ -6195,7 +6109,6 @@ void SetKey(int nKey)
 				{
 					CItemTradeShopWnd* pItemTradeShopWnd = CItemTradeShopWnd::GetInstance();
 
-					// 타이머 //
 					g_dwCurrTick = timeGetTime();
 
 					if((g_dwCurrTick-g_dwPrevTick)<1000)					
@@ -6276,60 +6189,42 @@ void SetKey(int nKey)
 					
 					if(bChk==FALSE)
 					{
-						// "아이템이 없습니다."
+						// "???????? ???????."
 						DisplayMessageAdd(g_Message[ETC_MESSAGE144].szMessage, 0xFFFFC309, CGameMenuWnd::GetInstance()->m_bSystemMsgFlag); 
 					}
 				}
 			}
-
-			if(nKey==g_sKeyConfig.snKey[__KEY_CHARACTER_OPEN__])
-			{				
-				if(!g_pGVDungeon->bChatMode)
+			if(nKey==g_sKeyConfig.snKey[__KEY_ITEM_GUARDIAN__])
+			{			
+				if(g_pMainPlayer->GetStatus()!=UNIT_STATUS_PORTAL_MOVING)
 				{
-					CCharWnd* pCharWnd = CCharWnd::GetInstance();		
-					
-					if(pCharWnd->GetActive()==FALSE)
-						pCharWnd->SetActive();
-					else					
-						pCharWnd->SetActive(FALSE);
-
-					pUserInterface->m_byOrderCheck = CHAR_WND;
-				}
-			}
-
-			// 가디언창 오픈
-			if(nKey==g_sKeyConfig.snKey[__KEY_GUARDIAN_OPEN__])
-			{				
-				if(!g_pGVDungeon->bChatMode)
-				{
-					CGuardianWnd* pGuardianWnd = CGuardianWnd::GetInstance();		
-					
-					if(pGuardianWnd->GetActive()==FALSE)
-						pGuardianWnd->SetActive();
-					else					
-						pGuardianWnd->SetActive(FALSE);
-
-					pUserInterface->m_byOrderCheck = GUARDIAN_WND;
-				}
-			}
-			
-			if(nKey==g_sKeyConfig.snKey[__KEY_OPTION_OPEN__])
-			{
-				if(!g_pGVDungeon->bChatMode)
-				{					
-					CGameMenuWnd* pGameMenuWnd = CGameMenuWnd::GetInstance();
-					
-					if(pGameMenuWnd->GetActive()==TRUE)
-						pGameMenuWnd->SetActive(FALSE);
-					else
+					// 가디언 물약 사용할 때 //
+					if(CUserInterface::GetInstance()->m_bGuardian==TRUE)
 					{
-						pGameMenuWnd->SetActive();
-						pGameMenuWnd->OpenWnd();
-						pUserInterface->m_byOrderCheck = GAMEMENU_WND;
+						int nVal = g_pMainPlayer->m_GuardianItem.m_wItemID/ITEM_DISTRIBUTE;
+
+						if(nVal==ITEM_SUPPLIES_INDEX)
+						{
+							CTDS_ITEM_PICKUP	ItemPickup;
+							ItemPickup.bInv			= 44;
+							ItemPickup.bSectionNum	= 1;
+							ItemPickup.i64ItemID	= 0;
+							ItemPickup.bZipCode		= 0;				
+							g_pNet->SendMsg((char*)&ItemPickup, ItemPickup.GetPacketSize(), SERVER_INDEX_ZONE);
+						}
 					}
 				}
-			}			
+				else
+				{
+					// "포탈 이동 중에는 사용할 수 없습니다."
+					DisplayMessageAdd(g_Message[ETC_MESSAGE502].szMessage, 0xFFFF2CFF); 
+				}
+			}
 
+			
+
+			// 가디언창 오픈
+			
 			if(nKey==g_sKeyConfig.snKey[__KEY_WEAPON_SWITCH__])
 			{
 				if(!g_pGVDungeon->bChatMode)
@@ -6349,13 +6244,10 @@ void SetKey(int nKey)
 						}
 						else
 						{					
-							CItemWnd* pItemWnd = CItemWnd::GetInstance();							
 
-							pItemWnd->m_dwCurTime = timeGetTime();
-							
-							if(pItemWnd->m_dwCurTime-pItemWnd->m_dwPrvTime>2000)
+							const auto timeSinceLastWeaponSwitch = 2001;
+							if(timeSinceLastWeaponSwitch > 2000)
 							{
-								pItemWnd->m_dwPrvTime = pItemWnd->m_dwCurTime;							
 
 								// SOUND_SYSTEM_WEAPONSWITCH
 								_PlaySound(0, SOUND_TYPE_SYSTEM, SOUND_SYSTEM_WEAPONSWITCH, g_v3InterfaceSoundPos, FALSE);
@@ -6379,47 +6271,6 @@ void SetKey(int nKey)
 				}
 			}
 			
-			if(nKey==g_sKeyConfig.snKey[__KEY_INVENTORY_OPEN__])
-			{
-				if (g_pMainPlayer->m_bMatching)
-					return;
-				
-				if(!g_pGVDungeon->bChatMode && g_pMainPlayer->GetStatus() != UNIT_STATUS_PORTAL_MOVING)
-				{						
-					CItemWnd* pItemWnd = CItemWnd::GetInstance();		
-
-					if(pItemWnd->GetActive()==FALSE)
-					{
-						pItemWnd->SetActive(!pItemWnd->GetActive());
-						pUserInterface->m_byOrderCheck = ITEM_WND;
-					}
-					else
-					{
-						if(pItemWnd->m_bItemKeyChk==FALSE)
-						{
-							if(pItemWnd->m_byItemChk==0)
-							{
-								pItemWnd->SetRender(SPR_OBJ_ITEM_CHK1, FALSE);
-								pItemWnd->SetRender(SPR_OBJ_ITEM_CHK2, TRUE);								
-								pItemWnd->m_byItemChk	= 1;											
-								_PlaySound(0, SOUND_TYPE_SYSTEM, SOUND_SYSTEM_BTNCLICK, g_v3InterfaceSoundPos, FALSE);
-							}
-							else
-							{
-								pItemWnd->SetRender(SPR_OBJ_ITEM_CHK1, TRUE);
-								pItemWnd->SetRender(SPR_OBJ_ITEM_CHK2, FALSE);								
-								pItemWnd->m_byItemChk	= 0;											
-								_PlaySound(0, SOUND_TYPE_SYSTEM, SOUND_SYSTEM_BTNCLICK, g_v3InterfaceSoundPos, FALSE);
-							}
-							pItemWnd->m_bItemKeyChk = TRUE;
-						}
-						else
-						{
-							pItemWnd->SetActive(FALSE);
-						}									
-					}
-				}
-			}
 			
 			if(nKey==g_sKeyConfig.snKey[__KEY_CHAT_CLAER__])
 				InitDungeonMessage();

@@ -16,14 +16,15 @@ BeltManager::BeltManager(
 void BeltManager::updateBeltWithItems(const std::vector<CItem>& items) {
 	_currentItems = items;
 
-	GenericItemsContainerView::HandlerItemClickRIGHT rightClickHandler = [=](CItem item, int index) {
+	using LongClickLEFT = GenericItemsContainerView::HandlerItemLongClickLEFT;
+	using ClickRIGHT = GenericItemsContainerView::HandlerItemClickRIGHT;
+
+	ClickRIGHT rightClickHandler = [=](CItem item, int index) {
 		auto result = _itemUsageManager->tryUseBeltItem(item, index);
 	};
-	_managedBeltView->updateWithItems(
-		items,
-		NewHUDResources::inventoryItemUnderlaySprite,
-	[=](CItem item, SpriteModel sprite, int index, Rect globalFrame) {
-		if (item.m_wItemID == 0) { return;  } // empty item 
+
+	LongClickLEFT longClickLEFT = [=](CItem item, SpriteModel sprite, int index, Rect globalFrame) {
+		if (item.m_wItemID == 0) { return; } // empty item 
 		if (!_handler) { return; }
 
 		_indexOnCurrentDragNDropItem = index;
@@ -31,9 +32,13 @@ void BeltManager::updateBeltWithItems(const std::vector<CItem>& items) {
 
 		SpriteRenderable* sprr = new SpriteRenderable(globalFrame, sprite);
 		_handler(sprr, globalFrame);
-		
-	},
-		rightClickHandler
+
+	};
+
+	_managedBeltView->updateWithItems(
+		items,
+		NewHUDResources::inventoryItemUnderlaySprite,
+		{ longClickLEFT, rightClickHandler, nullptr, nullptr }
 	);
 }
 

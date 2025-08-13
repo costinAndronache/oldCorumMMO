@@ -7,6 +7,8 @@ SingleLineLabel::SingleLineLabel(const Rect frameInParent, const Appearance appe
 	_frameInParent = frameInParent;
 	_mode = TextRenderingMode::withInsets;
 	_insetsForInsetMode = { 0, 0, 0, 0 };
+
+	_renderingSize = fittedSize(text);
 }
 
 SingleLineLabel::SingleLineLabel(const Rect frameInParent, const Appearance appearance, const char* text):
@@ -15,6 +17,7 @@ SingleLineLabel::SingleLineLabel(const Rect frameInParent, const Appearance appe
 	_text = std::string(text);
 	_mode = TextRenderingMode::withInsets;
 	_insetsForInsetMode = { 0, 0, 0, 0 };
+	_renderingSize = fittedSize(text);
 }
 
 Rect SingleLineLabel::renderingFrameForCurrentTextAndMode() {
@@ -23,14 +26,31 @@ Rect SingleLineLabel::renderingFrameForCurrentTextAndMode() {
 		return globalFrame().withInsets(_insetsForInsetMode);
 		break;
 	case TextRenderingMode::centered:
-		auto actualFrame = Rect{ {0, 0}, fittedSize(_text.size()) };
+		auto actualFrame = Rect{ {0, 0}, _renderingSize };
 		return actualFrame
 			.centeredWith(globalFrame());
 	}
 }
 
+Size SingleLineLabel::fittedSize(const std::string& text) {
+	auto lines = CustomUI::strtok(text, "\n");
+	auto biggestLine = std::max_element(
+		std::begin(lines),
+		std::end(lines),
+		[=](const std::string& a, const std::string& b) { return a.size() < b.size(); }
+	);
+
+	if (biggestLine == std::end(lines)) { return { 0, 0 }; }
+
+	Size result = { biggestLine->size() * 7, lines.size() * 9 };
+	return result;
+}
+
+void SingleLineLabel::handleRenderableHierarchyUpdateEvent() { }
+
 void SingleLineLabel::updateTextTo(std::string newText) {
-	_text = newText;
+	_text = std::move(newText);
+	_renderingSize = fittedSize(_text);
 }
 
 void SingleLineLabel::updateRenderingModeToCentered() { 
@@ -50,6 +70,7 @@ void SingleLineLabel::renderWithRenderer(I4DyuchiGXRenderer* renderer, int order
 		renderingFrame.maxX(),
 		renderingFrame.maxY()
 	};
+
 	IDIFontObject* font = _appearance.font ? _appearance.font : GetFont();
 	renderer->RenderFont(font, (char*)_text.c_str(), _text.size(), &r, _appearance.color.asDXColor(), CHAR_CODE_TYPE_ASCII, order + 1, 0);
 }

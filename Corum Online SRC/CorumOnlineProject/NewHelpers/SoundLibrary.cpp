@@ -1,5 +1,5 @@
 #include "SoundLibrary.h"
-#include "../../DungeonProcess_Sound.h"
+#include "../DungeonProcess_Sound.h"
 
 SoundLibrary* SoundLibrary::sharedInstance() {
 	static SoundLibrary* shared = nullptr;
@@ -36,6 +36,11 @@ void SoundLibrary::playSkillPointUp() {
 void SoundLibrary::playWindowOpen() {
 	_PlaySound(0, SOUND_TYPE_SYSTEM, SOUND_SYSTEM_WNDOPEN, g_v3InterfaceSoundPos, FALSE);
 }
+
 void SoundLibrary::playWindowClose() {
 	_PlaySound(0, SOUND_TYPE_SYSTEM, SOUND_SYSTEM_WNDCLOSE, g_v3InterfaceSoundPos, FALSE);
+}
+
+void SoundLibrary::playButtonClick() {
+	_PlaySound(0, SOUND_TYPE_SYSTEM, SOUND_SYSTEM_BTNCLICK, g_v3InterfaceSoundPos, FALSE);
 }

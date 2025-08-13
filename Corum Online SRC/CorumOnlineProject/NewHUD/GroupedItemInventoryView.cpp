@@ -25,6 +25,7 @@ Size GroupedItemInventoryView::preferredSize() {
 
 GroupedItemInventoryView::GroupedItemInventoryView(CustomUI::Rect frameInParent, CItemResourceHash* resourceHash) {
 	_frameInParent = frameInParent;
+	_tabSwitchHandler = nullptr;
 
 	RadioButtonGroup::LabeledButtonModel specimen;
 	specimen.labelModel.appearance.color.a = 255;
@@ -58,7 +59,9 @@ GroupedItemInventoryView::GroupedItemInventoryView(CustomUI::Rect frameInParent,
 	});
 
 	_radioButtonGroup->onActiveIndexUpdate([=](unsigned int index) {
-		setActiveTab(index == 0 ? Tab::smallItems : Tab::largeItems);
+		const auto tab = index == 0 ? Tab::smallItems : Tab::largeItems;
+		setActiveTab(tab);
+		if(_tabSwitchHandler) { _tabSwitchHandler(tab); }
 	});
 
 	const auto inventoryFrame = bounds()
@@ -77,12 +80,11 @@ GroupedItemInventoryView::GroupedItemInventoryView(CustomUI::Rect frameInParent,
 void GroupedItemInventoryView::rebuildWith(
 	const std::vector<CItem>& smallItems,
 	const std::vector<CItem>& largeItems,
-	ItemLongPressHandlerLMB onSmallItemLongPressLMB,
-	ItemLongPressHandlerLMB onLargeItemLongPressLMB,
-	HandlerItemClickRIGHT onRightClickSmallItem
+	Handlers smallItemHandlers,
+	Handlers largeItemHandlers
 ) {
-	_smallItemsInventory->rebuild(smallItems, onSmallItemLongPressLMB, onRightClickSmallItem);
-	_largeItemsInventory->rebuild(largeItems, onLargeItemLongPressLMB);
+	_smallItemsInventory->rebuild(smallItems, smallItemHandlers);
+	_largeItemsInventory->rebuild(largeItems, largeItemHandlers);
 }
 
 void GroupedItemInventoryView::setActiveTab(Tab tab) {

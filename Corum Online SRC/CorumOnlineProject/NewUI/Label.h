@@ -20,20 +20,20 @@ namespace CustomUI {
 		SingleLineLabel(const Rect frameInParent, const Appearance appearance, const char* text);
 		void renderWithRenderer(I4DyuchiGXRenderer* renderer, int order) override;
 
-		static Size fittedSize(int charCount) {
-			Size result = { charCount * 7, 9 };
-			return result;
-		}
+		static Size fittedSize(const std::string& text);
 
 		void updateTextTo(std::string newText);
 		void updateRenderingModeToCentered();
 		void updateRenderingModeToInsets(Insets insets);
+
+	protected:
+		void handleRenderableHierarchyUpdateEvent() override;
 	private:
 		TextRenderingMode _mode;
 		Insets _insetsForInsetMode;
 		std::string _text;
 		Appearance _appearance;
-		Rect _renderingFrame;
+		Size _renderingSize;
 
 		Rect renderingFrameForCurrentTextAndMode();
 	};

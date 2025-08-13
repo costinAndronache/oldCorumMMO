@@ -24,6 +24,7 @@ namespace CustomUI {
 		}
 
 		bool isCurrentlyTracking() { return _mouseAvatar != nullptr; }
+		virtual bool swallowsMouse(Point) override { return false; }
 
 	protected:
 		void onMouseMove(Point mouseGlobalOrigin) override {

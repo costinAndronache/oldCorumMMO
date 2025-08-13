@@ -45,7 +45,7 @@ namespace CustomUI {
 		void onClickEndRIGHT(EventHandler handler) { _onReleaseRIGHT = handler; }
 
 	protected:
-		void onMouseStateChange(MouseState newState, MouseState oldState) override;
+		void onMouseStateChange(MouseState newState, MouseState oldState, Point) override;
 
 	private:
 		SingleLineLabel* _label;

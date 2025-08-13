@@ -3,8 +3,9 @@
 using namespace CustomUI;
 using namespace NewInterface;
 
-GenericItemView::GenericItemView(Rect frameInParent, CustomUI::SpriteModel underlay) {
-	_frameInParent = frameInParent;
+GenericItemView::GenericItemView(Rect frameInParent, CustomUI::SpriteModel underlay):
+	Hoverable(frameInParent) 
+{
 	auto insets = Insets{ 0, 0, 0, 0 };
 	if (underlay.sprite) {
 		insets = { 2, 2, 2, 2 };
@@ -17,7 +18,7 @@ GenericItemView::GenericItemView(Rect frameInParent, CustomUI::SpriteModel under
 		return new Button(Button::Sprites::allZero, bounds());
 	});
 
-	const auto labelFittedHeight = SingleLineLabel::fittedSize(1).height;
+	const auto labelFittedHeight = SingleLineLabel::fittedSize("100").height;
 
 	const auto labelFrame = bounds().withInsets(insets)
 		.withHeight(20)
@@ -29,6 +30,7 @@ GenericItemView::GenericItemView(Rect frameInParent, CustomUI::SpriteModel under
 		);
 	});
 }
+
 
 GenericItemsContainerView::GenericItemsContainerView(CustomUI::Rect frameInParent, 
 							 CItemResourceHash* resourceHash,
@@ -48,8 +50,7 @@ GenericItemsContainerView::GenericItemsContainerView(CustomUI::Rect frameInParen
 void GenericItemsContainerView::updateWithItems(
 	const std::vector<CItem>& items,
 	CustomUI::SpriteModel itemUnderlaySprite,
-	HandlerItemLongClickLEFT onLongPressItemLMB,
-	HandlerItemClickRIGHT onRightClick
+	Handlers handlers
 ) {
 	std::vector<ItemWithUnderlay> withUnderlay(items.size());
 	std::transform(
@@ -59,13 +60,12 @@ void GenericItemsContainerView::updateWithItems(
 		[=](CItem item) -> ItemWithUnderlay { return { item, itemUnderlaySprite }; }
 	);
 
-	updateWithItems(withUnderlay, onLongPressItemLMB, onRightClick);
+	updateWithItems(withUnderlay, handlers);
 }
 
 void GenericItemsContainerView::updateWithItems(
 	const std::vector<ItemWithUnderlay>& items,
-	HandlerItemLongClickLEFT onLongPressItemLMB,
-	HandlerItemClickRIGHT onRightClick
+	Handlers handlers
 ) {
 	const auto spriteModelForItem = [=](CItem item) -> SpriteModel {
 		if (item.m_wItemID == 0) {
@@ -101,18 +101,29 @@ void GenericItemsContainerView::updateWithItems(
 		const auto sprite = spriteModelForItem(item.item);
 		result->_button->updateSpriteModelTo({ sprite, sprite, sprite });
 
-		if (onLongPressItemLMB) {
+		if (handlers.longClickLEFT) {
 			result->_button->onLongPressDetectedLEFT([=]() {
-				onLongPressItemLMB(item.item, sprite, index, result->globalFrame());
+				handlers.longClickLEFT(item.item, sprite, index, result->globalFrame());
 			});
 		}
 
-		if (onRightClick) {
+		if (handlers.clickRIGHT) {
 			result->_button->onClickEndRIGHT([=]() {
-				onRightClick(item.item, index);
+				handlers.clickRIGHT(item.item, index);
 			});
 		}
-		
+
+		if (handlers.hovering && handlers.hoveringEnd) {
+			result->onHover(
+				[=](Point globalMousePoint) {
+				handlers.hovering(item.item, index, globalMousePoint);
+			}, 
+				[=]() {
+				handlers.hoveringEnd(item.item, index);
+			}
+			);
+		}
+
 		_itemViews.push_back(result);
 		return result;
 	}

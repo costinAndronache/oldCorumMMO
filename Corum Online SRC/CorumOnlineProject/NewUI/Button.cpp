@@ -33,7 +33,7 @@ void Button::updateSpriteModelTo(Sprites newModel) {
 	_sprites = newModel;
 }
 
-void Button::onMouseStateChange(MouseState newState, MouseState oldState) {
+void Button::onMouseStateChange(MouseState newState, MouseState oldState, Point) {
 	const auto frame = globalFrame();
 
 	if (newState == MouseState::leftButtonPressedInside) {

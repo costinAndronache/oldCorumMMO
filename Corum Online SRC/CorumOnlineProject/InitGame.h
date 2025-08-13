@@ -10,6 +10,8 @@
 #include "./../SS3D_0719/4dyuchigx/4DyuchiGXGFunc/global.h"
 #endif
 
+
+#include "../CorumPreferences/CorumPreferences.h"
 #include "LogWnd.h"
 #include "HashTable.h"
 #include "MessagePool.h"
@@ -131,8 +133,6 @@ struct	ChrInfoLayer;
 #define	MAX_SNOW_EFFECT				100
 #define WINDOW_CLASS_NAME			"Corum Online Project"
 #define WINDOW_TITLE_NAME			"Corum Online Project"
-#define SCREEN_WIDTH				1024
-#define SCREEN_HEIGHT				768
 #define MAX_AUDIO_OBJECT_NUM		128
 #define MAX_OBJECT_NUM				1000	
 #define MAX_FONT_NUM				4
@@ -267,6 +267,9 @@ extern ChrInfoLayer*				g_pChrInfoEffect;
 extern CItemMoveManager				g_ItemMoveManager;
 extern CItemUsedManager				g_ItemUsedManager;
 
+using PreferencesPtr = std::shared_ptr<CorumPreferences::Preferences>;
+extern  PreferencesPtr corumPreferences(); 
+
 extern void	(*OnKeyDown[ MAX_UPDATE_GAME ])		(WPARAM wParam, LPARAM lParam);
 extern void	(*OnKeyUp[ MAX_UPDATE_GAME ])		(WPARAM wParam, LPARAM lParam);
 extern void	(*OnLButtonDown[ MAX_UPDATE_GAME ])	(WPARAM wParam, LPARAM lParam);
@@ -304,7 +307,7 @@ char*				ReturnKey(int nKey);
 IDIFontObject*		GetFont();
 DWORD __stdcall		DefaultErrorHandleProc(ERROR_TYPE type,DWORD dwErrorPriority,void* pCodeAddress,char* szStr);
 BOOL				IsCompressedTextureFormatOk();	
-HWND				InitInstance(HINSTANCE hInstance, int nCmdShow);
+HWND				InitInstance(HINSTANCE hInstance, int nCmdShow, PreferencesPtr preferences);
 ATOM				RegisterWindowClass(HINSTANCE hInstance);
 void				CentreWindow(HWND hwnd);
 LRESULT CALLBACK	WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);

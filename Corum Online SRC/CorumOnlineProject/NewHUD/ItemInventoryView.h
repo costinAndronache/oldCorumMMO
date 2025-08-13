@@ -6,8 +6,7 @@
 namespace NewInterface {
 	class ItemInventoryView : public CustomUI::Renderable {
 	public:
-		using ItemLongPressHandlerLMB = GenericItemsContainerView::HandlerItemLongClickLEFT;
-		using HandlerItemClickRIGHT = GenericItemsContainerView::HandlerItemClickRIGHT;
+		using Handlers = GenericItemsContainerView::Handlers;
 
 		struct Appearance {
 			CustomUI::MatrixContainer::Appearance containerAppearance;
@@ -24,8 +23,7 @@ namespace NewInterface {
 
 		void rebuild(
 			const std::vector<CItem>& items, 
-			ItemLongPressHandlerLMB onLongPressItemLMB = nullptr,
-			HandlerItemClickRIGHT onRightClickItem = nullptr
+			Handlers handlers
 		);
 
 		int itemIndexForGlobalPoint(CustomUI::Point p); // -1 on not found

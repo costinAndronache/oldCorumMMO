@@ -9,6 +9,8 @@
 using namespace CustomUI;
 using namespace NewInterface;
 
+static Point defaultWindowOrigin{ 20, 20 };
+
 static void checkOldInterfaces(std::vector<CMenu*> oldInterfaces) {
 	for (auto intf : oldInterfaces) {
 		if (intf->GetActive()) {
@@ -34,11 +36,14 @@ Interface::Interface(
 	const LP_SKILL_LIST_MANAGER skillListManager,
 	CItemResourceHash* resourceHash,
 	SoundLibrary* soundLibrary,
-	SharedNetwork* sharedNetwork) 
+	SharedNetwork* sharedNetwork,
+	TooltipHelper* tooltipHelper
+) 
 {
 	_mainUser = mainUser;
 	_skillListManager = skillListManager;
 	_soundLibrary = soundLibrary;
+	_tooltipHelper = tooltipHelper;
 
 	_frameInParent = CustomUI::Rect{ {0, 0}, screenSize };
 
@@ -86,12 +91,12 @@ Interface::Interface(
 
 	handlers.leftSkillHandler = [=]() {
 		_skillSelectionView->switchToActiveSelection(NewSkillSelectionView::ActiveSkillSelection::leftSkills);
-		_soundLibrary->playWindowOpen();
+		showWindow(_skillSelectionView);
 	};
 
 	handlers.rightSkillHandler = [=]() {
 		_skillSelectionView->switchToActiveSelection(NewSkillSelectionView::ActiveSkillSelection::rightSkills);
-		_soundLibrary->playWindowOpen();
+		showWindow(_skillSelectionView);
 	};
 
 	_leftHUD->setEventHandlers(handlers);
@@ -107,24 +112,24 @@ Interface::Interface(
 		[=](BYTE leftSkillKind) {
 			_mainUser->SetSkillChangeLR(leftSkillKind, 0);
 			_skillSelectionView->switchToActiveSelection(NewSkillSelectionView::ActiveSkillSelection::none);
-			_soundLibrary->playWindowClose();
+			hideWindow(_skillSelectionView);
 		},
 		[=](BYTE rightSkillKind) {
 			_mainUser->SetSkillChangeLR(rightSkillKind, 1);
 			_skillSelectionView->switchToActiveSelection(NewSkillSelectionView::ActiveSkillSelection::none);
-			_soundLibrary->playWindowClose();
+			hideWindow(_skillSelectionView);
 		},
 		[=](BYTE guardianSkillKind) {
 		// not yet
-		_skillSelectionView->switchToActiveSelection(NewSkillSelectionView::ActiveSkillSelection::none);
-		_soundLibrary->playWindowClose();
-	},
-		});
+			_skillSelectionView->switchToActiveSelection(NewSkillSelectionView::ActiveSkillSelection::none);
+			hideWindow(_skillSelectionView);
+		},
+	});
 
 	//
 
 	_newItemsWindow = registerChildRenderable<NewItemsWindow>([=]() {
-		return new NewItemsWindow({ 200, 200 }, resourceHash);
+		return new NewItemsWindow(defaultWindowOrigin, resourceHash);
 	});
 
 	_newItemsWindow->onClose([=]() {
@@ -138,12 +143,24 @@ Interface::Interface(
 	});
 	_mouseTracking->updateZIndexOffsetForce(1000);
 
+	_tooltipLayer = registerChildRenderable<TooltipLayer>([=]() {
+		return new TooltipLayer(bounds());
+	});
+	_tooltipLayer->updateZIndexOffsetForce(1000);
+
 	_dragNDropSystem = new DragNDropSystem(this, SoundLibrary::sharedInstance());
 	_userInventoryManager = new UserInventoryManager(
 		_newItemsWindow->groupedInventoryView(),
-		ItemUsageManager::sharedInstance()
+		ItemUsageManager::sharedInstance(),
+		_tooltipLayer,
+		tooltipHelper,
+		soundLibrary
 	);
-	_equipItemsManager = new EquipItemsManager(_newItemsWindow->equipItemsView());
+	_equipItemsManager = new EquipItemsManager(
+		_newItemsWindow->equipItemsView(),
+		_tooltipLayer,
+		tooltipHelper
+	);
 
 	_dragNDropManager = new DragNDropManager(
 		mainUser,
@@ -162,13 +179,13 @@ Interface::Interface(
 	auto entriesCount = CharacterStatsManager::maxEntryCount();
 	_statsView = registerChildRenderable<CharacterStatsView>([=]() {
 		return new CharacterStatsView({
-			{ 200, 200},
+			defaultWindowOrigin,
 			{ 400, CharacterStatsView::appropriateSizeForElementsCountOnPage(entriesCount)}
 			});
 	});
 
 	_statsView->onClose([=]() {
-		_statsView->setHidden(true);
+		hideWindow(_statsView);
 	});
 	_statsView->setHidden(true);
 
@@ -183,7 +200,7 @@ Interface::Interface(
 	auto skillsViewSize = UserSkillsView::appropriateSizeForMaxNumberOfSkillsPerList(UserSkillsManager::maxNumOfSkillsInList());
 
 	_userSkillsView = registerChildRenderable<UserSkillsView>([=]() {
-		return new UserSkillsView({ {200, 200}, skillsViewSize });
+		return new UserSkillsView({ defaultWindowOrigin, skillsViewSize });
 	});
 
 	_userSkillsView->onClose([=]() {
@@ -198,25 +215,43 @@ Interface::Interface(
 		SharedNetwork::sharedInstance(), 
 		&g_sSkillListManager,
 		g_pEffectLayer,
-		soundLibrary
+		soundLibrary,
+		tooltipHelper,
+		_tooltipLayer
 	);
 
 	_userSkillsManager->refreshUserSkillsView();
+	updateZIndexOffsetForce(1000);
+
+	setupDisplacement(_newItemsWindow->displacementHandle(), _newItemsWindow);
+	setupDisplacement(_statsView->displacementHandle(), _statsView);
+	setupDisplacement(_userSkillsView->displacementHandle(), _userSkillsView);
+}
+
+void Interface::setupDisplacement(DisplacementHandleRenderable *handle, Renderable *forWindow) {
+  handle->onDisplacement([=](auto dx, auto dy) {
+	  forWindow->updateOriginInParent(
+		  forWindow->frameInParent().origin + Point{dx, dy}
+	  );
+  });
 }
 
 void Interface::toggleWindow(Renderable* window) {
 	if (window->getHidden()) {
-		_soundLibrary->playWindowOpen();
+		showWindow(window);
 	} else {
-		_soundLibrary->playWindowClose();
+		hideWindow(window);
 	}
-
-	window->toggleHiddenState();
 }
 
 void Interface::hideWindow(Renderable* window) {
 	_soundLibrary->playWindowClose();
 	window->setHidden(true);
+}
+
+void Interface::showWindow(Renderable* window) {
+	_soundLibrary->playWindowOpen();
+	window->setHidden(false);
 }
 
 #pragma region Internals
@@ -368,7 +403,7 @@ bool Interface::swallowsMouse(CustomUI::Point mouse) {
 	if (_mouseTracking->isCurrentlyTracking()) { return true; }
 
 	for (auto child : _childRenderables) {
-		if (child->swallowsMouse(mouse) && child != _mouseTracking) {
+		if (child->swallowsMouse(mouse)) {
 			return true;
 		}
 	}

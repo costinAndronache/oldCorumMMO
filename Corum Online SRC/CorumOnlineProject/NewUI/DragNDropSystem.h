@@ -1,7 +1,7 @@
 #pragma once
 #include "Renderable.h"
 #include <set>
-#include "../../NewHelpers/SoundLibrary.h"
+#include "../NewHelpers/SoundLibrary.h"
 namespace CustomUI {
 	
 	class DragNDropSender {

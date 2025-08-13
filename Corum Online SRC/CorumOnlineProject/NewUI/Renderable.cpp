@@ -32,26 +32,27 @@ Rect Renderable::boundingBoxInParent() const {
 	return Rect{ {minX, minY}, { (float)(maxX - minX), (float)(maxY - minY)} };
 }
 
-void Renderable::updateMouseState(MouseState newState) {
+void Renderable::updateMouseState(MouseState newState, Point mouseGlobalCoords) {
 	const auto old = _currentMouseState;
 	if (old == newState) { return; }
 	_currentMouseState = newState;
 
-	onMouseStateChange(newState, old); 
+	onMouseStateChange(newState, old, mouseGlobalCoords); 
 }
 
 void Renderable::handleMouseDown(Point mouse, MouseButton button) {
 	if (_isHidden) { return; }
 	
 	if (!globalFrame().containsPoint(mouse)) {
-		updateMouseState(MouseState::none);
+		updateMouseState(MouseState::none, mouse);
 		return;
 	}
 
 	updateMouseState(
 		button == MouseButton::left ? 
 			MouseState::leftButtonPressedInside : 
-			MouseState::rightButtonPressedInside
+			MouseState::rightButtonPressedInside,
+		mouse
 	);
 
 	if (swallowsMouseEvents()) { return; }
@@ -63,7 +64,7 @@ void Renderable::handleMouseDown(Point mouse, MouseButton button) {
 void Renderable::handleMouseUp(Point mouse, MouseButton button) {
 	if (_isHidden) { return; }
 	updateMouseState(
-		globalFrame().containsPoint(mouse) ? MouseState::hovering : MouseState::none
+		globalFrame().containsPoint(mouse) ? MouseState::hovering : MouseState::none, mouse
 	);
 
 	if (swallowsMouseEvents()) { return; }
@@ -89,7 +90,8 @@ void Renderable::handleMouseMove(Point mouse) {
 	}
 
 	updateMouseState(
-		globalFrame().containsPoint(mouse) ? MouseState::hovering : MouseState::none
+		globalFrame().containsPoint(mouse) ? MouseState::hovering : MouseState::none,
+		mouse
 	);
 }
 
@@ -134,6 +136,16 @@ void Renderable::deconstructAllChildren() {
 	}
 	_childRenderables.clear();
 }
+
+void Renderable::updateParentTo(Renderable* parent) {
+	_parent = parent;
+	handleRenderableHierarchyUpdateEvent();
+	for (auto child : _childRenderables) {
+		child->handleRenderableHierarchyUpdateEvent();
+	}
+}
+
+void Renderable::handleRenderableHierarchyUpdateEvent() { }
 
 void Renderable::deconstructChildrenWhere(std::function<bool(Renderable*)> eligibleToDeconstruct) {
 	_childRenderables.erase(std::remove_if(

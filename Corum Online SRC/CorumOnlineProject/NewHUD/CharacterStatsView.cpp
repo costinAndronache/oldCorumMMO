@@ -6,8 +6,10 @@ using namespace NewInterface;
 
 static const int entryHeight = 30;
 
-CharacterAttributeView::CharacterAttributeView(CustomUI::Rect frameInParent, Model model) {
+CharacterAttributeView::CharacterAttributeView(CustomUI::Rect frameInParent, UpdateProxy* updateProxy) {
 	_frameInParent = frameInParent;
+	_updateProxy = updateProxy;
+
 	const auto _bounds = bounds();
 
 	auto appearance = SingleLineLabel::Appearance(
@@ -18,30 +20,28 @@ CharacterAttributeView::CharacterAttributeView(CustomUI::Rect frameInParent, Mod
 	const auto nameFrame = _bounds.withWidth(130);
 
 	_nameLabel = registerChildRenderable<SingleLineLabel>([=]() {
-		return new SingleLineLabel(nameFrame, appearance, model.name);
+		return new SingleLineLabel(nameFrame, appearance, "");
 	});
 	const auto valueFrame = _bounds
 		.withOriginOffsetBy({ (int)nameFrame.size.width, 0 })
 		.withWidthOffset(-nameFrame.size.width);
 
 	_valueLabel = registerChildRenderable<SingleLineLabel>([=]() {
-		return new SingleLineLabel(valueFrame, appearance, model.value);
+		return new SingleLineLabel(valueFrame, appearance, "");
 	});
 
-	if (model.increaseAction) {
-		auto btnFrame = _bounds
-			.fromMaxXOrigin(-_bounds.size.height)
-			.withWidth(_bounds.size.height)
-			.withInsets({ 5, 5, 5, 5 });
+	auto btnFrame = _bounds
+		.fromMaxXOrigin(-_bounds.size.height)
+		.withWidth(_bounds.size.height)
+		.withInsets({ 5, 5, 5, 5 });
 
-		_increaseButton = registerChildRenderable<Button>([=]() {
-			return new Button(
-				NewHUDResources::plus,
-				btnFrame
-			);
-		});
-		_increaseButton->onClickEndLEFT(model.increaseAction);
-	}
+	_increaseButton = registerChildRenderable<Button>([=]() {
+		return new Button(
+			NewHUDResources::plus,
+			btnFrame
+		);
+	});
+	
 
 	_nameLabel->updateBackground(NewHUDResources::borderedBlackBackgroundSolid);
 	_valueLabel->updateBackground(NewHUDResources::borderedBlackBackgroundFaded);
@@ -49,6 +49,12 @@ CharacterAttributeView::CharacterAttributeView(CustomUI::Rect frameInParent, Mod
 	_nameLabel->updateRenderingModeToCentered();
 	_valueLabel->updateRenderingModeToCentered();
 
+	_updateProxy->_update = [=](Model model) {
+		_nameLabel->updateTextTo(model.name);
+		_valueLabel->updateTextTo(model.value);
+		_increaseButton->onClickEndLEFT(model.increaseAction);
+		_increaseButton->setHidden(model.increaseAction == nullptr);
+	};
 }
 
 
@@ -80,6 +86,11 @@ CharacterStatsView::CharacterStatsView(CustomUI::Rect frameInParent) {
 		return new Button(NewHUDResources::xClose, closeBtnFrame);
 	});
 
+	auto displacementHandleFrame = _bounds.withSize(closeBtnFrame.size);
+	_displacementHandle = registerChildRenderable<DisplacementHandleRenderable>([=](){
+		return new DisplacementHandleRenderable(displacementHandleFrame);
+	});
+
 	auto containerFrame = _bounds
 		.withOriginOffsetBy({ 0, (int)closeBtnFrame.size.height })
 		.withHeightOffset(-closeBtnFrame.size.height);
@@ -91,9 +102,8 @@ CharacterStatsView::CharacterStatsView(CustomUI::Rect frameInParent) {
 	updateBackground(NewHUDResources::genericBackgroundSprite);
 }
 
-void CharacterStatsView::rebuildWithModels(
-	const std::vector< std::vector<Model> >& pageModels,
-	int availableStatPoints
+void CharacterStatsView::rebuildWithProxies(
+	const std::vector< std::vector<UpdateProxy*> >& pageModels
 ) {
 	auto appearance = MatrixContainer::Appearance{
 		MatrixContainer::VerticalGrowthDirection::downwards,
@@ -106,21 +116,23 @@ void CharacterStatsView::rebuildWithModels(
 	};
 
 	auto current = _container->activePageIndex();
-	_container->rebuildPages<std::vector<Model>>(
+	_container->rebuildPages<std::vector<UpdateProxy*>>(
 		pageModels,
-		[=](Rect frameInParent, std::vector<Model> modelsForPage, int) {
+		[=](Rect frameInParent, std::vector<UpdateProxy*> modelsForPage, int) {
 			auto mc = new MatrixContainer(frameInParent, appearance);
-			mc->rebuild<Model>(
+			mc->rebuild<UpdateProxy*>(
 				modelsForPage,
-				[=](Model model, int, Rect itemFrame) {
-					return new CharacterAttributeView(itemFrame, model);
+				[=](UpdateProxy* proxy, int, Rect itemFrame) {
+					return new CharacterAttributeView(itemFrame, proxy);
 				}
 			);
 			return mc;
 		}
 	);
 	_container->setActivePage(current);
+}
 
+void CharacterStatsView::updateAvailableStatPointsCount(int availableStatPoints) {
 	char title[50] = { 0 };
 	if (availableStatPoints > 0) {
 		wsprintf(title, "Character (%d)", availableStatPoints);

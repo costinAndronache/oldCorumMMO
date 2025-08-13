@@ -65,7 +65,7 @@ void InputField::onButtonPressRelease(Button* button) {
 }
 
 
-void InputField::onMouseStateChange(MouseState newState, MouseState oldState) {
+void InputField::onMouseStateChange(MouseState newState, MouseState oldState, Point) {
 	if (newState == MouseState::leftButtonPressedInside) {
 		_isActive = true;
 		_caretStateON = true;

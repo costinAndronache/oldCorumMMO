@@ -149,12 +149,13 @@ public:
 	void	SetWnd(BYTE bWnd);
 	void	SetIconChk(BOOL bIconChk);	
 	void	OptionConfig(BOOL bSave);	
-	void	ItemInfoRender(CItem* pItem, BOOL isEquip, BOOL bPrice = FALSE, DWORD dwPrice = 0, BYTE byZipCode = 0, BYTE byOption = 0);	
+		
 	void	RenderInfoBox(float fPosX, float fPosY, float fSizeX, float fSizeY, int nOrder);
 	void	GetDueDayText(char* pszItemInfo, DWORD dwDueDay);
 	void	GetLandTimeText(char* pszItemInfo, CItem* pItem);
 	BOOL	GetSetWnd();
 	
+	void	ItemInfoRender(CItem* pItem, BOOL isEquip, BOOL bPrice = FALSE, DWORD dwPrice = 0, BYTE byZipCode = 0, BYTE byOption = 0);
 	void	ItemInfoRender_Weapon(char szItemInfo[100][255], int* iInfoRow, CItem* pItem, CBaseItem* pItemInfo, LPSET_ITEM_INFO pSetItemInfo, DWORD dwItemSetID, DWORD dwSetNum, DWORD* pdwTextColor, BOOL isEquip, int iOption, int* nMaxSize);
 	void	ItemInfoRender_Armor(char szItemInfo[100][255], int* iInfoRow, CItem* pItem, CBaseItem* pItemInfo, LPSET_ITEM_INFO pSetItemInfo, DWORD dwItemSetID, DWORD dwSetNum, DWORD* pdwTextColor, BOOL isEquip, int iOption, int* nMaxSize, BYTE byZipCode);
 	void	ItemInfoRender_Guardian(char szItemInfo[100][255], int* iInfoRow, CItem* pItem, CBaseItem* pItemInfo, DWORD* pdwTextColor, int* nMaxSize);

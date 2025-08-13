@@ -4,6 +4,7 @@
 #include "../UserSkillsView.h"
 #include "../../NewHelpers/SharedNetwork.h"
 #include "../../NewHelpers/SoundLibrary.h"
+#include "TooltipManager.h"
 
 namespace NewInterface {
 	class UserSkillsManager {
@@ -16,7 +17,9 @@ namespace NewInterface {
 			SharedNetwork* network,
 			SSKILL_LIST_MANAGER* skillListManager,
 			EffectLayer* effectLayer,
-			SoundLibrary* soundLibrary
+			SoundLibrary* soundLibrary,
+			TooltipHelper* tooltipHelper,
+			TooltipLayer* tooltipLayer
 		);
 
 		void refreshUserSkillsView();
@@ -28,8 +31,13 @@ namespace NewInterface {
 		SharedNetwork* _network;
 		EffectLayer* _effectLayer;
 		SoundLibrary* _soundLibrary;
-		GenericSkillView::Model buildModelFor(LP_SKILL_RESOURCE_EX skillResource);
-		bool canIncreaseLevelForThis(LP_SKILL_RESOURCE_EX skillResource);
+		TooltipHelper* _tooltipHelper;
+		TooltipLayer* _tooltipLayer;
+		TooltipManager* _tooltipManager;
+
+
+		bool canIncreaseLevelForThis(BYTE skillKind);
+		GenericSkillView::Model buildModelFor(LP_SKILL_RESOURCE_EX skillResource, TooltipManager* tooltipManager);
 	};
 }
 

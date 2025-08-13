@@ -44,6 +44,12 @@ namespace CustomUI {
 	};
 
 	typedef POINT Point;
+	inline Point operator+(const Point& lhs, const Point& rhs) {
+		return {
+			lhs.x + rhs.x, lhs.y + rhs.y
+		};
+	}
+
 	struct Rect {
 		Point origin;
 		Size size;
@@ -236,14 +242,35 @@ namespace CustomUI {
 	};
 
 	struct Color {
-		unsigned char a, r, g, b;
-		DWORD asDXColor() {
-			return D3DCOLOR_ARGB(a, r, g, b);
-		}
+		unsigned char r, g, b, a;
+		
+		DWORD asDXColor() const;
+		Color withAlpha(unsigned char alpha) const;
+		static Color fromARGB(DWORD argb);
+
 		static Color white;
+		static Color red;
+		static Color green;
+		static Color blue;
+		static Color yellow;
+		static Color magenta;
 	};
 
 	char getASCII(WPARAM wparam, LPARAM lParam); // 0 if not from keyboard
 	bool safeToHandleKeyEvents();
+
+	std::vector<std::string> strtok(const std::string& text, const char* byChars);
+	inline void ltrim(std::string& s) {
+		s.erase(s.begin(), std::find_if(s.begin(), s.end(), [](unsigned char ch) {
+			return !std::isspace(ch);
+		}));
+	}
+
+	// Trim from the end (in place)
+	inline void rtrim(std::string& s) {
+		s.erase(std::find_if(s.rbegin(), s.rend(), [](unsigned char ch) {
+			return !std::isspace(ch);
+		}).base(), s.end());
+	}
 }
 

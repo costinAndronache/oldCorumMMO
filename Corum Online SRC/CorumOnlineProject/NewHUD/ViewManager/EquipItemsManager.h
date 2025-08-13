@@ -1,6 +1,7 @@
 #pragma once
 #include "../GenericItemsContainerView.h"
 #include "../../NewUI/DragNDropSystem.h"
+#include "TooltipManager.h"
 
 namespace NewInterface {
 	class EquipItemsManager :
@@ -8,7 +9,11 @@ namespace NewInterface {
 		public CustomUI::DragNDropSender {
 
 	public:
-		EquipItemsManager(GenericItemsContainerView* managedView);
+		EquipItemsManager(
+			GenericItemsContainerView* managedView,
+			TooltipLayer* toolTipLayer,
+			TooltipHelper* toolTipHelper
+		);
 
 		void updateWithItems(const CItem equipVector[MAX_EQUIP_POOL]);
 		void onLeftMouseDragStart(
@@ -25,6 +30,10 @@ namespace NewInterface {
 		int _indexOnCurrentDragNDropItem;
 		GenericItemsContainerView* _managedView;
 		std::function<void(CustomUI::Renderable*, CustomUI::Rect globalFrameStart)> _handler;
+
+		TooltipLayer* _toolTipLayer;
+		TooltipHelper* _toolTipHelper;
+		TooltipManager* _equipTooltipManager;
 	};
 }
 

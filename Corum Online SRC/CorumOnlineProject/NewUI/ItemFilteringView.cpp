@@ -18,7 +18,7 @@ ItemFilteringView::ItemFilteringView(Rect frameInParent, std::vector<CItem*>& al
 
 	const char* title = "Item pick-up filtering";
 	Rect titleLabelRect = topContainer
-		.withSize(SingleLineLabel::fittedSize(strlen(title)))
+		.withSize(SingleLineLabel::fittedSize(title))
 		.centeredVerticallyWith(topContainer);
 
 	SingleLineLabel::Appearance titleAppearance = { {255,255,255,255 } };

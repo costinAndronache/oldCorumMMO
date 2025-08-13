@@ -70,7 +70,9 @@ UserSkillsManager::UserSkillsManager(
 	SharedNetwork* network,
 	SSKILL_LIST_MANAGER* skillListManager,
 	EffectLayer* effectLayer,
-	SoundLibrary* soundLibrary
+	SoundLibrary* soundLibrary,
+	TooltipHelper* tooltipHelper,
+	TooltipLayer* tooltipLayer
 ) {
 	_managedView = managedView;
 	_mainUser = mainUser;
@@ -78,11 +80,27 @@ UserSkillsManager::UserSkillsManager(
 	_network = network;
 	_effectLayer = effectLayer;
 	_soundLibrary = soundLibrary;
+	_tooltipHelper = tooltipHelper;
+	_tooltipLayer = tooltipLayer;
+	_tooltipManager = nullptr;
+
+	_managedView->onClassSheetSwitch([=](auto) {
+		_soundLibrary->playButtonClick();
+	});
 }
 
 void UserSkillsManager::refreshUserSkillsView() {
+	if (_tooltipManager) { _tooltipManager->clearAllTooltips(); }
+
+	_tooltipManager = new TooltipManager(
+		_tooltipLayer,
+		[=](TooltipManager::TooltipObjectID skillKind) {
+			return _tooltipHelper->tooltipForSkill(skillKind);
+		}
+	);
+
 	auto transformFn = [=](LP_SKILL_RESOURCE_EX skill) {
-		return buildModelFor(skill);
+		return buildModelFor(skill, _tooltipManager);
 	};
 
 	auto summoner = convert(getSkillKindsForClass(_skillListManager->pSkillList[CLASS_TYPE_SUMMONER]), transformFn);
@@ -101,35 +119,34 @@ void UserSkillsManager::refreshUserSkillsView() {
 	});
 }
 
-bool UserSkillsManager::canIncreaseLevelForThis(LP_SKILL_RESOURCE_EX lpSkillResourceEx) {
-	if (lpSkillResourceEx)
+bool UserSkillsManager::canIncreaseLevelForThis(BYTE skillKind) {
+	Effect* pEffect = _effectLayer->GetEffectInfo(skillKind);
+	auto m_byBitClassType = (BYTE)pow((float)2, (float)(_mainUser->m_wClass - 1));
+	if (pEffect->bAbleClass & m_byBitClassType)
 	{
-		Effect* pEffect = _effectLayer->GetEffectInfo(lpSkillResourceEx->wId);
-		auto m_byBitClassType = (BYTE)pow((float)2, (float)(_mainUser->m_wClass - 1));
-		if (pEffect->bAbleClass & m_byBitClassType)
+		if (_mainUser->GetSkillLevel(skillKind) < MAX_SKILL_LEVEL_MANUAL_INCREASE)
 		{
-			if (_mainUser->GetSkillLevel(lpSkillResourceEx->wId) < MAX_SKILL_LEVEL)
-			{
-				int		nMaxLevel = 0;
-				BYTE	byMastery = _effectLayer->GetSkillMasteryKind(lpSkillResourceEx->wId);
-				BYTE	byLevel = _mainUser->GetSkillLevel(byMastery);
-				Effect* pEffect = _effectLayer->GetEffectInfo(lpSkillResourceEx->wId);
-				Effect* pMasteryEffect = _effectLayer->GetEffectInfo(byMastery);
+			int		nMaxLevel = 0;
+			BYTE	byMastery = _effectLayer->GetSkillMasteryKind(skillKind);
+			BYTE	byLevel = _mainUser->GetSkillLevel(byMastery);
+			Effect* pEffect = _effectLayer->GetEffectInfo(skillKind);
+			Effect* pMasteryEffect = _effectLayer->GetEffectInfo(byMastery);
 
-				if (byLevel != 0)
-					nMaxLevel = pMasteryEffect->GetMaxMastery(byLevel - 1);
+			if (byLevel != 0)
+				nMaxLevel = pMasteryEffect->GetMaxMastery(byLevel - 1);
 
-				if (nMaxLevel >= (int)pEffect->dwMinMastery) {
-					return true;
-				}
+			if (nMaxLevel >= (int)pEffect->dwMinMastery) {
+				return true;
 			}
 		}
 	}
+
 	return false;
 }
 
-GenericSkillView::Model UserSkillsManager::buildModelFor(LP_SKILL_RESOURCE_EX skillResource)  {
-	auto level = _mainUser->GetSkillLevel(skillResource->wId);
+GenericSkillView::Model UserSkillsManager::buildModelFor(LP_SKILL_RESOURCE_EX skillResource, TooltipManager* tooltipManager)  {
+	auto skillKind = skillResource->wId;
+	auto level = _mainUser->GetSkillLevel(skillKind);
 	auto sprite = [=]() -> SpriteModel {
 		if ( level > 0) {
 			return { skillResource->pSpr, { SKILL_ICON_SIZE, SKILL_ICON_SIZE } };
@@ -145,10 +162,10 @@ GenericSkillView::Model UserSkillsManager::buildModelFor(LP_SKILL_RESOURCE_EX sk
 
 	auto increaseHandler = [=]() -> std::function<void()> {
 		if (_mainUser->currentSkillPoints() > 0 && 
-			canIncreaseLevelForThis(skillResource)) {
+			canIncreaseLevelForThis(skillKind)) {
 			return [=]() { 
 				CTDS_SKILL_LEVELUP levelUpSkill;
-				levelUpSkill.nSkillIndex = skillResource->wId;
+				levelUpSkill.nSkillIndex = skillKind;
 				_network->send(levelUpSkill);
 				_soundLibrary->playSkillPointUp();
 			};
@@ -157,7 +174,15 @@ GenericSkillView::Model UserSkillsManager::buildModelFor(LP_SKILL_RESOURCE_EX sk
 		}
 	}();
 
+	Hoverable::OnHovering onHovering = [=](auto point) {
+		tooltipManager->handleHoveringEvent(skillKind, point);
+	};
+
+	Hoverable::OnHoveringEnd onHoveringEnd = [=]() {
+		tooltipManager->handleHoveringEndEvent(skillKind);
+	};
+
 	return {
-		sprite, text, increaseHandler
+		sprite, text, increaseHandler, onHovering, onHoveringEnd
 	};
 }

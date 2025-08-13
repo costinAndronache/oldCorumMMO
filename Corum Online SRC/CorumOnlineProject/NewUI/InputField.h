@@ -18,7 +18,7 @@ namespace CustomUI {
 		static const int maxChars = 124;
 
 	protected:
-		void onMouseStateChange(MouseState newState, MouseState oldState) override;
+		void onMouseStateChange(MouseState newState, MouseState oldState, Point) override;
 		void processKeyUp(WPARAM wparam, LPARAM lparam) override;
 		bool swallowsKeyEvents() override { return _isActive; }
 		bool swallowsMouseEvents() override;

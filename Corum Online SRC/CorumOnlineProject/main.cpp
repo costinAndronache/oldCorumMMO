@@ -80,11 +80,7 @@ int APIENTRY WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdL
 #endif
 	
   	RegisterWindowClass(hInstance);
-	InitInstance(hInstance, nShowCmd);	
-
-#ifdef DEVELOP_MODE
-	CentreWindow(g_hMainWnd);
-#endif
+	InitInstance(hInstance, nShowCmd, corumPreferences());	
 
 #ifdef _DEBUG
 	int	flag = _CRTDBG_ALLOC_MEM_DF |_CRTDBG_LEAK_CHECK_DF;
@@ -438,17 +434,11 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		}	
 		break;
 		
-#ifdef GM_TOOL
-	case WM_MOVE:
+	case WM_MOVING:
 		{
-			RECT rect, rect_dlg;
-			GetWindowRect(g_hMainWnd, &rect);
-			GetWindowRect(g_hGMToolDlg, &rect_dlg);
-			SetWindowPos(g_hGMToolDlg, HWND_NOTOPMOST, rect.right, rect.top, 
-			rect_dlg.right - rect_dlg.left, rect.bottom - rect.top, SWP_NOZORDER);
+			printf("WINDOW MOVING\n");
 		}
 		break;
-#endif
 
 	case WM_TIMER:			
 		if(OnTimerEvent[ GetGameStatus() ])	

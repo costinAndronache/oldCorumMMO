@@ -9,6 +9,9 @@
 #include "ViewManager/EquipItemsManager.h"
 #include "ViewManager/CharacterStatsManager.h"
 #include "ViewManager/UserSkillsManager.h"
+#include "DynamicInfoBox.h"
+#include "ViewManager/TooltipHelper.h"
+
 
 namespace NewInterface {
 	class Interface: 
@@ -16,12 +19,15 @@ namespace NewInterface {
 		public CMainUserUpdateInterested,
 		public CustomUI::DragNDropSystemRenderer {
 	public:
-		Interface(CustomUI::Size screenSize, 
-				  CMainUser* mainUser,
-				  const LP_SKILL_LIST_MANAGER skillListManager,
-				  CItemResourceHash* resourceHash,
-				  SoundLibrary* soundLibrary,
-				  SharedNetwork* sharedNetwork);
+		Interface(
+			CustomUI::Size screenSize,
+			CMainUser* mainUser,
+			const LP_SKILL_LIST_MANAGER skillListManager,
+			CItemResourceHash* resourceHash,
+			SoundLibrary* soundLibrary,
+			SharedNetwork* sharedNetwork,
+			TooltipHelper* tooltipHelper
+		);
 		void renderWithRenderer(I4DyuchiGXRenderer* renderer, int zIndex) override;
 		bool swallowsMouse(CustomUI::Point mouse) override;
 		void handleMouseDown(CustomUI::Point mouseGlobalOrigin, MouseButton button) override;
@@ -48,36 +54,37 @@ namespace NewInterface {
 		);
 		virtual void clearCurrentMouseCursorAvatar();
 	private:
-		LeftHUD* _leftHUD;
-		RightHUD* _rightHUD;
-
-		NewSkillSelectionView* _skillSelectionView;
-
 		std::shared_ptr<Interface> _thisAsShared;
-
 		LP_SKILL_LIST_MANAGER _skillListManager;
 		CMainUser* _mainUser;
+		SoundLibrary* _soundLibrary;
+
+		LeftHUD* _leftHUD;
+		RightHUD* _rightHUD;
+		NewItemsWindow* _newItemsWindow;
+		CharacterStatsView* _statsView;
+		UserSkillsView* _userSkillsView;
+		NewSkillSelectionView* _skillSelectionView;
+		DynamicInfoBox* _dynamicInfoBox;
+
 
 		CustomUI::DragNDropSystem* _dragNDropSystem;
 		CustomUI::MouseTrackingSpriteRenderable* _mouseTracking;
-
 		DragNDropManager* _dragNDropManager;
-
-		NewItemsWindow* _newItemsWindow;
 		UserInventoryManager* _userInventoryManager;
 		EquipItemsManager* _equipItemsManager;
-
-		CharacterStatsView* _statsView;
 		CharacterStatsManager* _statsManager;
-
-		UserSkillsView* _userSkillsView;
 		UserSkillsManager* _userSkillsManager;
 
-		SoundLibrary* _soundLibrary;
+		TooltipHelper* _tooltipHelper;
+		TooltipLayer* _tooltipLayer;
 		void updateLeftHUDWithSelectedLeftRightSkills();
 
 		void toggleWindow(Renderable*);
 		void hideWindow(Renderable*);
+		void showWindow(Renderable*);
+
+		void setupDisplacement(DisplacementHandleRenderable* handle, Renderable* forWindow);
 	};
 }
 

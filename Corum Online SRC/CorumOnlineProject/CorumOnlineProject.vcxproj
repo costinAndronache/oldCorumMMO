@@ -796,7 +796,7 @@
       <LanguageStandard>stdcpp14</LanguageStandard>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>legacy_stdio_definitions.lib;odbc32.lib;odbccp32.lib;imm32.lib;Winmm.lib;WS2_32.lib;d3d8.lib;mss32.lib;version.lib;gdiplus.lib;BaseLibrary.lib;SS3DGFunc.lib;CResNameResolver.lib;SoundLib.lib;CommonServer.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>legacy_stdio_definitions.lib;odbc32.lib;odbccp32.lib;imm32.lib;Winmm.lib;WS2_32.lib;d3d8.lib;mss32.lib;version.lib;gdiplus.lib;BaseLibrary.lib;SS3DGFunc.lib;CResNameResolver.lib;SoundLib.lib;CommonServer.lib;CorumPreferences.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>.\Debug\CorumOnlineResult.exe</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <IgnoreSpecificDefaultLibraries>LIBC.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
@@ -4100,12 +4100,17 @@
     <ClCompile Include="NewHelpers\SoundLibrary.cpp" />
     <ClCompile Include="NewHelpers\StatusPointManager.cpp" />
     <ClCompile Include="NewHUD\CharacterStatsView.cpp" />
+    <ClCompile Include="NewHUD\DisplacementHandleRenderable.cpp" />
+    <ClCompile Include="NewHUD\DynamicInfoBox.cpp" />
+    <ClCompile Include="NewHUD\TooltipLayer.cpp" />
     <ClCompile Include="NewHUD\UserInventoryView.cpp" />
     <ClCompile Include="NewHUD\UserSkillsView.cpp" />
     <ClCompile Include="NewHUD\ViewManager\BeltManager.cpp" />
     <ClCompile Include="NewHUD\ViewManager\CharacterStatsManager.cpp" />
     <ClCompile Include="NewHUD\ViewManager\DragNDropManager.cpp" />
     <ClCompile Include="NewHUD\ViewManager\EquipItemsManager.cpp" />
+    <ClCompile Include="NewHUD\ViewManager\TooltipManager.cpp" />
+    <ClCompile Include="NewHUD\ViewManager\TooltipHelper.cpp" />
     <ClCompile Include="NewHUD\ViewManager\UserInventoryManager.cpp" />
     <ClCompile Include="NewHUD\GenericItemsContainerView.cpp" />
     <ClCompile Include="NewHUD\GroupedItemInventoryView.cpp" />
@@ -4116,8 +4121,10 @@
     <ClCompile Include="NewHUD\NewSkillSelectionView.cpp" />
     <ClCompile Include="NewHUD\RightHUD.cpp" />
     <ClCompile Include="NewHUD\ViewManager\UserSkillsManager.cpp" />
+    <ClCompile Include="NewUI\BorderRenderable.cpp" />
     <ClCompile Include="NewUI\Button.cpp" />
     <ClCompile Include="NewUI\DragNDropSystem.cpp" />
+    <ClCompile Include="NewUI\Hoverable.cpp" />
     <ClCompile Include="NewUI\MatrixContainer.cpp" />
     <ClCompile Include="NewUI\CustomUIBase.cpp" />
     <ClCompile Include="NewUI\InputField.cpp" />
@@ -6710,12 +6717,17 @@
     <ClInclude Include="NewHelpers\SoundLibrary.h" />
     <ClInclude Include="NewHelpers\StatusPointManager.h" />
     <ClInclude Include="NewHUD\CharacterStatsView.h" />
+    <ClInclude Include="NewHUD\DisplacementHandleRenderable.h" />
+    <ClInclude Include="NewHUD\DynamicInfoBox.h" />
+    <ClInclude Include="NewHUD\TooltipLayer.h" />
     <ClInclude Include="NewHUD\UserInventoryView.h" />
     <ClInclude Include="NewHUD\UserSkillsView.h" />
     <ClInclude Include="NewHUD\ViewManager\BeltManager.h" />
     <ClInclude Include="NewHUD\ViewManager\CharacterStatsManager.h" />
     <ClInclude Include="NewHUD\ViewManager\DragNDropManager.h" />
     <ClInclude Include="NewHUD\ViewManager\EquipItemsManager.h" />
+    <ClInclude Include="NewHUD\ViewManager\TooltipManager.h" />
+    <ClInclude Include="NewHUD\ViewManager\TooltipHelper.h" />
     <ClInclude Include="NewHUD\ViewManager\UserInventoryManager.h" />
     <ClInclude Include="NewHUD\GenericItemsContainerView.h" />
     <ClInclude Include="NewHUD\GroupedItemInventoryView.h" />
@@ -6726,8 +6738,10 @@
     <ClInclude Include="NewHUD\NewSkillSelectionView.h" />
     <ClInclude Include="NewHUD\RightHUD.h" />
     <ClInclude Include="NewHUD\ViewManager\UserSkillsManager.h" />
+    <ClInclude Include="NewUI\BorderRenderable.h" />
     <ClInclude Include="NewUI\Button.h" />
     <ClInclude Include="NewUI\DragNDropSystem.h" />
+    <ClInclude Include="NewUI\Hoverable.h" />
     <ClInclude Include="NewUI\MatrixContainer.h" />
     <ClInclude Include="NewUI\CustomUIBase.h" />
     <ClInclude Include="NewUI\InputField.h" />

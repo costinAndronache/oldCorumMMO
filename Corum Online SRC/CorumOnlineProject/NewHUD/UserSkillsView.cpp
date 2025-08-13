@@ -26,6 +26,10 @@ GenericSkillView::GenericSkillView(CustomUI::Rect frameInParent) {
 		return new SpriteRenderable(skillSpriteFrame, SpriteModel::zero);
 	});
 
+	_hoverableOverSprite = registerChildRenderable<Hoverable>([=]() {
+		return new Hoverable(skillSpriteFrame);
+	});
+
 	auto labelFrame =
 		skillSpriteFrame
 		.fromMaxXOrigin(0)
@@ -55,11 +59,14 @@ void GenericSkillView::updateModel(Model model) {
 
 	_levelInfoLabel->updateTextTo(model.levelInfo);
 	_spriteRenderable->updateSprite(model.spriteModel);
+
+	_hoverableOverSprite->onHover(model.onHovering, model.onHoveringEnd);
 }
 
 static int titleHeight = 30;
-static Insets insets = { 5, 5, 5, 5 };
-
+static int borderThickness = 2;
+static Insets borderInsets{ borderThickness, borderThickness, borderThickness, borderThickness };
+static Insets insetsForMatrixContainer = { 5, 5, 5, 5 };
 static MatrixContainer::Appearance skillsContainerAppearance{
 	MatrixContainer::VerticalGrowthDirection::downwards,
 	{
@@ -71,15 +78,18 @@ static MatrixContainer::Appearance skillsContainerAppearance{
 };
 
 CustomUI::Size SkillsContainerView::appropriateSizeFor(int skillElementsCount) {
-	auto matrixContainerSize = MatrixContainer::appropriateSizeFor(skillsContainerAppearance.sizes, skillElementsCount).toCoverInsets(insets);
-	return { matrixContainerSize.width, matrixContainerSize.height + titleHeight };
+	auto matrixContainerSize = MatrixContainer::appropriateSizeFor(skillsContainerAppearance.sizes, skillElementsCount).toCoverInsets(insetsForMatrixContainer);
+
+	auto content = Size{ matrixContainerSize.width, matrixContainerSize.height + titleHeight };
+	return content.toCoverInsets(borderInsets);
+
 }
 
 SkillsContainerView::SkillsContainerView(CustomUI::Rect frame, const std::string& title) {
 	_frameInParent = frame;
-	auto _bounds = bounds();
+	auto _boundsForContent = bounds().withInsets(borderInsets);
 
-	auto titleFrame = _bounds.withHeight(titleHeight);
+	auto titleFrame = _boundsForContent.withHeight(titleHeight);
 	_titleLabel = registerChildRenderable<SingleLineLabel>([=]() {
 		return new SingleLineLabel(
 			titleFrame, SingleLineLabel::Appearance::defaultAppearance(), title
@@ -88,14 +98,21 @@ SkillsContainerView::SkillsContainerView(CustomUI::Rect frame, const std::string
 	_titleLabel->updateBackground(NewHUDResources::borderedBlackBackgroundSolid);
 	_titleLabel->updateRenderingModeToCentered();
 
-	auto containerFrame = _bounds
+	auto containerFrame = _boundsForContent
 		.withOriginOffsetBy({0, (int)titleFrame.size.height })
 		.withHeightOffset(-titleFrame.size.height)
-		.withInsets(insets);
+		.withInsets(insetsForMatrixContainer);
 
 	_container = registerChildRenderable<MatrixContainer>([=]() {
 		return new MatrixContainer(containerFrame, skillsContainerAppearance);
 	});
+
+	_border = registerChildRenderable<BorderRenderable>([=]() {
+		return new BorderRenderable(bounds());
+	});
+
+	_border->updateThickness(borderThickness);
+	_border->updateBorderLines(NewHUDResources::goldBorder);
 }
 
 void SkillsContainerView::refreshWithModels(const std::vector<Model>& models) {
@@ -139,6 +156,15 @@ SkillSheetView::SkillSheetView(CustomUI::Rect frameInParent) {
 	auto masterySkillAreaFrame = bounds()
 		.withHeight(_masterySkillAreaSize.height);
 
+	auto masterySkillAreaBorder = registerChildRenderable<BorderRenderable>([=]() {
+		return new BorderRenderable(
+			masterySkillAreaFrame
+		);
+	});
+
+	masterySkillAreaBorder->updateBorderLines(NewHUDResources::goldBorder);
+	masterySkillAreaBorder->updateThickness(3.0);
+
 	auto masterySkillViewFrame = Rect{ {0, 0}, GenericSkillView::preferredSize()};
 	masterySkillViewFrame = masterySkillViewFrame.centeredWith(masterySkillAreaFrame);
 
@@ -151,8 +177,8 @@ SkillSheetView::SkillSheetView(CustomUI::Rect frameInParent) {
 		.withHeightOffset(-masterySkillAreaFrame.size.height);
 
 	auto oneContainerSize = Size{
-		(bounds().size.width - 2 * horizontalSpacingBetweenContainers) / 3,
-		bounds().size.height
+		(skillContainersHostFrame.size.width - 2 * horizontalSpacingBetweenContainers) / 3,
+		skillContainersHostFrame.size.height
 	};
 	_skillContainersHost = registerChildRenderable<MatrixContainer>([=]() {
 		return new MatrixContainer(
@@ -203,6 +229,8 @@ Size UserSkillsView::appropriateSizeForMaxNumberOfSkillsPerList(int maxNumOfSkil
 
 UserSkillsView::UserSkillsView(CustomUI::Rect frameInParent) {
 	_frameInParent = frameInParent;
+	_classSwitchHandler = nullptr;
+
 	updateBackground(NewHUDResources::genericBackgroundSprite);
 
 	auto labelFrame = bounds()
@@ -224,7 +252,10 @@ UserSkillsView::UserSkillsView(CustomUI::Rect frameInParent) {
 		return new Button(NewHUDResources::xClose, closeBtnFrame);
 	});
 
-
+	auto displacementHandleFrame = Rect{{0, 0}, closeBtnFrame.size};
+	_displacementHandle = registerChildRenderable<DisplacementHandleRenderable>([=](){
+		return new DisplacementHandleRenderable(displacementHandleFrame);
+	});
 
 	using LabeledButtonModel = RadioButtonGroup::LabeledButtonModel;
 	std::vector<LabeledButtonModel> buttonModels = {
@@ -267,6 +298,9 @@ UserSkillsView::UserSkillsView(CustomUI::Rect frameInParent) {
 	setVisibleSkillSheetAtIndex(0);
 
 	_radioGroup->onActiveIndexUpdate([=](unsigned int index) {
+		if(_classSwitchHandler) {
+			_classSwitchHandler(CLASS_TYPE(index + 1));
+		}
 		setVisibleSkillSheetAtIndex(index);
 	});
 }

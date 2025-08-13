@@ -2,13 +2,21 @@
 #include "../GroupedItemInventoryView.h"
 #include "../../NewUI/DragNDropSystem.h"
 #include "../../NewHelpers/ItemUsageManager.h"
+#include "TooltipManager.h"
+#include "../../NewHelpers/SoundLibrary.h"
 
 namespace NewInterface {
 	class UserInventoryManager:
 		public CustomUI::DragNDropReceiver,
 		public CustomUI::DragNDropSender {
 	public:
-		UserInventoryManager(GroupedItemInventoryView* userInventoryView, ItemUsageManager* itemUsageManager);
+		UserInventoryManager(
+			GroupedItemInventoryView* userInventoryView, 
+			ItemUsageManager* itemUsageManager,
+			TooltipLayer* toolTipLayer,
+			TooltipHelper* toolTipHelper,
+			SoundLibrary* soundLibrary
+		);
 
 		void rebuildInventoryViewWith(
 			const std::vector<CItem>& smallItems,
@@ -29,6 +37,12 @@ namespace NewInterface {
 		GroupedItemInventoryView* _managedInventoryView;
 		std::function<void(CustomUI::Renderable*, CustomUI::Rect globalFrameStart)> _handler;
 		ItemUsageManager* _itemUsageManager;
+		
+		TooltipLayer* _toolTipLayer;
+		TooltipHelper* _toolTipHelper;
+		TooltipManager* _smallItemsTooltipManager;
+		TooltipManager* _largeItemsTooltipManager;
+		SoundLibrary* _soundLibrary;
 	};
 }
 

@@ -14,7 +14,7 @@ public:
 	void playSkillPointUp();
 	void playWindowOpen();
 	void playWindowClose();
-
+	void playButtonClick();
 private:
 	IMilesSoundLib* _soundLib;
 };
