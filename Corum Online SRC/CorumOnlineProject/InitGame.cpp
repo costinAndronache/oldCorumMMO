@@ -1836,36 +1836,80 @@ BOOL CreateFont()
 	return TRUE;
 }
 
-HWND InitInstance(HINSTANCE hInstance, int nCmdShow)
+HWND InitInstance(HINSTANCE hInstance, int nCmdShow, PreferencesPtr preferences)
 {
 	g_hInstance = hInstance; // Store instance handle in our global variable
+
+	auto style = WS_VISIBLE;
+
+	if(!preferences->windowMode()) {
+          DEVMODE dmScreenSettings;
+          memset(&dmScreenSettings, 0, sizeof(dmScreenSettings));
+          dmScreenSettings.dmSize = sizeof(dmScreenSettings);
+          dmScreenSettings.dmPelsWidth = preferences->resolution().width;
+          dmScreenSettings.dmPelsHeight = preferences->resolution().height;
+          dmScreenSettings.dmFields = DM_PELSWIDTH | DM_PELSHEIGHT;
+          ChangeDisplaySettings(&dmScreenSettings, CDS_FULLSCREEN);
+		  style |= WS_POPUP; 
+	} else {
+		style != WS_OVERLAPPEDWINDOW;
+	}
 
 	RECT rc;
 	rc.left		= 0;
 	rc.top		= 0;
-	rc.right	= windowWidth();
-	rc.bottom	= windowHeight();
-	AdjustWindowRect( &rc, WS_OVERLAPPEDWINDOW, FALSE );
+	rc.right	= preferences->resolution().width;
+	rc.bottom	= preferences->resolution().height;
 
-#ifndef DEVELOP_MODE
+	AdjustWindowRect( &rc, style, FALSE );
 
-	g_hMainWnd = CreateWindow(WINDOW_CLASS_NAME, WINDOW_TITLE_NAME,	NULL, /*WS_OVERLAPPEDWINDOW*/
-	  CW_USEDEFAULT, CW_USEDEFAULT,	rc.right - rc.left, rc.bottom - rc.top, 0L, NULL, hInstance, NULL);
-#else
+	g_hMainWnd = CreateWindowEx(
+		WS_EX_APPWINDOW,
+		WINDOW_CLASS_NAME, 
+		WINDOW_TITLE_NAME,	
+		style, 
+		CW_USEDEFAULT, 
+		CW_USEDEFAULT,	
+		rc.right - rc.left, 
+		rc.bottom - rc.top, 
+		0L, 
+		NULL, 
+		hInstance, 
+		NULL
+	);
 
-	g_hMainWnd = CreateWindow(WINDOW_CLASS_NAME, WINDOW_TITLE_NAME,	WS_OVERLAPPEDWINDOW, 
-	  CW_USEDEFAULT, CW_USEDEFAULT,	rc.right - rc.left, rc.bottom - rc.top, 0L, NULL, hInstance, NULL);
-
-#endif
-
-	if (!g_hMainWnd)
-	{
+	
+	if (!g_hMainWnd) {
 	  return FALSE;
+	}
+
+	if(preferences->windowMode()) {
+		RECT winrect = rc;
+        RECT workrect;
+
+        SystemParametersInfo(SPI_GETWORKAREA, 0, &workrect, 0);
+        int workwidth = workrect.right - workrect.left;
+        int workheight = workrect.bottom - workrect.top;
+
+        int winwidth = winrect.right - winrect.left;
+        int winheight = winrect.bottom - winrect.top;
+
+        winwidth = min(winwidth, workwidth);
+        winheight = min(winheight, workheight);
+
+        auto x = workrect.left + (workwidth - winwidth) / 2;
+        auto y = workrect.top + (workheight - winheight) / 2;
+
+		SetWindowPos(
+			g_hMainWnd,
+			HWND_DESKTOP,
+			x, y, winwidth, winheight,
+			SWP_SHOWWINDOW
+		);
 	}
 
 	ShowWindow(g_hMainWnd, nCmdShow);
 	UpdateWindow(g_hMainWnd);
-
 	return g_hMainWnd;
 }
 
@@ -1887,29 +1931,6 @@ ATOM RegisterWindowClass(HINSTANCE hInstance)
 	wcex.lpszClassName	= WINDOW_CLASS_NAME;
 
 	return RegisterClassEx(&wcex);
-}
-
-
-void CentreWindow(HWND hwnd)
-{
-
-    RECT winrect, workrect;
-    
-    SystemParametersInfo(SPI_GETWORKAREA, 0, &workrect, 0);
-    int workwidth = workrect.right -  workrect.left;
-    int workheight = workrect.bottom - workrect.top;
-    
-    GetWindowRect(hwnd, &winrect);
-    int winwidth = winrect.right - winrect.left;
-    int winheight = winrect.bottom - winrect.top;
-	
-    winwidth = min(winwidth, workwidth);
-    winheight = min(winheight, workheight);
-	
-    SetWindowPos(hwnd,HWND_TOP
-		, workrect.left + (workwidth-winwidth) / 2,workrect.top + (workheight-winheight) / 2,winwidth
-		, winheight,SWP_SHOWWINDOW);
-    SetForegroundWindow(hwnd);
 }
 
 char* ReturnKey(int nKey)

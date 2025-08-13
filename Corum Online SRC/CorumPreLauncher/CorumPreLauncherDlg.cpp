@@ -129,9 +129,9 @@ void CCorumPreLauncherDlg::storeCurrentPreferences() {
 }
 
 std::vector<CCorumPreLauncherDlg::ResolutionsListItemModel> CCorumPreLauncherDlg::resolutionsListModels() {
-	CorumPreferences::Resolution withTaskBar = {
-		GetSystemMetrics(SM_CXFULLSCREEN),
-		GetSystemMetrics(SM_CYFULLSCREEN)
+	CorumPreferences::Resolution fullScreen = {
+		GetSystemMetrics(SM_CXSCREEN),
+		GetSystemMetrics(SM_CYSCREEN)
 	};
 
 	RECT workrect;
@@ -139,7 +139,7 @@ std::vector<CCorumPreLauncherDlg::ResolutionsListItemModel> CCorumPreLauncherDlg
     int workwidth = workrect.right -  workrect.left;
     int workheight = workrect.bottom - workrect.top;
 
-	CorumPreferences::Resolution fullScreen{workwidth, workheight};
+	CorumPreferences::Resolution withTaskBar{workwidth, workheight};
 
 	std::vector<ResolutionsListItemModel> result{
 		{ L"Full screen with task bar",  withTaskBar}, 
@@ -156,7 +156,22 @@ std::vector<CCorumPreLauncherDlg::ResolutionsListItemModel> CCorumPreLauncherDlg
 
 void CCorumPreLauncherDlg::OnBnClickedButton1() {
 	storeCurrentPreferences();
-	ShellExecute(NULL, L"open", L"CorumOnlineResult.exe", NULL, NULL, 0);
+
+	PROCESS_INFORMATION ProcessInfo; // This is what we get as an [out] parameter
+
+    STARTUPINFO StartupInfo; // This is an [in] parameter
+
+    ZeroMemory(&StartupInfo, sizeof(StartupInfo));
+    StartupInfo.cb = sizeof StartupInfo; // Only compulsory field
+
+    if (CreateProcess(L"CorumOnlineResult.exe", NULL, NULL, NULL, FALSE, 0,
+                          NULL, NULL, &StartupInfo, &ProcessInfo)) {
+          WaitForSingleObject(ProcessInfo.hProcess, INFINITE);
+          CloseHandle(ProcessInfo.hThread);
+          CloseHandle(ProcessInfo.hProcess);
+    } else {
+          MessageBox(L"The game could not be started...");
+    }
 }
 
 void CCorumPreLauncherDlg::OnBnClickedExitbutton() {

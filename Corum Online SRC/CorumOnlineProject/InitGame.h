@@ -267,7 +267,8 @@ extern ChrInfoLayer*				g_pChrInfoEffect;
 extern CItemMoveManager				g_ItemMoveManager;
 extern CItemUsedManager				g_ItemUsedManager;
 
-extern std::shared_ptr<CorumPreferences::Preferences> corumPreferences(); 
+using PreferencesPtr = std::shared_ptr<CorumPreferences::Preferences>;
+extern  PreferencesPtr corumPreferences(); 
 
 extern void	(*OnKeyDown[ MAX_UPDATE_GAME ])		(WPARAM wParam, LPARAM lParam);
 extern void	(*OnKeyUp[ MAX_UPDATE_GAME ])		(WPARAM wParam, LPARAM lParam);
@@ -306,7 +307,7 @@ char*				ReturnKey(int nKey);
 IDIFontObject*		GetFont();
 DWORD __stdcall		DefaultErrorHandleProc(ERROR_TYPE type,DWORD dwErrorPriority,void* pCodeAddress,char* szStr);
 BOOL				IsCompressedTextureFormatOk();	
-HWND				InitInstance(HINSTANCE hInstance, int nCmdShow);
+HWND				InitInstance(HINSTANCE hInstance, int nCmdShow, PreferencesPtr preferences);
 ATOM				RegisterWindowClass(HINSTANCE hInstance);
 void				CentreWindow(HWND hwnd);
 LRESULT CALLBACK	WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
