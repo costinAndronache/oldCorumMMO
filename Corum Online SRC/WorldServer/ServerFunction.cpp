@@ -2103,37 +2103,38 @@ int GetPlayTime(DWORD dwCurTick, DWORD dwStartTick, DWORD dwFlag)
 
 BOOL FindEmptyPosNearDungeon(BYTE bWorldID, VECTOR3* vpDungeonPos, VECTOR3 *vpNearPos, BOOL bVillage)
 {
+	printf("\nTrying to probe near: (%.1f, %.1f)", vpDungeonPos->x, vpDungeonPos->z);
 	if(!g_pMap[ bWorldID ])
 	{
 		Log(LOG_IMPORTANT, "Invalid WorldID Entered at FindEmptyPosNearDungeon Function! (bWorldID:%d", bWorldID);
 		return FALSE;
 	}
 
+	//vpNearPos->x = vpDungeonPos->x;
+	//vpNearPos->y = vpDungeonPos->y;
+	//return TRUE;
+
 	MAP_TILE*	pTile = 0;
-	VECTOR3		vPos = { 0.f, 0.f, 0.f };
+	VECTOR3		vPos = *vpDungeonPos;
 	DWORD		dwCount = 0;	
 
-	while(dwCount < 4)
-	{
-		vPos = *vpDungeonPos;
-		dwCount++;
-		
+	while(dwCount < 64)
+	{		
 		float fDistance = (bVillage) ? 5.0f : 2.0f;
 
-		switch(dwCount)
+		switch(dwCount % 4)
 		{
-			case 1:		vPos.x -= (TILE_WIDTH * fDistance);	break;		//辑率规氢 
-			case 2:		vPos.z -= (TILE_WIDTH * fDistance);	break;		//巢率规氢
-			case 3:		vPos.z += (TILE_WIDTH * fDistance);	break;		//合率规氢
-			case 4:		vPos.x += (TILE_WIDTH * fDistance);	break;		//悼率规氢 
+			case 0:		vPos.x -= (TILE_WIDTH * fDistance);	break;		//辑率规氢 
+			case 1:		vPos.z -= (TILE_WIDTH * fDistance);	break;		//巢率规氢
+			case 2:		vPos.z += (TILE_WIDTH * fDistance);	break;		//合率规氢
+			case 3:		vPos.x += (TILE_WIDTH * fDistance);	break;		//悼率规氢 
 		}		
+
+		dwCount++;
 
 		pTile = g_pMap[bWorldID]->GetTile(vPos.x, vPos.z);	
 
-		if(!pTile)	return FALSE;
-
-		if(pTile->wAttr.uAttr != 1)
-		{
+		if(pTile && pTile->wAttr.uAttr != 1) {
 			vpNearPos->x = vPos.x;
 			vpNearPos->z = vPos.z;
 			return TRUE;

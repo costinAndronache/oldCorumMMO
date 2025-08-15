@@ -1,5 +1,6 @@
 #pragma once
 #include "../InitGame.h"
+#include "../NetworkClient.h"
 
 class SharedNetwork {
 public:
@@ -7,14 +8,20 @@ public:
 	using PacketIncomingEventHandler = std::function<void(T)>;
 
 	SharedNetwork();
-	static SharedNetwork* sharedInstance();
-
-	void send(CTDS_ITEM_MOVE);
+	static std::shared_ptr<SharedNetwork> sharedInstance();
 	void process(DSTC_ITEM_MOVE packet);
 	void onNextItemMove(PacketIncomingEventHandler<DSTC_ITEM_MOVE> handler);
+	void sendDisconnectOnWorldServer();
 
-	void send(CTDS_CHAR_LEVELUP);
-	void send(CTDS_SKILL_LEVELUP);
+	template<typename GamePacketType>
+	void send(GamePacketType packet) {
+          g_pNet->SendMsg(
+			  (char *)&packet, 
+			  packet.GetPacketSize(),
+              SERVER_INDEX_ZONE
+		  );
+	}
+
 private:
 	PacketIncomingEventHandler<DSTC_ITEM_MOVE> _incomingItemMoveHandler;
 };

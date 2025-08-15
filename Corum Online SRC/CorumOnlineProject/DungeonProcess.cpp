@@ -231,7 +231,8 @@ BOOL InitGameDungeon() {
 		g_pItemResourceHash,
 		SoundLibrary::sharedInstance(),
 		SharedNetwork::sharedInstance(),
-		_tooltipHelper
+		_tooltipHelper,
+		std::make_shared<GameExitManager>(SharedNetwork::sharedInstance(), g_pMainPlayer)
 	);
 
 	CBankWnd::GetInstance()->Init();

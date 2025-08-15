@@ -36,8 +36,9 @@ Interface::Interface(
 	const LP_SKILL_LIST_MANAGER skillListManager,
 	CItemResourceHash* resourceHash,
 	SoundLibrary* soundLibrary,
-	SharedNetwork* sharedNetwork,
-	TooltipHelper* tooltipHelper
+	std::shared_ptr<SharedNetwork> sharedNetwork,
+	TooltipHelper* tooltipHelper,
+	std::shared_ptr<GameExitManager> exitManager
 ) 
 {
 	_mainUser = mainUser;
@@ -221,11 +222,26 @@ Interface::Interface(
 	);
 
 	_userSkillsManager->refreshUserSkillsView();
+
+	_exitOptionsWindow = registerChildRenderable<ExitOptionsWindow>([=](){
+		return new ExitOptionsWindow({100, 100});
+	});
+	_exitOptionsWindow->onClose([=](){ _exitOptionsWindow->setHidden(true); });
+	_exitOptionsWindow->setHidden(true);
+
+	_exitOptionsManager = new ExitOptionsWindowManager(
+		_exitOptionsWindow,
+		exitManager,
+		ExitOptionsWindowManager::Mode::dungeon
+	);
+
+	
 	updateZIndexOffsetForce(1000);
 
 	setupDisplacement(_newItemsWindow->displacementHandle(), _newItemsWindow);
 	setupDisplacement(_statsView->displacementHandle(), _statsView);
 	setupDisplacement(_userSkillsView->displacementHandle(), _userSkillsView);
+	setupDisplacement(_exitOptionsWindow->displacementHandle(), _exitOptionsWindow);
 }
 
 void Interface::setupDisplacement(DisplacementHandleRenderable *handle, Renderable *forWindow) {
@@ -396,6 +412,10 @@ void Interface::processKeyDown(WPARAM wparam, LPARAM lparam) {
 
 	if (tolower(ascii) == 's') {
 		toggleWindow(_userSkillsView);
+	}
+
+	if (wparam == VK_ESCAPE) {
+		toggleWindow(_exitOptionsWindow);
 	}
 }
 

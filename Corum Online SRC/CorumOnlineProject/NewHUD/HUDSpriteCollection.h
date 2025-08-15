@@ -27,6 +27,7 @@ struct NewHUDResources {
 		group, lair, chat, match, rest, pk, system;
 
 	static CustomUI::Button::Sprites plus, up, xClose, next, previous;
+	static CustomUI::Button::Sprites genericButtonBackgroundSprites;
 
 	static CUISpriteModel inventoryItemUnderlaySprite;
 

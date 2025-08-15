@@ -4,12 +4,12 @@
 
 class StatusPointManager {
 public:
-	StatusPointManager(SharedNetwork* network);
+	StatusPointManager(std::shared_ptr<SharedNetwork>  network);
 
 	void increasePlayerStatusPoint(STATUS_POINT_KIND kind);
 	void increaseGuardianStatusPoint(STATUS_POINT_KIND kind);
 
 private:
-	SharedNetwork* _network;
+	std::shared_ptr<SharedNetwork>  _network;
 };
 

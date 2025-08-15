@@ -14,7 +14,7 @@ namespace NewInterface {
 		UserSkillsManager(
 			UserSkillsView* managedView, 
 			CMainUser* mainUser,
-			SharedNetwork* network,
+			std::shared_ptr<SharedNetwork> network,
 			SSKILL_LIST_MANAGER* skillListManager,
 			EffectLayer* effectLayer,
 			SoundLibrary* soundLibrary,
@@ -28,7 +28,7 @@ namespace NewInterface {
 		UserSkillsView* _managedView;
 		CMainUser* _mainUser;
 		SSKILL_LIST_MANAGER* _skillListManager;
-		SharedNetwork* _network;
+		std::shared_ptr<SharedNetwork> _network;
 		EffectLayer* _effectLayer;
 		SoundLibrary* _soundLibrary;
 		TooltipHelper* _tooltipHelper;

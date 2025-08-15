@@ -67,7 +67,7 @@ static SkillSheetView::Model convert(
 UserSkillsManager::UserSkillsManager(
 	UserSkillsView* managedView,
 	CMainUser* mainUser,
-	SharedNetwork* network,
+    std::shared_ptr<SharedNetwork> network,
 	SSKILL_LIST_MANAGER* skillListManager,
 	EffectLayer* effectLayer,
 	SoundLibrary* soundLibrary,

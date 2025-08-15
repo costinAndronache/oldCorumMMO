@@ -1,7 +1,7 @@
 #include "StatusPointManager.h"
 
-StatusPointManager::StatusPointManager(SharedNetwork* network) {
-	_network = network;
+StatusPointManager::StatusPointManager(std::shared_ptr<SharedNetwork> network):
+ _network(network) {
 }
 
 void StatusPointManager::increasePlayerStatusPoint(STATUS_POINT_KIND kind) {

@@ -12,7 +12,7 @@ namespace NewInterface {
 	public:
 		DragNDropManager(
 			CMainUser*, 
-			SharedNetwork*, 
+			std::shared_ptr<SharedNetwork>, 
 			CustomUI::DragNDropSystem*,
 			SoundLibrary*
 		);
@@ -25,7 +25,7 @@ namespace NewInterface {
 
 	private:
 		CMainUser* _mainUser;
-		SharedNetwork* _network;
+		std::shared_ptr<SharedNetwork>  _network;
 		SoundLibrary* _soundLibrary;
 		CustomUI::DragNDropSystem* _dragNDropSystem;
 

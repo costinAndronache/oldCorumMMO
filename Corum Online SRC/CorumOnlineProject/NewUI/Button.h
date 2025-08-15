@@ -15,6 +15,12 @@ namespace CustomUI {
 		typedef std::function<void()> EventHandler;
 
 		struct LabelModel {
+			LabelModel(
+				const std::string& inputText, 
+				SingleLineLabel::Appearance inputAppearance = SingleLineLabel::Appearance::defaultAppearance()
+			): text(inputText), appearance(inputAppearance) 
+			{ }
+
 			LabelModel(): text(""), appearance(Color::white) {}
 			std::string text;
 			SingleLineLabel::Appearance appearance;

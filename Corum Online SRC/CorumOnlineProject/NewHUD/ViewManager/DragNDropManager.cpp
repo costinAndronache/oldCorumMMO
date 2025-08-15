@@ -44,7 +44,7 @@ static CTDS_ITEM_MOVE dropToTilePacket(ITEM_NATIVE from, int fromIndex, int quan
 
 DragNDropManager::DragNDropManager(
 	CMainUser* mainUser, 
-	SharedNetwork* network, 
+	std::shared_ptr<SharedNetwork> network, 
 	CustomUI::DragNDropSystem* dragNDropSystem,
 	SoundLibrary* soundLibrary
 ) {

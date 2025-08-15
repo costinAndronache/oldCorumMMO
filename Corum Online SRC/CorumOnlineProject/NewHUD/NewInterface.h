@@ -11,7 +11,7 @@
 #include "ViewManager/UserSkillsManager.h"
 #include "DynamicInfoBox.h"
 #include "ViewManager/TooltipHelper.h"
-
+#include "ViewManager/ExitOptionsWindowManager.h"
 
 namespace NewInterface {
 	class Interface: 
@@ -25,8 +25,9 @@ namespace NewInterface {
 			const LP_SKILL_LIST_MANAGER skillListManager,
 			CItemResourceHash* resourceHash,
 			SoundLibrary* soundLibrary,
-			SharedNetwork* sharedNetwork,
-			TooltipHelper* tooltipHelper
+			std::shared_ptr<SharedNetwork> network,
+			TooltipHelper* tooltipHelper,
+			std::shared_ptr<GameExitManager> exitManager
 		);
 		void renderWithRenderer(I4DyuchiGXRenderer* renderer, int zIndex) override;
 		bool swallowsMouse(CustomUI::Point mouse) override;
@@ -65,7 +66,7 @@ namespace NewInterface {
 		CharacterStatsView* _statsView;
 		UserSkillsView* _userSkillsView;
 		NewSkillSelectionView* _skillSelectionView;
-		DynamicInfoBox* _dynamicInfoBox;
+		ExitOptionsWindow* _exitOptionsWindow;
 
 
 		CustomUI::DragNDropSystem* _dragNDropSystem;
@@ -75,6 +76,7 @@ namespace NewInterface {
 		EquipItemsManager* _equipItemsManager;
 		CharacterStatsManager* _statsManager;
 		UserSkillsManager* _userSkillsManager;
+		ExitOptionsWindowManager* _exitOptionsManager;
 
 		TooltipHelper* _tooltipHelper;
 		TooltipLayer* _tooltipLayer;
