@@ -1313,7 +1313,7 @@ DWORD __stdcall AfterRenderGameWorld()
 			if (SendPacketRequestDungeonInfo(WORD(pDungeon->m_dwID)))
 				continue;
 			
-			if(pDungeon->IsConquer())	//점령 가능 던전 
+			if(pDungeon->isSiegeDungeon())	//점령 가능 던전 
 			{
 				wsprintf(szBuf, "%s\n%s", pDungeon->m_szDungeonName,	pDungeon->m_szOwner);
 
@@ -3409,7 +3409,7 @@ void DisplayDungeonInfoOnWorldMap(DUNGEON_DATA_EX* pDungeon)
 	int nSec;
 	char szTemp[0xff]={0,};
 
-	if(pDungeon->IsConquer())
+	if(pDungeon->isSiegeDungeon())
 	{
 		// 점령 가능 던전.
 		pSpr->SetScaling(130, 105);
@@ -3672,7 +3672,7 @@ void OnCrashUser(GXOBJECT_HANDLE handle, LPObjectDesc pData, GXSCHEDULE_PROC_MSG
 			return;
 		}	
 
-		if (TRUE == pDungeon->IsConquer() && pDungeon->m_dwOwnerIndex != g_pMainPlayer->m_dwUserIndex)
+		if (TRUE == pDungeon->isSiegeDungeon() && pDungeon->m_dwOwnerIndex != g_pMainPlayer->m_dwUserIndex)
 		{			
 			pOKWnd->m_bType = __OKWND_TYPE_POTAL_ENTRANCE;
 			pOKWnd->m_dwDungeonID = pDungeon->m_dwID;			

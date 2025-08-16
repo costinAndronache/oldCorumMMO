@@ -443,10 +443,10 @@ void __stdcall TimerPerSec(DWORD dwVal)
 		{
 			DUNGEON_DATA_EX* pDungeon = (DUNGEON_DATA_EX*)g_pDungeonTable->m_pDungeonList->GetAndAdvance(pos);
 			
-			if (pDungeon->IsConquer() && pDungeon->m_pServer)
+			if (pDungeon->isSiegeDungeon() && pDungeon->m_pServer)
 			{	
 				// 점령던전들 돌면서갱신해야할 유저들에게 던전 갱신 이벤트를 보내줘라.
-				pDungeon->StartSiegeWarTime();
+				pDungeon->tryStartWarOrEndCurrentWar();
 				
 				if (!pDungeon->m_bSiege)
 				{
@@ -1989,15 +1989,8 @@ void QueryAllServer()
 			dwIdleTime = 0;// 공성시간으로 만들어라.			
 		}
 
-		if(	IS_ABLE_SERVICE_TYPE(ST_DEVELOP) )//hwoarang
-		{
-			//pDungeon->SetSiegeStartDestTime( 0 );
-			pDungeon->SetSiegeStartDestTime( dwIdleTime );
-		}
-		else
-		{
-			pDungeon->SetSiegeStartDestTime( dwIdleTime );
-		}
+		pDungeon->setSiegeWarTimeSTART( dwIdleTime );
+
 
 		//	레벨업시간 이어지는 처리
 		dwIdleTime = pDungeon->GetLevelUpTickCount();

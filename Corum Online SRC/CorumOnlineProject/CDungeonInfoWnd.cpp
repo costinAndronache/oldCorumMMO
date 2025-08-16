@@ -173,7 +173,7 @@ void CDungeonInfoWnd::RenderText()
 					m_fPosX+228, m_fPosX+350, m_fPosZ+52+nLine*17, m_fPosZ+64+nLine*17, GetStartOrder()+2);
 
 								
-				if(pDungeon->IsConquer()) // modified by deepdark!
+				if(pDungeon->isSiegeDungeon()) // modified by deepdark!
 				{
 					int nHour = 0;
 					int nMinute = 0;
@@ -272,7 +272,7 @@ void CDungeonInfoWnd::RenderText()
 				RenderFont(szInfo
 					, m_fPosX+117, m_fPosX+217, m_fPosZ+52+nLine*17, m_fPosZ+64+nLine*17, GetStartOrder()+2);				
 				
-				if(pDungeon->IsConquer())
+				if(pDungeon->isSiegeDungeon())
 				{
 					int nHour;
 					int nMinute;

@@ -48,12 +48,12 @@ public:
 	WORD						GetLevel();
 	WORD						GetUpgradeTime();
 	int							GetIdleTime();
-	void						SetSiegeStartDestTime(DWORD dwTick);
-	void						SetSiegeEndDestTime(DWORD dwTick);
-	BOOL						StartSiegeWarTime();
+	void						setSiegeWarTimeSTART(DWORD dwTick);
+	void						setSiegeWarTimeEND(DWORD dwTick);
+	BOOL						tryStartWarOrEndCurrentWar();
 	BOOL						LevelUpgrade();
 	void						SendRefreshProductionInfo(WORD wItemID, BYTE byProductionCount);
-	BOOL						IsConquer();		
+	BOOL						isSiegeDungeon();		
 	BOOL						IsStartWarTime();
 	BOOL						IsEndWarTime();
 	BOOL						IsLevelUpgradeTime();

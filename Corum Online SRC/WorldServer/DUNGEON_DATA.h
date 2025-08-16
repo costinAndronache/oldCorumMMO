@@ -42,8 +42,8 @@ struct DUNGEON_DATA
 	DWORD	m_dwAccExp;									// 누적된 경험치
 	CItem	m_cGuardianItem;							// 가디언 아이템
 	DWORD	m_dwPieceStartTime;							// 평화롭게 상태가 바뀌기 시작한 시간.
-	DWORD	m_dwPieceCoolTime;							// 공성 주기
-	DWORD	m_wBattleStartTime;							// 공성전 시작한 시간
+	DWORD	m_dwPieceCoolTime;	
+	DWORD	m_wBattleStartTime;
 	BYTE	m_byDefenseCount;							// 방어 성공횟수
 	BYTE	m_byProperty;								// 속성
 	BYTE	m_byEntererMinLevel;						// 들어올놈의 최소 레벨

@@ -247,7 +247,7 @@ void CmdTryToJoinDungeon(CWorldUser* pUser ,char* pMsg,DWORD dwLength)
 
 	}
 
-	if (pDungeon->IsConquer())
+	if (pDungeon->isSiegeDungeon())
 	{
 		if (pUser->m_dwUserIndex != pDungeon->m_dwOwnerIndex)
 		{

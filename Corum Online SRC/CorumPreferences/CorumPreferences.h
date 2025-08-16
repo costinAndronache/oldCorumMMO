@@ -31,4 +31,10 @@ namespace CorumPreferences {
 		bool _windowMode;
 		Resolution _resolution;
 	};
+
 }
+
+void fixDungeonStaticDataEntry(int id, const char* name);
+void fixLayerFormationForAllEntries();
+void serializeCurrentDungeonStaticDataFixes();
+

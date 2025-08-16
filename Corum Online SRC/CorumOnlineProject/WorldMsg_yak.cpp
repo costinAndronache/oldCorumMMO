@@ -61,7 +61,7 @@ void CmdReplyDungeonInfo( char* pMsg, DWORD dwLen )
 	pDungeon->bReceivedInfo = 1;
 	pDungeon->pReceivedDungeonPos = g_pDungeonTable->m_pReceivedDungeonList->AddTail( pDungeon );
 
-	if (pDungeon->IsConquer())
+	if (pDungeon->isSiegeDungeon())
 	{
 		if (pDungeon->m_bSiege)
 			pDungeon->StopOperationTime();		
@@ -78,7 +78,7 @@ void CmdRefreshEventDungeon_StartSiege(char* pMsg, DWORD dwLen)
 	WSTC_REFRESHEVENT_DUNGEON_STARTSIEGE* pPacket = (WSTC_REFRESHEVENT_DUNGEON_STARTSIEGE*)pMsg;
 	DUNGEON_DATA_EX* pDungeon = g_pDungeonTable->GetDungeonInfo(pPacket->wDungeonID);
 		
-	pDungeon->SetSiegeEndDestTime(pPacket->dwSiegeEndTick);
+	pDungeon->setSiegeWarENDTime(pPacket->dwSiegeEndTick);
 	pDungeon->StopOperationTime();
 	
 	// 월드에 있을때만 보여줘
@@ -94,7 +94,7 @@ void CmdRefreshEventDungeon_StartSiege(char* pMsg, DWORD dwLen)
 		ShowObject(pDungeon->m_hSiegingDungeon);
 	}
 	
-	if (pDungeon->IsConquer())
+	if (pDungeon->isSiegeDungeon())
 	{		
 		if (g_pThisDungeon == pDungeon)
 		{
@@ -129,7 +129,7 @@ void CmdRefreshEventDungeon_EndSiege(char* pMsg, DWORD dwLen)
 	WSTC_REFRESHEVENT_DUNGEON_ENDSIEGE* pPacket = (WSTC_REFRESHEVENT_DUNGEON_ENDSIEGE*)pMsg;
 	DUNGEON_DATA_EX*	pDungeon = g_pDungeonTable->GetDungeonInfo(pPacket->wDungeonID);
 	
-	pDungeon->SetSiegeStartDestTime(pPacket->dwSiegeStartTick);
+	pDungeon->setNextSiegeWarTimeSTART(pPacket->dwSiegeStartTick);
 	pDungeon->ResumeOperationTime();
 	if (pDungeon->m_hSiegingDungeon)
 	{

@@ -30,7 +30,7 @@
 #include "../BaseLibrary/Timer.h"
 #include "DungeonInterfaceLayout.h"
 #include "../BaseLibrary/mdump.h"
-
+#include "../CorumPreferences/CorumPreferences.h"
 
 void message(char* const info) {
 	MessageBox(g_hMainWnd, info, "CorumOnlineProject", MB_OK);
@@ -46,6 +46,9 @@ int APIENTRY WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdL
 
 	AllocConsole();
 	freopen("CONOUT$", "w", stdout);
+
+	fixLayerFormationForAllEntries();
+	serializeCurrentDungeonStaticDataFixes();
 
 #ifndef DEVELOP_MODE	
 	if(!CheckGlobalEventHandle())

@@ -577,6 +577,7 @@
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='dev|Win32'">WIN32;_DEBUG;_WINDOWS;_MBCS;_USRDLL;COMMONSERVER_EXPORTS;DEV_MODE;NEW_COMMAND</PreprocessorDefinitions>
       <BasicRuntimeChecks Condition="'$(Configuration)|$(Platform)'=='dev|Win32'">EnableFastChecks</BasicRuntimeChecks>
     </ClCompile>
+    <ClCompile Include="DungeonDataOverrides.cpp" />
     <ClCompile Include="NTAes.cpp" />
     <ClCompile Include="NTNetWork.cpp" />
     <ClCompile Include="StdAfx.cpp">
@@ -831,6 +832,7 @@
     <ClInclude Include="CommonServer.h" />
     <ClInclude Include="CommonServerExports.h" />
     <ClInclude Include="CommonAllServers.h" />
+    <ClInclude Include="DungeonDataOverrides.h" />
     <ClInclude Include="HS_HASH.h" />
     <ClInclude Include="HS_LIST.h" />
     <ClInclude Include="NTAes.h" />

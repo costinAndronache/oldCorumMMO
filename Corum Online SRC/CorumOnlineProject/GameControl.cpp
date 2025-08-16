@@ -26,7 +26,7 @@
 #include "CodeFun.h"
 #include "NetworkTimeObserver.h"
 #include "NMCrypt.h"
-
+#include "../CorumPreferences/CorumPreferences.h"
 
 void	(*Render[ MAX_RENDER_MODE ])();
 BOOL	(*InitGameProcess[ MAX_UPDATE_GAME ])();
@@ -1278,6 +1278,8 @@ void LoadTotalDungeonInfo()
 
 	CreateConvertCDBToMAP(p);
 	
+	GetCurrentDirectory(0xff, szBuf);
+
 	FILE*	fp;
 	fp = fopen(p, "rt");
 	
@@ -1308,6 +1310,8 @@ void LoadTotalDungeonInfo()
 					pInfo->m_wWorldMapID = (BYTE)dwWorldMapID;
 					g_pDungeonTable->AddDungeonInfo(pInfo);
 				}
+
+				fixDungeonStaticDataEntry(dwID, szDungeonName);
 				
 				memset(pInfo->m_szDungeonName, 0, sizeof(pInfo->m_szDungeonName));
 				__lstrcpyn(pInfo->m_szDungeonName, szDungeonName, sizeof(szDungeonName));
@@ -1315,6 +1319,7 @@ void LoadTotalDungeonInfo()
 		}
 	} 
 
+	serializeCurrentDungeonStaticDataFixes();
 	fclose(fp);
 	DeleteFile(szFileName);
 }
@@ -2265,7 +2270,7 @@ BOOL IsPKZone()
 #if IS_JAPAN_LOCALIZING()
 	return (g_pThisDungeon->IsConquer()&& g_pMainPlayer->m_bCurLayer) || g_bAdultMode;
 #else
-	return (g_pThisDungeon->IsConquer()&& g_pMainPlayer->m_bCurLayer) || (!g_pThisDungeon->IsPathWay() && !g_pThisDungeon->IsVillage() && g_pThisDungeon->m_wLayerCount-1 == g_pMainPlayer->m_bCurLayer) ;
+	return (g_pThisDungeon->isSiegeDungeon()&& g_pMainPlayer->m_bCurLayer) || (!g_pThisDungeon->IsPathWay() && !g_pThisDungeon->IsVillage() && g_pThisDungeon->m_wLayerCount-1 == g_pMainPlayer->m_bCurLayer) ;
 #endif
 }
 

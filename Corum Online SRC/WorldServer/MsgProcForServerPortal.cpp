@@ -68,7 +68,7 @@ void CmdRequestUserAcceptForPortal(SERVER_DATA* pServer, char* pMsg, DWORD dwLen
 				goto lb_Fail;
 			}
 		}
-		else if (pDungeon->IsConquer() && pDungeon->m_dwOwnerIndex != pPacket->dwUserIndex )
+		else if (pDungeon->isSiegeDungeon() && pDungeon->m_dwOwnerIndex != pPacket->dwUserIndex )
 		{
 			// 입장료 깍아라.
 			if (pPacket->dwUserMoney >= pDungeon->GetEntrancePay())

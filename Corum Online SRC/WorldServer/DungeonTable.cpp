@@ -61,7 +61,7 @@ BOOL CDungeonTable::Add(DUNGEON_DATA_EX* pDungeon)
 	}
 
 	//if(pDungeon->dwID > 4000 && pDungeon->pServer)	//점령던전 이면  
-	if (pDungeon->IsConquer())	//점령던전 이면			//개발용..  실제는 윗줄로 갱신 
+	if (pDungeon->isSiegeDungeon())	//점령던전 이면			//개발용..  실제는 윗줄로 갱신 
 	{
 		pDungeon->m_pListPos = m_pDungeonList->AddTail(pDungeon);
 	}
@@ -119,7 +119,7 @@ void CDungeonTable::Remove(DUNGEON_DATA_EX* pInfo)
 {
 	DWORD dwIndex = pInfo->m_dwID%m_dwMaxBucketNum;
 	
-	if(pInfo->IsConquer() )	//점령던전 이면 
+	if(pInfo->isSiegeDungeon() )	//점령던전 이면 
 	{
 		m_pDungeonList->RemoveAt(pInfo->m_pListPos);
 	}	

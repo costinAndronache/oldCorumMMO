@@ -73,10 +73,8 @@ DWORD DUNGEON_DATA_EX::GetEventLastActionTick()
 }
 
 
-void DUNGEON_DATA_EX::SetSiegeStartDestTime(DWORD dwTick)
+void DUNGEON_DATA_EX::setSiegeWarTimeSTART(DWORD dwTick)
 {
-	
-
 	// 공성전 될 시간 셋팅한다.
 	m_bSiege = FALSE;
 	m_dwRemainSiegeStartTick = g_dwCurTick + dwTick;
@@ -85,7 +83,7 @@ void DUNGEON_DATA_EX::SetSiegeStartDestTime(DWORD dwTick)
 }
 
 
-void DUNGEON_DATA_EX::SetSiegeEndDestTime(DWORD dwTick)
+void DUNGEON_DATA_EX::setSiegeWarTimeEND(DWORD dwTick)
 {
 
 	m_bSiege = TRUE;
@@ -124,7 +122,7 @@ void DUNGEON_DATA_EX::SendToUsers(char* pPacket, DWORD dwSize)
 void DUNGEON_DATA_EX::SendStartSiege()
 {
 	
-	SetSiegeEndDestTime(m_wBattleTimeLimit * 1000 * 60);
+	setSiegeWarTimeEND(m_wBattleTimeLimit * 1000 * 60);
 	
 	// 클라이언트에게 보내줘라.
 	WSTC_REFRESHEVENT_DUNGEON_STARTSIEGE packet;
@@ -141,12 +139,8 @@ void DUNGEON_DATA_EX::SendStartSiege()
 	}
 }
 
-
-void DUNGEON_DATA_EX::SendEndSiege(BYTE bDefenseSuccess)
-{
-
-	
-	SetSiegeStartDestTime( GetIdleTime() - (m_wBattleTimeLimit * 60 * 1000));//(주기 - 쟁타임)
+void DUNGEON_DATA_EX::SendEndSiege(BYTE bDefenseSuccess) {
+	setSiegeWarTimeSTART( GetIdleTime() - (m_wBattleTimeLimit * 60 * 1000));//(주기 - 쟁타임)
 		
 	// 유저에게 보내줘라.	
 	WSTC_REFRESHEVENT_DUNGEON_ENDSIEGE	packet;
@@ -191,7 +185,7 @@ void DUNGEON_DATA_EX::SetDefenseCount(BYTE byDefenseCount)
 }
 
 
-BOOL DUNGEON_DATA_EX::StartSiegeWarTime()
+BOOL DUNGEON_DATA_EX::tryStartWarOrEndCurrentWar()
 {
 	// 공성전 시작해도 되는가?
 	if (m_bSiege == FALSE)	
@@ -419,7 +413,7 @@ void DUNGEON_DATA_EX::SetOwner(DWORD dwOwnerIndex, DWORD dwGuildID, char* pOwner
 
 
 // 던점 점령이 가능한가?	
-BOOL DUNGEON_DATA_EX::IsConquer()
+BOOL DUNGEON_DATA_EX::isSiegeDungeon()
 {
 	return (m_dwID >= 4000) && (m_dwID < 5000);
 }
