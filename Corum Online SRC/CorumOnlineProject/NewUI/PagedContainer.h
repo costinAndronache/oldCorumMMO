@@ -10,8 +10,8 @@ namespace CustomUI {
 
 		template<typename Model>
 		void rebuildPages(const std::vector<Model>& models,
-			std::function<Renderable* (Rect frameInParent, Model model, int index)> createFn) {
-			deconstructChildrenWhere([=](Renderable* child) { return child != _pager; });
+			std::function<std::shared_ptr<Renderable> (Rect frameInParent, Model model, int index)> createFn) {
+			deconstructChildrenWhere([=](auto child) { return child != _pager; });
 			_pages.erase(_pages.begin(), _pages.end());
 
 			for (int i = 0; i < models.size(); i++) {
@@ -28,9 +28,9 @@ namespace CustomUI {
 		void setActivePage(unsigned int pageIndexOneBased);
 		unsigned int activePageIndex() { return _pager->activePageIndex(); }
 	private:
-		PagerControl* _pager;
+		std::shared_ptr<PagerControl> _pager;
 		Rect _pageFrame;
-		std::vector<Renderable*> _pages;
+		std::vector<std::shared_ptr<Renderable>> _pages;
 	};
 }
 

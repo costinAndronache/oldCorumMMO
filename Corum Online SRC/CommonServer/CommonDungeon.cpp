@@ -2,7 +2,7 @@
 #include "CommonServer.h"
 #include "CommonDungeon.h"
 
-DUNGEON_TYPE DECLSPECIFIER DungeonIDtoType(const DWORD dwID)
+DUNGEON_TYPE COMMONSERVERDECLSPECIFIER DungeonIDtoType(const DWORD dwID)
 {
 	if ( (1 <= dwID) && (10 >= dwID) )				
 	{	// ¸¶À»

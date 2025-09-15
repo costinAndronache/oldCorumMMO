@@ -27,10 +27,10 @@ namespace NewInterface {
 
 		void updateModel(Model model);
 	private:
-		CustomUI::SpriteRenderable* _spriteRenderable;
-		CustomUI::Button* _increaseButton;
-		CustomUI::SingleLineLabel* _levelInfoLabel;
-		CustomUI::Hoverable* _hoverableOverSprite;
+		std::shared_ptr<CustomUI::SpriteRenderable> _spriteRenderable;
+		std::shared_ptr<CustomUI::Button> _increaseButton;
+		std::shared_ptr<CustomUI::SingleLineLabel> _levelInfoLabel;
+		std::shared_ptr<CustomUI::Hoverable> _hoverableOverSprite;
 	};
 
 	class SkillsContainerView: public CustomUI::Renderable {
@@ -42,9 +42,9 @@ namespace NewInterface {
 		void refreshWithModels(const std::vector<Model>& models); 
 
 	private:
-		CustomUI::SingleLineLabel* _titleLabel;
-		CustomUI::MatrixContainer* _container;
-		CustomUI::BorderRenderable* _border;
+		std::shared_ptr<CustomUI::SingleLineLabel> _titleLabel;
+		std::shared_ptr<CustomUI::MatrixContainer> _container;
+		std::shared_ptr<CustomUI::BorderRenderable> _border;
 	};
 
 	class SkillSheetView: public CustomUI::Renderable {
@@ -63,8 +63,8 @@ namespace NewInterface {
 		void refreshWith(Model model);
 
 	private:
-		GenericSkillView* _masterySkillView;
-		CustomUI::MatrixContainer* _skillContainersHost;
+		std::shared_ptr<GenericSkillView> _masterySkillView;
+		std::shared_ptr<CustomUI::MatrixContainer> _skillContainersHost;
 	};
 
 
@@ -88,13 +88,13 @@ namespace NewInterface {
 		void refreshWith(Model model);
 		void onClassSheetSwitch(ClassSheetSwitchHandler handler) { _classSwitchHandler = handler;}
 
-		DisplacementHandleRenderable* displacementHandle() { return _displacementHandle;}
+		std::shared_ptr<DisplacementHandleRenderable> displacementHandle() { return _displacementHandle;}
 	private:
-		DisplacementHandleRenderable* _displacementHandle;
-		CustomUI::SingleLineLabel* _titleLabel;
-		CustomUI::Button *_closeButton;
-		CustomUI::RadioButtonGroup* _radioGroup;
-		std::vector<SkillSheetView*> _skillSheetViews;
+		std::shared_ptr<DisplacementHandleRenderable> _displacementHandle;
+		std::shared_ptr<CustomUI::SingleLineLabel> _titleLabel;
+		std::shared_ptr<CustomUI::Button> _closeButton;
+		std::shared_ptr<CustomUI::RadioButtonGroup> _radioGroup;
+		std::vector<std::shared_ptr<SkillSheetView>> _skillSheetViews;
 		ClassSheetSwitchHandler _classSwitchHandler;
 		void setVisibleSkillSheetAtIndex(int index);
 	};

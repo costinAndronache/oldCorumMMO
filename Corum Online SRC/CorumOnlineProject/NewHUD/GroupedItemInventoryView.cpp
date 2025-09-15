@@ -51,7 +51,7 @@ GroupedItemInventoryView::GroupedItemInventoryView(CustomUI::Rect frameInParent,
 	const auto radioButtonGroupFrame = bounds()
 		.withHeight(radioGroupHeight);
 	_radioButtonGroup = registerChildRenderable<RadioButtonGroup>([=]() {
-		return new RadioButtonGroup(
+		return std::make_shared<RadioButtonGroup>(
 			std::vector<RadioButtonGroup::LabeledButtonModel>{smallModel, largeModel },
 			radioButtonGroupFrame,
 			0
@@ -68,11 +68,11 @@ GroupedItemInventoryView::GroupedItemInventoryView(CustomUI::Rect frameInParent,
 		.withInsets({ radioGroupHeight, 0, 0, 0 });
 
 	_smallItemsInventory = registerChildRenderable<ItemInventoryView>([=]() {
-		return new ItemInventoryView(inventoryFrame, resourceHash, ItemInventoryView::smallInventoryAppearance);
+		return std::make_shared<ItemInventoryView>(inventoryFrame, resourceHash, ItemInventoryView::smallInventoryAppearance);
 	});
 
 	_largeItemsInventory = registerChildRenderable<ItemInventoryView>([=]() {
-		return new ItemInventoryView(inventoryFrame, resourceHash, ItemInventoryView::largeInventoryAppearance);
+		return std::make_shared<ItemInventoryView>(inventoryFrame, resourceHash, ItemInventoryView::largeInventoryAppearance);
 	});
 
 }
@@ -101,7 +101,7 @@ void GroupedItemInventoryView::setActiveTab(Tab tab) {
 	_radioButtonGroup->setActiveButtonIndex(index);
 }
 
-ItemInventoryView* GroupedItemInventoryView::inventoryViewFor(Tab tab) {
+std::shared_ptr<ItemInventoryView> GroupedItemInventoryView::inventoryViewFor(Tab tab) {
 	switch (tab) {
 	case Tab::smallItems:
 		return _smallItemsInventory;

@@ -13,8 +13,8 @@
 #define GKO_EXIST		0
 
 
-int		DECLSPECIFIER CreateGlobalKernelObject(DWORD dwServerID); // FALSE: 이미 실행중인 서버임!
-void	DECLSPECIFIER DeleteGlobalKernelObject();
+int		COMMONSERVERDECLSPECIFIER CreateGlobalKernelObject(DWORD dwServerID); // FALSE: 이미 실행중인 서버임!
+void	COMMONSERVERDECLSPECIFIER DeleteGlobalKernelObject();
 
 
 #endif 

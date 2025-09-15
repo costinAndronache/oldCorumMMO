@@ -3,7 +3,6 @@
 
 class ItemUsageManager {
 public:
-	static ItemUsageManager* sharedInstance();
 	ItemUsageManager();
 
 	bool tryUseBeltItem(CItem item, int index);

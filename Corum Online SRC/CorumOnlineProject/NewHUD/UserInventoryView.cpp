@@ -41,12 +41,12 @@ NewItemsWindow::NewItemsWindow(CustomUI::Point originInParent, CItemResourceHash
 	auto displacementHandleFrame = Rect{{0, 0}, btnSize};
 
 	_displacementHandle = registerChildRenderable<DisplacementHandleRenderable>([=](){
-		return new DisplacementHandleRenderable(displacementHandleFrame);
+		return std::make_shared<DisplacementHandleRenderable>(displacementHandleFrame);
 	});
 
 	auto labelFrame = _bounds.withHeight(btnSize.height);
 	_titleLabel = registerChildRenderable<SingleLineLabel>([=]() {
-		return new SingleLineLabel(
+		return std::make_shared<SingleLineLabel>(
 			labelFrame,
 			SingleLineLabel::Appearance::defaultAppearance(),
 			"INVENTORY"
@@ -59,7 +59,7 @@ NewItemsWindow::NewItemsWindow(CustomUI::Point originInParent, CItemResourceHash
 		.withSize(btnSize);
 
 	_closeButton = registerChildRenderable<Button>([=]() {
-		return new Button(
+		return std::make_shared<Button>(
 			Button::Sprites { 
 				SpriteCollection::xCloseSprite, 
 				SpriteCollection::xCloseSprite, 
@@ -79,7 +79,7 @@ NewItemsWindow::NewItemsWindow(CustomUI::Point originInParent, CItemResourceHash
 	};
 	
 	_equipItemsView = registerChildRenderable<GenericItemsContainerView>([=]() {
-		return new GenericItemsContainerView(equipFrame, itemResourceHash, equipAppearance);
+		return std::make_shared<GenericItemsContainerView>(equipFrame, itemResourceHash, equipAppearance);
 	});
 
 	const auto groupedFrame = Rect{
@@ -88,7 +88,7 @@ NewItemsWindow::NewItemsWindow(CustomUI::Point originInParent, CItemResourceHash
 	};
 
 	_groupedInventoryView = registerChildRenderable<GroupedItemInventoryView>([=]() {
-		return new GroupedItemInventoryView(groupedFrame, itemResourceHash);
+		return std::make_shared<GroupedItemInventoryView>(groupedFrame, itemResourceHash);
 	});
 
 	_groupedInventoryView->updateBackground(NewHUDResources::inventoryItemUnderlays.inventoryBackground);

@@ -24,16 +24,16 @@ namespace CustomUI {
 
 		void onActiveIndexUpdate(ActiveIndexUpdateHandler handler) { _handler = handler; };
 	private:
-		void toggleButtonDidSwitchState(ToggleButton* button, bool isOn);
+		void toggleButtonDidSwitchState(std::shared_ptr<ToggleButton> button, bool isOn);
 
-		ToggleButton* buildFromModelList(const std::vector<ButtonModel>*, int index, Rect frame);
-		ToggleButton* buildFromLabeledModelList(const std::vector<LabeledButtonModel>*, int index, Rect frame);
+		std::shared_ptr<ToggleButton> buildFromModelList(const std::vector<ButtonModel>*, int index, Rect frame);
+		std::shared_ptr<ToggleButton> buildFromLabeledModelList(const std::vector<LabeledButtonModel>*, int index, Rect frame);
 
 		void adjustButtons(const unsigned int activeButtonIndex);
 
 		ActiveIndexUpdateHandler _handler;
 		unsigned int _activeButtonIndex;
-		std::vector<ToggleButton*> _buttons;
+		std::vector<std::shared_ptr<ToggleButton>> _buttons;
 	};
 }
 

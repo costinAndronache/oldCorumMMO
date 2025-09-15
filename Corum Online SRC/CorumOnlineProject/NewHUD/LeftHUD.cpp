@@ -10,13 +10,13 @@ LeftHUD::LeftHUD(CustomUI::Point originInParent) {
 	_frameInParent = { originInParent, NewHUDResources::newHUDSize };
 
 	_leftHUDSprite = registerChildRenderable<SpriteRenderable>([=]() {
-		return new SpriteRenderable(bounds(), NewHUDResources::leftInterfaceHUDSprite);
+		return std::make_shared<SpriteRenderable>(bounds(), NewHUDResources::leftInterfaceHUDSprite);
 	});
 
 	const auto hpBarFrame = Rect{ { 0, 60 }, {302, 13} };
 
 	_hpBar = registerChildRenderable<HorizontalScalingBar>([=]() {
-		return 	new HorizontalScalingBar(
+		return std::make_shared<HorizontalScalingBar>(
 			NewHUDResources::hpBarSprite,
 			hpBarFrame,
 			HorizontalScalingBar::Direction::leftRight);
@@ -24,7 +24,7 @@ LeftHUD::LeftHUD(CustomUI::Point originInParent) {
 
 	const auto expBarFrame = Rect{ {0, 75}, {302, 5} };
 	_expBar = registerChildRenderable<HorizontalScalingBar>([=]() {
-		return new HorizontalScalingBar(
+		return std::make_shared<HorizontalScalingBar>(
 			NewHUDResources::expBarSprite,
 			expBarFrame,
 			HorizontalScalingBar::Direction::leftRight
@@ -33,42 +33,42 @@ LeftHUD::LeftHUD(CustomUI::Point originInParent) {
 
 	const auto tradeBtnFrame = Rect{ {0, 14}, {52, 18} };
 	_tradeBtn = registerChildRenderable<Button>([=]() {
-		return new Button(NewHUDResources::trade, tradeBtnFrame);
+		return std::make_shared<Button>(NewHUDResources::trade, tradeBtnFrame);
 	});
 
 	const auto shopBtnFrame = Rect{ {0, 33}, {52, 18} };
 	_shopBtn = registerChildRenderable<Button>([=]() {
-		return new Button(NewHUDResources::shop, shopBtnFrame);
+		return std::make_shared<Button>(NewHUDResources::shop, shopBtnFrame);
 	});
 
 	const auto itemBtnFrame = Rect{ {72, 35}, {57, 18} };
 	_itemBtn = registerChildRenderable<Button>([=]() {
-		return new Button(NewHUDResources::item, itemBtnFrame);
+		return std::make_shared<Button>(NewHUDResources::item, itemBtnFrame);
 	});
 
 	const auto statsBtnFrame = Rect{ {152, 35}, {59, 18} };
 	_statsBtn = registerChildRenderable<Button>([=]() {
-		return new Button(NewHUDResources::stats, statsBtnFrame);
+		return std::make_shared<Button>(NewHUDResources::stats, statsBtnFrame);
 	});
 
 	const auto skillsBtnFrame = Rect{ { 228, 35}, {59, 18} };
 	_skillsBtn = registerChildRenderable<Button>([=]() {
-		return new Button(NewHUDResources::skill, skillsBtnFrame);
+		return std::make_shared<Button>(NewHUDResources::skill, skillsBtnFrame);
 	});
 
 	const auto pkBtnFrame = Rect{ {330, 83}, {32, 32} };
 	_pkButton = registerChildRenderable<ToggleButton>([=]() {
-		return new ToggleButton(NewHUDResources::pk, pkBtnFrame);
+		return std::make_shared<ToggleButton>(NewHUDResources::pk, pkBtnFrame);
 	});
 
 	const auto leftSkillBtnFrame = Rect{ {132, 85}, {34, 34} };
 	_leftSkillBtn = registerChildRenderable<Button>([&]() {
-		return new Button(Button::Sprites::allZero, leftSkillBtnFrame);
+		return std::make_shared<Button>(Button::Sprites::allZero, leftSkillBtnFrame);
 	});
 
 	const auto rightSkillBtnFrame = Rect{ {247, 85}, {34, 34} };
 	_rightSkillBtn = registerChildRenderable<Button>([&]() {
-		return new Button(Button::Sprites::allZero, rightSkillBtnFrame);
+		return std::make_shared<Button>(Button::Sprites::allZero, rightSkillBtnFrame);
 	});
 
 	_pkButton->setState(false);
@@ -79,16 +79,16 @@ LeftHUD::LeftHUD(CustomUI::Point originInParent) {
 	};
 
 	_hpLabel = registerChildRenderable<SingleLineLabel>([=]() {
-		return new SingleLineLabel(
-			{ {0, 90 }, labelsSize },
+		return std::make_shared<SingleLineLabel>(
+			Rect{ {0, 90 }, labelsSize },
 			labelsAppearance,
 			""
 		);
 	});
 
 	_spLabel = registerChildRenderable<SingleLineLabel>([=]() {
-		return new SingleLineLabel(
-			{ {0, 104 }, labelsSize },
+		return std::make_shared<SingleLineLabel>(
+			Rect{ {0, 104 }, labelsSize },
 			labelsAppearance,
 			""
 		);

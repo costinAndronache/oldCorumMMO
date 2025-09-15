@@ -9,7 +9,7 @@
 // 2005.01.05 ±è¿µ´ë
 
 #define SIZE_PACKET 4
-class   DECLSPECIFIER CNTNetWork
+class   COMMONSERVERDECLSPECIFIER CNTNetWork
 {
 public:
 #pragma pack(push,1)

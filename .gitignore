@@ -89,3 +89,5 @@ Corum Online SRC/[Lib]BaseNetwork/.vs
 Corum Online SRC/[Lib]BaseNetwork/.vs
 Corum Online SRC/CompiledTools
 .vs
+Corum Online SRC/*/Release
+Corum Online SRC/*/Release

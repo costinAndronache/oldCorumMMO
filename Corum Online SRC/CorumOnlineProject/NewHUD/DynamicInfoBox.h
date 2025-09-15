@@ -16,8 +16,8 @@ namespace NewInterface {
 		void updateWithLines(const std::vector<InfoLine>& lines);
 
 	private:
-		CustomUI::MatrixContainer* _infoLinesContainer;
-		CustomUI::BorderRenderable* _border;
+		std::shared_ptr<CustomUI::MatrixContainer> _infoLinesContainer;
+		std::shared_ptr<CustomUI::BorderRenderable> _border;
 	};
 }
 

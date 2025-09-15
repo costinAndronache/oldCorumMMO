@@ -11,7 +11,7 @@ int					g_ConsoleLogLevel		= 2;
 int					g_FileLogLevel			= 7;
 
 
-void DECLSPECIFIER InitLog( void )
+void COMMONSERVERDECLSPECIFIER InitLog( void )
 {
 	InitializeCriticalSectionAndSpinCount(&g_criLog, 1000);
 
@@ -25,7 +25,7 @@ void DECLSPECIFIER InitLog( void )
 	SetConsoleMode(g_hIn, dwMode);
 }
 
-void DECLSPECIFIER FreeLog( void )
+void COMMONSERVERDECLSPECIFIER FreeLog( void )
 {
 	DeleteCriticalSection(&g_criLog);
 
@@ -35,7 +35,7 @@ void DECLSPECIFIER FreeLog( void )
 	}
 }
 
-void DECLSPECIFIER SetConsoleSize(DWORD col,DWORD row)
+void COMMONSERVERDECLSPECIFIER SetConsoleSize(DWORD col,DWORD row)
 {
 	SMALL_RECT srect;
 	COORD	dwSize;
@@ -56,12 +56,12 @@ void DECLSPECIFIER SetConsoleSize(DWORD col,DWORD row)
 	SetConsoleWindowInfo(g_hOut,TRUE, &srect);
 }
 
-void DECLSPECIFIER GetConsoleKeyInput(PINPUT_RECORD pInput, LPDWORD pResult)
+void COMMONSERVERDECLSPECIFIER GetConsoleKeyInput(PINPUT_RECORD pInput, LPDWORD pResult)
 {
 	ReadConsoleInput(g_hIn,pInput,1,pResult);
 }
 
-void DECLSPECIFIER Log( int type, char *logmsg, ... )
+void COMMONSERVERDECLSPECIFIER Log( int type, char *logmsg, ... )
 {
 	va_list vargs;
 	struct tm *now;
@@ -174,7 +174,7 @@ lb_Exit:
 	return;
 }	
 
-void DECLSPECIFIER WriteText(char* msg, bool type )
+void COMMONSERVERDECLSPECIFIER WriteText(char* msg, bool type )
 {
 	DWORD lenout;
 

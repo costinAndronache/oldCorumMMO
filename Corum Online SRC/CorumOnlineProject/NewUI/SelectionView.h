@@ -6,14 +6,14 @@
 namespace CustomUI {
 	class SelectionView: public Renderable {
 	public:
-		typedef std::function<Renderable* (Rect)> RenderableCreateFn;
+		typedef std::function<std::shared_ptr<Renderable> (Rect)> RenderableCreateFn;
 		typedef std::function<void(bool)> SelectionStateChangeHandler;
 		SelectionView(Rect frameInParent, RenderableCreateFn renderableCreate);
 		void renderWithRenderer(I4DyuchiGXRenderer* renderer, int order) override;
 		void setSelectionState(bool isSelected);
 		void setEnableSelection(bool selectionEnabled);
 		bool isSelected();
-		Renderable* renderable();
+		std::shared_ptr<Renderable> renderable();
 
 		void* data;
 
@@ -22,12 +22,12 @@ namespace CustomUI {
 		}
 
 	private:
-		Renderable* _renderable;
+		std::shared_ptr<Renderable> _renderable;
 		SelectionStateChangeHandler _handler;
 
 		bool _isSelected;
 		bool _selectionEnabled;
-		Button* _button;
+		std::shared_ptr<Button> _button;
 
 		void onButtonPress(Button* button);
 		void onButtonPressRelease(Button* button);

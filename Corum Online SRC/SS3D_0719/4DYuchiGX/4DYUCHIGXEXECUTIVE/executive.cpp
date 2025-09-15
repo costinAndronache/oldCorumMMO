@@ -606,7 +606,7 @@ void CoExecutive::GXOSetCurrentMotionIndex(GXOBJECT_HANDLE gxh,DWORD dwMotionInd
 #endif
 	((CoGXObject*)gxh)->SetCurrentMotionIndex(dwMotionIndex);
 }
-void CoExecutive::GXOSetPosition(GXOBJECT_HANDLE gxh,VECTOR3* pv3Pos, BOOL bDoInterpolation)
+void CoExecutive::GXOSetPosition(GXOBJECT_HANDLE gxh, const VECTOR3* pv3Pos, BOOL bDoInterpolation)
 {
 #ifdef	_DEBUG
 	CheckHandle(gxh);

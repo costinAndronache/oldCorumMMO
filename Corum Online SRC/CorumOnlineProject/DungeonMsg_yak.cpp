@@ -230,14 +230,15 @@ void CmdMoveDungeon( char* pMsg, DWORD dwLen )
 	// 이동 정보를 입력하고
 	pUser->SetStatus(pMove->bMoveType);
 
-	VECTOR2_TO_VECTOR3(pMove->v2MoveDirection, pUser->m_v3Direction)
-	pUser->m_pDestTile		= g_pMap->GetMap( pMove->wDestX, pMove->wDestZ );
+	pUser->setDurectionFromV2(pMove->v2MoveDirection);
+	pUser->m_pDestTile		= g_pMap->GetTileByIndexes( pMove->wDestX, pMove->wDestZ );
 	pUser->m_pStartTile		= pUser->m_pCurTile;
 	
+	auto m_v3Direction = pUser->currentDirection(); 
 	g_pExecutive->GXOSetDirection( pUser->m_hPlayer.pHandle, 
 		&g_Camera.v3AxsiY, 
-		(float)(atan2(pUser->m_v3Direction.z, pUser->m_v3Direction.x) + DEG90 ) );
-	GXSetPosition(pUser->m_hShadowHandle, &pUser->m_v3CurPos, FALSE, TRUE);	
+		(float)(atan2(m_v3Direction.z, m_v3Direction.x) + DEG90 ) );
+	GXSetPosition(pUser->m_hShadowHandle, pUser->currentPositionReadOnly(), FALSE, TRUE);	
 	
 }
 
@@ -366,7 +367,7 @@ void CmdAttack_User_Mon( char* pMsg, DWORD dwLen )
 		g_pMainPlayer->m_dwTemp[ USER_TEMP_TARGET_INDEX ]	= pMonster->m_dwMonsterIndex;
 
 		VECTOR3	v3DirMon;
-		VECTOR3_SUB_VECTOR3( &v3DirMon, &pMonster->m_v3CurPos, &g_pMainPlayer->m_v3CurPos );
+		VECTOR3_SUB_VECTOR3( &v3DirMon, &pMonster->m_v3CurPos, g_pMainPlayer->currentPositionReadOnly() );
 		g_pExecutive->GXOSetDirection( g_pMainPlayer->m_hPlayer.pHandle, &g_Camera.v3AxsiY, (float)(atan2(v3DirMon.z, v3DirMon.x) + DEG90 ) );		
 		
 		g_pMainPlayer->m_wAttackType = (WORD)( MOTION_TYPE_ATTACK1_1 + ( pAttackUserMon->bAttackType * 3 + pAttackUserMon->bAttackFrame ) );
@@ -409,7 +410,7 @@ void CmdAttack_User_Mon( char* pMsg, DWORD dwLen )
 		VECTOR3		v3DirMon;
 		VECTOR2_TO_VECTOR3(pAttackUserMon->v2UserPos, v3DirMon)
 		SetUserPosition( pUser, &v3DirMon );
-		VECTOR3_SUB_VECTOR3( &v3DirMon, &pMonster->m_v3CurPos, &pUser->m_v3CurPos );
+		VECTOR3_SUB_VECTOR3( &v3DirMon, &pMonster->m_v3CurPos, pUser->currentPositionReadOnly() );
 		g_pExecutive->GXOSetDirection( pUser->m_hPlayer.pHandle, &g_Camera.v3AxsiY, (float)(atan2(v3DirMon.z, v3DirMon.x) + DEG90 ) );		
 			
 		pUser->m_wAttackType	= (WORD)( MOTION_TYPE_ATTACK1_1 + ( pAttackUserMon->bAttackType * 3 + pAttackUserMon->bAttackFrame ) );
@@ -481,7 +482,7 @@ void CmdAttack_User_User( char* pMsg, DWORD dwLen )
 		if( g_pMainPlayer->GetStatus() != UNIT_STATUS_DEAD )
 		{
 			VECTOR3	v3DirMon;
-			VECTOR3_SUB_VECTOR3( &v3DirMon, &pDefense->m_v3CurPos, &g_pMainPlayer->m_v3CurPos );
+			VECTOR3_SUB_VECTOR3( &v3DirMon, pDefense->currentPositionReadOnly(), g_pMainPlayer->currentPositionReadOnly() );
 			g_pExecutive->GXOSetDirection( g_pMainPlayer->m_hPlayer.pHandle, &g_Camera.v3AxsiY, (float)(atan2(v3DirMon.z, v3DirMon.x) + DEG90 ) );	
 			
 			g_pMainPlayer->m_dwTemp[ USER_TEMP_TARGET_TYPE ]	= OBJECT_TYPE_PLAYER;
@@ -505,7 +506,7 @@ void CmdAttack_User_User( char* pMsg, DWORD dwLen )
 		VECTOR3		v3DirMon;
 		VECTOR2_TO_VECTOR3(pAttackUserUser->v2OffenseUserPos, v3DirMon)
 		SetUserPosition( pOffense, &v3DirMon );
-		VECTOR3_SUB_VECTOR3( &v3DirMon, &pDefense->m_v3CurPos, &pOffense->m_v3CurPos );
+		VECTOR3_SUB_VECTOR3( &v3DirMon, pDefense->currentPositionReadOnly(), pOffense->currentPositionReadOnly());
 		g_pExecutive->GXOSetDirection( pOffense->m_hPlayer.pHandle, &g_Camera.v3AxsiY, (float)(atan2(v3DirMon.z, v3DirMon.x) + DEG90 ) );
 		
 		pOffense->m_wAttackType	= (WORD)( MOTION_TYPE_ATTACK1_1 + ( pAttackUserUser->bAttackType * 3 + pAttackUserUser->bAttackFrame ) );
@@ -540,7 +541,7 @@ void CmdAttack_User_User( char* pMsg, DWORD dwLen )
 
 				if (hp == 0) {
 					_PlaySound(CHARACTER_SOUND_DEAD, SOUND_TYPE_CHARACTER, CHARACTER_SOUND_DEAD + (pDefense->m_wClass - 1) * SOUND_PER_CHARACTER
-						, pDefense->m_v3CurPos, FALSE);
+						, pDefense->currentPosition(), FALSE);
 
 					pDefense->SetStatus(UNIT_STATUS_DEAD);
 
@@ -807,7 +808,7 @@ void CmdAttack_Mon_User( char* pMsg, DWORD dwLen )
 					
 		// 방향을 케릭터의 방향으로 만든다.
 		VECTOR3	v3DirMon;
-		VECTOR3_SUB_VECTOR3( &v3DirMon, &g_pMainPlayer->m_v3CurPos, &pMonster->m_v3CurPos );
+		VECTOR3_SUB_VECTOR3( &v3DirMon, g_pMainPlayer->currentPositionReadOnly(), &pMonster->m_v3CurPos );
 		g_pExecutive->GXOSetDirection( pMonster->m_hMonster.pHandle, &g_Camera.v3AxsiY
 			, (float)(atan2(v3DirMon.z, v3DirMon.x) + DEG90 ) );		
 		
@@ -842,7 +843,7 @@ void CmdAttack_Mon_User( char* pMsg, DWORD dwLen )
 
 			// 방향을 케릭터의 방향으로 만든다.
 			VECTOR3	v3DirMon;
-			VECTOR3_SUB_VECTOR3( &v3DirMon, &pUser->m_v3CurPos, &pMonster->m_v3CurPos );
+			VECTOR3_SUB_VECTOR3( &v3DirMon, pUser->currentPositionReadOnly(), &pMonster->m_v3CurPos );
 			g_pExecutive->GXOSetDirection( pMonster->m_hMonster.pHandle, &g_Camera.v3AxsiY, (float)(atan2(v3DirMon.z, v3DirMon.x) + DEG90 ) );		
 			
 			if( pMonster->GetStatus() != UNIT_STATUS_ATTACKING )
@@ -870,7 +871,7 @@ void CmdAttack_Mon_User( char* pMsg, DWORD dwLen )
 				g_pMainPlayer->updateCurrentHP(hp);
 			}
 			if (hp <= 0) {
-				_PlaySound(CHARACTER_SOUND_DEAD, SOUND_TYPE_CHARACTER, CHARACTER_SOUND_DEAD + (pUser->m_wClass - 1) * SOUND_PER_CHARACTER, pUser->m_v3CurPos, FALSE);
+				_PlaySound(CHARACTER_SOUND_DEAD, SOUND_TYPE_CHARACTER, CHARACTER_SOUND_DEAD + (pUser->m_wClass - 1) * SOUND_PER_CHARACTER, pUser->currentPosition(), FALSE);
 				pUser->SetStatus(UNIT_STATUS_DEAD);
 			}
 		},

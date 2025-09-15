@@ -1899,7 +1899,7 @@ BOOL CreateMainPlayer(WSTC_WORLD_USER_INFO* pInfo)
 	g_pMainPlayer->m_hPlayer.pDesc->pInfo	= g_pMainPlayer;
 	g_pMainPlayer->m_hPlayerHead.pHandle	= pSelectChr->hHeadHandle;	//g_pGVLogin->ChrSelectInfo[ g_pGVLogin->dwCurCharIndex ].hHeadHandle;
 	g_pMainPlayer->m_hPlayerHelmet.pHandle	= pSelectChr->hHelmetHandle;
-	g_pMainPlayer->m_wClass					= pSelectChr->ReceivedChrInfo.wClass;
+	g_pMainPlayer->m_wClass					= (eENUM_CLASS_TYPE)pSelectChr->ReceivedChrInfo.wClass;
 	g_pMainPlayer->m_dwRecentOutMap			= pInfo->dwRecentOutMap;
 	g_pMainPlayer->m_dwRecentOutPos			= pInfo->dwRecentOutPos;
 	g_pMainPlayer->m_wCriminalTime			= pInfo->wCriminalTime;
@@ -1945,7 +1945,7 @@ BOOL CreateMainPlayer(WSTC_WORLD_USER_INFO* pInfo)
 		byRHand = EQUIP_TYPE_RHAND2;
 	}
 
-	g_pMainPlayer->m_wClass = pInfo->wClass;
+	g_pMainPlayer->m_wClass = (eENUM_CLASS_TYPE)pInfo->wClass;
 	g_pMainPlayer->m_wHead = pInfo->wHead;
 	g_pMainPlayer->m_wHelmet = pInfo->Equip[ EQUIP_TYPE_HELMET ].m_wItemID;
 	g_pMainPlayer->m_wHandL = pInfo->Equip[ byLHand ].m_wItemID;

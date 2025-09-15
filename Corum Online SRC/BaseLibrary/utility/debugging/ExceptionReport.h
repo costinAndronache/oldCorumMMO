@@ -1,4 +1,5 @@
 #pragma once
+#include "../../BaseLibrary.h"
 
 #define USE_MINIDUMP		1
 #define USE_DBGHELPS		0
@@ -89,7 +90,7 @@ enum BasicType  // Stolen from CVCONST.H in the DIA 2.0 SDK
 typedef LONG (WINAPI *PCERUserFunc)(HANDLE hFile);
 typedef PCERUserFunc LPCERUserFunc;
 
-class CExceptionReport
+class BASELIBRARYDECLSPEC CExceptionReport
 {
 public:
 	// constructor and destructor

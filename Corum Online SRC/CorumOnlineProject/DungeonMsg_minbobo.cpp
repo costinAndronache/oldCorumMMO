@@ -659,7 +659,7 @@ void CmdPortalJoinUser( char* pMsg, DWORD dwLen )
 
 	// 포탈의 제어를 포탈 Effect가 끝나는 시점에 동작하게 한다. new는 추후 포탈 4가지 구현후 통합된 풀로 바꾸자
 	ShowObject(g_pMainPlayer->m_hSelfPortalEffect.pHandle);
-	GXSetPosition(g_pMainPlayer->m_hSelfPortalEffect.pHandle, &g_pMainPlayer->m_v3CurPos, FALSE, TRUE);
+	GXSetPosition(g_pMainPlayer->m_hSelfPortalEffect.pHandle, g_pMainPlayer->currentPositionReadOnly(), FALSE, TRUE);
 	
 	g_pMainPlayer->m_hSelfPortalEffect.pDesc->pInfo			= (void*)g_pMainPlayer;
 	g_pMainPlayer->m_hSelfPortalEffect.pDesc->dwTempBuf[0]	= (DWORD)pCopy;
@@ -698,7 +698,7 @@ void CmdPortalMoveOutside( char* pMsg, DWORD dwLen )
 	//포탈의 제어를 포탈 Effect가 끝나는 시점에 동작하게 한다. new는 추후 포탈 4가지 구현후 통합된 풀로 바꾸자
 	DSTC_PORTAL_MOVE_OUTSIDE* pCopy = new DSTC_PORTAL_MOVE_OUTSIDE;
 	memcpy(pCopy, pPacket, dwLen);
-	GXSetPosition(g_pMainPlayer->m_hSelfPortalEffect.pHandle, &g_pMainPlayer->m_v3CurPos, FALSE, TRUE);
+	GXSetPosition(g_pMainPlayer->m_hSelfPortalEffect.pHandle, g_pMainPlayer->currentPositionReadOnly(), FALSE, TRUE);
 	
 	g_pMainPlayer->m_hSelfPortalEffect.pDesc->pInfo = (void*)g_pMainPlayer;
 	g_pMainPlayer->m_hSelfPortalEffect.pDesc->dwTempBuf[0] = (DWORD)pCopy;
@@ -944,7 +944,7 @@ void CmdPortalDisappear( char* pMsg, DWORD dwLen )
 	CUser*	pUser = g_pUserHash->GetData( pPacket->dwUserIndex );
 	if( !pUser ) return;
 	
-	GXSetPosition(pUser->m_hSelfPortalEffect.pHandle, &pUser->m_v3CurPos, FALSE, TRUE);
+	GXSetPosition(pUser->m_hSelfPortalEffect.pHandle, pUser->currentPositionReadOnly(), FALSE, TRUE);
 	
 	pUser->m_hSelfPortalEffect.pDesc->pInfo = (void*)pUser;
 

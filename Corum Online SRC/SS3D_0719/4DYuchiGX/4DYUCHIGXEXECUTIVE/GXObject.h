@@ -117,7 +117,7 @@ public:
 	void				SetCurrentMotionIndex(DWORD dwMotionIndex) {m_dwCurrentMotionIndex = dwMotionIndex;}
 	void				SetCurrentMaterialIndex(DWORD dwMtlIndex) { m_dwCurrentMtlSetIndex = dwMtlIndex;}
 
-	void				SetPosition(VECTOR3* pv3Pos, BOOL bDoInterpolation);
+	void				SetPosition(const VECTOR3* pv3Pos, BOOL bDoInterpolation);
 	void				MovePosition(VECTOR3* pv3Pos);
 //	void				GetPosition(VECTOR3* pv3Pos) {*pv3Pos = *(VECTOR3*)&m_matTransform._41;}
 	void				GetPosition(VECTOR3* pv3Pos) {*pv3Pos = m_v3Pos;}

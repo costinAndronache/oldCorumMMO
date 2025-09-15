@@ -115,115 +115,10 @@ STMPOOL_HANDLE				g_pGuildListPool				= NULL;
 BOOL CtrlHandler(DWORD fdwCtrlType);
 BOOL APIENTRY DlgProc (HWND hdlg, UINT msg, WPARAM wParam, LPARAM lParam);
 
-/*
-void SetDBInfo()
-{
-	if( IS_ABLE_SERVICE_TYPE(ST_DEVELOP) )
-	{
-		g_DBInfo.Set(DT_GAME_DB, DBIT_CATALOG, "Corum");
-		g_DBInfo.Set(DT_GAME_DB, DBIT_ID, "potato");
-		g_DBInfo.Set(DT_GAME_DB, DBIT_PW, "5378abc");
-
-		g_DBInfo.Set(DT_TOTAL_DB, DBIT_CATALOG, "Corum_Total_DB");
-		g_DBInfo.Set(DT_TOTAL_DB, DBIT_ID, "potato");
-		g_DBInfo.Set(DT_TOTAL_DB, DBIT_PW, "5378abc");
-
-		g_DBInfo.Set(DT_MEMBER_DB, DBIT_CATALOG, "member");
-		g_DBInfo.Set(DT_MEMBER_DB, DBIT_ID, "potato");
-		g_DBInfo.Set(DT_MEMBER_DB, DBIT_PW, "5378abc");
-
-		g_DBInfo.Set(DT_LOG_DB, DBIT_CATALOG, "Log_Corum_");
-		g_DBInfo.Set(DT_LOG_DB, DBIT_ID, "potato");
-		g_DBInfo.Set(DT_LOG_DB, DBIT_PW, "5378abc");
-		return;
-	} // if( IS_ABLE_SERVICE_TYPE(ST_DEVELOP) )
-
-	switch( MY_NATION_CODE )
-	{
-	case NC_JAPAN:
-		{
-			g_DBInfo.Set(DT_GAME_DB, DBIT_CATALOG, "Corum");
-			g_DBInfo.Set(DT_GAME_DB, DBIT_ID, "potato");
-			g_DBInfo.Set(DT_GAME_DB, DBIT_PW, "ajtwlssja");
-
-			g_DBInfo.Set(DT_TOTAL_DB, DBIT_CATALOG, "Total_DB");
-			g_DBInfo.Set(DT_TOTAL_DB, DBIT_ID, "potato");
-			g_DBInfo.Set(DT_TOTAL_DB, DBIT_PW, "ajtwlssja");
-
-			g_DBInfo.Set(DT_MEMBER_DB, DBIT_CATALOG, "CORUM");
-			g_DBInfo.Set(DT_MEMBER_DB, DBIT_ID, "potato");
-			g_DBInfo.Set(DT_MEMBER_DB, DBIT_PW, "ajtwlssja");
-
-			g_DBInfo.Set(DT_LOG_DB, DBIT_CATALOG, "Log_Corum_");
-			g_DBInfo.Set(DT_LOG_DB, DBIT_ID, "potato");
-			g_DBInfo.Set(DT_LOG_DB, DBIT_PW, "ajtwlssja");
-		}break;
-	case NC_CHINA:
-		{
-			g_DBInfo.Set(DT_GAME_DB, DBIT_CATALOG, "Corum");
-			g_DBInfo.Set(DT_GAME_DB, DBIT_ID, "potato");
-			g_DBInfo.Set(DT_GAME_DB, DBIT_PW, "ajtwlssja");
-
-			g_DBInfo.Set(DT_TOTAL_DB, DBIT_CATALOG, "Total_DB");
-			g_DBInfo.Set(DT_TOTAL_DB, DBIT_ID, "potato");
-			g_DBInfo.Set(DT_TOTAL_DB, DBIT_PW, "ajtwlssja");
-
-			g_DBInfo.Set(DT_MEMBER_DB, DBIT_CATALOG, "CORUM");
-			g_DBInfo.Set(DT_MEMBER_DB, DBIT_ID, "potato");
-			g_DBInfo.Set(DT_MEMBER_DB, DBIT_PW, "ajtwlssja");
-
-			g_DBInfo.Set(DT_LOG_DB, DBIT_CATALOG, "Log_Corum_");
-			g_DBInfo.Set(DT_LOG_DB, DBIT_ID, "potato");
-			g_DBInfo.Set(DT_LOG_DB, DBIT_PW, "ajtwlssja");		
-		}break;
-	case NC_TAIWAN:
-		{
-			g_DBInfo.Set(DT_GAME_DB, DBIT_CATALOG, "Corum");
-			g_DBInfo.Set(DT_GAME_DB, DBIT_ID, "potato");
-			g_DBInfo.Set(DT_GAME_DB, DBIT_PW, "8x0ozs1xos");
-
-			g_DBInfo.Set(DT_TOTAL_DB, DBIT_CATALOG, "Total_DB");
-			g_DBInfo.Set(DT_TOTAL_DB, DBIT_ID, "potato");
-			g_DBInfo.Set(DT_TOTAL_DB, DBIT_PW, "8x0ozs1xos");
-
-			g_DBInfo.Set(DT_MEMBER_DB, DBIT_CATALOG, "CORUM");
-			g_DBInfo.Set(DT_MEMBER_DB, DBIT_ID, "potato");
-			g_DBInfo.Set(DT_MEMBER_DB, DBIT_PW, "8x0ozs1xos");
-
-			g_DBInfo.Set(DT_LOG_DB, DBIT_CATALOG, "Log_Corum_");
-			g_DBInfo.Set(DT_LOG_DB, DBIT_ID, "potato");
-			g_DBInfo.Set(DT_LOG_DB, DBIT_PW, "8x0ozs1xos");
-		}break;
-	case NC_KOREA:
-		{
-			g_DBInfo.Set(DT_GAME_DB, DBIT_CATALOG, "Corum");
-			g_DBInfo.Set(DT_GAME_DB, DBIT_ID, "GameSrv");
-			g_DBInfo.Set(DT_GAME_DB, DBIT_PW, "rnrwk3rotkaaksrncjsvkfqordnjs!");
-
-			g_DBInfo.Set(DT_TOTAL_DB, DBIT_CATALOG, "Total_DB");
-			g_DBInfo.Set(DT_TOTAL_DB, DBIT_ID, "GameSrv");
-			g_DBInfo.Set(DT_TOTAL_DB, DBIT_PW, "rnrwk3rotkaaksrncjsvkfqordnjs!");
-
-			g_DBInfo.Set(DT_MEMBER_DB, DBIT_CATALOG, "Member");
-			g_DBInfo.Set(DT_MEMBER_DB, DBIT_ID, "GameSrv");
-			g_DBInfo.Set(DT_MEMBER_DB, DBIT_PW, "rnrwk3rotkaaksrncjsvkfqordnjs!");
-
-			g_DBInfo.Set(DT_LOG_DB, DBIT_CATALOG, "Log_Corum_");
-			g_DBInfo.Set(DT_LOG_DB, DBIT_ID, "GameSrv");
-			g_DBInfo.Set(DT_LOG_DB, DBIT_PW, "rnrwk3rotkaaksrncjsvkfqordnjs!");
-		}break;
-	default:
-		{
-		}break;
-	} // switch( MY_NATION_CODE )
-}
-*/
-
-
 
 int main(int argc, char* argv[])
 {
-	static auto minidumper = new MiniDumper("DUNGEON_CRASH");
+	static auto minidumper = new MiniDumper(L"DungeonServerResult");
 
 #ifdef _DEBUG
 	_CrtSetReportFile( _CRT_WARN, _CRTDBG_FILE_STDERR );
@@ -268,17 +163,8 @@ int main(int argc, char* argv[])
 
 	g_pThis = new COwnServer;
 
-#if defined JAPAN_LOCALIZING
-	g_pThis->InitializeDecodeCFG(".\\Server.cfg");
-#elif defined CHINA_LOCALIZING
-	g_pThis->InitializeDecodeCFG(".\\Server.cfg");
-#elif defined TAIWAN_LOCALIZING
-	g_pThis->InitializeDecodeCFG(".\\Server.cfg");
-#elif defined ENGLISH_LOCALIZING
-	g_pThis->InitializeDecodeCFG(".\\Server.cfg");
-#else
 	g_pThis->Initialize(".\\Server.ini", ".\\DungeonConfig.ini");
-#endif	
+
 	
 	if(GKO_EXIST == CreateGlobalKernelObject(g_pThis->GetPortForUser()))
 	{
@@ -327,22 +213,18 @@ int main(int argc, char* argv[])
 	InitOleDBThread();
 	InitMemoryPool();
 	
-#if defined JAPAN_LOCALIZING
-	ConnectToDBServerDecodeCFG();
-#elif defined CHINA_LOCALIZING
-	ConnectToDBServerDecodeCFG();
-#elif defined TAIWAN_LOCALIZING
-	ConnectToDBServerDecodeCFG();
-#elif defined ENGLISH_LOCALIZING
-	ConnectToDBServerDecodeCFG();
-#else
-	if(!ConnectToDBServer())
-	{
+
+	if(!ConnectToDBServer()) {
 		return false;
 	}
-#endif	
 
-	g_pThis->RequestDungeonInfo();
+
+	if(g_pThis->GetServerType() == SERVER_TYPE_OCCUPIED_DUNGEON) {
+		g_pThis->RequestDungeonInfo();
+	} else {
+		g_pThis->requestDungeonInfoStatic();
+	}
+
 
 	if(!g_pThis->ResetItemSerialNumber())
 	{

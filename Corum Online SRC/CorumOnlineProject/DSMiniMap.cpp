@@ -41,8 +41,9 @@ BOOL CMiniMapWnd::Init()
 {
 //	int nOrder = GetStartOrder();
 
-	float x = 144 * (g_pMainPlayer->m_v3CurPos.x/g_pMap->m_fMiniMapSize);
-	float y = 144 - (144*(g_pMainPlayer->m_v3CurPos.z/g_pMap->m_fMiniMapSize));
+	auto m_v3CurPos = g_pMainPlayer->currentPosition();
+	float x = 144 * (m_v3CurPos.x/g_pMap->m_fMiniMapSize);
+	float y = 144 - (144*(m_v3CurPos.z/g_pMap->m_fMiniMapSize));
 
 /*
 	InsertData(SPR_OBJ_PARTY_RED, SPR_INTERFACE_PARTY_RED, 0, 0, 1.0f, 1.0f, 5);
@@ -195,18 +196,10 @@ void CMiniMapWnd::RenderText()
 		if(pDungeonInfo && !IsEmptyString(pDungeonInfo->m_szDungeonName))
 		{			
 			// 던젼 이름 //
-#if IS_JAPAN_LOCALIZING()
-			// modified by minjin. 2004. 10. 26.
-			// adjust Z-Order '4' to '6'
-			if(lstrlen(pDungeonInfo->m_szSchoolName))
-				RenderFont(pDungeonInfo->m_szSchoolName, m_fPosX+15, m_fPosX+120, m_fPosZ+9, m_fPosZ+23, GetStartOrder()+6);
-			else
-				RenderFont(pDungeonInfo->m_szDungeonName, m_fPosX+15, m_fPosX + 100, m_fPosZ+9, m_fPosZ+23, GetStartOrder()+6);
-#else
+
 			// 미니 멥에 이름 제대로 나오지 않던 버그 수정 
 			// 2005.01.30 김영대 
 			RenderFont(pDungeonInfo->m_szDungeonName, m_fPosX+15, m_fPosX+150, m_fPosZ+9, m_fPosZ+23, GetStartOrder()+6);			
-#endif
 		}		
 		
 		if(pDungeonInfo && pDungeonInfo->m_dwID/1000!=0)
@@ -350,7 +343,7 @@ BOOL CMiniMapWnd::CreateMap()
 		lpSpriteData->pSpr				= g_pRenderer->CreateSpriteObject(GetFile(szFileNameTIF, DATA_TYPE_MAP), 0);
 		g_pInterfaceSprHash->Insert(lpSpriteData, SPR_INTERFACE_MAP);
 				
-		InsertData(SPR_OBJ_MAP, SPR_INTERFACE_MAP, 8, 42, 1.0f, 1.0f, 1);
+		InsertData(SPR_OBJ_MAP, SPR_INTERFACE_MAP, windowWidth() - 100, 42, 1.0f, 1.0f, 1);
 
 		SetRender(SPR_OBJ_MAP, TRUE);		
 		SetOrder();
@@ -391,7 +384,8 @@ VECTOR2 CMiniMapWnd::GetRatioMinimap(float x, float z)
 void CMiniMapWnd::SetMinimapPos()
 {
 	// 사이즈 변경 //
-	VECTOR2 vec2 = GetRatioMinimap(g_pMainPlayer->m_v3CurPos.x, g_pMainPlayer->m_v3CurPos.z);	
+	auto m_v3CurPos = g_pMainPlayer->currentPosition();
+	VECTOR2 vec2 = GetRatioMinimap(m_v3CurPos.x, m_v3CurPos.z);	
 
 	SetPosObjX(SPR_OBJ_DSMAP_USER, vec2.x+8-11);
 	SetPosObjY(SPR_OBJ_DSMAP_USER, vec2.y+42-11);

@@ -33,19 +33,31 @@ class CMonster;
 class CItemNativeManager;
 
 
-class CUser
-{
+class CUser {
+protected:
+	VECTOR3				m_v3CurPos;				// 현재나의 좌표.
+	VECTOR3				m_v3Direction;			// 움직이는 방향.	단위백터.
+
 public:
+
+	const VECTOR3*		currentPositionReadOnly() const { return &m_v3CurPos; }
+	const VECTOR3*		currentDirectionReadOnly() const { return &m_v3Direction; }
+
+	VECTOR3				currentPosition() const { return m_v3CurPos; }
+	VECTOR3				currentDirection() const { return m_v3Direction; }
+
+	virtual void		setPosition(VECTOR3 pos) { m_v3CurPos = pos; }
+	virtual void		setDirection(VECTOR3 dir) { m_v3Direction = dir; }
+
+	void				setPositionFromV2(VECTOR2 v2) { m_v3CurPos = { v2.x, 0, v2.y }; }
+	void				setDurectionFromV2(VECTOR2 v2) { m_v3Direction = {v2.x, 0, v2.y}; }
 
 	DWORD				m_dwUserIndex;	
 	
 	char				m_szName[MAX_CHARACTER_NAME_LENGTH];			// Name	
 	WORD				m_wHead;				// 머리 번호.
-	WORD				m_wClass;				// 케릭터 클래스.
+	eENUM_CLASS_TYPE	m_wClass;				// 케릭터 클래스.
 	float				m_fMoveSpeed;
-
-	VECTOR3				m_v3CurPos;				// 현재나의 좌표.
-	VECTOR3				m_v3Direction;			// 움직이는 방향.	단위백터.
 
 	int					m_nCharNameSize;		// 캐릭터 이름 사이즈.
 	int					m_nGuildNameSize;		// 길드이름 사이즈.
@@ -160,7 +172,7 @@ public:
 	void				ShowMoveStartEffect();
 	void				ShowMoveStopEffect();
 	BYTE				GetStatus();
-	void				SetStatus(BYTE bStatus, BOOL bLive = FALSE);		
+	virtual void		SetStatus(BYTE bStatus, BOOL bLive = FALSE);		
 
 public:
 	virtual void				OnCastPhaseBegin(BYTE bSkillKind, VECTOR3& vecTarget, BOOL bDirection, int spOffsetPerSecond);
@@ -292,7 +304,8 @@ public:
 
 	DWORD			currentLUCK() const;
 	void			updateCurrentLUCK(DWORD);
-
+	void			setPosition(VECTOR3 pos) override;
+	void			SetStatus(BYTE bStatus, BOOL bLive = FALSE) override;
 	//
 
 	DWORD			m_wRace;

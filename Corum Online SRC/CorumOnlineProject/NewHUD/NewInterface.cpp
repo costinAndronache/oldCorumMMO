@@ -36,10 +36,12 @@ Interface::Interface(
 	const LP_SKILL_LIST_MANAGER skillListManager,
 	CItemResourceHash* resourceHash,
 	SoundLibrary* soundLibrary,
-	SharedNetwork* sharedNetwork,
-	TooltipHelper* tooltipHelper
-) 
-{
+	std::shared_ptr<SharedNetwork> sharedNetwork,
+	std::shared_ptr<TooltipHelper> tooltipHelper,
+	std::shared_ptr<GameExitManager> exitManager,
+	I4DyuchiGXExecutive* executive,
+	std::shared_ptr<UserPreferencesManager> userPreferencesManager
+) {
 	_mainUser = mainUser;
 	_skillListManager = skillListManager;
 	_soundLibrary = soundLibrary;
@@ -47,20 +49,22 @@ Interface::Interface(
 
 	_frameInParent = CustomUI::Rect{ {0, 0}, screenSize };
 
+	auto itemUsageManager = std::make_shared<ItemUsageManager>();
+
 	const auto hudSize = NewHUDResources::newHUDSize;
 	const auto hudOriginY = (long)(screenSize.height - hudSize.height);
 	_leftHUD = registerChildRenderable<LeftHUD>([&]() {
-		return new LeftHUD(Point{ 0,  hudOriginY });
+		return  std::make_shared<LeftHUD>(Point{ 0,  hudOriginY });
 	});
 
 	const auto rightHudOriginX = (long)(screenSize.width - hudSize.width);
 	_rightHUD = registerChildRenderable<RightHUD>([=]() {
-		return new RightHUD({ rightHudOriginX, hudOriginY }, resourceHash, ItemUsageManager::sharedInstance());
+		return std::make_shared<RightHUD>(Point{ rightHudOriginX, hudOriginY }, resourceHash, itemUsageManager);
 	});
 
 	_skillSelectionView = registerChildRenderable<NewSkillSelectionView>([&]() {
-		return new NewSkillSelectionView(
-			{ {0, hudOriginY - 200}, {200, 200} },
+		return std::make_shared<NewSkillSelectionView>(
+			CustomUI::Rect{ {0, hudOriginY - 200}, {200, 200} },
 			MatrixContainer::VerticalGrowthDirection::upwards,
 			skillListManager
 		);
@@ -78,91 +82,83 @@ Interface::Interface(
 
 	LeftHUD::EventHandlers handlers;
 	handlers.statsHandler = [=]() {
-		toggleWindow(_statsView);
+		toggleWindow(_statsView.get());
 	};
 
 	handlers.itemHandler = [=]() {
-		toggleWindow(_newItemsWindow);
+		toggleWindow(_newItemsWindow.get());
 	};
 
 	handlers.skillsHandler = [=]() {
-		toggleWindow(_userSkillsView);
+		toggleWindow(_userSkillsView.get());
 	};
 
 	handlers.leftSkillHandler = [=]() {
 		_skillSelectionView->switchToActiveSelection(NewSkillSelectionView::ActiveSkillSelection::leftSkills);
-		showWindow(_skillSelectionView);
+		showWindow(_skillSelectionView.get());
 	};
 
 	handlers.rightSkillHandler = [=]() {
 		_skillSelectionView->switchToActiveSelection(NewSkillSelectionView::ActiveSkillSelection::rightSkills);
-		showWindow(_skillSelectionView);
+		showWindow(_skillSelectionView.get());
 	};
 
 	_leftHUD->setEventHandlers(handlers);
 	updateLeftHUDWithSelectedLeftRightSkills();
 
-	_skillSelectionView->updateCurrentSkills({
-		mainUser->skillsAvailableOnLeft(),
-		mainUser->skillsAvailableOnRight(),
-		std::vector<BYTE>()
+
+#pragma region :: skill selection
+
+	_skillSelectionManager = std::make_shared<SkillSelectionManager>(
+		_skillSelectionView,
+		_mainUser,
+		userPreferencesManager,
+		soundLibrary
+	);
+
+	_skillSelectionManager->onSkillSelection([=](){
+		hideWindow(_skillSelectionView.get());
 	});
 
-	_skillSelectionView->setHandlers({
-		[=](BYTE leftSkillKind) {
-			_mainUser->SetSkillChangeLR(leftSkillKind, 0);
-			_skillSelectionView->switchToActiveSelection(NewSkillSelectionView::ActiveSkillSelection::none);
-			hideWindow(_skillSelectionView);
-		},
-		[=](BYTE rightSkillKind) {
-			_mainUser->SetSkillChangeLR(rightSkillKind, 1);
-			_skillSelectionView->switchToActiveSelection(NewSkillSelectionView::ActiveSkillSelection::none);
-			hideWindow(_skillSelectionView);
-		},
-		[=](BYTE guardianSkillKind) {
-		// not yet
-			_skillSelectionView->switchToActiveSelection(NewSkillSelectionView::ActiveSkillSelection::none);
-			hideWindow(_skillSelectionView);
-		},
-	});
+	_skillSelectionManager->refreshSkillSelectionView();
 
 	//
 
 	_newItemsWindow = registerChildRenderable<NewItemsWindow>([=]() {
-		return new NewItemsWindow(defaultWindowOrigin, resourceHash);
+		return std::make_shared<NewItemsWindow>(defaultWindowOrigin, resourceHash);
 	});
 
 	_newItemsWindow->onClose([=]() {
-		hideWindow(_newItemsWindow);
+		hideWindow(_newItemsWindow.get());
 	});
 
 	_newItemsWindow->setHidden(true);
 
 	_mouseTracking = registerChildRenderable<MouseTrackingSpriteRenderable>([=]() {
-		return new MouseTrackingSpriteRenderable(bounds());
+		return std::make_shared<MouseTrackingSpriteRenderable>(bounds());
 	});
 	_mouseTracking->updateZIndexOffsetForce(1000);
 
 	_tooltipLayer = registerChildRenderable<TooltipLayer>([=]() {
-		return new TooltipLayer(bounds());
+		return std::make_shared<TooltipLayer>(bounds());
 	});
 	_tooltipLayer->updateZIndexOffsetForce(1000);
 
-	_dragNDropSystem = new DragNDropSystem(this, SoundLibrary::sharedInstance());
-	_userInventoryManager = new UserInventoryManager(
+	_dragNDropSystem = std::make_shared<DragNDropSystem>(this, SoundLibrary::sharedInstance());
+	_userInventoryManager = std::make_shared<UserInventoryManager>(
 		_newItemsWindow->groupedInventoryView(),
-		ItemUsageManager::sharedInstance(),
+		itemUsageManager,
 		_tooltipLayer,
 		tooltipHelper,
 		soundLibrary
 	);
-	_equipItemsManager = new EquipItemsManager(
+	_equipItemsManager = std::make_shared<EquipItemsManager>(
 		_newItemsWindow->equipItemsView(),
 		_tooltipLayer,
 		tooltipHelper
 	);
 
-	_dragNDropManager = new DragNDropManager(
+	_dragNDropManager = std::make_shared<DragNDropManager>(
 		mainUser,
 		sharedNetwork,
 		_dragNDropSystem,
@@ -178,19 +174,19 @@ Interface::Interface(
 
 	auto entriesCount = CharacterStatsManager::maxEntryCount();
 	_statsView = registerChildRenderable<CharacterStatsView>([=]() {
-		return new CharacterStatsView({
+		return std::make_shared<CharacterStatsView>(CustomUI::Rect{
 			defaultWindowOrigin,
 			{ 400, CharacterStatsView::appropriateSizeForElementsCountOnPage(entriesCount)}
-			});
+		});
 	});
 
 	_statsView->onClose([=]() {
-		hideWindow(_statsView);
+		hideWindow(_statsView.get());
 	});
 	_statsView->setHidden(true);
 
-	auto statusPointManager = new StatusPointManager(sharedNetwork);
-	_statsManager = new CharacterStatsManager(
+	auto statusPointManager = std::make_shared<StatusPointManager>(sharedNetwork);
+	_statsManager = std::make_shared<CharacterStatsManager>(
 		_statsView, statusPointManager, _mainUser, soundLibrary
 	);
 
@@ -200,16 +196,16 @@ Interface::Interface(
 	auto skillsViewSize = UserSkillsView::appropriateSizeForMaxNumberOfSkillsPerList(UserSkillsManager::maxNumOfSkillsInList());
 
 	_userSkillsView = registerChildRenderable<UserSkillsView>([=]() {
-		return new UserSkillsView({ defaultWindowOrigin, skillsViewSize });
+		return std::make_shared<UserSkillsView>(CustomUI::Rect{ defaultWindowOrigin, skillsViewSize });
 	});
 
 	_userSkillsView->onClose([=]() {
-		hideWindow(_userSkillsView);
+		hideWindow(_userSkillsView.get());
 	});
 
 	_userSkillsView->setHidden(true);
 
-	_userSkillsManager = new UserSkillsManager(
+	_userSkillsManager = std::make_shared<UserSkillsManager>(
 		_userSkillsView, 
 		_mainUser, 
 		SharedNetwork::sharedInstance(), 
@@ -221,19 +217,100 @@ Interface::Interface(
 	);
 
 	_userSkillsManager->refreshUserSkillsView();
+
+#pragma region :: Exit options window
+	_exitOptionsWindow = registerChildRenderable<ExitOptionsWindow>([=](){
+		return std::make_shared<ExitOptionsWindow>(Point{100, 100});
+	});
+	_exitOptionsWindow->onClose([=](){ _exitOptionsWindow->setHidden(true); });
+	_exitOptionsWindow->setHidden(true);
+
+	_exitOptionsManager = std::make_shared<ExitOptionsWindowManager>(
+		_exitOptionsWindow,
+		exitManager,
+		ExitOptionsWindowManager::Mode::dungeon
+	);
+
+#pragma region :: Minimap
+	const Size minimapWindowSize = {130, 155};
+	auto minimapWindowFrame = bounds()
+		.fromMaxXOrigin(-minimapWindowSize.width)
+		.withSize(minimapWindowSize);
+		
+	_minimapWindow = registerChildRenderable<MinimapWindow>([=](){
+		return std::make_shared<MinimapWindow>(minimapWindowFrame);
+	});
+	
+	_minimapWindowManager = std::make_shared<MinimapWindowManager>(
+		_minimapWindow,
+		g_pRenderer
+	);
+
+#pragma region :: Char death confirmation
+
+	auto charDeathModalFrame = CustomUI::Rect{{0, 0}, {600, 60}}.centeredWith(bounds());
+	_charDeathConfirmationModal = registerChildRenderable<ConfirmationModal>([=](){
+		return std::make_shared<ConfirmationModal>(charDeathModalFrame);
+	});
+
+	_charDeathConfirmationManager = std::make_shared<CharDeathConfirmationManager>(
+		_charDeathConfirmationModal, sharedNetwork
+	);
+
+
+#pragma region :: hovered object hp info bar
+	auto hpInfoBarFrame = CustomUI::Rect{{0, 0}, {350, 25}}
+		.centeredHorizontallyWith(bounds());
+
+	_hpInfoBarView = registerChildRenderable<HPInfoBarView>([=](){
+		return std::make_shared<HPInfoBarView>(hpInfoBarFrame);
+	});
+
+	_hpInfoBarManager = std::make_shared<InfoBarManager>(
+		_hpInfoBarView,
+		executive
+	);
+#pragma region :: window displacement setup
+
 	updateZIndexOffsetForce(1000);
 
-	setupDisplacement(_newItemsWindow->displacementHandle(), _newItemsWindow);
-	setupDisplacement(_statsView->displacementHandle(), _statsView);
-	setupDisplacement(_userSkillsView->displacementHandle(), _userSkillsView);
+	setupDisplacement(
+		_newItemsWindow->displacementHandle(), 
+		std::weak_ptr<NewItemsWindow>(_newItemsWindow)
+	);
+	setupDisplacement(
+		_statsView->displacementHandle(), 
+		std::weak_ptr<CharacterStatsView>(_statsView)
+	);
+	
+	setupDisplacement(
+		_userSkillsView->displacementHandle(), 
+		std::weak_ptr<UserSkillsView>(_userSkillsView)
+	);
+
+	setupDisplacement(
+		_exitOptionsWindow->displacementHandle(), 
+		std::weak_ptr<ExitOptionsWindow>(_exitOptionsWindow)
+	);
+
+	setupDisplacement(
+		_minimapWindow->displacementHandle(), 
+		std::weak_ptr<MinimapWindow>(_minimapWindow)
+	);
 }
 
-void Interface::setupDisplacement(DisplacementHandleRenderable *handle, Renderable *forWindow) {
-  handle->onDisplacement([=](auto dx, auto dy) {
-	  forWindow->updateOriginInParent(
-		  forWindow->frameInParent().origin + Point{dx, dy}
-	  );
-  });
+void Interface::setupDisplacement(
+	std::shared_ptr<DisplacementHandleRenderable> handle, 
+	std::weak_ptr<Renderable> forWindow
+) {
+	handle->onDisplacement([=](auto dx, auto dy) {
+		auto window = forWindow.lock();
+		if(window) {
+			window->updateOriginInParent(
+				window->frameInParent().origin + Point{dx, dy}
+			);
+		}
+	});
 }
 
 void Interface::toggleWindow(Renderable* window) {
@@ -245,13 +322,26 @@ void Interface::toggleWindow(Renderable* window) {
 }
 
 void Interface::hideWindow(Renderable* window) {
-	_soundLibrary->playWindowClose();
+	if(window->getHidden()) { return; }
 	window->setHidden(true);
+
+	if(window != _skillSelectionView.get()) {
+		_soundLibrary->playWindowClose();
+	} else {
+		_soundLibrary->playButtonClick();
+	}
+
 }
 
 void Interface::showWindow(Renderable* window) {
-	_soundLibrary->playWindowOpen();
+	if(!window->getHidden()) { return; }
 	window->setHidden(false);
+
+	if(window != _skillSelectionView.get()) {
+		_soundLibrary->playWindowOpen();
+	} else {
+		_soundLibrary->playButtonClick();
+	}
 }
 
 #pragma region Internals
@@ -281,13 +371,12 @@ void Interface::updateLeftHUDWithSelectedLeftRightSkills() {
 //CMainUserUpdateInterested
 
 void Interface::updatedSkills(CMainUser* mainUser) {
-	_skillSelectionView->updateCurrentSkills({
-		mainUser->skillsAvailableOnLeft(),
-		mainUser->skillsAvailableOnRight(),
-		std::vector<BYTE>() // guardian skills handled later
-	});
-
+	_skillSelectionManager->refreshSkillSelectionView();
 	_userSkillsManager->refreshUserSkillsView();
+}
+
+void Interface::updatedPosition(CMainUser* user) {
+	_minimapWindowManager->updateMainPlayerDotFrom3DPosition(user->currentPosition());
 }
 
 void Interface::updatedItemInventory(CMainUser* user) {
@@ -362,6 +451,12 @@ void Interface::updatedLevel(CMainUser* mainUser, DWORD oldValue, DWORD newValue
 	_statsManager->refreshCharacterStats();
 }
 
+void Interface::updatedStatus(CMainUser*, UNIT_STATUS status) {
+	if(status == UNIT_STATUS_DEAD) {
+		showWindow(_charDeathConfirmationModal.get());
+	}
+}
+
 ///
 
 void Interface::handleMouseDown(Point mouseGlobalOrigin, MouseButton button) {
@@ -377,25 +472,40 @@ void Interface::handleMouseMove(Point mouseGlobalOrigin) {
 }
 
 void Interface::processKeyDown(WPARAM wparam, LPARAM lparam) {
-	Renderable::processKeyDown(wparam, lparam);
 	auto ascii = CustomUI::getASCII(wparam, lparam);
 	 // dirty hack for shortcuts for now
 
 	if ('1' <= ascii && ascii <= '8') {
 		auto index = ascii - '1';
 		_rightHUD->beltDragNDropParticipant()->tryUseItemAtIndex(index);
+		return;
 	}
 
 	if (tolower(ascii) == 'a') {
-		toggleWindow(_statsView);
+		toggleWindow(_statsView.get());
+		return;
 	}
 
 	if (tolower(ascii) == 't') {
-		toggleWindow(_newItemsWindow);
+		toggleWindow(_newItemsWindow.get());
+		return;
 	}
 
 	if (tolower(ascii) == 's') {
-		toggleWindow(_userSkillsView);
+		toggleWindow(_userSkillsView.get());
+		return;
+	}
+
+	if (wparam == VK_ESCAPE) {
+		toggleWindow(_exitOptionsWindow.get());
+		return;
+	}
+
+	auto tryMatchSkillHotkey = _skillSelectionView->getHidden() ||
+		_skillSelectionView->currentMouseState() != MouseState::hovering;
+
+	if(tryMatchSkillHotkey && _skillSelectionManager->trySkillSelectionViaHotkey(wparam, lparam)) {
+		hideWindow(_skillSelectionView.get());
 	}
 }
 
@@ -417,7 +527,7 @@ void Interface::renderWithRenderer(I4DyuchiGXRenderer* renderer, int zIndex) {
 
 ///
 
-void Interface::renderOnMouseCursorAvatar(Renderable* avatar,
+void Interface::renderOnMouseCursorAvatar(std::shared_ptr<Renderable> avatar,
 	std::function<void(CustomUI::Rect avatarCurrentGlobalFrame)> onLeftMouseButtonUP
 ) {
 	_mouseTracking->trackWithNewRenderable(avatar, onLeftMouseButtonUP);
@@ -426,6 +536,15 @@ void Interface::renderOnMouseCursorAvatar(Renderable* avatar,
 void Interface::clearCurrentMouseCursorAvatar() {
 	_mouseTracking->trackWithNewRenderable(nullptr, nullptr);
 }
+
+void Interface::updateForLayer(MinimapWindowManager::Layer layer) {
+	_minimapWindowManager->updateForLayer(layer);
+}
+
+void Interface::processCurrentHovering(GXOBJECT_HANDLE hoveredObject) {
+	_hpInfoBarManager->updateForCurrentHovering(hoveredObject);
+}
+
 
 /*
 

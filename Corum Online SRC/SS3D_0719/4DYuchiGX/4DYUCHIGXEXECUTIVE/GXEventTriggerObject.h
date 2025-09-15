@@ -20,7 +20,7 @@ public:
 	CoGXEventTrigger();
 
 	BOOL				Initialize(CoExecutive* pExecutive,GXSchedulePROC pProc,DWORD dwFlag);
-	void				SetPosition(VECTOR3* pv3Pos);
+	void				SetPosition(const VECTOR3* pv3Pos);
 	void				SetRotation(VECTOR3* pv3Rot);
 	void				SetScale(VECTOR3* pv3Scale);
 	void				GetEventTriggerDesc(EVENT_TRIGGER_DESC* pEVDesc);

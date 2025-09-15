@@ -15,7 +15,7 @@
 }
 
 
-inline void DECLSPECIFIER ShowAllPacketSize()
+inline void COMMONSERVERDECLSPECIFIER ShowAllPacketSize()
 {
 	int		nMax			= 0;
 	char	szMaxName[0xff]	= {0,};

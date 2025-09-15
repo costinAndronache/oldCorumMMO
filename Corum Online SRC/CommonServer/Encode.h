@@ -15,9 +15,9 @@
 #define MAX_READING			40960
 
 
-BOOL DECLSPECIFIER EncodeINIFile(char* szSrcFileName, char* szSaveFile, char* szEncodeKey, int nEncodeSubKey);
-BOOL DECLSPECIFIER DecodeCFGFile(char* szLoadFile, char* szTagetFile, char* szDecodeKey, int nDecodeSubKey);
-void DECLSPECIFIER CreateRandomString(IN OUT char* szString, int iLen);
+BOOL COMMONSERVERDECLSPECIFIER EncodeINIFile(char* szSrcFileName, char* szSaveFile, char* szEncodeKey, int nEncodeSubKey);
+BOOL COMMONSERVERDECLSPECIFIER DecodeCFGFile(char* szLoadFile, char* szTagetFile, char* szDecodeKey, int nDecodeSubKey);
+void COMMONSERVERDECLSPECIFIER CreateRandomString(IN OUT char* szString, int iLen);
 
 
 #endif 

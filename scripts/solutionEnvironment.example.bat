@@ -9,4 +9,5 @@ set DX8LIBDIR=%DX8SDKDIR%\lib
 set SOLUTION_INCLUDES=%WINSDKDIR%\include;%VSSDKDIR%\include;%VSSDKDIR%\atlmfc\include;%DX8INCLUDEDIR%;
 set SOLUTION_LIBS=%WINSDKDIR%\Lib;%DX8LIBDIR%;%VSSDKDIR%\lib\x86;%VSSDKDIR%\atlmfc\lib\x86;%WINSDKDIR%\lib;%UCRTSDKDIR_LIB%;
 
+set CPP_RUNTIME_LIB=MultiThreadedDLL
 :: DirectX8.1 SDK needed; https://archive.org/details/dx81sdk_full

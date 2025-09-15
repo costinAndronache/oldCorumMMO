@@ -4,7 +4,7 @@ using namespace NewInterface;
 using namespace CustomUI;
 
 TooltipManager::TooltipManager(
-	TooltipLayer* layer,
+	std::shared_ptr<TooltipLayer> layer,
 	TooltipCreateFn createFn
 ) {
 	_layer = layer;

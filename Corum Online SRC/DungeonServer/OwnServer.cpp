@@ -6,7 +6,7 @@
 #include "DungeonTable.h"
 #include "Dungeon.h"
 #include "GameSystem.h"
-
+#include "../CommonServer/DungeonStaticData.h"
 
 #define CONSOLE_TITLE	"Dungeon Server - [CorumOnline]"
 #define CONSOLE_TITLE2	"Village Server - [CorumOnline]"
@@ -141,14 +141,6 @@ BOOL COwnServer::Initialize(char* pServerInfoFile, char* pServerConfigInfoFile)
 	if(lstrlen(m_szIpForUser) == 0)
 		GetLocalAddress(m_szIpForUser);
 	
-#ifdef TAIWAN_LOCALIZING
-	GetPrivateProfileString("OWN_SERVERINFO", "IP_FOR_EXTERN", "", m_szIpForExtern, MAX_IP_LENGTH, pServerInfoFile);	
-	if(lstrlen(m_szIpForExtern) == 0)
-	{
-		MessageBox(NULL, "Check Extern IP in server.ini!", "Alert!", MB_OK);
-		return FALSE;
-	}
-#endif
 	
 	GetPrivateProfileString("OWN_SERVERINFO", "IP_FOR_SERVER_LISTEN", "", m_szIpForServer, MAX_IP_LENGTH, pServerInfoFile);	
 	if(lstrlen(m_szIpForServer) == 0)
@@ -215,15 +207,55 @@ BOOL COwnServer::InitializeDecodeCFG(char* pServerInfoFile)
 }
 
 
-//-----------------------------------------------------------------------------
-// SYSTEM DB로 부터 현재 이서버가 가지고 있어야 할 던전들의 구성을 받아온다.
-//-----------------------------------------------------------------------------
+BOOL COwnServer::requestDungeonInfoStatic() {
+	using namespace DungeonStaticData;
+	const auto manager = DungeonStaticDataManager::parseFromFile(
+		DungeonStaticData::staticDataJSONFile
+	);
+
+	const auto dungeons = manager.allDungeonsConnectingTo(m_wPortForUser);
+
+	if(dungeons.empty()) {
+		Log(LOG_IMPORTANT, "No dungeons found in the static data for port: %d", m_wPortForUser);
+		return FALSE;
+	}
+
+	CZP_REQUEST_DUNGEON_INFO_DG_ResultRow DungeonInfo[MAX_DUNGEON_PER_SERVER];
+	memset(DungeonInfo, 0, sizeof(DungeonInfo));
+
+	const auto nRet = min(dungeons.size(), MAX_DUNGEON_PER_SERVER);
+	for(int i = 0; i < nRet; ++i) {
+		const auto dungeon = dungeons[i];
+		auto& row = DungeonInfo[i];
+
+		row.m_dwID = dungeon.id;
+		strncpy(row.m_szDungeonName, dungeon.name.c_str(), sizeof(row.m_szDungeonName) - 1);
+		row.m_cGuardianItem = CItem(); row.m_cGuardianItem.SetID(0);
+
+		row.m_wLayerCount = dungeon.layerFormationIDs.size();
+		for(int i = 0; i < min(MAX_LAYER_PER_DUNGEON, dungeon.layerFormationIDs.size()); i++) {
+			row.m_dwLayerFormation[i] = dungeon.layerFormationIDs[i];
+		}
+	}
+
+	for(int i = 0; i < nRet; ++i)
+	{
+		memcpy((CZP_REQUEST_DUNGEON_INFO_DG_ResultRow*)&m_pDungeonInfo[i], &DungeonInfo[i], sizeof(CZP_REQUEST_DUNGEON_INFO_DG_ResultRow));
+	}
+
+	m_dwTotalDungeonNum = (DWORD)nRet;
+
+	Log(LOG_JUST_DISPLAY, "@ DungeonInfo Query (for non-siege dungeons) Successfully!");
+
+	return TRUE;
+}
+
 BOOL COwnServer::RequestDungeonInfo()
 {
 	char szQuery[ 0xff ]={0,};
 	wsprintf(szQuery, "CZP_REQUEST_DUNGEON_INFO_DG %d",  m_wPortForUser);
 	
-	DUNGEON_DATA DungeonInfo[MAX_DUNGEON_PER_SERVER];
+	CZP_REQUEST_DUNGEON_INFO_DG_ResultRow DungeonInfo[MAX_DUNGEON_PER_SERVER];
 	int nRet = g_pDb->OpenRecord(szQuery, &DungeonInfo[0], MAX_DUNGEON_PER_SERVER, GAME_DB );
 
 	if(nRet < 0)
@@ -234,7 +266,7 @@ BOOL COwnServer::RequestDungeonInfo()
 	
 	for(int i = 0; i < nRet; ++i)
 	{
-		memcpy((DUNGEON_DATA*)&m_pDungeonInfo[i], &DungeonInfo[i], sizeof(DUNGEON_DATA));
+		memcpy((CZP_REQUEST_DUNGEON_INFO_DG_ResultRow*)&m_pDungeonInfo[i], &DungeonInfo[i], sizeof(CZP_REQUEST_DUNGEON_INFO_DG_ResultRow));
 	}
 
 	m_dwTotalDungeonNum = (DWORD)nRet;

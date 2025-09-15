@@ -7,7 +7,7 @@ using namespace NewInterface;
 DisplacementHandleRenderable::DisplacementHandleRenderable(CustomUI::Rect frameInParent) {
 	_frameInParent = frameInParent;
 	_spriteRenderable = registerChildRenderable<SpriteRenderable>([=](){
-		return new SpriteRenderable(bounds(), NewHUDResources::displacementIcon);
+		return std::make_shared<SpriteRenderable>(bounds(), NewHUDResources::displacementIcon);
 	});
 
 	_handler = nullptr;

@@ -38,7 +38,7 @@ CMonster* CSection::FindMonster(DWORD dwBaseMonsterID)
 	{
 		pMonster = (CMonster*)m_pMonsterList->GetAndAdvance(pos);
 
-		if(pMonster->IsGuardian())
+		if(pMonster->GuardianType() != GUARDIAN_TYPE_NOT_A_GUARDIAN)
 			continue;
 		if(pMonster->GetBaseMonsterInfo()->dwID == dwBaseMonsterID)
 			return pMonster;

@@ -13,6 +13,8 @@
 CoStaticModel::CoStaticModel()
 {
 	memset((char*)this+4,0,sizeof(CoStaticModel)-4);
+	///
+	_meshMap = new IndexedMap<CMeshObject>();
 }
 
 STDMETHODIMP CoStaticModel::QueryInterface(REFIID refiid, PPVOID ppv)
@@ -46,8 +48,6 @@ STDMETHODIMP_(ULONG) CoStaticModel::Release(void)
 BOOL CoStaticModel::Initialize(I4DyuchiGXRenderer* pDev,DWORD dwMaxStaticObjectNum,DWORD dwMaxMaterialNum)
 {
 	m_pRenderer = pDev;
-	m_pIndexItemTableMeshObject = ITCreate();
-	ITInitialize(m_pIndexItemTableMeshObject,dwMaxStaticObjectNum);
 	m_dwMaxMaterialNum = dwMaxMaterialNum;
 	m_pMaterialList = new CMaterialList;
 	m_bRecvShadowEnable = TRUE;
@@ -78,9 +78,10 @@ void CoStaticModel::ResetMaterialAll()
 	pMtlListTemp->Initialize(4096);
 	pMtlListTemp->BeginBulidMaterialList(4096);
 
-	for (DWORD i=0; i<ITGetItemNum(m_pIndexItemTableMeshObject); i++)
+	for (const auto& entry: _meshMap->current())
 	{
-		CMeshObject* pObj = (CMeshObject*)ITGetItemSequential(m_pIndexItemTableMeshObject,i);
+		CMeshObject* pObj = entry.second;
+
 		for (DWORD j=0; j<pObj->GetFaceGroupNum(); j++)
 		{
 			ResetMaterial(pObj->GetFaceGroup()+j,pMtlListTemp);
@@ -113,26 +114,22 @@ void CoStaticModel::InitializeObjects()
 //	CMeshFlag	flag;
 //	CreateCollisionDesc(flag);
 
-
-	DWORD			i;
 	CMeshObject*	pObj;
 	
 
-	DWORD	dwNum = ITGetItemNum(m_pIndexItemTableMeshObject);
+	DWORD	dwNum = _meshMap->current().size();
 	
 	m_pDefaultMatrixList = new MATRIX4[dwNum];
 	memset(m_pDefaultMatrixList,0,sizeof(MATRIX4)*dwNum);
 
-	for (i=0; i<dwNum; i++)
-	{	
-
-		pObj = (CMeshObject*)ITGetItemSequential(m_pIndexItemTableMeshObject,i);
+	for (int i = 0; i < _meshMap->current().size(); i++) {
+		auto it = std::next(_meshMap->current().begin(), i);
+		pObj = it->second;
 		pObj->SetResultMatrixPtr(m_pDefaultMatrixList + i);
 		pObj->ResetResultMatrix();
 		pObj->SetGeometry(m_pGeometry);
 		pObj->SetCollsionModelDescEntry(m_pColMeshModelDescWorld);
 		pObj->Initialize(m_pMaterialList,NULL,m_pGeometry);
-
 /*		
 		CMeshFlag	flag;
 		flag = ((CMeshObject*)pObj)->GetMeshFlag();
@@ -166,12 +163,7 @@ CMeshObject* CoStaticModel::AllocObject()
 	pObj->SetObjectType(OBJECT_TYPE_MESH);
 
 	
-	DWORD dwIndex = ITAddItem(m_pIndexItemTableMeshObject,(void*)pObj);
-	if (dwIndex == 0xffffffff)
-	{
-		delete pObj;
-		pObj = NULL;
-	}
+	DWORD dwIndex = _meshMap->storeObject(pObj);
 	pObj->SetIndex(dwIndex);
 
 	return pObj;
@@ -254,9 +246,9 @@ BOOL __stdcall CoStaticModel::DeleteObject(DWORD dwIndex)
 	// 링크드 리스트에서 제거하는 루틴을 추가해야한다.
 	__asm int 3
 	BOOL	bResult = FALSE;
-	CMeshObject*	pObj = (CMeshObject*)ITGetItem(m_pIndexItemTableMeshObject,dwIndex);
+	CMeshObject*	pObj = _meshMap->getObjectORNull(dwIndex);
+	_meshMap->deleteObject(dwIndex);
 	
-	ITDeleteItem(m_pIndexItemTableMeshObject,dwIndex);
 	delete pObj;
 	bResult = TRUE;
 
@@ -284,7 +276,7 @@ COLLISION_MESH_OBJECT_DESC*	__stdcall CoStaticModel::GetCollisionMeshObjectDesc(
 {
 	COLLISION_MESH_OBJECT_DESC* pColDesc = NULL;
 
-	CMeshObject* pMeshObj = (CMeshObject*)ITGetItem(m_pIndexItemTableMeshObject,dwObjIndex);
+	CMeshObject* pMeshObj = _meshMap->getObjectORNull(dwObjIndex);
 	if (!pMeshObj)
 		goto lb_return;
 
@@ -311,13 +303,12 @@ COLLISION_MODEL_DESC* CoStaticModel::CreateCollisionDesc(CMeshFlag /*gxm*/)
 	DWORD				dwBoundingVertexNum;
 	DWORD				size;
 	VECTOR3				*pv3,*pv3Offset;	
-	DWORD				i;
 
-	if (!ITGetItemNum(m_pIndexItemTableMeshObject))
+	if (_meshMap->current().empty())
 		goto lb_return;
 
 	m_dwColMeshSize = size = sizeof(COLLISION_MESH_OBJECT_DESC) +
-		sizeof(COLLISION_MESH_OBJECT_DESC)*ITGetItemNum(m_pIndexItemTableMeshObject) + 
+		sizeof(COLLISION_MESH_OBJECT_DESC)* _meshMap->current().size() + 
 		sizeof(DWORD);
 
 	
@@ -326,19 +317,18 @@ COLLISION_MODEL_DESC* CoStaticModel::CreateCollisionDesc(CMeshFlag /*gxm*/)
 	
 
 
-	m_pColMeshModelDescWorld->dwColMeshObjectDescNum = ITGetItemNum(m_pIndexItemTableMeshObject);
+	m_pColMeshModelDescWorld->dwColMeshObjectDescNum = _meshMap->current().size();
 
 
-	dwBoundingVertexNum = ITGetItemNum(m_pIndexItemTableMeshObject)*8;
+	dwBoundingVertexNum = _meshMap->current().size() * 8;
 	pv3 = pv3Offset = new VECTOR3[dwBoundingVertexNum];
 
 	CMeshObject* pObj;
 
-	for (i=0; i<ITGetItemNum(m_pIndexItemTableMeshObject); i++)
-	{
-		pObj = (CMeshObject*)ITGetItemSequential(m_pIndexItemTableMeshObject,i);
+	for (int i=0; i < _meshMap->current().size(); i++) {
+		auto it = std::next(_meshMap->current().begin(), i);
+		pObj = it->second;
 
-		
 		if ((pObj->GetMeshFlag().GetTransformType() == TRANSFORM_TYPE_ALIGN_VIEW) || (!pObj->GetColMeshTemp()))
 		{
 			pObj->CreateBoundingMesh(
@@ -402,7 +392,8 @@ BOOL __stdcall CoStaticModel::RenderObject(DWORD dwObjIndex,DWORD dwAlpha,DWORD 
 	
 	VIEW_VOLUME*		pVV = m_pGeometry->INL_GetViewvolume();
 	
-	CMeshObject* pMeshObj = (CMeshObject*)ITGetItem(m_pIndexItemTableMeshObject,dwObjIndex);
+	CMeshObject* pMeshObj = (CMeshObject*)_meshMap->getObjectORNull(dwObjIndex);
+	if(!pMeshObj) { return FALSE; }
 
 	if (pMeshObj->GetMeshFlag().GetTransformType() == TRANSFORM_TYPE_ALIGN_VIEW)
 	{
@@ -532,10 +523,9 @@ BOOL CoStaticModel::DecommitIDIMeshObject(CMeshObject* pObj)
 BOOL CoStaticModel::CommitAllIDIMeshObjectsInViewVolume()
 {
 	CMeshObject*	pObj;
-	DWORD	dwNum = ITGetItemNum(m_pIndexItemTableMeshObject);
-	for (DWORD i=0; i<dwNum; i++)
+	for (const auto& entry: _meshMap->current())
 	{	
-		pObj = (CMeshObject*)ITGetItemSequential(m_pIndexItemTableMeshObject,i);
+		pObj = entry.second;
 		if (pObj->GetDeviceObject())
 			continue;
 
@@ -550,10 +540,9 @@ BOOL CoStaticModel::CommitAllIDIMeshObjectsInViewVolume()
 BOOL CoStaticModel::CommitAllIDIMeshObjectsInViewSphere()
 {
 	CMeshObject*	pObj;
-	DWORD	dwNum = ITGetItemNum(m_pIndexItemTableMeshObject);
-	for (DWORD i=0; i<dwNum; i++)
+	for (const auto& entry: _meshMap->current())
 	{	
-		pObj = (CMeshObject*)ITGetItemSequential(m_pIndexItemTableMeshObject,i);
+		pObj = entry.second;
 		if (pObj->GetDeviceObject())
 			continue;
 
@@ -599,7 +588,7 @@ DWORD __stdcall CoStaticModel::CreateIVertexList(IVERTEX** ppVertex)
 {
 	// 리턴값은 페이스 갯수
 
-	if (!ITGetItemNum(m_pIndexItemTableMeshObject))
+	if (_meshMap->current().empty())
 		return 0;
 
 	DWORD			dwResult;
@@ -609,18 +598,18 @@ DWORD __stdcall CoStaticModel::CreateIVertexList(IVERTEX** ppVertex)
 	DWORD			i;
 	CMeshObject*	pObj;
 
-	for (i=0; i<ITGetItemNum(m_pIndexItemTableMeshObject); i++)
+	for (const auto& entry: _meshMap->current())
 	{
-		pObj = (CMeshObject*)ITGetItemSequential(m_pIndexItemTableMeshObject,i);
+		pObj = entry.second;
 		dwTotalFacesNum += pObj->GetTotalFacesNum();
 	}
 	IVERTEX*		pvSrc;
 	IVERTEX*		pv = new IVERTEX[dwTotalFacesNum*3];
 	IVERTEX*		pEntry = pv;
 
-	for (i=0; i<ITGetItemNum(m_pIndexItemTableMeshObject); i++)
-	{
-		pObj = (CMeshObject*)ITGetItemSequential(m_pIndexItemTableMeshObject,i);
+	for (int i=0; i < _meshMap->current().size(); i++) {
+		auto it = std::next(_meshMap->current().begin(), i);
+		pObj = it->second;
 		if (pObj->GetMeshFlag().GetTransformType() == TRANSFORM_TYPE_ALIGN_VIEW)
 		{
 			dwViewAlignedFacesNum += pObj->GetTotalFacesNum();
@@ -648,7 +637,7 @@ DWORD __stdcall	CoStaticModel::CreateIVertexListWithIndex(IVERTEX** ppVertex,DWO
 	DWORD		dwResult = 0;
 	CMeshObject*	pMeshObject;
 
-	pMeshObject = (CMeshObject*)ITGetItem(m_pIndexItemTableMeshObject,dwObjIndex);
+	pMeshObject = _meshMap->getObjectORNull(dwObjIndex);
 	
 	if (!pMeshObject)
 		goto lb_return;
@@ -687,9 +676,9 @@ void __stdcall CoStaticModel::Optimize()
 	if (m_bOptimizedFlag)
 		goto lb_return;
 
-	for (i=0; i<ITGetItemNum(m_pIndexItemTableMeshObject); i++)
+	for (const auto& entry: _meshMap->current())
 	{
-		pObj = (CMeshObject*)ITGetItemSequential(m_pIndexItemTableMeshObject,i);
+		pObj = entry.second;
 
 		pObj->ReleaseLightTexturePatches();
 	//	pObj->Optimize();
@@ -703,24 +692,17 @@ lb_return:
 }
 DWORD __stdcall CoStaticModel::GetObjectNum()
 {
-	return ITGetItemNum(m_pIndexItemTableMeshObject);
+	return _meshMap->current().size();
 }
-DWORD __stdcall CoStaticModel::GetObjectIndex(DWORD dwSeqIndex)
-{
-	CMeshObject*	pObj;
-	DWORD	dwIndex = 0xffffffff;
+DWORD __stdcall CoStaticModel::GetObjectIndex(DWORD dwSeqIndex) {
+	const auto invalid = 0xffffffff;
+	if(dwSeqIndex >= _meshMap->current().size()) { return invalid; }
 	
-	DWORD	dwNum = ITGetItemNum(m_pIndexItemTableMeshObject);
+	auto it = std::next(_meshMap->current().begin(), dwSeqIndex);
+	CMeshObject*	pObj = it->second;
+	if(!pObj) { return invalid; }
 
-	if (dwSeqIndex >= dwNum)
-		goto lb_return;
-
-	pObj = (CMeshObject*)ITGetItemSequential(m_pIndexItemTableMeshObject,dwSeqIndex);
-
-	dwIndex = pObj->GetIndex();
-
-lb_return:
-	return dwIndex;
+	return pObj->GetIndex();
 }
 
 BOOL __stdcall CoStaticModel::BeignShadeLightMapObject(DWORD dwColor)
@@ -730,9 +712,9 @@ BOOL __stdcall CoStaticModel::BeignShadeLightMapObject(DWORD dwColor)
 
 	m_dwAmbientColor = dwColor;
 
-	for (i=0; i<ITGetItemNum(m_pIndexItemTableMeshObject); i++)
-	{
-		pObj = (CMeshObject*)ITGetItemSequential(m_pIndexItemTableMeshObject,i);
+	for (i=0; i < _meshMap->current().size(); i++) {
+		auto it = std::next(_meshMap->current().begin(), i);
+		pObj = it->second;
 		
 		if (pObj->GetLightTexture())
 		{
@@ -750,12 +732,11 @@ BOOL __stdcall CoStaticModel::ShadeLightMapObject(DWORD dwObjIndex,VECTOR3* pv3,
 {
 	BOOL		bResult = FALSE;
 
-	CMeshObject*	pMeshObject;
+	CMeshObject*	pMeshObject = _meshMap->getObjectORNull(dwObjIndex);
 
-	if (dwObjIndex >= ITGetItemNum(m_pIndexItemTableMeshObject))
+	if (!pMeshObject)
 		goto lb_return;
 
-	pMeshObject = (CMeshObject*)ITGetItem(m_pIndexItemTableMeshObject,dwObjIndex);
 
 	if (pMeshObject->GetLightTexture())
 	{
@@ -790,7 +771,7 @@ BOOL CoStaticModel::GetLightTexturePatch(CMeshObject** ppMeshObj,CLightTexture**
 	float			fMinDist = 900000.0f;
 	VECTOR3			v3NearIntersectPoint;
 
-	pObj = (CMeshObject*)ITGetItem(m_pIndexItemTableMeshObject,dwObjIndex);
+	pObj = _meshMap->getObjectORNull(dwObjIndex);
 	pLightTexture = pObj->GetLightTexture();
 	if (!pLightTexture)
 		goto lb_return;
@@ -955,9 +936,9 @@ void __stdcall CoStaticModel::EndShadeLightMapObject()
 
 	fpVCL = fopen(m_szTempVCLFileName,"wb");
 	
-	for (i=0; i<ITGetItemNum(m_pIndexItemTableMeshObject); i++)
-	{
-		pObj = (CMeshObject*)ITGetItemSequential(m_pIndexItemTableMeshObject,i);
+	for (i=0; i < _meshMap->current().size(); i++) {
+		auto it = std::next(_meshMap->current().begin(), i);
+		pObj = it->second;
 	
 		if (pObj->GetLightTexture())
 		{
@@ -996,13 +977,13 @@ BOOL __stdcall CoStaticModel::WriteFile(char* szFileName)
 	fwrite(&dwVersion,sizeof(DWORD),1,fp);
 		
 	m_pMaterialList->WriteFile(fp);
-	dwObjNum = ITGetItemNum(m_pIndexItemTableMeshObject);
+	dwObjNum = _meshMap->current().size();
 
 	fwrite(&dwObjNum,sizeof(DWORD),1,fp);
 
-	for (i=0; i<ITGetItemNum(m_pIndexItemTableMeshObject); i++)
-	{
-		pObj = (CMeshObject*)ITGetItemSequential(m_pIndexItemTableMeshObject,i);
+	for (i=0; i < _meshMap->current().size(); i++) {
+		auto it = std::next(_meshMap->current().begin(), i);
+		pObj = it->second;
 		pObj->WriteFile(fp);
 	}
 
@@ -1060,10 +1041,10 @@ DWORD CoStaticModel::ReadCollisionMesh(void* pFP)
 	
 	COLLISION_MESH_OBJECT_DESC*	pColMesh;
 
-	for (DWORD i=0; i<ITGetItemNum(m_pIndexItemTableMeshObject); i++)
-	{
+	for (int i=0; i < _meshMap->current().size(); i++) {
+		auto it = std::next(_meshMap->current().begin(), i);
 		// 단지 오프셋 세팅..
-		CMeshObject* pObj = (CMeshObject*)ITGetItemSequential(m_pIndexItemTableMeshObject,i);
+		CMeshObject* pObj = it->second;
 
 
 		if (pObj->GetMeshFlag().GetTransformType() == TRANSFORM_TYPE_ALIGN_VIEW)
@@ -1244,9 +1225,9 @@ CMeshObject* CoStaticModel::GetObject(char* szObjName)
 	CMeshObject*	pObj;
 	DWORD			i;
 
-	for (i=0; i<ITGetItemNum(m_pIndexItemTableMeshObject); i++)
+	for (const auto& entry: _meshMap->current())
 	{
-		pObj = (CMeshObject*)ITGetItemSequential(m_pIndexItemTableMeshObject,i);
+		pObj = entry.second;
 		if (!lstrcmp(szObjName,pObj->GetObjectName()))
 		{
 			pResult = pObj;
@@ -1326,18 +1307,19 @@ BOOL __stdcall	CoStaticModel::IsCollisionMeshObject(VECTOR3* pv3IntersectPoint,f
 	p.x = ptCursor->x - pVP->rcClip.left;
 	p.y = ptCursor->y - pVP->rcClip.top;
 
-	if (p.x < 0 || p.y < 0)
-		goto lb_return;
+	if (p.x < 0 || p.y < 0) { return FALSE; }
 
 	
-	if (ptCursor->x > pVP->rcClip.right || ptCursor->y > pVP->rcClip.bottom)
-		goto lb_return;
+	if (ptCursor->x > pVP->rcClip.right || ptCursor->y > pVP->rcClip.bottom) { return FALSE;}
 
 
 	CalcRay(&v3Pos,&v3Dir,p.x,p.y,(DWORD)pVP->wClipWidth,(DWORD)pVP->wClipHeight,&matProj,&matView);
 	
-	pObj = (CMeshObject*)ITGetItemSequential(m_pIndexItemTableMeshObject,dwObjIndex);
-	if (pObj->GetMeshFlag().GetTransformType() == TRANSFORM_TYPE_ALIGN_VIEW)
+	if(dwObjIndex >= _meshMap->current().size()) { return FALSE; }
+	auto it = std::next(_meshMap->current().begin(), dwObjIndex);
+
+	pObj = it->second;
+	if (!pObj || pObj->GetMeshFlag().GetTransformType() == TRANSFORM_TYPE_ALIGN_VIEW)
 		goto lb_return;
 
 	pColMeshDesc = GetCollisionMeshObjectDesc(dwObjIndex);
@@ -1367,16 +1349,13 @@ void CoStaticModel::ReleaseObjects()
 	DWORD			i;
 
 	//주의할 필요가 있다.인덱스테이블에서 아이템을 하나씩 삭제할때마다 아이템의 순서가 바뀌고 갯수도 줄어든다.
-	DWORD dwNum = ITGetItemNum(m_pIndexItemTableMeshObject);
-	for (i=0; i<dwNum; i++)
-	{
-		pObj = (CMeshObject*)ITGetItemSequential(m_pIndexItemTableMeshObject,0);
-		if (pObj)
-		{
-			ITDeleteItem(m_pIndexItemTableMeshObject,pObj->GetIndex());
-			delete pObj;
-		}
+	
+	for (const auto& entry: _meshMap->current()) {
+		pObj = (CMeshObject*)entry.second;
+		if (pObj) { delete pObj; }
 	}
+
+	_meshMap->eraseAll();
 }
 void CoStaticModel::Clean()
 {
@@ -1473,7 +1452,7 @@ CoStaticModel::~CoStaticModel()
 	CleanColMesh();
 	Clean();
 	ReleaseObjects();
-	ITRelease(m_pIndexItemTableMeshObject);
+	_meshMap->eraseAll();
 
 	if (m_pGeometry)
 	{

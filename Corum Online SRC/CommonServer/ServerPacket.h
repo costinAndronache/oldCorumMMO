@@ -14,7 +14,7 @@
 struct DSTWS_SERVER_ATTACH
 {
 	WORD	wHeader;
-	DWORD	dwID;		
+	DWORD	portOnUserSide;		
 	BYTE	bType;
 
 	DSTWS_SERVER_ATTACH()	{	wHeader = Protocol_Server::CMD_SERVER_ATTACH;		}

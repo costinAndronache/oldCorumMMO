@@ -44,8 +44,8 @@ static CTDS_ITEM_MOVE dropToTilePacket(ITEM_NATIVE from, int fromIndex, int quan
 
 DragNDropManager::DragNDropManager(
 	CMainUser* mainUser, 
-	SharedNetwork* network, 
-	CustomUI::DragNDropSystem* dragNDropSystem,
+	std::shared_ptr<SharedNetwork> network, 
+	std::shared_ptr<CustomUI::DragNDropSystem> dragNDropSystem,
 	SoundLibrary* soundLibrary
 ) {
 	_mainUser = mainUser;
@@ -55,9 +55,9 @@ DragNDropManager::DragNDropManager(
 }
 
 void DragNDropManager::setupRoutes(
-	BeltManager* belt,
-	UserInventoryManager* userItemsInventory,
-	EquipItemsManager* equipItems
+	std::shared_ptr<BeltManager> belt,
+	std::shared_ptr<UserInventoryManager> userItemsInventory,
+	std::shared_ptr<EquipItemsManager> equipItems
 ) {
 	setupRoutesFromBelt(belt, userItemsInventory);
 	setupRoutesFromUserInventory(userItemsInventory, belt, equipItems);
@@ -65,10 +65,10 @@ void DragNDropManager::setupRoutes(
 }
 
 void DragNDropManager::setupRoutesFromBelt(
-	BeltManager* fromBelt,
-	UserInventoryManager* toUserItemsInventory
+	std::shared_ptr<BeltManager> fromBelt,
+	std::shared_ptr<UserInventoryManager> toUserItemsInventory
 ) {
-	const auto toReceivers = std::vector<DragNDropReceiver*>{ fromBelt, toUserItemsInventory };
+	const auto toReceivers = std::vector<std::shared_ptr<DragNDropReceiver>>{ fromBelt, toUserItemsInventory };
 	auto onNoRouteMatched = [=]() -> void {
 		dropOnTileFromBelt(fromBelt);
 	};
@@ -101,11 +101,11 @@ void DragNDropManager::setupRoutesFromBelt(
 }
 
 void DragNDropManager::setupRoutesFromUserInventory(
-	UserInventoryManager* fromUserItemsInventory,
-	BeltManager* toBelt,
-	EquipItemsManager* toEquipItems
+	std::shared_ptr<UserInventoryManager> fromUserItemsInventory,
+	std::shared_ptr<BeltManager> toBelt,
+	std::shared_ptr<EquipItemsManager> toEquipItems
 ) {
-	const auto toReceivers = std::vector<DragNDropReceiver*>{ fromUserItemsInventory, toBelt, toEquipItems };
+	const auto toReceivers = std::vector<std::shared_ptr<DragNDropReceiver>>{ fromUserItemsInventory, toBelt, toEquipItems };
 	auto onNoRouteMatched = [=]() -> void {
 		dropOnTileFromUserInventory(fromUserItemsInventory);
 	};
@@ -141,10 +141,10 @@ void DragNDropManager::setupRoutesFromUserInventory(
 }
 
 void DragNDropManager::setupRoutesFromEquipInventory(
-	EquipItemsManager* fromEquipItems,
-	UserInventoryManager* toInventory
+	std::shared_ptr<EquipItemsManager> fromEquipItems,
+	std::shared_ptr<UserInventoryManager> toInventory
 ) {
-	const auto toReceivers = std::vector<DragNDropReceiver*>{ toInventory };
+	const auto toReceivers = std::vector<std::shared_ptr<DragNDropReceiver>>{ toInventory };
 	auto onNoRouteMatched = [=]() -> void {
 		fromEquipItems->resetIndexOnCurrentDragNDropItem();
 	};
@@ -168,7 +168,10 @@ void DragNDropManager::setupRoutesFromEquipInventory(
 
 }
 
-void DragNDropManager::swapBeltItems(BeltManager* belt, Rect dragNDropEndFrame) {
+void DragNDropManager::swapBeltItems(
+	std::shared_ptr<BeltManager> belt, 
+	Rect dragNDropEndFrame) 
+{
 	const auto fromIndex = belt->indexOnCurrentDragNDropItem();
 	const auto toIndex = belt->itemIndexForGlobalPoint(dragNDropEndFrame.center());
 
@@ -189,9 +192,10 @@ void DragNDropManager::swapBeltItems(BeltManager* belt, Rect dragNDropEndFrame) 
 }
 
 void DragNDropManager::moveFromBeltToSmallItemsInventory(
-	BeltManager* belt,
-	UserInventoryManager* userInventory,
-	Rect dragNDropEndFrame) {
+	std::shared_ptr<BeltManager> belt,
+	std::shared_ptr<UserInventoryManager> userInventory,
+	Rect dragNDropEndFrame) 
+{
 	const auto fromIndex = belt->indexOnCurrentDragNDropItem();
 	const auto toIndex = userInventory->itemIndexForGlobalPoint(dragNDropEndFrame.center());
 
@@ -218,7 +222,7 @@ void DragNDropManager::moveFromBeltToSmallItemsInventory(
 }
 
 void DragNDropManager::swapUserInventoryITems(
-	UserInventoryManager* inv,
+	std::shared_ptr<UserInventoryManager> inv,
 	CustomUI::Rect dragNDropEndFrame
 ) {
 	const auto fromIndex = inv->indexOnCurrentDragNDropItem();
@@ -258,8 +262,8 @@ void DragNDropManager::swapUserInventoryITems(
 }
 
 void DragNDropManager::moveFromUserInventoryToBelt(
-	UserInventoryManager* inv,
-	BeltManager* belt,
+	std::shared_ptr<UserInventoryManager> inv,
+	std::shared_ptr<BeltManager> belt,
 	CustomUI::Rect dragNDropEndFrame
 ) {
 	const auto fromIndex = inv->indexOnCurrentDragNDropItem();
@@ -288,8 +292,8 @@ void DragNDropManager::moveFromUserInventoryToBelt(
 }
 
 void DragNDropManager::moveFromUserInventoryToEquip(
-	UserInventoryManager* inv,
-	EquipItemsManager* equipItems,
+	std::shared_ptr<UserInventoryManager> inv,
+	std::shared_ptr<EquipItemsManager> equipItems,
 	CustomUI::Rect dragNDropEndFrame
 ) {
 	const auto fromIndex = inv->indexOnCurrentDragNDropItem();
@@ -320,8 +324,8 @@ void DragNDropManager::moveFromUserInventoryToEquip(
 }
 
 void DragNDropManager::moveFromEquipToItemInventory(
-	EquipItemsManager* fromEquipItems,
-	UserInventoryManager* toInventory,
+	std::shared_ptr<EquipItemsManager> fromEquipItems,
+	std::shared_ptr<UserInventoryManager> toInventory,
 	CustomUI::Rect dragNDropEndFrame
 ) {
 	const auto fromIndex = fromEquipItems->indexOnCurrentDragNDropItem();
@@ -345,7 +349,7 @@ void DragNDropManager::moveFromEquipToItemInventory(
 	_soundLibrary->playItemMouseDropInInterface();
 }
 
-void DragNDropManager::dropOnTileFromBelt(BeltManager* belt) {
+void DragNDropManager::dropOnTileFromBelt(std::shared_ptr<BeltManager> belt) {
 	const auto fromIndex = belt->indexOnCurrentDragNDropItem();
 	if (!(fromIndex >= 0)) { return;  }
 	const auto item = _mainUser->beltItemAtIndex(fromIndex);
@@ -358,7 +362,7 @@ void DragNDropManager::dropOnTileFromBelt(BeltManager* belt) {
 	_soundLibrary->playItemMouseDropInTile();
 }
 
-void DragNDropManager::dropOnTileFromUserInventory(UserInventoryManager* inventory) {
+void DragNDropManager::dropOnTileFromUserInventory(std::shared_ptr<UserInventoryManager> inventory) {
 	const auto fromIndex = inventory->indexOnCurrentDragNDropItem();
 	if (!(fromIndex.index >= 0)) { return; }
 	

@@ -57,8 +57,8 @@ BOOL CMonster::SetPathFindMove(BYTE bMonsterStatus)
 		return FALSE;
 	}
 	
-	m_v2DestPos.x = TILE_X( m_PathFinder.pLocation[m_PathFinder.dwCurCurve].dwBlock_X );
-	m_v2DestPos.y = TILE_Z( m_PathFinder.pLocation[m_PathFinder.dwCurCurve].dwBlock_Y );
+	m_v2DestPos.x = DUNGEON_TILE_3D_X( m_PathFinder.pLocation[m_PathFinder.dwCurCurve].dwBlock_X );
+	m_v2DestPos.y = DUNGEON_TILE_3D_Z( m_PathFinder.pLocation[m_PathFinder.dwCurCurve].dwBlock_Y );
 	m_PathFinder.dwCurCurve++;
 	
 	// 몬스터가 가는 방향을 구한다.
@@ -178,7 +178,7 @@ void CMonster::SetStatus( BYTE bStatus, BOOL bClearTarget, BOOL bCompulsion )
 				|| (IsCurDungeonSiege() 
 					&& (GetCurLayerIndex()+1) == GetCurDungeon()->GetTotalLayer() 
 					&& (IsNormalMonster() 
-						|| IsGuardian() == GUARDIAN_TYPE_DUNGEON)))
+						|| GuardianType() == GUARDIAN_TYPE_DUNGEON)))
 
 				m_dwTemp[NPC_TEMP_KILLTICK]	= g_dwTickCount;
 			else
@@ -737,8 +737,8 @@ BOOL CMonster::ChangeTargetObject(const CUnit* pAttackUser, int nAttackDemage)
 			if ( !m_pBaseMonster )		continue;	// added by minjin.
 
 			if(pMonster == this 
-				|| pMonster->IsGuardian() 
-				||IsGuardian() )	
+				|| pMonster->GuardianType() != GUARDIAN_TYPE_NOT_A_GUARDIAN 
+				||GuardianType() != GUARDIAN_TYPE_NOT_A_GUARDIAN )	
 				continue;		//자기 자신이거나 가디언은 스킵 
 			if(pMonster->m_pBaseMonster->dwID == m_pBaseMonster->dwID &&		//같은종류의 몬스터이고 AI_CHANGE_TARGET_TYPE_SAME_KIND 인경우
 				pMonster->GetAI_TargetChangeType() == AI_CHANGE_TARGET_TYPE_SAME_KIND &&
@@ -764,8 +764,8 @@ BOOL CMonster::ChangeTargetObject(const CUnit* pAttackUser, int nAttackDemage)
 				if ( !pMonster ) continue; // added by minjin.
 
 				if(pMonster == this 
-					|| pMonster->IsGuardian() 
-					|| IsGuardian())	
+					|| pMonster->GuardianType() != GUARDIAN_TYPE_NOT_A_GUARDIAN 
+					|| GuardianType() != GUARDIAN_TYPE_NOT_A_GUARDIAN)	
 					continue;			//자기 자신이거나 가디언은 스킵 
 				else if(!pMonster->m_pBaseMonster 
 					|| !m_pBaseMonster) 
@@ -1072,7 +1072,7 @@ lbl_user:
 		fLength = CalcDistance( GetCurPosition(), pUser->GetCurPosition());
 		if( fLength > m_fSight ) continue;		// 시야 밖의 유저이면 무시.
 		
-		fTemp	= 1.f - ( fLength / TILE_SIZE ) / (double)m_pBaseMonster->bSR * 0.5f;
+		fTemp	= 1.f - ( fLength / DUNGEON_TILE_SIZE ) / (double)m_pBaseMonster->bSR * 0.5f;
 		fTarget = (float)pUser->GetLevel() / (float)pUser->GetHP() 
 			* pfClass[ pUser->GetClass() ] * fTemp;
 
@@ -1125,7 +1125,7 @@ lbl_user:
 			fLength = CalcDistance( GetCurPosition(), pUser->GetCurPosition() );
 			if( fLength > m_fSight ) continue;		// 시야 밖의 유저이면 무시.
 
-			fTemp	= 1.f - ( fLength / TILE_SIZE ) / (double)m_pBaseMonster->bSR * 0.5f;
+			fTemp	= 1.f - ( fLength / DUNGEON_TILE_SIZE ) / (double)m_pBaseMonster->bSR * 0.5f;
 			fTarget = (float)pUser->GetLevel() / (float)pUser->GetHP() 
 				* pfClass[ pUser->GetClass() ] * fTemp;
 
@@ -1182,7 +1182,7 @@ lbl_monster:
 		fLength = CalcDistance( GetCurPosition(), pMonster->GetCurPosition() );
 		if( fLength > m_fSight ) continue;		// 시야 밖의 유저이면 무시.
 			
-		fTemp	= 1.f - ( fLength / TILE_SIZE ) / (double)m_pBaseMonster->bSR * 0.5f;
+		fTemp	= 1.f - ( fLength / DUNGEON_TILE_SIZE ) / (double)m_pBaseMonster->bSR * 0.5f;
 		fTarget = (float)pMonster->GetLevel() / (float)pMonster->GetHP() 
 			* pfClass[ pMonster->GetClass() ] * fTemp;
 
@@ -1223,7 +1223,7 @@ lbl_monster:
 			fLength = CalcDistance( GetCurPosition(), pMonster->GetCurPosition());
 			if( fLength > m_fSight ) continue;		// 시야 밖의 유저이면 무시.
 				
-			fTemp	= 1.f - ( fLength / TILE_SIZE ) / (double)m_pBaseMonster->bSR * 0.5f;
+			fTemp	= 1.f - ( fLength / DUNGEON_TILE_SIZE ) / (double)m_pBaseMonster->bSR * 0.5f;
 			fTarget = (float)pMonster->GetLevel() / (float)pMonster->GetHP() 
 				* pfClass[ pMonster->GetClass() ] * fTemp;
 
@@ -1265,7 +1265,7 @@ lbl_summon:
 		fLength = CalcDistance( GetCurPosition(), pMonster->GetCurPosition());
 		if( fLength > m_fSight ) continue;		// 시야 밖의 유저이면 무시.
 			
-		fTemp	= 1.f - ( fLength / TILE_SIZE ) / (double)m_pBaseMonster->bSR * 0.5f;
+		fTemp	= 1.f - ( fLength / DUNGEON_TILE_SIZE ) / (double)m_pBaseMonster->bSR * 0.5f;
 		fTarget = (float)pMonster->GetLevel() / (float)pMonster->GetHP() 
 			* pfClass[ pMonster->GetClass() ] * fTemp;
 
@@ -1308,7 +1308,7 @@ lbl_summon:
 			fLength = CalcDistance( GetCurPosition(), pMonster->GetCurPosition());
 			if( fLength > m_fSight ) continue;		// 시야 밖의 유저이면 무시.
 				
-			fTemp	= 1.f - ( fLength / TILE_SIZE ) / (double)m_pBaseMonster->bSR * 0.5f;
+			fTemp	= 1.f - ( fLength / DUNGEON_TILE_SIZE ) / (double)m_pBaseMonster->bSR * 0.5f;
 			fTarget = (float)pMonster->GetLevel() / (float)pMonster->GetHP() 
 				* pfClass[ pMonster->GetClass() ] * fTemp;
 
@@ -1369,7 +1369,7 @@ lbl_user:
 		fLength = CalcDistance( GetCurPosition(), pUser->GetCurPosition());
 		if( fLength > m_fSight ) continue;		// 시야 밖의 유저이면 무시.
 			
-		fTemp	= 1.f - ( fLength / TILE_SIZE ) / (double)m_pBaseMonster->bSR * 0.5f;
+		fTemp	= 1.f - ( fLength / DUNGEON_TILE_SIZE ) / (double)m_pBaseMonster->bSR * 0.5f;
 		fTarget = (float)pUser->GetLevel() / (float)pUser->GetHP() 
 			* pfClass[ pUser->GetClass() ] * fTemp;
 
@@ -1424,7 +1424,7 @@ lbl_user:
 			fLength = CalcDistance( GetCurPosition(), pUser->GetCurPosition());
 			if( fLength > m_fSight ) continue;		// 시야 밖의 유저이면 무시.
 
-			fTemp	= 1.f - ( fLength / TILE_SIZE ) / (double)m_pBaseMonster->bSR * 0.5f;
+			fTemp	= 1.f - ( fLength / DUNGEON_TILE_SIZE ) / (double)m_pBaseMonster->bSR * 0.5f;
 			fTarget = (float)pUser->GetLevel() / (float)pUser->GetHP() 
 				* pfClass[ pUser->GetClass() ] * fTemp;
 
@@ -1478,7 +1478,7 @@ lbl_monster:
 		fLength = CalcDistance( GetCurPosition(), pMonster->GetCurPosition() );
 		if( fLength > m_fSight ) continue;		// 시야 밖의 유저이면 무시.
 			
-		fTemp	= 1.f - ( fLength / TILE_SIZE ) / (double)m_pBaseMonster->bSR * 0.5f;
+		fTemp	= 1.f - ( fLength / DUNGEON_TILE_SIZE ) / (double)m_pBaseMonster->bSR * 0.5f;
 		fTarget = (float)pMonster->GetLevel() / (float)pMonster->GetHP() 
 			* pfClass[ pMonster->GetClass() ] * fTemp;
 
@@ -1518,7 +1518,7 @@ lbl_monster:
 			fLength = CalcDistance( GetCurPosition(), pMonster->GetCurPosition() );
 			if( fLength > m_fSight ) continue;		// 시야 밖의 유저이면 무시.
 				
-			fTemp	= 1.f - ( fLength / TILE_SIZE ) / (double)m_pBaseMonster->bSR * 0.5f;
+			fTemp	= 1.f - ( fLength / DUNGEON_TILE_SIZE ) / (double)m_pBaseMonster->bSR * 0.5f;
 			fTarget = (float)pMonster->GetLevel() / (float)pMonster->GetHP() 
 				* pfClass[ pMonster->GetClass() ] * fTemp;
 
@@ -1559,7 +1559,7 @@ lbl_summon:
 		fLength = CalcDistance( GetCurPosition(), pMonster->GetCurPosition());
 		if( fLength > m_fSight ) continue;		// 시야 밖의 유저이면 무시.
 			
-		fTemp	= 1.f - ( fLength / TILE_SIZE ) / (double)m_pBaseMonster->bSR * 0.5f;
+		fTemp	= 1.f - ( fLength / DUNGEON_TILE_SIZE ) / (double)m_pBaseMonster->bSR * 0.5f;
 		fTarget = (float)pMonster->GetLevel() / (float)pMonster->GetHP() 
 			* pfClass[ pMonster->GetClass() ] * fTemp;
 
@@ -1601,7 +1601,7 @@ lbl_summon:
 			fLength = CalcDistance( GetCurPosition(), pMonster->GetCurPosition());
 			if( fLength > m_fSight ) continue;		// 시야 밖의 유저이면 무시.
 				
-			fTemp	= 1.f - ( fLength / TILE_SIZE ) / (double)m_pBaseMonster->bSR * 0.5f;
+			fTemp	= 1.f - ( fLength / DUNGEON_TILE_SIZE ) / (double)m_pBaseMonster->bSR * 0.5f;
 			fTarget = (float)pMonster->GetLevel() / (float)pMonster->GetHP() 
 				* pfClass[ pMonster->GetClass() ] * fTemp;
 
@@ -1723,8 +1723,8 @@ void* CMonster::FindUser_Guardian()
 			{
 				if( fLength <= m_fSight )
 				{
-					if( ( GetCurDungeon()->GetDungeonDataEx()->m_dwOwnerGuildNum == 0 ) || 
-						( pUser->m_dwGuildId != GetCurDungeon()->GetDungeonDataEx()->m_dwOwnerGuildNum ) )
+					if( ( GetCurDungeon()->GetDungeonDataEx()->ownerGuildID == 0 ) || 
+						( pUser->m_dwGuildId != GetCurDungeon()->GetDungeonDataEx()->ownerGuildID ) )
 					{
 						if (pUser->GetAttackMode() == ATTACK_MODE_OFFENSE)
 						{
@@ -1751,7 +1751,7 @@ void* CMonster::FindUser_Guardian()
 void CMonster::SearchUser()
 {
 	CMap*	pMap = GetCurDungeonLayer()->GetMap();
-	BYTE	bSight = (BYTE)( m_fSight / TILE_SIZE );
+	BYTE	bSight = (BYTE)( m_fSight / DUNGEON_TILE_SIZE );
 	int		iRndX=0, iRndZ=0;
 	static int iDir = 0;	// rand 함수 제거용, 낭비잖아! : 최덕석 2005.1.11
 	
@@ -1915,13 +1915,13 @@ BOOL CMonster::PathFind(const VECTOR2* v2Dest /* = NULL  */)
 	BlockLocation* pBlock;
 	DWORD dwStartX, dwStartZ, dwEndX, dwEndZ; // 시작 지점과 목적지.
 	
-	dwStartX = (DWORD)( GetCurPosition()->x / TILE_SIZE );
-	dwStartZ = (DWORD)( GetCurPosition()->y / TILE_SIZE );
+	dwStartX = (DWORD)( GetCurPosition()->x / DUNGEON_TILE_SIZE );
+	dwStartZ = (DWORD)( GetCurPosition()->y / DUNGEON_TILE_SIZE );
 	
 	if( m_pUnitForAI )
 	{
-		dwEndX = (DWORD)( m_pUnitForAI->GetCurPosition()->x / TILE_SIZE );
-		dwEndZ = (DWORD)( m_pUnitForAI->GetCurPosition()->y / TILE_SIZE ); 
+		dwEndX = (DWORD)( m_pUnitForAI->GetCurPosition()->x / DUNGEON_TILE_SIZE );
+		dwEndZ = (DWORD)( m_pUnitForAI->GetCurPosition()->y / DUNGEON_TILE_SIZE ); 
 	}
 	else 
 	{
@@ -2289,7 +2289,7 @@ void CMonster::AI4()
 	if(m_dwTemp[NPC_TEMP_SKILLMANY] > 0)
 	{
 		// 가디언이면
-		if(this->IsGuardian())
+		if(this->GuardianType() != GUARDIAN_TYPE_NOT_A_GUARDIAN)
 		{
 			// 선택된 스킬을 쓴다
 			bSkill = GetSelectedSkill(SELECT_ATTACK_TYPE_LBUTTON);
@@ -2691,7 +2691,7 @@ WORD CMonster::GetAI_CongestionTime() const
 
 void CMonster::CheckCongestionMode(BOOL bOnCheck)
 {
-	if(IsGuardian())	return;
+	if(GuardianType() != GUARDIAN_TYPE_NOT_A_GUARDIAN)	return;
 
 	if(bOnCheck)	//ON 체크 
 	{
@@ -3211,7 +3211,7 @@ void CMonster::UpdateSight()
 {
 	m_fSight = m_pBaseMonster->bSR * 125.0f;
 	m_fSight += m_fSight*max(GetAlphaStat(USER_BLIND), -100)/100.f;
-	m_fSight = max(m_fSight, TILE_SIZE);
+	m_fSight = max(m_fSight, DUNGEON_TILE_SIZE);
 }
 
 void CMonster::UpdateFireResist()
@@ -3731,7 +3731,7 @@ void CMonster::LevelUP()
 
 	///// 가디언 스탯 및 레벨업 시 생명연장 : 최덕석 2005.1.18
 	// 가디언이고
-	if (IsGuardian())
+	if (GuardianType() != GUARDIAN_TYPE_NOT_A_GUARDIAN)
 	{
 		CUser* pMasterUser = (CUser*)GetLord();
 		
@@ -3977,8 +3977,8 @@ void CMonster::SkillToMonster(BYTE bSkillKind
 	m_SkillDesc.dwTargetIndex		= pTargetMonster->GetID();
 	m_SkillDesc.pDungeonLayer		= GetCurDungeonLayer();
 	m_SkillDesc.casterPosition		= *GetCurPosition();
-	m_SkillDesc.wTileIndex_X		= WORD(pTargetMonster->GetCurPosition()->x/TILE_SIZE);
-	m_SkillDesc.wTileIndex_Z		= WORD(pTargetMonster->GetCurPosition()->y/TILE_SIZE);
+	m_SkillDesc.wTileIndex_X		= WORD(pTargetMonster->GetCurPosition()->x/DUNGEON_TILE_SIZE);
+	m_SkillDesc.wTileIndex_Z		= WORD(pTargetMonster->GetCurPosition()->y/DUNGEON_TILE_SIZE);
 	m_SkillDesc.pMonsterMaster		= NULL;
 	
 
@@ -4012,8 +4012,8 @@ void CMonster::SkillToUser(BYTE bSkillKind
 	m_SkillDesc.dwTargetIndex	= pTargetUser->GetID();
 	m_SkillDesc.pDungeonLayer	= GetCurDungeonLayer();
 	m_SkillDesc.casterPosition	= *GetCurPosition();
-	m_SkillDesc.wTileIndex_X	= WORD(pTargetUser->GetCurPosition()->x/TILE_SIZE);
-	m_SkillDesc.wTileIndex_Z	= WORD(pTargetUser->GetCurPosition()->y/TILE_SIZE);
+	m_SkillDesc.wTileIndex_X	= WORD(pTargetUser->GetCurPosition()->x/DUNGEON_TILE_SIZE);
+	m_SkillDesc.wTileIndex_Z	= WORD(pTargetUser->GetCurPosition()->y/DUNGEON_TILE_SIZE);
 	m_SkillDesc.pMonsterMaster	= NULL;
 		
 	GetAttackSkillDamage(bSkillKind, bSkillLevel,&m_SkillDesc.wDamageMinMax[0], &m_SkillDesc.wDamageMinMax[1]);
@@ -4937,7 +4937,7 @@ BOOL CMonster::IsAlliance(const CMonster* pMonster)
 		|| (GetLord() == pMonster->GetLord() && pMonster->GetTemp(NPC_TEMP_TARGET) == 0)	// 같은 종족도 컨퓨즈 걸린 놈은 적으로 : 최덕석 2005.1.21
 		|| (GetLord() 
 			&& GetLord()->GetAttackMode() == ATTACK_MODE_DEFENSE 
-			&& pMonster->IsGuardian() == GUARDIAN_TYPE_DUNGEON)
+			&& pMonster->GuardianType() == GUARDIAN_TYPE_DUNGEON)
 		|| (pMonster->GetLord()																// 수성 유저 소환물은 적으로 인식하지 않음 : 최덕석 2005.2.28
 			&& pMonster->GetLord()->GetAttackMode() == ATTACK_MODE_DEFENSE)
 		|| (pMonster->GetLord() && pMonster->GetLord() == this)
@@ -4957,7 +4957,7 @@ BOOL CMonster::IsAlliance(const CUser* pUser)
 
 	return (GetLord() 
 			&& GetLord()->IsAlliance((CUnit*)pUser)) 
-		|| (IsGuardian() == GUARDIAN_TYPE_DUNGEON 
+		|| (GuardianType() == GUARDIAN_TYPE_DUNGEON 
 			&& pUser->GetAttackMode() == ATTACK_MODE_DEFENSE);
 }
 
@@ -4976,7 +4976,7 @@ BOOL CMonster::IsMindControll(VOID) const
 	return IsNormalMonster() && (GetEffectDesc(__SKILL_MINDCONTROL__) || GetEffectDesc(__SKILL_MINDEXPLOSION__));	
 }
 
-BOOL CMonster::IsGuardian(VOID) const
+GUARDIAN_TYPE CMonster::GuardianType(VOID) const
 {
 	if (GetRace() == OBJECT_TYPE_GUARDIAN)
 	{
@@ -4986,7 +4986,7 @@ BOOL CMonster::IsGuardian(VOID) const
 			return GUARDIAN_TYPE_NORMAL;	// 주인있는 가디언
 	}
 
-	return FALSE;
+	return GUARDIAN_TYPE_NOT_A_GUARDIAN;
 }
 
 
@@ -4994,23 +4994,6 @@ void CMonster::SetHP(DWORD dwHP, const CUnit* pAttackUser)
 {
 	DWORD dwPrevHP = GetHP();
 	m_dwHP = (min(dwHP, GetMaxHP()));
-
-#ifdef JAPAN_LOCALIZING
-	if(!m_dwHP)
-	{
-		if(GetRace() == OBJECT_TYPE_GUARDIAN)
-		{
-			CUser *pLord = (CUser *)GetLord();
-			if(pLord)
-			{
-				CItem* pGuardianItem = &pLord->m_pInv_Guardian[GetTemp(NPC_TEMP_SLOT)];
-				// 가디언의 수명 페널티를 적용
-				SendExchangeGuardianLife(pLord, -pGuardianItem->GetBaseItem()->BaseItem_Guardian.wDyingPenalty);
-				
-			}
-		}
-	}
-#endif
 
 	if( pAttackUser && 
 		pAttackUser->GetObjectType()==OBJECT_TYPE_MONSTER)
@@ -5036,7 +5019,7 @@ void CMonster::SetHP(DWORD dwHP, const CUnit* pAttackUser)
 			}
 		}		
 		
-		if (IsGuardian() || IsElemental())
+		if (GuardianType() != GUARDIAN_TYPE_NOT_A_GUARDIAN || IsElemental())
 		{
 			// 소환된 몬스터일경우데도 역시 경험치를 얻질 못한다.
 			return;
@@ -5054,7 +5037,7 @@ void CMonster::SetHP(DWORD dwHP, const CUnit* pAttackUser)
 // 확률에 해당하는 아이템을 드롭시켜라.
 int CMonster::GetDropItem(int userDropFactor, int itemDropBarrier)
 {
-	const int maxItemCount = 10; 
+	const int maxItemCount = MONSER_MAX_DROP_COUNT; 
 	std::vector<int> candidateItemsIndexes;
 
 	for (int i = 0; i < maxItemCount; i++) {
@@ -5179,7 +5162,7 @@ void UpdateMonsterForAI( CMonster* pMonster )
 void CMonster::SetSkillLevel(BYTE bySkillKind, BYTE bySkillLevel)
 {
 	int nIndex = 0;
-	for(int i = (IsGuardian()? MAX_GUARDIAN_USE_SKILL: MAX_MONSTER_USE_SKILL)-1; i >= 0; --i)
+	for(int i = (GuardianType() != GUARDIAN_TYPE_NOT_A_GUARDIAN ? MAX_GUARDIAN_USE_SKILL: MAX_MONSTER_USE_SKILL)-1; i >= 0; --i)
 	{
 		// 이미 배웟다면 그곳에 들어가기.
 		if (m_MonsterSkill[i].bySkillKind == bySkillKind)
@@ -5199,7 +5182,7 @@ void CMonster::SetSkillLevel(BYTE bySkillKind, BYTE bySkillLevel)
 	m_MonsterSkill[nIndex].bSkillLevel = bySkillLevel;
 
 	m_dwTemp[NPC_TEMP_SKILLMANY] = 0;
-	for(int i = 0; i < (IsGuardian()? MAX_GUARDIAN_USE_SKILL: MAX_MONSTER_USE_SKILL); ++i)
+	for(int i = 0; i < (GuardianType() != GUARDIAN_TYPE_NOT_A_GUARDIAN ? MAX_GUARDIAN_USE_SKILL: MAX_MONSTER_USE_SKILL); ++i)
 	{
 		if (m_MonsterSkill[i].bSkillLevel != 0)
 			m_dwTemp[NPC_TEMP_SKILLMANY]++;
@@ -5208,7 +5191,7 @@ void CMonster::SetSkillLevel(BYTE bySkillKind, BYTE bySkillLevel)
 
 BYTE CMonster::GetSkillLevel(const BYTE bySkillKind) const
 {
-	for(int i = 0; i < (IsGuardian()? MAX_GUARDIAN_USE_SKILL: MAX_MONSTER_USE_SKILL); ++i)
+	for(int i = 0; i < (GuardianType() != GUARDIAN_TYPE_NOT_A_GUARDIAN ? MAX_GUARDIAN_USE_SKILL: MAX_MONSTER_USE_SKILL); ++i)
 	{
 		if (m_MonsterSkill[i].bySkillKind == bySkillKind)
 		{		

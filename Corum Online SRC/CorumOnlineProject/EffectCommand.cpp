@@ -177,7 +177,7 @@ void CmdSkill( char* pMsg, DWORD dwLen )
 		}
 		else
 		{
-			casterPosition = pOwnUser->m_v3CurPos;
+			casterPosition = pOwnUser->currentPosition();
 			caster3DModelHandle = pOwnUser->m_hPlayer.pHandle;
 			mainPlayerIsCaster = pOwnUser==g_pMainPlayer;
 			
@@ -213,8 +213,8 @@ void CmdSkill( char* pMsg, DWORD dwLen )
 	}
 	else if (pPacket->casterType == OBJECT_TYPE_SKILL)
 	{		
-		casterPosition.x = (pPacket->casterDungeonID>>16)*TILE_WIDTH+TILE_WIDTH/2;
-		casterPosition.z = (pPacket->casterDungeonID&0x0000ffff)*TILE_WIDTH+TILE_WIDTH/2;
+		casterPosition.x = (pPacket->casterDungeonID>>16)*DUNGEON_TILE_WIDTH+DUNGEON_TILE_WIDTH/2;
+		casterPosition.z = (pPacket->casterDungeonID&0x0000ffff)*DUNGEON_TILE_WIDTH+DUNGEON_TILE_WIDTH/2;
 		casterPosition.y = 0;
 	}
 	// 타일가운데로 옮겨줘.
@@ -409,7 +409,7 @@ void CmdSkill( char* pMsg, DWORD dwLen )
 					{
 						CUser*	pUser = g_pUserHash->GetData( pPacket->sTargetInfo[i].dwTargetIndex);
 						if (pUser)
-							v3Start = pUser->m_v3CurPos;
+							v3Start = pUser->currentPosition();
 					}	
 
 					pEffectDesc = SkillSubProcess_General(bSkillKind, bSkillLevel
@@ -1002,7 +1002,7 @@ void CmdUsedPotion( char* pMsg, DWORD dwLen )
 	if ( pUser->m_dwUserIndex == g_pMainPlayer->m_dwUserIndex )
 	{
 		// 오로지 내가 쓸때만 소리가 들리게 한다. 다른사람 썼을때도 들리면 거슬린단다.. -_-;;;
-		_PlaySound(0, SOUND_TYPE_SYSTEM, SOUND_SYSTEM_HPRECOVER, g_pMainPlayer->m_v3CurPos, FALSE);
+		_PlaySound(0, SOUND_TYPE_SYSTEM, SOUND_SYSTEM_HPRECOVER, g_pMainPlayer->currentPosition(), FALSE);
 	}
 
 }

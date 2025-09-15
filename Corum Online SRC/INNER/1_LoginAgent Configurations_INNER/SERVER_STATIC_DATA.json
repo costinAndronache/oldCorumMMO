@@ -1,0 +1,43 @@
+[
+    {
+        "ip": "127.0.0.1",
+        "port": 16201,
+        "serverType": 3,
+        "_comment": "0 - login server, 1 - world server, 2 - dungeon(siege, passage, standard), 3 - village"
+    },
+    {
+        "ip": "127.0.0.1",
+        "port": 16204,
+        "serverType": 2
+    },
+    {
+        "ip": "127.0.0.1",
+        "port": 17204,
+        "serverType": 2
+    },
+    {
+        "ip": "127.0.0.1",
+        "port": 16205,
+        "serverType": 2
+    },
+    {
+        "ip": "127.0.0.1",
+        "port": 15201,
+        "serverType": 2
+    },
+    {
+        "ip": "127.0.0.1",
+        "port": 15202,
+        "serverType": 2
+    },
+    {
+        "ip": "127.0.0.1",
+        "port": 15203,
+        "serverType": 2
+    },
+    {
+        "ip": "127.0.0.1",
+        "port": 15204,
+        "serverType": 2
+    }
+]

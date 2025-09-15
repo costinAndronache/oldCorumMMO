@@ -7,8 +7,12 @@
 #include "MonsterManager.h"
 
 
-#define GUARDIAN_TYPE_NORMAL		1		// 유저가 소환한
-#define GUARDIAN_TYPE_DUNGEON		2		// 던전을 수호하기 위한.
+enum GUARDIAN_TYPE {
+	GUARDIAN_TYPE_NORMAL = 1,		// 유저가 소환한
+	GUARDIAN_TYPE_DUNGEON = 2,		// 던전을 수호하기 위한.
+	GUARDIAN_TYPE_NOT_A_GUARDIAN = 3
+};
+
 
 #define MONSTER_RACE_BOSS			7
 #define	MONSTER_RANK_DRAGON			9
@@ -290,7 +294,7 @@ public:
 	
 	BOOL				IsElemental(VOID) const;
 	BOOL				IsMindControll(VOID) const; 
-	BOOL				IsGuardian(VOID) const;
+	GUARDIAN_TYPE		GuardianType(VOID) const;
 	BOOL				IsNormalMonster() const;
 	BOOL				IsNPC() const;
 

@@ -148,8 +148,8 @@ void CmdDungeonSkillCasting( DWORD dwConnectionIndex, char* pMsg, DWORD dwLength
 
 	if (nCool < 0) {
 		printf("\nCast fail, not enough cool points: %.1f", pUser->m_fCurCoolPoint);
-		bSkillKind = 0;
-		goto lbl_fail;
+		pUser->SendSkillCastingFail(SKILL_CASTING_FAIL_REASON_LACK_COOL_POINTS);
+		return;
 	}
 
 	pUser->m_fCurCoolPoint = max(millisecondsToSeconds(nCool), 0.1F);
@@ -264,8 +264,8 @@ lbl_fail:
 	else if (pPacket->bTargetType == OBJECT_TYPE_TILE)
 	{
 lbl_tile:
-		packet.vecTarget.x = pPacket->wTileIndex_X*TILE_SIZE;
-		packet.vecTarget.y = pPacket->wTileIndex_Z*TILE_SIZE;
+		packet.vecTarget.x = pPacket->wTileIndex_X*DUNGEON_TILE_SIZE;
+		packet.vecTarget.y = pPacket->wTileIndex_Z*DUNGEON_TILE_SIZE;
 	}
 	pLayer->BroadCastSectionMsg( (char*)&packet, packet.GetPacketSize(), pUser->GetPrevSectionNum() );
 }
@@ -392,9 +392,9 @@ void CmdAccExp_Acquisition( DWORD dwConnectionIndex, char* pMsg, DWORD dwLength 
 		if (pDungeon->GetDungeonDataEx()->IsDungeonOwner(pUser))
 		{
 			// 관리자군.
-			if (!pDungeon->GetDungeonDataEx()->m_dwAccExp)	return;
+			if (!pDungeon->GetDungeonDataEx()->accumulatedEXPForOwner)	return;
 			
-			pUser->AddExp(pDungeon->GetDungeonDataEx()->m_dwAccExp, FALSE);
+			pUser->AddExp(pDungeon->GetDungeonDataEx()->accumulatedEXPForOwner, FALSE);
 			pDungeon->GetDungeonDataEx()->SetAccExp(0);			
 		}
 	}	
@@ -412,17 +412,17 @@ void CmdProduct_Acquisition( DWORD dwConnectionIndex, char* pMsg, DWORD dwLength
 		CUser* pUser = (CUser*)g_pNet->GetUserInfo( dwConnectionIndex );
 		if (!pUser)	return;
 
-		if (pDungeon->GetDungeonDataEx()->IsDungeonOwner(pUser)	&& !pDungeon->GetDungeonDataEx()->m_bSiege)
+		if (pDungeon->GetDungeonDataEx()->IsDungeonOwner(pUser)	&& !pDungeon->GetDungeonDataEx()->inSiegeWarNow)
 		{
 			// 관리자군.
 			// 원소 속성석이거나 가디언 성체가 완성되었을때만 획득가능하지.
-			if ((g_DungeonProductionItemMinMax[pDungeon->GetDungeonDataEx()->m_byProperty].wItemIDDefault
-				== pDungeon->GetDungeonDataEx()->m_wProduction && pDungeon->GetDungeonDataEx()->m_byProductionCount == 1)
-				|| (g_DungeonProductionItemMinMax[pDungeon->GetDungeonDataEx()->m_byProperty].wItemIDDefault
-				!= pDungeon->GetDungeonDataEx()->m_wProduction && pDungeon->GetDungeonDataEx()->m_byProductionCount == 3))
+			if ((g_DungeonProductionItemMinMax[pDungeon->GetDungeonDataEx()->siegeDungeonPrize_productionSchemeIndex].wItemIDDefault
+				== pDungeon->GetDungeonDataEx()->siegeDungeonPrize_itemID && pDungeon->GetDungeonDataEx()->siegeDungeonPrize_currentMakingStep == 1)
+				|| (g_DungeonProductionItemMinMax[pDungeon->GetDungeonDataEx()->siegeDungeonPrize_productionSchemeIndex].wItemIDDefault
+				!= pDungeon->GetDungeonDataEx()->siegeDungeonPrize_itemID && pDungeon->GetDungeonDataEx()->siegeDungeonPrize_currentMakingStep == 3))
 			{				
 				CItem sItem;
-				CreateItem(&sItem, pDungeon->GetDungeonDataEx()->m_wProduction, 1);
+				CreateItem(&sItem, pDungeon->GetDungeonDataEx()->siegeDungeonPrize_itemID, 1);
 				// 던전 산출물 버그 : 김영대 050218
 				int nPackCount = Insert_SmallInvItem(pUser, &sItem, 0, sItem.GetQuantity(), FALSE);
 				
@@ -433,14 +433,14 @@ void CmdProduct_Acquisition( DWORD dwConnectionIndex, char* pMsg, DWORD dwLength
 				ServerPacket.wDungeonID = WORD(pDungeon->GetDungeonDataEx()->m_dwID);
 				
 				// 디폴트 생산품으로 돌려놓기위해서..
-				ServerPacket.wProduction = g_DungeonProductionItemMinMax[pDungeon->GetDungeonDataEx()->m_byProperty].wItemIDDefault;
+				ServerPacket.wProduction = g_DungeonProductionItemMinMax[pDungeon->GetDungeonDataEx()->siegeDungeonPrize_productionSchemeIndex].wItemIDDefault;
 				
 				// 먹은수.
 				g_pNet->SendToServer(WSINDEX, (char*)&ServerPacket, ServerPacket.GetPacketSize(), FLAG_SEND_NOT_ENCRYPTION );
 
-				pDungeon->GetDungeonDataEx()->m_wProduction			= 
-					g_DungeonProductionItemMinMax[pDungeon->GetDungeonDataEx()->m_byProperty].wItemIDDefault;
-				pDungeon->GetDungeonDataEx()->m_byProductionCount	= 0;
+				pDungeon->GetDungeonDataEx()->siegeDungeonPrize_itemID			= 
+					g_DungeonProductionItemMinMax[pDungeon->GetDungeonDataEx()->siegeDungeonPrize_productionSchemeIndex].wItemIDDefault;
+				pDungeon->GetDungeonDataEx()->siegeDungeonPrize_currentMakingStep	= 0;
 				pDungeon->GetDungeonDataEx()->SetOperationMode(DUNGEON_OPERATIONTYPE_PRECOCIOUS);
 				
 				DSTC_ITEM_PICKUP	packet;
@@ -466,10 +466,10 @@ void CmdAccEntrance_Acquisition( DWORD dwConnectionIndex, char* pMsg, DWORD dwLe
 		if (pDungeon->GetDungeonDataEx()->IsDungeonOwner(pUser))
 		{
 			// 던전의 주인이거나, 길드마스터일때 건드릴수 있다.
-			if (!pDungeon->GetDungeonDataEx()->m_dwAccEntrance)	return;
+			if (!pDungeon->GetDungeonDataEx()->accumulatedEntranceFees)	return;
 			
 			int nPlusMoney = 
-				pDungeon->GetDungeonDataEx()->SetAccEntrance(-INT(pDungeon->GetDungeonDataEx()->m_dwAccEntrance));
+				pDungeon->GetDungeonDataEx()->SetAccEntrance(-INT(pDungeon->GetDungeonDataEx()->accumulatedEntranceFees));
 			
 			if (pUser->m_dwMoney<=__MAX_MONEY__ -nPlusMoney)
 			{

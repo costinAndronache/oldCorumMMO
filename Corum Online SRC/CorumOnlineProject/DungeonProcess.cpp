@@ -164,11 +164,12 @@ DWORD __stdcall AfterInterpolation(AFTER_INTERPOLATION_CALL_BACK_ARG* pArg)
 		// 0xffffffff 이 핸들 값이면 제대로된 핸들이 아니다. 
 		if( 0xffffffff != (unsigned long int)g_pMainPlayer->m_hPlayer.pHandle && NULL != g_pMainPlayer->m_hPlayer.pHandle) 
 		{
+			auto m_v3CurPos = g_pMainPlayer->currentPosition();
 			VECTOR3 v3Tmp = 
 			{
-				g_pMainPlayer->m_v3CurPos.x + g_Camera.fCameraDistance_x,
-				g_pMainPlayer->m_v3CurPos.y + g_Camera.fCameraDistance_y,
-				g_pMainPlayer->m_v3CurPos.z + g_Camera.fCameraDistance_z
+				m_v3CurPos.x + g_Camera.fCameraDistance_x,
+				m_v3CurPos.y + g_Camera.fCameraDistance_y,
+				m_v3CurPos.z + g_Camera.fCameraDistance_z
 			};
 
 			g_pExecutive->GetGeometry()->SetCameraPos( &v3Tmp, 0 );
@@ -209,11 +210,11 @@ void cancelTooltipRenderingForAllDropped() {
 }
 //
 
-BOOL InitGameDungeon() {
+void initInterfaceOnDungeonJoin(NewInterface::MinimapWindowManager::Layer layer) {
 	ItemPickupFilteringSystem::sharedInstance()->setViewActive(false);
 	_appliedSkillsIconsView = std::make_shared<AppliedSkillsIconsView>();
 
-	_tooltipHelper = new NewInterface::TooltipHelper(
+	auto tooltipHelper = std::make_shared<NewInterface::TooltipHelper>(
 		g_Message,
 		g_pMainPlayer,
 		g_pItemOptionHash,
@@ -231,9 +232,21 @@ BOOL InitGameDungeon() {
 		g_pItemResourceHash,
 		SoundLibrary::sharedInstance(),
 		SharedNetwork::sharedInstance(),
-		_tooltipHelper
+		tooltipHelper,
+		std::make_shared<GameExitManager>(SharedNetwork::sharedInstance(), g_pMainPlayer),
+		g_pExecutive,
+		userPreferencesManager
 	);
 
+	  
+	_newInterface->updateForLayer(layer);
+}
+
+void updateInterfaceOnLayerChange(NewInterface::MinimapWindowManager::Layer layer) {
+	_newInterface->updateForLayer(layer);
+}
+
+BOOL InitGameDungeon() {
 	CBankWnd::GetInstance()->Init();
 	// 카메라 이동에 관련된 플래그 세팅.
 	g_Camera.iCameraMoveOption = CAMERA_MOVE_OPTION_SCREEN_FRAME;
@@ -688,6 +701,640 @@ void UpdateGameDungeon()
 		if(g_pMainPlayer->m_hPlayerHelmet.pHandle)
 			g_pExecutive->SetAlphaFlag( g_pMainPlayer->m_hPlayerHelmet.pHandle, dwAlpha );
 	}
+
+	_newInterface->processCurrentHovering(g_hHandle);
+}
+
+std::string minimapText(const char* dungeonName, int floor) {
+	char text[256];
+	snprintf(text, sizeof(text), 
+		"%s: %d", dungeonName, floor
+	);
+
+	return text;
+}
+
+void tryWeaponSwitch() {
+	if(!g_pGVDungeon->bChatMode)
+	{						
+		if(g_pMainPlayer->GetStatus()==UNIT_STATUS_DEAD)
+			return;
+
+		if(g_pMainPlayer->GetStatus()==UNIT_STATUS_NORMAL)
+		{
+			// Item Weapon Switch.
+			if(g_pMainPlayer->m_pEquip[EQUIP_TYPE_LHAND1].m_wItemID==0	&&
+				g_pMainPlayer->m_pEquip[EQUIP_TYPE_LHAND2].m_wItemID==0 &&
+				g_pMainPlayer->m_pEquip[EQUIP_TYPE_RHAND1].m_wItemID==0	&&
+				g_pMainPlayer->m_pEquip[EQUIP_TYPE_RHAND2].m_wItemID==0	)
+			{
+				return;
+			}
+			else
+			{					
+
+				const auto timeSinceLastWeaponSwitch = 2001;
+				if(timeSinceLastWeaponSwitch > 2000)
+				{
+
+					// SOUND_SYSTEM_WEAPONSWITCH
+					_PlaySound(0, SOUND_TYPE_SYSTEM, SOUND_SYSTEM_WEAPONSWITCH, g_v3InterfaceSoundPos, FALSE);
+
+					if(g_ItemMoveManager.GetNewItemMoveMode())
+					{
+						CTDS_SWITCH_WEAPON packet;
+						g_pNet->SendMsg( (char*)&packet, packet.GetPacketSize(), SERVER_INDEX_ZONE );
+					}
+					else
+					{
+						CTDS_ITEM_PICKUP ItemPickup;
+						ItemPickup.bSectionNum	= 1;
+						ItemPickup.i64ItemID	= 0;
+						SetItemPacket(&ItemPickup, 17, 0, 0, 0, 0);
+						g_pNet->SendMsg( (char*)&ItemPickup, ItemPickup.GetPacketSize(), SERVER_INDEX_ZONE );
+					}								
+				}
+			}
+		}
+	}
+}
+
+void DungeonProcessHandleDungeonJoinEvent(DSTC_JOIN* pJoin) {
+
+	if(!pJoin->bApproval)
+	{
+		char szInfo[0xff] = {0,};
+		// "[Dungeon Error] 던전서버 조인에 실패했습니다!"
+		lstrcpy(szInfo, g_Message[ETC_MESSAGE780].szMessage); 
+
+		if(GetGameStatus()== UPDATE_GAME_WORLD)
+		{
+			// MSG_ID : 421 ; 던전조인 실패! 운영팀에게 문의하세요!
+			DisplayMessageAdd(szInfo, 0xFFFFC309);	
+			_PlaySound(0, SOUND_TYPE_SYSTEM, SOUND_SYSTEM_ERRORMSG, g_Camera.v3CameraPos, FALSE);
+			MoveToUserPrevPos();
+		}
+		else
+		{
+			MessageBox(g_hMainWnd, szInfo, "Error", MB_OK);
+		}
+
+		return;
+	}
+
+	// 월드서버에게 현재 로딩중이라는 정보를 알려준다. 
+	SendLoadingStatus(TRUE);		
+
+	g_bLoadingChk = TRUE;
+
+	DWORD dwTotalProgress = 20;
+	DWORD dwCurProgress = 0;
+
+	g_pMainPlayer->SetStatus(UNIT_STATUS_NORMAL);
+	SetProgressBar(dwTotalProgress, ++dwCurProgress);
+
+	// MSG_ID : 파이터(7), 프리스트(9), 서머너(10), 레인저(11), 소서리스(12)
+	char* szClass[6] = {""
+		, g_Message[ETC_MESSAGE7].szMessage
+		, g_Message[ETC_MESSAGE9].szMessage
+		, g_Message[ETC_MESSAGE10].szMessage
+		, g_Message[ETC_MESSAGE11].szMessage
+		, g_Message[ETC_MESSAGE12].szMessage};	
+
+	// 1:1 대전 초기화 
+	g_pMainPlayer->m_bMatching = FALSE;
+	g_pInputManager->ClearInput(INPUT_BUFFER_13);
+	g_pInputManager->ClearInput(INPUT_BUFFER_14);
+	g_MatchInfo.SetDisplayMatchFlag(FALSE);
+	CUserInterface::GetInstance()->m_bMatchUserHPShowFlag = FALSE;
+	CUserInterface::GetInstance()->m_bMatchUserHPShowEnable = FALSE;	
+
+	g_ItemMoveManager.Initialize();
+	g_helpLoadingSprite.Load(pJoin->dwLayerID);
+	g_helpLoadingSprite.SetLoadingFlag(TRUE);
+
+	CInterface*		pInterface		= CInterface::GetInstance();
+	CMiniMapWnd*	pMiniMapWnd		= CMiniMapWnd::GetInstance();
+	CUserInterface*	pUserInterface	= CUserInterface::GetInstance();
+	CQuantityWnd*	pQuantityWnd	= CQuantityWnd::GetInstance();
+
+	g_bMagicChk	= FALSE;
+	g_bRButton	= FALSE;
+	g_bBeltChk	= FALSE;
+	g_bGuildChk = FALSE;
+
+	g_pMainPlayer->m_nItemSelect	= 0;
+	g_pMainPlayer->m_nInterfaceChk	= 0;
+	g_pMainPlayer->m_dwMoney		= pJoin->dwMoney;
+
+	g_pMainPlayer->updateCurrentSkillPoints(pJoin->wPointSkill);
+	g_pMainPlayer->updateCurrentStatPoints(pJoin->wPoint);
+	g_pMainPlayer->updateMaxHP(pJoin->wMaxHP);
+	g_pMainPlayer->updateMaxSP(pJoin->wMaxMP);
+	g_pMainPlayer->updateCurrentSP(pJoin->wMP);
+	g_pMainPlayer->updateCurrentHP(pJoin->wHP);
+	g_pMainPlayer->updateCurrentLevel(pJoin->dwLevel);
+	g_pMainPlayer->m_wFireResist	= pJoin->wFireResist;
+	g_pMainPlayer->m_wIceResist		= pJoin->wIceResist;
+	g_pMainPlayer->m_wLightResist	= pJoin->wLightResist;
+	g_pMainPlayer->m_wPoiResist		= pJoin->wPoiResist;
+	g_pMainPlayer->m_wPhyResist		= pJoin->wPhyResist;	
+	g_pMainPlayer->updateCurrentEXP(pJoin->dwExp);
+	g_pMainPlayer->updateCurrentEGO(pJoin->dwEgo);
+	g_pMainPlayer->updateCurrentDEX(pJoin->dwDex);
+	g_pMainPlayer->updateCurrentINT(pJoin->dwInt);
+	g_pMainPlayer->updateCurrentVIT(pJoin->dwVit);
+	g_pMainPlayer->updateCurrentSTR(pJoin->dwStr);
+	g_pMainPlayer->m_wRace			= pJoin->wRace;	
+	g_pMainPlayer->updateCurrentHonor(pJoin->dwHonor);
+	g_pMainPlayer->m_wGrade			= pJoin->wGrade;	
+	g_pMainPlayer->updateCurrentLUCK(pJoin->dwLuck);
+	g_pMainPlayer->m_wAttackAcuracy	= pJoin->wAttackAcuracy;	
+	g_pMainPlayer->m_wAvoid			= pJoin->wAvoid;
+	g_pMainPlayer->m_wBlockRate		= pJoin->wBlockRate;
+	g_pMainPlayer->m_fMoveSpeed		= pJoin->fMoveSpeed;
+	g_pMainPlayer->m_byType			= pJoin->byType;
+	g_pMainPlayer->m_byRank			= pJoin->byRank;
+	g_pMainPlayer->m_dwGuildId		= pJoin->dwGuildId;
+	g_pMainPlayer->m_dwGuildWarFlag = pJoin->dwGuildWarFlag;//: hwoarang 050202
+	g_pMainPlayer->m_team_index		= pJoin->team_index;//: hwoarang 050202
+
+	g_pMainPlayer->m_dwUserIndex	= pJoin->dwUserIndex;
+	g_pMainPlayer->m_dwMatchRecords = pJoin->dwMatchRecords;
+	g_pMainPlayer->m_dwMatchWin		= pJoin->dwMatchWin;
+	g_pMainPlayer->m_dwMatchLose    = pJoin->dwMatchLose;
+	g_pMainPlayer->m_bCurrnetHand	= pJoin->byCurrentHand;
+	g_pMainPlayer->m_bPlayerShop	= 0;
+
+	memset(g_pMainPlayer->m_szGuildName, 0, sizeof(g_pMainPlayer->m_szGuildName));
+	memset(g_pMainPlayer->m_szNickName, 0, sizeof(g_pMainPlayer->m_szNickName));
+
+	__lstrcpyn(g_pMainPlayer->m_szGuildName, pJoin->szGuildName, MAX_GUILD_NAME_REAL_LENGTH);
+	__lstrcpyn(g_pMainPlayer->m_szNickName, pJoin->szNickName, MAX_NICK_REAL_NAME);
+
+	g_pMainPlayer->m_dwHealHPSec	= pJoin->dwHealHPSec;
+	g_pMainPlayer->m_dwHealMPSec	= pJoin->dwHealMPSec;
+	g_pMainPlayer->m_wAttackSpeed= pJoin->wAttackSpeed;
+	g_pMainPlayer->m_dwTemp[ USER_TEMP_LASTATTACKTICK ] = 0;	
+
+	SetProgressBar(dwTotalProgress, ++dwCurProgress);
+	memset(&g_pMainPlayer->m_MouseItem, 0, sizeof(CItem));
+
+	SetProgressBar(dwTotalProgress, ++dwCurProgress);
+	for(int i = 0; i < 2; i++)
+	{
+		g_pMainPlayer->m_pwAttackDamage_R[i]	= pJoin->pwAttackDamage_R[i];
+		g_pMainPlayer->m_pwAttackDamage_L[i]	= pJoin->pwAttackDamage_L[i];
+	}			
+	int i = 0;
+	for(i = 0; i < MAX_PLAYER_SHOP_INV; i++)
+	{
+		memset(&g_pMainPlayer->m_sPlayerShop.cItem[i], 0, sizeof(CItem));
+		g_pMainPlayer->m_sPlayerShop.m_dwCustomSellPrice[i] = 0;
+	}
+
+	memset(g_pMainPlayer->m_sPlayerShop.szTitle, 0, sizeof(g_pMainPlayer->m_sPlayerShop.szTitle));	
+	SetProgressBar(dwTotalProgress, ++dwCurProgress);
+
+	g_pMainPlayer->initializeSkillLevelsFrom(pJoin->pwSkillLevel);
+	SetProgressBar(dwTotalProgress, ++dwCurProgress);
+
+	for(i = 0; i < MAX_EQUIP_POOL; i++)
+		memcpy(&g_pMainPlayer->m_pEquip[i], &pJoin->pEquip[i], sizeof(CItem));
+	SetProgressBar(dwTotalProgress, ++dwCurProgress);
+
+	for(i = 0; i < MAX_INV_LARGE_POOL; i++)
+		memcpy(&g_pMainPlayer->m_pInv_Large[i], &pJoin->pInv_Large[i], sizeof(CItem));
+	SetProgressBar(dwTotalProgress, ++dwCurProgress);
+
+	for(i = 0; i < MAX_INV_SMALL_POOL; i++)
+		memcpy(&g_pMainPlayer->m_pInv_Small[i], &pJoin->pInv_Small[i], sizeof(CItem));
+	SetProgressBar(dwTotalProgress, ++dwCurProgress);
+
+	for(i = 0; i < MAX_INV_GUARDIAN_POOL; i++)
+		memcpy(&g_pMainPlayer->m_pInv_Guardian[i], &pJoin->pInv_Guardian[i], sizeof(CItem));	
+	SetProgressBar(dwTotalProgress, ++dwCurProgress);
+
+	for (i = 0; i < MAX_BELT_POOL; i++) {
+		g_pMainPlayer->setBeltItem(pJoin->pBelt[i], i);
+	}
+	SetProgressBar(dwTotalProgress, ++dwCurProgress);
+
+	memset(&g_pMainPlayer->m_GuardianItem, 0, sizeof(CItem));
+
+	RemoveAllMonster();
+	
+	if(g_Dev.bBeginType == DEVELOP_START_MAP)
+	{
+		SetGameStatus(UPDATE_GAME_PLAY);
+		InitGameDungeon();
+	}
+	else
+		SetGameStatus( UPDATE_GAME_PLAY );	
+
+	InitMap(pJoin->dwLayerID);
+
+
+	CStoreWnd* pStoreWnd	= CStoreWnd::GetInstance();
+	pStoreWnd->m_dwMapId	= pJoin->wMapID;
+	g_dwLayerID				= pJoin->dwLayerID;
+
+	if (pJoin->wMapID>=__MAPID_DUNGEON_START__)
+		pInterface->InitInterface(__SERVER_TYPE_DUNGEON__);
+	else
+		pInterface->InitInterface(__SERVER_TYPE_VILL__);
+
+	UpdateMainPlayerToMap();	
+	InitMainPlayer( pJoin );		
+
+	DUNGEON_DATA_EX* pDungeon = g_pDungeonTable->GetDungeonInfo( pJoin->wMapID );
+
+	if(pDungeon) {
+		DungeonEnvironmentSetting(pDungeon);
+	}
+
+
+
+	SPR(SPR_LOADING_BACK)->ShowSprite(FALSE);
+
+	pMiniMapWnd->m_wMapId		= pJoin->wMapID;
+	pMiniMapWnd->m_dwLayerId    = pJoin->dwLayerID;
+	pMiniMapWnd->CreateMap();
+
+	g_pMainPlayer->m_wClassRank		= pJoin->wClassRank;
+	g_pMainPlayer->updateMaxCoolPoints(float(g_pMainPlayer->currentEGO() * (100 + 5 * g_pMainPlayer->m_wClassRank) / 1000.));
+
+	g_pMainPlayer->updateCurrentCoolPoints(g_pMainPlayer->maxCoolPoints());
+	pUserInterface->onDungeonJoin();
+
+	memset(g_pMainPlayer->m_szClassName, 0, sizeof(g_pMainPlayer->m_szClassName));
+	memset(g_pMainPlayer->m_szGroupName, 0, sizeof(g_pMainPlayer->m_szGroupName));
+
+	lstrcpy(g_pMainPlayer->m_szClassName, szClass[g_pMainPlayer->m_wClass]);
+	lstrcpy(g_pMainPlayer->m_szGroupName, g_Message[ETC_MESSAGE70].szMessage);	
+	g_pMainPlayer->m_nCharNameSize	= lstrlen(g_pMainPlayer->m_szName);	
+	g_pMainPlayer->m_nGroupNameSize	= lstrlen(g_pMainPlayer->m_szGroupName);
+	g_pMainPlayer->m_nClassNameSize	= lstrlen(g_pMainPlayer->m_szClassName);
+
+	RECT rt;
+	rt.left		= (LONG)pQuantityWnd->m_fPosX+124-(g_pInputManager->GetInputBufferLength(INPUT_BUFFER_5)*7)-7;
+	rt.right	= (LONG)pQuantityWnd->m_fPosX+124;
+	rt.top		=  (LONG)pQuantityWnd->m_fPosZ+83;
+	rt.bottom	= (LONG)pQuantityWnd->m_fPosZ+95;
+	g_pInputManager->InitializeInput(INPUT_BUFFER_5, FONT_SS3D_GAME, rt, 0xffffffff, 101);
+
+	pMiniMapWnd->m_byMapLayer = pJoin->bLayer;	
+
+	SelectBGM(pJoin->wMapID, pJoin->bLayer, pJoin->dwLayerID);
+
+	if(pJoin->bIsPortal)
+	{
+		// 반투명 되있을지도 모르니 정상상태로.
+		g_pMainPlayer->UserObjectAlpha(255);		
+
+		g_pMainPlayer->SetMotion(MOTION_TYPE_PORTAL_APPEAR, 0, ACTION_ONCE);
+		g_pMainPlayer->SetStatus(UNIT_STATUS_PORTAL_MOVING);
+		g_pMainPlayer->m_hPlayer.pDesc->bSkip = FALSE;
+
+		GXSetPosition(g_pMainPlayer->m_hSelfPortalEffect.pHandle, g_pMainPlayer->currentPositionReadOnly(), FALSE, TRUE);
+		SetAction(g_pMainPlayer->m_hSelfPortalEffect.pHandle, 1, 0, ACTION_ONCE);
+		ShowObject(g_pMainPlayer->m_hSelfPortalEffect.pHandle);
+		g_pMainPlayer->m_hSelfPortalEffect.pDesc->ObjectFunc = PortalAppearFuncUser;
+		g_pMainPlayer->m_hSelfPortalEffect.pDesc->pInfo = (void*)g_pMainPlayer;
+		g_pMainPlayer->m_hSelfPortalEffect.pDesc->bSkip = FALSE;
+
+		if(g_pExecutive->IsValidHandle(g_pMainPlayer->m_hSelfPortalEffect.pHandle)==0xffffffff)
+			asm_int3();
+
+		char szBuf[0xff] = {0,};
+		auto m_v3CurPos = g_pMainPlayer->currentPosition();
+		sprintf(szBuf, "\nPortalEffect Position!!!  x:%f y:%f z:%f\n"
+			, m_v3CurPos.x, m_v3CurPos.y, m_v3CurPos.z);
+		OutputDebugString(szBuf);
+	}
+	else
+	{
+		// 조인 했으면 무적 모드 풀기 위한 패킷을 날려라.
+		CTDS_FINISH_MAPLOADING packet;
+		g_pNet->SendMsg((char*)&packet, packet.GetPacketSize(), SERVER_INDEX_ZONE);
+	}
+
+	SetListener(NULL);
+	g_helpLoadingSprite.ReleaseSprites();		
+
+	CHelpWnd* pHelpWnd = CHelpWnd::GetInstance();
+
+	if(g_pThisDungeon->IsVillage() == TRUE)
+	{		
+		if(g_pMainPlayer->m_byHelp[0] == 1)
+		{			
+			// 마을 처음 접속일때 //
+			pHelpWnd->m_byType			= 2;
+			g_pMainPlayer->m_byHelp[0]	= 2;
+			pHelpWnd->SetClear();
+			pHelpWnd->SetActive();
+
+			WSTC_HELP_INFO pHelpInfoPacket;
+			pHelpInfoPacket.bHelpInfo[0] = g_pMainPlayer->m_byHelp[0];
+			pHelpInfoPacket.bHelpInfo[1] = g_pMainPlayer->m_byHelp[1];
+			pHelpInfoPacket.bHelpInfo[2] = g_pMainPlayer->m_byHelp[2];
+			g_pNet->SendMsg((char*)&pHelpInfoPacket, pHelpInfoPacket.GetPacketSize(), SERVER_INDEX_WORLD);
+		}
+		else
+		{		
+			// 마을 처음 접속이 아닐때 //
+			if(g_pMainPlayer->currentLevel() <= 3)
+			{
+				// 레벨이 3이하일때 //
+				if(g_pMainPlayer->m_byHelp[0]<6)
+				{
+					// 장비 착용 설명을 했을때 //
+					BOOL bChk = FALSE;
+
+					for(int i = 0; i < MAX_EQUIP_POOL; i++)
+					{
+						if(g_pMainPlayer->m_pEquip[i].GetID()==0)
+						{
+							bChk = TRUE;
+							break;
+						}
+					}
+
+					if(bChk==TRUE)
+					{
+						// 미착용 장비가 있을때 //
+						g_pMainPlayer->m_byHelp[0]	= 6;
+						pHelpWnd->m_byType	= 6;
+						pHelpWnd->SetClear();
+						pHelpWnd->SetActive();
+
+						WSTC_HELP_INFO pHelpInfoPacket;
+						pHelpInfoPacket.bHelpInfo[0] = g_pMainPlayer->m_byHelp[0];
+						pHelpInfoPacket.bHelpInfo[1] = g_pMainPlayer->m_byHelp[1];
+						pHelpInfoPacket.bHelpInfo[2] = g_pMainPlayer->m_byHelp[2];
+						g_pNet->SendMsg((char*)&pHelpInfoPacket, pHelpInfoPacket.GetPacketSize(), SERVER_INDEX_WORLD);
+					}
+				}
+				else
+				{
+					// 장비 착용 설명을 했을때 //
+					if(g_pMainPlayer->m_byHelp[0]<7)
+					{
+						// 퀵슬롯 장착 설명을 안 했을 경우 //
+						BOOL bChk = FALSE;
+
+						for(int i = 0; i < MAX_INV_SMALL_POOL; i++)
+						{
+							if(g_pMainPlayer->m_pInv_Small[i].GetID()/ITEM_DISTRIBUTE==ITEM_SUPPLIES_INDEX)
+							{
+								bChk = TRUE;
+								break;
+							}
+						}
+
+						if(bChk==TRUE)
+						{
+							// 포션 아이템이 있을 경우 //
+							BOOL bChk = FALSE;
+
+							for(int i = 0; i < MAX_BELT_POOL; i++)
+							{
+								const auto item = g_pMainPlayer->beltItemAtIndex(i);
+								if(item.GetID()/ITEM_DISTRIBUTE==ITEM_SUPPLIES_INDEX)
+								{
+									bChk = TRUE;
+									break;
+								}
+							}
+
+							if(bChk==FALSE)
+							{
+								// 퀵슬롯이 비어 있을 경우 //
+								g_pMainPlayer->m_byHelp[0]	= 7;
+								pHelpWnd->m_byType	= 7;
+								pHelpWnd->SetClear();
+								pHelpWnd->SetActive();
+
+								WSTC_HELP_INFO pHelpInfoPacket;
+								pHelpInfoPacket.bHelpInfo[0] = g_pMainPlayer->m_byHelp[0];
+								pHelpInfoPacket.bHelpInfo[1] = g_pMainPlayer->m_byHelp[1];
+								pHelpInfoPacket.bHelpInfo[2] = g_pMainPlayer->m_byHelp[2];
+								g_pNet->SendMsg((char*)&pHelpInfoPacket, pHelpInfoPacket.GetPacketSize(), SERVER_INDEX_WORLD);
+							}
+						}						
+					}
+				}
+			}			
+		}
+	}
+	else
+	{
+		if(g_pMainPlayer->m_byHelp[1] == 1)
+		{
+			// 던젼 처음 접속일때.
+			pHelpWnd->m_byType			= 8;
+			g_pMainPlayer->m_byHelp[1]	= 8;
+			pHelpWnd->SetClear();
+			pHelpWnd->SetActive();
+
+			WSTC_HELP_INFO pHelpInfoPacket;
+			pHelpInfoPacket.bHelpInfo[0] = g_pMainPlayer->m_byHelp[0];
+			pHelpInfoPacket.bHelpInfo[1] = g_pMainPlayer->m_byHelp[1];
+			pHelpInfoPacket.bHelpInfo[2] = g_pMainPlayer->m_byHelp[2];
+			g_pNet->SendMsg((char*)&pHelpInfoPacket, pHelpInfoPacket.GetPacketSize(), SERVER_INDEX_WORLD);
+		}		
+	}
+
+	CreateSnowEffect();
+	Release_Sound_Resource();
+
+	// 월드서버에게 현재 로딩중이라는 정보를 알려준다. 	
+	SendLoadingStatus(FALSE);		
+
+	g_pMainPlayer->WeightProcess();
+
+	time(&g_pMainPlayer->m_PotionTime);
+	localtime(&g_pMainPlayer->m_PotionTime);
+
+	g_pMainPlayer->GetCheckUpgrade();
+
+	if( !g_pThisDungeon->IsVillage() )	//던전 입장후 메시지를 보여준다.
+	{
+
+		DisplayMessageAdd(g_Message[ETC_MESSAGE1279].szMessage, 0xFFFFC309);//던전 로딩후 잠시동안은 물리공격과
+		DisplayMessageAdd(g_Message[ETC_MESSAGE1280].szMessage, 0xFFFFC309);//스킬 사용이 불가능 합니다.
+	}
+
+	if( g_pMainPlayer->m_dwGuildWarFlag != G_W_F_NONE )
+	{
+		CGuildWarStatusWnd::GetInstance()->SetActive();	
+		CGuildWarStatusWnd::GetInstance()->WinLose_De();
+	}
+
+	if( g_pMainPlayer->m_dwGuildWarFlag == G_W_F_MASTER )
+	{
+		// 창을 띄워준다.
+		CGuildWarFinalSettingWnd::GetInstance()->SetActive(TRUE);
+	}
+
+	if( g_pMainPlayer->m_dwGuildWarFlag != G_W_F_NONE )
+	{
+		GUILD_MATCH_STATUS_REQUEST	Packet;
+
+		Packet.match_type = g_pMainPlayer->m_match_type;
+		Packet.wDungeonID = g_pMainPlayer->m_wDungeonID;
+		Packet.byLayerIndex = g_pMainPlayer->m_byLayerIndex;
+		Packet.dwGuildWarFlag = g_pMainPlayer->m_dwGuildWarFlag;
+
+		g_pNet->SendMsg( (char*)&Packet, Packet.GetPacketSize(), SERVER_INDEX_WORLD );
+	}
+
+	if( g_pMainPlayer->m_dwGuildWarFlag == G_W_F_MASTER )
+	{
+		// 창을 띄워준다.
+		GUILD_MATCHBEGIN_SETTING	Packet;
+
+		Packet.eType = GMS_TYPE_REQUEST_LADDER_INFO;
+		CGuildWarFinalSettingWnd::GetInstance()->ProcessPacket( &Packet );
+
+		Packet.eType = GMS_TYPE_REQUEST_MEMBER_LIST;
+		CGuildWarFinalSettingWnd::GetInstance()->ProcessPacket( &Packet );    
+	}
+
+
+
+	initInterfaceOnDungeonJoin({
+		g_pMap->layerID(), 
+		g_pMap->m_fMiniMapSize, g_pMap->m_fMiniMapSize,
+		minimapText(pDungeon->m_szDungeonName, pJoin->bLayer)
+	});
+}
+
+void DungeonProcessHandleLayerChangeEvent(DSTC_CHANGE_LAYER*	pChangeLayer) {
+#pragma warning SOME GLOBALS g_etc* MAY BE DELETE'ED' & REINITIALIZED HERE
+
+	// 월드서버에게 현재 로딩중이라는 정보를 알려준다. 
+	SendLoadingStatus(TRUE);		
+
+	CMiniMapWnd*	pMiniMapWnd		= CMiniMapWnd::GetInstance();
+	CInterface*		pIntreface		= CInterface::GetInstance();
+	DWORD			dwTotalProgress = 20;
+	DWORD			dwCurProgress	= 0;
+
+	g_bRButton	= FALSE;
+
+	if (0 == pChangeLayer->bCurLayerIndex) {
+		g_pMainPlayer->m_bMatching = FALSE;
+	}
+
+	CDungeonSiegeInfoWnd::GetInstance()->m_dwCurrentMonterLayerCount	= pChangeLayer->wTotalMonster;
+	CDungeonSiegeInfoWnd::GetInstance()->m_dwKillMonsterLayerCount		= pChangeLayer->wCurMonster;
+
+	g_ItemMoveManager.Initialize();
+	g_helpLoadingSprite.Load(pChangeLayer->wDungeonLayer);
+	g_helpLoadingSprite.SetLoadingFlag(TRUE);
+
+	memset(&g_pMainPlayer->m_GuardianItem, 0, sizeof(CItem));
+
+	ShowLoading();
+
+	g_bInitSoundEnalbe = FALSE;
+	for(int i = ITEM_WND; i <= EXIT_WND; i++)
+	{
+		if(i != MINIMAP_WND)
+		{
+			pIntreface->m_pMenu[i]->SetActive(FALSE);
+		}
+	}
+	g_bInitSoundEnalbe = TRUE;
+
+	CUserInterface::GetInstance()->CloseGuardianDescriptionWnd();
+
+	if(pChangeLayer->wDungeonIndex != (WORD)-1)	
+		SetProgressBar(dwTotalProgress, ++dwCurProgress);	
+
+	RemoveAllPlayer();
+
+	if(pChangeLayer->wDungeonIndex != (WORD)-1)	
+		SetProgressBar(dwTotalProgress, ++dwCurProgress);
+
+	ReleaseDungeonEffect();
+	ReleaseMainPlayerByChangeLayer();
+
+	if(pChangeLayer->wDungeonIndex != (WORD)-1)	
+		SetProgressBar(dwTotalProgress, ++dwCurProgress);
+
+	RemoveAllMonster();
+
+	g_pMainPlayer->RemoveResource();
+	pMiniMapWnd->ReleaseMap();
+	pMiniMapWnd->m_dwLayerId = pChangeLayer->wDungeonLayer;
+	pMiniMapWnd->CreateMap();
+
+	if(pChangeLayer->wDungeonIndex != (WORD)-1)	
+		SetProgressBar(dwTotalProgress, ++dwCurProgress);
+
+	RemoveAllItem();	
+	RemoveAllEffectDesc();	
+
+	if(pChangeLayer->wDungeonIndex != (WORD)-1)	
+		SetProgressBar(dwTotalProgress, ++dwCurProgress);
+
+	g_pExecutive->UnloadAllPreLoadedGXObject(UNLOAD_PRELOADED_RESOURCE_TYPE_ONLY_UNLOAD_ENABLED);
+
+	if(pChangeLayer->wDungeonIndex != (WORD)-1)	
+		SetProgressBar(dwTotalProgress, ++dwCurProgress);	
+
+
+
+	if(pChangeLayer->wDungeonIndex != (WORD)-1)	
+		SetProgressBar(dwTotalProgress, ++dwCurProgress);
+
+	if(pChangeLayer->wDungeonIndex != (WORD)-1)	
+		SetProgressBar(dwTotalProgress, ++dwCurProgress);
+
+	if(pChangeLayer->wDungeonIndex != (WORD)-1)	
+		SetProgressBar(dwTotalProgress, ++dwCurProgress);
+
+	PreLoadCurLayerMonster(pChangeLayer->pdwMonsterKind);
+
+	if(pChangeLayer->wDungeonIndex != (WORD)-1)	
+		SetProgressBar(dwTotalProgress, ++dwCurProgress);
+
+	InitMap(pChangeLayer->wDungeonLayer);
+
+	CreateMainPlayerByChangeLayer();
+
+	BYTE bMoveType = g_pMainPlayer->m_bMoveType;
+
+	InitMainPlayer( pChangeLayer );
+	CMiniMapWnd::GetInstance()->m_byMapLayer = pChangeLayer->bCurLayerIndex;	
+
+	SelectBGM( WORD(g_pThisDungeon->m_dwID), pChangeLayer->bCurLayerIndex, pChangeLayer->wDungeonLayer );
+
+	g_pMainPlayer->m_bMoveType	= bMoveType;
+
+	// 조인 했으면 무적 모드 풀기 위한 패킷을 날려라.
+	CTDS_FINISH_MAPLOADING packet;	
+	g_pNet->SendMsg((char*)&packet, packet.GetPacketSize(), SERVER_INDEX_ZONE);
+
+	char szPos[0xff] = {0,};
+	auto m_v3CurPos = g_pMainPlayer->currentPosition();
+	sprintf(szPos, "Pos X : %f, Pos Z : %f", m_v3CurPos.x, m_v3CurPos.z);
+	OutputDebugString(szPos);
+
+	Release_Sound_Resource();
+
+	// 월드서버에게 현재 로딩중이라는 정보를 알려준다. 
+	SendLoadingStatus(FALSE);		
+
+	g_pMainPlayer->GetCheckUpgrade();
+
+	updateInterfaceOnLayerChange({
+		g_pMap->layerID(), 
+		g_pMap->m_fMiniMapSize, g_pMap->m_fMiniMapSize,
+		minimapText(g_pThisDungeon->m_szDungeonName, pChangeLayer->bCurLayerIndex)
+	});
 }
 
 void ReleaseGameDungeon()
@@ -768,6 +1415,9 @@ void ReleaseGameDungeon()
 
 void DungeonEnvironmentSetting(DUNGEON_DATA_EX* pDungeon)
 {
+	g_pGeometry->DisableFog(0);
+	return;
+
 	bool bEnalbeFog = true;
 	if (DUNGEON_TYPE_VILLAGE != pDungeon->GetDungeonType())
 	{
@@ -840,7 +1490,7 @@ void RenderTileAttr()
 	{
 		for(float i=(pGrid->x1*125.0f); i<(pGrid->x2*125.0f); i=i+125.0f)
 		{
-			pTile = g_pMap->GetTile(i, j);
+			pTile = g_pMap->GetTileBy3DPosition(i, j);
 			
 			vPos.x = pTile->x + 62.5;
 			vPos.y = 0.0f;
@@ -905,19 +1555,19 @@ DWORD __stdcall BeforeRenderGameDungeon()
 
 	// 메인 캐릭터 위치에 맞게 카메라 위치를 조정.
 	if(pUserInterface->m_bMoveChr==TRUE && pUserInterface->m_byMoveType==6)
-		GXSetPosition(pUserInterface->m_pUserMouseHandle[2].pHandle, &g_pMainPlayer->m_v3CurPos, FALSE);		
+		GXSetPosition(pUserInterface->m_pUserMouseHandle[2].pHandle, g_pMainPlayer->currentPositionReadOnly(), FALSE);		
 
 	if(pUserInterface->m_pUser)
 	{
 		if(pUserInterface->m_pUser->m_dwPartyId==g_pMainPlayer->m_dwPartyId)
 		{
 			if(pUserInterface->m_bMoveChr==TRUE && pUserInterface->m_byMoveType==4)
-				GXSetPosition(pUserInterface->m_pUserMouseHandle[1].pHandle, &pUserInterface->m_pUser->m_v3CurPos, FALSE);
+				GXSetPosition(pUserInterface->m_pUserMouseHandle[1].pHandle, pUserInterface->m_pUser->currentPositionReadOnly(), FALSE);
 		}
 		else
 		{
 			if(pUserInterface->m_bMoveChr==TRUE || pUserInterface->m_byMoveType==5)
-				GXSetPosition(pUserInterface->m_pUserMouseHandle[2].pHandle, &pUserInterface->m_pUser->m_v3CurPos, FALSE);
+				GXSetPosition(pUserInterface->m_pUserMouseHandle[2].pHandle, pUserInterface->m_pUser->currentPositionReadOnly(), FALSE);
 		}
 	}	
 
@@ -971,11 +1621,11 @@ DWORD __stdcall BeforeRenderGameDungeon()
 			{
 				// 방어자가 아니라면.				
 				POSITION_ pos = g_pMap->m_pCPList->GetHeadPosition();
-
+				auto m_v3CurPos = g_pMainPlayer->currentPosition();
 				while(pos)
 				{
 					CP_DESC* pCPDesc = (CP_DESC*)g_pMap->m_pCPList->GetAndAdvance(pos);
-					MAP_TILE* pTile = g_pMap->GetTile(g_pMainPlayer->m_v3CurPos.x, g_pMainPlayer->m_v3CurPos.z );
+					MAP_TILE* pTile = g_pMap->GetTileBy3DPosition(m_v3CurPos.x, m_v3CurPos.z );
 					BOOL bShow = FALSE;
 					
 					if (g_pMainPlayer->GetStatus() != UNIT_STATUS_DEAD && pCPDesc->pTile == pTile)
@@ -1074,11 +1724,9 @@ DWORD __stdcall AfterRenderGameDungeon()
 		RenderUserSelectRect();
 	}
 
-	//pInterface->Render();
-	_newInterface->renderWithRenderer(g_pRenderer, __ORDER_INTERFACE_START__);
-
-	//_leftHudTest->renderWithRenderer(g_pRenderer, __ORDER_INTERFACE_START__);
-
+	if(_newInterface) {
+		_newInterface->renderWithRenderer(g_pRenderer, __ORDER_INTERFACE_START__);
+	}
 
 	g_pSprManager->RenderAllSprite();
 	pInterface->SetMiniMapPos();
@@ -1194,9 +1842,7 @@ DWORD __stdcall AfterRenderGameDungeon()
 	{
 		pUser = pUserNode->pData;
 				
-		vPlayerHeadPos		= pUser->m_v3CurPos;
-		vPlayerHeadPos.x	= pUser->m_v3CurPos.x;
-		vPlayerHeadPos.y	= pUser->m_v3CurPos.y;
+		vPlayerHeadPos		= pUser->currentPosition();
 		GetScreenXYFromXYZ(g_pGeometry, 0, &vPlayerHeadPos, &vOutPos);
 
 		if(vOutPos.x >= 1.0f || vOutPos.y >= 1.0f )
@@ -1479,9 +2125,7 @@ DWORD __stdcall AfterRenderGameDungeon()
 			if(!pUser)
 				return 0;
 									
-			vPlayerHeadPos		= pUser->m_v3CurPos;
-			vPlayerHeadPos.x	= pUser->m_v3CurPos.x;
-			vPlayerHeadPos.y	= pUser->m_v3CurPos.y;
+			vPlayerHeadPos		= pUser->currentPosition();
 			GetScreenXYFromXYZ(g_pGeometry, 0, &vPlayerHeadPos, &vOutPos);			
 
 			x = (WORD)( __GAME_SIZE_X__ * vOutPos.x );
@@ -1538,16 +2182,21 @@ DWORD __stdcall AfterRenderGameDungeon()
 #ifdef DEVELOP_MODE
 	// GM 모드일때 우측 상단에 마우스 정보 표시 
 	char szTempEx[0xff] = {0,};
-	MAP_TILE* pTile = g_pMap->GetTile(g_Mouse.v3Mouse.x, g_Mouse.v3Mouse.z);
 
-	
-	sprintf(szTempEx, "%ld, %ld,", g_Mouse.MousePos.x, g_Mouse.MousePos.y);
-	RenderFont(szTempEx, 500, 1200, 100, 150, 0);
+	auto pos = g_pMainPlayer->currentPosition();
+
+	MAP_TILE* pTile = g_pMap->GetTileBy3DPosition(g_Mouse.v3Mouse.x, g_Mouse.v3Mouse.z);
+
+	sprintf(szTempEx, "%.1f, %.1f,", pos.z, pos.x);
+	//RenderFont(szTempEx, 500, 1200, 100, 150, 0);
 
 	if (pTile)
 	{
-		sprintf(szTempEx, "x:%6.1f, z:%6.1f, Tile_X:%d, Tile_Z:%d, ATTR:%d", g_Mouse.v3Mouse.x, g_Mouse.v3Mouse.z, pTile->wIndex_X, pTile->wIndex_Z, pTile->wAttr.uAttr);
-		//RenderFont(szTempEx, 500, 1200, 50, 90, 0);		
+		sprintf(szTempEx, "x:%.1f, z:%.1f, tile_X:%d, tile_Z:%d, ATTR:%d", 
+			g_Mouse.v3Mouse.x, g_Mouse.v3Mouse.z, 
+			pTile->wIndex_X, pTile->wIndex_Z, 
+			pTile->wAttr.uAttr);
+		RenderFont(szTempEx, 500, 1200, 50, 200, 0);		
 	}
 #endif	
 
@@ -1756,7 +2405,7 @@ void OnKeyDownDungeon(WPARAM wParam, LPARAM lParam)
 		break;
 	case VK_HOME:
 		{
-#ifdef DEVELOP_MODE
+
 			VECTOR3		v3Pos;
 			g_pExecutive->GXOGetPosition( g_pMainPlayer->m_hPlayer.pHandle, &v3Pos );
 			if(g_nDGZoom>-30)
@@ -1764,12 +2413,12 @@ void OnKeyDownDungeon(WPARAM wParam, LPARAM lParam)
 				SetCameraPos( &v3Pos, CAMERA_DISTANCE );
 				g_nDGZoom--;
 			}
-#endif
+
 		}
 		break;
 	case VK_END:
 		{
-#ifdef DEVELOP_MODE
+
 			VECTOR3		v3Pos;
 			g_pExecutive->GXOGetPosition( g_pMainPlayer->m_hPlayer.pHandle, &v3Pos );
 			if(g_nDGZoom<100)
@@ -1777,7 +2426,7 @@ void OnKeyDownDungeon(WPARAM wParam, LPARAM lParam)
 				SetCameraPos( &v3Pos, CAMERA_DISTANCE*-1.f );
 				g_nDGZoom++;
 			}
-#endif
+
 		}
 		break;
 	case VK_DELETE:
@@ -1789,31 +2438,31 @@ void OnKeyDownDungeon(WPARAM wParam, LPARAM lParam)
 		break;
 	case VK_NEXT:
 		{
-#ifdef DEVELOP_MODE
+
 			VECTOR3		v3Pos;
 			g_pExecutive->GXOGetPosition( g_pMainPlayer->m_hPlayer.pHandle, &v3Pos );
 			SetCameraYaw( &v3Pos, DEG01 * CAMERA_Y * 1.0f );
-#endif
+
 		}
 		break;	
 	case VK_PRIOR:
 		{
-#ifdef DEVELOP_MODE
+
 			VECTOR3		v3Pos;
 			g_pExecutive->GXOGetPosition( g_pMainPlayer->m_hPlayer.pHandle, &v3Pos );
 			
 			SetCameraYaw( &v3Pos, DEG01 * CAMERA_Y * -1.0f );
-#endif
+
 		}
 		break;
 	case VK_INSERT:
 		{
-#ifdef DEVELOP_MODE
+
 			VECTOR3		v3Pos;
 			g_pExecutive->GXOGetPosition( g_pMainPlayer->m_hPlayer.pHandle, &v3Pos );
 			
 			SetCameraYaw( &v3Pos, DEG01 * CAMERA_Y * -1 );						
-#endif
+
 		}
 		break;
 	case VK_LEFT:
@@ -1894,32 +2543,7 @@ void OnKeyDownDungeon(WPARAM wParam, LPARAM lParam)
 				g_bKeyChkUp = FALSE;
 			}			
 		}
-		break;
-		
-		//Debug Tile 정보 토글 
-		#ifdef DEVELOP_MODE
-		case VK_NUMLOCK:
-			{
-				if(g_bShowTileAttr)
-				{
-					g_bShowTileAttr = FALSE;
-	
-					for(int i=0; i<MAX_KIND_OF_DEBUG_TILE; i++)
-					{
-						for(int j=0; j<MAX_DEBUG_TILE_NUM; j++)
-						{
-							HideObject(g_TileAttr[i][j]);
-						}
-					}
-	
-				}
-				else
-					g_bShowTileAttr = TRUE;
-
-				bHanMode = FALSE;
-			}
-			break;
-		#endif		
+		break;	
 	}
 }
 
@@ -2145,8 +2769,8 @@ void OnLButtonDownDungeon(WPARAM wParam, LPARAM lParam)
 		if( g_bLCtrl )
 		{
 			CTDS_GUARDIAN_COMMAND_MOVE Move;
-			Move.v2DestPos.x	= g_Mouse.v3Mouse.x / TILE_WIDTH;
-			Move.v2DestPos.y	= g_Mouse.v3Mouse.z / TILE_HEIGHT;
+			Move.v2DestPos.x	= g_Mouse.v3Mouse.x / g_pMap->m_fTileSize;
+			Move.v2DestPos.y	= g_Mouse.v3Mouse.z / g_pMap->m_fTileSize;
 
 			if( FillSelectedMonster( Move.pdwGuardianIndex, Move.pdwMonsterIndex ) != 0 )
 			{
@@ -2867,7 +3491,7 @@ void OnMouseMoveDungeon(WPARAM wParam, LPARAM lParam)
 						if(	CUserInterface::GetInstance()->m_bMoveChr==FALSE ||
 							CUserInterface::GetInstance()->m_byMoveType!=4)
 						{
-							GXSetPosition(CUserInterface::GetInstance()->m_pUserMouseHandle[1].pHandle, &pUser->m_v3CurPos, FALSE);
+							GXSetPosition(CUserInterface::GetInstance()->m_pUserMouseHandle[1].pHandle, pUser->currentPositionReadOnly(), FALSE);
 							SetAction(CUserInterface::GetInstance()->m_pUserMouseHandle[1].pHandle, 1, ACTION_LOOP);
 							ShowObject(CUserInterface::GetInstance()->m_pUserMouseHandle[1].pHandle);
 							CUserInterface::GetInstance()->m_bMoveChr = TRUE;
@@ -2879,7 +3503,7 @@ void OnMouseMoveDungeon(WPARAM wParam, LPARAM lParam)
 						if(	CUserInterface::GetInstance()->m_bMoveChr==FALSE ||
 							CUserInterface::GetInstance()->m_byMoveType!=5)
 						{
-							GXSetPosition(CUserInterface::GetInstance()->m_pUserMouseHandle[2].pHandle, &pUser->m_v3CurPos, FALSE);
+							GXSetPosition(CUserInterface::GetInstance()->m_pUserMouseHandle[2].pHandle, pUser->currentPositionReadOnly(), FALSE);
 							SetAction(CUserInterface::GetInstance()->m_pUserMouseHandle[2].pHandle, 1, ACTION_LOOP);
 							ShowObject(CUserInterface::GetInstance()->m_pUserMouseHandle[2].pHandle);
 							CUserInterface::GetInstance()->m_bMoveChr = TRUE;
@@ -2893,7 +3517,7 @@ void OnMouseMoveDungeon(WPARAM wParam, LPARAM lParam)
 					if(	CUserInterface::GetInstance()->m_bMoveChr==FALSE ||
 						CUserInterface::GetInstance()->m_byMoveType!=6)
 					{
-						GXSetPosition(CUserInterface::GetInstance()->m_pUserMouseHandle[2].pHandle, &g_pMainPlayer->m_v3CurPos, FALSE);
+						GXSetPosition(CUserInterface::GetInstance()->m_pUserMouseHandle[2].pHandle, g_pMainPlayer->currentPositionReadOnly(), FALSE);
 						SetAction(CUserInterface::GetInstance()->m_pUserMouseHandle[2].pHandle, 1, ACTION_LOOP);
 						ShowObject(CUserInterface::GetInstance()->m_pUserMouseHandle[2].pHandle);
 						CUserInterface::GetInstance()->m_bMoveChr = TRUE;
@@ -3041,11 +3665,9 @@ void OnMouseWheelDungeon(WPARAM wParam, LPARAM lParam)
 		}
 		else								//wheel down
 		{
-			if(g_nDGZoom<__MAX_ZOOM_OUT__)
-			{
-				SetCameraPos( &v3Pos, CAMERA_DISTANCE * -1.f );
-				g_nDGZoom++;
-			}
+
+			SetCameraPos( &v3Pos, CAMERA_DISTANCE * -1.f );
+			g_nDGZoom++;
 		}	
 	}
 }
@@ -3519,7 +4141,8 @@ void MouseEventDungeon()
 	{
 		// 마지막으로 Mouse이벤트를 처리한 시간을 기록한다.
 		g_Mouse.dwLButtonDownTime = g_dwCurTick;	
-		
+		auto m_v3CurPos = g_pMainPlayer->currentPosition();
+
 		if( g_hHandle )
 		{
 			LPObjectDesc pObjDesc = (LPObjectDesc)g_pExecutive->GetData( g_hHandle );
@@ -3541,7 +4164,7 @@ void MouseEventDungeon()
 					CTDS_DUNGEON_ATTACK_USER_MON	Attack;
 					Attack.dwMonsterIndex = pMonster->m_dwMonsterIndex;
 					VECTOR3_TO_VECTOR2(pMonster->m_v3CurPos, Attack.v2MonsterPos)
-					VECTOR3_TO_VECTOR2(g_pMainPlayer->m_v3CurPos, Attack.v2UserPos)
+					VECTOR3_TO_VECTOR2(m_v3CurPos, Attack.v2UserPos)
 					g_pNet->SendMsg( (char*)&Attack, Attack.GetPacketSize(), SERVER_INDEX_ZONE );
 
 					// 중복해서 메시지를 보내지 않기 위해서다.
@@ -3557,8 +4180,8 @@ void MouseEventDungeon()
 
 					CTDS_DUNGEON_ATTACK_USER_USER	Attack;
 					Attack.dwUserIndex		= pUser->m_dwUserIndex;
-					VECTOR3_TO_VECTOR2(pUser->m_v3CurPos, Attack.v2DefenseUserPos)
-					VECTOR3_TO_VECTOR2(g_pMainPlayer->m_v3CurPos, Attack.v2OffenseUserPos)
+					VECTOR3_TO_VECTOR2(pUser->currentPosition(), Attack.v2DefenseUserPos)
+					VECTOR3_TO_VECTOR2(m_v3CurPos, Attack.v2OffenseUserPos)
 					g_pNet->SendMsg( (char*)&Attack, Attack.GetPacketSize(), SERVER_INDEX_ZONE );
 					
 					g_pMainPlayer->SetStatus(UNIT_STATUS_ATTACKING);		// 중복해서 메시지를 보내지 않기 위해서다.
@@ -3629,8 +4252,8 @@ lb_move:
 			{
 				CTDS_DUNGEON_ATTACK_USER_USER	Attack;
 				Attack.dwUserIndex = pAutoTargetUser->m_dwUserIndex;
-				VECTOR3_TO_VECTOR2(pAutoTargetUser->m_v3CurPos, Attack.v2DefenseUserPos)
-				VECTOR3_TO_VECTOR2(g_pMainPlayer->m_v3CurPos, Attack.v2OffenseUserPos)
+				VECTOR3_TO_VECTOR2(pAutoTargetUser->currentPosition(), Attack.v2DefenseUserPos)
+				VECTOR3_TO_VECTOR2(g_pMainPlayer->currentPosition(), Attack.v2OffenseUserPos)
 				g_pNet->SendMsg( (char*)&Attack, Attack.GetPacketSize(), SERVER_INDEX_ZONE );
 				
 				g_pMainPlayer->SetStatus(UNIT_STATUS_ATTACKING);		// 중복해서 메시지를 보내지 않기 위해서다.
@@ -3646,7 +4269,7 @@ lb_move:
 				CTDS_DUNGEON_ATTACK_USER_MON	Attack;
 				Attack.dwMonsterIndex = pAutoTargetMonster->m_dwMonsterIndex;
 				VECTOR3_TO_VECTOR2(pAutoTargetMonster->m_v3CurPos, Attack.v2MonsterPos)
-				VECTOR3_TO_VECTOR2(g_pMainPlayer->m_v3CurPos, Attack.v2UserPos)
+				VECTOR3_TO_VECTOR2(g_pMainPlayer->currentPosition(), Attack.v2UserPos)
 				g_pNet->SendMsg( (char*)&Attack, Attack.GetPacketSize(), SERVER_INDEX_ZONE );
 
 				g_pMainPlayer->SetStatus(UNIT_STATUS_ATTACKING);		// 중복해서 메시지를 보내지 않기 위해서다.
@@ -3688,8 +4311,9 @@ void InitMainPlayer( DSTC_JOIN* pJoin )
 	g_pMainPlayer->m_i64PickupItem		= 0;
 
 	// 나의 위치에따라 현재 속해있는 섹션 번호를 넣는다.
-	VECTOR2_TO_VECTOR3(pJoin->v2CurPos, g_pMainPlayer->m_v3CurPos)
-	g_pMainPlayer->m_pCurTile			= g_pMap->GetTile( pJoin->v2CurPos.x, pJoin->v2CurPos.y );
+	g_pMainPlayer->setPosition({ pJoin->v2CurPos.x, 0, pJoin->v2CurPos.y });
+
+	g_pMainPlayer->m_pCurTile			= g_pMap->GetTileBy3DPosition( pJoin->v2CurPos.x, pJoin->v2CurPos.y );
 	g_pMainPlayer->m_byGuildFlag		= pJoin->byGuildFlag;
 
 	if(g_pMainPlayer->m_hPlayerFlag.pHandle)
@@ -3742,14 +4366,14 @@ void InitMainPlayer( DSTC_JOIN* pJoin )
 			g_pExecutive->GXOAttach(g_pMainPlayer->m_hPlayerFlag.pHandle, g_pMainPlayer->m_hPlayer.pHandle, "Bip01 Spine3");
 	}
 	
-	GXSetPosition( g_pMainPlayer->m_hPlayer.pHandle, &g_pMainPlayer->m_v3CurPos, TRUE , TRUE);
+	GXSetPosition( g_pMainPlayer->m_hPlayer.pHandle, g_pMainPlayer->currentPositionReadOnly(), TRUE , TRUE);
 	
 	// 서버에서 받아서 처리할수도 있는 구문이다.
 	DWORD	x, z, i;
 	Section_Link_Info*	pSection;
 
-	x = (DWORD)( pJoin->v2CurPos.x / TILE_WIDTH );
-	z = (DWORD)( pJoin->v2CurPos.y / TILE_HEIGHT );
+	x = (DWORD)( pJoin->v2CurPos.x / DUNGEON_TILE_WIDTH );
+	z = (DWORD)( pJoin->v2CurPos.y / DUNGEON_TILE_HEIGHT );
 
 	for( i=0; i<g_pMap->m_wTotalSectionMany; i++)
 	{
@@ -3774,17 +4398,18 @@ void InitMainPlayer( DSTC_JOIN* pJoin )
 	
 	LIGHT_DESC	shadowlight;
 
+	auto m_v3CurPos = g_pMainPlayer->currentPosition();
 	shadowlight.dwDiffuse = 0xffffffff;
-	shadowlight.v3Point.x = g_pMainPlayer->m_v3CurPos.x + 500.0f;
+	shadowlight.v3Point.x = m_v3CurPos.x + 500.0f;
 	shadowlight.v3Point.y = 800.0f;
-	shadowlight.v3Point.z = g_pMainPlayer->m_v3CurPos.z - 600.0f;
+	shadowlight.v3Point.z = m_v3CurPos.z - 600.0f;
 	shadowlight.fFov = PI/2.0f;
 	shadowlight.v3Up.x = 0.0f;
 	shadowlight.v3Up.y = 1.0f;
 	shadowlight.v3Up.z = 0.0f;
 
 	shadowlight.fRs = 2000.0f;
-	shadowlight.v3To = g_pMainPlayer->m_v3CurPos;
+	shadowlight.v3To = m_v3CurPos;
 	
 	
 	g_pMainPlayer->m_hShadowLightHandle = g_pExecutive->CreateGXLight(&shadowlight, NULL, NULL, 0, NULL
@@ -3799,9 +4424,9 @@ void InitMainPlayer( DSTC_JOIN* pJoin )
 
 	VECTOR3 v3Tmp = 
 	{
-		g_pMainPlayer->m_v3CurPos.x + g_Camera.fCameraDistance_x,
-		g_pMainPlayer->m_v3CurPos.y + g_Camera.fCameraDistance_y,
-		g_pMainPlayer->m_v3CurPos.z + g_Camera.fCameraDistance_z
+		m_v3CurPos.x + g_Camera.fCameraDistance_x,
+		m_v3CurPos.y + g_Camera.fCameraDistance_y,
+		m_v3CurPos.z + g_Camera.fCameraDistance_z
 	};
 	
 	g_pGeometry->SetCameraPos( &v3Tmp, 0 );
@@ -3838,7 +4463,7 @@ void InitMainPlayer( DSTC_JOIN* pJoin )
 	}
 	
 	g_pMainPlayer->m_hShadowHandle		= CreateHandleObject(FILE(MOD_CHARACTER_SHADOW), NULL, NULL, GXOBJECT_CREATE_TYPE_EFFECT);	
-	GXSetPosition(g_pMainPlayer->m_hShadowHandle, &g_pMainPlayer->m_v3CurPos, FALSE);
+	GXSetPosition(g_pMainPlayer->m_hShadowHandle, g_pMainPlayer->currentPositionReadOnly(), FALSE);
 			
 	if(CGameMenuWnd::GetInstance()->m_bShadowFlag==TRUE)
 		HideObject(g_pMainPlayer->m_hShadowHandle);
@@ -3890,21 +4515,22 @@ void InitMainPlayer( DSTC_CHANGE_LAYER* pLayer )
 	g_pMainPlayer->m_bCurLayer		= pLayer->bCurLayerIndex;
 	g_pMainPlayer->m_i64PickupItem	= 0;
 	
-	VECTOR2_TO_VECTOR3(pLayer->v2CurPos, g_pMainPlayer->m_v3CurPos)
-	g_pMainPlayer->m_pCurTile		= g_pMap->GetTile( pLayer->v2CurPos.x, pLayer->v2CurPos.y );
+	g_pMainPlayer->setPositionFromV2(pLayer->v2CurPos);
+	
+	g_pMainPlayer->m_pCurTile		= g_pMap->GetTileBy3DPosition( pLayer->v2CurPos.x, pLayer->v2CurPos.y );
 	g_pMainPlayer->SetAttackMode(pLayer->bAttackMode);
 	g_pMainPlayer->UserObjectAlpha(255);
 	
 	if( g_pExecutive->IsValidHandle(g_pMainPlayer->m_hPlayer.pHandle)	== GX_MAP_OBJECT_TYPE_INVALID)		asm_int3();
 	if( g_pExecutive->IsValidHandle(g_pMainPlayer->m_hPlayerHead.pHandle)	== GX_MAP_OBJECT_TYPE_INVALID)	asm_int3();
 
-	SetUserPosition(g_pMainPlayer, &g_pMainPlayer->m_v3CurPos);	
+	SetUserPosition(g_pMainPlayer, g_pMainPlayer->currentPositionReadOnly());	
 
 	DWORD	x, z;
 	Section_Link_Info*	pSection;
 
-	x = (DWORD)( pLayer->v2CurPos.x / TILE_WIDTH );
-	z = (DWORD)( pLayer->v2CurPos.y / TILE_HEIGHT );
+	x = (DWORD)( pLayer->v2CurPos.x / DUNGEON_TILE_WIDTH );
+	z = (DWORD)( pLayer->v2CurPos.y / DUNGEON_TILE_HEIGHT );
 
 	for( int i=0; i<g_pMap->m_wTotalSectionMany; i++)
 	{
@@ -3919,10 +4545,11 @@ void InitMainPlayer( DSTC_CHANGE_LAYER* pLayer )
 	CDungeonSiegeInfoWnd::GetInstance()->SetActive(g_pThisDungeon->m_bSiege);
 	CDungeonSiegeInfoWnd::GetInstance()->m_iType = SIEGEINFOWND_TYPE_SIEGE;
 	
+	auto m_v3CurPos = g_pMainPlayer->currentPosition();
 	VECTOR3 v3Tmp = {
-		g_pMainPlayer->m_v3CurPos.x + g_Camera.fCameraDistance_x,
-		g_pMainPlayer->m_v3CurPos.y + g_Camera.fCameraDistance_y,
-		g_pMainPlayer->m_v3CurPos.z + g_Camera.fCameraDistance_z };
+		m_v3CurPos.x + g_Camera.fCameraDistance_x,
+		m_v3CurPos.y + g_Camera.fCameraDistance_y,
+		m_v3CurPos.z + g_Camera.fCameraDistance_z };
 	
 	g_pGeometry->SetCameraPos( &v3Tmp, 0 );
 
@@ -3977,16 +4604,16 @@ CUser* InitPlayer( DSTC_APPEAR* pAppear )
 	
 	g_pUserHash->Insert(pPlayer, pPlayer->m_dwUserIndex);	//유저 인덱스 번호로 키지정후 삽입.
 	
-	VECTOR2_TO_VECTOR3(pAppear->v2CurPos, pPlayer->m_v3CurPos)
-	VECTOR2_TO_VECTOR3(pAppear->v2Direction, pPlayer->m_v3Direction)
-	pPlayer->m_wClass			= pAppear->wClass; 
+	
+	pPlayer->setPositionFromV2(pAppear->v2CurPos);
+	pPlayer->setDurectionFromV2(pAppear->v2Direction);
+	pPlayer->m_wClass			= (eENUM_CLASS_TYPE)pAppear->wClass; 
 	pPlayer->m_byGuildFlag			= pAppear->byGuildFlag;
 	
-	if(pPlayer->m_v3CurPos.x <= 0 || pPlayer->m_v3CurPos.z <= 0)
-		asm_int3();
+
 
 	// 유저가 속해있는 섹션을 구한다.	
-	pPlayer->m_pCurTile	= g_pMap->GetTile( pAppear->v2CurPos.x, pAppear->v2CurPos.y );
+	pPlayer->m_pCurTile	= g_pMap->GetTileBy3DPosition( pAppear->v2CurPos.x, pAppear->v2CurPos.y );
 
 	for(int i = 0; i < g_pMap->m_wTotalSectionMany; i++)
 	{
@@ -4116,7 +4743,12 @@ CUser* InitPlayer( DSTC_APPEAR* pAppear )
 		}
 	}
 	
-	g_pExecutive->GXOSetDirection(pPlayer->m_hPlayer.pHandle, &g_Camera.v3AxsiY, (float)(atan2(pPlayer->m_v3Direction.z, pPlayer->m_v3Direction.x) + DEG90 ) );
+	auto m_v3Direction = pPlayer->currentDirection();
+	g_pExecutive->GXOSetDirection(
+		pPlayer->m_hPlayer.pHandle, 
+		&g_Camera.v3AxsiY, 
+		(float)(atan2(m_v3Direction.z, m_v3Direction.x) + DEG90 ) 
+	);
 
 	pPlayer->m_wArmor	= pAppear->wArmor;
 	pPlayer->m_wHandR	= pAppear->wHandR;
@@ -4134,22 +4766,25 @@ CUser* InitPlayer( DSTC_APPEAR* pAppear )
 	pPlayer->m_dwGuildWarFlag = pAppear->dwGuildWarFlag;// : hwoarang 050202 
 	pPlayer->m_team_index = pAppear->team_index;//팀 인덱스 : hwoarang 050202 
 
-	LP_PARTY_USER sPartyNode = g_pPartyUserHash->GetData( pPlayer->m_dwUserIndex );
 
-	if(sPartyNode)
-	{
-		CMiniMapWnd* pMiniMapWnd = CMiniMapWnd::GetInstance();
+	 //Party handling later
+	 // 
+	//LP_PARTY_USER sPartyNode = g_pPartyUserHash->GetData( pPlayer->m_dwUserIndex );
 
-		VECTOR2 vec = pMiniMapWnd->GetRatioMinimap(pPlayer->m_v3CurPos.x, pPlayer->m_v3CurPos.z);
-		
-		pMiniMapWnd->SetPartyPtr(pMiniMapWnd->GetPartyPtrRt(sPartyNode->dwResourceId), 1);			
+	//if(sPartyNode)
+	//{
+	//	CMiniMapWnd* pMiniMapWnd = CMiniMapWnd::GetInstance();
 
-		if(pMiniMapWnd->m_bInit==TRUE)	
-		{
-			pMiniMapWnd->SetPosObj(sPartyNode->dwResourceId, pMiniMapWnd->m_fPosX+vec.x+8, pMiniMapWnd->m_fPosZ+vec.y+42);			
-			pMiniMapWnd->SetRender(sPartyNode->dwResourceId, TRUE);
-		}			
-	}	
+	//	VECTOR2 vec = pMiniMapWnd->GetRatioMinimap(pPlayer->m_v3CurPos.x, pPlayer->m_v3CurPos.z);
+	//	
+	//	pMiniMapWnd->SetPartyPtr(pMiniMapWnd->GetPartyPtrRt(sPartyNode->dwResourceId), 1);			
+
+	//	if(pMiniMapWnd->m_bInit==TRUE)	
+	//	{
+	//		pMiniMapWnd->SetPosObj(sPartyNode->dwResourceId, pMiniMapWnd->m_fPosX+vec.x+8, pMiniMapWnd->m_fPosZ+vec.y+42);			
+	//		pMiniMapWnd->SetRender(sPartyNode->dwResourceId, TRUE);
+	//	}			
+	//}	
 	
 	CGroupWnd* pGroupWnd = CGroupWnd::GetInstance();
 	pGroupWnd->SetPartyUI();
@@ -4197,7 +4832,7 @@ CUser* InitPlayer( DSTC_APPEAR* pAppear )
 													pPlayer->m_hSelfPortalEffect.pDesc, NULL);
 	HideObject(pPlayer->m_hSelfPortalEffect.pHandle);
 	
-	SetUserPosition( pPlayer, &pPlayer->m_v3CurPos );
+	SetUserPosition( pPlayer, pPlayer->currentPositionReadOnly());
 
 	if(CGameMenuWnd::GetInstance()->m_bShadowFlag==TRUE)
 		HideObject(pPlayer->m_hShadowHandle);	
@@ -4269,9 +4904,9 @@ void InitMonster( DSTC_APPEAR_MON* pAppear )
 	// 몬스터가 속해있는 섹션을 구한다.
 	DWORD	x, z, i;
 	Section_Link_Info*	pSection;
-	x = (DWORD)(pMonster->m_v3CurPos.x / TILE_WIDTH);
-	z = (DWORD)(pMonster->m_v3CurPos.z / TILE_HEIGHT);
-	pMonster->m_pCurTile = g_pMap->GetTile( pAppear->v2CurPos.x, pAppear->v2CurPos.y );
+	x = (DWORD)(pMonster->m_v3CurPos.x / DUNGEON_TILE_WIDTH);
+	z = (DWORD)(pMonster->m_v3CurPos.z / DUNGEON_TILE_HEIGHT);
+	pMonster->m_pCurTile = g_pMap->GetTileBy3DPosition( pAppear->v2CurPos.x, pAppear->v2CurPos.y );
 
 	for( i=0; i<g_pMap->m_wTotalSectionMany; i++)
 	{
@@ -4523,11 +5158,12 @@ BOOL PathFindDungeon()
 	g_pMainPlayer->m_dwTemp[ USER_TEMP_AUTO_TARGET_TYPE ]	= 0;
 	g_pMainPlayer->m_dwTemp[ USER_TEMP_AUTO_TARGET_INDEX ]	= 0; 
 	
+	auto m_v3CurPos = g_pMainPlayer->currentPosition();
 	DWORD dwStartX, dwStartZ, dwEndX, dwEndZ; 
-	dwStartX = (DWORD)( g_pMainPlayer->m_v3CurPos.x / TILE_SIZE );
-	dwStartZ = (DWORD)( g_pMainPlayer->m_v3CurPos.z / TILE_SIZE );
-	dwEndX = (DWORD)( g_Mouse.v3Mouse.x / TILE_SIZE );
-	dwEndZ = (DWORD)( g_Mouse.v3Mouse.z / TILE_SIZE );
+	dwStartX = (DWORD)( m_v3CurPos.x / DUNGEON_TILE_SIZE );
+	dwStartZ = (DWORD)( m_v3CurPos.z / DUNGEON_TILE_SIZE );
+	dwEndX = (DWORD)( g_Mouse.v3Mouse.x / DUNGEON_TILE_SIZE );
+	dwEndZ = (DWORD)( g_Mouse.v3Mouse.z / DUNGEON_TILE_SIZE );
 
 	if(dwEndX >= g_pMap->m_dwMapXTileMany || dwEndZ >= g_pMap->m_dwMapZTileMany)	return FALSE;
 	
@@ -4544,18 +5180,18 @@ BOOL PathFindDungeon()
 	VECTOR3		v3Tmp, v3Direction, v3Dest;
 	int			cnt = 1;
 
-	v3Dest.x	= (float)( g_PathFinder.pLocation[0].dwBlock_X * TILE_WIDTH + ( TILE_WIDTH / 2.f ) );
-	v3Dest.z	= (float)( g_PathFinder.pLocation[0].dwBlock_Y * TILE_HEIGHT + ( TILE_HEIGHT / 2.f ) );
+	v3Dest.x	= (float)( g_PathFinder.pLocation[0].dwBlock_X * DUNGEON_TILE_WIDTH + ( DUNGEON_TILE_WIDTH / 2.f ) );
+	v3Dest.z	= (float)( g_PathFinder.pLocation[0].dwBlock_Y * DUNGEON_TILE_HEIGHT + ( DUNGEON_TILE_HEIGHT / 2.f ) );
 	v3Dest.y	= 0;
 	
-	VECTOR3_SUB_VECTOR3( &v3Direction, &v3Dest, &g_pMainPlayer->m_v3CurPos );
+	VECTOR3_SUB_VECTOR3( &v3Direction, &v3Dest, g_pMainPlayer->currentPositionReadOnly() );
 	Normalize( &v3Tmp, &v3Direction );						// 움직일 방형의 반위백터
-	pTile = g_pMap->GetTile( g_pMainPlayer->m_v3CurPos.x, g_pMainPlayer->m_v3CurPos.z );
+	pTile = g_pMap->GetTileBy3DPosition( m_v3CurPos.x, m_v3CurPos.z );
 	pNextTile = pTile;
 
 	do
 	{
-		pNextTile = g_pMap->GetTile( g_pMainPlayer->m_v3CurPos.x + v3Tmp.x * cnt, g_pMainPlayer->m_v3CurPos.z + v3Tmp.z * cnt );
+		pNextTile = g_pMap->GetTileBy3DPosition( m_v3CurPos.x + v3Tmp.x * cnt, m_v3CurPos.z + v3Tmp.z * cnt );
 		cnt++;
 	} while( pTile == pNextTile );
 
@@ -4588,9 +5224,9 @@ BOOL SetPathFindMove()
 	if( g_PathFinder.dwCurveNum == g_PathFinder.dwCurCurve ) goto lb_stop;
 	
 	// 여기서 부터 길찾기 설정이다.
-	g_pMainPlayer->m_hPlayer.pDesc->vDest.x		= (float)( g_PathFinder.pLocation[g_PathFinder.dwCurCurve].dwBlock_X * TILE_WIDTH + ( TILE_WIDTH / 2.f ) );
-	g_pMainPlayer->m_hPlayer.pDesc->vDest.z		= (float)( g_PathFinder.pLocation[g_PathFinder.dwCurCurve].dwBlock_Y * TILE_HEIGHT + ( TILE_HEIGHT / 2.f ) );
-	g_pMainPlayer->m_pDestTile		= g_pMap->GetMap( g_PathFinder.pLocation[g_PathFinder.dwCurCurve].dwBlock_X,
+	g_pMainPlayer->m_hPlayer.pDesc->vDest.x		= (float)( g_PathFinder.pLocation[g_PathFinder.dwCurCurve].dwBlock_X * DUNGEON_TILE_WIDTH + ( DUNGEON_TILE_WIDTH / 2.f ) );
+	g_pMainPlayer->m_hPlayer.pDesc->vDest.z		= (float)( g_PathFinder.pLocation[g_PathFinder.dwCurCurve].dwBlock_Y * DUNGEON_TILE_HEIGHT + ( DUNGEON_TILE_HEIGHT / 2.f ) );
+	g_pMainPlayer->m_pDestTile		= g_pMap->GetTileByIndexes( g_PathFinder.pLocation[g_PathFinder.dwCurCurve].dwBlock_X,
 													   g_PathFinder.pLocation[g_PathFinder.dwCurCurve].dwBlock_Y );
 	g_pMainPlayer->m_hPlayer.pDesc->vDest.y		= 0.f;
 	g_PathFinder.dwCurCurve++;	
@@ -4598,7 +5234,7 @@ BOOL SetPathFindMove()
 	g_pMainPlayer->m_hPlayer.pDesc->dwStartTick	= g_dwCurTick;					// 현재의 ms를 구한다.
 	
 	VECTOR3	v3Dir, v3DirNormal;
-	VECTOR3_SUB_VECTOR3( &v3Dir, &g_pMainPlayer->m_hPlayer.pDesc->vDest, &g_pMainPlayer->m_v3CurPos );
+	VECTOR3_SUB_VECTOR3( &v3Dir, &g_pMainPlayer->m_hPlayer.pDesc->vDest, g_pMainPlayer->currentPositionReadOnly() );
 	Normalize( &v3DirNormal, &v3Dir );						// 움직일 방형의 반위백터
 	g_pExecutive->GXOSetDirection( g_pMainPlayer->m_hPlayer.pHandle, &g_Camera.v3AxsiY, (float)(atan2(v3Dir.z, v3Dir.x) + DEG90 ) );
 
@@ -4607,14 +5243,14 @@ BOOL SetPathFindMove()
 	case UNIT_STATUS_WALKING:
 	case UNIT_STATUS_RUNNING:
 		{
-			if( EpsilonVector( &g_pMainPlayer->m_v3Direction,  &v3DirNormal, 0.1f ) ) return TRUE;	// 같은 방향이면 메시지를 보낼 필요없음.						
+			if( EpsilonVector( g_pMainPlayer->currentDirectionReadOnly(),  &v3DirNormal, 0.1f ) ) return TRUE;	// 같은 방향이면 메시지를 보낼 필요없음.						
 
 			// 방향이 같지 않다면 이동 메시지를 날린다.
 			g_pMainPlayer->SetMotion( WORD((g_pMainPlayer->m_bMoveType == UNIT_STATUS_WALKING) ? MOTION_TYPE_WALK : MOTION_TYPE_RUN)
 					, g_pExecutive->GXOGetCurrentFrame( g_pMainPlayer->m_hPlayer.pHandle )
 					, ACTION_LOOP );
 			
-			g_pMainPlayer->m_v3Direction = v3DirNormal;
+			g_pMainPlayer->setDirection(v3DirNormal);
 
 			// Move Packet를 보낸다.
 			SendMovePacket();			
@@ -4636,7 +5272,7 @@ BOOL SetPathFindMove()
 		{
 			g_pMainPlayer->SetMotion(WORD((g_pMainPlayer->m_bMoveType == UNIT_STATUS_WALKING) ? MOTION_TYPE_WALK : MOTION_TYPE_RUN), 0, ACTION_LOOP );
 			
-			g_pMainPlayer->m_v3Direction	= v3DirNormal;
+			g_pMainPlayer->setDirection(v3DirNormal);
 			g_pMainPlayer->SetStatus(g_pMainPlayer->m_bMoveType);
 
 			// Move Message를 보낸다.
@@ -4697,7 +5333,7 @@ void PathFindMoveFunc(GXOBJECT_HANDLE handle, LPObjectDesc pData, DWORD dwCurFra
 		if( g_pChrInfoUser->GetFrameInfo(pMainUser->m_wClass-1, pMainUser->m_byItemType, MOTION_TYPE_WALK, _CHRINFO_FRAME0) == dwCurFrame || 
 			g_pChrInfoUser->GetFrameInfo(pMainUser->m_wClass-1, pMainUser->m_byItemType, MOTION_TYPE_WALK, _CHRINFO_FRAME1) == dwCurFrame )
 		{
-			_PlaySound( GAMEPLAY_HEABYSTONE_WALK, SOUND_TYPE_GAMEPLAY, 0,  pMainUser->m_v3CurPos, FALSE );
+			_PlaySound( GAMEPLAY_HEABYSTONE_WALK, SOUND_TYPE_GAMEPLAY, 0,  pMainUser->currentPosition(), FALSE );
 		}
 	}
 	else 
@@ -4706,7 +5342,7 @@ void PathFindMoveFunc(GXOBJECT_HANDLE handle, LPObjectDesc pData, DWORD dwCurFra
 		if( g_pChrInfoUser->GetFrameInfo(pMainUser->m_wClass-1, pMainUser->m_byItemType, MOTION_TYPE_RUN, _CHRINFO_FRAME0) == dwCurFrame ||
 			g_pChrInfoUser->GetFrameInfo(pMainUser->m_wClass-1, pMainUser->m_byItemType, MOTION_TYPE_RUN, _CHRINFO_FRAME1) == dwCurFrame )
 		{
-			_PlaySound( GAMEPLAY_HEABYSTONE_RUN, SOUND_TYPE_GAMEPLAY, 0, pMainUser->m_v3CurPos, FALSE );
+			_PlaySound( GAMEPLAY_HEABYSTONE_RUN, SOUND_TYPE_GAMEPLAY, 0, pMainUser->currentPosition(), FALSE );
 		}
 	}
 
@@ -4724,11 +5360,11 @@ void PathFindMoveFunc(GXOBJECT_HANDLE handle, LPObjectDesc pData, DWORD dwCurFra
 	else	
 	{
 		// 도착 지점이 아니라면 계속 진행한다.
-		v3Tmp = pMainUser->m_v3CurPos;
+		v3Tmp = pMainUser->currentPosition();
 		Pos.x += cosf(fRad-DEG90)*fSpeed;
 		Pos.z += sinf(fRad-DEG90)*fSpeed;
 		SetUserPosition( pMainUser, &Pos );
-		pTile = g_pMap->GetTile( Pos.x, Pos.z );			// 이동한 다음의 타일을 받는다. 
+		pTile = g_pMap->GetTileBy3DPosition( Pos.x, Pos.z );			// 이동한 다음의 타일을 받는다. 
 															// 타일이 바뀌었나 체크를 위해.
 		if (!pTile)
 		{
@@ -4825,11 +5461,11 @@ void PlayerMoveFunc(GXOBJECT_HANDLE handle, LPObjectDesc pData, DWORD dwCurFrame
 	g_pExecutive->GXOGetPosition( handle, &Pos );
 	
 	// 현재의 위치와 옮겨가가될 위치를 검색해서 만약 중간에 못가는 타일이 있다면 세워버린다.
-	pTile = g_pMap->GetTile( Pos.x, Pos.z );
+	pTile = g_pMap->GetTileBy3DPosition( Pos.x, Pos.z );
 	if( !pTile )
 	{
 		//trust
-		GXSetPosition( handle, &pUser->m_v3CurPos , TRUE, TRUE);
+		GXSetPosition( handle, pUser->currentPositionReadOnly(), TRUE, TRUE);
 		
 		if (g_dwLayerID < 100 )	// 던전은 아니므로
 			::SetAction(pUser->m_hPlayer.pHandle,  MOTION_TYPE_VILLAGESTAND, 0, ACTION_LOOP );
@@ -4844,7 +5480,7 @@ void PlayerMoveFunc(GXOBJECT_HANDLE handle, LPObjectDesc pData, DWORD dwCurFrame
 	if( pTile->wAttr.uSection == 0 )
 	{
 		//trust
-		GXSetPosition( handle, &pUser->m_v3CurPos, TRUE , TRUE);
+		GXSetPosition( handle, pUser->currentPositionReadOnly(), TRUE , TRUE);
 
 		if (g_dwLayerID < 100 )	// 던전은 아니므로
 			::SetAction(pUser->m_hPlayer.pHandle, MOTION_TYPE_VILLAGESTAND, 0, ACTION_LOOP );
@@ -4878,7 +5514,7 @@ void PlayerMoveFunc(GXOBJECT_HANDLE handle, LPObjectDesc pData, DWORD dwCurFrame
 		{	
 			CMiniMapWnd* pMiniMapWnd = CMiniMapWnd::GetInstance();
 
-			VECTOR2 vec = pMiniMapWnd->GetRatioMinimap(pUser->m_v3CurPos.x, pUser->m_v3CurPos.z);
+			VECTOR2 vec = pMiniMapWnd->GetRatioMinimap(pUser->currentPosition().x, pUser->currentPosition().z);
 
 			if(pMiniMapWnd->m_bInit==TRUE)	
 			{
@@ -4889,21 +5525,21 @@ void PlayerMoveFunc(GXOBJECT_HANDLE handle, LPObjectDesc pData, DWORD dwCurFrame
 	}
 	*/
 	
-
-	sPartyNode = g_pPartyUserHash->GetData( pUser->m_dwUserIndex );
+	// Party handling later
+	/*sPartyNode = g_pPartyUserHash->GetData( pUser->m_dwUserIndex );
 
 	if(sPartyNode)
 	{
 		CMiniMapWnd* pMiniMapWnd = CMiniMapWnd::GetInstance();
 
-		VECTOR2 vec = pMiniMapWnd->GetRatioMinimap(pUser->m_v3CurPos.x, pUser->m_v3CurPos.z);
+		VECTOR2 vec = pMiniMapWnd->GetRatioMinimap(pUser->currentPosition().x, pUser->currentPosition().z);
 
 		if(pMiniMapWnd->m_bInit==TRUE)	
 		{
 			pMiniMapWnd->SetPosObj(sPartyNode->dwResourceId, vec.x+8, vec.y+42);
 			
 		}			
-	}
+	}*/
 	//--
 	return;
 }
@@ -4923,11 +5559,11 @@ void PlayerDamageFunc(GXOBJECT_HANDLE handle, LPObjectDesc pData, DWORD dwCurFra
 		
 		if (pUser->UsingStatusSkill(__SKILL_AIREALCOAT__))
 		{
-			_PlaySound(__SKILL_AIREALCOAT__, SOUND_EFFECT_GENERAL1, 0, pUser->m_v3CurPos, FALSE);
+			_PlaySound(__SKILL_AIREALCOAT__, SOUND_EFFECT_GENERAL1, 0, pUser->currentPosition(), FALSE);
 		}
 		else
 		{
-			_PlaySound( CHARACTER_SOUND_DAMAGE, SOUND_TYPE_CHARACTER, CHARACTER_SOUND_DAMAGE + ( pUser->m_wClass - 1 ) * SOUND_PER_CHARACTER, pUser->m_v3CurPos, FALSE );
+			_PlaySound( CHARACTER_SOUND_DAMAGE, SOUND_TYPE_CHARACTER, CHARACTER_SOUND_DAMAGE + ( pUser->m_wClass - 1 ) * SOUND_PER_CHARACTER, pUser->currentPosition(), FALSE );
 		}
 	}
 
@@ -5051,7 +5687,7 @@ void MonsterMoveFunc(GXOBJECT_HANDLE handle, LPObjectDesc pData, DWORD dwCurFram
 		|| (dwCurFrame >= 70 && dwCurFrame <= 80))
 		{
 			DWORD dwRate = (dwCurFrame >= 70 ? dwCurFrame-69 : dwCurFrame-34);
-			float fDist = CalcDistance(&g_pMainPlayer->m_v3CurPos, &pMonster->m_v3CurPos);
+			float fDist = CalcDistance(g_pMainPlayer->currentPositionReadOnly(), &pMonster->m_v3CurPos);
 			float fPower = 1000/max(1.0, (fDist/100.));
 
 			VECTOR3 vecQuake;vecQuake.x = vecQuake.y = vecQuake.z = 0;
@@ -5108,7 +5744,7 @@ void EffectOnceAndNormal( GXOBJECT_HANDLE handle, LPObjectDesc pData, DWORD dwCu
 		case OBJECT_TYPE_PLAYER:
 			pUser = g_pUserHash->GetData( pEffectDesc->dwTargetIndex[0] ); 
 			if( !pUser ) goto lb_remove;
-			GXSetPosition( pEffectDesc->hEffect.pHandle, &pUser->m_v3CurPos, FALSE );
+			GXSetPosition( pEffectDesc->hEffect.pHandle, pUser->currentPositionReadOnly(), FALSE );
 			break;
 		}		
 	}
@@ -5223,7 +5859,8 @@ void UpdatePlayer()
 			continue;
 		}
 		
-		pTile	= pMap->GetTile( pUser->m_v3CurPos.x, pUser->m_v3CurPos.z );
+		auto m_v3CurPos = pUser->currentPosition();
+		pTile	= pMap->GetTileBy3DPosition( m_v3CurPos.x, m_v3CurPos.z );
 
 		if( pUser->m_wCurSectionNum == pTile->wAttr.uSection )
 		{
@@ -5271,7 +5908,7 @@ void UpdateMonster()
 	while( pMonsterNode )
 	{
 		pMonster	= pMonsterNode->pData;
-		pTile		= pMap->GetTile( pMonster->m_v3CurPos.x, pMonster->m_v3CurPos.z );
+		pTile		= pMap->GetTileBy3DPosition( pMonster->m_v3CurPos.x, pMonster->m_v3CurPos.z );
 
 		if( !( ( pMonster->GetStatus() == UNIT_STATUS_WALKING ) 
 			|| ( pMonster->GetStatus() == UNIT_STATUS_RUNNING ) ) )
@@ -5329,8 +5966,13 @@ void SendMovePacket()
 {
 	CTDS_DUNGEON_MOVE		move;
 	move.bMoveType			= g_pMainPlayer->m_bMoveType;
-	VECTOR3_TO_VECTOR2(g_pMainPlayer->m_v3CurPos, move.v2MoveStartPos)
-	VECTOR3_TO_VECTOR2(g_pMainPlayer->m_v3Direction, move.v2MoveDirection)
+
+	auto pos = g_pMainPlayer->currentPosition();
+	move.v2MoveStartPos = { pos.x, pos.z };
+	
+	auto dir = g_pMainPlayer->currentDirection();
+	move.v2MoveDirection = {dir.x, dir.z};
+	
 	move.wDestX				= g_pMainPlayer->m_pDestTile->wIndex_X;
 	move.wDestZ				= g_pMainPlayer->m_pDestTile->wIndex_Z;
 	g_pNet->SendMsg( (char*)&move, move.GetPacketSize(), SERVER_INDEX_ZONE );
@@ -5339,7 +5981,10 @@ void SendMovePacket()
 void SendStopPacket()
 {
 	CTDS_DUNGEON_STOP	stop;
-	VECTOR3_TO_VECTOR2(g_pMainPlayer->m_v3CurPos, stop.v2StopPos)
+	auto pos = g_pMainPlayer->currentPosition();
+	stop.v2StopPos = {pos.x, pos.z};
+
+	
 	g_pNet->SendMsg( (char*)&stop, stop.GetPacketSize(), SERVER_INDEX_ZONE );
 }
 
@@ -6033,7 +6678,7 @@ void InputChatName(BOOL bChk)
 	}
 }
 
-void SetKey(int nKey)
+void SetKey(int wparam)
 {
 	if( g_pThisDungeon->IsStadium() && g_pMainPlayer->m_dwGuildWarFlag == G_W_F_OBSERVER )
 		return;
@@ -6043,17 +6688,17 @@ void SetKey(int nKey)
 	CInterface*		pInterface		= CInterface::GetInstance();
 
 	// emoticon 단축키 처리  
-	if (ShortKeyEmoticon((WORD)nKey, 0x30, 0x39) || ShortKeyEmoticon((WORD)nKey, 0x60, 0x69))
+	if (ShortKeyEmoticon((WORD)wparam, 0x30, 0x39) || ShortKeyEmoticon((WORD)wparam, 0x60, 0x69))
 		return;
 			
 	if(pQuantityWnd->GetActive())
 	{
 		// 숫자 키만 사용할수있다 //
-		if(nKey>=0x30 && nKey<=0x39)
+		if(wparam>=0x30 && wparam<=0x39)
 		{
  			if(pQuantityWnd->m_byDrawIndex<=10)
 			{					
-				unsigned char ch = (unsigned char)nKey;
+				unsigned char ch = (unsigned char)wparam;
 
 				memcpy(pQuantityWnd->m_szMoney + pQuantityWnd->m_byDrawIndex, &ch, 1);
 
@@ -6086,7 +6731,7 @@ void SetKey(int nKey)
 				SkillSelectionView::sharedInstance()->handleKeyEvent(0);
 			}
 			
-			if(nKey==g_sKeyConfig.snKey[__KEY_GROUP_OPEN__])
+			if(wparam==g_sKeyConfig.snKey[__KEY_GROUP_OPEN__])
 			{
 				CGroupWnd* pGroupWnd = CGroupWnd::GetInstance();
 	
@@ -6101,7 +6746,7 @@ void SetKey(int nKey)
 				}
 			}
 
-			if(nKey==g_sKeyConfig.snKey[__KEY_ITEM__])
+			if(wparam==g_sKeyConfig.snKey[__KEY_ITEM__])
 			{	
 				std::set<DWORD> filterIDs = ItemPickupFilteringSystem::sharedInstance()->currentSelectedIDs();
 
@@ -6146,11 +6791,12 @@ void SetKey(int nKey)
 								}
 							}
 
-							if(pItem->v3ItemPos.x>=g_pMainPlayer->m_v3CurPos.x-(TILE_SIZE+TILE_SIZE/2.0f) &&
-								pItem->v3ItemPos.x<=g_pMainPlayer->m_v3CurPos.x+(TILE_SIZE+TILE_SIZE/2.0f))
+							auto m_v3CurPos = g_pMainPlayer->currentPosition();
+							if(pItem->v3ItemPos.x>=m_v3CurPos.x-(DUNGEON_TILE_SIZE+DUNGEON_TILE_SIZE/2.0f) &&
+								pItem->v3ItemPos.x<=m_v3CurPos.x+(DUNGEON_TILE_SIZE+DUNGEON_TILE_SIZE/2.0f))
 							{
-								if(pItem->v3ItemPos.z>=g_pMainPlayer->m_v3CurPos.z-(TILE_SIZE+TILE_SIZE/2.0f) &&
-									pItem->v3ItemPos.z<=g_pMainPlayer->m_v3CurPos.z+(TILE_SIZE+TILE_SIZE/2.0f))
+								if(pItem->v3ItemPos.z>=m_v3CurPos.z-(DUNGEON_TILE_SIZE+DUNGEON_TILE_SIZE/2.0f) &&
+									pItem->v3ItemPos.z<=m_v3CurPos.z+(DUNGEON_TILE_SIZE+DUNGEON_TILE_SIZE/2.0f))
 								{
 									CQuantityWnd* pQuantityWnd = CQuantityWnd::GetInstance();
 
@@ -6194,7 +6840,7 @@ void SetKey(int nKey)
 					}
 				}
 			}
-			if(nKey==g_sKeyConfig.snKey[__KEY_ITEM_GUARDIAN__])
+			if(wparam==g_sKeyConfig.snKey[__KEY_ITEM_GUARDIAN__])
 			{			
 				if(g_pMainPlayer->GetStatus()!=UNIT_STATUS_PORTAL_MOVING)
 				{
@@ -6225,54 +6871,12 @@ void SetKey(int nKey)
 
 			// 가디언창 오픈
 			
-			if(nKey==g_sKeyConfig.snKey[__KEY_WEAPON_SWITCH__])
-			{
-				if(!g_pGVDungeon->bChatMode)
-				{						
-					if(g_pMainPlayer->GetStatus()==UNIT_STATUS_DEAD)
-						return;
-
-					if(g_pMainPlayer->GetStatus()==UNIT_STATUS_NORMAL)
-					{
-						// Item Weapon Switch.
-						if(g_pMainPlayer->m_pEquip[EQUIP_TYPE_LHAND1].m_wItemID==0	&&
-							g_pMainPlayer->m_pEquip[EQUIP_TYPE_LHAND2].m_wItemID==0 &&
-							g_pMainPlayer->m_pEquip[EQUIP_TYPE_RHAND1].m_wItemID==0	&&
-							g_pMainPlayer->m_pEquip[EQUIP_TYPE_RHAND2].m_wItemID==0	)
-						{
-							return;
-						}
-						else
-						{					
-
-							const auto timeSinceLastWeaponSwitch = 2001;
-							if(timeSinceLastWeaponSwitch > 2000)
-							{
-
-								// SOUND_SYSTEM_WEAPONSWITCH
-								_PlaySound(0, SOUND_TYPE_SYSTEM, SOUND_SYSTEM_WEAPONSWITCH, g_v3InterfaceSoundPos, FALSE);
-
-								if(g_ItemMoveManager.GetNewItemMoveMode())
-								{
-									CTDS_SWITCH_WEAPON packet;
-									g_pNet->SendMsg( (char*)&packet, packet.GetPacketSize(), SERVER_INDEX_ZONE );
-								}
-								else
-								{
-									CTDS_ITEM_PICKUP ItemPickup;
-									ItemPickup.bSectionNum	= 1;
-									ItemPickup.i64ItemID	= 0;
-									SetItemPacket(&ItemPickup, 17, 0, 0, 0, 0);
-									g_pNet->SendMsg( (char*)&ItemPickup, ItemPickup.GetPacketSize(), SERVER_INDEX_ZONE );
-								}								
-							}
-						}
-					}
-				}
+			if(wparam==g_sKeyConfig.snKey[__KEY_WEAPON_SWITCH__]) {
+				tryWeaponSwitch();
 			}
 			
 			
-			if(nKey==g_sKeyConfig.snKey[__KEY_CHAT_CLAER__])
+			if(wparam==g_sKeyConfig.snKey[__KEY_CHAT_CLAER__])
 				InitDungeonMessage();
 
 			// Menu Order 재조정 //
@@ -6439,42 +7043,6 @@ void CameraAccelatingMove(void)
 		SetListener(&v3CameraAngleRad);			
 	}
 	*/
-}
-
-BOOL FindEmptyPosNearDungeon(VECTOR3* vpDungeonPos, VECTOR3 *vpNearPos, BOOL bVillage)
-{
-	MAP_TILE*	pTile = 0;
-	VECTOR3		vPos;
-	DWORD		dwCount = 0;
-
-	while(dwCount < 4)
-	{
-		vPos = *vpDungeonPos;
-		dwCount++;
-		
-		float fDistance = (bVillage) ? 5.0f : 2.0f;
-
-		switch(dwCount)
-		{
-		case 1:		vPos.x -= (TILE_SIZE_WORLD * fDistance);	break;		//서쪽방향 
-		case 2:		vPos.z -= (TILE_SIZE_WORLD * fDistance);	break;		//남쪽방향
-		case 3:		vPos.z += (TILE_SIZE_WORLD * fDistance);	break;		//북쪽방향
-		case 4:		vPos.x += (TILE_SIZE_WORLD * fDistance);	break;		//동쪽방향 
-		}
-		
-		pTile = g_pMap->GetTile(vPos.x, vPos.z);
-		if(!pTile)
-			return FALSE;
-
-		if(pTile->wAttr.uAttr != 1)
-		{
-			vpNearPos->x = vPos.x;
-			vpNearPos->z = vPos.z;
-			g_pExecutive->GXMGetHFieldHeight(&vpNearPos->y, vPos.x, vPos.z);
-			return TRUE;
-		}
-	}
-	return FALSE;
 }
 
 void SelectSummonMonster(CMonster* pMonster, BOOL bSelect)

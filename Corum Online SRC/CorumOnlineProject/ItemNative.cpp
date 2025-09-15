@@ -2109,14 +2109,15 @@ void ItemChk()
 
 void renderAllDroppedItemsTooltips(const std::vector<ITEM*>& droppedItemTooltips) {
 	{
+		auto m_v3CurPos = g_pMainPlayer->currentPosition();
 		for (int i = 0; i < droppedItemTooltips.size(); i++) {
 			ITEM* pItem = droppedItemTooltips[i];
 
-			if (pItem->v3ItemPos.x >= g_pMainPlayer->m_v3CurPos.x - (8 * TILE_SIZE) &&
-				pItem->v3ItemPos.x <= g_pMainPlayer->m_v3CurPos.x + (8 * TILE_SIZE))
+			if (pItem->v3ItemPos.x >= m_v3CurPos.x - (8 * DUNGEON_TILE_SIZE) &&
+				pItem->v3ItemPos.x <= m_v3CurPos.x + (8 * DUNGEON_TILE_SIZE))
 			{
-				if (pItem->v3ItemPos.z >= g_pMainPlayer->m_v3CurPos.z - (8 * TILE_SIZE) &&
-					pItem->v3ItemPos.z <= g_pMainPlayer->m_v3CurPos.z + (8 * TILE_SIZE))
+				if (pItem->v3ItemPos.z >= m_v3CurPos.z - (8 * DUNGEON_TILE_SIZE) &&
+					pItem->v3ItemPos.z <= m_v3CurPos.z + (8 * DUNGEON_TILE_SIZE))
 				{
 					CUserInterface* pUserInterface = CUserInterface::GetInstance();
 

@@ -63,18 +63,7 @@
 extern int windowWidth();
 extern int windowHeight();
 
-using namespace CorumPreferences;
-std::shared_ptr<CorumPreferences::Preferences> corumPreferences() {
-	static std::shared_ptr<CorumPreferences::Preferences> _corumPreferences(nullptr);
-	if(!_corumPreferences) {
-		auto instance = Preferences::buildFromFile(Preferences::defaultFileName()); 
-		if(!instance) { instance = new Preferences();}
-
-		_corumPreferences = std::shared_ptr<Preferences>(instance);
-	}
-
-	return _corumPreferences;
-}
+IDIFontObject* verdanaBIG = nullptr;
 
 static float _windowWidth, _windowHeight;
 int windowWidth() {
@@ -698,19 +687,24 @@ void InitializeHash()
 
 void LoadCursorDoIt()
 {
-	memset(g_hCursor, 0, sizeof(g_hCursor));	
-	g_hCursor[ __MOUSE_POINTER_DEFAULT__	  ] = LoadCursor(g_hInstance, MAKEINTRESOURCE(IDC_CURSOR_COMMON_C));
-	g_hCursor[ __MOUSE_POINTER_DEFAULTCLICK__ ] = LoadCursor(g_hInstance, MAKEINTRESOURCE(IDC_CURSOR_COMMON));
-	g_hCursor[ __MOUSE_POINTER_BUTTON__		  ] = LoadCursor(g_hInstance, MAKEINTRESOURCE(IDC_CURSOR_BUTTON_C));
-	g_hCursor[ __MOUSE_POINTER_BUTTONCLICK__  ] = LoadCursor(g_hInstance, MAKEINTRESOURCE(IDC_CURSOR_BUTTON));
-	g_hCursor[ __MOUSE_POINTER_ITEM__		  ] = LoadCursor(g_hInstance, MAKEINTRESOURCE(IDC_CURSOR_ITEM_C));
-	g_hCursor[ __MOUSE_POINTER_ITEMCLICK__	  ] = LoadCursor(g_hInstance, MAKEINTRESOURCE(IDC_CURSOR_ITEM));
-	g_hCursor[ __MOUSE_POINTER_ATTACK__		  ] = LoadCursor(g_hInstance, MAKEINTRESOURCE(IDC_CURSOR_ATTACK_C));
-	g_hCursor[ __MOUSE_POINTER_ATTACKCLICK__  ] = LoadCursor(g_hInstance, MAKEINTRESOURCE(IDC_CURSOR_ATTACK));
-	g_hCursor[ __MOUSE_POINTER_NPC__		  ] = LoadCursor(g_hInstance, MAKEINTRESOURCE(IDC_CURSOR_DIALOG_C));
-	g_hCursor[ __MOUSE_POINTER_NPCCLICK__	  ] = LoadCursor(g_hInstance, MAKEINTRESOURCE(IDC_CURSOR_DIALOG));
-	g_hCursor[ __MOUSE_POINTER_GUARDIAN__	  ] = LoadCursor(g_hInstance, MAKEINTRESOURCE(IDC_CURSOR_TARGET_C));
-	g_hCursor[ __MOUSE_POINTER_GUARDIANCLICK__] = LoadCursor(g_hInstance, MAKEINTRESOURCE(IDC_CURSOR_TARGET));
+	memset(g_hCursor, 0, sizeof(g_hCursor));
+	char cursorFolder[255];
+	snprintf(cursorFolder, sizeof(cursorFolder), "%s/Cursor", g_szDataPath);
+	struct Cursor { 
+		std::string filename;
+		int id;
+	};
+
+	std::vector<Cursor> cursors{
+		{ "m_common_c.cur", __MOUSE_POINTER_DEFAULT__ },
+		{ "m_common.cur", __MOUSE_POINTER_DEFAULTCLICK__ },
+	};
+
+	for(const auto& item: cursors) {
+		char filePath[255];
+		snprintf(filePath, sizeof(filePath), "%s/%s", cursorFolder, item.filename.c_str());
+		g_hCursor[item.id] = LoadCursorFromFile(filePath);
+	}
 }
 
 
@@ -906,6 +900,9 @@ BOOL InitGame()
 
 	g_fBGMVolume = 0.8;
 	g_fEffectVolume = 0.7;
+
+	LoadCursorDoIt();
+	ChangeCursor(__MOUSE_POINTER_DEFAULT__);
 
 	return TRUE;
 }
@@ -1725,7 +1722,8 @@ IDIFontObject* GetFont()
 BOOL CreateFont()
 {
 	memset(g_pFont, 0, sizeof(g_pFont));
-	
+	auto fontFace = "Verdana";
+
 	LOGFONT LogFont;
 	LogFont.lfHeight			= -12;
 	LogFont.lfWidth				= 0;
@@ -1736,34 +1734,14 @@ BOOL CreateFont()
 	LogFont.lfUnderline			= 0;
 	LogFont.lfStrikeOut			= 0;
 
-#if IS_JAPAN_LOCALIZING()
-	LogFont.lfCharSet			= SHIFTJIS_CHARSET;
-#elif IS_KOREA_LOCALIZING()
-	LogFont.lfCharSet			= HANGUL_CHARSET;	
-#elif IS_CHINA_LOCALIZING()
-	LogFont.lfCharSet			= GB2312_CHARSET;
-#elif IS_TAIWAN_LOCALIZING()
-	LogFont.lfCharSet			= CHINESEBIG5_CHARSET;
-#else
 	LogFont.lfCharSet			= DEFAULT_CHARSET;
-#endif
 		
 	LogFont.lfOutPrecision		= 0;
 	LogFont.lfClipPrecision		= 0;
 	LogFont.lfQuality			= PROOF_QUALITY;
 	LogFont.lfPitchAndFamily	= 0;
 
-#if IS_JAPAN_LOCALIZING()
-	lstrcpy(LogFont.lfFaceName,"MS PGothic");
-#elif IS_KOREA_LOCALIZING()
-	lstrcpy(LogFont.lfFaceName,"±¼¸²Ã¼");
-#elif IS_CHINA_LOCALIZING()
-	lstrcpy(LogFont.lfFaceName,"Mingliu");
-#elif IS_TAIWAN_LOCALIZING()
-	lstrcpy(LogFont.lfFaceName,"Mingliu");
-#else
-	lstrcpy(LogFont.lfFaceName,"Courier New");
-#endif 
+	lstrcpy(LogFont.lfFaceName, fontFace);
 
 	DWORD dwFlag = D3DX_FONT;			
 
@@ -1787,37 +1765,12 @@ BOOL CreateFont()
 	LogFont.lfItalic			= 0;
 	LogFont.lfUnderline			= 0;
 	LogFont.lfStrikeOut			= 0;
-
-#if IS_JAPAN_LOCALIZING()
-	LogFont.lfCharSet			= SHIFTJIS_CHARSET;
-#elif IS_KOREA_LOCALIZING()
-	LogFont.lfCharSet			= HANGUL_CHARSET;	
-#elif IS_CHINA_LOCALIZING()
-	LogFont.lfCharSet			= GB2312_CHARSET;
-#elif IS_TAIWAN_LOCALIZING()
-	LogFont.lfCharSet			= CHINESEBIG5_CHARSET;
-#else
 	LogFont.lfCharSet			= DEFAULT_CHARSET;
-#endif
-
 	LogFont.lfOutPrecision		= 0;
 	LogFont.lfClipPrecision		= 0;
 	LogFont.lfQuality			=  PROOF_QUALITY;
 	LogFont.lfPitchAndFamily	= 0;
 
-// __deepdark	
-#if IS_JAPAN_LOCALIZING()
-	lstrcpy(LogFont.lfFaceName,"MS PGothic");
-#elif IS_KOREA_LOCALIZING()
-	lstrcpy(LogFont.lfFaceName,"±¼¸²Ã¼");
-#elif IS_CHINA_LOCALIZING()
-	lstrcpy(LogFont.lfFaceName,"Mingliu");
-#elif IS_TAIWAN_LOCALIZING()
-	lstrcpy(LogFont.lfFaceName,"Mingliu");
-#else
-	lstrcpy(LogFont.lfFaceName,"Courier New");
-#endif 
-// __deepdark
 
 	dwFlag = D3DX_FONT;
 	
@@ -1834,6 +1787,13 @@ BOOL CreateFont()
 		return FALSE;		
 
 	g_hFont = CreateFontIndirect(&LogFont);
+
+
+	LogFont.lfHeight = 30;
+	LogFont.lfWidth = 0;
+
+	verdanaBIG = g_pRenderer->CreateFontObject(&LogFont, D3DX_FONT);
+
 	return TRUE;
 }
 

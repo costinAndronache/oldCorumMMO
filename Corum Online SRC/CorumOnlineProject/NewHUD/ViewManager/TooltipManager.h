@@ -14,7 +14,7 @@ namespace NewInterface {
 		using InfoLines = std::vector<InfoLine>;
 		using TooltipCreateFn = std::function<InfoLines(TooltipObjectID)>;
 		TooltipManager(
-			TooltipLayer* layer,
+			std::shared_ptr<TooltipLayer> layer,
 			TooltipCreateFn createFn
 		);
 
@@ -23,7 +23,7 @@ namespace NewInterface {
 		void clearAllTooltips();
 	private:
 		TooltipCreateFn _createFn;
-		TooltipLayer* _layer;
+		std::shared_ptr<TooltipLayer> _layer;
 		std::map<TooltipObjectID, TooltipLayer::Handle> _currentDisplayedTooltips;
 
 		TooltipLayer::Handle currentInfoTooltipFor(TooltipObjectID);

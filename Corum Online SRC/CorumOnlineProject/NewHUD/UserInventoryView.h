@@ -14,18 +14,17 @@ namespace NewInterface {
 
 		void onClose(EventHandler handler) { _onCloseHandler = handler; }
 
-
 		// must replace later with interfaces with only the update methods
-		GenericItemsContainerView* equipItemsView() { return _equipItemsView; }
-		GroupedItemInventoryView* groupedInventoryView() { return _groupedInventoryView; }
+		std::shared_ptr<GenericItemsContainerView> equipItemsView() { return _equipItemsView; }
+		std::shared_ptr<GroupedItemInventoryView> groupedInventoryView() { return _groupedInventoryView; }
 
-		DisplacementHandleRenderable* displacementHandle() { return _displacementHandle; }
+		std::shared_ptr<DisplacementHandleRenderable> displacementHandle() { return _displacementHandle; }
 	private:
-		DisplacementHandleRenderable* _displacementHandle;
-		GenericItemsContainerView* _equipItemsView;
-		GroupedItemInventoryView* _groupedInventoryView;
-		CustomUI::Button* _closeButton;
-		CustomUI::SingleLineLabel* _titleLabel;
+		std::shared_ptr<DisplacementHandleRenderable> _displacementHandle;
+		std::shared_ptr<GenericItemsContainerView> _equipItemsView;
+		std::shared_ptr<GroupedItemInventoryView> _groupedInventoryView;
+		std::shared_ptr<CustomUI::Button> _closeButton;
+		std::shared_ptr<CustomUI::SingleLineLabel> _titleLabel;
 
 		EventHandler _onCloseHandler;
 	};

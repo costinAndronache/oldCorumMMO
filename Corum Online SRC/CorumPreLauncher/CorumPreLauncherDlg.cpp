@@ -118,14 +118,14 @@ void CCorumPreLauncherDlg::setupFromStoredPreferences() {
 }
 
 void CCorumPreLauncherDlg::storeCurrentPreferences() {
-	auto prefs = CorumPreferences::Preferences();
-	prefs.storeWindowMode(_windowModeCheck.GetCheck());
+	CorumPreferences::Preferences* prefs = Preferences::buildFromFile(Preferences::defaultFileName());
+	prefs->storeWindowMode(_windowModeCheck.GetCheck());
 	auto currentSelection = _resolutionsList.GetCurSel();
-	prefs.storeResolution(
+	prefs->storeResolution(
 		(_resolutionsListModels.begin() + currentSelection)->resolution
 	);
 
-	prefs.serializeToFile(Preferences::defaultFileName());
+	prefs->serializeToFile(Preferences::defaultFileName());
 }
 
 std::vector<CCorumPreLauncherDlg::ResolutionsListItemModel> CCorumPreLauncherDlg::resolutionsListModels() {

@@ -10,23 +10,23 @@ GenericItemView::GenericItemView(Rect frameInParent, CustomUI::SpriteModel under
 	if (underlay.sprite) {
 		insets = { 2, 2, 2, 2 };
 		registerChildRenderable<SpriteRenderable>([=]() {
-			return new SpriteRenderable(bounds(), underlay);
+			return std::make_shared<SpriteRenderable>(bounds(), underlay);
 		});
 	}
 
 	_button = registerChildRenderable<Button>([=]() {
-		return new Button(Button::Sprites::allZero, bounds());
+		return std::make_shared<Button>(Button::Sprites::allZero, bounds());
 	});
 
 	const auto labelFittedHeight = SingleLineLabel::fittedSize("100").height;
 
-	const auto labelFrame = bounds().withInsets(insets)
+	auto labelFrame = bounds().withInsets(insets)
 		.withHeight(20)
 		.fromMaxYOrigin(-3);
 
 	_instanceCountLabel = registerChildRenderable<SingleLineLabel>([=]() {
-		return new SingleLineLabel(
-			labelFrame, { Color::white, nullptr }, ""
+		return std::make_shared<SingleLineLabel>(
+			labelFrame, SingleLineLabel::Appearance::defaultAppearance(), ""
 		);
 	});
 }
@@ -40,7 +40,7 @@ GenericItemsContainerView::GenericItemsContainerView(CustomUI::Rect frameInParen
 	_appearance = appearance;
 
 	_matrixContainer = registerChildRenderable<MatrixContainer>([=]() {
-		return new MatrixContainer(
+		return std::make_shared<MatrixContainer>(
 			bounds(),
 			_appearance
 		);
@@ -90,7 +90,7 @@ void GenericItemsContainerView::updateWithItems(
 	_matrixContainer->rebuild<ItemWithUnderlay>(
 		items,
 		[=](ItemWithUnderlay item, int index, Rect frame) {
-		auto result = new GenericItemView(frame, item.itemUnderlaySprite);
+		auto result = std::make_shared<GenericItemView>(frame, item.itemUnderlaySprite);
 
 		const auto q = item.item.GetQuantity();
 		if (q > 1) {

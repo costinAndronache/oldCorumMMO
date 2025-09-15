@@ -168,10 +168,10 @@ private:
 	DWORD					m_dwCount;
 
 public:
-	AppliedSkill*				CreateMagicArray(BYTE bSkillKind, VECTOR3* vecStart, BOOL bOwn);	// 마법을 사용할때 마법원 그리기.
+	AppliedSkill*				CreateMagicArray(BYTE bSkillKind, const VECTOR3* vecStart, BOOL bOwn);	// 마법을 사용할때 마법원 그리기.
 	void					SetSkillStatusUserUser(CUser* pTargetUser, BYTE bSkillKind);
 	void					SendSkillStatusUserUser();
-	BOOL					CanSkillBeCastAtPosition(BYTE bSkillKind, VECTOR3* vecTarget);
+	BOOL					CanSkillBeCastAtPosition(BYTE bSkillKind, const VECTOR3* vecTarget);
 	AppliedSkill*				CreateGXObject(char *szFile, BOOL bOwn, WORD wChrNum);
 	AppliedSkill*				CreateStatusEffect(BYTE bSkillKind, BYTE bJoint, BOOL bOwn);
 	void					SetSkillStatusUserMon(CMonster* pMonster, BYTE bSkillKind);
@@ -181,14 +181,16 @@ public:
 	void					AttachLight(AppliedSkill* pEffectDesc, BYTE bLightNum, void(*LightFunc)(AppliedSkill*));
 	void					DetachLight(AppliedSkill* pEffectDesc);
 		
-	void					Init(BOOL bChk);			// 초기화
-	void					LoadScript(BOOL bChk);		// 스크립트 파일을 읽어 와라.
+	void					Init(BOOL loadJointsForEffects);			// 초기화
+	void					LoadScript(BOOL loadJointsForEffects);		// 스크립트 파일을 읽어 와라.
 
 	int						GetEffectStatusPostion(BYTE bID)		{	return m_Effect[bID].GetEffectPosition();			}
 	BYTE					GetSkillMasteryKind(BYTE bSkillKind)	{	return BYTE(bSkillKind/30*30+__SKILL_MANAMASTERY__);}
 	Effect*					GetEffectInfo(BYTE bSkillID)			{	return &m_Effect[bSkillID];							}
 	
-~EffectLayer(){};
+	~EffectLayer(){
+		printf("\nEFFECT LAYER DESTROYED!!!");
+	};
 };
 
 

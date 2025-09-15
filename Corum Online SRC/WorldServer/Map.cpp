@@ -3,7 +3,7 @@
 #include "Section.h"
 #include "OwnServer.h"
 #include <crtdbg.h>
-
+#include "../BaseLibrary/Utilities.h"
 
 CorumCMap*	g_pMap[ MAX_WORLD_NUM_PER_SERVER ] = {0,};
 DWORD	g_dwCurLandNum = 0; 
@@ -29,7 +29,7 @@ void CorumCMap::Create(  DWORD dwID )
 {
 	if(ReadMap(dwID))
 	{
-		Log(LOG_JUST_DISPLAY, "@ Worldmap file read Successfully!");
+		Log(LOG_JUST_DISPLAY, "@ Worldmap file read Successfully, filename: %d!", dwID);
 	}
 	else
 	{
@@ -50,6 +50,16 @@ void CorumCMap::Destroy()
 	}
 }
 
+std::string CorumCMap::debugDescription() {
+	return Utilities::debugDescriptionMatrix<int>(
+		(int)m_dwTileNumHeight, (int)m_dwTileNumWidth, 
+		[=](int i, int j) {
+			auto tile = GetTileByIndexes(j, i);
+			return tile->wAttr.uAttr;
+		}, 
+		true
+	);
+}
 
 //-----------------------------------------------------------------------------
 // 속성 파일을 읽어드린다. 
@@ -71,7 +81,7 @@ BOOL CorumCMap::ReadMap(DWORD dwID)
 		return FALSE;
 	}
 	
-	DWORD dwTileSize, dwObjNum;
+	DWORD dwObjNum;
 			
 	//Read XTileMany				
 	bResult = ReadFile(hFile, &m_dwTileNumWidth, sizeof(m_dwTileNumWidth), &dwRead, NULL);
@@ -179,7 +189,7 @@ lb_set:
 //-----------------------------------------------------------------------------
 // 타일 인덱스 좌표로 타일 포인터를 구함 
 //-----------------------------------------------------------------------------
-MAP_TILE* CorumCMap::GetMap(DWORD dwX, DWORD dwZ)
+MAP_TILE* CorumCMap::GetTileByIndexes(DWORD dwX, DWORD dwZ)
 {
 	if( dwX >= m_dwTileNumWidth || dwZ >= m_dwTileNumHeight )	
 		return NULL;
@@ -190,12 +200,25 @@ MAP_TILE* CorumCMap::GetMap(DWORD dwX, DWORD dwZ)
 //-----------------------------------------------------------------------------
 // 좌표로 타일 포인터를 구함. 
 //-----------------------------------------------------------------------------
-MAP_TILE* CorumCMap::GetTile(float fx, float fz)
+MAP_TILE* CorumCMap::GetTileBy3DPosition(float fx, float fz)
 {
+	// The origin of the  map ( {x: 0, z: 0} is at the bottom-left corner. 
+	// But in the ttb file the tile data at [0, 0] is for the top-left tile 
+
 	if(fx < 0 || fz < 0)	return NULL;
 
-	DWORD x = (DWORD)( fx / TILE_WIDTH );
-	DWORD z = (DWORD)( fz / TILE_HEIGHT );
+	DWORD x = (DWORD)( fx / dwTileSize );
+	DWORD zFlipped = (DWORD)( fz / dwTileSize );
 	
-	return GetMap(x, z);
+	return GetTileByIndexes(x, (m_dwTileNumHeight - 1) - zFlipped);
+}
+
+TileIndexes CorumCMap::indexesFor3DPosition(float fz, float fx) {
+	DWORD x = (DWORD)( fx / dwTileSize );
+	DWORD zFlipped = (DWORD)( fz / dwTileSize );
+
+	return {
+		((int)m_dwTileNumHeight - 1) - (int)zFlipped,
+		(int)x
+	};
 }

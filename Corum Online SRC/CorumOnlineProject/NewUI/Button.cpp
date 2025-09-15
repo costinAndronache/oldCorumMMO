@@ -23,7 +23,7 @@ Button::Button(Sprites sprites, LabelModel labelModel, Rect frameInParent): _spr
 	auto labelFrame = bounds();
 
 	_label = registerChildRenderable<SingleLineLabel>([=]() {
-		return new SingleLineLabel(labelFrame, labelModel.appearance, labelModel.text);
+		return std::make_shared<SingleLineLabel>(labelFrame, labelModel.appearance, labelModel.text);
 	});
 	_label->updateRenderingModeToCentered();
 
@@ -31,6 +31,12 @@ Button::Button(Sprites sprites, LabelModel labelModel, Rect frameInParent): _spr
 
 void Button::updateSpriteModelTo(Sprites newModel) {
 	_sprites = newModel;
+}
+
+void Button::processKeyDown(WPARAM wparam, LPARAM lparam) {
+	if(_currentMouseState == MouseState::hovering && _onKeyDown) {
+		_onKeyDown(wparam, lparam);
+	}
 }
 
 void Button::onMouseStateChange(MouseState newState, MouseState oldState, Point) {

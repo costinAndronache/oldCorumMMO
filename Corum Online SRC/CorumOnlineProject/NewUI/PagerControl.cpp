@@ -34,15 +34,15 @@ PagerControl::PagerControl(Rect frameInParent, Appearance appearance):
 		.withX(labelDedidcatedArea.maxX());
 
 	_previousPageBtn = registerChildRenderable<Button>([=]() {
-		return new Button(appearance.previousPageBtnSprites, prevPageBtnFrame);
+		return std::make_shared<Button>(appearance.previousPageBtnSprites, prevPageBtnFrame);
 	});
 
 	_label = registerChildRenderable<SingleLineLabel>([=]() {
-		return new SingleLineLabel(labelFrame, appearance.labelAppearance, "");
+		return std::make_shared<SingleLineLabel>(labelFrame, appearance.labelAppearance, "");
 	});
 
 	_nextPageBtn = registerChildRenderable<Button>([=]() {
-		return new Button(appearance.nextPageBtnSprites, nextPageBtnFrame);
+		return std::make_shared<Button>(appearance.nextPageBtnSprites, nextPageBtnFrame);
 	});
 
 	_previousPageBtn->onClickEndLEFT([=]() {

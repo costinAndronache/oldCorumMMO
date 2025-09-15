@@ -2,23 +2,32 @@
 
 using namespace CustomUI;
 
-DragNDropSystem::DragNDropSystem(DragNDropSystemRenderer* renderer, SoundLibrary* soundLibrary) {
+DragNDropSystem::DragNDropSystem(
+	DragNDropSystemRenderer* renderer, 
+	SoundLibrary* soundLibrary
+) {
 	_renderer = renderer;
 	_soundLibrary = soundLibrary;
 }
 
 void DragNDropSystem::registerRoute(
-	DragNDropSender* sender,
-	std::vector<DragNDropReceiver*> allowedReceivers,
+	std::shared_ptr<DragNDropSender> sender,
+	std::vector<std::shared_ptr<DragNDropReceiver>> allowedReceivers,
 	std::function<void(Rect globalFrameOnEnd, std::set<unsigned int> matchedReceiversIndexes)> onRouteMatch,
 	std::function<void()> onNoRouteMatched
 ) {
+	auto weakThis = weak_from_this();
 
-	sender->onLeftMouseDragStart([=](Renderable* avatar, Rect globalFrameStart) {
+	sender->onLeftMouseDragStart(
+		[weakThis, allowedReceivers, onRouteMatch, onNoRouteMatched]
+		(std::shared_ptr<Renderable> avatar, Rect globalFrameStart) {
+		auto tthis = weakThis.lock();
+		if(!tthis) { return; }
+
 		avatar->updateFrameInParent(globalFrameStart);
-		_soundLibrary->playItemMousePickUp();
-
-		_renderer->renderOnMouseCursorAvatar(
+		tthis->_soundLibrary->playItemMousePickUp();
+		 
+		tthis->_renderer->renderOnMouseCursorAvatar(
 			avatar,
 			[=](Rect avatarCurrentGlobalFrame) {
 				std::set<unsigned int> foundReceiversIndexes;
@@ -37,7 +46,7 @@ void DragNDropSystem::registerRoute(
 					onRouteMatch(avatarCurrentGlobalFrame, foundReceiversIndexes);
 				}
 
-				_renderer->clearCurrentMouseCursorAvatar();
+				tthis->_renderer->clearCurrentMouseCursorAvatar();
 			}
 		);
 	});

@@ -12,71 +12,75 @@ namespace NewInterface {
 	public:
 		DragNDropManager(
 			CMainUser*, 
-			SharedNetwork*, 
-			CustomUI::DragNDropSystem*,
+			std::shared_ptr<SharedNetwork>, 
+			std::shared_ptr<CustomUI::DragNDropSystem>,
 			SoundLibrary*
 		);
 
 		void setupRoutes(
-			BeltManager* belt,
-			UserInventoryManager* userItemsInventory,
-			EquipItemsManager* equipItems
+			std::shared_ptr<BeltManager> belt,
+			std::shared_ptr<UserInventoryManager> userItemsInventory,
+			std::shared_ptr<EquipItemsManager> equipItems
 		);
 
 	private:
 		CMainUser* _mainUser;
-		SharedNetwork* _network;
+		std::shared_ptr<SharedNetwork>  _network;
 		SoundLibrary* _soundLibrary;
-		CustomUI::DragNDropSystem* _dragNDropSystem;
+		std::shared_ptr<CustomUI::DragNDropSystem> _dragNDropSystem;
 
 		void setupRoutesFromBelt(
-			BeltManager* fromBelt,
-			UserInventoryManager* toUserItemsInventory
+			std::shared_ptr<BeltManager> fromBelt,
+			std::shared_ptr<UserInventoryManager> toUserItemsInventory
 		);
 
 		void setupRoutesFromUserInventory(
-			UserInventoryManager* fromUserItemsInventory,
-			BeltManager* toBelt,
-			EquipItemsManager* toEquipItems
+			std::shared_ptr<UserInventoryManager> fromUserItemsInventory,
+			std::shared_ptr<BeltManager> toBelt,
+			std::shared_ptr<EquipItemsManager> toEquipItems
 		);
 
 		void setupRoutesFromEquipInventory(
-			EquipItemsManager* fromEquipItems,
-			UserInventoryManager* toInventory
+			std::shared_ptr<EquipItemsManager> fromEquipItems,
+			std::shared_ptr<UserInventoryManager> toInventory
 		);
 
-		void swapBeltItems(BeltManager* belt, CustomUI::Rect dragNDropEndFrame);
+		void swapBeltItems(
+			std::shared_ptr<BeltManager> belt, 
+			CustomUI::Rect dragNDropEndFrame
+		);
+
 		void moveFromBeltToSmallItemsInventory(
-			BeltManager* belt,
-			UserInventoryManager* userInventory,
+			std::shared_ptr<BeltManager> belt,
+			std::shared_ptr<UserInventoryManager> userInventory,
 			CustomUI::Rect dragNDropEndFrame
 		);
 
 		void swapUserInventoryITems(
-			UserInventoryManager* inv,
+			std::shared_ptr<UserInventoryManager> inv,
 			CustomUI::Rect dragNDropEndFrame
 		);
 
 		void moveFromUserInventoryToBelt(
-			UserInventoryManager* inv,
-			BeltManager* belt,
+			std::shared_ptr<UserInventoryManager> inv,
+			std::shared_ptr<BeltManager> belt,
 			CustomUI::Rect dragNDropEndFrame
 		);
 
 		void moveFromUserInventoryToEquip(
-			UserInventoryManager* inv,
-			EquipItemsManager* equipItems,
+			std::shared_ptr<UserInventoryManager> inv,
+			std::shared_ptr<EquipItemsManager> equipItems,
 			CustomUI::Rect dragNDropEndFrame
 		);
 
 		void moveFromEquipToItemInventory(
-			EquipItemsManager* fromequipItems,
-			UserInventoryManager* toInventory,
+			std::shared_ptr<EquipItemsManager> fromequipItems,
+			std::shared_ptr<UserInventoryManager> toInventory,
 			CustomUI::Rect dragNDropEndFrame
 		);
 
-		void dropOnTileFromBelt(BeltManager* belt);
-		void dropOnTileFromUserInventory(UserInventoryManager* inventory);
+		void dropOnTileFromBelt(std::shared_ptr<BeltManager> belt);
+		void dropOnTileFromUserInventory(std::shared_ptr<UserInventoryManager> inventory);
 	};
 }
 

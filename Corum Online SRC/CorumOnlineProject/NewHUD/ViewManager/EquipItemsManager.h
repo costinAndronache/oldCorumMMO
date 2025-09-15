@@ -10,14 +10,14 @@ namespace NewInterface {
 
 	public:
 		EquipItemsManager(
-			GenericItemsContainerView* managedView,
-			TooltipLayer* toolTipLayer,
-			TooltipHelper* toolTipHelper
+			std::shared_ptr<GenericItemsContainerView> managedView,
+			std::shared_ptr<TooltipLayer> toolTipLayer,
+			std::shared_ptr<TooltipHelper> toolTipHelper
 		);
 
 		void updateWithItems(const CItem equipVector[MAX_EQUIP_POOL]);
 		void onLeftMouseDragStart(
-			std::function<void(CustomUI::Renderable*, CustomUI::Rect globalFrameStart)> handler) override {
+			std::function<void(std::shared_ptr<CustomUI:: Renderable>, CustomUI::Rect globalFrameStart)> handler) override {
 			_handler = handler;
 		}
 
@@ -28,12 +28,12 @@ namespace NewInterface {
 		int itemIndexForGlobalPoint(CustomUI::Point p) { return _managedView->itemIndexForGlobalPoint(p); }
 	private:
 		int _indexOnCurrentDragNDropItem;
-		GenericItemsContainerView* _managedView;
-		std::function<void(CustomUI::Renderable*, CustomUI::Rect globalFrameStart)> _handler;
+		std::shared_ptr<GenericItemsContainerView> _managedView;
+		std::function<void(std::shared_ptr<CustomUI:: Renderable>, CustomUI::Rect globalFrameStart)> _handler;
 
-		TooltipLayer* _toolTipLayer;
-		TooltipHelper* _toolTipHelper;
-		TooltipManager* _equipTooltipManager;
+		std::shared_ptr<TooltipLayer> _toolTipLayer;
+		std::shared_ptr<TooltipHelper> _toolTipHelper;
+		std::shared_ptr<TooltipManager> _equipTooltipManager;
 	};
 }
 

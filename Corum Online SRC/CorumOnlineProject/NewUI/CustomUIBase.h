@@ -22,6 +22,7 @@
 #define DARKGRAY(alpha)      D3DCOLOR_ARGB(alpha, 73, 73, 73)
 #define DARKERGRAY(alpha)    D3DCOLOR_ARGB(alpha, 31, 31, 31)
 
+
 namespace CustomUI {
 	struct Insets {
 		int top, bottom, left, right;
@@ -75,6 +76,13 @@ namespace CustomUI {
 		Rect centeredVerticallyWith(Rect other) const {
 			Rect result = {
 				{ origin.x,  other.midY() - (size.height / 2)}, size
+			};
+			return result;
+		}
+
+		Rect centeredHorizontallyWith(Rect other) const {
+			Rect result = {
+				{ other.midX() - (size.width/2),  origin.y}, size
 			};
 			return result;
 		}

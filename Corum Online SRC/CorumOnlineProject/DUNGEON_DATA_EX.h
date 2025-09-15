@@ -61,13 +61,13 @@ public:
 	WORD				GetLevel();								// 던전 레벨
 	WORD				GetUpgradeTime();						// 던전 업그레이드 시간
 	int					GetIdleTime();							// 공성전 할때까지의 휴식기간.
-	void				SetSiegeStartDestTime(DWORD dwTick);	// 공성전 될 시간 셋팅한다.
-	void				SetSiegeEndDestTime(DWORD dwTick);
-	BOOL				StartSiegeWarTime();					// 공성전 시작해도 되는가?
+	void				setNextSiegeWarTimeSTART(DWORD dwTick);	// 공성전 될 시간 셋팅한다.
+	void				setSiegeWarENDTime(DWORD dwTick);
+	BOOL				tryUpdateCurrentSiegeWarState();					// 공성전 시작해도 되는가?
 	BOOL				LevelUpgrade();							// 던전 레벨 업그레이드하기.
 	int					GetRemainTime(DWORD dwDestTime, DWORD dwCurTick, DWORD dwFlag);	// TIME_SEC, TIME_MIN, TIME_HOUR
 	
-	BOOL				IsConquer();
+	BOOL				isSiegeDungeon();
 	BOOL				IsVillage()const{ return (DUNGEON_TYPE_VILLAGE == m_byDungeonType);}//마을 맵이냐?: hwoarang 050202
 	BOOL				IsPathWay()const{ return (DUNGEON_TYPE_TUNNEL == m_byDungeonType);}//통로 맵이냐?: hwoarang 050202
 	bool				IsStadium()const{ return (DUNGEON_TYPE_MATCH_STATIDUM == m_byDungeonType);}//길드전 맵이냐?: hwoarang 050202

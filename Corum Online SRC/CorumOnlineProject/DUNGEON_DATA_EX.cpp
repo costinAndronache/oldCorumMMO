@@ -104,26 +104,26 @@ int	DUNGEON_DATA_EX::GetIdleTime()
 	return 60*1000*60*3;
 }
 
-void DUNGEON_DATA_EX::SetSiegeStartDestTime(DWORD dwTick)
+void DUNGEON_DATA_EX::setNextSiegeWarTimeSTART(DWORD dwTick)
 {
 	// 공성전 될 시간 셋팅한다.
 	m_bSiege = FALSE;
 	m_dwRemainSiegeStartTick = g_dwCurTick+dwTick;
 }
 
-void DUNGEON_DATA_EX::SetSiegeEndDestTime(DWORD dwTick)
+void DUNGEON_DATA_EX::setSiegeWarENDTime(DWORD dwTick)
 {
 	m_bSiege = TRUE;
 	m_dwRemainSiegeEndTick = g_dwCurTick+dwTick;
 }	
 
-BOOL DUNGEON_DATA_EX::StartSiegeWarTime()
+BOOL DUNGEON_DATA_EX::tryUpdateCurrentSiegeWarState()
 { // 공성전 시작해도 되는가?
 	if (m_bSiege == FALSE)	// 공성전 아닐때.
 	{
 		if (IsStartWarTime())
 		{
-			SetSiegeStartDestTime(GetIdleTime());
+			setNextSiegeWarTimeSTART(GetIdleTime());
 			
 			return TRUE;
 		}
@@ -132,7 +132,7 @@ BOOL DUNGEON_DATA_EX::StartSiegeWarTime()
 	{
 		if (IsEndWarTime())
 			//SetSiegeEndDestTime(m_wBattleTimeLimit*1000*60);
-			SetSiegeEndDestTime(60*1000*60);
+			setSiegeWarENDTime(60*1000*60);
 	}
 	
 	return FALSE;
@@ -191,7 +191,7 @@ int DUNGEON_DATA_EX::GetRemainTime(DWORD dwDestTime, DWORD dwCurTick, DWORD dwFl
 	return -1;
 }
 
-BOOL DUNGEON_DATA_EX::IsConquer()
+BOOL DUNGEON_DATA_EX::isSiegeDungeon()
 {
 	return (m_dwID >= 4000)  && (m_dwID < 5000);
 }

@@ -3,7 +3,7 @@
 
 #define __ownedByRenderable 
 namespace CustomUI {
-	class Renderable {
+	class Renderable: public std::enable_shared_from_this<Renderable> {
 	public:
 		enum class MouseButton { left, right};
 		enum class MouseState { hovering, leftButtonPressedInside, rightButtonPressedInside, none };
@@ -38,18 +38,21 @@ namespace CustomUI {
 
 		void updateFrameInParent(Rect newFrame) { _frameInParent = newFrame; }
 		void updateBackground(SpriteModel backgroundSprite) { _backgroundSprite = backgroundSprite; }
+
+		MouseState currentMouseState() const { return _currentMouseState; }
 		virtual ~Renderable() { deconstructAllChildren(); }
 	protected:
 		Renderable() {
+			_parent = nullptr;
+			_frameInParent = Rect::zero();
 			_currentMouseState = MouseState::none;
 			_isHidden = false;
-			_parent = nullptr;
 			_backgroundSprite = SpriteModel::zero;
 			_zIndexOffsetForce = 0;
 		}
 
 		Rect _frameInParent;
-		Renderable* _parent;
+		/*std::weak_ptr<*/Renderable* _parent;
 
 		MouseState _currentMouseState;
 
@@ -61,18 +64,18 @@ namespace CustomUI {
 		virtual bool swallowsMouseEvents() { return false; }
 
 		template<typename T>
-		T* __ownedByRenderable registerChildRenderable(std::function<T*()> creatingFn) {
-			T* result = creatingFn();
+		std::shared_ptr<T> registerChildRenderable(std::function<std::shared_ptr<T>()> creatingFn) {
+			auto result = creatingFn();
 			_childRenderables.push_back(result);
 			result->updateParentTo(this);
 			return result;
 		}
 
 		void deconstructAllChildren();
-		void deconstructChildrenWhere(std::function<bool(Renderable*)> eligibleToDeconstruct);
+		void deconstructChildrenWhere(std::function<bool(std::shared_ptr<Renderable>)> eligibleToDeconstruct);
 
 		int _zIndexOffsetForce;
-		std::vector<Renderable*> _childRenderables;
+		std::vector<std::shared_ptr<Renderable>> _childRenderables;
 
 		virtual void handleRenderableHierarchyUpdateEvent();
 	private:
@@ -80,7 +83,7 @@ namespace CustomUI {
 		void updateMouseState(MouseState newState, Point mouseGlobalCoords);
 		SpriteModel _backgroundSprite;
 
-		void updateParentTo(Renderable* parent); 
+		void updateParentTo(/*std::weak_ptr*/Renderable* parent); 
 	};
 
 }

@@ -245,7 +245,7 @@ void SetDBInfo()
 
 int main(int argc, char* argv[])
 {
-	static auto minidumper = new MiniDumper("LOGIN_CRASH");
+	static auto minidumper = new MiniDumper(L"LOGIN_CRASH");
 
 	if(!g_Local.LoadFromINI("./Local.ini"))// Local Info ¼ÂÆÃ : 050102 hwoarang
 	{

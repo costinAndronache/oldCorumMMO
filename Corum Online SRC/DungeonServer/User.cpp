@@ -1408,7 +1408,7 @@ void CUser::SendItemSkill(BYTE bFlag, BYTE bObjectTargetType, void* pObjectTarte
 					case ITEM_ATTR_DEAD_EXP_LOSS_DECREASE:
 						{
 							// 공성중일때는 없애라.
-							if (GetCurDungeon()->GetDungeonDataEx()->m_bSiege
+							if (GetCurDungeon()->GetDungeonDataEx()->inSiegeWarNow
 							|| m_sMatchDescInfo.m_bMatching	)// : 050111 hwoarang
 							{
 								bDetachItem = FALSE;
@@ -1939,7 +1939,7 @@ DUNGEON_JOIN_FAIL CUser::IsEnterDungeon()
 	if (GetLevel() > MAX_LEVEL)
 		return DUNGEON_JOIN_FAIL_NOT_MINMAX_LEVEL;
 
-	if (GetCurDungeon()->GetDungeonDataEx()->IsConquer())
+	if (GetCurDungeon()->GetDungeonDataEx()->isSiegeDungeon())
 	{
 		if (!GetCurDungeon()->GetDungeonDataEx()->IsDungeonOwner(this))
 		{
@@ -2620,7 +2620,7 @@ void CUser::ChangeGodMode(ENUM_GODMODE_STATUS eGodModeStatus)
 BOOL CUser::IsPKZone()
 {
 #ifndef	JAPAN_LOCALIZING
-	return (GetCurDungeon()->GetDungeonDataEx()->IsConquer() && GetCurLayerIndex()) || 
+	return (GetCurDungeon()->GetDungeonDataEx()->isSiegeDungeon() && GetCurLayerIndex()) || 
 			(!GetCurDungeon()->GetDungeonDataEx()->IsPathWay() && 
 			 !GetCurDungeon()->GetDungeonDataEx()->IsVillage() && 
 			 GetCurDungeon()->GetTotalLayer()-1 == GetCurLayerIndex());
@@ -4562,7 +4562,7 @@ BOOL CUser::IsChangeLayer(WORD wIndex_X, WORD wIndex_Z, BYTE bSpotNum) const
 
 		case DUNGEON_TYPE_CONQUER:
 			{
-				CUser* pOwner = g_pUserHash->GetData(pDungeon->m_dwOwnerIndex);
+				CUser* pOwner = g_pUserHash->GetData(pDungeon->ownerUserID);
 
 				// 위층 올라가는건 무사통과
 				if (!bSpotNum)
@@ -4572,7 +4572,7 @@ BOOL CUser::IsChangeLayer(WORD wIndex_X, WORD wIndex_Z, BYTE bSpotNum) const
 				else
 				{
 					//내려갈때만						
-					if (pDungeon->m_bSiege)
+					if (pDungeon->inSiegeWarNow)
 					{
 						// 공성중이고
 						if (!pLayer->GetMap()->m_bCPRemainCount && !pLayer->m_wCurMonster)
@@ -4583,8 +4583,8 @@ BOOL CUser::IsChangeLayer(WORD wIndex_X, WORD wIndex_Z, BYTE bSpotNum) const
 						else
 						{
 							if ((pDungeon->IsDungeonOwner(this)) ||
-								(pDungeon->m_dwOwnerGuildNum &&
-								GetCurDungeon()->GetDungeonDataEx()->m_dwOwnerGuildNum == m_dwGuildId) ||
+								(pDungeon->ownerGuildID &&
+								GetCurDungeon()->GetDungeonDataEx()->ownerGuildID == m_dwGuildId) ||
 								(pOwner && (pOwner->m_dwPartyId && pOwner->m_dwPartyId == m_dwPartyId) ))
 							{
 								bChangeLayer = TRUE;
@@ -5098,6 +5098,11 @@ void CUser::SetQueryUserInfo(char* pResult)
 	memcpy(&m_pBelt, pResult+dwOffset, sizeof(m_pBelt));
 	dwOffset+=sizeof(m_pBelt);
 	memcpy(&m_pwSkillLevel, pResult+dwOffset, sizeof(m_pwSkillLevel));
+	///
+	m_pwSkillLevel[__SKILL_WINDTALES__] = 65;
+	m_pwSkillLevel[__SKILL_WINDFORCE__] = 65;
+	m_pwSkillLevel[__SKILL_HEAL__] = 50;
+	///
 	dwOffset+=sizeof(m_pwSkillLevel);
 	memcpy(m_szGuildName, pResult+dwOffset, sizeof(m_szGuildName));
 	dwOffset+=sizeof(m_szGuildName);
@@ -5183,7 +5188,7 @@ void CUser::SetPartyID(DWORD dwPartyID)
 
 		// 던전 주인놈이 파티 맺었다면	이놈과 파티 맺은놈들이 혹시나 먼저 던전에 들어가서
 		// 공격자로 되있을것이니 같은 파티원들 방어자로 변환해줘라.
-		if (GetID() == GetCurDungeon()->GetDungeonDataEx()->m_dwOwnerIndex && dwPartyID)
+		if (GetID() == GetCurDungeon()->GetDungeonDataEx()->ownerUserID && dwPartyID)
 		{
 			Node<CUser>* pnode = GetCurDungeon()->GetPartyUserHash()->GetBucketHead(dwPartyID);
 

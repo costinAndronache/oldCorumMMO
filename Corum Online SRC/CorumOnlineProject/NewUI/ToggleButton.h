@@ -17,12 +17,12 @@ namespace CustomUI {
 
 		void onStateSwitch(StateSwitchHandler handler) { _stateSwitchHandler = handler; }
 	private:
-		void onButtonPress(Button* button);
-		void onButtonPressRelease(Button* button);
+		void onButtonPress(std::shared_ptr<Button> button);
+		void onButtonPressRelease(std::shared_ptr<Button> button);
 
 		void adjustButtonSprites(bool isToggled);
 
-		Button* _button;
+		std::shared_ptr<Button> _button;
 		Button::Sprites _sprites;
 
 		bool _isToggled;

@@ -189,7 +189,7 @@ public:
 	DWORD				__stdcall	GXOGetCurrentMaterialIndex(GXOBJECT_HANDLE gxh);
 	
 
-	void				__stdcall	GXOSetPosition(GXOBJECT_HANDLE gxh,VECTOR3* pv3Pos, BOOL bDoInterpolation);
+	void				__stdcall	GXOSetPosition(GXOBJECT_HANDLE gxh, const VECTOR3* pv3Pos, BOOL bDoInterpolation);
 	void				__stdcall	GXOMovePosition(GXOBJECT_HANDLE gxh,VECTOR3* pv3Pos);
 	void				__stdcall	GXOGetPosition(GXOBJECT_HANDLE gxh,VECTOR3* pv3Pos);
 	void				__stdcall	GXOSetDirection(GXOBJECT_HANDLE gxh,VECTOR3* pv3Axis,float fRad);

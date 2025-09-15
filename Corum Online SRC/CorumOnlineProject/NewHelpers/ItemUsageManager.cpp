@@ -1,16 +1,6 @@
 #include "../InitGame.h"
 #include "ItemUsageManager.h"
 
-
-ItemUsageManager* ItemUsageManager::sharedInstance() {
-	static ItemUsageManager* _shared = nullptr;
-	if (!_shared) {
-		_shared = new ItemUsageManager();
-	}
-
-	return _shared;
-}
-
 ItemUsageManager::ItemUsageManager() {}
 
 bool ItemUsageManager::tryUseBeltItem(CItem item, int index) {

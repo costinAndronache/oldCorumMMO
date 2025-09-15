@@ -27,11 +27,12 @@ namespace NewInterface {
 
 		void setHiddenStateForItemAtIndex(int index, Tab tab, bool isHidden);
 	private:
-		CustomUI::RadioButtonGroup* _radioButtonGroup;
-		ItemInventoryView *_smallItemsInventory, *_largeItemsInventory;
+		std::shared_ptr<CustomUI::RadioButtonGroup> _radioButtonGroup;
+		std::shared_ptr<ItemInventoryView> _smallItemsInventory;
+		std::shared_ptr<ItemInventoryView> _largeItemsInventory;
 		Tab _activeTab;
 		ActiveTabSwitchHandler _tabSwitchHandler;
-		ItemInventoryView* inventoryViewFor(Tab);
+		std::shared_ptr<ItemInventoryView> inventoryViewFor(Tab);
 	};
 }
 

@@ -175,7 +175,7 @@ struct ITEM_LAND
 };
 
 
-class DECLSPECIFIER CItem
+class COMMONSERVERDECLSPECIFIER CItem
 {
 public:
 	static CItem nullItem();

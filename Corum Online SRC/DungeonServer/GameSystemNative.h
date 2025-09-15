@@ -35,4 +35,5 @@ BOOL	MakeCItemClass( CItem* pItem, WORD wBaseItemID, const BASEMONSTER* const pB
 BOOL	AppearItem(CUser* pUser, const CItem* pItem, BYTE byCount, DWORD dwMoney,  BOOL bRandom = TRUE, float fX = 0, float fY = 0, float fZ = 0, DWORD dwOwnerLimitSec = 10, CUser* pItemOwerUser = NULL);
 void	MakeItemStruct( ITEM_SERVER* pMakeItem, CItem*	pItem, VECTOR2*	pv2Pos, DWORD dwSection, DWORD dwOwnerIndex, DWORD dwPartyIndex, DWORD dwRemoveFrame, DWORD dwOwnerFrame, DWORD dwOwnerLimitSec = 10 /* Àç¿ø 050329*/ );
 void	CreateItemByMonster( CMonster* pMonster, CUser* pUser );
+void CreateItemByMonsterDEBUG( CMonster* pMonster, CUser* pUser );
 void	CreateItemByGM( CUser* pUser, DWORD dwBaseItemID );

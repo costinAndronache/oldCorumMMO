@@ -11,10 +11,10 @@ namespace NewInterface {
 		public CustomUI::DragNDropSender {
 	public:
 		UserInventoryManager(
-			GroupedItemInventoryView* userInventoryView, 
-			ItemUsageManager* itemUsageManager,
-			TooltipLayer* toolTipLayer,
-			TooltipHelper* toolTipHelper,
+			std::shared_ptr<GroupedItemInventoryView> userInventoryView, 
+			std::shared_ptr<ItemUsageManager> itemUsageManager,
+			std::shared_ptr<TooltipLayer> toolTipLayer,
+			std::shared_ptr<TooltipHelper> toolTipHelper,
 			SoundLibrary* soundLibrary
 		);
 
@@ -24,7 +24,7 @@ namespace NewInterface {
 		);
 
 		void onLeftMouseDragStart(
-			std::function<void(CustomUI::Renderable*, CustomUI::Rect globalFrameStart)> handler) override {
+			std::function<void(std::shared_ptr<CustomUI:: Renderable>, CustomUI::Rect globalFrameStart)> handler) override {
 			_handler = handler;
 		}
 
@@ -34,14 +34,14 @@ namespace NewInterface {
 		CustomUI::Rect currentGlobalFrame() override { return _managedInventoryView->globalFrame(); }
 	private:
 		GroupedItemInventoryView::IndexResult _indexOnCurrentDragNDropItem;
-		GroupedItemInventoryView* _managedInventoryView;
-		std::function<void(CustomUI::Renderable*, CustomUI::Rect globalFrameStart)> _handler;
-		ItemUsageManager* _itemUsageManager;
+		std::shared_ptr<GroupedItemInventoryView> _managedInventoryView;
+		std::function<void(std::shared_ptr<CustomUI:: Renderable>, CustomUI::Rect globalFrameStart)> _handler;
+		std::shared_ptr<ItemUsageManager> _itemUsageManager;
 		
-		TooltipLayer* _toolTipLayer;
-		TooltipHelper* _toolTipHelper;
-		TooltipManager* _smallItemsTooltipManager;
-		TooltipManager* _largeItemsTooltipManager;
+		std::shared_ptr<TooltipLayer> _toolTipLayer;
+		std::shared_ptr<TooltipHelper> _toolTipHelper;
+		std::shared_ptr<TooltipManager> _smallItemsTooltipManager;
+		std::shared_ptr<TooltipManager> _largeItemsTooltipManager;
 		SoundLibrary* _soundLibrary;
 	};
 }

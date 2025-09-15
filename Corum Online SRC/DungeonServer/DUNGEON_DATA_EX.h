@@ -15,7 +15,7 @@ class CUser;
 const DWORD EVENT_DUNGEON_RESET_DELAY = 10000;
 
 
-class DUNGEON_DATA_EX  : public DUNGEON_DATA
+class DUNGEON_DATA_EX  : public CZP_REQUEST_DUNGEON_INFO_DG_ResultRow
 {	
 	void				InitializeOperationMode();		// 숙성중인지 컨버전 중인지..
 
@@ -59,7 +59,7 @@ public:
 	void				SetDefenseCount(BYTE byDefenseCount, BOOL bDB_Update);
 
 	BOOL				IsPathWay()const;
-	BOOL				IsConquer()const;
+	BOOL				isSiegeDungeon()const;
 	BOOL				IsVillage()const;
 	BOOL				IsStadium()const;//길드전 맵이냐?: hwoarang 050202
 	BOOL				IsEventDungeon()const;

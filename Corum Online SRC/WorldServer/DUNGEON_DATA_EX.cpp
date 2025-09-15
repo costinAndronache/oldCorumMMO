@@ -9,7 +9,7 @@
 
 DUNGEON_DATA_EX::DUNGEON_DATA_EX()
 {
-	memset((DUNGEON_DATA*)this, 0, sizeof(DUNGEON_DATA));
+	memset((CZP_QUERY_DUNGEON_INFO_WORLD_ResultRow*)this, 0, sizeof(CZP_QUERY_DUNGEON_INFO_WORLD_ResultRow));
 	m_pListSendToUser			= new CDugneonRefreshUserList;
 	m_dwRemainSiegeStartTick	= 0;
 	m_dwRemainSiegeEndTick		= 0;
@@ -73,10 +73,8 @@ DWORD DUNGEON_DATA_EX::GetEventLastActionTick()
 }
 
 
-void DUNGEON_DATA_EX::SetSiegeStartDestTime(DWORD dwTick)
+void DUNGEON_DATA_EX::setSiegeWarTimeSTART(DWORD dwTick)
 {
-	
-
 	// 공성전 될 시간 셋팅한다.
 	m_bSiege = FALSE;
 	m_dwRemainSiegeStartTick = g_dwCurTick + dwTick;
@@ -85,7 +83,7 @@ void DUNGEON_DATA_EX::SetSiegeStartDestTime(DWORD dwTick)
 }
 
 
-void DUNGEON_DATA_EX::SetSiegeEndDestTime(DWORD dwTick)
+void DUNGEON_DATA_EX::setSiegeWarTimeEND(DWORD dwTick)
 {
 
 	m_bSiege = TRUE;
@@ -124,7 +122,7 @@ void DUNGEON_DATA_EX::SendToUsers(char* pPacket, DWORD dwSize)
 void DUNGEON_DATA_EX::SendStartSiege()
 {
 	
-	SetSiegeEndDestTime(m_wBattleTimeLimit * 1000 * 60);
+	setSiegeWarTimeEND(m_wBattleTimeLimit * 1000 * 60);
 	
 	// 클라이언트에게 보내줘라.
 	WSTC_REFRESHEVENT_DUNGEON_STARTSIEGE packet;
@@ -141,12 +139,8 @@ void DUNGEON_DATA_EX::SendStartSiege()
 	}
 }
 
-
-void DUNGEON_DATA_EX::SendEndSiege(BYTE bDefenseSuccess)
-{
-
-	
-	SetSiegeStartDestTime( GetIdleTime() - (m_wBattleTimeLimit * 60 * 1000));//(주기 - 쟁타임)
+void DUNGEON_DATA_EX::SendEndSiege(BYTE bDefenseSuccess) {
+	setSiegeWarTimeSTART( GetIdleTime() - (m_wBattleTimeLimit * 60 * 1000));//(주기 - 쟁타임)
 		
 	// 유저에게 보내줘라.	
 	WSTC_REFRESHEVENT_DUNGEON_ENDSIEGE	packet;
@@ -191,7 +185,7 @@ void DUNGEON_DATA_EX::SetDefenseCount(BYTE byDefenseCount)
 }
 
 
-BOOL DUNGEON_DATA_EX::StartSiegeWarTime()
+BOOL DUNGEON_DATA_EX::tryStartWarOrEndCurrentWar()
 {
 	// 공성전 시작해도 되는가?
 	if (m_bSiege == FALSE)	
@@ -254,7 +248,7 @@ void DUNGEON_DATA_EX::SendRefreshOwner()
 	// 모든 유저에게 보내라.
 	WSTDS_DUNGEON_MESSAGE SendPacket;
 	memset(SendPacket.szMessage, 0, sizeof(SendPacket.szMessage));
-	wsprintf(SendPacket.szMessage, GetServerMessage(SERVER_MESSAGE_SIEGE_CONQUER), m_szOwner, m_szDungeonName);
+	wsprintf(SendPacket.szMessage, "%s now owns %s", m_szOwner, m_szDungeonName);
 	
 	SendPacket.wMsgLen			= WORD(strlen(SendPacket.szMessage) +1);
 	SendPacket.dwMessageColor	= 0xFF21DBFF;
@@ -419,7 +413,7 @@ void DUNGEON_DATA_EX::SetOwner(DWORD dwOwnerIndex, DWORD dwGuildID, char* pOwner
 
 
 // 던점 점령이 가능한가?	
-BOOL DUNGEON_DATA_EX::IsConquer()
+BOOL DUNGEON_DATA_EX::isSiegeDungeon()
 {
 	return (m_dwID >= 4000) && (m_dwID < 5000);
 }

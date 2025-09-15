@@ -8,7 +8,7 @@
 void DFOutputDebugString(LPCTSTR pFormat, ...);
 
 
-class DECLSPECIFIER DFSimpleXForm
+class COMMONSERVERDECLSPECIFIER DFSimpleXForm
 {
 #define MAX_KEY_LEN		32
 #define SIMPLE_BASE_KEY	"ù±Ü¨ïñÜÃù±ÜôÜ¨ãý"
@@ -29,7 +29,7 @@ private:
 };
 
 
-class DECLSPECIFIER DFXform
+class COMMONSERVERDECLSPECIFIER DFXform
 {
 	// for blowfish!
 	typedef struct 

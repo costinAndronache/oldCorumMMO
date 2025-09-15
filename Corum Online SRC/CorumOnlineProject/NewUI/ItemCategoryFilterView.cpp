@@ -33,11 +33,11 @@ ItemCategoryFilterView::ItemCategoryFilterView(CustomUI::Rect frameInParent, Cat
 	}
 
 	_radioButtonGroup = registerChildRenderable<RadioButtonGroup>([&]() {
-		return new RadioButtonGroup(models, bounds(), currentSelectedCategory);
+		return std::make_shared<RadioButtonGroup>(models, bounds(), currentSelectedCategory);
 	});
 
 	_radioButtonGroup->onActiveIndexUpdate([&](unsigned int index) {
-		radioButtonGroupToggledActiveButtonAt(_radioButtonGroup, index);
+		radioButtonGroupToggledActiveButtonAt(_radioButtonGroup.get(), index);
 	});
 }
 

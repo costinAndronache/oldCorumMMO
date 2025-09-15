@@ -7,6 +7,7 @@ enum SERVER_TYPE
 	SERVER_TYPE_WORLD					= 1,
 	SERVER_TYPE_DUNGEON					= 2,
 	SERVER_TYPE_VILLAGE					= 3,
+	SERVER_TYPE_ENDVALUE
 };
 
 
@@ -257,7 +258,6 @@ struct PARTY_FRIEND
 #define MAX_PASSWORD_REAL_LENGTH			16
 #define MAX_DUNGEON_NUM_PER_SERVERSET		1000// 맵 갯수 모자라지기 때문에 늘렸음: 050202 hwoarang 
 #define MAX_USER_PER_DUNGEON				4000
-#define MAX_SERVER_TYPE						4
 #define MAX_PACKET_NUM						256
 #define MAX_USER_CONNECTION					4000 
 #define MAX_RANK_REAL_NICKNAME_LENGTH		8
@@ -276,7 +276,7 @@ struct PARTY_FRIEND
 #define MAX_TILE_HEIGHT_NUM					192		// 한맵(던전 한층)당 가질수 있는 타일의 세로갯수 
 #define MAX_SECTION_NUM_PER_LAYER			150		// 한 층당 가질수 있는 최대 섹션 갯수 
 #define MAX_LAYER_PER_DUNGEON				20
-#define MAX_DUNGEON_PER_SERVER				30		// 한 서버가 가질수 있는 최대 던전 수 
+#define MAX_DUNGEON_PER_SERVER				2 * 30		// 한 서버가 가질수 있는 최대 던전 수 
 #define MAX_MOVE_SPOT_NUM					10
 #define MAX_START_SPOT_NUM					5
 

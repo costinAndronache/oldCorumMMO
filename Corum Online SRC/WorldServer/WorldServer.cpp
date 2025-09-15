@@ -350,7 +350,7 @@ void SetLocalData()
 
 int main(int argc, char* argv[])
 {
-	static auto minidumper = new MiniDumper("WORLD_CRASH");
+	static auto minidumper = new MiniDumper(L"WorldServerResult");
 	char dir[255];
 	GetCurrentDirectory(255, dir);
 	if(!g_Local.LoadFromINI(".\\Local.ini"))// Local Info ¼ÂÆÃ : 050102 hwoarang

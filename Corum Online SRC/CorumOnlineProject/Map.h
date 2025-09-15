@@ -61,7 +61,7 @@ class CorumCMap
 	
 protected:
 	char				m_szMapName[ MAX_MAP_NAME_LENGTH ];		
-
+	int					_layerID;
 public:
 	float				m_fMapXLength;
 	float				m_fMapZLength;
@@ -81,13 +81,15 @@ public:
 	BYTE				m_bCPRemainCount;		// 없애야 할 cp 갯수.
 	BOOL				SetTileOccupied( DWORD dwX, DWORD dwZ, BYTE attr, LPVOID pType );
 
-	MAP_TILE*			GetMap(DWORD dwX, DWORD dwZ);
+	MAP_TILE*			GetTileByIndexes(DWORD dwX, DWORD dwZ);
 	BOOL				SetMap(DWORD dwX, DWORD dwZ, MAP_TILE* pTile);
-	MAP_TILE*			GetTile(float fx, float fz);
+	MAP_TILE*			GetTileBy3DPosition(float fx, float fz);
 	
-	CorumCMap(DWORD dwWidth, DWORD dwHeight, float fTileSize);
+	std::string			debugDescription();
+	CorumCMap(DWORD dwWidth, DWORD dwHeight, float fTileSize, int layerID);
 	~CorumCMap();
 
+	int					layerID() const { return _layerID; }
 };
 
 

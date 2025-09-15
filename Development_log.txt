@@ -32,12 +32,15 @@ TRIVIA::
 - weight limit exceeded not correctly handled now; movement speed reduction not correctly applied
 
 - inform visually when the cast fails because of not enough cool points; 
-  + display the required coolpoints on each skill description
-    + display the user's current coolpoints numerically in the interface
+  + display the required coolpoints on each skill description [DONE]
+    + display the user's current coolpoints numerically in the interface [hmm]
 
-- fix the UI
+- fix the UI [mostly done]
 
-- sorceress' "fast cast" overdrive doesnt seem to do anything, must look into it
+- sorceress' "fast cast" overdrive doesnt seem to do anything, must look into it 
+
+- often some textures are not loaded (helam, kuelgard, Kiabronte, etc..)
+- drawing still has hiccups, in some areas it is even below 60fps; 
 
 -------------------------------------- FINDINGS --------------------------------------------
 
@@ -211,3 +214,142 @@ SKILLing is comprised of two phases:
       [TO DO] :: must display on the skill description the required cooldown points cost (dwCoolTime) + show the user's cooldown points numerically somewhere in the interface
   [BUG]
 
+
+
+
+================================================================
+
+Dungeon Siege time (duration)
+ + these properties seem to affect the times when the siege war is supposed to start + its duration: 
+  - m_dwPieceCoolTime :: the time (in milliseconds) it takes for the product to complete one evolution step;
+  - m_wBattleTimeLimit :: the time (in minutes) that a siege war is supposed to last;
+
+  - after a siege war ends, i.e. at time T_lastWarEnd (milliseconds, CPU time) the next siege war will start at:
+    - T_nextWarStart = T_lastWarEnd + [ m_dwPieceCoolTime - milliseconds(m_wBattleTimeLimit) ];
+     i.e. 
+       - if the product needs 30 minutes for one  evolution step 
+       - the last siege war just ended now, with war duration =  10 minutes 
+       - then the next siege war will start (from now) in 20 minutes 
+
+    - in other words, siege wars always happen during a product evolution step
+    + 
+    - siege wars always end at a (m_dwPieceCoolTime) multiple . 
+    
+Dungeon Siege production
+  + from what I recall, dungeons specify either a general range of products(i.e. `Bag`) or a specific product, (i.e. )
+
+  + struct DUNGEONPRODUCTIONITEMMINMAX { 	BYTE	byID; WORD	wItemIDMin; WORD	wItemIDMax; WORD	wItemIDDefault; }
+     + represents what a siege dungeon can produce;  
+        itemIDMin - itemIDMax is probably the range of item ids from which it selects to produce the final output;
+        wItemIDDefault - probably a placeholder value, ' 
+  
+  + there can only be a maximum of (#define		MAX_DUNGEON_PROPERTY 5) instances of this production data; 
+   + it is stored in an array of rows retrieved from the [Corum0].[DungeonProductionItemMinMax] table in order
+  + the dungeon data structs (worldserver, dungeonserver, client) all contain a `m_byProperty` which is an index into this array;
+  + 'm_wProduction' (MapInfo.Production) is a dynamic property on the dungeon data subclasses representing the selected id from the item id range (or the default item id) 
+    - when m_wProduction == wItemIDDefault it means the dungeon is in 'undecided product state' 
+  + 'm_byProductionCount' (MapInfo.ProductionCount) dynamic property representing the current evolution step; in the range ([0, 3])
+
+
+
+
+  + a siege dungeon can be in 3 states (`OperationType` in `MapInfo` table) {
+    	DUNGEON_OPERATIONTYPE_PRECOCIOUS = 0,
+	    DUNGEON_OPERATIONTYPE_PRODUCTION = 1,
+	    DUNGEON_OPERATIONTYPE_CONVERSION = 2,
+   }
+
+
+
+
+
+ at the end of a siege war this mode + the evolution step can change: 
+ seems like the order of state changes goes like this: (in case of a succesful defense, i.e. same owner before & after the war)
+   0.1 decrease the quantity of its current attached magic field array item, if any
+
+   1. if dungeon is in `undecided product state` with no evolution step i.e. (m_byProductionCount == 0 && m_wProduction == wItemIDDefault)
+      => then increment the evolution step (m_byProductionCount = 1) 
+        update mode to DUNGEON_OPERATIONTYPE_PRECOCIOUS
+
+   2.  if dungeon is in `undecided product state` with one evolution step i.e. (m_byProductionCount == 1 && m_wProduction == wItemIDDefault)
+      => then decide on what item to produce and reset the evolution (m_byProductionCount = 1; m_wProduction = decision())
+      update mode to DUNGEON_OPERATIONTYPE_PRECOCIOUS
+
+   3. if the production is decided 
+    IF the dungeon is in DUNGEON_OPERATIONTYPE_CONVERSION
+      ==> re-decide the production item id ; m_wProduction = decision()
+    ELSE
+     IF it has a magic field array attached
+       => update mode to  DUNGEON_OPERATIONTYPE_CONVERSION
+     ELSE 
+     => if the mode is still DUNGEON_OPERATIONTYPE_PRECOCIOUS then increment the evolution step counter ( but not beyond 3)
+     
+     => if the evolution counter is at the final step (3)
+         = > update mode to DUNGEON_OPERATIONTYPE_PRODUCTION
+
+  ======= special case if the dungeon has a magic field array item property ===========
+   - not really sure whats the deal with these, these items probably represnt a special buff applied to the siege dungeon
+   --> if the dungeon has a magic field array attached, and the product is decided: 
+      => update mode to DUNGEON_OPERATIONTYPE_CONVERSION , 
+       -- meaning the item is produced instantly (no evolution steps increments) + it is re-decided / re-randomized on each siege war, regardless if the war was won or not
+
+
+if the siege war was lost(i.e. different owner pre / post war)
+ - apply a "regression"::
+    - decrement the evolution step
+    - if evolution step == 0 , "cancel" the production, m_wProduction = wItemIDDefault
+
+regardless of whether it is a regression or an evolution , this updtae happens only if the siege has an owner; 
+
+
+
+===================== ITEM CATEGORISATION ======================================
+#define ITEM_DISTRIBUTE				200
+#define	ITEM_WEAPONST_INDEX			0
+#define	ITEM_WEAPONEND_INDEX		7
+#define	ITEM_ARMORST_INDEX			10
+#define	ITEM_ARMOREND_INDEX			17
+#define ITEM_BAG_INDEX				18
+#define	ITEM_GUARDIAN_INDEX			19
+#define	ITEM_RIDE_INDEX				20
+#define ITEM_MIXUPGRADEST_INDEX		31
+#define ITEM_MIXUPGRADEEND_INDEX	33
+#define ITEM_UPGRADE_INDEX			34
+#define ITEM_LIQUID_INDEX			35
+#define ITEM_EDITION_INDEX			36
+#define	ITEM_ZODIAC_INDEX			40
+#define	ITEM_SUPPLIES_INDEX			50
+#define	ITEM_SPECIALST_INDEX		60
+#define	ITEM_SPECIALEND_INDEX		66
+#define ITEM_MATERIALST_INDEX		70
+#define ITEM_MATERIALEND_INDEX		77
+#define	ITEM_MAGICARRAY_INDEX		80
+#define ITEM_MAGICFIELDARRAY_INDEX	90
+#define ITEM_CONSUMABLEST_INDEX		101
+#define ITEM_CONSUMABLEEND_INDEX	102
+#define	ITEM_MONEY_INDEX			125
+
+The 'category' of an item is int(itemID / ITEM_DISTRIBUTE)
+but either there can be more than 200 items inside a category(?) or their ID's are not uniformly spread;  
+the result must be compared to all intervals [_startIndex, _endIndex] defined above
+
+
+===============================================
+Pathfinding on worldmap vs dungeons ; client vs worldserver
+ - a TTB file stores a matrix of values describing the layout of a 3d map floor (a dungeon floor or a worldmap) ; 
+ - such maps are divided into tiles, if a tile is 'walkable' it has a specific value on its attribute field
+   - one tile corresponds to a (currently) 80 x 80 (worldmap) / 125 x 125 (dungeon floor) region on the map ; 
+     ==> that region's tile index into the ttb matrix is therefore ( line: z / tile_Size, column: x / tile_size)
+   - BUT the 3D origin of a map is on the bottom-left corner  and the ttb file store data top-down 
+      (i.e. tile data at [0, 0] corresponds to the 3d region starting at (x: 0, y: 0 (not used), z: maxZ) )
+     =====> the correct index for a 3d(x, 0, z) region is therefore: 
+           line:  (line_count - 1) -  z / tile_Size 
+           column: x / tile_size 
+            -- the client somehow takes this into account within its pathfinding utilities but the worldServer needed a fix for it
+
+=========================================
+
+CmdChangeLayer 
+ -- is a mini - reinitialization during dungeon gameplay, for the new layer 
+   -- but it may fuck up some things set up during 'InitGameDungeon' 
+    -- (i.e. it deletes & re-sets g_pEffectLayer & other globals) 

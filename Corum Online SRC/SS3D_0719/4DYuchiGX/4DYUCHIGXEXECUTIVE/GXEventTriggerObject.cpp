@@ -30,7 +30,7 @@ BOOL CoGXEventTrigger::Initialize(CoExecutive* pExecutive,GXSchedulePROC pProc,D
 
 	return TRUE;
 }
-void CoGXEventTrigger::SetPosition(VECTOR3* pv3Pos)
+void CoGXEventTrigger::SetPosition(const VECTOR3* pv3Pos)
 {
 	m_EventTriggerDesc.v3Pos = *pv3Pos;
 	BuildMesh();

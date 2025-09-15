@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "Utils.h"
 
-DECLSPECIFIER const char* codeToString(USER_PROPERTY_CODE code) {
+COMMONSERVERDECLSPECIFIER const char* codeToString(USER_PROPERTY_CODE code) {
 	switch (code)
 	{
 	case USER_MAXHP: return "MAX_HP";
@@ -118,7 +118,7 @@ DECLSPECIFIER const char* codeToString(USER_PROPERTY_CODE code) {
 	}
 }
 
-DECLSPECIFIER void printUserStatusList(const USER_STATUS* statusList, int count) {
+COMMONSERVERDECLSPECIFIER void printUserStatusList(const USER_STATUS* statusList, int count) {
 	if (count <= 0 || !statusList) {
 		return;
 	}

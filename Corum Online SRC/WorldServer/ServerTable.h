@@ -29,7 +29,7 @@ class CServerTable
 	DWORD					m_dwNum;		
 	SERVER_DATA**			m_ppInfoTable;
 	SERVER_DATA*			m_pLoginAgent;		
-	CServerList				m_ServerList[MAX_SERVER_TYPE];	// ServerType - 1의 인덱스가 해당 ServerType의 리스트를 가르킴 
+	CServerList				m_ServerList[SERVER_TYPE_ENDVALUE];	// ServerType - 1의 인덱스가 해당 ServerType의 리스트를 가르킴 
 		
 	void					RemoveServerTable();
 		

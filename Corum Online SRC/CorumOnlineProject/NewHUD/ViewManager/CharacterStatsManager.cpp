@@ -36,8 +36,8 @@ int CharacterStatsManager::maxEntryCount() {
 }
 
 CharacterStatsManager::CharacterStatsManager(
-	CharacterStatsView* managedView,
-	StatusPointManager* statusPointManager,
+	std::shared_ptr<CharacterStatsView> managedView,
+	std::shared_ptr<StatusPointManager> statusPointManager,
 	CMainUser* mainUser,
 	SoundLibrary* soundLibrary
 ) {

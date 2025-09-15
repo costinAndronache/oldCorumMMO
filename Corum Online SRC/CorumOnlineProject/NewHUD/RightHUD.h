@@ -14,7 +14,7 @@ namespace NewInterface {
 		RightHUD(
 			CustomUI::Point originInParent,
 			CItemResourceHash* resourceHash,
-			ItemUsageManager* itemUsageManager
+			std::shared_ptr<ItemUsageManager> itemUsageManager
 		);
 
 
@@ -22,19 +22,18 @@ namespace NewInterface {
 		void updateSPScale(float scale);
 		void updateCooldownScale(float scale);
 
-		BeltManager* beltDragNDropParticipant() { return _beltDragNDropParticipant; }
+		std::shared_ptr<BeltManager> beltDragNDropParticipant() { return _beltDragNDropParticipant; }
 
 	private:
 		EventHandlers _handlers;
-		CustomUI::HorizontalScalingBar* _spBar;
-		CustomUI::HorizontalScalingBar* _cooldownBar;
-		CustomUI::Button* _groupBtn, * _lairBtn, * _chatBtn,
-			* _restBtn, * _matchBtn, * _optionsBtn;
+		std::shared_ptr<CustomUI::HorizontalScalingBar> _spBar, _cooldownBar;
+		std::shared_ptr<CustomUI::Button> _groupBtn, _lairBtn, _chatBtn,
+		_restBtn, _matchBtn, _optionsBtn;
 
-		CustomUI::SpriteRenderable* _rightHUDSprite;
+		std::shared_ptr<CustomUI::SpriteRenderable> _rightHUDSprite;
 
-		GenericItemsContainerView* _beltItemsView;
-		BeltManager* _beltDragNDropParticipant;
+		std::shared_ptr<GenericItemsContainerView> _beltItemsView;
+		std::shared_ptr<BeltManager> _beltDragNDropParticipant;
 	};
 }
 

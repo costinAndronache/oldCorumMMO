@@ -316,7 +316,7 @@ void CDungeonTable::AddListDungeonGroup(DUNGEON_DATA_EX *pDungeon, WORD wGroupID
 		}		
 	}
 	
-	if (!g_pThisDungeon && pDungeon->IsConquer())
+	if (!g_pThisDungeon && pDungeon->isSiegeDungeon())
 	{
 		pDungeon->m_hSiegingDungeon = CreateHandleObject( g_pObjManager->GetFile(DWORD(DUNGEON_SIEGING)), NULL, NULL, GXOBJECT_CREATE_TYPE_EFFECT|GXOBJECT_CREATE_TYPE_DEFAULT_PROC );
 		GXSetPosition(pDungeon->m_hSiegingDungeon, &pDungeon->vPos, FALSE);

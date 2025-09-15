@@ -22,7 +22,7 @@ using namespace std;
 #define BLOCK_LENGTH 16
 
 
-class DECLSPECIFIER CNTAes  
+class COMMONSERVERDECLSPECIFIER CNTAes  
 {
 
 public:

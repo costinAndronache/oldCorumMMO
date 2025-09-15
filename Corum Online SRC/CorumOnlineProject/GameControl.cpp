@@ -26,7 +26,7 @@
 #include "CodeFun.h"
 #include "NetworkTimeObserver.h"
 #include "NMCrypt.h"
-
+#include "../CorumPreferences/CorumPreferences.h"
 
 void	(*Render[ MAX_RENDER_MODE ])();
 BOOL	(*InitGameProcess[ MAX_UPDATE_GAME ])();
@@ -381,18 +381,19 @@ void RenderMultiple()
 		g_pRenderer->BeginPerformanceAnalyze();
 	
 	g_dwCurTick = timeGetTime();	
-	DWORD	dwGameFrameProcess	=	g_pExecutive->Process();
-	if( dwGameFrameProcess)
-	{
+	int processedFrames = 0;
+	int lostMilliseconds = 0;
+	g_pExecutive->LogicPass(g_dwCurTick, 1000 / 30, &processedFrames, &lostMilliseconds);
+	if( processedFrames) {
 		if( g_bPause ) return;	
 		(*UpdateGameProcess[ GetGameStatus() ])();
 	}
 	
-	g_pGeometry->BeginRender(0,0xff000000, BEGIN_RENDER_FLAG_USE_RENDER_TEXTURE);
+	g_pGeometry->BeginRender(0,0xff000000, BEGIN_RENDER_FLAG_CLEAR_FRAMEBUFFER);
 	if(BeforeRender[ GetGameStatus()])
 		(*BeforeRender[ GetGameStatus() ])();
 
-	g_pExecutive->Render();
+	g_pExecutive->Render(0, 1000 / 60);
 
 	if(AfterRender[ GetGameStatus()])
 		(*AfterRender[ GetGameStatus() ])();
@@ -602,10 +603,10 @@ void SetActionNext( GXOBJECT_HANDLE handle, WORD wAct, WORD wNextAct, BYTE bNext
 	pDesc->nCurFrame = 0;
 }
 
-void SetUserPosition( CUser* pUser, VECTOR3* pv3Pos, BOOL bFlag /* = TRUE  */ )
+void SetUserPosition( CUser* pUser, const VECTOR3* pv3Pos, BOOL bFlag /* = TRUE  */ )
 {
 	MAP_TILE* pTile;
-	pTile = g_pMap->GetTile( pv3Pos->x, pv3Pos->z );
+	pTile = g_pMap->GetTileBy3DPosition( pv3Pos->x, pv3Pos->z );
 
 	if (!pTile)		
 		return;
@@ -614,19 +615,24 @@ void SetUserPosition( CUser* pUser, VECTOR3* pv3Pos, BOOL bFlag /* = TRUE  */ )
 		return;
 	
 
-	pUser->m_v3CurPos.x = pv3Pos->x;
-	pUser->m_v3CurPos.y	= pv3Pos->y;
-	pUser->m_v3CurPos.z = pv3Pos->z;
+	auto pos = *pv3Pos;
+	if (pos.x < 0)	{
+		pos.x = 0;
+	} else if(pos.x > g_pMap->m_fMapXLength) {
+		pos.x = g_pMap->m_fMapXLength-1;
+	}
+
+	if (pos.z < 0) {
+		pos.z = 0;
+	} else if(pos.z > g_pMap->m_fMapZLength) {
+		pos.z = g_pMap->m_fMapZLength-1;
+	}
 	
-	if (pUser->m_v3CurPos.x < 0)							pUser->m_v3CurPos.x = 0;
-	else if(pUser->m_v3CurPos.x > g_pMap->m_fMapXLength)	pUser->m_v3CurPos.x = g_pMap->m_fMapXLength-1;
-	if (pUser->m_v3CurPos.z < 0)							pUser->m_v3CurPos.z = 0;
-	else if(pUser->m_v3CurPos.z > g_pMap->m_fMapZLength)	pUser->m_v3CurPos.z = g_pMap->m_fMapZLength-1;
-	
-	
+	pUser->setPosition(pos);
+
 	if( bFlag )
 	{
-		GXSetPosition( pUser->m_hPlayer.pHandle, &pUser->m_v3CurPos, FALSE , TRUE);
+		GXSetPosition( pUser->m_hPlayer.pHandle, &pos, FALSE , TRUE);
 
 		if( g_pMainPlayer != pUser )
 		{
@@ -644,14 +650,14 @@ void SetUserPosition( CUser* pUser, VECTOR3* pv3Pos, BOOL bFlag /* = TRUE  */ )
 	CGameMenuWnd* pGameMenuWnd = CGameMenuWnd::GetInstance();
 	
 	if(pGameMenuWnd->m_bShadowFlag==FALSE)
-		GXSetPosition(pUser->m_hShadowHandle, &pUser->m_v3CurPos, FALSE, TRUE);
+		GXSetPosition(pUser->m_hShadowHandle, &pos, FALSE, TRUE);
 }
 
 
 void SetMonsterPosition( CMonster* pMonster, VECTOR3* pv3Pos, BOOL bFlag /* = TRUE  */ )
 {
 	MAP_TILE* pTile;
-	pTile = g_pMap->GetTile( pv3Pos->x, pv3Pos->z );
+	pTile = g_pMap->GetTileBy3DPosition( pv3Pos->x, pv3Pos->z );
 	if (!pTile)	
 		return;
 	
@@ -925,7 +931,7 @@ void LoadWorldMap( DWORD dwMapResourceUID )
 	ReadFile(hFile, &dwTileSize, sizeof(DWORD), &dwRead, NULL);
 	ReadFile(hFile, &dwObjNum, sizeof(DWORD), &dwRead, NULL);
 	
-	CorumCMap* pMap = new CorumCMap(dwXLen, dwZLen, (float)dwTileSize);	
+	CorumCMap* pMap = new CorumCMap(dwXLen, dwZLen, (float)dwTileSize, dwMapResourceUID);	
 		
 	// 속성 정보 읽어드림 
 	MAP_TILE *pTile=0;	int nZ=0, nX=0;
@@ -976,6 +982,8 @@ void LoadWorldMap( DWORD dwMapResourceUID )
 	g_pMap = pMap;
 
 	SendLoadingStatus(FALSE);
+
+
 }
 
 
@@ -1053,7 +1061,7 @@ void InitMap( DWORD dwLayerID )
 	ReadFile(hFile, &dwTileSize, sizeof(DWORD), &dwRead, NULL);
 	ReadFile(hFile, &dwObjNum, sizeof(DWORD), &dwRead, NULL);
 
-	CorumCMap* pMap = new CorumCMap(dwXLen, dwZLen, TILE_SIZE);	
+	CorumCMap* pMap = new CorumCMap(dwXLen, dwZLen, DUNGEON_TILE_SIZE, dwLayerID);	
 		
 	//속성 정보 읽어드림 
 	MAP_TILE *pTile = 0;	int nZ=0, nX=0;
@@ -1079,16 +1087,16 @@ void InitMap( DWORD dwLayerID )
 		
 		nX				= i % dwXLen;		
 		nZ				= i / dwXLen;
-		pTile->x		= nX * TILE_SIZE;
-		pTile->z		= nZ * TILE_SIZE;
+		pTile->x		= nX * DUNGEON_TILE_SIZE;
+		pTile->z		= nZ * DUNGEON_TILE_SIZE;
 		pTile->wIndex_X	= WORD(nX);
 		pTile->wIndex_Z = WORD(nZ);
 		
 		if( pTile->wAttr.uAttr == 9 )	//cp
 		{
 			VECTOR3 vec;
-			vec.x = pTile->x+TILE_SIZE/2;
-			vec.z = pTile->z+TILE_SIZE/2;
+			vec.x = pTile->x+DUNGEON_TILE_SIZE/2;
+			vec.z = pTile->z+DUNGEON_TILE_SIZE/2;
 			vec.y = 0;			
 			
 			AppliedSkill*	pEffectDesc = g_pEffectLayer->CreateGXObject(g_pObjManager->GetFile(EFFECT_CP_POSITION), 0xff, __CHR_EFFECT_NONE__);
@@ -1143,8 +1151,8 @@ void InitMap( DWORD dwLayerID )
 		{
 			pMap->m_pTile[m_dwTileNumWidth * z + x].wIndex_X = WORD(x);
 			pMap->m_pTile[m_dwTileNumWidth * z + x].wIndex_Z = WORD(z);
-			pMap->m_pTile[m_dwTileNumWidth * z + x].x = WORD(x * TILE_WIDTH);
-			pMap->m_pTile[m_dwTileNumWidth * z + x].z = WORD(z * TILE_HEIGHT);
+			pMap->m_pTile[m_dwTileNumWidth * z + x].x = WORD(x * DUNGEON_TILE_WIDTH);
+			pMap->m_pTile[m_dwTileNumWidth * z + x].z = WORD(z * DUNGEON_TILE_HEIGHT);
 			
 			for( s=0; s<pMap->m_wTotalSectionMany; s++ )
 			{
@@ -1185,7 +1193,7 @@ void InitMap( DWORD dwLayerID )
 		{
 			for(int x = nStartX; x <= nEndX; x++)
 			{
-				MAP_TILE* pTile = pMap->GetMap(x, z);			
+				MAP_TILE* pTile = pMap->GetTileByIndexes(x, z);			
 				if (pTile && pTile->wAttr.uOccupied == TILE_EMPTY)
 				{
 					VECTOR3 vec;
@@ -1278,6 +1286,8 @@ void LoadTotalDungeonInfo()
 
 	CreateConvertCDBToMAP(p);
 	
+	GetCurrentDirectory(0xff, szBuf);
+
 	FILE*	fp;
 	fp = fopen(p, "rt");
 	
@@ -1308,6 +1318,8 @@ void LoadTotalDungeonInfo()
 					pInfo->m_wWorldMapID = (BYTE)dwWorldMapID;
 					g_pDungeonTable->AddDungeonInfo(pInfo);
 				}
+
+				fixDungeonStaticDataEntry(dwID, szDungeonName);
 				
 				memset(pInfo->m_szDungeonName, 0, sizeof(pInfo->m_szDungeonName));
 				__lstrcpyn(pInfo->m_szDungeonName, szDungeonName, sizeof(szDungeonName));
@@ -1315,6 +1327,7 @@ void LoadTotalDungeonInfo()
 		}
 	} 
 
+	serializeCurrentDungeonStaticDataFixes();
 	fclose(fp);
 	DeleteFile(szFileName);
 }
@@ -1419,8 +1432,7 @@ BOOL LoadWorldMapScript(char* szMapFile, DWORD dwFlag)
 				{
 					pDungeon = g_pDungeonTable->GetDungeonInfo(dwID);
 					
-					if(!pDungeon)
-						asm_int3();
+					if(!pDungeon) { continue; }
 
 					pDungeon->vPos = v3Pos;
 				}
@@ -1536,7 +1548,7 @@ void ReleaseBoundingVolume(GXOBJECT_HANDLE handle)
 	g_pExecutive->GXOSetBoundingVolume( handle, &bound );
 }
 
-BOOL EpsilonVector(VECTOR3*	v3Vec1, VECTOR3* v3Vec2, float fEpsilon )
+BOOL EpsilonVector(const VECTOR3*	v3Vec1, const VECTOR3* v3Vec2, float fEpsilon )
 {
 	float	fDist = CalcDistance( v3Vec1, v3Vec2 );
 	return ( fDist < fEpsilon ) ? TRUE : FALSE;
@@ -1876,7 +1888,7 @@ BOOL InitSearchModule(CorumCMap* pMap)
 	
 	g_pSw = new Sw;		//	인스턴스 생성
 	g_pSw->Initialize( 20, 20, pMap->m_dwMapXTileMany, pMap->m_dwMapZTileMany
-		, sizeof(MAP_TILE), (PVOID)&( pMap->GetTile(0, 0)->wAttr ) );
+		, sizeof(MAP_TILE), (PVOID)&( pMap->GetTileBy3DPosition(0, 0)->wAttr ) );
 	memset( &g_PathFinder, 0, sizeof( A_STAR ) );
 
 	return TRUE;
@@ -2265,7 +2277,7 @@ BOOL IsPKZone()
 #if IS_JAPAN_LOCALIZING()
 	return (g_pThisDungeon->IsConquer()&& g_pMainPlayer->m_bCurLayer) || g_bAdultMode;
 #else
-	return (g_pThisDungeon->IsConquer()&& g_pMainPlayer->m_bCurLayer) || (!g_pThisDungeon->IsPathWay() && !g_pThisDungeon->IsVillage() && g_pThisDungeon->m_wLayerCount-1 == g_pMainPlayer->m_bCurLayer) ;
+	return (g_pThisDungeon->isSiegeDungeon()&& g_pMainPlayer->m_bCurLayer) || (!g_pThisDungeon->IsPathWay() && !g_pThisDungeon->IsVillage() && g_pThisDungeon->m_wLayerCount-1 == g_pMainPlayer->m_bCurLayer) ;
 #endif
 }
 
@@ -2884,7 +2896,7 @@ void SetListener(VECTOR3 * pV3Angle)
 	g_pGeometry->GetCameraAngleRad( &v3CameraAngleRad, 0 );
 	v3CameraAngleRad.x = v3CameraAngleRad.z = 0.f;
 
-	g_pSoundLib->SetListener(&g_pMainPlayer->m_v3CurPos, &v3CameraAngleRad);
+	g_pSoundLib->SetListener((VECTOR3*)g_pMainPlayer->currentPositionReadOnly(), &v3CameraAngleRad);
 }
 
 

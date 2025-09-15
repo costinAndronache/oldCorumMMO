@@ -19,7 +19,7 @@
 struct EVENT_DUNGEON_PROPERTY;
 
 
-class DUNGEON_DATA_EX : public DUNGEON_DATA
+class DUNGEON_DATA_EX : public CZP_QUERY_DUNGEON_INFO_WORLD_ResultRow
 {
 	
 public:
@@ -48,12 +48,12 @@ public:
 	WORD						GetLevel();
 	WORD						GetUpgradeTime();
 	int							GetIdleTime();
-	void						SetSiegeStartDestTime(DWORD dwTick);
-	void						SetSiegeEndDestTime(DWORD dwTick);
-	BOOL						StartSiegeWarTime();
+	void						setSiegeWarTimeSTART(DWORD dwTick);
+	void						setSiegeWarTimeEND(DWORD dwTick);
+	BOOL						tryStartWarOrEndCurrentWar();
 	BOOL						LevelUpgrade();
 	void						SendRefreshProductionInfo(WORD wItemID, BYTE byProductionCount);
-	BOOL						IsConquer();		
+	BOOL						isSiegeDungeon();		
 	BOOL						IsStartWarTime();
 	BOOL						IsEndWarTime();
 	BOOL						IsLevelUpgradeTime();

@@ -37,11 +37,11 @@ struct CacheCumulatedExpStore {
 
 static CacheCumulatedExpStore _cumulatedExpStore;
 
-DWORD DECLSPECIFIER cumulatedExperienceAtLevel(DWORD level, const DWORD (&expToGatherForLevel)[MAX_LEVEL + 1]) {
+DWORD COMMONSERVERDECLSPECIFIER cumulatedExperienceAtLevel(DWORD level, const DWORD (&expToGatherForLevel)[MAX_LEVEL + 1]) {
 	return _cumulatedExpStore.getCacheFor(expToGatherForLevel).cumulatedAt(level);
 }
 
-DWORD DECLSPECIFIER levelForCumulatedExperience(DWORD exp, const DWORD (&expToGatherForLevel)[MAX_LEVEL + 1]) {
+DWORD COMMONSERVERDECLSPECIFIER levelForCumulatedExperience(DWORD exp, const DWORD (&expToGatherForLevel)[MAX_LEVEL + 1]) {
 
 	const auto cache = _cumulatedExpStore.getCacheFor(expToGatherForLevel);
 	for (int level = 1; level <= MAX_LEVEL; level += 1) {

@@ -128,6 +128,14 @@ extern LPGlobalVariable_Dungeon g_pGVDungeon;
 */
 void SendPKMode(BOOL bPKMode);
 BOOL InitGameDungeon();
+
+
+struct DSTC_JOIN;
+void DungeonProcessHandleDungeonJoinEvent(DSTC_JOIN* pJoin);
+
+struct DSTC_CHANGE_LAYER;
+void DungeonProcessHandleLayerChangeEvent(DSTC_CHANGE_LAYER*);
+
 void UpdateGameDungeon();
 void ReleaseGameDungeon();
 //======================================================================//
@@ -218,7 +226,6 @@ void CameraAccelatingMove(void);
 void SelectSummonMonster(CMonster* pMonster, BOOL bSelect);
 void PlayItemSound(WORD	wItemId);
 DWORD __stdcall AfterInterporation(AFTER_INTERPOLATION_CALL_BACK_ARG* pArg);
-BOOL FindEmptyPosNearDungeon(VECTOR3* vpDungeonPos, VECTOR3 *vpNearPos, BOOL bVillage = FALSE);
 
 //------------------------------------------------------------------------
 // minjin ( 2004. 10. 06. ) Source Code Refactoring

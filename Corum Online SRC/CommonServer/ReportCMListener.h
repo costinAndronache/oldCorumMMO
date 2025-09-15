@@ -27,7 +27,7 @@ struct MACHINENAME
 };
 
 
-void DECLSPECIFIER ReportToCMListener(DWORD dwType, MACHINENAME* pMachineName);
+void COMMONSERVERDECLSPECIFIER ReportToCMListener(DWORD dwType, MACHINENAME* pMachineName);
 
 
 #endif 

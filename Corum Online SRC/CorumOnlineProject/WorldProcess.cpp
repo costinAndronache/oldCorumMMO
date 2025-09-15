@@ -49,6 +49,7 @@
 #include "RivalGuildWar.h"			//	Rival Guild War Operation.. KJK, LMJ is Working 
 //	deathrain
 #include "NetworkTimeObserver.h"
+#include <iostream>
 
 BYTE					g_byLen[10];
 SMESSAGERQ				g_sMessageRQ[__MAX_READ_MESSAGE__];
@@ -155,6 +156,8 @@ void InitPacketProcWorld()
 	PacketProc[UPDATE_GAME_WORLD][Protocol_World::CMD_GUILD_WAR_BBS]									= CmdGuildWarBBS;
 }
 
+static int minimapX() { return windowWidth() - 232; }
+
 BOOL InitGameWorld()
 {	
 	g_bLoadingChk	= FALSE;
@@ -163,18 +166,16 @@ BOOL InitGameWorld()
 	memset(g_pGVWorld, 0, sizeof(GLOBAL_VARIABLE_WORLD));
 	SetRenderMode(RENDER_MODE_NORMAL);	
 
-#ifdef _USE_IME
-
-	GET_IMEEDIT()->SetEditIndex(0);
-	GET_IMEEDIT()->EnableSpaceKey(TRUE);
-
-#endif
 
 	_CHECK_MEMORY()	
 	g_Camera.v3AxsiY.y = 1.0f;
 	
 	LoadWorldMap(g_pMainPlayer->m_dwRecentOutMap);	
 	InitSearchModule(g_pMap);
+
+	std::ofstream o("debugPrintCurrentWorldMap");
+	o << g_pMap->debugDescription();
+
 	
 	//현재 유저가 속한 월드맵 대륙번호를 저장 
 	g_pDungeonTable->SetCurrentWorldMapID( (BYTE)g_pMainPlayer->m_dwRecentOutMap );
@@ -199,20 +200,18 @@ BOOL InitGameWorld()
 
 	VAR->bDisplayDungeonInfo = 1;
 
-	g_pSprManager->CreateSprite(SPR_WORLD_UI_TOP, 0, 0, TRUE, 1);
-	g_pSprManager->CreateSprite(SPR_WORLD_UI_MENU, 0, 32, TRUE, 1);
-
+	
 	switch(g_pMainPlayer->m_dwRecentOutMap)
 	{
-	case 1:		g_pSprManager->CreateSprite(SPR_WORLD_UI_SMALL_MAP, 793, 0, TRUE, 120);	break;
-	case 2:		g_pSprManager->CreateSprite(SPR_WORLD_UI_SMALL_MAP2, 793, 0, TRUE, 120);break;
+	case 1:		g_pSprManager->CreateSprite(SPR_WORLD_UI_SMALL_MAP, minimapX(), 0, TRUE, 120);	break;
+	case 2:		g_pSprManager->CreateSprite(SPR_WORLD_UI_SMALL_MAP2, minimapX(), 0, TRUE, 120);break;
 	default:	asm_int3();
 	}
 
-	g_pSprManager->CreateSprite(SPR_WORLD_UI_RIGHT, 1004, 221, TRUE, 1);
-	g_pSprManager->CreateSprite(SPR_WORLD_UI_LEFT, 0, 554, TRUE, 1);
-	g_pSprManager->CreateSprite(SPR_WORLD_UI_BOTTOM, 0, 608, TRUE, 1);
-	g_pSprManager->CreateSprite(SPR_WORLD_UI_CHAT, 0, 640, TRUE, 1);	
+	//g_pSprManager->CreateSprite(SPR_WORLD_UI_RIGHT, 1004, 221, TRUE, 1);
+	//g_pSprManager->CreateSprite(SPR_WORLD_UI_LEFT, 0, 554, TRUE, 1);
+	//g_pSprManager->CreateSprite(SPR_WORLD_UI_BOTTOM, 0, 608, TRUE, 1);
+	//g_pSprManager->CreateSprite(SPR_WORLD_UI_CHAT, 0, 640, TRUE, 1);	
 
 	V2_SPRITE* pSpr = g_pSprManager->CreateSprite(SPR_SPEAKING_BOX, 100, 100, FALSE, 100);
 
@@ -287,18 +286,18 @@ BOOL InitGameWorld()
 	g_pExecutive->GXMGetHFieldHeight(&vPos.y, vPos.x, vPos.z);
 	GXSetPosition(g_pMainPlayer->m_hPlayer.pHandle, &vPos, FALSE);
 
-	g_pMainPlayer->m_v3CurPos.x = vPos.x;
-	g_pMainPlayer->m_v3CurPos.y = vPos.y;
-	g_pMainPlayer->m_v3CurPos.z = vPos.z;	
+	g_pMainPlayer->setPosition(vPos);
 
-	g_pMainPlayer->m_pCurTile	= g_pMap->GetTile( g_pMainPlayer->m_v3CurPos.x, g_pMainPlayer->m_v3CurPos.z );
+	g_pMainPlayer->m_pCurTile	= g_pMap->GetTileBy3DPosition(
+		vPos.x, 
+		vPos.z 
+	);
 
 	// 비공정 오부젝트 생성 //
 	LP_ITEM_RESOURCE_EX lpItemResource;
 
-#ifdef DEVELOP_MODE
 	g_pMainPlayer->m_pEquip[ EQUIP_TYPE_RIDE ].m_wItemID = 4000;
-#endif
+
 	int				nVal = g_pMainPlayer->m_pEquip[ EQUIP_TYPE_RIDE ].m_wItemID/ITEM_DISTRIBUTE;
 
 	VECTOR3			v3Pos = { 0, };
@@ -325,9 +324,9 @@ BOOL InitGameWorld()
 				SetBoundingVolume(g_pMainPlayer->m_RideObject.pHandle, 80.0f);
 				g_pExecutive->GXOEnableHFieldApply(g_pMainPlayer->m_RideObject.pHandle);
 							
-				v3Pos.x = g_pMainPlayer->m_v3CurPos.x-200;
+				v3Pos.x = g_pMainPlayer->currentPosition().x-200;
 				v3Pos.y = 0.0f;
-				v3Pos.z = g_pMainPlayer->m_v3CurPos.z;
+				v3Pos.z = g_pMainPlayer->currentPosition().z;
 				GXSetPosition(g_pMainPlayer->m_RideObject.pHandle, &v3Pos, FALSE);
 			}	
 		}					
@@ -356,15 +355,15 @@ BOOL InitGameWorld()
 	LIGHT_DESC	shadowlight;
 
 	shadowlight.dwDiffuse	= 0xffffffff;
-	shadowlight.v3Point.x	= g_pMainPlayer->m_v3CurPos.x + 500.0f;
+	shadowlight.v3Point.x	= g_pMainPlayer->currentPosition().x + 500.0f;
 	shadowlight.v3Point.y	= 1000.0f;
-	shadowlight.v3Point.z	= g_pMainPlayer->m_v3CurPos.z + 600.0f;
+	shadowlight.v3Point.z	= g_pMainPlayer->currentPosition().z + 600.0f;
 	shadowlight.fFov		= PI/2.0f;
 	shadowlight.v3Up.x		= 0.0f;
 	shadowlight.v3Up.y		= 1.0f;
 	shadowlight.v3Up.z		= 0.0f;
 	shadowlight.fRs			= 2000.0f;
-	shadowlight.v3To		= g_pMainPlayer->m_v3CurPos;
+	shadowlight.v3To		= g_pMainPlayer->currentPosition();
 	
 	VAR->hMainSpotWorld = g_pExecutive->CreateGXLight(&shadowlight,NULL,NULL,0,NULL, GXLIGHT_TYPE_ENABLE_SHADOW | GXLIGHT_TYPE_DISABLE_LIGHT_COLOR);
 	g_pExecutive->GXLEnableDynamicLight(VAR->hMainSpotWorld);
@@ -434,13 +433,13 @@ BOOL InitGameWorld()
 	}
 
 	g_pSprManager->GetSprite(SPR_LOADING_BACK)->ShowSprite(FALSE);	
-	g_pSprManager->CreateSprite(BUTTON_WDCHAT1, 443, 750, 32, 0, 8, 16, TRUE, 24);
-	g_pSprManager->CreateSprite(BUTTON_WDCHAT2, 578, 734, 224, 16, 8, 32, TRUE, 24);
-	g_pSprManager->CreateSprite(BUTTON_WDCHAT3, 590, 734, 232, 16, 8, 32, TRUE, 24);	
-	g_pSprManager->CreateSprite(SPR_CHAT_SC, 589, 643, 213, 16, 10, 16, TRUE, 24);
-	g_pSprManager->GetSprite(BUTTON_WDCHAT1)->ShowSprite(FALSE);
-	g_pSprManager->GetSprite(BUTTON_WDCHAT2)->ShowSprite(TRUE);
-	g_pSprManager->GetSprite(BUTTON_WDCHAT3)->ShowSprite(FALSE);
+	//g_pSprManager->CreateSprite(BUTTON_WDCHAT1, 443, 750, 32, 0, 8, 16, TRUE, 24);
+	//g_pSprManager->CreateSprite(BUTTON_WDCHAT2, 578, 734, 224, 16, 8, 32, TRUE, 24);
+	//g_pSprManager->CreateSprite(BUTTON_WDCHAT3, 590, 734, 232, 16, 8, 32, TRUE, 24);	
+	//g_pSprManager->CreateSprite(SPR_CHAT_SC, 589, 643, 213, 16, 10, 16, TRUE, 24);
+	//g_pSprManager->GetSprite(BUTTON_WDCHAT1)->ShowSprite(FALSE);
+	//g_pSprManager->GetSprite(BUTTON_WDCHAT2)->ShowSprite(TRUE);
+	//g_pSprManager->GetSprite(BUTTON_WDCHAT3)->ShowSprite(FALSE);
 
 	g_nPGSelect	= 3;
 	g_nChatId	= 0;
@@ -526,8 +525,8 @@ void SendWorldMovePacket()
 {
 	CTC_WORLD_MOVE move;
 	move.bMoveType			= g_pMainPlayer->m_bMoveType;
-	move.v3MoveStartPos		= g_pMainPlayer->m_v3CurPos;
-	move.v3MoveDirection	= g_pMainPlayer->m_v3Direction;
+	move.v3MoveStartPos		= g_pMainPlayer->currentPosition();
+	move.v3MoveDirection	= g_pMainPlayer->currentDirection();
 	move.wDestX				= g_pMainPlayer->m_pDestTile->wIndex_X;
 	move.wDestZ				= g_pMainPlayer->m_pDestTile->wIndex_Z;
 	g_pNet->SendMsg( (char*)&move, move.GetPacketSize(), SERVER_INDEX_WORLD );
@@ -536,11 +535,11 @@ void SendWorldMovePacket()
 void SendWorldStopPacket()
 {
 	CTC_WORLD_STOP	stop;
-	stop.v3StopPos		= g_pMainPlayer->m_v3CurPos;
+	stop.v3StopPos		= g_pMainPlayer->currentPosition();
 	g_pNet->SendMsg( (char*)&stop, stop.GetPacketSize(), SERVER_INDEX_WORLD );
 }
 
-BOOL EpsilonVectorByTwoMatrix(VECTOR3*	v3Vec1, VECTOR3* v3Vec2, float fEpsilon )
+BOOL EpsilonVectorByTwoMatrix(const VECTOR3*	v3Vec1, const VECTOR3* v3Vec2, float fEpsilon )
 {
 	double dx = pow((double)(v3Vec2->x - v3Vec1->x), 2);
 	double dz = pow((double)(v3Vec2->z - v3Vec1->z), 2);
@@ -575,7 +574,7 @@ void PathFindMoveFuncWorld(GXOBJECT_HANDLE handle, LPObjectDesc pData, DWORD dwC
 	if(EpsilonVectorByTwoMatrix(&Pos, &pObjDesc->vDest, fSpeed))
 	{
 		GXSetPosition(handle, &pObjDesc->vDest, FALSE);
-		pMainUser->m_v3CurPos = pObjDesc->vDest;
+		pMainUser->setPosition(pObjDesc->vDest);
 		
 		if(!SetPathFindMoveWorld())
 			goto lb_stop;
@@ -584,7 +583,7 @@ void PathFindMoveFuncWorld(GXOBJECT_HANDLE handle, LPObjectDesc pData, DWORD dwC
 	{
 		g_pExecutive->GXOMoveForward( handle, fSpeed );
 		g_pExecutive->GXOGetPosition( handle, &Pos );			
-		pTile = g_pMap->GetTile( Pos.x, Pos.z );			// 이동한 다음의 타일을 받는다. 
+		pTile = g_pMap->GetTileBy3DPosition( Pos.x, Pos.z );			// 이동한 다음의 타일을 받는다. 
 															// 타일이 바뀌었나 체크를 위해.
 
 		if(!pTile)
@@ -601,14 +600,14 @@ void PathFindMoveFuncWorld(GXOBJECT_HANDLE handle, LPObjectDesc pData, DWORD dwC
 				else	
 					::SetAction(pMainUser->m_hPlayer.pHandle, MOTION_TYPE_WARSTAND, 0, ACTION_LOOP );
 
-				GXSetPosition( handle, &pMainUser->m_v3CurPos, FALSE );			
+				GXSetPosition( handle, pMainUser->currentPositionReadOnly(), FALSE );			
 				goto lb_stop;
 			}
 
 			pMainUser->m_pCurTile = pTile;
 		}
 		pObjDesc->dwStartTick = pObjDesc->dwCurTick;
-		pMainUser->m_v3CurPos = Pos;
+		pMainUser->setPosition(Pos);
 	}
 
 	// 만약 주인공이라면 카메라를 같이 이동시킨다.
@@ -643,16 +642,16 @@ BOOL SetPathFindMoveWorld()
 	if(g_PathFinder.dwCurveNum==g_PathFinder.dwCurCurve)	goto lb_stop;
 	
 	// 여기서 부터 길찾기 설정이다.
-	g_pMainPlayer->m_hPlayer.pDesc->vDest.x		= (float)( g_PathFinder.pLocation[g_PathFinder.dwCurCurve].dwBlock_X * TILE_SIZE_WORLD + ( TILE_SIZE_WORLD / 2.f ) );
-	g_pMainPlayer->m_hPlayer.pDesc->vDest.z		= (float)( g_PathFinder.pLocation[g_PathFinder.dwCurCurve].dwBlock_Y * TILE_SIZE_WORLD + ( TILE_SIZE_WORLD / 2.f ) );
-	g_pMainPlayer->m_pDestTile					= g_pMap->GetMap( g_PathFinder.pLocation[g_PathFinder.dwCurCurve].dwBlock_X,
+	g_pMainPlayer->m_hPlayer.pDesc->vDest.x		= (float)( g_PathFinder.pLocation[g_PathFinder.dwCurCurve].dwBlock_X * g_pMap->m_fTileSize + ( g_pMap->m_fTileSize / 2.f ) );
+	g_pMainPlayer->m_hPlayer.pDesc->vDest.z		= (float)( g_PathFinder.pLocation[g_PathFinder.dwCurCurve].dwBlock_Y * g_pMap->m_fTileSize + ( g_pMap->m_fTileSize / 2.f ) );
+	g_pMainPlayer->m_pDestTile					= g_pMap->GetTileByIndexes( g_PathFinder.pLocation[g_PathFinder.dwCurCurve].dwBlock_X,
 																	g_PathFinder.pLocation[g_PathFinder.dwCurCurve].dwBlock_Y );
 	g_pMainPlayer->m_hPlayer.pDesc->vDest.y		= 0.f;
 	g_PathFinder.dwCurCurve++;
 		
 	g_pMainPlayer->m_hPlayer.pDesc->dwStartTick	= g_dwCurTick;					// 현재의 ms를 구한다.
 		
-	VECTOR3_SUB_VECTOR3( &v3Dir, &g_pMainPlayer->m_hPlayer.pDesc->vDest, &g_pMainPlayer->m_v3CurPos );
+	VECTOR3_SUB_VECTOR3( &v3Dir, &g_pMainPlayer->m_hPlayer.pDesc->vDest, g_pMainPlayer->currentPositionReadOnly() );
 
 	Normalize( &v3DirNormal, &v3Dir );						// 움직일 방형의 반위백터
 	fDir = (float)(atan2(v3Dir.z, v3Dir.x) + DEG90 );
@@ -663,7 +662,7 @@ BOOL SetPathFindMoveWorld()
 	case UNIT_STATUS_WALKING:
 	case UNIT_STATUS_RUNNING:
 		{
-			if( EpsilonVectorByTwoMatrix( &g_pMainPlayer->m_v3Direction,  &v3DirNormal, 0.1f ) ) return TRUE;	// 같은 방향이면 메시지를 보낼 필요없음.						
+			if( EpsilonVectorByTwoMatrix( g_pMainPlayer->currentDirectionReadOnly(),  &v3DirNormal, 0.1f ) ) return TRUE;	// 같은 방향이면 메시지를 보낼 필요없음.						
 
 			//걷기/뛰기 토글 모드에 따라
 			if(g_pMainPlayer->m_bMoveType == UNIT_STATUS_WALKING)
@@ -683,7 +682,7 @@ BOOL SetPathFindMoveWorld()
 			else
 				asm_int3();
 						
-			g_pMainPlayer->m_v3Direction = v3DirNormal;
+			g_pMainPlayer->setDirection(v3DirNormal);
 			// Move Packet를 보낸다.
 			SendWorldMovePacket();			
 
@@ -698,9 +697,8 @@ BOOL SetPathFindMoveWorld()
 	
 	case UNIT_STATUS_NORMAL:
 		{
-			g_pMainPlayer->m_v3Direction	= v3DirNormal;
+			g_pMainPlayer->setDirection(v3DirNormal);
 
-			
 			//걷기/뛰기 토글 모드에 따라
 			if(g_pMainPlayer->m_bMoveType == UNIT_STATUS_WALKING)
 			{
@@ -738,15 +736,16 @@ lb_stop:
 
 BOOL PathFindWorld()
 {
+	auto m_v3CurPos = g_pMainPlayer->currentPosition();
 	g_Mouse.v3Mouse = GetXYZFromScreenXY( g_pGeometry, g_Mouse.MousePos.x , g_Mouse.MousePos.y , g_rcScreenRect.right, g_rcScreenRect.bottom);
 
 	if( g_Mouse.v3Mouse.z < 0 || g_Mouse.v3Mouse.x < 0)	
 		return	FALSE;
 	
-	DWORD dwStartX	= (DWORD)( g_pMainPlayer->m_v3CurPos.x / TILE_SIZE_WORLD );
-	DWORD dwStartZ	= (DWORD)( g_pMainPlayer->m_v3CurPos.z / TILE_SIZE_WORLD );
-	DWORD dwEndX	= (DWORD)( g_Mouse.v3Mouse.x / TILE_SIZE_WORLD );
-	DWORD dwEndZ	= (DWORD)( g_Mouse.v3Mouse.z / TILE_SIZE_WORLD );
+	DWORD dwStartX	= (DWORD)( m_v3CurPos.x / g_pMap->m_fTileSize );
+	DWORD dwStartZ	= (DWORD)( m_v3CurPos.z / g_pMap->m_fTileSize );
+	DWORD dwEndX	= (DWORD)( g_Mouse.v3Mouse.x / g_pMap->m_fTileSize );
+	DWORD dwEndZ	= (DWORD)( g_Mouse.v3Mouse.z / g_pMap->m_fTileSize );
 		
 	if(dwEndX >= g_pMap->m_dwMapXTileMany || dwEndZ >= g_pMap->m_dwMapZTileMany)
 		return FALSE;
@@ -759,18 +758,21 @@ BOOL PathFindWorld()
 		VECTOR3		v3Tmp, v3Direction, v3Dest;
 		int			cnt = 1;
 
-		v3Dest.x	= (float)( g_PathFinder.pLocation[0].dwBlock_X * TILE_SIZE_WORLD + ( TILE_SIZE_WORLD / 2.f ) );
-		v3Dest.z	= (float)( g_PathFinder.pLocation[0].dwBlock_Y * TILE_SIZE_WORLD + ( TILE_SIZE_WORLD / 2.f ) );
+		v3Dest.x	= (float)( g_PathFinder.pLocation[0].dwBlock_X * g_pMap->m_fTileSize + ( g_pMap->m_fTileSize / 2.f ) );
+		v3Dest.z	= (float)( g_PathFinder.pLocation[0].dwBlock_Y * g_pMap->m_fTileSize + ( g_pMap->m_fTileSize / 2.f ) );
 		v3Dest.y	= 0;
 		
-		VECTOR3_SUB_VECTOR3( &v3Direction, &v3Dest, &g_pMainPlayer->m_v3CurPos );
+		VECTOR3_SUB_VECTOR3( &v3Direction, &v3Dest, g_pMainPlayer->currentPositionReadOnly() );
 		Normalize( &v3Tmp, &v3Direction );						// 움직일 방형의 반위백터
-		pTile = g_pMap->GetTile( g_pMainPlayer->m_v3CurPos.x, g_pMainPlayer->m_v3CurPos.z );
+		pTile = g_pMap->GetTileBy3DPosition( m_v3CurPos.x, m_v3CurPos.z );
 		pNextTile = pTile;
 
 		do
 		{
-			pNextTile = g_pMap->GetTile( g_pMainPlayer->m_v3CurPos.x + v3Tmp.x * cnt, g_pMainPlayer->m_v3CurPos.z + v3Tmp.z * cnt );
+			pNextTile = g_pMap->GetTileBy3DPosition(
+				m_v3CurPos.x + v3Tmp.x * cnt, 
+				m_v3CurPos.z + v3Tmp.z * cnt
+			);
 			cnt++;
 		}while( pTile == pNextTile );
 
@@ -1125,7 +1127,7 @@ DWORD __stdcall AfterRenderGameWorld()
 
 	pInterface->Render();		
 	
-	// 채팅 //
+	// 채占쏙옙 //
 	if(g_nWordIndex==__MAX_WORD_QUEUE__)
 	{		
 		if(g_nWordStart>g_nWordEnd)
@@ -1212,75 +1214,15 @@ DWORD __stdcall AfterRenderGameWorld()
 	//===========================================================================//
 	g_pInputManager->RenderInputBufferAll();
 	int nFontIndex = 0;
-	//ID 폰트 출력
+	//ID 占쏙옙트 占쏙옙占�
 
 	for(int i=0; i<MAX_INPUT_BUFFER_NUM; i++)
 	{
-#ifdef _USE_IME
 
-		if(GET_IMEEDIT()->GetEditIndex()==1)
-		{
-			if(i!=0)
-			{
-				if(!g_pInputManager->GetInputBufferLength(i))	continue;
-
-#if IS_JAPAN_LOCALIZING()
-				// 던전 주인의 메모가 없는 경우.. 
-				if(i == INPUT_BUFFER_11)
-				{
-					if(!g_pInputManager->GetInputBufferLength(i))	continue;
-				}
-#endif
-				g_pInputManager->RenderInputBuffer(i);
-				
-			}
-		}
-		else if(GET_IMEEDIT()->GetEditIndex()==2)
-		{
-			if(i!=6)
-			{
-				if(!g_pInputManager->GetInputBufferLength(i))	continue;
-
-#if IS_JAPAN_LOCALIZING()
-				// 던전 주인의 메모가 없는 경우.. 
-				if(i == INPUT_BUFFER_11)
-				{
-					if(!g_pInputManager->GetInputBufferLength(i+1)) continue;
-				}
-#endif		
-				g_pInputManager->RenderInputBuffer(i);
-				
-			}
-		}
-		else
-		{
-			if(!g_pInputManager->GetInputBufferLength(i))	continue;
-			
-#if IS_JAPAN_LOCALIZING()
-			// 던전 주인의 메모가 없는 경우.. 
-			if(i == INPUT_BUFFER_11)
-			{
-				if(!g_pInputManager->GetInputBufferLength(i+1))	continue;
-			}
-#endif
-		
-			g_pInputManager->RenderInputBuffer(i);
-		}
-			
-#else
 		if(!g_pInputManager->GetInputBufferLength(i))	continue;
-		
 		g_pInputManager->RenderInputBuffer(i);
-#endif
-
 		nFontIndex++;
 	}
-
-#ifdef _USE_IME
-
-	GET_IMEEDIT()->RenderSprite(59999); // 월드에서 IME 표시 안되는 문제로 수정 BY DEEPDARK.
-
-#endif
 	
 	DisplayDungeonInfoOnWorldMap(VAR->pCurSelectDungeon);
 	RECT rect;
@@ -1313,7 +1255,7 @@ DWORD __stdcall AfterRenderGameWorld()
 			if (SendPacketRequestDungeonInfo(WORD(pDungeon->m_dwID)))
 				continue;
 			
-			if(pDungeon->IsConquer())	//점령 가능 던전 
+			if(pDungeon->isSiegeDungeon())	//점령 가능 던전 
 			{
 				wsprintf(szBuf, "%s\n%s", pDungeon->m_szDungeonName,	pDungeon->m_szOwner);
 
@@ -1335,22 +1277,14 @@ DWORD __stdcall AfterRenderGameWorld()
 			}
 			else	//비점령 던전 
 			{				
-#if IS_JAPAN_LOCALIZING()
-				int nLen = 0;
-				if(lstrlen(pDungeon->m_szSchoolName))
-				{
-					nLen = lstrlen(pDungeon->m_szSchoolName);
-					lstrcpy(szBuf, pDungeon->m_szSchoolName);
-				}
-				else
-				{
-					nLen = lstrlen(pDungeon->m_szDungeonName);
-					lstrcpy(szBuf, pDungeon->m_szDungeonName);
-				}
-#else
-				wsprintf(szBuf, "%s + (%d, %d)", pDungeon->m_szDungeonName, pDungeon->m_dwID, pDungeon->m_wGroupID);
+
+				snprintf(szBuf, sizeof(szBuf) - 1, 
+					"%s + (%d, %d) + (%.1f, %.1f)", 
+					pDungeon->m_szDungeonName, 
+					pDungeon->m_dwID, pDungeon->m_wGroupID,
+					pDungeon->vPos.z, pDungeon->vPos.x
+				);
 				int nLen = lstrlen(szBuf);
-#endif
 
 				rect.left	= x - (nLen/2)*8;
 				rect.right	= rect.left + nLen*8;
@@ -1377,7 +1311,7 @@ DWORD __stdcall AfterRenderGameWorld()
 		g_pExecutive->GXOGetPosition(g_pMainPlayer->m_RideObject.pHandle, &vPos);
 	}
 	
-	MAP_TILE* pTile = g_pMap->GetTile(vPos.x, vPos.z);
+	MAP_TILE* pTile = g_pMap->GetTileBy3DPosition(vPos.x, vPos.z);
 
 	if(pTile)
 		SetMinimapPos(vPos);	
@@ -1388,7 +1322,6 @@ DWORD __stdcall AfterRenderGameWorld()
 	
 	if( g_hHandle )
 	{
-		
 		LPObjectDesc pObjDesc = (LPObjectDesc)g_pExecutive->GetData(g_hHandle);
 		
 		if( !pObjDesc ) return 0;
@@ -1416,44 +1349,24 @@ DWORD __stdcall AfterRenderGameWorld()
 				RenderFont(pUser->szName, rect.left, rect.right, rect.top, rect.bottom, 0);
 		}
 	}
-	//
-	//wsprintf(szTemp, "x:%6.1f, z:%6.1f, Tile_X:%d, Tile_Z:%d, ATTR:%d",vPos.x, vPos.z, pTile->wIndex_X, pTile->wIndex_Z, pTile->wAttr.uAttr);
 	
-	//RECT rect2;
-	//rect2.left = 500;
-	//rect2.top = 50;
-	//rect2.right = 1200;
-	//rect2.bottom = 90;
+	char szDebug[255];
+	snprintf(szDebug, 254, 
+		"z:%.1f, x:%.1f, Tile_Z:%d, Tile_X:%d,  ATTR:%d compZ: %d, compX: %d",
+		vPos.z, vPos.x, pTile->wIndex_Z, pTile->wIndex_X, pTile->wAttr.uAttr,
+		(int)vPos.z / 80, (int)vPos.x / 80
+	);
+	
+	RECT rect2;
+	rect2.left = 50;
+	rect2.top = 50;
+	rect2.right = 550;
+	rect2.bottom = 90;
 
-	//g_pGeometry->RenderFont( GetFont(), szTemp, lstrlen(szTemp),&rect2,0xffffffff,CHAR_CODE_TYPE_ASCII, 0, 0);		
+/*	g_pGeometry->RenderFont( 
+		GetFont(), szDebug, lstrlen(szDebug),&rect2,0xffffffff,CHAR_CODE_TYPE_ASCII, 100, 0
+	);	*/	
 	//rect2.top = 60;
-
-#ifdef DEVELOP_MODE
-	//Display Cursor Position For Debug
-	LPMouseState	pMouse = GetMouse();
-	char	szTemp[ 0xff ]={0,};	
-	wsprintf(szTemp, "X: %d, Y:%d", pMouse->MousePos.x , pMouse->MousePos.y);
-	//wsprintf(szTemp, "%s", m_szInputBuffer);
-//	g_pGeometry->RenderFont( GetFont(), szTemp, lstrlen(szTemp),&rect2,0xffffffff,CHAR_CODE_TYPE_ASCII, 0, 0);
-	
-	//--
-	{
-		char szTemp[ 0xff ]={0,};
-		rect.left = 550;
-		rect.top = 10;
-		rect.right = 1200;
-		rect.bottom = 50;
-
-		// sound count 
-		if (g_pSoundLib)
-		{
-			wsprintf(szTemp, "AllocatedSoundFileNum : %ld | Allocated SounfEffectNum : %ld", 
-				g_pSoundLib->GetAllocatedSoundFileCount(), g_pSoundLib->GetAllocatedSoundEffectCount() );
-
-			RenderFont(szTemp, rect.left, rect.right, rect.top, rect.bottom, 255);			
-		}
-	}
-#endif
 
 	//Display Camera Position For Debug
 	//CAMERA_DESC desc;
@@ -1481,7 +1394,7 @@ void SetMinimapPos(VECTOR3 vPos)
 	fY = float(vPos.z * MINIMAP_RATIO_Y);
 	fY = float(180.0 - fY);
 
-	wX = WORD(/*800*/798 + fX);
+	wX = WORD(minimapX() + fX);
 	wY = WORD(3 + fY);
 
 	VAR->pMinimapPos->vPos.x = wX;
@@ -1595,12 +1508,12 @@ void OnKeyDownWorld(WPARAM wParam, LPARAM lParam)
 				g_pExecutive->GXOGetPosition(g_pMainPlayer->m_RideObject.pHandle, &vPos);
 
 				MAP_TILE* pTile;
-				pTile = g_pMap->GetTile(vPos.x + 250.0f, vPos.z);
+				pTile = g_pMap->GetTileBy3DPosition(vPos.x + 250.0f, vPos.z);
 				if(!pTile->wAttr.uAttr)
 				{
 					vPos.x += 250.0f;
 					GXSetPosition(g_pMainPlayer->m_hPlayer.pHandle, &vPos, FALSE);
-					g_pMainPlayer->m_v3CurPos = vPos;
+					g_pMainPlayer->setPosition(vPos);
 					g_pMainPlayer->SetMotion(MOTION_TYPE_VILLAGESTAND, 0, ACTION_LOOP);					
 					ShowObject(g_pMainPlayer->m_hPlayer.pHandle);
 					SetBoundingVolume(g_pMainPlayer->m_hPlayer.pHandle, 80.0f);
@@ -1618,17 +1531,18 @@ void OnKeyDownWorld(WPARAM wParam, LPARAM lParam)
 					
 					LIGHT_DESC	shadowlight;
 
+					auto m_v3CurPos = g_pMainPlayer->currentPosition();
 					shadowlight.dwDiffuse = 0xffffffff;
-					shadowlight.v3Point.x = g_pMainPlayer->m_v3CurPos.x + 500.0f;
+					shadowlight.v3Point.x = m_v3CurPos.x + 500.0f;
 					shadowlight.v3Point.y = 1000.0f;
-					shadowlight.v3Point.z = g_pMainPlayer->m_v3CurPos.z + 600.0f;
+					shadowlight.v3Point.z = m_v3CurPos.z + 600.0f;
 					shadowlight.fFov = PI/2.0f;
 					shadowlight.v3Up.x = 0.0f;
 					shadowlight.v3Up.y = 1.0f;
 					shadowlight.v3Up.z = 0.0f;
 
 					shadowlight.fRs = 2000.0f;
-					shadowlight.v3To = g_pMainPlayer->m_v3CurPos;
+					shadowlight.v3To = m_v3CurPos;
 
 					g_pExecutive->GXLSetLightDesc(VAR->hMainSpotWorld,&shadowlight);
 
@@ -1678,7 +1592,7 @@ void OnKeyDownWorld(WPARAM wParam, LPARAM lParam)
 					if( g_pExecutive->GXOGetCurrentMotionIndex(g_pMainPlayer->m_RideObject.pHandle) == 3 )	//떠있는경우 
 					{
 						VECTOR3 vAirShipPos;	g_pExecutive->GXOGetPosition(g_pMainPlayer->m_RideObject.pHandle, &vAirShipPos);
-						MAP_TILE* pTile = g_pMap->GetTile(vAirShipPos.x, vAirShipPos.z );
+						MAP_TILE* pTile = g_pMap->GetTileBy3DPosition(vAirShipPos.x, vAirShipPos.z );
 						
 						if(pTile->wAttr.uOccupied == TILE_EMPTY)
 						{
@@ -1767,26 +1681,6 @@ void OnLButtonDownWorld(WPARAM wParam, LPARAM lParam)
 
 	if(g_Mouse.MousePos.x>=0 && g_Mouse.MousePos.y>=747 && g_Mouse.MousePos.x<=439 && g_Mouse.MousePos.y<=767)
 	{
-#ifdef _USE_IME
-
-		if(GET_IMEEDIT()->GetEditIndex()==2)
-		{
-			LPSTR lpszName = (LPSTR)GET_IMEEDIT()->GetImeEditString();			
-					
-			g_pInputManager->ClearInput(INPUT_BUFFER_WORLD_CHAT_GUILD_PARTY_USERNAME);
-			g_pInputManager->InsertCharacter(INPUT_BUFFER_WORLD_CHAT_GUILD_PARTY_USERNAME, lpszName, lstrlen(lpszName));								
-			
-		}
-
-		POINT pChatPoint;
-		pChatPoint.x	= 10;
-		pChatPoint.y	= 752;
-		GET_IMEEDIT()->SetEditIndex(1);
-		GET_IMEEDIT()->ClearImeEditString();
-		GET_IMEEDIT()->ActivateIME(pChatPoint, __MAX_BUUFER_SIZE__);
-
-				
-#endif
 
 		g_pInputManager->SetFocusInput(INPUT_BUFFER_WORLD_CHAT);
 		
@@ -1809,24 +1703,6 @@ void OnLButtonDownWorld(WPARAM wParam, LPARAM lParam)
 
 		g_pInputManager->GetInputBuffer(INPUT_BUFFER_WORLD_CHAT_GUILD_PARTY_USERNAME);
 
-#ifdef _USE_IME
-
-		if(GET_IMEEDIT()->GetEditIndex()==2)
-		{
-			LPSTR lpszName = (LPSTR)GET_IMEEDIT()->GetImeEditString();			
-			g_pInputManager->ClearInput(INPUT_BUFFER_WORLD_CHAT_GUILD_PARTY_USERNAME);
-			g_pInputManager->InsertCharacter(INPUT_BUFFER_WORLD_CHAT_GUILD_PARTY_USERNAME, lpszName, lstrlen(lpszName));								
-			
-		}
-
-		POINT pChatPoint;
-		pChatPoint.x	= 10;
-		pChatPoint.y	= 752;
-		GET_IMEEDIT()->SetEditIndex(1);
-		GET_IMEEDIT()->ClearImeEditString();
-		GET_IMEEDIT()->ActivateIME(pChatPoint, __MAX_BUUFER_SIZE__);
-
-#endif
 
 		g_pInputManager->SetFocusInput(INPUT_BUFFER_WORLD_CHAT);
 		g_nChatId			= 0;
@@ -1851,25 +1727,6 @@ void OnLButtonDownWorld(WPARAM wParam, LPARAM lParam)
 		g_pInputManager->GetInputBuffer(INPUT_BUFFER_WORLD_CHAT);
 		
 
-#ifdef _USE_IME
-
-		if(GET_IMEEDIT()->GetEditIndex()==2)
-		{
-			LPSTR lpszName = (LPSTR)GET_IMEEDIT()->GetImeEditString();			
-					
-			g_pInputManager->ClearInput(INPUT_BUFFER_WORLD_CHAT_GUILD_PARTY_USERNAME);
-			g_pInputManager->InsertCharacter(INPUT_BUFFER_WORLD_CHAT_GUILD_PARTY_USERNAME, lpszName, lstrlen(lpszName));								
-			
-		}
-
-		POINT pChatPoint;
-		pChatPoint.x	= 10;
-		pChatPoint.y	= 752;
-		GET_IMEEDIT()->SetEditIndex(1);
-		GET_IMEEDIT()->ClearImeEditString();
-		GET_IMEEDIT()->ActivateIME(pChatPoint, __MAX_BUUFER_SIZE__);
-
-#endif
 		g_pInputManager->SetFocusInput(INPUT_BUFFER_WORLD_CHAT);
 		g_nChatId			= 0;
 
@@ -1895,19 +1752,6 @@ void OnLButtonDownWorld(WPARAM wParam, LPARAM lParam)
 
 		}
 
-#ifdef _USE_IME
-
-		if(GET_IMEEDIT()->GetEditIndex()!=2)
-		{
-			POINT pChatPoint;
-			pChatPoint.x	= 458;
-			pChatPoint.y	= 752;
-			GET_IMEEDIT()->SetEditIndex(2);
-			GET_IMEEDIT()->SetImeEditString(g_pInputManager->GetInputBuffer(INPUT_BUFFER_WORLD_CHAT_GUILD_PARTY_USERNAME));		
-			GET_IMEEDIT()->ActivateIME(pChatPoint, __MAX_IDBUUFER_SIZE__);		
-		}
-		
-#endif
 
 		g_pInputManager->GetInputBuffer(INPUT_BUFFER_WORLD_CHAT);
 		
@@ -2022,7 +1866,7 @@ void OnRButtonDownWorld(WPARAM wParam, LPARAM lParam)
 			{
 
 				VECTOR3 vAirShipPos;	g_pExecutive->GXOGetPosition(g_pMainPlayer->m_RideObject.pHandle, &vAirShipPos);
-				MAP_TILE* pTile = g_pMap->GetTile(vAirShipPos.x, vAirShipPos.z );
+				MAP_TILE* pTile = g_pMap->GetTileBy3DPosition(vAirShipPos.x, vAirShipPos.z );
 				
 				if(pTile->wAttr.uOccupied == TILE_EMPTY)
 				{
@@ -2060,44 +1904,11 @@ void OnMouseMoveWorld(WPARAM wParam, LPARAM lParam)
 
 	if(g_Mouse.bLDown==TRUE)
 	{	
-		// Moue Pointer //
-		if(g_Mouse.MousePos.x>=0 && g_Mouse.MousePos.y>=747 && g_Mouse.MousePos.x<=439 && g_Mouse.MousePos.y<=767)
-			SetMousePointerType(__MOUSE_POINTER_BUTTONCLICK__);
-		else if(g_Mouse.MousePos.x>=578 && g_Mouse.MousePos.y>=734 && g_Mouse.MousePos.x<=586 && g_Mouse.MousePos.y<=766)
-			SetMousePointerType(__MOUSE_POINTER_BUTTONCLICK__);			
-		else if(g_Mouse.MousePos.x>=590 && g_Mouse.MousePos.y>=734 && g_Mouse.MousePos.x<=598 && g_Mouse.MousePos.y<=766)
-			SetMousePointerType(__MOUSE_POINTER_BUTTONCLICK__);
-		else if(g_Mouse.MousePos.x>=443 && g_Mouse.MousePos.y>=750 && g_Mouse.MousePos.x<=574 && g_Mouse.MousePos.y<=766)
-			SetMousePointerType(__MOUSE_POINTER_BUTTONCLICK__);	
-		else if(g_Mouse.MousePos.x>589 && g_Mouse.MousePos.y>641 && g_Mouse.MousePos.x<599 && g_Mouse.MousePos.y<731)
-		{
-			if(SPR(SPR_CHAT_SC)->vPos.y<=g_Mouse.MousePos.y && SPR(SPR_CHAT_SC)->vPos.y+12>=g_Mouse.MousePos.y)
-				SetMousePointerType(__MOUSE_POINTER_BUTTONCLICK__);
-			else
-				SetMousePointerType(__MOUSE_POINTER_DEFAULTCLICK__);		
-		}
-		else
 			SetMousePointerType(__MOUSE_POINTER_DEFAULTCLICK__);
 	}
 	else
 	{	
-		// Moue Pointer //
-		if(g_Mouse.MousePos.x>=0 && g_Mouse.MousePos.y>=747 && g_Mouse.MousePos.x<=439 && g_Mouse.MousePos.y<=767)
-			SetMousePointerType(__MOUSE_POINTER_BUTTON__);
-		else if(g_Mouse.MousePos.x>=578 && g_Mouse.MousePos.y>=734 && g_Mouse.MousePos.x<=586 && g_Mouse.MousePos.y<=766)
-			SetMousePointerType(__MOUSE_POINTER_BUTTON__);			
-		else if(g_Mouse.MousePos.x>=590 && g_Mouse.MousePos.y>=734 && g_Mouse.MousePos.x<=598 && g_Mouse.MousePos.y<=766)
-			SetMousePointerType(__MOUSE_POINTER_BUTTON__);
-		else if(g_Mouse.MousePos.x>=443 && g_Mouse.MousePos.y>=750 && g_Mouse.MousePos.x<=574 && g_Mouse.MousePos.y<=766)
-			SetMousePointerType(__MOUSE_POINTER_BUTTON__);	
-		else if(g_Mouse.MousePos.x>589 && g_Mouse.MousePos.y>641 && g_Mouse.MousePos.x<599 && g_Mouse.MousePos.y<731)
-		{
-			if(SPR(SPR_CHAT_SC)->vPos.y<=g_Mouse.MousePos.y && SPR(SPR_CHAT_SC)->vPos.y+12>=g_Mouse.MousePos.y)
-				SetMousePointerType(__MOUSE_POINTER_BUTTON__);
-			else
-				SetMousePointerType(__MOUSE_POINTER_DEFAULT__);		
-		}
-		else
+
 			SetMousePointerType(__MOUSE_POINTER_DEFAULT__);
 	}
 
@@ -2530,7 +2341,7 @@ void MoveProcessWalk()
 	{
 		g_pExecutive->GXOSetDirection(g_pMainPlayer->m_hPlayer.pHandle, &g_Camera.v3AxsiY, DEG90 + DEG45);
 		g_pExecutive->EstimatedMoveForward(g_pMainPlayer->m_hPlayer.pHandle, &v3Pos, fSpeed);
-		MAP_TILE* pTile = g_pMap->GetTile(v3Pos.x, v3Pos.z);
+		MAP_TILE* pTile = g_pMap->GetTileBy3DPosition(v3Pos.x, v3Pos.z);
 		if(pTile->wAttr.uAttr != 1)
 		{
 			g_pExecutive->GXOMoveForward(g_pMainPlayer->m_hPlayer.pHandle, fSpeed);
@@ -2544,7 +2355,7 @@ void MoveProcessWalk()
 	{
 		g_pExecutive->GXOSetDirection(g_pMainPlayer->m_hPlayer.pHandle, &g_Camera.v3AxsiY, DEG45);
 		g_pExecutive->EstimatedMoveForward(g_pMainPlayer->m_hPlayer.pHandle, &v3Pos, fSpeed);
-		MAP_TILE* pTile = g_pMap->GetTile(v3Pos.x, v3Pos.z);
+		MAP_TILE* pTile = g_pMap->GetTileBy3DPosition(v3Pos.x, v3Pos.z);
 		if(pTile->wAttr.uAttr != 1)
 		{
 			g_pExecutive->GXOMoveForward(g_pMainPlayer->m_hPlayer.pHandle, fSpeed);
@@ -2557,7 +2368,7 @@ void MoveProcessWalk()
 	{
 		g_pExecutive->GXOSetDirection(g_pMainPlayer->m_hPlayer.pHandle, &g_Camera.v3AxsiY, DEG270 + DEG45);
 		g_pExecutive->EstimatedMoveForward(g_pMainPlayer->m_hPlayer.pHandle, &v3Pos, fSpeed);
-		MAP_TILE* pTile = g_pMap->GetTile(v3Pos.x, v3Pos.z);
+		MAP_TILE* pTile = g_pMap->GetTileBy3DPosition(v3Pos.x, v3Pos.z);
 		if(pTile->wAttr.uAttr != 1)
 		{
 			g_pExecutive->GXOMoveForward(g_pMainPlayer->m_hPlayer.pHandle, fSpeed);
@@ -2570,7 +2381,7 @@ void MoveProcessWalk()
 	{
 		g_pExecutive->GXOSetDirection(g_pMainPlayer->m_hPlayer.pHandle, &g_Camera.v3AxsiY, DEG180 + DEG45);
 		g_pExecutive->EstimatedMoveForward(g_pMainPlayer->m_hPlayer.pHandle, &v3Pos, fSpeed);
-		MAP_TILE* pTile = g_pMap->GetTile(v3Pos.x, v3Pos.z);
+		MAP_TILE* pTile = g_pMap->GetTileBy3DPosition(v3Pos.x, v3Pos.z);
 		if(pTile->wAttr.uAttr != 1)
 		{
 			g_pExecutive->GXOMoveForward(g_pMainPlayer->m_hPlayer.pHandle, fSpeed);
@@ -2583,7 +2394,7 @@ void MoveProcessWalk()
 	{
 		g_pExecutive->GXOSetDirection(g_pMainPlayer->m_hPlayer.pHandle, &g_Camera.v3AxsiY, DEG180);
 		g_pExecutive->EstimatedMoveForward(g_pMainPlayer->m_hPlayer.pHandle, &v3Pos, fSpeed);
-		MAP_TILE* pTile = g_pMap->GetTile(v3Pos.x, v3Pos.z);
+		MAP_TILE* pTile = g_pMap->GetTileBy3DPosition(v3Pos.x, v3Pos.z);
 		if(pTile->wAttr.uAttr != 1)
 		{
 			g_pExecutive->GXOMoveForward(g_pMainPlayer->m_hPlayer.pHandle, fSpeed);
@@ -2596,7 +2407,7 @@ void MoveProcessWalk()
 	{
 		g_pExecutive->GXOSetDirection(g_pMainPlayer->m_hPlayer.pHandle, &g_Camera.v3AxsiY, DEG90);
 		g_pExecutive->EstimatedMoveForward(g_pMainPlayer->m_hPlayer.pHandle, &v3Pos, fSpeed);
-		MAP_TILE* pTile = g_pMap->GetTile(v3Pos.x, v3Pos.z);
+		MAP_TILE* pTile = g_pMap->GetTileBy3DPosition(v3Pos.x, v3Pos.z);
 		if(pTile->wAttr.uAttr != 1)
 		{
 			g_pExecutive->GXOMoveForward(g_pMainPlayer->m_hPlayer.pHandle, fSpeed);
@@ -2609,7 +2420,7 @@ void MoveProcessWalk()
 	{
 		g_pExecutive->GXOSetDirection(g_pMainPlayer->m_hPlayer.pHandle, &g_Camera.v3AxsiY, DEG270);
 		g_pExecutive->EstimatedMoveForward(g_pMainPlayer->m_hPlayer.pHandle, &v3Pos, fSpeed);
-		MAP_TILE* pTile = g_pMap->GetTile(v3Pos.x, v3Pos.z);
+		MAP_TILE* pTile = g_pMap->GetTileBy3DPosition(v3Pos.x, v3Pos.z);
 		if(pTile->wAttr.uAttr != 1)
 		{
 			g_pExecutive->GXOMoveForward(g_pMainPlayer->m_hPlayer.pHandle, fSpeed);
@@ -2622,7 +2433,7 @@ void MoveProcessWalk()
 	{
 		g_pExecutive->GXOSetDirection(g_pMainPlayer->m_hPlayer.pHandle, &g_Camera.v3AxsiY, DEG360);
 		g_pExecutive->EstimatedMoveForward(g_pMainPlayer->m_hPlayer.pHandle, &v3Pos, fSpeed);
-		MAP_TILE* pTile = g_pMap->GetTile(v3Pos.x, v3Pos.z);
+		MAP_TILE* pTile = g_pMap->GetTileBy3DPosition(v3Pos.x, v3Pos.z);
 		if(pTile->wAttr.uAttr != 1)
 		{
 			g_pExecutive->GXOMoveForward(g_pMainPlayer->m_hPlayer.pHandle, fSpeed);
@@ -2640,7 +2451,7 @@ void MoveProcessPlane()
 	{
 		g_pExecutive->GXOSetDirection(g_pMainPlayer->m_RideObject.pHandle, &g_Camera.v3AxsiY, DEG90 + DEG45);
 		g_pExecutive->EstimatedMoveForward(g_pMainPlayer->m_RideObject.pHandle, &v3Pos, fSpeed);
-		MAP_TILE* pTile = g_pMap->GetTile(v3Pos.x, v3Pos.z);
+		MAP_TILE* pTile = g_pMap->GetTileBy3DPosition(v3Pos.x, v3Pos.z);
 		if(pTile)
 		{
 			g_pExecutive->GXOMoveForward(g_pMainPlayer->m_RideObject.pHandle, fSpeed);
@@ -2654,7 +2465,7 @@ void MoveProcessPlane()
 	{
 		g_pExecutive->GXOSetDirection(g_pMainPlayer->m_RideObject.pHandle, &g_Camera.v3AxsiY, DEG45);
 		g_pExecutive->EstimatedMoveForward(g_pMainPlayer->m_RideObject.pHandle, &v3Pos, fSpeed);
-		MAP_TILE* pTile = g_pMap->GetTile(v3Pos.x, v3Pos.z);
+		MAP_TILE* pTile = g_pMap->GetTileBy3DPosition(v3Pos.x, v3Pos.z);
 		if(pTile)
 		{
 			g_pExecutive->GXOMoveForward(g_pMainPlayer->m_RideObject.pHandle, fSpeed);
@@ -2667,7 +2478,7 @@ void MoveProcessPlane()
 	{
 		g_pExecutive->GXOSetDirection(g_pMainPlayer->m_RideObject.pHandle, &g_Camera.v3AxsiY, DEG270 + DEG45);
 		g_pExecutive->EstimatedMoveForward(g_pMainPlayer->m_RideObject.pHandle, &v3Pos, fSpeed);
-		MAP_TILE* pTile = g_pMap->GetTile(v3Pos.x, v3Pos.z);
+		MAP_TILE* pTile = g_pMap->GetTileBy3DPosition(v3Pos.x, v3Pos.z);
 		if(pTile)
 		{
 			g_pExecutive->GXOMoveForward(g_pMainPlayer->m_RideObject.pHandle, fSpeed);
@@ -2680,7 +2491,7 @@ void MoveProcessPlane()
 	{
 		g_pExecutive->GXOSetDirection(g_pMainPlayer->m_RideObject.pHandle, &g_Camera.v3AxsiY, DEG180 + DEG45);
 		g_pExecutive->EstimatedMoveForward(g_pMainPlayer->m_RideObject.pHandle, &v3Pos, fSpeed);
-		MAP_TILE* pTile = g_pMap->GetTile(v3Pos.x, v3Pos.z);
+		MAP_TILE* pTile = g_pMap->GetTileBy3DPosition(v3Pos.x, v3Pos.z);
 		if(pTile)
 		{
 			g_pExecutive->GXOMoveForward(g_pMainPlayer->m_RideObject.pHandle, fSpeed);
@@ -2693,7 +2504,7 @@ void MoveProcessPlane()
 	{
 		g_pExecutive->GXOSetDirection(g_pMainPlayer->m_RideObject.pHandle, &g_Camera.v3AxsiY, DEG180);
 		g_pExecutive->EstimatedMoveForward(g_pMainPlayer->m_RideObject.pHandle, &v3Pos, fSpeed);
-		MAP_TILE* pTile = g_pMap->GetTile(v3Pos.x, v3Pos.z);
+		MAP_TILE* pTile = g_pMap->GetTileBy3DPosition(v3Pos.x, v3Pos.z);
 		if(pTile)
 		{
 			g_pExecutive->GXOMoveForward(g_pMainPlayer->m_RideObject.pHandle, fSpeed);
@@ -2706,7 +2517,7 @@ void MoveProcessPlane()
 	{
 		g_pExecutive->GXOSetDirection(g_pMainPlayer->m_RideObject.pHandle, &g_Camera.v3AxsiY, DEG90);
 		g_pExecutive->EstimatedMoveForward(g_pMainPlayer->m_RideObject.pHandle, &v3Pos, fSpeed);
-		MAP_TILE* pTile = g_pMap->GetTile(v3Pos.x, v3Pos.z);
+		MAP_TILE* pTile = g_pMap->GetTileBy3DPosition(v3Pos.x, v3Pos.z);
 		if(pTile)
 		{
 			g_pExecutive->GXOMoveForward(g_pMainPlayer->m_RideObject.pHandle, fSpeed);
@@ -2719,7 +2530,7 @@ void MoveProcessPlane()
 	{
 		g_pExecutive->GXOSetDirection(g_pMainPlayer->m_RideObject.pHandle, &g_Camera.v3AxsiY, DEG270);
 		g_pExecutive->EstimatedMoveForward(g_pMainPlayer->m_RideObject.pHandle, &v3Pos, fSpeed);
-		MAP_TILE* pTile = g_pMap->GetTile(v3Pos.x, v3Pos.z);
+		MAP_TILE* pTile = g_pMap->GetTileBy3DPosition(v3Pos.x, v3Pos.z);
 		if(pTile)
 		{
 			g_pExecutive->GXOMoveForward(g_pMainPlayer->m_RideObject.pHandle, fSpeed);
@@ -2732,7 +2543,7 @@ void MoveProcessPlane()
 	{
 		g_pExecutive->GXOSetDirection(g_pMainPlayer->m_RideObject.pHandle, &g_Camera.v3AxsiY, DEG360);
 		g_pExecutive->EstimatedMoveForward(g_pMainPlayer->m_RideObject.pHandle, &v3Pos, fSpeed);
-		MAP_TILE* pTile = g_pMap->GetTile(v3Pos.x, v3Pos.z);
+		MAP_TILE* pTile = g_pMap->GetTileBy3DPosition(v3Pos.x, v3Pos.z);
 		if(pTile)
 		{
 			g_pExecutive->GXOMoveForward(g_pMainPlayer->m_RideObject.pHandle, fSpeed);
@@ -2819,7 +2630,7 @@ lb_TileAgain:
 		break;
 	}
 
-	pTile = g_pMap->GetTile(vPos.x, vPos.z);
+	pTile = g_pMap->GetTileBy3DPosition(vPos.x, vPos.z);
  	if(pTile->wAttr.uAttr == 1)
 	{
 		goto lb_TileAgain;
@@ -3071,7 +2882,7 @@ void PlayerWorldMoveFunc(GXOBJECT_HANDLE handle, LPObjectDesc pData, DWORD dwCur
 	g_pExecutive->GXOGetPosition( handle, &Pos );
 	
 	// 현재의 위치와 옮겨가가될 위치를 검색해서 만약 중간에 못가는 타일이 있다면 세워버린다.
-	pTile = g_pMap->GetTile( Pos.x, Pos.z );
+	pTile = g_pMap->GetTileBy3DPosition( Pos.x, Pos.z );
 	if( !pTile )
 	{
 		GXSetPosition( handle, &pUser->m_v3CurPos, FALSE );
@@ -3097,15 +2908,13 @@ void PlayerWorldMoveFunc(GXOBJECT_HANDLE handle, LPObjectDesc pData, DWORD dwCur
 
 void SetWorldUserPosition( LP_PARTY_USER pUser, VECTOR3* pv3Pos, BOOL bFlag /* = TRUE  */ )
 {
-	MAP_TILE* pTile = g_pMap->GetTile( pv3Pos->x, pv3Pos->z );
+	MAP_TILE* pTile = g_pMap->GetTileBy3DPosition( pv3Pos->x, pv3Pos->z );
+	auto pos = *pv3Pos;
 
 	if (!pTile)
 		return;
 	
-	pUser->m_v3CurPos.x = pv3Pos->x;
-	pUser->m_v3CurPos.y	= pv3Pos->y;
-	pUser->m_v3CurPos.z = pv3Pos->z;
-	
+
 	if(pUser->m_v3CurPos.x < 0)
 		pUser->m_v3CurPos.x = 0;
 	else if(pUser->m_v3CurPos.x > g_pMap->m_fMapXLength)
@@ -3116,6 +2925,7 @@ void SetWorldUserPosition( LP_PARTY_USER pUser, VECTOR3* pv3Pos, BOOL bFlag /* =
 	else if(pUser->m_v3CurPos.z > g_pMap->m_fMapZLength)
 		pUser->m_v3CurPos.z = g_pMap->m_fMapZLength-1;
 
+	pUser->m_v3CurPos = pos;
 	if(bFlag)
 	{
 		g_pExecutive->GXMGetHFieldHeight(&pUser->m_v3CurPos.y, pUser->m_v3CurPos.x, pUser->m_v3CurPos.z);
@@ -3409,7 +3219,7 @@ void DisplayDungeonInfoOnWorldMap(DUNGEON_DATA_EX* pDungeon)
 	int nSec;
 	char szTemp[0xff]={0,};
 
-	if(pDungeon->IsConquer())
+	if(pDungeon->isSiegeDungeon())
 	{
 		// 점령 가능 던전.
 		pSpr->SetScaling(130, 105);
@@ -3672,7 +3482,7 @@ void OnCrashUser(GXOBJECT_HANDLE handle, LPObjectDesc pData, GXSCHEDULE_PROC_MSG
 			return;
 		}	
 
-		if (TRUE == pDungeon->IsConquer() && pDungeon->m_dwOwnerIndex != g_pMainPlayer->m_dwUserIndex)
+		if (TRUE == pDungeon->isSiegeDungeon() && pDungeon->m_dwOwnerIndex != g_pMainPlayer->m_dwUserIndex)
 		{			
 			pOKWnd->m_bType = __OKWND_TYPE_POTAL_ENTRANCE;
 			pOKWnd->m_dwDungeonID = pDungeon->m_dwID;			

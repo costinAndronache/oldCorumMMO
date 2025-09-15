@@ -2,13 +2,14 @@
 #include <memory>
 #include <functional>
 #include <map>
+#include "BaseLibrary.h"
 
-class RunLoopSource {
+class BASELIBRARYDECLSPEC RunLoopSource {
 public:
 	virtual void runLoopStep() = 0;
 };
 
-class RunLoop {
+class BASELIBRARYDECLSPEC RunLoop {
 public:
 	using SourceHandle = int;
 

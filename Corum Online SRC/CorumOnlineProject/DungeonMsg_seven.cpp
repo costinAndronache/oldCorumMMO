@@ -47,7 +47,7 @@ void CmdEmoticon( char* pMsg, DWORD dwLen )
 			CreateHandleObject(GetFile(szBuf, DATA_TYPE_EFFECT), GXPlayerPROC, pUser->m_hPlayerEmoticon.pDesc, GXOBJECT_CREATE_TYPE_EFFECT);
 	}
 
-	GXSetPosition(pUser->m_hPlayerEmoticon.pHandle, &pUser->m_v3CurPos, FALSE, TRUE);
+	GXSetPosition(pUser->m_hPlayerEmoticon.pHandle, pUser->currentPositionReadOnly(), FALSE, TRUE);
 		
 	g_pExecutive->SetAlphaFlag(pUser->m_hPlayerEmoticon.pHandle, 255);
 	ShowObject(pUser->m_hPlayerEmoticon.pHandle);

@@ -2,7 +2,7 @@
 #include "Encode.h"
 
 
-BOOL DECLSPECIFIER EncodeINIFile(char* szSrcFileName, char* szSaveFile, char* szEncodeKey, int nEncodeSubKey)
+BOOL COMMONSERVERDECLSPECIFIER EncodeINIFile(char* szSrcFileName, char* szSaveFile, char* szEncodeKey, int nEncodeSubKey)
 {
 	FILE*	fp, *fp1;
 	fp = fopen( szSaveFile, "wb" );
@@ -51,7 +51,7 @@ BOOL DECLSPECIFIER EncodeINIFile(char* szSrcFileName, char* szSaveFile, char* sz
 	return TRUE;
 }
 
-BOOL DECLSPECIFIER DecodeCFGFile(char* szLoadFile, char* szTagetFile, char* szDecodeKey, int nDecodeSubKey)
+BOOL COMMONSERVERDECLSPECIFIER DecodeCFGFile(char* szLoadFile, char* szTagetFile, char* szDecodeKey, int nDecodeSubKey)
 {
 	FILE*	fp = NULL;	
 	FILE*	fp1 = NULL;
@@ -104,7 +104,7 @@ BOOL DECLSPECIFIER DecodeCFGFile(char* szLoadFile, char* szTagetFile, char* szDe
 }
 
 // 10자의 임의의 영문 문자열 생성.
-void DECLSPECIFIER CreateRandomString(IN OUT char* szString, int iLen)
+void COMMONSERVERDECLSPECIFIER CreateRandomString(IN OUT char* szString, int iLen)
 {
 	iLen;
 	srand((unsigned int) time(0));

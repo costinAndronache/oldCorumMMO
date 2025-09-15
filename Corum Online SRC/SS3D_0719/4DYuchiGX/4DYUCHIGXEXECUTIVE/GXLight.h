@@ -60,7 +60,7 @@ public:
 	
 	
 
-	void					SetPosition(VECTOR3* pv3Pos);
+	void					SetPosition(const VECTOR3* pv3Pos);
 	void					MovePosition(VECTOR3* pv3Pos);
 	void					GetPosition(VECTOR3* pv3Pos) {*pv3Pos = m_LightDesc.v3Point;}
 	void					PostAttach(CoGXObject* pObj,MATRIX4* pMat,VECTOR3* pv3Offset,DWORD dwAttachType);

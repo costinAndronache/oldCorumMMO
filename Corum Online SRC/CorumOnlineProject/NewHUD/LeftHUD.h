@@ -35,14 +35,13 @@ namespace NewInterface {
 		void setEventHandlers(EventHandlers handlers);
 	private:
 		EventHandlers _handlers;
-		CustomUI::HorizontalScalingBar* _hpBar;
-		CustomUI::HorizontalScalingBar* _expBar;
-		CustomUI::Button *_tradeBtn, *_shopBtn, *_itemBtn, *_statsBtn, *_skillsBtn;
-		CustomUI::ToggleButton *_pkButton;
-		CustomUI::Button* _leftSkillBtn, *_rightSkillBtn;
-		CustomUI::SpriteRenderable* _leftHUDSprite;
-		CustomUI::SingleLineLabel* _hpLabel;
-		CustomUI::SingleLineLabel* _spLabel;
+		std::shared_ptr<CustomUI::HorizontalScalingBar> _hpBar;
+		std::shared_ptr<CustomUI::HorizontalScalingBar> _expBar;
+		std::shared_ptr<CustomUI::Button> _tradeBtn, _shopBtn, _itemBtn, _statsBtn, _skillsBtn;
+		std::shared_ptr<CustomUI::ToggleButton> _pkButton;
+		std::shared_ptr<CustomUI::Button> _leftSkillBtn, _rightSkillBtn;
+		std::shared_ptr<CustomUI::SpriteRenderable> _leftHUDSprite;
+		std::shared_ptr<CustomUI::SingleLineLabel> _hpLabel, _spLabel;
 	};
 }
 

@@ -23,11 +23,11 @@
 #define LOG_JUST_DISPLAY1	8
 
 
-void DECLSPECIFIER InitLog();
-void DECLSPECIFIER FreeLog();
-void DECLSPECIFIER GetConsoleKeyInput(PINPUT_RECORD pInput, LPDWORD pResult);
-void DECLSPECIFIER Log(int type, char *logmsg, ...);
-void DECLSPECIFIER WriteText(char* msg, bool type = true);
+void COMMONSERVERDECLSPECIFIER InitLog();
+void COMMONSERVERDECLSPECIFIER FreeLog();
+void COMMONSERVERDECLSPECIFIER GetConsoleKeyInput(PINPUT_RECORD pInput, LPDWORD pResult);
+void COMMONSERVERDECLSPECIFIER Log(int type, char *logmsg, ...);
+void COMMONSERVERDECLSPECIFIER WriteText(char* msg, bool type = true);
 
 
 #endif 

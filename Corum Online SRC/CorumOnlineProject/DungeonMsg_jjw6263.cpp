@@ -217,7 +217,7 @@ void CmdEventDungeonClear(char* pMsg, DWORD dwLen)
 
 	pEffectDesc->dwTargetIndex[0] = pPacket->dwUserIndex;
 	::SetAction( pEffectDesc->hEffect.pHandle, 1, 0, ACTION_LOOP );
-	GXSetPosition(pEffectDesc->hEffect.pHandle,&pUser->m_v3CurPos,FALSE);
+	GXSetPosition(pEffectDesc->hEffect.pHandle,pUser->currentPositionReadOnly(),FALSE);
 	pEffectDesc->hEffect.pDesc->ObjectFunc = EffectEventDungeonFunc;
 	
 	// "이벤트 던젼 클리어!!"

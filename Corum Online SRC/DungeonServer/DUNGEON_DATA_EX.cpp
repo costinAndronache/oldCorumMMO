@@ -8,7 +8,7 @@
 
 DUNGEON_DATA_EX::DUNGEON_DATA_EX()
 {
-	memset((DUNGEON_DATA*)this, 0, sizeof(DUNGEON_DATA));
+	memset((CZP_REQUEST_DUNGEON_INFO_DG_ResultRow*)this, 0, sizeof(CZP_REQUEST_DUNGEON_INFO_DG_ResultRow));
 }
 
 DUNGEON_DATA_EX::~DUNGEON_DATA_EX()
@@ -36,7 +36,7 @@ int	DUNGEON_DATA_EX::GetIdleTime()
 
 DWORD DUNGEON_DATA_EX::GetEntrancePay()
 {
-	return m_dwEntrance;
+	return entranceFee;
 }
 
 DWORD DUNGEON_DATA_EX::GetMaxEntrancePay()
@@ -109,8 +109,8 @@ BOOL DUNGEON_DATA_EX::IsCreateProductionTime()
 
 void DUNGEON_DATA_EX::SetOwner(DWORD dwOwnerIndex, DWORD dwGuildID, char* pOwnerID, char* pOwnerName)
 {
-	m_dwOwnerIndex = dwOwnerIndex;
-	m_dwOwnerGuildNum = dwGuildID;
+	ownerUserID = dwOwnerIndex;
+	ownerGuildID = dwGuildID;
 	
 	__lstrcpyn(m_szOwner, pOwnerName, MAX_CHARACTER_REAL_LENGTH);
 	
@@ -149,16 +149,16 @@ void DUNGEON_DATA_EX::SetDefenseCount(BYTE byDefenseCount, BOOL bDB_Update)
 
 void DUNGEON_DATA_EX::SetEntrance(DWORD dwEntrance)
 {
-	m_dwEntrance = dwEntrance;
+	entranceFee = dwEntrance;
 
 	char szQuery[0xff]={0,};
-	wsprintf(szQuery, "update mapinfo set Entrance = %d where id = %d", m_dwEntrance, m_dwID);
+	wsprintf(szQuery, "update mapinfo set Entrance = %d where id = %d", entranceFee, m_dwID);
 	g_pDb->THExecuteSQL(szQuery, FALSE, FALSE, NULL, (BYTE)GAME_DB);
 
 	DSTWS_REFRESH_ENTRANCE_EDIT ServerPacket;
 	ServerPacket.wDungeonID = (WORD)m_dwID;
 	// 획득한 돈
-	ServerPacket.nMoney = m_dwEntrance; 
+	ServerPacket.nMoney = entranceFee; 
 	g_pNet->SendToServer(WSINDEX, (char*)&ServerPacket, ServerPacket.GetPacketSize(), FLAG_SEND_NOT_ENCRYPTION);
 }
 
@@ -173,21 +173,21 @@ int DUNGEON_DATA_EX::SetAccEntrance(int nPlusMoney)
 
 	if (nPlusMoney < 0)
 	{
-		if (m_dwAccEntrance < (DWORD)abs(nPlusMoney))
-			m_dwAccEntrance = 0;	
+		if (accumulatedEntranceFees < (DWORD)abs(nPlusMoney))
+			accumulatedEntranceFees = 0;	
 		else
-			m_dwAccEntrance += nPlusMoney;
+			accumulatedEntranceFees += nPlusMoney;
 	}
 	else
 	{
-		if (0xffffffff-m_dwAccEntrance > (DWORD)nPlusMoney)
-			m_dwAccEntrance += nPlusMoney;
+		if (0xffffffff-accumulatedEntranceFees > (DWORD)nPlusMoney)
+			accumulatedEntranceFees += nPlusMoney;
 		else
-			m_dwAccEntrance = 0xffffffff;
+			accumulatedEntranceFees = 0xffffffff;
 	}
 	
 	char szQuery[0xff]={0,};
-	wsprintf(szQuery, "update mapinfo set AccEntrance = %u where id = %d", m_dwAccEntrance, m_dwID);
+	wsprintf(szQuery, "update mapinfo set AccEntrance = %u where id = %d", accumulatedEntranceFees, m_dwID);
 	g_pDb->THExecuteSQL(szQuery, FALSE, FALSE, NULL, (BYTE)GAME_DB);
 	
 	return nPlusMoney;
@@ -195,8 +195,8 @@ int DUNGEON_DATA_EX::SetAccEntrance(int nPlusMoney)
 
 WORD DUNGEON_DATA_EX::ConvertProduction()
 {
-	WORD wProduction = g_DungeonProductionItemMinMax[m_byProperty].wItemIDMin;
-	BYTE byRandom = BYTE(g_DungeonProductionItemMinMax[m_byProperty].wItemIDMax-wProduction);
+	WORD wProduction = g_DungeonProductionItemMinMax[siegeDungeonPrize_productionSchemeIndex].wItemIDMin;
+	BYTE byRandom = BYTE(g_DungeonProductionItemMinMax[siegeDungeonPrize_productionSchemeIndex].wItemIDMax-wProduction);
 
 	return WORD( (byRandom) ? (wProduction + (rand() % byRandom)) : wProduction);
 }
@@ -206,13 +206,13 @@ void DUNGEON_DATA_EX::InitializeOperationMode()
 	if (m_cMagicFieldArrayItem.GetQuantity())
 	{
 		// 원소 속성석이 아니라면
-		if (g_DungeonProductionItemMinMax[m_byProperty].wItemIDDefault != m_wProduction)
+		if (g_DungeonProductionItemMinMax[siegeDungeonPrize_productionSchemeIndex].wItemIDDefault != siegeDungeonPrize_itemID)
 			SetOperationMode(DUNGEON_OPERATIONTYPE_CONVERSION);
 	}
 	else
 	{
 		// 완성했다.
-		if (m_byProductionCount >= 3)
+		if (siegeDungeonPrize_currentMakingStep >= 3)
 			SetOperationMode(DUNGEON_OPERATIONTYPE_PRODUCTION);
 		else
 			SetOperationMode(DUNGEON_OPERATIONTYPE_PRECOCIOUS);
@@ -225,34 +225,34 @@ WORD DUNGEON_DATA_EX::CreateProduction(BOOL bWin)
 	if (bWin)
 	{	
 		// 원소 속성석이었다면
-		if (g_DungeonProductionItemMinMax[m_byProperty].wItemIDDefault == m_wProduction)
+		if (g_DungeonProductionItemMinMax[siegeDungeonPrize_productionSchemeIndex].wItemIDDefault == siegeDungeonPrize_itemID)
 		{
 			// 갯수를 증가해줘라.
-			if (!m_byProductionCount)
+			if (!siegeDungeonPrize_currentMakingStep)
 			{
-				m_byProductionCount = 1;
+				siegeDungeonPrize_currentMakingStep = 1;
 				SetOperationMode(DUNGEON_OPERATIONTYPE_PRECOCIOUS);
 			}
 			// 다음 생산품으로 변해라.
 			else
 			{
-				m_wProduction = ConvertProduction();
-				m_byProductionCount = 0;
+				siegeDungeonPrize_itemID = ConvertProduction();
+				siegeDungeonPrize_currentMakingStep = 0;
 				SetOperationMode(DUNGEON_OPERATIONTYPE_PRECOCIOUS);
 			}
 		}
 		else
 		{
 			// 완성도를 멈추고, 생산품을 바꿔줘라.
-			if (m_bOperationType == DUNGEON_OPERATIONTYPE_CONVERSION)
+			if (current_DUNGEON_OPERATIONTYPE == DUNGEON_OPERATIONTYPE_CONVERSION)
 			{
-				m_wProduction = ConvertProduction();
+				siegeDungeonPrize_itemID = ConvertProduction();
 			}
 			// 완성도를 증가해라.
 			else
 			{
-				if (m_byProductionCount < 3)
-					m_byProductionCount+=1;				
+				if (siegeDungeonPrize_currentMakingStep < 3)
+					siegeDungeonPrize_currentMakingStep+=1;				
 			}
 			
 			InitializeOperationMode();
@@ -261,21 +261,21 @@ WORD DUNGEON_DATA_EX::CreateProduction(BOOL bWin)
 	else
 	{
 		//완성도를 줄여라.
-		if (g_DungeonProductionItemMinMax[m_byProperty].wItemIDDefault == m_wProduction)
+		if (g_DungeonProductionItemMinMax[siegeDungeonPrize_productionSchemeIndex].wItemIDDefault == siegeDungeonPrize_itemID)
 		{
-			m_byProductionCount = 0;
+			siegeDungeonPrize_currentMakingStep = 0;
 			SetOperationMode(DUNGEON_OPERATIONTYPE_PRECOCIOUS);			
 		}
 		else
 		{
-			if (m_byProductionCount > 0)
+			if (siegeDungeonPrize_currentMakingStep > 0)
 			{
-				m_byProductionCount-=1;
+				siegeDungeonPrize_currentMakingStep-=1;
 			}
 			else
 			{
-				m_byProductionCount = 1;
-				m_wProduction = g_DungeonProductionItemMinMax[m_byProperty].wItemIDDefault;
+				siegeDungeonPrize_currentMakingStep = 1;
+				siegeDungeonPrize_itemID = g_DungeonProductionItemMinMax[siegeDungeonPrize_productionSchemeIndex].wItemIDDefault;
 			}
 			SetOperationMode(DUNGEON_OPERATIONTYPE_PRECOCIOUS);
 		}
@@ -283,27 +283,27 @@ WORD DUNGEON_DATA_EX::CreateProduction(BOOL bWin)
 
 	DSWST_CREATEPRODUCTION packet;
 	packet.wDungeonID = (WORD)m_dwID;
-	packet.byProductionCount = m_byProductionCount;
-	packet.wProduction = m_wProduction;
+	packet.byProductionCount = siegeDungeonPrize_currentMakingStep;
+	packet.wProduction = siegeDungeonPrize_itemID;
 	g_pNet->SendToServer(WSINDEX, (char*)&packet, packet.GetPacketSize(), FLAG_SEND_NOT_ENCRYPTION);
 	
 	char szQuery[0xff]={0,};
-	wsprintf(szQuery, "update mapinfo set Production = %d, ProductionCount = %d where id = %d", m_wProduction, m_byProductionCount, m_dwID);
+	wsprintf(szQuery, "update mapinfo set Production = %d, ProductionCount = %d where id = %d", siegeDungeonPrize_itemID, siegeDungeonPrize_currentMakingStep, m_dwID);
 	g_pDb->THExecuteSQL(szQuery, FALSE, FALSE, NULL, (BYTE)GAME_DB);
 
-	return m_wProduction;
+	return siegeDungeonPrize_itemID;
 }
 
 void DUNGEON_DATA_EX::SetOperationMode(BYTE byOperationMode)
 {
-	m_bOperationType = byOperationMode;
+	current_DUNGEON_OPERATIONTYPE = byOperationMode;
 	DSTWS_DUNGEON_REFRESH_OPERATIONMODE packet;
 	packet.wDungeonID = (WORD)m_dwID;
 	packet.byOperationMode = byOperationMode;
 	g_pNet->SendToServer(WSINDEX, (char*)&packet, packet.GetPacketSize(), FLAG_SEND_NOT_ENCRYPTION);
 	
 	char szQuery[0xff]={0,};
-	wsprintf(szQuery, "update mapinfo set OperationType = %d where id = %d", m_bOperationType, m_dwID);
+	wsprintf(szQuery, "update mapinfo set OperationType = %d where id = %d", current_DUNGEON_OPERATIONTYPE, m_dwID);
 	g_pDb->THExecuteSQL(szQuery, FALSE, FALSE, NULL, (BYTE)GAME_DB);
 }
 
@@ -393,21 +393,21 @@ void DUNGEON_DATA_EX::SetGuardianItem(CItem* pItem)
 
 void DUNGEON_DATA_EX::SetAccExp(DWORD dwExp)
 {
-	m_dwAccExp = dwExp;
+	accumulatedEXPForOwner = dwExp;
 
 	DSTWS_REFRESH_ACCEXP_ACQUISITION ServerPacket;
 	ServerPacket.wDungeonID = (WORD)m_dwID;
-	ServerPacket.dwAccExp = m_dwAccExp;	
+	ServerPacket.dwAccExp = accumulatedEXPForOwner;	
 	g_pNet->SendToServer(WSINDEX, (char*)&ServerPacket, ServerPacket.GetPacketSize(), FLAG_SEND_NOT_ENCRYPTION );
 
 	char szQuery[0xff]={0,};
-	wsprintf(szQuery, "update mapinfo set accexp = %d where id = %d",m_dwAccExp, m_dwID);
+	wsprintf(szQuery, "update mapinfo set accexp = %d where id = %d",accumulatedEXPForOwner, m_dwID);
 	g_pDb->THExecuteSQL(szQuery, FALSE, FALSE, NULL, (BYTE)GAME_DB);
 }
 
 BOOL DUNGEON_DATA_EX::IsDungeonOwner(const CUser* const pUser) const
 {
-	return (m_dwOwnerIndex == pUser->GetID() || (m_dwOwnerGuildNum && pUser->m_dwGuildId == m_dwOwnerGuildNum && pUser->m_byRank == 1));
+	return (ownerUserID == pUser->GetID() || (ownerGuildID && pUser->m_dwGuildId == ownerGuildID && pUser->m_byRank == 1));
 }
 
 BOOL DUNGEON_DATA_EX::IsPathWay()const
@@ -419,7 +419,7 @@ BOOL DUNGEON_DATA_EX::IsEventDungeon()const
 {
 	return (DUNGEON_TYPE_EVENT == m_lDungeonType);
 }
-BOOL DUNGEON_DATA_EX::IsConquer()const
+BOOL DUNGEON_DATA_EX::isSiegeDungeon()const
 {
 	return (DUNGEON_TYPE_CONQUER == m_lDungeonType);
 }

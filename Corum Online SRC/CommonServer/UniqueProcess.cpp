@@ -5,7 +5,7 @@
 HANDLE g_hGlobalEvent = NULL;
 
 
-int DECLSPECIFIER CreateGlobalKernelObject(DWORD dwServerID)
+int COMMONSERVERDECLSPECIFIER CreateGlobalKernelObject(DWORD dwServerID)
 {
 	char szObjectName[0xff]={0,};
 	wsprintf(szObjectName, "Global\\CorumServer_%u", dwServerID);
@@ -18,7 +18,7 @@ int DECLSPECIFIER CreateGlobalKernelObject(DWORD dwServerID)
 }
 
 
-void DECLSPECIFIER DeleteGlobalKernelObject()
+void COMMONSERVERDECLSPECIFIER DeleteGlobalKernelObject()
 {
 	if(g_hGlobalEvent)
 	{

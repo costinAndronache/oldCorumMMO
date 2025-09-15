@@ -3,11 +3,13 @@
 #include "message.h"
 #include "Dungeon_Data_ex.h"
 #include "InitGame.h"
+#include "../BaseLibrary/Utilities.h"
 
-CorumCMap::CorumCMap( DWORD dwWidth, DWORD dwHeight, float fTileSize )
+CorumCMap::CorumCMap( DWORD dwWidth, DWORD dwHeight, float fTileSize, int layerID)
 {
 	memset(this, 0, sizeof(CorumCMap));
 	m_pTile = new MAP_TILE[ dwWidth * dwHeight ];	
+	_layerID = layerID;
 
 	//memset( m_pTile, 0xff, sizeof(MAP_TILE) * (dwWidth * dwHeight) );
 	memset( m_pTile, 0x00, sizeof(MAP_TILE) * (dwWidth * dwHeight) );
@@ -54,7 +56,7 @@ CorumCMap::~CorumCMap()
 	m_pCPList = NULL;
 }
 
-MAP_TILE* CorumCMap::GetMap(DWORD dwX, DWORD dwZ)
+MAP_TILE* CorumCMap::GetTileByIndexes(DWORD dwX, DWORD dwZ)
 {
 	if( dwX >= m_dwMapXTileMany || dwZ >= m_dwMapZTileMany )	
 		return NULL;
@@ -117,13 +119,23 @@ lb_set:
 	return TRUE;
 }
 
-MAP_TILE* CorumCMap::GetTile(float fx, float fz)
+MAP_TILE* CorumCMap::GetTileBy3DPosition(float fx, float fz)
 {
 	if(fx < 0 || fz < 0)	return NULL;
 
 	DWORD x = (DWORD)( fx / m_fTileSize );
 	DWORD z = (DWORD)( fz / m_fTileSize );
 	
-	return GetMap(x, z);
+	return GetTileByIndexes(x, z);
 }
 
+std::string CorumCMap::debugDescription() {
+	return Utilities::debugDescriptionMatrix<int>(
+		(int)m_dwMapZTileMany, (int)m_dwMapXTileMany, 
+		[=](int i, int j) {
+		auto tile = GetTileByIndexes(j, i);
+		return tile->wAttr.uAttr;
+		},
+		true
+	);
+}

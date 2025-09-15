@@ -65,14 +65,14 @@ static SkillSheetView::Model convert(
 }
 
 UserSkillsManager::UserSkillsManager(
-	UserSkillsView* managedView,
+	std::shared_ptr<UserSkillsView> managedView,
 	CMainUser* mainUser,
-	SharedNetwork* network,
+    std::shared_ptr<SharedNetwork> network,
 	SSKILL_LIST_MANAGER* skillListManager,
 	EffectLayer* effectLayer,
 	SoundLibrary* soundLibrary,
-	TooltipHelper* tooltipHelper,
-	TooltipLayer* tooltipLayer
+	std::shared_ptr<TooltipHelper> tooltipHelper,
+	std::shared_ptr<TooltipLayer> tooltipLayer
 ) {
 	_managedView = managedView;
 	_mainUser = mainUser;
@@ -92,15 +92,15 @@ UserSkillsManager::UserSkillsManager(
 void UserSkillsManager::refreshUserSkillsView() {
 	if (_tooltipManager) { _tooltipManager->clearAllTooltips(); }
 
-	_tooltipManager = new TooltipManager(
+	_tooltipManager = std::make_shared<TooltipManager>(
 		_tooltipLayer,
-		[=](TooltipManager::TooltipObjectID skillKind) {
+		[this](TooltipManager::TooltipObjectID skillKind) {
 			return _tooltipHelper->tooltipForSkill(skillKind);
 		}
 	);
 
 	auto transformFn = [=](LP_SKILL_RESOURCE_EX skill) {
-		return buildModelFor(skill, _tooltipManager);
+		return buildModelFor(skill, _tooltipManager.get());
 	};
 
 	auto summoner = convert(getSkillKindsForClass(_skillListManager->pSkillList[CLASS_TYPE_SUMMONER]), transformFn);
