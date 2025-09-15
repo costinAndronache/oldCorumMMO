@@ -20,14 +20,14 @@ CharacterAttributeView::CharacterAttributeView(CustomUI::Rect frameInParent, Upd
 	const auto nameFrame = _bounds.withWidth(130);
 
 	_nameLabel = registerChildRenderable<SingleLineLabel>([=]() {
-		return new SingleLineLabel(nameFrame, appearance, "");
+		return std::make_shared<SingleLineLabel>(nameFrame, appearance, "");
 	});
 	const auto valueFrame = _bounds
 		.withOriginOffsetBy({ (int)nameFrame.size.width, 0 })
 		.withWidthOffset(-nameFrame.size.width);
 
 	_valueLabel = registerChildRenderable<SingleLineLabel>([=]() {
-		return new SingleLineLabel(valueFrame, appearance, "");
+		return std::make_shared<SingleLineLabel>(valueFrame, appearance, "");
 	});
 
 	auto btnFrame = _bounds
@@ -36,7 +36,7 @@ CharacterAttributeView::CharacterAttributeView(CustomUI::Rect frameInParent, Upd
 		.withInsets({ 5, 5, 5, 5 });
 
 	_increaseButton = registerChildRenderable<Button>([=]() {
-		return new Button(
+		return std::make_shared<Button>(
 			NewHUDResources::plus,
 			btnFrame
 		);
@@ -70,7 +70,7 @@ CharacterStatsView::CharacterStatsView(CustomUI::Rect frameInParent) {
 	const auto _bounds = bounds();
 
 	_titleLabel = registerChildRenderable<SingleLineLabel>([=]() {
-		return new SingleLineLabel(
+		return std::make_shared<SingleLineLabel>(
 			_bounds.withHeight(closeButtonHeight),
 			SingleLineLabel::Appearance(Color::white, nullptr),
 			"Character"
@@ -83,12 +83,12 @@ CharacterStatsView::CharacterStatsView(CustomUI::Rect frameInParent) {
 		.withHeight(closeButtonHeight)
 		.withWidth(closeButtonHeight);
 	_closeButton = registerChildRenderable<Button>([=]() {
-		return new Button(NewHUDResources::xClose, closeBtnFrame);
+		return std::make_shared<Button>(NewHUDResources::xClose, closeBtnFrame);
 	});
 
 	auto displacementHandleFrame = _bounds.withSize(closeBtnFrame.size);
 	_displacementHandle = registerChildRenderable<DisplacementHandleRenderable>([=](){
-		return new DisplacementHandleRenderable(displacementHandleFrame);
+		return std::make_shared<DisplacementHandleRenderable>(displacementHandleFrame);
 	});
 
 	auto containerFrame = _bounds
@@ -96,7 +96,7 @@ CharacterStatsView::CharacterStatsView(CustomUI::Rect frameInParent) {
 		.withHeightOffset(-closeBtnFrame.size.height);
 
 	_container = registerChildRenderable<PagedContainer>([=]() {
-		return new PagedContainer(containerFrame);
+		return std::make_shared<PagedContainer>(containerFrame);
 	});
 
 	updateBackground(NewHUDResources::genericBackgroundSprite);
@@ -119,11 +119,11 @@ void CharacterStatsView::rebuildWithProxies(
 	_container->rebuildPages<std::vector<UpdateProxy*>>(
 		pageModels,
 		[=](Rect frameInParent, std::vector<UpdateProxy*> modelsForPage, int) {
-			auto mc = new MatrixContainer(frameInParent, appearance);
+			auto mc = std::make_shared<MatrixContainer>(frameInParent, appearance);
 			mc->rebuild<UpdateProxy*>(
 				modelsForPage,
 				[=](UpdateProxy* proxy, int, Rect itemFrame) {
-					return new CharacterAttributeView(itemFrame, proxy);
+					return std::make_shared<CharacterAttributeView>(itemFrame, proxy);
 				}
 			);
 			return mc;

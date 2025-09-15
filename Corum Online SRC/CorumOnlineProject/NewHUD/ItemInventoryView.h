@@ -32,10 +32,10 @@ namespace NewInterface {
 
 	private:
 		Appearance _appearance;
-		CustomUI::PagedContainer* _pagedContainer;
+		std::shared_ptr<CustomUI::PagedContainer> _pagedContainer;
 		CItemResourceHash* _resourceHash;
 
-		std::vector<GenericItemsContainerView*> _pages;
+		std::vector<std::shared_ptr<GenericItemsContainerView>> _pages;
 	};
 }
 

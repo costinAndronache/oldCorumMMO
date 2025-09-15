@@ -304,8 +304,8 @@ int CTokenCommand::ParseGMCommand()
 			// GM 이 있는 곳을 알려준다. . 
 			m_sWorldGMCommand.sGMCmdParamRecallSomeone.wDungeonID = (WORD)g_pThisDungeon->m_dwID;
 			m_sWorldGMCommand.sGMCmdParamRecallSomeone.bLayer	  = (BYTE)g_pMainPlayer->m_bCurLayer;
-			m_sWorldGMCommand.sGMCmdParamRecallSomeone.wX		  = (WORD)g_pMainPlayer->m_v3CurPos.x;
-			m_sWorldGMCommand.sGMCmdParamRecallSomeone.wZ		  = (WORD)g_pMainPlayer->m_v3CurPos.z;
+			m_sWorldGMCommand.sGMCmdParamRecallSomeone.wX		  = (WORD)g_pMainPlayer->currentPosition().x;
+			m_sWorldGMCommand.sGMCmdParamRecallSomeone.wZ		  = (WORD)g_pMainPlayer->currentPosition().z;
 			
 			goto Parsing_Sucess;
 		}

@@ -3,6 +3,7 @@
 
 #include <functional>
 #include <vector>
+#include "BaseLibrary.h"
 
 #ifndef NULL
 #define NULL (0)
@@ -19,7 +20,7 @@ struct CNode
     void*    data;
 };
 
-class CVoidList {
+class BASELIBRARYDECLSPEC  CVoidList {
 public:
 
     CVoidList();

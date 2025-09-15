@@ -159,7 +159,7 @@ void GetSoundEffect(ISoundEffect ** ppOutEffect, SOUND_FILE_HANDLE & rhInFileHan
 	if (g_pMainPlayer)
 	{
 
-		fDis = CalcDistance(&g_pMainPlayer->m_v3CurPos, &v3Pos);
+		fDis = CalcDistance(g_pMainPlayer->currentPositionReadOnly(), &v3Pos);
 
 		if ( fDis >= SOUND_LISTEN_SCOPE_DISTANCE && !(g_v3InterfaceSoundPos == v3Pos) )
 		{
@@ -183,7 +183,7 @@ void GetSoundEffect(ISoundEffect ** ppOutEffect, SOUND_FILE_HANDLE & rhInFileHan
 //===================================
 // Purpose : 이펙트 사운드 핸들을 이용하여 소리를 출력
 //===================================
-void PlaySoundEffect(ISoundEffect * pSoundEffect, VECTOR3 * pV3Pos, bool bLoop)
+void PlaySoundEffect(ISoundEffect * pSoundEffect, const VECTOR3 * pV3Pos, bool bLoop)
 {	
 	if ( !g_pSoundLib ) 
 		return;
@@ -202,9 +202,9 @@ void PlaySoundEffect(ISoundEffect * pSoundEffect, VECTOR3 * pV3Pos, bool bLoop)
 		// sung-han 2005-03-14 거리에 따른 사운드 볼륨 조절 ----------------------------
 		float fDis = 0;
 		float fEffectVolume = g_fEffectVolume;
-		if(g_pMainPlayer && !(*pV3Pos == v3Pos) )
+		if(g_pMainPlayer && !(*(VECTOR3*)pV3Pos == v3Pos) )
 		{
-			fDis = CalcDistance(&g_pMainPlayer->m_v3CurPos, pV3Pos);
+			fDis = CalcDistance(g_pMainPlayer->currentPositionReadOnly(), pV3Pos);
 			fEffectVolume = g_fEffectVolume - (fDis / SOUND_LISTEN_SCOPE_DISTANCE)*g_fEffectVolume;
 		}
 		if(fEffectVolume < 0 || fEffectVolume > 1)
@@ -215,10 +215,10 @@ void PlaySoundEffect(ISoundEffect * pSoundEffect, VECTOR3 * pV3Pos, bool bLoop)
 
 		
 		pSoundEffect->SetVolume(fEffectVolume);
-		if ( *pV3Pos == v3Pos )
+		if ( *(VECTOR3*)pV3Pos == v3Pos )
 			pSoundEffect->SetRelativePosition(&v3Pos);
 		else
-			pSoundEffect->SetPosition(pV3Pos);
+			pSoundEffect->SetPosition((VECTOR3*)pV3Pos);
 		
 		pSoundEffect->Play(bLoop);
 	}

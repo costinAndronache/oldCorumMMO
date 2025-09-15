@@ -125,7 +125,7 @@ void CmdPortalMove( DWORD dwConnectionIndex, char* pMsg, DWORD dwLength )
 		{
 			// 같은 포트이다. 이 던전서버에 할당된 던전이면 바로 처리
 
-			if( pDungeon->GetDungeonDataEx()->m_bSiege && !pDungeon->GetDungeonDataEx()->IsDungeonOwner(pUser) )
+			if( pDungeon->GetDungeonDataEx()->inSiegeWarNow && !pDungeon->GetDungeonDataEx()->IsDungeonOwner(pUser) )
 			{
 				pUser->GoToWorld( pUser->m_bDestWorldSpot, GOTOWORLD_STATUS_GOTOWORLD );
 				return;
@@ -150,7 +150,7 @@ void CmdPortalMove( DWORD dwConnectionIndex, char* pMsg, DWORD dwLength )
 			if ( pUser->GetPortalType() != Portal_Type_GM && pUser->GetCurDungeonID() == pPacket->wToDungeonID	&& pUser->GetCurLayerIndex() == pPacket->bLayerNo )
 				FAIL_VALUE(byPortalFail, 6);				
 						
-			if (pDungeon->GetDungeonDataEx()->IsConquer() && !pDungeon->GetDungeonDataEx()->IsDungeonOwner(pUser) )
+			if (pDungeon->GetDungeonDataEx()->isSiegeDungeon() && !pDungeon->GetDungeonDataEx()->IsDungeonOwner(pUser) )
 			{
 				if (pUser->GetPortalType() == Portal_Type_GM)
 				{
@@ -308,7 +308,7 @@ void CmdRequestSectionInfoForPortal( DWORD dwConnectionIndex, char* pMsg, DWORD 
 	pLayer->InsertUser( pUser,  &v2Start);
 	pUser->ChangeGodMode(GODMODE_STATUS_MAPLOADING);
 
-	if (pDungeon->GetDungeonDataEx()->m_bSiege)
+	if (pDungeon->GetDungeonDataEx()->inSiegeWarNow)
 	{
 		pDungeon->SendSiegeInfo(pUser);
 		pUser->SetAttackMode(pDungeon->GetAttackMode(pUser));
@@ -2791,7 +2791,7 @@ void CmdPickupItem( DWORD dwConnectionIndex, char* pMsg, DWORD dwLength )
 		{		
 			DUNGEON_DATA_EX* pDungeon = pUser->GetCurDungeon()->GetDungeonDataEx();
 			
-			if (!pDungeon->m_bSiege)
+			if (!pDungeon->inSiegeWarNow)
 			{					
 				if(pDungeon->m_cGuardianItem.m_wItemID!=0)
 				{
@@ -4085,7 +4085,7 @@ void CmdPickupItem( DWORD dwConnectionIndex, char* pMsg, DWORD dwLength )
 		break;
 	case 63:		// 마우스에서 던전관리 창으로 마법진 이동
 		{	
-			if (pUser->GetCurDungeon()->GetDungeonDataEx()->m_bSiege)	return;
+			if (pUser->GetCurDungeon()->GetDungeonDataEx()->inSiegeWarNow)	return;
 			if (!pUser->GetCurDungeon()->GetDungeonDataEx()->IsDungeonOwner(pUser))
 				break;
 
@@ -4118,7 +4118,7 @@ void CmdPickupItem( DWORD dwConnectionIndex, char* pMsg, DWORD dwLength )
 		break;
 	case 64:	// 던전관리창에서 마법진을 마우스로
 		{
-			if (pUser->GetCurDungeon()->GetDungeonDataEx()->m_bSiege)	return;
+			if (pUser->GetCurDungeon()->GetDungeonDataEx()->inSiegeWarNow)	return;
 			if (pUser->m_ItemMouse.GetID())	return;
 			if (!pUser->GetCurDungeon()->GetDungeonDataEx()->IsDungeonOwner(pUser))
 				break;
@@ -6712,7 +6712,7 @@ void CmdDungeonAttack_User_User( DWORD dwConnectionIndex, char* pMsg, DWORD dwLe
 			{ 
 				SetBadAction(pOffense, pDefense);
 							
-				if (pOffense->GetCurDungeon()->GetDungeonDataEx()->IsConquer() && pOffense->GetCurDungeon()->GetDungeonDataEx()->m_bSiege)
+				if (pOffense->GetCurDungeon()->GetDungeonDataEx()->isSiegeDungeon() && pOffense->GetCurDungeon()->GetDungeonDataEx()->inSiegeWarNow)
 					pOffense->m_wSiegePKCount++;
 
 				pDefense->SetStatus( UNIT_STATUS_DEAD );

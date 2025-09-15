@@ -24,7 +24,7 @@ ItemFilteringView::ItemFilteringView(Rect frameInParent, std::vector<CItem*>& al
 	SingleLineLabel::Appearance titleAppearance = { {255,255,255,255 } };
 
 	_titleLabel = registerChildRenderable<SingleLineLabel>([=]() {
-		return new SingleLineLabel(titleLabelRect, titleAppearance, title);
+		return std::make_shared<SingleLineLabel>(titleLabelRect, titleAppearance, title);
 	});
 
 	SpriteModel closeSpriteModel = { SpriteCollection::xClose, SpriteCollection::xCloseSize };
@@ -34,8 +34,8 @@ ItemFilteringView::ItemFilteringView(Rect frameInParent, std::vector<CItem*>& al
 		.withWidth(30);
 
 	_closeButton = registerChildRenderable<Button>([=]() {
-		return new Button(
-			{
+		return std::make_shared<Button>(
+			Button::Sprites{
 				closeSpriteModel,
 				SpriteModel::zero,
 				closePressedSpriteModel
@@ -43,8 +43,8 @@ ItemFilteringView::ItemFilteringView(Rect frameInParent, std::vector<CItem*>& al
 			closeButtonRect);
 	});
 
-	_closeButton->onClickEndLEFT([=]() {
-		onButtonPressRelease(_closeButton);
+	_closeButton->onClickEndLEFT([this]() {
+		onButtonPressRelease(_closeButton.get());
 	});
 
 	Rect inputFieldContainer = Rect::zero()
@@ -56,14 +56,16 @@ ItemFilteringView::ItemFilteringView(Rect frameInParent, std::vector<CItem*>& al
 	SpriteModel clearBtnModel = { SpriteCollection::xRedBlack, SpriteCollection::xRedBlackSize };
 	SpriteModel clearBtnPressedModel = { SpriteCollection::xRedBlackPressed, SpriteCollection::xRedBlackSize };
 
-	_inputField = registerChildRenderable<InputField>([&]() {
-		return new InputField(inputFieldContainer, InputFieldResources::bgSpriteModel, {
-			clearBtnModel, SpriteModel::zero, clearBtnPressedModel
-		});
+	_inputField = registerChildRenderable<InputField>([=]() {
+		return std::make_shared<InputField>(
+			inputFieldContainer, 
+			InputFieldResources::bgSpriteModel, 
+			Button::Sprites{ clearBtnModel, SpriteModel::zero, clearBtnPressedModel}
+		);
 	});
 
-	_inputField->onTextUpdate([&](const char* text) {
-		onInputFieldTextChange(_inputField, text);
+	_inputField->onTextUpdate([this](const char* text) {
+		onInputFieldTextChange(_inputField.get(), text);
 	});
 
 	Rect categoriesFilterContainer = Rect::zero()
@@ -72,11 +74,15 @@ ItemFilteringView::ItemFilteringView(Rect frameInParent, std::vector<CItem*>& al
 		.withHeight(40);
 
 	_categoriesFilterView = registerChildRenderable<ItemCategoryFilterView>([&]() {
-		return new ItemCategoryFilterView(categoriesFilterContainer, CategoryType::CategoryTypeAll);
+		return std::make_shared<ItemCategoryFilterView>(categoriesFilterContainer, CategoryType::CategoryTypeAll);
 	});
 
-	_categoriesFilterView->onCategoryUpdate([&](CategoryType category) {
-		itemCategoryFilterViewDidSwitchToCategory(_categoriesFilterView, category);
+
+	_categoriesFilterView->onCategoryUpdate([this](CategoryType category) {
+		itemCategoryFilterViewDidSwitchToCategory(
+			_categoriesFilterView.get(), 
+			category
+		);
 	});
 
 	Rect tableContainer = Rect::zero()
@@ -90,8 +96,14 @@ ItemFilteringView::ItemFilteringView(Rect frameInParent, std::vector<CItem*>& al
 	ItemInfoViewResources::initialize();
 
 	PagedItemViewTableResources::initialize();
-	_table = registerChildRenderable<PagedItemViewTable>([&]() {
-		return new PagedItemViewTable(tableContainer, this, ItemInfoViewResources::bgSpriteModel.naturalSize, allItems.size(), SpriteModel::zero);
+	_table = registerChildRenderable<PagedItemViewTable>([&, this]() {
+		return std::make_shared<PagedItemViewTable>(
+			tableContainer, 
+			(PagedItemViewTableClient*)this, 
+			ItemInfoViewResources::bgSpriteModel.naturalSize, 
+			allItems.size(), 
+			SpriteModel::zero
+		);
 	});
 	
 }
@@ -124,7 +136,7 @@ void ItemFilteringView::renderWithRenderer(I4DyuchiGXRenderer* renderer, int ord
 	_closeButton->renderWithRenderer(renderer, order + 1);
 
 	for (int i = 0; i < _createdInfoViews.size(); i++) {
-		ItemInfoView* iv = static_cast<ItemInfoView*>(_createdInfoViews[i]->renderable());
+		auto iv = static_cast<ItemInfoView*>(_createdInfoViews[i]->renderable().get());
 		if (iv->renderInfoIfMouseHover()) {
 			return;
 		}
@@ -137,21 +149,23 @@ void ItemFilteringView::onInputFieldTextChange(InputField* inputField, const cha
 	_table->reloadData(_displayedItems.size());
 }
 
-Renderable* ItemFilteringView::buildRenderableForModelAtIndexWithFrame(int modelIndex, Rect frame) {
+std::shared_ptr<CustomUI::Renderable> ItemFilteringView::buildRenderableForModelAtIndexWithFrame(int modelIndex, Rect frame) {
 	CItem* current = NULL;
 	if (0 <= modelIndex && modelIndex < _displayedItems.size()) {
 		current = _displayedItems[modelIndex];
 	}
 
 	ItemInfoView::Model model = { current, ItemInfoViewResources::bgSpriteModel.naturalSize };
-	SelectionView* sv = new SelectionView(frame, [=](Rect frameInsideSelectionView) {
-		return new ItemInfoView(model,
+	auto sv = std::make_shared<SelectionView>(frame, [=](Rect frameInsideSelectionView) {
+		return std::make_shared<ItemInfoView>(model,
 			frameInsideSelectionView,
 			ItemInfoViewResources::bgSpriteModel);
 	});
 
-	sv->onSelectionStateChange([=](bool isSelected) {
-		selectionViewDidChangeSelectionState(sv, isSelected);
+	auto weakSV = std::weak_ptr<SelectionView>(sv);
+
+	sv->onSelectionStateChange([this, weakSV](bool isSelected) {
+		selectionViewDidChangeSelectionState(weakSV.lock().get(), isSelected);
 	});
 	
 
@@ -165,9 +179,9 @@ Renderable* ItemFilteringView::buildRenderableForModelAtIndexWithFrame(int model
 	return sv;
 }
 
-void ItemFilteringView::updateRenderableWithModelAtIndex(Renderable* renderable, int modelIndex) {
-	SelectionView* sv = static_cast<SelectionView*>(renderable);
-	ItemInfoView* infoView = static_cast<ItemInfoView*>(sv->renderable());
+void ItemFilteringView::updateRenderableWithModelAtIndex(std::shared_ptr<CustomUI::Renderable> renderable, int modelIndex) {
+	SelectionView* sv = static_cast<SelectionView*>(renderable.get());
+	ItemInfoView* infoView = static_cast<ItemInfoView*>(sv->renderable().get());
 
 	CItem* current = NULL;
 	if (0 <= modelIndex && modelIndex < _displayedItems.size()) {
@@ -192,7 +206,7 @@ void ItemFilteringView::updateRenderableWithModelAtIndex(Renderable* renderable,
 void ItemFilteringView::onButtonPress(Button* button) { }
 
 void ItemFilteringView::onButtonPressRelease(Button* button) {
-	if (button == _closeButton) {
+	if (button == _closeButton.get()) {
 		setHidden(true);
 		_PlaySound(0, SOUND_TYPE_SYSTEM, SOUND_SYSTEM_WNDCLOSE, g_v3InterfaceSoundPos, FALSE);
 	}

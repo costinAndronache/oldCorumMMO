@@ -10,8 +10,8 @@ namespace NewInterface {
 		using IncreasedAttribute = STATUS_POINT_KIND;
 		using AttributeIncreaseHandler = std::function<void(IncreasedAttribute)>;
 		CharacterStatsManager(
-			CharacterStatsView* managedView,
-			StatusPointManager* _statusPointManager,
+			std::shared_ptr<CharacterStatsView> managedView,
+			std::shared_ptr<StatusPointManager> statusPointManager,
 			CMainUser* mainUser,
 			SoundLibrary* soundLibrary
 		);
@@ -35,8 +35,8 @@ namespace NewInterface {
 		static std::vector<std::vector<ModelCreate>> _entriesGenerators;
         static const std::vector<std::vector<ModelCreate>>& entriesGenerators();
 
-		StatusPointManager* _statusPointManager;
-		CharacterStatsView* _managedView;
+		std::shared_ptr<StatusPointManager> _statusPointManager;
+		std::shared_ptr<CharacterStatsView> _managedView;
 		CMainUser* _mainUser;
 		SoundLibrary* _soundLibrary;
 

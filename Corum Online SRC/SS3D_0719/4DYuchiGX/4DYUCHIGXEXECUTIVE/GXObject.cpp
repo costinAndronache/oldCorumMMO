@@ -245,12 +245,11 @@ void CoGXObject::DisableAsEffect()
 	m_dwPropertyFlag &= GXOBJECT_CREATE_TYPE_EFFECT_INVERSE;
 }
 
-void CoGXObject::SetPosition(VECTOR3* pv3Pos, BOOL bDoInterpolation)
+void CoGXObject::SetPosition(const VECTOR3* pv3Pos, BOOL bDoInterpolation)
 {
 	m_v3Pos = *pv3Pos;
 
-	if( bDoInterpolation == FALSE)	
-	{
+	if( bDoInterpolation == FALSE) {
 		SetOldPosition( &m_v3Pos);
 	}
 

@@ -251,7 +251,7 @@ void SetStrFn(char* pszText, char** pArrayText, BYTE* byLen, int nIndex, int nSi
 }
 
 
-void GXSetPosition(GXOBJECT_HANDLE gxh, VECTOR3* pv3Pos, BOOL bDoInterpolation, BOOL bChk)
+void GXSetPosition(GXOBJECT_HANDLE gxh, const VECTOR3* pv3Pos, BOOL bDoInterpolation, BOOL bChk)
 {	
 	if(!bChk || GetGameStatus()==UPDATE_GAME_WORLD)
 	{
@@ -262,7 +262,7 @@ void GXSetPosition(GXOBJECT_HANDLE gxh, VECTOR3* pv3Pos, BOOL bDoInterpolation, 
 		if(!g_pMap)
 			return;
 
-		MAP_TILE* pTile = g_pMap->GetTile(pv3Pos->x, pv3Pos->z);
+		MAP_TILE* pTile = g_pMap->GetTileBy3DPosition(pv3Pos->x, pv3Pos->z);
 
 		if(!pTile)
 		{

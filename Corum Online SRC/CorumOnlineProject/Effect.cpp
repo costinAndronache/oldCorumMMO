@@ -22,16 +22,16 @@
 #include "CodeFun.h"
 #include "UserInterface.h"
 
-void EffectLayer::Init(BOOL bChk)
+void EffectLayer::Init(BOOL loadJointsForEffects)
 {
 	m_dwCount	= 0;
 	memset(m_Effect, 0, sizeof(m_Effect));
 	memset(g_sSkillInfoDP, 0, sizeof(g_sSkillInfoDP));
 
-	LoadScript(bChk);	
+	LoadScript(loadJointsForEffects);	
 }
 
-void EffectLayer::LoadScript(BOOL bChk)
+void EffectLayer::LoadScript(BOOL loadJointsForEffects)
 {
 	// 스킬 데이터를 로드한다.
 	Load(GetFile("skill.cdb", DATA_TYPE_MANAGER));
@@ -41,7 +41,7 @@ void EffectLayer::LoadScript(BOOL bChk)
 	{
 		m_nEffectSize[i] = (BYTE)lstrlen(m_Effect[i].szName);		
 		
-		if(bChk)
+		if(loadJointsForEffects)
 		{
 			for(int joint = 0; joint < m_Effect[i].bJointEffect; ++joint)
 			{
@@ -408,7 +408,7 @@ AppliedSkill* EffectLayer::CreateGXObject(char *szFile, BOOL bOwn, WORD wChrNum)
 	return pEffectDesc;
 }
 
-BOOL EffectLayer::CanSkillBeCastAtPosition(BYTE bSkillKind, VECTOR3* vecTarget)
+BOOL EffectLayer::CanSkillBeCastAtPosition(BYTE bSkillKind, const VECTOR3* vecTarget)
 {
 	if (g_pThisDungeon->GetDungeonType() == DUNGEON_TYPE_VILLAGE 
 		&& !g_pMainPlayer->m_bCurLayer )
@@ -427,14 +427,14 @@ BOOL EffectLayer::CanSkillBeCastAtPosition(BYTE bSkillKind, VECTOR3* vecTarget)
 		return FALSE;
 	}
 
-	MAP_TILE* pTile = g_pMap->GetTile(vecTarget->x, vecTarget->z);
+	MAP_TILE* pTile = g_pMap->GetTileBy3DPosition(vecTarget->x, vecTarget->z);
 	if (pTile && !pTile->wAttr.uSection)
 	{
 		_PlaySound(0, SOUND_TYPE_SYSTEM, SOUND_SYSTEM_ERRORMSG, g_Camera.CameraDesc.v3From, FALSE);
 		return FALSE;
 	}
 
-	float fDist = CalcDistance( &g_pMainPlayer->m_v3CurPos, vecTarget );
+	float fDist = CalcDistance( g_pMainPlayer->currentPositionReadOnly(), vecTarget );
 	Effect* pEffect = GetEffectInfo(bSkillKind);
 
 	if( pEffect->dwRange && fDist > pEffect->dwRange )
@@ -455,7 +455,7 @@ BOOL EffectLayer::CanSkillBeCastAtPosition(BYTE bSkillKind, VECTOR3* vecTarget)
 	return TRUE;
 }
 
-AppliedSkill* EffectLayer::CreateMagicArray(BYTE bSkillKind, VECTOR3* vecStart, BOOL bOwn)
+AppliedSkill* EffectLayer::CreateMagicArray(BYTE bSkillKind, const VECTOR3* vecStart, BOOL bOwn)
 {
 	Effect* pEffect = GetEffectInfo(bSkillKind);
 	

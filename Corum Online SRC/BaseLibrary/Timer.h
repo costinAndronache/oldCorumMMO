@@ -3,8 +3,9 @@
 #include <Windows.h>
 #include "WorkQueue.h"
 #include "RunLoop.h"
+#include "BaseLibrary.h"
 
-class Timer: public RunLoopSource {
+class BASELIBRARYDECLSPEC Timer: public RunLoopSource {
 public:
 	typedef std::function<void()> Callback;
 	void launchAfter(DWORD timeoutMilliseconds, bool repeated, Callback callback);

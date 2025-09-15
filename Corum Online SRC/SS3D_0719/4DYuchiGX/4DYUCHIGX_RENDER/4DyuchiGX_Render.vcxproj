@@ -21,14 +21,14 @@
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <UseOfMfc>false</UseOfMfc>
     <CharacterSet>MultiByte</CharacterSet>
     <WholeProgramOptimization>true</WholeProgramOptimization>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
-    <PlatformToolset>$(SOLUTION_PLATFORM_TOOLSET)</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <UseOfMfc>false</UseOfMfc>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
@@ -53,9 +53,11 @@
     <LibraryPath>$(LibraryPath);$(DX8LIBDIR);;..\..\..\centralizedOutput;</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <OutDir>./../../4DYuchiDLL\</OutDir>
-    <IntDir>.\Release\</IntDir>
+    <OutDir>.\Debug\</OutDir>
+    <IntDir>.\Debug\</IntDir>
     <LinkIncremental>false</LinkIncremental>
+    <LibraryPath>$(LibraryPath);$(DX8LIBDIR);;..\..\..\centralizedOutput;</LibraryPath>
+    <IncludePath>$(IncludePath);$(DX8INCLUDEDIR);</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -63,9 +65,9 @@
       <AdditionalIncludeDirectories>C:\Work\XEngine;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;MY4DYUCHIGX_RENDER_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
-      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <RuntimeLibrary>$(CPP_RUNTIME_LIB_DEBUG)</RuntimeLibrary>
       <FunctionLevelLinking>true</FunctionLevelLinking>
-      <PrecompiledHeader />
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderOutputFile>.\Debug/4DyuchiGX_Render.pch</PrecompiledHeaderOutputFile>
       <AssemblerListingLocation>.\Debug/</AssemblerListingLocation>
       <ObjectFileName>.\Debug/</ObjectFileName>
@@ -73,7 +75,7 @@
       <BrowseInformation>true</BrowseInformation>
       <WarningLevel>Level4</WarningLevel>
       <SuppressStartupBanner>true</SuppressStartupBanner>
-      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
     </ClCompile>
     <Link>
       <RegisterOutput>false</RegisterOutput>
@@ -125,7 +127,7 @@
       <BufferSecurityCheck>false</BufferSecurityCheck>
       <FunctionLevelLinking>false</FunctionLevelLinking>
       <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
-      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderOutputFile>.\Release/4DyuchiGX_Render.pch</PrecompiledHeaderOutputFile>
       <AssemblerListingLocation>.\Release/</AssemblerListingLocation>
       <ObjectFileName>.\Release/</ObjectFileName>
@@ -133,17 +135,17 @@
       <BrowseInformation>true</BrowseInformation>
       <WarningLevel>Level4</WarningLevel>
       <SuppressStartupBanner>true</SuppressStartupBanner>
-      <DebugInformationFormat />
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>d3dx8.lib;d3d8.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>legacy_stdio_definitions.lib;d3dx8.lib;d3d8.lib;SS3DGFunc.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ShowProgress>LinkVerboseLib</ShowProgress>
       <OutputFile>$(OutDir)SS3DRendererForCorum.dll</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <AdditionalLibraryDirectories>C:\Work\XEngine\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <IgnoreSpecificDefaultLibraries>libci.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
       <ModuleDefinitionFile>.\4DyuchiGX_Render.def</ModuleDefinitionFile>
-      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <GenerateDebugInformation>DebugFull</GenerateDebugInformation>
       <ProgramDatabaseFile>$(OutDir)SS3DRendererForCorum.pdb</ProgramDatabaseFile>
       <GenerateMapFile>true</GenerateMapFile>
       <MapFileName>$(OutDir)SS3DRendererForCorum.map</MapFileName>
@@ -154,6 +156,7 @@
       <BaseAddress>0x64000000</BaseAddress>
       <ImportLibrary>$(OutDir)SS3DRendererForCorum.lib</ImportLibrary>
       <TargetMachine>MachineX86</TargetMachine>
+      <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
     </Link>
     <Midl>
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -167,6 +170,9 @@
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <Culture>0x0412</Culture>
     </ResourceCompile>
+    <PostBuildEvent>
+      <Command>..\..\..\..\scripts\postBuildCentraliseOutput_4DyuchiGXRender.bat</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <None Include="..\4DyuchiGRX_common\math.inl" />

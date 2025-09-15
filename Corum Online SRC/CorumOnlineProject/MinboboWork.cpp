@@ -23,15 +23,15 @@ void CreateMainPlayerByChangeLayer()
 	LIGHT_DESC	shadowlight;
 
 	shadowlight.dwDiffuse	= 0xffffffff;
-	shadowlight.v3Point.x	= g_pMainPlayer->m_v3CurPos.x + 500.0f;
+	shadowlight.v3Point.x	= g_pMainPlayer->currentPosition().x + 500.0f;
 	shadowlight.v3Point.y	= 800.0f;
-	shadowlight.v3Point.z	= g_pMainPlayer->m_v3CurPos.z - 600.0f;
+	shadowlight.v3Point.z	= g_pMainPlayer->currentPosition().z - 600.0f;
 	shadowlight.fFov		= PI/2.0f;
 	shadowlight.v3Up.x		= 0.0f;
 	shadowlight.v3Up.y		= 1.0f;
 	shadowlight.v3Up.z		= 0.0f;
 	shadowlight.fRs			= 2000.0f;
-	shadowlight.v3To		= g_pMainPlayer->m_v3CurPos;	
+	shadowlight.v3To		= g_pMainPlayer->currentPosition();	
 	
 	g_pMainPlayer->m_hShadowLightHandle = g_pExecutive->CreateGXLight(&shadowlight
 		, NULL, NULL, 0, NULL, GXLIGHT_TYPE_ENABLE_SHADOW |	GXLIGHT_TYPE_DISABLE_LIGHT_COLOR);
@@ -380,7 +380,7 @@ void PortalEffectFuncMainPlayer(GXOBJECT_HANDLE handle, LPObjectDesc pData, DWOR
 		{
 			CMiniMapWnd* pMiniMapWnd = CMiniMapWnd::GetInstance();
 
-			VECTOR2 vec = pMiniMapWnd->GetRatioMinimap(pUser->m_v3CurPos.x, pUser->m_v3CurPos.z);
+			VECTOR2 vec = pMiniMapWnd->GetRatioMinimap(pUser->currentPosition().x, pUser->currentPosition().z);
 			pMiniMapWnd->SetPosObjX(sPartyNode->dwResourceId, vec.x+8);
 			pMiniMapWnd->SetPosObjY(sPartyNode->dwResourceId, vec.y+42);
 		}

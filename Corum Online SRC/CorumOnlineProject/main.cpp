@@ -30,7 +30,7 @@
 #include "../BaseLibrary/Timer.h"
 #include "DungeonInterfaceLayout.h"
 #include "../BaseLibrary/mdump.h"
-
+#include "../CorumPreferences/CorumPreferences.h"
 
 void message(char* const info) {
 	MessageBox(g_hMainWnd, info, "CorumOnlineProject", MB_OK);
@@ -40,25 +40,17 @@ static Timer* testTimer = nullptr;
 
 static MiniDumper* _miniDumpCrashHandler;
 
+std::shared_ptr<UserPreferencesManager> userPreferencesManager;
+
 int APIENTRY WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nShowCmd )
 {
-	_miniDumpCrashHandler = new MiniDumper("CLIENT_CRASH");
+	_miniDumpCrashHandler = new MiniDumper(L"CorumOnlineResult");
+	wchar_t current[_MAX_PATH];
+	GetCurrentDirectoryW(_MAX_PATH, current);
+	userPreferencesManager = std::make_shared<UserPreferencesManager>(current);
 
 	AllocConsole();
 	freopen("CONOUT$", "w", stdout);
-
-#ifndef DEVELOP_MODE	
-	if(!CheckGlobalEventHandle())
-	{
-		RunAutoPatch();	
-		return 0;
-	}
-
-	if(IsHackToolUsed())
-	{
-		return 0;
-	}
-#endif
 	
 	int nResult = GetDXVersion();
 	if(nResult < 0x801)
@@ -74,13 +66,10 @@ int APIENTRY WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdL
 #ifdef DEVELOP_MODE
 	GetCurrentDirectory(_MAX_PATH, g_Dev.szDevIniPath);
 	lstrcat(g_Dev.szDevIniPath, "\\Dev.ini");
-#else
-	if(FindWindow(WINDOW_CLASS_NAME, WINDOW_TITLE_NAME))
-		return 0;
 #endif
 	
   	RegisterWindowClass(hInstance);
-	InitInstance(hInstance, nShowCmd, corumPreferences());	
+	InitInstance(hInstance, nShowCmd, userPreferencesManager->currentPreferences());	
 
 #ifdef _DEBUG
 	int	flag = _CRTDBG_ALLOC_MEM_DF |_CRTDBG_LEAK_CHECK_DF;

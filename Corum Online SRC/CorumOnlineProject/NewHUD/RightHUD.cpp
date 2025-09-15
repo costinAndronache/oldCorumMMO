@@ -8,70 +8,73 @@ using namespace NewInterface;
 RightHUD::RightHUD(
 	CustomUI::Point originInParent, 
 	CItemResourceHash* resourceHash,
-	ItemUsageManager* itemUsageManager
+	std::shared_ptr<ItemUsageManager> itemUsageManager
 ) {
 	_frameInParent = { originInParent, NewHUDResources::newHUDSize };
 
 	_rightHUDSprite = registerChildRenderable<SpriteRenderable>([=]() {
-		return new SpriteRenderable(bounds(), NewHUDResources::rightInterfaceHUDSprite);
+		return std::make_shared<SpriteRenderable>(bounds(), NewHUDResources::rightInterfaceHUDSprite);
 	});
 
 	const auto groupBtnSprites = NewHUDResources::group;
 	const auto groupBtnFrame = Rect{ {112, 35}, groupBtnSprites.normal.naturalSize };
 	_groupBtn = registerChildRenderable<Button>([=]() {
-		return new Button(groupBtnSprites, groupBtnFrame);
+		return std::make_shared<Button>(groupBtnSprites, groupBtnFrame);
 	});
 
 	const auto lairBtnSprites = NewHUDResources::lair;
 	const auto lairBtnFrame = Rect{ {189, 35}, lairBtnSprites.normal.naturalSize };
 	_lairBtn = registerChildRenderable<Button>([=]() {
-		return new Button(lairBtnSprites, lairBtnFrame);
+		return std::make_shared<Button>(lairBtnSprites, lairBtnFrame);
 	});
 
 	const auto chatBtnSprites = NewHUDResources::chat;
 	const auto chatBtnFrame = Rect{ {272, 35}, chatBtnSprites.normal.naturalSize };
 	_chatBtn = registerChildRenderable<Button>([=]() {
-		return new Button(chatBtnSprites, chatBtnFrame);
+		return std::make_shared<Button>(chatBtnSprites, chatBtnFrame);
 	});
 
 	const auto matchBtnSprites = NewHUDResources::match;
 	const auto matchBtnFrame = Rect{ {350, 33}, matchBtnSprites.normal.naturalSize };
 	_matchBtn = registerChildRenderable<Button>([=]() {
-		return new Button(matchBtnSprites, matchBtnFrame);
+		return std::make_shared<Button>(matchBtnSprites, matchBtnFrame);
 	});
 
 	const auto restBtnSprites = NewHUDResources::rest;
 	const auto restBtnFrame = Rect{ {350, 14}, restBtnSprites.normal.naturalSize };
 	_restBtn = registerChildRenderable<Button>([=]() {
-		return new Button(restBtnSprites, restBtnFrame);
+		return std::make_shared<Button>(restBtnSprites, restBtnFrame);
 	});
 
 	const auto spBarFrame = Rect{ {97, 60}, {300, 15} };
 	_spBar = registerChildRenderable<HorizontalScalingBar>([=]() {
-		return new HorizontalScalingBar(NewHUDResources::spBarSprite,
-										spBarFrame,										
-										HorizontalScalingBar::Direction::rightLeft);
+		return std::make_shared<HorizontalScalingBar>(
+			NewHUDResources::spBarSprite,
+			spBarFrame,										
+			HorizontalScalingBar::Direction::rightLeft
+		);
 	});
 
 	const auto coolBarFrame = Rect{ {97, 75}, { 300, 5 } };
 	_cooldownBar = registerChildRenderable<HorizontalScalingBar>([=]() {
-		return new HorizontalScalingBar(NewHUDResources::cooldownBarSprite,
-										coolBarFrame,
-										HorizontalScalingBar::Direction::rightLeft);
+		return std::make_shared<HorizontalScalingBar>(
+			NewHUDResources::cooldownBarSprite,
+			coolBarFrame,
+			HorizontalScalingBar::Direction::rightLeft);
 	});
 
 	const auto optionsBtnSprites = NewHUDResources::system;
 	const auto optionsBtnFrame = Rect{ {34, 84}, optionsBtnSprites.normal.naturalSize };
 	_optionsBtn = registerChildRenderable<Button>([=]() {
-		return new Button(optionsBtnSprites, optionsBtnFrame);
+		return std::make_shared<Button>(optionsBtnSprites, optionsBtnFrame);
 	});
 
 	const auto beltFrame = Rect{ {102, 85}, {300, 34} };
 	_beltItemsView = registerChildRenderable<GenericItemsContainerView>([=]() {
-		return new GenericItemsContainerView(
+		return std::make_shared<GenericItemsContainerView>(
 			beltFrame,
 			resourceHash,
-			{
+			MatrixContainer::Appearance{
 				MatrixContainer::VerticalGrowthDirection::downwards,
 				{
 					{ 34, 34},
@@ -82,7 +85,7 @@ RightHUD::RightHUD(
 		);
 	});
 
-	_beltDragNDropParticipant = new BeltManager(
+	_beltDragNDropParticipant = std::make_shared<BeltManager>(
 		_beltItemsView,
 		itemUsageManager
 	);

@@ -394,9 +394,9 @@ void	CGuildWarStatusWnd::RenderText()
 			{
 				VECTOR3	vPlayerHeadPos, vOutPos;
 
-				vPlayerHeadPos.x	= pUser->m_v3CurPos.x;
-				vPlayerHeadPos.y	= pUser->m_v3CurPos.y + 200.0f;
-				vPlayerHeadPos.z	= pUser->m_v3CurPos.z;
+				vPlayerHeadPos.x	= pUser->currentPosition().x;
+				vPlayerHeadPos.y	= pUser->currentPosition().y + 200.0f;
+				vPlayerHeadPos.z	= pUser->currentPosition().z;
 				
 				GetScreenXYFromXYZ(g_pGeometry, 0, &vPlayerHeadPos, &vOutPos);
 				

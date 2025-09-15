@@ -4,21 +4,15 @@
 
 #include "CommonServerExports.h"
 
-#define	TILE_SIZE		125.0f
-#define TILE_SIZE_WORLD	80.0f
-#define	TILE_HEIGHT	125.0f
-#define	TILE_WIDTH	125.0f
+#define	DUNGEON_TILE_SIZE		125.0f
+#define	DUNGEON_TILE_HEIGHT	125.0f
+#define	DUNGEON_TILE_WIDTH	125.0f
 
+#define DUNGEON_TILE_3D_X(MAP_INDEX_X)	(float)( MAP_INDEX_X * DUNGEON_TILE_WIDTH + (DUNGEON_TILE_WIDTH * 0.5f ) )
+#define DUNGEON_TILE_3D_Z(MAP_INDEX_Z)	(float)( MAP_INDEX_Z * DUNGEON_TILE_HEIGHT + (DUNGEON_TILE_HEIGHT * 0.5f ) )
 
-#define GRID_WIDTH		1250.0f		
-#define GRID_HEIGHT		1250.0f		
-
-
-#define TILE_X(X)	(float)( X * TILE_WIDTH + (TILE_WIDTH * 0.5f ) )
-#define TILE_Z(Z)	(float)( Z * TILE_HEIGHT + (TILE_HEIGHT * 0.5f ) )
-
-#define WORLDTILE_X(X)	(float)( X * TILE_SIZE_WORLD + (TILE_SIZE_WORLD * 0.5f ) )
-#define WORLDTILE_Z(Z)	(float)( Z * TILE_SIZE_WORLD + (TILE_SIZE_WORLD * 0.5f ) )
+#define DUNGEON_TILE_INDEX_X(TILE_3D_X) (int)( DUNGEON_TILE_3D_X / DUNGEON_TILE_WIDTH )
+#define DUNGEON_TILE_INDEX_Z(TILE_3D_Z) (int)( DUNGEON_TILE_3D_Z / DUNGEON_TILE_HEIGHT )
 
 #define TILE_EMPTY					0
 #define TILE_OCCUPIED_PC			1

@@ -113,7 +113,7 @@ BOOL __stdcall CoGXLight::Render()
 	return bResult;
 }
 
-void CoGXLight::SetPosition(VECTOR3* pv3Pos) 
+void CoGXLight::SetPosition(const VECTOR3* pv3Pos) 
 {
 	m_LightDesc.v3Point = *pv3Pos;
 	VECTOR3_ADD_VECTOR3(&m_LightDesc.v3To,&m_LightDesc.v3Point,&m_v3Dir);

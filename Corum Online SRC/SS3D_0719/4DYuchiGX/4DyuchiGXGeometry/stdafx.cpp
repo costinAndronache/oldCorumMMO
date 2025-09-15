@@ -1,1 +1,1 @@
-#include "../4DYUCHIGRX_COMMON/stdafx.h"
+#include "stdafx.h"

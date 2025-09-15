@@ -25,11 +25,11 @@ SelectionView::SelectionView(Rect frameInParent, RenderableCreateFn renderableCr
 	Button::Sprites sprites{ SpriteModel::zero, SpriteModel::zero, SpriteModel::zero };
 
 	_button = registerChildRenderable<Button>([=]() { 
-		return new Button(sprites, bounds());
+		return std::make_shared<Button>(sprites, bounds());
 	});
 
 	_button->onClickEndLEFT([this]() {
-		onButtonPressRelease(_button);
+		onButtonPressRelease(_button.get());
 	});
 
 }
@@ -57,7 +57,7 @@ void SelectionView::setEnableSelection(bool selectionEnabled) {
 	_selectionEnabled = selectionEnabled;
 }
 
-Renderable* SelectionView::renderable() {
+std::shared_ptr<Renderable> SelectionView::renderable() {
 	return _renderable;
 }
 

@@ -50,7 +50,7 @@ void CreateDamageEffect( BYTE bObjectType, DWORD dwIndex )
 		{
 			CUser* pUser = g_pUserHash->GetData(dwIndex);
 			if (!pUser)		return;
-			vec = pUser->m_v3CurPos;
+			vec = pUser->currentPosition();
 			
 			if (bObjectType == OBJECT_TYPE_MAINPLAYER)
 				bOwn = 1;			
@@ -154,8 +154,8 @@ void EffectSkillStartFunc(GXOBJECT_HANDLE handle, LPObjectDesc pData, DWORD dwCu
 					{
 						pEffectDesc->dwFrameCount = i*4+1 ;
 						float fradian = (nIndex-nMin[i])*DEG180/(i+1)-DEG45;
-						vecStart.x += cosf(pEffectDesc->f_Radian+fradian)*TILE_SIZE/2*(i+1);
-						vecStart.z += sinf(pEffectDesc->f_Radian+fradian)*TILE_SIZE/2*(i+1);
+						vecStart.x += cosf(pEffectDesc->f_Radian+fradian)*DUNGEON_TILE_SIZE/2*(i+1);
+						vecStart.z += sinf(pEffectDesc->f_Radian+fradian)*DUNGEON_TILE_SIZE/2*(i+1);
 						break;
 					}
 				}
@@ -174,17 +174,17 @@ void EffectSkillStartFunc(GXOBJECT_HANDLE handle, LPObjectDesc pData, DWORD dwCu
 				int nIndex = (pEffectDesc->dwTemp[SKILL_TEMP_CREATECOUNT]/pEffectDesc->pEffect->Value[pEffectDesc->dwSkillLevel].nCompass);
 				if (nIndex%2)
 				{
-					vecStart.x += cosf(pEffectDesc->f_Radcount)*TILE_SIZE*nIndex/2;
-					vecStart.z += sinf(pEffectDesc->f_Radcount)*TILE_SIZE*nIndex/2;
+					vecStart.x += cosf(pEffectDesc->f_Radcount)*DUNGEON_TILE_SIZE*nIndex/2;
+					vecStart.z += sinf(pEffectDesc->f_Radcount)*DUNGEON_TILE_SIZE*nIndex/2;
 				}
 				else
 				{
-					vecStart.x -= cosf(pEffectDesc->f_Radcount)*TILE_SIZE*nIndex/2;
-					vecStart.z -= sinf(pEffectDesc->f_Radcount)*TILE_SIZE*nIndex/2;
+					vecStart.x -= cosf(pEffectDesc->f_Radcount)*DUNGEON_TILE_SIZE*nIndex/2;
+					vecStart.z -= sinf(pEffectDesc->f_Radcount)*DUNGEON_TILE_SIZE*nIndex/2;
 				}
 				
-				vecStart.x += cosf(pEffectDesc->f_Radian)*TILE_SIZE*(pEffectDesc->dwTemp[SKILL_TEMP_CREATECOUNT]%pEffectDesc->pEffect->Value[pEffectDesc->dwSkillLevel].nCompass);
-				vecStart.z += sinf(pEffectDesc->f_Radian)*TILE_SIZE*(pEffectDesc->dwTemp[SKILL_TEMP_CREATECOUNT]%pEffectDesc->pEffect->Value[pEffectDesc->dwSkillLevel].nCompass);
+				vecStart.x += cosf(pEffectDesc->f_Radian)*DUNGEON_TILE_SIZE*(pEffectDesc->dwTemp[SKILL_TEMP_CREATECOUNT]%pEffectDesc->pEffect->Value[pEffectDesc->dwSkillLevel].nCompass);
+				vecStart.z += sinf(pEffectDesc->f_Radian)*DUNGEON_TILE_SIZE*(pEffectDesc->dwTemp[SKILL_TEMP_CREATECOUNT]%pEffectDesc->pEffect->Value[pEffectDesc->dwSkillLevel].nCompass);
 				pObjDesc->ObjectFunc = pEffectDesc->pEffect->SkillFunc;
 				g_pExecutive->DisableRender(handle);				
 			}break;
@@ -207,8 +207,8 @@ void EffectSkillStartFunc(GXOBJECT_HANDLE handle, LPObjectDesc pData, DWORD dwCu
 				{
 					arrayIndex = (pEffectDesc->dwTemp[SKILL_TEMP_CREATECOUNT])%8;
 				
-					float costemp = array[arrayIndex].x*TILE_SIZE;
-					float sintemp = array[arrayIndex].y*TILE_SIZE;
+					float costemp = array[arrayIndex].x*DUNGEON_TILE_SIZE;
+					float sintemp = array[arrayIndex].y*DUNGEON_TILE_SIZE;
 					vecStart.x += costemp*((pEffectDesc->dwTemp[SKILL_TEMP_CREATECOUNT]-1)/8+1);
 					vecStart.z += sintemp*((pEffectDesc->dwTemp[SKILL_TEMP_CREATECOUNT]-1)/8+1);
 				}
@@ -416,11 +416,11 @@ void EffectSubCommonProcess(AppliedSkill* pEffectDesc)
 					pUser->SetMotion(MOTION_TYPE_WARSTAND, 0, ACTION_LOOP);
 					pUser->SetStatus(UNIT_STATUS_NORMAL, TRUE);
 					pUser->m_hPlayer.pDesc->ObjectFunc = NULL;
-					pUser->m_v3CurPos.y = 0;
+					//pUser->currentPosition().y = 0;
 					CCharDieWnd::GetInstance()->SetActive(FALSE);					
 					
 					g_pExecutive->SetAlphaFlag( pUser->m_hPlayer.pHandle, 255 );
-					GXSetPosition(pUser->m_hPlayer.pHandle, &pUser->m_v3CurPos, FALSE );					
+					GXSetPosition(pUser->m_hPlayer.pHandle, pUser->currentPositionReadOnly(), FALSE );					
 				}
 				else
 				{
@@ -506,7 +506,7 @@ void EffectChainAttackerFunc( GXOBJECT_HANDLE handle, LPObjectDesc pData, DWORD 
 		CUser* pUser = g_pUserHash->GetData(pEffectDesc->dwTargetIndex[0]);
 		if (!pUser)	goto lbl_remove;
 
-		vecDest = pUser->m_v3CurPos;
+		vecDest = pUser->currentPosition();
 	}
 	
 	{
@@ -607,7 +607,7 @@ void EffectGuardianKillFunc( GXOBJECT_HANDLE handle, LPObjectDesc pData, DWORD d
 			else if(pEffectDesc->dwOwnType == OBJECT_TYPE_PLAYER)
 			{
 				CUser* pUser = g_pUserHash->GetData(pEffectDesc->dwOwnIndex);
-				if (pUser)		GXSetPosition(handle, &pUser->m_v3CurPos, FALSE);				
+				if (pUser)		GXSetPosition(handle, pUser->currentPositionReadOnly(), FALSE);				
 			}
 		}
 		else 
@@ -633,7 +633,7 @@ void EffectGuardianKillFunc( GXOBJECT_HANDLE handle, LPObjectDesc pData, DWORD d
 				CUser* pUser = g_pUserHash->GetData(pEffectDesc->dwTargetIndex[0]);
 				if (pUser)
 				{
-					vecDest = pUser->m_v3CurPos;
+					vecDest = pUser->currentPosition();
 					dwOwnIndex = pUser->m_dwUserIndex;
 					dwOwnType = OBJECT_TYPE_PLAYER;
 				}
@@ -692,7 +692,7 @@ void EffectEventDungeonFunc( GXOBJECT_HANDLE handle, LPObjectDesc pData, DWORD d
 		return;
 	}
 	
-	GXSetPosition( handle, &pTargetUser->m_v3CurPos, FALSE );
+	GXSetPosition( handle, pTargetUser->currentPositionReadOnly(), FALSE );
 	
 	if( bFrameFlag == FRAME_FLAG_FINISHED )
 	{
@@ -772,7 +772,7 @@ void EffectOnceAndRemoveFunc( GXOBJECT_HANDLE handle, LPObjectDesc pData, DWORD 
 			{
 				CUser* pTargetUser = g_pUserHash->GetData(pEffectDesc->dwTargetIndex[0]);
 				if (pTargetUser)
-					GXSetPosition( handle, &pTargetUser->m_v3CurPos, FALSE );
+					GXSetPosition( handle, pTargetUser->currentPositionReadOnly(), FALSE );
 				
 			}break;
 
@@ -857,7 +857,7 @@ void EffectSkillCameraQuake(AppliedSkill* pEffectDesc, DWORD dwCurFrame)
 	
 	VECTOR3 v3Effect;g_pExecutive->GXOGetPosition(pEffectDesc->hEffect.pHandle, &v3Effect);		
 			
-	float fDist = CalcDistance( &g_pMainPlayer->m_v3CurPos, &v3Effect );
+	float fDist = CalcDistance( g_pMainPlayer->currentPositionReadOnly(), &v3Effect );
 	if (fDist > 1000)	return;
 
 	VECTOR3 vecQuake;vecQuake.x = vecQuake.y = vecQuake.z = 0;	
@@ -918,7 +918,7 @@ void EffectSkillCameraQuake(AppliedSkill* pEffectDesc, DWORD dwCurFrame)
 
 void CameraQuake(VECTOR3& vecQuake)
 {	
-	VECTOR3 vAfterPos = g_pMainPlayer->m_v3CurPos;
+	VECTOR3 vAfterPos = g_pMainPlayer->currentPosition();
 
 	vAfterPos.x += g_Camera.fCameraDistance_x+vecQuake.x;
 	vAfterPos.y += g_Camera.fCameraDistance_y+vecQuake.y;
@@ -938,7 +938,7 @@ void PlayerAttackFunc(GXOBJECT_HANDLE handle, LPObjectDesc pData, DWORD dwCurFra
 	{
 		if ( 0 == dwCurFrame)
 		{ // 기합 소리 
-			_PlaySound( CHARACTER_SOUND_ATTACK, SOUND_TYPE_CHARACTER, CHARACTER_SOUND_ATTACK + ( pUser->m_wClass - 1 ) * SOUND_PER_CHARACTER, pUser->m_v3CurPos, FALSE );
+			_PlaySound( CHARACTER_SOUND_ATTACK, SOUND_TYPE_CHARACTER, CHARACTER_SOUND_ATTACK + ( pUser->m_wClass - 1 ) * SOUND_PER_CHARACTER, pUser->currentPosition(), FALSE );
 		}
 		
 		// 타격음 플레이.
@@ -958,11 +958,11 @@ void PlayerAttackFunc(GXOBJECT_HANDLE handle, LPObjectDesc pData, DWORD dwCurFra
 		
 			if( pUser->m_wHandR == 0 )
 			{	
-				_PlaySound( 0, SOUND_TYPE_WEAPONATTACK, 0, pUser->m_v3CurPos, FALSE);	// 맨손.
+				_PlaySound( 0, SOUND_TYPE_WEAPONATTACK, 0, pUser->currentPosition(), FALSE);	// 맨손.
 			}
 			else
 			{
-				_PlaySound( 0, SOUND_TYPE_WEAPONATTACK, dwWeapon * SOUND_PER_WEAPON, pUser->m_v3CurPos, FALSE);
+				_PlaySound( 0, SOUND_TYPE_WEAPONATTACK, dwWeapon * SOUND_PER_WEAPON, pUser->currentPosition(), FALSE);
 			}
 		}
 
@@ -976,7 +976,7 @@ void PlayerAttackFunc(GXOBJECT_HANDLE handle, LPObjectDesc pData, DWORD dwCurFra
 					if( !pMonster ) goto lb_exit;
 
 					VECTOR3	v3DirMon;
-					VECTOR3_SUB_VECTOR3( &v3DirMon, &pUser->m_v3CurPos, &pMonster->m_v3CurPos);
+					VECTOR3_SUB_VECTOR3( &v3DirMon, pUser->currentPositionReadOnly(), &pMonster->m_v3CurPos);
 					float fRad = (float)atan2(v3DirMon.z, v3DirMon.x);
 					pMonster->m_vecTemp = pMonster->m_v3CurPos;
 					pMonster->m_radian = fRad+3.14;
@@ -1088,22 +1088,22 @@ void PlayerAttackFunc(GXOBJECT_HANDLE handle, LPObjectDesc pData, DWORD dwCurFra
 					{
 						if( ( dwAttack == 0 && pUser->m_wHandR != 0 ) || dwAttack == 1 || dwAttack == 2 || dwAttack == 3 || dwAttack == 5 )
 						{	// 칼날일때.
-							_PlaySound( WEAPONDAMAGE_SOUND_DAMAGE, SOUND_TYPE_WEAPONDAMAGE, WEAPONDAMAGE_SOUND_DAMAGE, pUser->m_v3CurPos, FALSE );
+							_PlaySound( WEAPONDAMAGE_SOUND_DAMAGE, SOUND_TYPE_WEAPONDAMAGE, WEAPONDAMAGE_SOUND_DAMAGE, pUser->currentPosition(), FALSE );
 						}
 						else
 						{	// 둔기 일때.
-							_PlaySound( WEAPONDAMAGE_SOUND_DAMAGE, SOUND_TYPE_WEAPONDAMAGE, WEAPONDAMAGE_SOUND_DAMAGE + SOUND_PER_WEAPONDAMAGE, pUser->m_v3CurPos, FALSE );
+							_PlaySound( WEAPONDAMAGE_SOUND_DAMAGE, SOUND_TYPE_WEAPONDAMAGE, WEAPONDAMAGE_SOUND_DAMAGE + SOUND_PER_WEAPONDAMAGE, pUser->currentPosition(), FALSE );
 						}
 					}
 					else if( pDefense->m_dwTemp[USER_TEMP_DAMAGE_TYPE] == 1 )	// block
 					{
 						if( ( dwAttack == 0 && pUser->m_wHandR != 0 ) || dwAttack == 1 || dwAttack == 2 || dwAttack == 3 || dwAttack == 5 )
 						{	// 칼날일때.
-							_PlaySound( WEAPONDAMAGE_SOUND_DAMAGE, SOUND_TYPE_WEAPONDAMAGE, WEAPONDAMAGE_SOUND_DAMAGE, pUser->m_v3CurPos, FALSE );
+							_PlaySound( WEAPONDAMAGE_SOUND_DAMAGE, SOUND_TYPE_WEAPONDAMAGE, WEAPONDAMAGE_SOUND_DAMAGE, pUser->currentPosition(), FALSE );
 						}
 						else
 						{	// 둔기 일때.
-							_PlaySound( WEAPONDAMAGE_SOUND_DAMAGE, SOUND_TYPE_WEAPONDAMAGE, WEAPONDAMAGE_SOUND_DAMAGE + SOUND_PER_WEAPONDAMAGE, pUser->m_v3CurPos, FALSE );
+							_PlaySound( WEAPONDAMAGE_SOUND_DAMAGE, SOUND_TYPE_WEAPONDAMAGE, WEAPONDAMAGE_SOUND_DAMAGE + SOUND_PER_WEAPONDAMAGE, pUser->currentPosition(), FALSE );
 						}
 					}
 				}
@@ -1161,7 +1161,7 @@ void MonsterAttackFunc(GXOBJECT_HANDLE handle, LPObjectDesc pData, DWORD dwCurFr
 						{
 							// 방향을 몬스터의 방향으로 돌려준다.
 							VECTOR3	v3DirMon;
-							VECTOR3_SUB_VECTOR3( &v3DirMon, &pMonster->m_v3CurPos, &pUser->m_v3CurPos );
+							VECTOR3_SUB_VECTOR3( &v3DirMon, &pMonster->m_v3CurPos, pUser->currentPositionReadOnly() );
 							g_pExecutive->GXOSetDirection( pUser->m_hPlayer.pHandle, &g_Camera.v3AxsiY, (float)(atan2(v3DirMon.z, v3DirMon.x) + DEG90 ) );							
 							
 							pUser->SetMotionSequence( MOTION_TYPE_DEFENSEFAIL, MOTION_TYPE_WARSTAND, ACTION_ONCE, 0 );
@@ -1217,7 +1217,7 @@ void MonsterAttackFunc(GXOBJECT_HANDLE handle, LPObjectDesc pData, DWORD dwCurFr
 									SendStopPacket();
 								// 방향을 몬스터의 방향으로 돌려준다.
 								VECTOR3	v3DirMon;
-								VECTOR3_SUB_VECTOR3( &v3DirMon, &pMonster->m_v3CurPos, &g_pMainPlayer->m_v3CurPos );
+								VECTOR3_SUB_VECTOR3( &v3DirMon, &pMonster->m_v3CurPos, g_pMainPlayer->currentPositionReadOnly() );
 								g_pExecutive->GXOSetDirection( g_pMainPlayer->m_hPlayer.pHandle, &g_Camera.v3AxsiY, (float)(atan2(v3DirMon.z, v3DirMon.x) + DEG90 ) );
 
 								g_pMainPlayer->SetActionNext( MOTION_TYPE_DEFENSEFAIL, MOTION_TYPE_WARSTAND, ACTION_ONCE, 0 );
@@ -1229,7 +1229,7 @@ void MonsterAttackFunc(GXOBJECT_HANDLE handle, LPObjectDesc pData, DWORD dwCurFr
 								SendStopPacket();
 							// 방향을 몬스터의 방향으로 돌려준다.
 							VECTOR3	v3DirMon;
-							VECTOR3_SUB_VECTOR3( &v3DirMon, &pMonster->m_v3CurPos, &g_pMainPlayer->m_v3CurPos );
+							VECTOR3_SUB_VECTOR3( &v3DirMon, &pMonster->m_v3CurPos, g_pMainPlayer->currentPositionReadOnly() );
 							g_pExecutive->GXOSetDirection( g_pMainPlayer->m_hPlayer.pHandle, &g_Camera.v3AxsiY, (float)(atan2(v3DirMon.z, v3DirMon.x) + DEG90 ) );
 
 							g_pMainPlayer->SetMotionSequence( MOTION_TYPE_DEFENSEFAIL, MOTION_TYPE_WARSTAND, ACTION_ONCE, 0 );
@@ -1436,7 +1436,7 @@ void EffectPotionAroundRemoveFunc( GXOBJECT_HANDLE handle, LPObjectDesc pData, D
 				return;
 			}
 
-			vecStart = pUser->m_v3CurPos;
+			vecStart = pUser->currentPosition();
 			if (pEffectDesc->dwFrameCount > 20)
 				g_pExecutive->SetAlphaFlag(handle, pEffectDesc->dwTemp[SKILL_TEMP_EFFECT_ALPHA]-(pEffectDesc->dwTemp[SKILL_TEMP_EFFECT_ALPHA]/30*(pEffectDesc->dwFrameCount-20)));
 		}break;
@@ -1465,7 +1465,7 @@ void EffectSkillUserAroundRemoveFunc( GXOBJECT_HANDLE handle, LPObjectDesc pData
 			CUser* pUser = (CUser*)g_pUserHash->GetData(pEffectDesc->dwTargetIndex[0]);
 			if (!pUser) return;
 
-			vecStart = pUser->m_v3CurPos;
+			vecStart = pUser->currentPosition();
 		}break;
 	case OBJECT_TYPE_MONSTER:
 		{
@@ -1500,7 +1500,7 @@ void EffectSkillAroundFunc( GXOBJECT_HANDLE handle, LPObjectDesc pData, DWORD dw
 			CUser* pUser = (CUser*)g_pUserHash->GetData(pEffectDesc->dwTargetIndex[0]);
 			if (!pUser) return;
 
-			vecStart = pUser->m_v3CurPos;
+			vecStart = pUser->currentPosition();
 		}break;
 	case OBJECT_TYPE_MONSTER:
 		{
@@ -1542,7 +1542,7 @@ void EffectSkillUserStatusTopFunc( GXOBJECT_HANDLE handle, LPObjectDesc pData, D
 		PlaySoundEffect(pEffectDesc->m_pSound[SOUND_EFFECT_GENERAL2], &pEffectDesc->vecBasePosion, FALSE);
 	}
 
-	GXSetPosition( handle, &pUser->m_v3CurPos, FALSE );
+	GXSetPosition( handle, pUser->currentPositionReadOnly(), FALSE );
 	
 	if (bFrameFlag == FRAME_FLAG_FINISHED_HIDE)
 		g_pExecutive->DisableRender(handle);
@@ -1592,7 +1592,7 @@ void EffectSkillUserStatusCenterFunc( GXOBJECT_HANDLE handle, LPObjectDesc pData
 		break;
 	}
 	
-	GXSetPosition( handle, &pUser->m_v3CurPos, FALSE );	
+	GXSetPosition( handle, pUser->currentPositionReadOnly(), FALSE );	
 }
 
 void EffectSkillUserStatusBottomFunc( GXOBJECT_HANDLE handle, LPObjectDesc pData, DWORD dwCurFrame, BYTE bFrameFlag )
@@ -1653,7 +1653,7 @@ void EffectSkillUserStatusBottomFunc( GXOBJECT_HANDLE handle, LPObjectDesc pData
 		}
 	}
 
-	GXSetPosition( handle, &pUser->m_v3CurPos, FALSE );	
+	GXSetPosition( handle, pUser->currentPositionReadOnly(), FALSE );	
 }
 
 
@@ -1781,7 +1781,7 @@ void MonsterKillWithAction1( GXOBJECT_HANDLE handle)
 	{
 		// 밀리는 처리.		
 		VECTOR3 vecDest = pMonster->m_v3CurPos;
-		MAP_TILE* pTile = g_pMap->GetTile(vecDest.x, vecDest.z);
+		MAP_TILE* pTile = g_pMap->GetTileBy3DPosition(vecDest.x, vecDest.z);
 		if (pTile)	
 		{
 			if (pTile->wAttr.uOccupied != TILE_OCCUPIED_DONT_MOVE)	
@@ -1819,7 +1819,7 @@ void MonsterKillWithAction( GXOBJECT_HANDLE handle)
 		// 밀리는 처리.		
 		VECTOR3 vecDest = pMonster->m_v3CurPos;		
 
-		MAP_TILE* pTile = g_pMap->GetTile(vecDest.x, vecDest.z);
+		MAP_TILE* pTile = g_pMap->GetTileBy3DPosition(vecDest.x, vecDest.z);
 		if (pTile)	
 		{
 			float v0 = pMonster->m_dwTemp[MONSTER_TEMP_PUSHPOWER]*time;
@@ -1970,7 +1970,7 @@ AppliedSkill* SkillSubProcess_MagmaWall(BYTE bSkillKind, BYTE bSkillLevel, DWORD
 	if (dwOwnType == OBJECT_TYPE_PLAYER)
 	{
 		CUser* pUser = g_pUserHash->GetData(dwOwnIndex);
-		VECTOR3_SUB_VECTOR3( &v3DirMon, &vecStart, &pUser->m_v3CurPos );
+		VECTOR3_SUB_VECTOR3( &v3DirMon, &vecStart, pUser->currentPositionReadOnly() );
 	}
 	else if( dwOwnType == OBJECT_TYPE_MONSTER)
 	{
@@ -2001,7 +2001,7 @@ AppliedSkill* SkillSubProcess_IceWall(BYTE bSkillKind, BYTE bSkillLevel, DWORD d
 	if (dwOwnType == OBJECT_TYPE_PLAYER)
 	{ 
 		CUser* pUser = g_pUserHash->GetData(dwOwnIndex);
-		VECTOR3_SUB_VECTOR3( &v3DirMon, &vecStart, &pUser->m_v3CurPos );
+		VECTOR3_SUB_VECTOR3( &v3DirMon, &vecStart, pUser->currentPositionReadOnly() );
 	}
 	else if (dwOwnType == OBJECT_TYPE_MONSTER)
 	{
@@ -2033,7 +2033,7 @@ AppliedSkill* SkillSubProcess_BlastQuake(BYTE bSkillKind, BYTE bSkillLevel, DWOR
 	if (dwOwnType == OBJECT_TYPE_PLAYER)
 	{
 		CUser* pUser = g_pUserHash->GetData(dwOwnIndex);
-		VECTOR3_SUB_VECTOR3( &v3DirMon, &vecStart, &pUser->m_v3CurPos );		
+		VECTOR3_SUB_VECTOR3( &v3DirMon, &vecStart, pUser->currentPositionReadOnly() );		
 	}
 	else if(dwOwnType == OBJECT_TYPE_MONSTER)
 	{
@@ -2043,8 +2043,8 @@ AppliedSkill* SkillSubProcess_BlastQuake(BYTE bSkillKind, BYTE bSkillLevel, DWOR
 	else if(dwOwnType == OBJECT_TYPE_SKILL)
 	{
 		VECTOR3 vecTemp;
-		vecTemp.x = (dwOwnIndex>>16)*TILE_WIDTH+TILE_WIDTH/2;
-		vecTemp.z = (dwOwnIndex&0x0000ffff)*TILE_WIDTH+TILE_WIDTH/2;
+		vecTemp.x = (dwOwnIndex>>16)*DUNGEON_TILE_WIDTH+DUNGEON_TILE_WIDTH/2;
+		vecTemp.z = (dwOwnIndex&0x0000ffff)*DUNGEON_TILE_WIDTH+DUNGEON_TILE_WIDTH/2;
 
 		VECTOR3_SUB_VECTOR3( &v3DirMon, &vecStart, &vecTemp );
 	}
@@ -2163,7 +2163,7 @@ void DragonicFireblast( GXOBJECT_HANDLE handle, LPObjectDesc pData, DWORD dwCurF
 		CUser* pUser = g_pUserHash->GetData(pEffectDesc->dwTargetIndex[0] );
 		if (!pUser)	goto lb_remove;
 		
-		vecDest = pUser->m_v3CurPos;
+		vecDest = pUser->currentPosition();
 	}
 	
 	g_pExecutive->GXOGetPosition(handle,&vPos);
@@ -2244,7 +2244,7 @@ void FireBallHeadFunctionBySlowboatEightDirection( GXOBJECT_HANDLE handle, LPObj
 		CUser* pUser = g_pUserHash->GetData(pEffectDesc->dwTargetIndex[0] );
 		if (!pUser)	goto lb_remove;
 		
-		vecDest = pUser->m_v3CurPos;
+		vecDest = pUser->currentPosition();
 	}
 
 	// 타겟 몬스터의 위치를 알아보자
@@ -2344,7 +2344,7 @@ void FireBallHeadFunctionBySlowboat( GXOBJECT_HANDLE handle, LPObjectDesc pData,
 		CUser* pUser = g_pUserHash->GetData(pEffectDesc->dwTargetIndex[0] );
 		if (!pUser)	goto lb_remove;
 		
-		vecDest = pUser->m_v3CurPos;
+		vecDest = pUser->currentPosition();
 	}	 
 	
 	if (pEffectDesc->dwFrameCount % 4 == 0)
@@ -2423,7 +2423,7 @@ void FireBallCoatFunctionBySlowboat( GXOBJECT_HANDLE handle, LPObjectDesc pData,
 	VECTOR3 vPos;
 	VECTOR3 vPosEffect;
 //	float	pfRad;
-	vPos = g_pMainPlayer->m_v3CurPos;
+	vPos = g_pMainPlayer->currentPosition();
 	g_pExecutive->GXOGetPosition(handle,&vPosEffect);
 
 	// 위치 결정
@@ -2478,7 +2478,7 @@ void	MakeCoatFunctionBySlowboat(DWORD dwPara)
 	// 몸 감싸기의 머리 생성 
 	// 이것은 허리에서 xz평면에 평행하게 회전하는 것.
 	AppliedSkill*	pEffectDesc = g_pEffectLayer->CreateEffect(__SKILL_FIREMISSILE__, 0, 1);
-	VECTOR3 vPos = g_pMainPlayer->m_v3CurPos;
+	VECTOR3 vPos = g_pMainPlayer->currentPosition();
 	vPos.y+=70.0f;
 	
 	pEffectDesc->byTargetObjectType[0]	= OBJECT_TYPE_EFFECT;	// 
@@ -2717,7 +2717,7 @@ void MonsterKillWithAction2( GXOBJECT_HANDLE handle)
 		VECTOR3 vecDest = pMonster->m_v3CurPos;
 		float v0 = pMonster->m_dwTemp[MONSTER_TEMP_PUSHPOWER]*time;
 
-		MAP_TILE* pTile = g_pMap->GetTile(vecDest.x, vecDest.z);
+		MAP_TILE* pTile = g_pMap->GetTileBy3DPosition(vecDest.x, vecDest.z);
 		if (pTile)	
 		{
 			if (pTile->wAttr.uOccupied != TILE_OCCUPIED_DONT_MOVE)	
@@ -2793,11 +2793,11 @@ void PlayerKillFunc(GXOBJECT_HANDLE handle, LPObjectDesc pData, DWORD dwCurFrame
 
 	if( bFrameFlag == FRAME_FLAG_FINISHED || bFrameFlag == FRAME_FLAG_CHANGE_NEXT  )
 	{
-		if( pUser->m_v3CurPos.y > -5.0f )
+		if( pUser->currentPosition().y > -5.0f )
 		{
-			pUser->m_v3CurPos.y -= 0.1f;
-			GXSetPosition( pUser->m_hPlayer.pHandle, &pUser->m_v3CurPos, FALSE , TRUE);
-			g_pExecutive->SetAlphaFlag( pUser->m_hPlayer.pHandle, (DWORD)( 180 + ( pUser->m_v3CurPos.y*2) ) );
+			//pUser->currentPosition().y -= 0.1f;
+			GXSetPosition( pUser->m_hPlayer.pHandle, pUser->currentPositionReadOnly(), FALSE , TRUE);
+			g_pExecutive->SetAlphaFlag( pUser->m_hPlayer.pHandle, (DWORD)( 180 + ( pUser->currentPosition().y*2) ) );
 		}
 		else
 		{
@@ -2907,9 +2907,9 @@ BOOL SkillEvent(BYTE bLR)
 				if (pEffect->dwRange == 0)
 				{// 자기 자신으로 부터 나가야 해.
 					if ( g_pEffectLayer->CanSkillBeCastAtPosition(bSkillKind
-							, &g_pMainPlayer->m_v3CurPos))
+							, g_pMainPlayer->currentPositionReadOnly()))
 					{
-						vecStart = pUser->m_v3CurPos;
+						vecStart = pUser->currentPosition();
 						goto lbl_skill_to_tile;
 					}
 				}
@@ -2949,13 +2949,13 @@ BOOL SkillEvent(BYTE bLR)
 						// 영역마법이라면 그위치에 찍어야 하므로.
 						if (pEffect->IsRangeSkill())
 						{
-							vecStart = pUser->m_v3CurPos;
+							vecStart = pUser->currentPosition();
 							goto lbl_skill_to_tile;
 						}
 						else
 						{
 							if (g_pEffectLayer->CanSkillBeCastAtPosition(bSkillKind, 
-								&pUser->m_v3CurPos))
+								pUser->currentPositionReadOnly()))
 							{
 								g_pMainPlayer->BeginSkillCastOn(pUser, bLR);
 								bSkill = TRUE;
@@ -2973,7 +2973,7 @@ BOOL SkillEvent(BYTE bLR)
 
 				if (pEffect->dwRange == 0)
 				{// 자기 자신으로 부터 나가야 해.
-					if (g_pEffectLayer->CanSkillBeCastAtPosition(bSkillKind, &g_pMainPlayer->m_v3CurPos))
+					if (g_pEffectLayer->CanSkillBeCastAtPosition(bSkillKind, g_pMainPlayer->currentPositionReadOnly()))
 					{
 						vecStart = pMonster->m_v3CurPos;
 						goto lbl_skill_to_tile;
@@ -3008,10 +3008,10 @@ BOOL SkillEvent(BYTE bLR)
 		{
 			if (pEffect->dwRange == 0)
 			{// 자기 자신으로 부터 나가야 해.
-				if (g_pEffectLayer->CanSkillBeCastAtPosition(bSkillKind, &g_pMainPlayer->m_v3CurPos))
+				if (g_pEffectLayer->CanSkillBeCastAtPosition(bSkillKind, g_pMainPlayer->currentPositionReadOnly()))
 				{
-					vecStart.x = DWORD(g_Mouse.v3Mouse.x/TILE_WIDTH)*TILE_WIDTH+TILE_WIDTH/2;
-					vecStart.z = DWORD(g_Mouse.v3Mouse.z/TILE_WIDTH)*TILE_WIDTH+TILE_WIDTH/2;
+					vecStart.x = DWORD(g_Mouse.v3Mouse.x/DUNGEON_TILE_WIDTH)*DUNGEON_TILE_WIDTH+DUNGEON_TILE_WIDTH/2;
+					vecStart.z = DWORD(g_Mouse.v3Mouse.z/DUNGEON_TILE_WIDTH)*DUNGEON_TILE_WIDTH+DUNGEON_TILE_WIDTH/2;
 					goto lbl_skill_to_tile;
 				}
 			}
@@ -3019,14 +3019,14 @@ BOOL SkillEvent(BYTE bLR)
 			{				
 				if (pEffect->bSkillTarget & TARGETTYPE_TILE  )
 				{// 타일을 찍어야 발동한다.
-					vecStart.x = DWORD(g_Mouse.v3Mouse.x/TILE_WIDTH)*TILE_WIDTH+TILE_WIDTH/2;
-					vecStart.z = DWORD(g_Mouse.v3Mouse.z/TILE_WIDTH)*TILE_WIDTH+TILE_WIDTH/2;
+					vecStart.x = DWORD(g_Mouse.v3Mouse.x/DUNGEON_TILE_WIDTH)*DUNGEON_TILE_WIDTH+DUNGEON_TILE_WIDTH/2;
+					vecStart.z = DWORD(g_Mouse.v3Mouse.z/DUNGEON_TILE_WIDTH)*DUNGEON_TILE_WIDTH+DUNGEON_TILE_WIDTH/2;
 				}
 lbl_skill_to_tile:
 					
 				if (g_pEffectLayer->CanSkillBeCastAtPosition(bSkillKind, &vecStart))
 				{
-					g_pMainPlayer->BeginSkillCastAtTile(vecStart.x/TILE_WIDTH, vecStart.z/TILE_WIDTH, bLR, bSkillKind);
+					g_pMainPlayer->BeginSkillCastAtTile(vecStart.x/DUNGEON_TILE_WIDTH, vecStart.z/DUNGEON_TILE_WIDTH, bLR, bSkillKind);
 					bSkill = TRUE;
 				}
 			}
@@ -3038,11 +3038,11 @@ lbl_skill_to_tile:
 
 void InitSnowEffect(AppliedSkill* pEffectDesc)
 {
-	pEffectDesc->vecBasePosion.x = g_pMainPlayer->m_v3CurPos.x;
+	pEffectDesc->vecBasePosion.x = g_pMainPlayer->currentPosition().x;
 	pEffectDesc->vecBasePosion.x += rand() % int(__GAME_SIZE_X__*1.5);
 	pEffectDesc->vecBasePosion.x -= rand() % int(__GAME_SIZE_X__*1.5);
 	pEffectDesc->vecBasePosion.y = 1500;
-	pEffectDesc->vecBasePosion.z = g_pMainPlayer->m_v3CurPos.z;
+	pEffectDesc->vecBasePosion.z = g_pMainPlayer->currentPosition().z;
 	pEffectDesc->vecBasePosion.z += rand() % 1000;
 	pEffectDesc->vecBasePosion.z -= rand() % 2000;
 	GXSetPosition(pEffectDesc->hEffect.pHandle, &pEffectDesc->vecBasePosion, FALSE);

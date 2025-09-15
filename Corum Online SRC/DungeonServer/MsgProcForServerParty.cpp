@@ -64,7 +64,7 @@ void CmdPartyMsg(DWORD dwConnectionIndex, char* pMsg, DWORD dwLength)
 			}			
 		}
 
-		if (pUser->GetCurDungeon()->GetDungeonDataEx()->m_bSiege )
+		if (pUser->GetCurDungeon()->GetDungeonDataEx()->inSiegeWarNow )
 		{
 			pUser->SetAttackMode(pUser->GetCurDungeon()->GetAttackMode(pUser));
 

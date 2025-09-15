@@ -4,8 +4,8 @@ using namespace NewInterface;
 using namespace CustomUI;
 
 BeltManager::BeltManager(
-	GenericItemsContainerView* managedBeltView,
-	ItemUsageManager* itemUsageManager
+	std::shared_ptr<GenericItemsContainerView> managedBeltView,
+	std::shared_ptr<ItemUsageManager> itemUsageManager
 ) 
 {
 	_managedBeltView = managedBeltView;
@@ -30,7 +30,7 @@ void BeltManager::updateBeltWithItems(const std::vector<CItem>& items) {
 		_indexOnCurrentDragNDropItem = index;
 		_managedBeltView->setHiddenStateForItemAtIndex(index, true);
 
-		SpriteRenderable* sprr = new SpriteRenderable(globalFrame, sprite);
+		auto sprr = std::make_shared<SpriteRenderable>(globalFrame, sprite);
 		_handler(sprr, globalFrame);
 
 	};

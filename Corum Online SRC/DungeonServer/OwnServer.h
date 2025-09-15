@@ -1,5 +1,6 @@
 #pragma once
 
+#include "../CommonServer/DungeonStaticData.h"
 
 class CDungeon;
 class CUser;
@@ -103,6 +104,7 @@ public:
 	WORD 				GetLogColor()	const				{	return m_wLogColor;			}
 	void				SetLogColor(WORD wColor)			{	m_wLogColor = wColor;		}	
 	BOOL				RequestDungeonInfo();
+	BOOL				requestDungeonInfoStatic();
 	BOOL				PreLoadDungeon();
 	BOOL				ResetItemSerialNumber();	
 	ITEM_SERIAL*		GetNewSerial();

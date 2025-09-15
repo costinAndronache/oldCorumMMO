@@ -40,7 +40,7 @@ ItemInventoryView::ItemInventoryView(CustomUI::Rect frameInParent, CItemResource
 	_appearance = appearance;
 	_resourceHash = resourceHash;
 	_pagedContainer = registerChildRenderable<PagedContainer>([=]() {
-		return new PagedContainer(bounds());
+		return std::make_shared<PagedContainer>(bounds());
 	});
 }
 
@@ -86,7 +86,7 @@ void ItemInventoryView::rebuild(
 			}
 		};
 
-		auto mc = new GenericItemsContainerView(
+		auto mc = std::make_shared<GenericItemsContainerView>(
 			frame, _resourceHash, _appearance.containerAppearance
 		);
 

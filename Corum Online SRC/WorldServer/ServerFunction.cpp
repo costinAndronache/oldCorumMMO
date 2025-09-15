@@ -17,6 +17,8 @@
 #include "GlobalDefine.h"
 #include "SchoolGuildDungeon.h"
 #include "PartyMatcher.h"
+#include "../CommonServer/DungeonStaticData.h"
+#include "../BaseLibrary/Utilities.h"
 
 extern CSchoolGuildDungeonHash*	g_pSchoolGuildDungeonTableHash;
 
@@ -443,10 +445,10 @@ void __stdcall TimerPerSec(DWORD dwVal)
 		{
 			DUNGEON_DATA_EX* pDungeon = (DUNGEON_DATA_EX*)g_pDungeonTable->m_pDungeonList->GetAndAdvance(pos);
 			
-			if (pDungeon->IsConquer() && pDungeon->m_pServer)
+			if (false) // pDungeon->isSiegeDungeon() && pDungeon->m_pServer)
 			{	
 				// 점령던전들 돌면서갱신해야할 유저들에게 던전 갱신 이벤트를 보내줘라.
-				pDungeon->StartSiegeWarTime();
+				pDungeon->tryStartWarOrEndCurrentWar();
 				
 				if (!pDungeon->m_bSiege)
 				{
@@ -1852,52 +1854,62 @@ void InitNetwork()
 	InitializePacketProc();	
 }
 
+static void processDungeonServer(const DungeonStaticData::DungeonServer& server) {
+	SERVER_DATA* pServer = g_pServerTable->AllocNewServer(server.port);		
+
+	pServer->dwServerStatus = SERVER_STATUS_NOT_CONNECTED;
+	pServer->bServerType = (BYTE)server.serverType;
+	memset(pServer->szIPForServer, 0, sizeof(pServer->szIPForServer));
+	strncpy(pServer->szIPForServer, server.ip.c_str(), MAX_IP_LENGTH);
+	pServer->dwIPForUser = inet_addr(server.ip.c_str());
+	pServer->wPort = (WORD)server.port;		
+	pServer->dwID = server.port;
+
+	g_pServerTable->Add(pServer);
+}
+
 void QueryAllServer()
 {
+	using namespace DungeonStaticData;
+
 	if( !_CrtCheckMemory( ) ) __asm int 3
 
 	Log(LOG_JUST_DISPLAY, "@ Loading All Server Informations...");
 	
-	// World서버에 접속할 서버 정보를 DB에서 쿼리 
-	char szQuery[ 0xff ]={0,};
-	wsprintf(szQuery, "Select ServerType, IPForUser, IPForServer, Port from ServerTable where ServerType <> 0");
-		
-	ServerRecord RecordSet[ 50 ];
-	memset(RecordSet, 0, sizeof(ServerRecord));
+	const auto serversResult = readServersFromFile(
+		DungeonStaticData::staticServerDataJSONFile
+	);
 
-	int nRet = g_pDb->OpenRecord(szQuery, RecordSet, 50, GAME_DB);
-
-	if(nRet < 0)
-	{
-		Log(LOG_IMPORTANT, "Fail To Query Server Informations!");
-		return;
-	}
-
-	for(int i =0; i<nRet; i++)
-	{
-		__lstrcpyn(RecordSet[i].IPForServer, "127.0.0.1", MAX_IP_LENGTH);
-		__lstrcpyn(RecordSet[i].IPForUser, "127.0.0.1", MAX_IP_LENGTH);
-		// Port가 ID
-		SERVER_DATA* pServer = g_pServerTable->AllocNewServer(RecordSet[ i ].Port-10000);		
-
-		pServer->dwServerStatus = SERVER_STATUS_NOT_CONNECTED;
-		pServer->bServerType = (BYTE)RecordSet[ i ].ServerType;
-		memset(pServer->szIPForServer, 0, sizeof(pServer->szIPForServer));
-		__lstrcpyn(pServer->szIPForServer, RecordSet[ i ].IPForServer, MAX_IP_LENGTH);
-		pServer->dwIPForUser = inet_addr(RecordSet[ i ].IPForUser);
-		pServer->wPort = (WORD)RecordSet[i].Port;		
-
-		g_pServerTable->Add(pServer);
-	}
+	serversResult.sswitch<void>(
+		[&](std::shared_ptr<std::string> errorPtr){
+			printf("ERROR READING SERVERS: %s\n", errorPtr->c_str());
+		},
+		[&](std::shared_ptr<std::vector<DungeonServerDecodingResult>> serverResultsArrayPtr) {
+			for(const auto& serverDecodingResult: *serverResultsArrayPtr) {
+				serverDecodingResult.sswitch<void>(
+					[&](std::shared_ptr<MissingKeys> missingKeys) {
+						printf("Error decoding a dungeon server\n");
+					},
+					[&](std::shared_ptr<DungeonServer> dungeonServer) {
+						processDungeonServer(*dungeonServer);
+					}
+				);
+			}
+		}
+	);
 
 	Log(LOG_JUST_DISPLAY, "@ Loading All Map Informations...");
 	
+	auto manager = DungeonStaticData::DungeonStaticDataManager::parseFromFile(
+		DungeonStaticData::staticDataJSONFile
+	);
 	// World서버가 가지고 있어야 할 맵 정보를 DB에서 쿼리 
-	DUNGEON_DATA rs[ MAX_DUNGEON_NUM_PER_SERVERSET ];
+	CZP_QUERY_DUNGEON_INFO_WORLD_ResultRow rs[ MAX_DUNGEON_NUM_PER_SERVERSET ];
 	memset(rs,0, sizeof(rs));
 
+	char szQuery[255];
 	wsprintf(szQuery, "CZP_QUERY_DUNGEON_INFO_WORLD %d", g_pThis->GetServerID());	
-	nRet = g_pDb->OpenRecord(szQuery, rs, MAX_DUNGEON_NUM_PER_SERVERSET, GAME_DB);
+	auto nRet = g_pDb->OpenRecord(szQuery, rs, MAX_DUNGEON_NUM_PER_SERVERSET, GAME_DB);
 
 	if(nRet < 0)
 	{
@@ -1914,29 +1926,32 @@ void QueryAllServer()
 
 	// 분단위로 계산
 	DWORD dwSubLocalTime = 0;
+	std::vector<DUNGEON_DATA_EX*> _dungeonsWithoutServers;
 
-	for(int i = 0; i < nRet; i++)
-	{
-		if (rs[i].m_dwID == 1) {
-			rs[i].m_dwPort = 16201;
-		}
+	for(int i = 0; i < nRet; i++) {
+		manager.tryFixup(rs[i]);
 
 		DUNGEON_DATA_EX* pDungeon = g_pDungeonTable->AllocNewDungeon( (WORD)rs[i].m_dwID );
-		memcpy((DUNGEON_DATA*)pDungeon, &rs[i], sizeof(DUNGEON_DATA));
+		memcpy((CZP_QUERY_DUNGEON_INFO_WORLD_ResultRow*)pDungeon, &rs[i], sizeof(CZP_QUERY_DUNGEON_INFO_WORLD_ResultRow));
 		
-		if (pDungeon->m_dwID == 3004 || pDungeon->m_dwID == 3002) {
-			rs[i].m_dwPort = 16204;
+		auto server = g_pServerTable->GetServerInfo(rs[i].m_dwPort);
+		pDungeon->m_pServer = server;
+		if(!server) {
+			_dungeonsWithoutServers.push_back(pDungeon);
+		} else {
+			printf(
+				"\nFound server for dungeon:: %d --> %d :: %d :: %d",
+				pDungeon->m_dwID,
+				pDungeon->m_dwPort,
+				rs[i].m_dwPort,
+				server->wPort
+			);
 		}
-
-		if (pDungeon->m_dwID == 3015) {
-			rs[i].m_dwPort = 16205;
-		}
-
-		pDungeon->m_pServer = g_pServerTable->GetServerInfo(rs[i].m_dwPort-10000);
-		
 		
 		if (pDungeon->m_dwID > 2000 && pDungeon->m_dwID < 3000)
-		{
+		{ 
+			// for a passage dungeon there are two dungeon objects created; their ids are consecutive 
+			// the dungeon server must handle only one instance,
 			if (pDungeon->m_dwID%2==0)
 			{
 				DUNGEON_DATA_EX* pTempDungeon = g_pDungeonTable->GetDungeonInfo((WORD)pDungeon->m_dwID-1);
@@ -1989,15 +2004,8 @@ void QueryAllServer()
 			dwIdleTime = 0;// 공성시간으로 만들어라.			
 		}
 
-		if(	IS_ABLE_SERVICE_TYPE(ST_DEVELOP) )//hwoarang
-		{
-			//pDungeon->SetSiegeStartDestTime( 0 );
-			pDungeon->SetSiegeStartDestTime( dwIdleTime );
-		}
-		else
-		{
-			pDungeon->SetSiegeStartDestTime( dwIdleTime );
-		}
+		pDungeon->setSiegeWarTimeSTART( dwIdleTime );
+
 
 		//	레벨업시간 이어지는 처리
 		dwIdleTime = pDungeon->GetLevelUpTickCount();
@@ -2025,37 +2033,27 @@ void QueryAllServer()
 	
 }
 
+static void readWorldMapTTB(int worldMapID) {
+	auto map = new CorumCMap;
+	map->Create( worldMapID + 10000 );
+	g_pMap[ worldMapID ] = map;
+	g_dwCurLandNum++;
+
+	char worldMapFileName[100];
+	snprintf(worldMapFileName, 99, "mapDebugDescription_%d", worldMapID);
+	std::ofstream o(worldMapFileName);
+
+	o << map->debugDescription();
+}
+
 BOOL QueryWorldmapFormation()
 {
 	Log(LOG_JUST_DISPLAY, "@ Loading Worldmap Formation...");
 
 	memset(g_pMap, 0, sizeof(g_pMap));
 	
-	char	szQuery[ 1024 ]={0,};
-	BYTE	bFormedID[ MAX_WORLD_NUM_PER_SERVER ];	memset(bFormedID, 0, sizeof(bFormedID));
-
-	wsprintf(szQuery, "select MapID_01, MapID_02, MapID_03, MapID_04, MapID_05 from WorldServerTable where "
-						"ServerSet = %s and WorldMapID=%d", g_pThis->GetServerSetCode(), g_pThis->GetServerID());
-
-	int nRet = g_pDb->OpenRecord(szQuery, bFormedID, DEFAULT_RETURNED_MAX_ROWS, GAME_DB);
-
-	if(nRet < 0)	
-	{
-		Log(LOG_IMPORTANT, "Fail to Query WorldMap Formation!");
-		__asm int 3
-		return FALSE;
-	}
-
-	for(int i=0; i<MAX_WORLD_NUM_PER_SERVER; i++)
-	{
-		if(bFormedID[i])
-		{
-			g_pMap[ bFormedID[i] ] = new CorumCMap;
-			g_pMap[ bFormedID[i] ]->Create( bFormedID[i] + 10000 );
-		
-			g_dwCurLandNum++;
-		}			
-	}
+	readWorldMapTTB(1);
+	readWorldMapTTB(2);
 
 	return TRUE;
 }
@@ -2100,46 +2098,101 @@ int GetPlayTime(DWORD dwCurTick, DWORD dwStartTick, DWORD dwFlag)
 	return -1;
 }
 
+VECTOR3 emptyPositionOnMapNearObjectPosition(CorumCMap* map, VECTOR3 objectPosition) {
+	int radius = 1; 
+	const auto maxRadius = 3; 
+
+	for(int radius = 1; radius <= maxRadius; radius++) {
+		printf("\nTesting with radius: %d", radius);
+		auto distance = radius * map->dwTileSize;
+		VECTOR3 neighbours[] = {
+			{objectPosition.x - distance, 0, objectPosition.z}, // left
+			{objectPosition.x + distance, 0, objectPosition.z}, // right
+			{objectPosition.x, 0, objectPosition.z + distance}, // top
+			{objectPosition.x, 0, objectPosition.z - distance}, // bottom
+			{objectPosition.x - distance, 0, objectPosition.z + distance}, // top+left
+			{objectPosition.x + distance, 0, objectPosition.z + distance}, // top+right
+			{objectPosition.x - distance, 0, objectPosition.z - distance}, // bot+left
+			{objectPosition.x + distance, 0, objectPosition.z - distance}  // bot+right
+		};
+
+		for(int i = 0; i < sizeof(neighbours) / sizeof(VECTOR3); i++) {
+			auto test = neighbours[i];
+			auto tile = map->GetTileBy3DPosition(test.x, test.z);
+			if(tile && tile->wAttr.uAttr != 1) {
+				printf("\n Found on neighbour: %d:: \(x, z) = \(%.1f, %.1f) [x, z] = [%d, %d", 
+					i, test.x, test.z, tile->wIndex_X, tile->wIndex_Z
+				);
+				return {test.x, 0, test.z};
+			}
+		}
+	}
+
+	printf("\n Found nothing\n");
+	return {0, 0, 0};
+}
 
 BOOL FindEmptyPosNearDungeon(BYTE bWorldID, VECTOR3* vpDungeonPos, VECTOR3 *vpNearPos, BOOL bVillage)
 {
-	if(!g_pMap[ bWorldID ])
-	{
+	auto map = g_pMap[bWorldID];
+
+	if(!map) {
 		Log(LOG_IMPORTANT, "Invalid WorldID Entered at FindEmptyPosNearDungeon Function! (bWorldID:%d", bWorldID);
 		return FALSE;
 	}
 
+	const auto indexes = map->indexesFor3DPosition(vpDungeonPos->z, vpDungeonPos->x);
+	printf("\nTrying to probe near: (%.1f, %.1f)", vpDungeonPos->x, vpDungeonPos->z);
+	printf(
+		"\n(Z, X) : on map id: %d == (%d, %d) size: %d)", 
+		bWorldID, indexes.zIndex, indexes.xIndex, map->dwTileSize
+	);
+
+	auto result = emptyPositionOnMapNearObjectPosition(map, *vpDungeonPos);
+	if(result.x > 0 && result.z > 0) {
+		*vpNearPos = result;
+		return TRUE;
+	} else {
+		*vpNearPos = *vpDungeonPos;
+		return TRUE;
+	}
+
+	return FALSE;
+
 	MAP_TILE*	pTile = 0;
-	VECTOR3		vPos = { 0.f, 0.f, 0.f };
+	VECTOR3		vPos = *vpDungeonPos;
 	DWORD		dwCount = 0;	
 
-	while(dwCount < 4)
-	{
+	while(dwCount < 4 * 3)
+	{	
 		vPos = *vpDungeonPos;
-		dwCount++;
-		
-		float fDistance = (bVillage) ? 5.0f : 2.0f;
+		float fDistance = 2.5 * (dwCount / 4);
 
-		switch(dwCount)
-		{
-			case 1:		vPos.x -= (TILE_WIDTH * fDistance);	break;		//서쪽방향 
-			case 2:		vPos.z -= (TILE_WIDTH * fDistance);	break;		//남쪽방향
-			case 3:		vPos.z += (TILE_WIDTH * fDistance);	break;		//북쪽방향
-			case 4:		vPos.x += (TILE_WIDTH * fDistance);	break;		//동쪽방향 
+		switch(dwCount % 4) {
+			case 0:		vPos.x -= (map->dwTileSize * fDistance);	break;		//서쪽방향 
+			case 1:		vPos.z -= (map->dwTileSize * fDistance);	break;		//남쪽방향
+			case 2:		vPos.z += (map->dwTileSize * fDistance);	break;		//북쪽방향
+			case 3:		vPos.x += (map->dwTileSize * fDistance);	break;		//동쪽방향 
 		}		
 
-		pTile = g_pMap[bWorldID]->GetTile(vPos.x, vPos.z);	
+		dwCount++;
 
-		if(!pTile)	return FALSE;
+		pTile = map->GetTileBy3DPosition(vPos.x, vPos.z);	
+		const auto currentIndexes = map->indexesFor3DPosition(vPos.z, vPos.x);
 
-		if(pTile->wAttr.uAttr != 1)
-		{
+		printf(
+			"\n Probing indexes: (Z, X):: (%d, %d)", currentIndexes.zIndex, currentIndexes.xIndex
+		);
+
+		if(pTile && pTile->wAttr.uAttr != 1) {
 			vpNearPos->x = vPos.x;
 			vpNearPos->z = vPos.z;
+			printf("\n  this is the one!\n");
 			return TRUE;
 		}
 	}
 
+	printf("\n Found nothing\n");
 	return FALSE;
 }
 

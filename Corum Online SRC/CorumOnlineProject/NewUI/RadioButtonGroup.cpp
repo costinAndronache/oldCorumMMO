@@ -28,14 +28,12 @@ RadioButtonGroup::LabeledButtonModel RadioButtonGroup::LabeledButtonModel::defau
 }
 
 static void fillButtons(
-	std::vector<ToggleButton*>& buttonList, int count,
+	std::vector<std::shared_ptr<ToggleButton>>& buttonList, int count,
 	Point origin, Size buttonSize, int xStep, int yStep,
-	std::function<ToggleButton*(int, Rect)> createFn) {
+	std::function<std::shared_ptr<ToggleButton>(int, Rect)> createFn) {
 	for (int i = 0; i < count; i++) {
 		Rect btnFrame = { { origin.x + i * xStep, origin.y + i * yStep }, buttonSize };
-
-		ToggleButton* tgb = createFn(i, btnFrame);
-		buttonList.push_back(tgb);
+		buttonList.push_back(createFn(i, btnFrame));
 	}
 }
 
@@ -44,7 +42,7 @@ RadioButtonGroup::RadioButtonGroup(std::vector<ButtonModel> models, Rect frameIn
 	_buttons.reserve(models.size());
 	_frameInParent = frameInParent;
 
-	std::function<ToggleButton* (int, Rect)> createFn = [&](int index, Rect btnFrame) {
+	std::function<std::shared_ptr<ToggleButton> (int, Rect)> createFn = [&](int index, Rect btnFrame) {
 		return buildFromModelList(&models, index, btnFrame);
 	};
 
@@ -64,7 +62,7 @@ RadioButtonGroup::RadioButtonGroup(std::vector<LabeledButtonModel> models, Rect 
 	_frameInParent = frameInParent;
 
 	_buttons.reserve(models.size());
-	std::function<ToggleButton*(int, Rect)> createFn = [&](int index, Rect btnFrame) {
+	std::function<std::shared_ptr<ToggleButton>(int, Rect)> createFn = [&](int index, Rect btnFrame) {
 		return buildFromLabeledModelList(&models, index, btnFrame);
 	};
 
@@ -79,7 +77,7 @@ RadioButtonGroup::RadioButtonGroup(std::vector<LabeledButtonModel> models, Rect 
 	adjustButtons(_activeButtonIndex);
 }
 
-void RadioButtonGroup::toggleButtonDidSwitchState(ToggleButton* button, bool isOn) {
+void RadioButtonGroup::toggleButtonDidSwitchState(std::shared_ptr<ToggleButton> button, bool isOn) {
 	auto it = std::find(_buttons.begin(), _buttons.end(), button);
 	if (it != _buttons.end()) {
 		const int index = it - _buttons.begin();
@@ -106,29 +104,31 @@ void RadioButtonGroup::adjustButtons(const unsigned int activeButtonIndex) {
 	}
 }
 
-ToggleButton* RadioButtonGroup::buildFromModelList(const std::vector<ButtonModel>* models, int index, Rect frame) {
+std::shared_ptr<ToggleButton> RadioButtonGroup::buildFromModelList(const std::vector<ButtonModel>* models, int index, Rect frame) {
 	ButtonModel model = (*models)[index];
 	auto toggleButton = registerChildRenderable<ToggleButton>([=]() {
-		return new ToggleButton(model.sprites, frame);
+		return std::make_shared<ToggleButton>(model.sprites, frame);
 	});
 
-	toggleButton->onStateSwitch([this, toggleButton](bool isOn){
-		toggleButtonDidSwitchState(toggleButton, isOn);
+	auto weak = std::weak_ptr<ToggleButton>(toggleButton);
+	toggleButton->onStateSwitch([this, weak](bool isOn){
+		toggleButtonDidSwitchState(weak.lock(), isOn);
 	});
 
 	return toggleButton;
 }
 
-ToggleButton *RadioButtonGroup::buildFromLabeledModelList(
+std::shared_ptr<ToggleButton> RadioButtonGroup::buildFromLabeledModelList(
     const std::vector<LabeledButtonModel>* models, int index, Rect frame) {
 	LabeledButtonModel model = (*models)[index];
 
 	auto toggleButton = registerChildRenderable<ToggleButton>([=]() {
-		return new ToggleButton(model.sprites, model.labelModel, frame);
+		return std::make_shared<ToggleButton>(model.sprites, model.labelModel, frame);
 	});
 
-	toggleButton->onStateSwitch([this, toggleButton](bool isOn) {
-		toggleButtonDidSwitchState(toggleButton, isOn);
+	auto weak = std::weak_ptr<ToggleButton>(toggleButton);
+	toggleButton->onStateSwitch([this, weak](bool isOn) {
+		toggleButtonDidSwitchState(weak.lock(), isOn);
 	});
 
 	return toggleButton;

@@ -11,7 +11,7 @@
 #endif
 
 
-#include "../CorumPreferences/CorumPreferences.h"
+#include "NewHelpers/UserPreferencesManager.h"
 #include "LogWnd.h"
 #include "HashTable.h"
 #include "MessagePool.h"
@@ -270,6 +270,8 @@ extern CItemUsedManager				g_ItemUsedManager;
 using PreferencesPtr = std::shared_ptr<CorumPreferences::Preferences>;
 extern  PreferencesPtr corumPreferences(); 
 
+extern IDIFontObject* verdanaBIG;
+
 extern void	(*OnKeyDown[ MAX_UPDATE_GAME ])		(WPARAM wParam, LPARAM lParam);
 extern void	(*OnKeyUp[ MAX_UPDATE_GAME ])		(WPARAM wParam, LPARAM lParam);
 extern void	(*OnLButtonDown[ MAX_UPDATE_GAME ])	(WPARAM wParam, LPARAM lParam);
@@ -309,7 +311,6 @@ DWORD __stdcall		DefaultErrorHandleProc(ERROR_TYPE type,DWORD dwErrorPriority,vo
 BOOL				IsCompressedTextureFormatOk();	
 HWND				InitInstance(HINSTANCE hInstance, int nCmdShow, PreferencesPtr preferences);
 ATOM				RegisterWindowClass(HINSTANCE hInstance);
-void				CentreWindow(HWND hwnd);
 LRESULT CALLBACK	WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 DWORD				GetExpTableOfLevel(GAME_OBJECT_TYPE eObjectType, DWORD dwLevel);
 DWORD	GetCumulatedExpByLevel(GAME_OBJECT_TYPE eObjectType, DWORD dwLevel);
@@ -318,7 +319,7 @@ DWORD				GetGuardianItemLevel(DWORD dwExp);
 
 extern std::vector<ITEM*> selectedItemsForTooltipRendering;
 
-
+extern std::shared_ptr<UserPreferencesManager> userPreferencesManager;
 
 
 

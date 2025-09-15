@@ -23,12 +23,12 @@ namespace CustomUI {
 		template<typename Model>
 		void rebuild(
 			const std::vector<Model>& models,
-			std::function<Renderable* (Model model, int index, Rect frameInContainer)> createFn
+			std::function<std::shared_ptr<Renderable> (Model model, int index, Rect frameInContainer)> createFn
 		) {
 			deconstructAllChildren();
 			for (int i = 0; i < models.size(); i++) {
 				const auto currentFrame = Rect{ originForIndex(i, _appearance.sizes.columnsPerRow), _appearance.sizes.itemSize };
-				registerChildRenderable<Renderable>([=]() -> Renderable* {
+				registerChildRenderable<Renderable>([=]() -> std::shared_ptr<Renderable> {
 					return createFn(models[i], i, currentFrame);
 				});
 			}

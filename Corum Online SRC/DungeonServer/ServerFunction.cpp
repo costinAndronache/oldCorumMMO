@@ -126,8 +126,8 @@ void __stdcall UpdateMonitor(DWORD dwVal)	// 일단 임시로 만드는것이다. 다음에 계
 	while( pos )
 	{
 		pUser = (CUser*)pPcList->GetAndAdvance( pos );
-		g_pGDI->DrawFillBox( INT( pUser->GetCurPosition()->x / TILE_WIDTH ) * 2, INT(wHeight-( pUser->GetCurPosition()->y / TILE_HEIGHT * 2)), 
-			INT( pUser->GetCurPosition()->x / TILE_WIDTH ) * 2 + 2, INT(wHeight-( pUser->GetCurPosition()->y / TILE_HEIGHT * 2 + 2)), 0xff00 );
+		g_pGDI->DrawFillBox( INT( pUser->GetCurPosition()->x / DUNGEON_TILE_WIDTH ) * 2, INT(wHeight-( pUser->GetCurPosition()->y / DUNGEON_TILE_HEIGHT * 2)), 
+			INT( pUser->GetCurPosition()->x / DUNGEON_TILE_WIDTH ) * 2 + 2, INT(wHeight-( pUser->GetCurPosition()->y / DUNGEON_TILE_HEIGHT * 2 + 2)), 0xff00 );
 	}
 	
 	// Monster
@@ -138,8 +138,8 @@ void __stdcall UpdateMonitor(DWORD dwVal)	// 일단 임시로 만드는것이다. 다음에 계
 	while( pos )
 	{
 		pMonster = (CMonster*)pMonsterList->GetAndAdvance( pos );
-		g_pGDI->DrawFillBox( INT( pMonster->GetCurPosition()->x / TILE_WIDTH ) * 2, INT(wHeight-( pMonster->GetCurPosition()->y / TILE_HEIGHT * 2)), 
-			INT( pMonster->GetCurPosition()->x / TILE_WIDTH ) * 2 + 2, INT(wHeight-( pMonster->GetCurPosition()->y / TILE_HEIGHT * 2 + 2)), 0x07E0 );
+		g_pGDI->DrawFillBox( INT( pMonster->GetCurPosition()->x / DUNGEON_TILE_WIDTH ) * 2, INT(wHeight-( pMonster->GetCurPosition()->y / DUNGEON_TILE_HEIGHT * 2)), 
+			INT( pMonster->GetCurPosition()->x / DUNGEON_TILE_WIDTH ) * 2 + 2, INT(wHeight-( pMonster->GetCurPosition()->y / DUNGEON_TILE_HEIGHT * 2 + 2)), 0x07E0 );
 	}
 
 	// 활성화 섹션을 그린다.

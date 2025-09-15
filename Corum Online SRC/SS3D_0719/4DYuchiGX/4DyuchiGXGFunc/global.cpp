@@ -86,7 +86,7 @@ GLOBAL_FUNC_DLL void __stdcall SET_VECTOR3(VECTOR3* pv3,float fVal)
 	pv3->z = fVal;
 }
 #ifdef _USE_SSE
-GLOBAL_FUNC_DLL void __stdcall VECTOR3_ADD_VECTOR3(VECTOR3* pv3Result,VECTOR3* pv3Arg1,VECTOR3* pv3Arg2)
+GLOBAL_FUNC_DLL void __stdcall VECTOR3_ADD_VECTOR3(VECTOR3* pv3Result, const VECTOR3* pv3Arg1, const VECTOR3* pv3Arg2)
 {
 	__asm
 	{
@@ -112,7 +112,7 @@ GLOBAL_FUNC_DLL void __stdcall VECTOR3_ADD_VECTOR3(VECTOR3* pv3Result,VECTOR3* p
 	}
 }
 #else
-GLOBAL_FUNC_DLL void __stdcall VECTOR3_ADD_VECTOR3(VECTOR3* pv3Result,VECTOR3* pv3Arg1,VECTOR3* pv3Arg2)
+GLOBAL_FUNC_DLL void __stdcall VECTOR3_ADD_VECTOR3(VECTOR3* pv3Result, const VECTOR3* pv3Arg1, const VECTOR3* pv3Arg2)
 {
 	pv3Result->x = pv3Arg1->x + pv3Arg2->x;
 	pv3Result->y = pv3Arg1->y + pv3Arg2->y;
@@ -121,7 +121,7 @@ GLOBAL_FUNC_DLL void __stdcall VECTOR3_ADD_VECTOR3(VECTOR3* pv3Result,VECTOR3* p
 #endif
 
 #ifdef _USE_SSE
-GLOBAL_FUNC_DLL void __stdcall VECTOR3_SUB_VECTOR3(VECTOR3* pv3Result,VECTOR3* pv3Arg1,VECTOR3* pv3Arg2)
+GLOBAL_FUNC_DLL void __stdcall VECTOR3_SUB_VECTOR3(VECTOR3* pv3Result,const VECTOR3* pv3Arg1, const VECTOR3* pv3Arg2)
 {
 //	RDTSC_BEGIN
 	__asm
@@ -149,7 +149,7 @@ GLOBAL_FUNC_DLL void __stdcall VECTOR3_SUB_VECTOR3(VECTOR3* pv3Result,VECTOR3* p
 //	RDTSC_END
 }
 #else
-GLOBAL_FUNC_DLL void __stdcall VECTOR3_SUB_VECTOR3(VECTOR3* pv3Result,VECTOR3* pv3Arg1,VECTOR3* pv3Arg2)
+GLOBAL_FUNC_DLL void __stdcall VECTOR3_SUB_VECTOR3(VECTOR3* pv3Result, const VECTOR3* pv3Arg1, const VECTOR3* pv3Arg2)
 {
 	pv3Result->x = pv3Arg1->x - pv3Arg2->x;
 	pv3Result->y = pv3Arg1->y - pv3Arg2->y;
@@ -157,7 +157,7 @@ GLOBAL_FUNC_DLL void __stdcall VECTOR3_SUB_VECTOR3(VECTOR3* pv3Result,VECTOR3* p
 }
 #endif
 #ifdef _USE_SSE
-GLOBAL_FUNC_DLL void __stdcall VECTOR3_MUL_VECTOR3(VECTOR3* pv3Result,VECTOR3* pv3Arg1,VECTOR3* pv3Arg2)
+GLOBAL_FUNC_DLL void __stdcall VECTOR3_MUL_VECTOR3(VECTOR3* pv3Result, const VECTOR3* pv3Arg1, const VECTOR3* pv3Arg2)
 {
 	__asm
 	{
@@ -185,7 +185,7 @@ GLOBAL_FUNC_DLL void __stdcall VECTOR3_MUL_VECTOR3(VECTOR3* pv3Result,VECTOR3* p
 	}
 }
 #else
-GLOBAL_FUNC_DLL void __stdcall VECTOR3_MUL_VECTOR3(VECTOR3* pv3Result,VECTOR3* pv3Arg1,VECTOR3* pv3Arg2)
+GLOBAL_FUNC_DLL void __stdcall VECTOR3_MUL_VECTOR3(VECTOR3* pv3Result, const VECTOR3* pv3Arg1, const VECTOR3* pv3Arg2)
 {
 	pv3Result->x = pv3Arg1->x * pv3Arg2->x;
 	pv3Result->y = pv3Arg1->y * pv3Arg2->y;
@@ -194,7 +194,7 @@ GLOBAL_FUNC_DLL void __stdcall VECTOR3_MUL_VECTOR3(VECTOR3* pv3Result,VECTOR3* p
 #endif
 
 #ifdef _USE_SSE
-GLOBAL_FUNC_DLL void __stdcall VECTOR3_DIV_VECTOR3(VECTOR3* pv3Result,VECTOR3* pv3Arg1,VECTOR3* pv3Arg2)
+GLOBAL_FUNC_DLL void __stdcall VECTOR3_DIV_VECTOR3(VECTOR3* pv3Result, const VECTOR3* pv3Arg1, const VECTOR3* pv3Arg2)
 {
 	__asm
 	{
@@ -222,7 +222,7 @@ GLOBAL_FUNC_DLL void __stdcall VECTOR3_DIV_VECTOR3(VECTOR3* pv3Result,VECTOR3* p
 	}
 }
 #else
-GLOBAL_FUNC_DLL void __stdcall VECTOR3_DIV_VECTOR3(VECTOR3* pv3Result,VECTOR3* pv3Arg1,VECTOR3* pv3Arg2)
+GLOBAL_FUNC_DLL void __stdcall VECTOR3_DIV_VECTOR3(VECTOR3* pv3Result, const VECTOR3* pv3Arg1, const VECTOR3* pv3Arg2)
 {
 	pv3Result->x = pv3Arg1->x / pv3Arg2->x;
 	pv3Result->y = pv3Arg1->y / pv3Arg2->y;
@@ -255,7 +255,7 @@ GLOBAL_FUNC_DLL void __stdcall VECTOR3_ADDEQU_VECTOR3(VECTOR3* pv3Result,VECTOR3
 	}
 }
 #else
-GLOBAL_FUNC_DLL void __stdcall VECTOR3_ADDEQU_VECTOR3(VECTOR3* pv3Result,VECTOR3* pv3Arg1)
+GLOBAL_FUNC_DLL void __stdcall VECTOR3_ADDEQU_VECTOR3(VECTOR3* pv3Result, const VECTOR3* pv3Arg1)
 {
 	pv3Result->x += pv3Arg1->x;
 	pv3Result->y += pv3Arg1->y;
@@ -264,7 +264,7 @@ GLOBAL_FUNC_DLL void __stdcall VECTOR3_ADDEQU_VECTOR3(VECTOR3* pv3Result,VECTOR3
 #endif
 
 #ifdef _USE_SSE
-GLOBAL_FUNC_DLL void __stdcall VECTOR3_SUBEQU_VECTOR3(VECTOR3* pv3Result,VECTOR3* pv3Arg1)
+GLOBAL_FUNC_DLL void __stdcall VECTOR3_SUBEQU_VECTOR3(VECTOR3* pv3Result, const VECTOR3* pv3Arg1)
 {
 	__asm
 	{
@@ -289,7 +289,7 @@ GLOBAL_FUNC_DLL void __stdcall VECTOR3_SUBEQU_VECTOR3(VECTOR3* pv3Result,VECTOR3
 	}
 }
 #else
-GLOBAL_FUNC_DLL void __stdcall VECTOR3_SUBEQU_VECTOR3(VECTOR3* pv3Result,VECTOR3* pv3Arg1)
+GLOBAL_FUNC_DLL void __stdcall VECTOR3_SUBEQU_VECTOR3(VECTOR3* pv3Result, const VECTOR3* pv3Arg1)
 {
 	pv3Result->x -= pv3Arg1->x;
 	pv3Result->y -= pv3Arg1->y;
@@ -298,7 +298,7 @@ GLOBAL_FUNC_DLL void __stdcall VECTOR3_SUBEQU_VECTOR3(VECTOR3* pv3Result,VECTOR3
 #endif
 
 #ifdef _USE_SSE
-GLOBAL_FUNC_DLL void __stdcall VECTOR3_MULEQU_VECTOR3(VECTOR3* pv3Result,VECTOR3* pv3Arg1)
+GLOBAL_FUNC_DLL void __stdcall VECTOR3_MULEQU_VECTOR3(VECTOR3* pv3Result, const VECTOR3* pv3Arg1)
 {
 	__asm
 	{
@@ -323,7 +323,7 @@ GLOBAL_FUNC_DLL void __stdcall VECTOR3_MULEQU_VECTOR3(VECTOR3* pv3Result,VECTOR3
 	}
 }
 #else
-GLOBAL_FUNC_DLL void __stdcall VECTOR3_MULEQU_VECTOR3(VECTOR3* pv3Result,VECTOR3* pv3Arg1)
+GLOBAL_FUNC_DLL void __stdcall VECTOR3_MULEQU_VECTOR3(VECTOR3* pv3Result, const VECTOR3* pv3Arg1)
 {
 	pv3Result->x *= pv3Arg1->x;
 	pv3Result->y *= pv3Arg1->y;
@@ -332,7 +332,7 @@ GLOBAL_FUNC_DLL void __stdcall VECTOR3_MULEQU_VECTOR3(VECTOR3* pv3Result,VECTOR3
 #endif
 
 #ifdef _USE_SSE
-GLOBAL_FUNC_DLL void __stdcall VECTOR3_DIVEQU_VECTOR3(VECTOR3* pv3Result,VECTOR3* pv3Arg1)
+GLOBAL_FUNC_DLL void __stdcall VECTOR3_DIVEQU_VECTOR3(VECTOR3* pv3Result, const VECTOR3* pv3Arg1)
 {
 	__asm
 	{
@@ -359,7 +359,7 @@ GLOBAL_FUNC_DLL void __stdcall VECTOR3_DIVEQU_VECTOR3(VECTOR3* pv3Result,VECTOR3
 	}
 }
 #else
-GLOBAL_FUNC_DLL void __stdcall VECTOR3_DIVEQU_VECTOR3(VECTOR3* pv3Result,VECTOR3* pv3Arg1)
+GLOBAL_FUNC_DLL void __stdcall VECTOR3_DIVEQU_VECTOR3(VECTOR3* pv3Result, const VECTOR3* pv3Arg1)
 {
 	pv3Result->x /= pv3Arg1->x;
 	pv3Result->y /= pv3Arg1->y;
@@ -487,7 +487,7 @@ GLOBAL_FUNC_DLL void __stdcall VECTOR3_DIVEQU_FLOAT(VECTOR3* pv3Result,float fVa
 
 
 #ifdef _USE_SSE
-GLOBAL_FUNC_DLL void __stdcall VECTOR3_ADD_FLOAT(VECTOR3* pv3Result,VECTOR3* pv3Arg1,float fVal)
+GLOBAL_FUNC_DLL void __stdcall VECTOR3_ADD_FLOAT(VECTOR3* pv3Result, const VECTOR3* pv3Arg1,float fVal)
 {	
 	__asm
 	{
@@ -509,7 +509,7 @@ GLOBAL_FUNC_DLL void __stdcall VECTOR3_ADD_FLOAT(VECTOR3* pv3Result,VECTOR3* pv3
 	}
 }
 #else
-GLOBAL_FUNC_DLL void __stdcall VECTOR3_ADD_FLOAT(VECTOR3* pv3Result,VECTOR3* pv3Arg1,float fVal)
+GLOBAL_FUNC_DLL void __stdcall VECTOR3_ADD_FLOAT(VECTOR3* pv3Result, const VECTOR3* pv3Arg1,float fVal)
 {
 	pv3Result->x = pv3Arg1->x + fVal;
 	pv3Result->y = pv3Arg1->y + fVal;
@@ -518,7 +518,7 @@ GLOBAL_FUNC_DLL void __stdcall VECTOR3_ADD_FLOAT(VECTOR3* pv3Result,VECTOR3* pv3
 #endif
 
 #ifdef _USE_SSE
-GLOBAL_FUNC_DLL void __stdcall VECTOR3_SUB_FLOAT(VECTOR3* pv3Result,VECTOR3* pv3Arg1,float fVal)
+GLOBAL_FUNC_DLL void __stdcall VECTOR3_SUB_FLOAT(VECTOR3* pv3Result, const VECTOR3* pv3Arg1,float fVal)
 {
 	__asm
 	{
@@ -541,7 +541,7 @@ GLOBAL_FUNC_DLL void __stdcall VECTOR3_SUB_FLOAT(VECTOR3* pv3Result,VECTOR3* pv3
 	}
 }
 #else
-GLOBAL_FUNC_DLL void __stdcall VECTOR3_SUB_FLOAT(VECTOR3* pv3Result,VECTOR3* pv3Arg1,float fVal)
+GLOBAL_FUNC_DLL void __stdcall VECTOR3_SUB_FLOAT(VECTOR3* pv3Result, const VECTOR3* pv3Arg1,float fVal)
 {
 	pv3Result->x = pv3Arg1->x - fVal;
 	pv3Result->y = pv3Arg1->y - fVal;
@@ -551,7 +551,7 @@ GLOBAL_FUNC_DLL void __stdcall VECTOR3_SUB_FLOAT(VECTOR3* pv3Result,VECTOR3* pv3
 
 
 #ifdef _USE_SSE
-GLOBAL_FUNC_DLL void __stdcall VECTOR3_MUL_FLOAT(VECTOR3* pv3Result,VECTOR3* pv3Arg1,float fVal)
+GLOBAL_FUNC_DLL void __stdcall VECTOR3_MUL_FLOAT(VECTOR3* pv3Result, const VECTOR3* pv3Arg1,float fVal)
 {	
 	__asm
 	{
@@ -573,7 +573,7 @@ GLOBAL_FUNC_DLL void __stdcall VECTOR3_MUL_FLOAT(VECTOR3* pv3Result,VECTOR3* pv3
 	}
 }
 #else
-GLOBAL_FUNC_DLL void __stdcall VECTOR3_MUL_FLOAT(VECTOR3* pv3Result,VECTOR3* pv3Arg1,float fVal)
+GLOBAL_FUNC_DLL void __stdcall VECTOR3_MUL_FLOAT(VECTOR3* pv3Result, const VECTOR3* pv3Arg1, float fVal)
 {
 	pv3Result->x = pv3Arg1->x * fVal;
 	pv3Result->y = pv3Arg1->y * fVal;
@@ -583,7 +583,7 @@ GLOBAL_FUNC_DLL void __stdcall VECTOR3_MUL_FLOAT(VECTOR3* pv3Result,VECTOR3* pv3
 #endif
 
 #ifdef _USE_SSE
-GLOBAL_FUNC_DLL void __stdcall VECTOR3_DIV_FLOAT(VECTOR3* pv3Result,VECTOR3* pv3Arg1,float fVal)
+GLOBAL_FUNC_DLL void __stdcall VECTOR3_DIV_FLOAT(VECTOR3* pv3Result, const VECTOR3* pv3Arg1, float fVal)
 {	
 	__asm
 	{
@@ -604,7 +604,7 @@ GLOBAL_FUNC_DLL void __stdcall VECTOR3_DIV_FLOAT(VECTOR3* pv3Result,VECTOR3* pv3
 	}
 }
 #else
-GLOBAL_FUNC_DLL void __stdcall VECTOR3_DIV_FLOAT(VECTOR3* pv3Result,VECTOR3* pv3Arg1,float fVal)
+GLOBAL_FUNC_DLL void __stdcall VECTOR3_DIV_FLOAT(VECTOR3* pv3Result, const VECTOR3* pv3Arg1,float fVal)
 {
 	pv3Result->x = pv3Arg1->x / fVal;
 	pv3Result->y = pv3Arg1->y / fVal;
@@ -1247,7 +1247,7 @@ GLOBAL_FUNC_DLL void __stdcall Normalize(VECTOR3* OUT vn,VECTOR3* IN v)
 
 #ifdef _USE_SSE
 
-GLOBAL_FUNC_DLL float __stdcall CalcDistance(VECTOR3* pv3Start,VECTOR3* pv3End)
+GLOBAL_FUNC_DLL float __stdcall CalcDistance(const VECTOR3* pv3Start, const VECTOR3* pv3End)
 {
 	
 	float	result;
@@ -1283,7 +1283,7 @@ GLOBAL_FUNC_DLL float __stdcall CalcDistance(VECTOR3* pv3Start,VECTOR3* pv3End)
 	return result;
 }
 #else
-GLOBAL_FUNC_DLL float __stdcall CalcDistance(VECTOR3* pv3Start,VECTOR3* pv3End)
+GLOBAL_FUNC_DLL float __stdcall CalcDistance(const VECTOR3* pv3Start, const VECTOR3* pv3End)
 {
 	float	result;
 

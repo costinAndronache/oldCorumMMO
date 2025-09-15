@@ -45,18 +45,18 @@ void DynamicInfoBox::updateWithLines(const std::vector<InfoLine>& lines) {
 
 	_frameInParent = { _frameInParent.origin, totalSize };
 	_border = registerChildRenderable<BorderRenderable>([=]() {
-		return new BorderRenderable(bounds());
+		return std::make_shared<BorderRenderable>(bounds());
 	});
 
 	_border->updateSingleBorderLine(NewHUDResources::blueDot);
 	_infoLinesContainer = registerChildRenderable<MatrixContainer>([=]() {
-		return new MatrixContainer(bounds().withInsets(smallInsets), containerAppearance);
+		return std::make_shared<MatrixContainer>(bounds().withInsets(smallInsets), containerAppearance);
 	});
 
 	_infoLinesContainer->rebuild<InfoLine>(
 		lines,
 		[=](InfoLine line, int, Rect frameInContainer) {
-			auto label = new SingleLineLabel(
+			auto label = std::make_shared<SingleLineLabel>(
 				frameInContainer,
 				SingleLineLabel::Appearance(line.color),
 				line.text

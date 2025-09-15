@@ -565,7 +565,7 @@ void CmdPartyJoinId( char* pMsg, DWORD dwLen )
 
 		if(pUser)
 		{
-			VECTOR2 vec = pMiniMapWnd->GetRatioMinimap(pUser->m_v3CurPos.x, pUser->m_v3CurPos.z);
+			VECTOR2 vec = pMiniMapWnd->GetRatioMinimap(pUser->currentPosition().x, pUser->currentPosition().z);
 			pMiniMapWnd->SetPosObjX(dwResource, vec.x+8);
 			pMiniMapWnd->SetPosObjY(dwResource, vec.y+42);
 			pMiniMapWnd->SetRender(dwResource, TRUE);

@@ -4,10 +4,10 @@ using namespace NewInterface;
 using namespace CustomUI;
 
 UserInventoryManager::UserInventoryManager(
-	GroupedItemInventoryView* userInventoryView, 
-	ItemUsageManager* itemUsageManager,
-	TooltipLayer* toolTipLayer,
-	TooltipHelper* toolTipHelper,
+	std::shared_ptr<GroupedItemInventoryView> userInventoryView, 
+	std::shared_ptr<ItemUsageManager> itemUsageManager,
+	std::shared_ptr<TooltipLayer> toolTipLayer,
+	std::shared_ptr<TooltipHelper> toolTipHelper,
 	SoundLibrary* soundLibrary
 ) {
 	_managedInventoryView = userInventoryView;
@@ -51,7 +51,7 @@ void UserInventoryManager::rebuildInventoryViewWith(
 		_smallItemsTooltipManager->clearAllTooltips();
 
 		_indexOnCurrentDragNDropItem = { index, _managedInventoryView->activeTab() };
-		SpriteRenderable* sprr = new SpriteRenderable(globalFrame, sprite);
+		auto sprr = std::make_shared<SpriteRenderable>(globalFrame, sprite);
 
 		_managedInventoryView->setHiddenStateForItemAtIndex(index, _managedInventoryView->activeTab(), true);
 		_handler(sprr, globalFrame);
@@ -61,19 +61,18 @@ void UserInventoryManager::rebuildInventoryViewWith(
 		auto result = _itemUsageManager->tryUseSmallInventoryItem(item, index);
 	};
 
-	_smallItemsTooltipManager = new TooltipManager(
+	_smallItemsTooltipManager = std::make_shared<TooltipManager>(
 		_toolTipLayer,
 		[=](int smallItemIndex) -> TooltipManager::InfoLines {
 			return _toolTipHelper->tooltipForItem(smallItems[smallItemIndex]);
 		}
 	);
 
-	_largeItemsTooltipManager = new TooltipManager(
+	_largeItemsTooltipManager = std::make_shared<TooltipManager>(
 		_toolTipLayer,
 		[=](int largeItemIndex) -> TooltipManager::InfoLines {
 		return _toolTipHelper->tooltipForItem(largeItems[largeItemIndex]);
-	}
-	);
+	});
 
 	GenericItemsContainerView::HandlerItemHovering smallItemHovering =
 		[=](CItem item, int index, Point mouseCoordsGlobal) {

@@ -1032,8 +1032,8 @@ int	GetDamageBox(PARAM_TARGETCOUNT* pParam)
 	// 박스의 원점을 박스의 중간점으로 되도록 하기위해서.
 	VECTOR2 vecStart = *pParam->vecStart;
 
-	vecStart.x = vecStart.x+cosf(fRad)*TILE_SIZE*nMax;
-	vecStart.y = vecStart.y+sinf(fRad)*TILE_SIZE*nMax;
+	vecStart.x = vecStart.x+cosf(fRad)*DUNGEON_TILE_SIZE*nMax;
+	vecStart.y = vecStart.y+sinf(fRad)*DUNGEON_TILE_SIZE*nMax;
 
 	while(pos)
 	{
@@ -1135,7 +1135,7 @@ int	GetDamage8Line(PARAM_TARGETCOUNT* pParam)
 
 	for(int arrayIndex = 0; arrayIndex < 9; ++arrayIndex)
 	{	
-		float fRad = (float)atan2(array[arrayIndex].y*TILE_SIZE, array[arrayIndex].x*TILE_SIZE); // 나가는 방향
+		float fRad = (float)atan2(array[arrayIndex].y*DUNGEON_TILE_SIZE, array[arrayIndex].x*DUNGEON_TILE_SIZE); // 나가는 방향
 
 		// 색션안에 있는놈들
 		POSITION_ pos		= pStartingPointSection->m_pMonsterList->GetHeadPosition();
@@ -1319,8 +1319,8 @@ int GetDamageArc(PARAM_TARGETCOUNT* pParam)
 	int nMax = pEffect->Value[pParam->bSkillLevel].nCompass; // 가로 최대 길이
 	
 	int nCount = 0;
-	float fRad = (float)atan2((float)(int(pParam->vecStart->y / TILE_SIZE) - pStartingPointTile->wIndex_Z
-		), (float)(int(pParam->vecStart->x / TILE_SIZE) - pStartingPointTile->wIndex_X)); // 나가는 방향
+	float fRad = (float)atan2((float)(int(pParam->vecStart->y / DUNGEON_TILE_SIZE) - pStartingPointTile->wIndex_Z
+		), (float)(int(pParam->vecStart->x / DUNGEON_TILE_SIZE) - pStartingPointTile->wIndex_X)); // 나가는 방향
 
 	// 색션안에 있는놈들
 	POSITION_ pos = pStartingPointSection->m_pMonsterList->GetHeadPosition();
@@ -1427,14 +1427,14 @@ VECTOR2 GetSkillStartPosition(BYTE bTargetType, DWORD dwTargetIndex, WORD wTileI
 	}
 	else if (bTargetType == OBJECT_TYPE_SKILL)
 	{
-		vecStart.x = (dwTargetIndex>>16)*TILE_WIDTH+TILE_WIDTH/2;
-		vecStart.y = (dwTargetIndex&0x0000ffff)*TILE_WIDTH+TILE_WIDTH/2;
+		vecStart.x = (dwTargetIndex>>16)*DUNGEON_TILE_WIDTH+DUNGEON_TILE_WIDTH/2;
+		vecStart.y = (dwTargetIndex&0x0000ffff)*DUNGEON_TILE_WIDTH+DUNGEON_TILE_WIDTH/2;
 	}
 	else if (bTargetType & OBJECT_TYPE_TILE)
 	{
 lbl_tile:
-		vecStart.x = wTileIndex_X * TILE_SIZE + TILE_SIZE / 2;
-		vecStart.y = wTileIndex_Z * TILE_SIZE + TILE_SIZE / 2;		
+		vecStart.x = wTileIndex_X * DUNGEON_TILE_SIZE + DUNGEON_TILE_SIZE / 2;
+		vecStart.y = wTileIndex_Z * DUNGEON_TILE_SIZE + DUNGEON_TILE_SIZE / 2;		
 	}
 
 	return vecStart;
@@ -1878,7 +1878,7 @@ void SystemSkillToUser(CDungeonLayer* pLayer
 					   , CUser* pTargetUser)
 {
 	SkillCast skillDesc;
-	skillDesc.casterDungeonID		= int(pvecStartPosition->x/TILE_WIDTH)<<16 | int(pvecStartPosition->y/TILE_HEIGHT);
+	skillDesc.casterDungeonID		= int(pvecStartPosition->x/DUNGEON_TILE_WIDTH)<<16 | int(pvecStartPosition->y/DUNGEON_TILE_HEIGHT);
 	skillDesc.casterType			= OBJECT_TYPE_SKILL;
 	skillDesc.casterPlayerPKFlagEnabled				= 0;
 	skillDesc.bSectionNum		= pTargetUser->GetPrevSectionNum();
@@ -1920,7 +1920,7 @@ void SystemSkillToMonster(CDungeonLayer* pLayer
 {	
 	SkillCast skillDesc;
 
-	skillDesc.casterDungeonID		= int(pvecStartPosition->x/TILE_WIDTH)<<16 | int(pvecStartPosition->y/TILE_HEIGHT);
+	skillDesc.casterDungeonID		= int(pvecStartPosition->x/DUNGEON_TILE_WIDTH)<<16 | int(pvecStartPosition->y/DUNGEON_TILE_HEIGHT);
 	skillDesc.casterType			= OBJECT_TYPE_SKILL;
 	skillDesc.casterPlayerPKFlagEnabled				= 0;
 	skillDesc.bSectionNum		= pTargetMonster->GetPrevSectionNum();

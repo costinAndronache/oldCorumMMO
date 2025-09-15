@@ -12,28 +12,28 @@ namespace NewInterface {
 		static int maxNumOfSkillsInList();
 
 		UserSkillsManager(
-			UserSkillsView* managedView, 
+			std::shared_ptr<UserSkillsView> managedView, 
 			CMainUser* mainUser,
-			SharedNetwork* network,
+			std::shared_ptr<SharedNetwork> network,
 			SSKILL_LIST_MANAGER* skillListManager,
 			EffectLayer* effectLayer,
 			SoundLibrary* soundLibrary,
-			TooltipHelper* tooltipHelper,
-			TooltipLayer* tooltipLayer
+			std::shared_ptr<TooltipHelper> tooltipHelper,
+			std::shared_ptr<TooltipLayer> tooltipLayer
 		);
 
 		void refreshUserSkillsView();
 
 	private:
-		UserSkillsView* _managedView;
+		std::shared_ptr<UserSkillsView> _managedView;
 		CMainUser* _mainUser;
 		SSKILL_LIST_MANAGER* _skillListManager;
-		SharedNetwork* _network;
+		std::shared_ptr<SharedNetwork> _network;
 		EffectLayer* _effectLayer;
 		SoundLibrary* _soundLibrary;
-		TooltipHelper* _tooltipHelper;
-		TooltipLayer* _tooltipLayer;
-		TooltipManager* _tooltipManager;
+		std::shared_ptr<TooltipHelper> _tooltipHelper;
+		std::shared_ptr<TooltipLayer> _tooltipLayer;
+		std::shared_ptr<TooltipManager> _tooltipManager;
 
 
 		bool canIncreaseLevelForThis(BYTE skillKind);

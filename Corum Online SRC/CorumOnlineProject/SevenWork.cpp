@@ -42,7 +42,7 @@ void GXEmoticonProc(GXOBJECT_HANDLE handle, LPObjectDesc pData, DWORD dwCurFrame
 	g_pGeometry->GetCameraAngleRad( &v3CameraAngleRad, 0 );
 	g_pExecutive->GXOSetDirection( handle, &g_Camera.v3AxsiY,  -v3CameraAngleRad.y);
 
-	GXSetPosition( handle, &pUser->m_v3CurPos, FALSE );
+	GXSetPosition( handle, pUser->currentPositionReadOnly(), FALSE );
 
 	if (dwCurFrame >= 100)
 	{

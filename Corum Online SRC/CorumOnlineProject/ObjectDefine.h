@@ -17,7 +17,7 @@
 
 struct  OBJECT_DESC
 {
-	BYTE	bType;
+	GAME_OBJECT_TYPE bType;
 	BYTE	bActionFlag;	
 	BYTE	bNextFlag;		//bACtionFlag가 ACTION_NEXT일때 유효 
 	BYTE	bCrashProc;		//충돌했을때 CrashProc을 실행 하는냐 마느냐의 여부 

@@ -20,7 +20,7 @@ namespace NewInterface {
 		void onMouseMove(CustomUI::Point mouseGlobalOrigin) override;
 	private:
 		DisplacementHandler _handler;
-		CustomUI::SpriteRenderable* _spriteRenderable;
+		std::shared_ptr<CustomUI::SpriteRenderable> _spriteRenderable;
 		CustomUI::Point _lastGlobalPosition;
 		std::function<void(CustomUI::Point)> _onMouseMove;
 	};

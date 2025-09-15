@@ -32,7 +32,7 @@ namespace CustomUI {
 		bool _isActive;
 		bool _caretStateON;
 		DWORD _lastCaretUpdateTime;
-		Button* _clearButton;
+		std::shared_ptr<Button> _clearButton;
 	};
 
 	struct InputFieldResources {

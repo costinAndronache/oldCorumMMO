@@ -1,3 +1,4 @@
+#include "BaseLibrary.h"
 
 #if _MSC_VER < 1300
 #define DECLSPEC_DEPRECATED
@@ -15,13 +16,13 @@ typedef BOOL (WINAPI *MINIDUMPWRITEDUMP)(HANDLE hProcess, DWORD dwPid, HANDLE hF
 									CONST PMINIDUMP_CALLBACK_INFORMATION CallbackParam
 									);
 
-class MiniDumper
+class BASELIBRARYDECLSPEC MiniDumper
 {
 private:
-	static LPCSTR m_szAppName;
+	static PWSTR m_szAppName;
 
 	static LONG WINAPI TopLevelFilter( struct _EXCEPTION_POINTERS *pExceptionInfo );
 
 public:
-	MiniDumper( LPCSTR szAppName );
+	MiniDumper( PWSTR szAppName );
 };

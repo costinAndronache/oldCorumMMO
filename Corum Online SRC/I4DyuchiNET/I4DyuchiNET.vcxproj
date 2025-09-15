@@ -5,10 +5,6 @@
       <Configuration>Debug</Configuration>
       <Platform>Win32</Platform>
     </ProjectConfiguration>
-    <ProjectConfiguration Include="release confirm|Win32">
-      <Configuration>release confirm</Configuration>
-      <Platform>Win32</Platform>
-    </ProjectConfiguration>
     <ProjectConfiguration Include="Release|Win32">
       <Configuration>Release</Configuration>
       <Platform>Win32</Platform>
@@ -24,27 +20,18 @@
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='release confirm|Win32'" Label="Configuration">
-    <ConfigurationType>DynamicLibrary</ConfigurationType>
-    <PlatformToolset>v142</PlatformToolset>
-    <UseOfMfc>false</UseOfMfc>
-  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <PlatformToolset>$(SOLUTION_PLATFORM_TOOLSET)</PlatformToolset>
     <UseOfMfc>false</UseOfMfc>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
-    <ConfigurationType>DynamicLibrary</ConfigurationType>
-    <PlatformToolset>v142</PlatformToolset>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <PlatformToolset>v143</PlatformToolset>
     <UseOfMfc>false</UseOfMfc>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
-  </ImportGroup>
-  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='release confirm|Win32'" Label="PropertySheets">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC71.props" />
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
@@ -59,8 +46,8 @@
     <_ProjectFileVersion>16.0.34930.59</_ProjectFileVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <OutDir>.\Release\</OutDir>
-    <IntDir>.\Release\</IntDir>
+    <OutDir>.\Debug\</OutDir>
+    <IntDir>.\Debug\</IntDir>
     <LinkIncremental>false</LinkIncremental>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -68,11 +55,6 @@
     <IntDir>.</IntDir>
     <LinkIncremental>false</LinkIncremental>
     <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);.\include</IncludePath>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='release confirm|Win32'">
-    <OutDir>.\I4DyuchiNET___Win32_release_confirm\</OutDir>
-    <IntDir>.\I4DyuchiNET___Win32_release_confirm\</IntDir>
-    <LinkIncremental>false</LinkIncremental>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <Midl>
@@ -88,7 +70,7 @@
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_WIN32_WINNT=0x0500;_USE_WINSOCK;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
-      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <PrecompiledHeader />
       <PrecompiledHeaderOutputFile>.\Release/I4DyuchiNET.pch</PrecompiledHeaderOutputFile>
@@ -111,8 +93,8 @@
       <OutputFile>$(OutDir)INetwork.dll</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <ModuleDefinitionFile>.\I4DyuchiNET.def</ModuleDefinitionFile>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
-      <ProgramDatabaseFile>.\Release/Inetwork.pdb</ProgramDatabaseFile>
+      <GenerateDebugInformation>DebugFull</GenerateDebugInformation>
+      <ProgramDatabaseFile>$(OutDir)Inetwork.pdb</ProgramDatabaseFile>
       <GenerateMapFile>true</GenerateMapFile>
       <MapFileName>.\Release/Inetwork.map</MapFileName>
       <SubSystem>Windows</SubSystem>
@@ -122,6 +104,9 @@
       <ImportLibrary>.\Release/Inetwork.lib</ImportLibrary>
       <TargetMachine>MachineX86</TargetMachine>
     </Link>
+    <PostBuildEvent>
+      <Command>..\..\scripts\postBuildCentraliseOutput_I4DyuchiNET.bat</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Midl>
@@ -136,7 +121,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_WIN32_WINNT=0x0500;_USE_WINSOCK;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
-      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <RuntimeLibrary>$(CPP_RUNTIME_LIB_DEBUG)</RuntimeLibrary>
       <PrecompiledHeader />
       <PrecompiledHeaderOutputFile>.\Debug/I4DyuchiNET.pch</PrecompiledHeaderOutputFile>
       <AssemblerListingLocation>.\Debug/</AssemblerListingLocation>
@@ -145,7 +130,7 @@
       <BrowseInformation>true</BrowseInformation>
       <WarningLevel>Level3</WarningLevel>
       <SuppressStartupBanner>true</SuppressStartupBanner>
-      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <DisableSpecificWarnings>4996;%(DisableSpecificWarnings)</DisableSpecificWarnings>
     </ClCompile>
     <ResourceCompile>
@@ -172,56 +157,6 @@
       <Command>..\..\scripts\postBuildCentraliseOutput_I4DyuchiNET.bat</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='release confirm|Win32'">
-    <Midl>
-      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <MkTypLibCompatible>true</MkTypLibCompatible>
-      <SuppressStartupBanner>true</SuppressStartupBanner>
-      <TargetEnvironment>Win32</TargetEnvironment>
-      <TypeLibraryName>.\I4DyuchiNET___Win32_release_confirm/I4DyuchiNET.tlb</TypeLibraryName>
-      <HeaderFileName />
-    </Midl>
-    <ClCompile>
-      <Optimization>Disabled</Optimization>
-      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
-      <IntrinsicFunctions>true</IntrinsicFunctions>
-      <FavorSizeOrSpeed>Size</FavorSizeOrSpeed>
-      <OmitFramePointers>true</OmitFramePointers>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_WIN32_WINNT=0x0500;_NEED_CONFIRM;_USE_WINSOCK;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
-      <PrecompiledHeader />
-      <PrecompiledHeaderOutputFile>.\I4DyuchiNET___Win32_release_confirm/I4DyuchiNET.pch</PrecompiledHeaderOutputFile>
-      <AssemblerOutput>AssemblyAndMachineCode</AssemblerOutput>
-      <AssemblerListingLocation>.\I4DyuchiNET___Win32_release_confirm/</AssemblerListingLocation>
-      <ObjectFileName>.\I4DyuchiNET___Win32_release_confirm/</ObjectFileName>
-      <ProgramDataBaseFileName>.\I4DyuchiNET___Win32_release_confirm/</ProgramDataBaseFileName>
-      <BrowseInformation>true</BrowseInformation>
-      <WarningLevel>Level3</WarningLevel>
-      <SuppressStartupBanner>true</SuppressStartupBanner>
-      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
-    </ClCompile>
-    <ResourceCompile>
-      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <Culture>0x0412</Culture>
-    </ResourceCompile>
-    <Link>
-      <AdditionalOptions>/MAPINFO:EXPORTS /MAPINFO:LINES  %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalDependencies>odbc32.lib;odbccp32.lib;ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <OutputFile>../../4DyuchiDLL/Inetwork.dll</OutputFile>
-      <SuppressStartupBanner>true</SuppressStartupBanner>
-      <ModuleDefinitionFile>.\I4DyuchiNET.def</ModuleDefinitionFile>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
-      <ProgramDatabaseFile>.\I4DyuchiNET___Win32_release_confirm/Inetwork.pdb</ProgramDatabaseFile>
-      <GenerateMapFile>true</GenerateMapFile>
-      <MapFileName>.\I4DyuchiNET___Win32_release_confirm/Inetwork.map</MapFileName>
-      <SubSystem>Windows</SubSystem>
-      <BaseAddress>0x60000000</BaseAddress>
-      <RandomizedBaseAddress>false</RandomizedBaseAddress>
-      <DataExecutionPrevention />
-      <ImportLibrary>.\I4DyuchiNET___Win32_release_confirm/Inetwork.lib</ImportLibrary>
-      <TargetMachine>MachineX86</TargetMachine>
-    </Link>
-  </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="accept.cpp">
       <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Disabled</Optimization>
@@ -231,9 +166,6 @@
       <Optimization Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">MaxSpeed</Optimization>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">WIN32;NDEBUG;_WINDOWS;_WIN32_WINNT=0x0500;_USE_WINSOCK</PreprocessorDefinitions>
       <BrowseInformation Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</BrowseInformation>
-      <FavorSizeOrSpeed Condition="'$(Configuration)|$(Platform)'=='release confirm|Win32'">Size</FavorSizeOrSpeed>
-      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='release confirm|Win32'">WIN32;NDEBUG;_WINDOWS;_WIN32_WINNT=0x0500;_NEED_CONFIRM;_USE_WINSOCK</PreprocessorDefinitions>
-      <BrowseInformation Condition="'$(Configuration)|$(Platform)'=='release confirm|Win32'">true</BrowseInformation>
     </ClCompile>
     <ClCompile Include="collect_confirm_packet.cpp">
       <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Disabled</Optimization>
@@ -243,9 +175,6 @@
       <Optimization Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">MaxSpeed</Optimization>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">WIN32;NDEBUG;_WINDOWS;_WIN32_WINNT=0x0500;_USE_WINSOCK</PreprocessorDefinitions>
       <BrowseInformation Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</BrowseInformation>
-      <FavorSizeOrSpeed Condition="'$(Configuration)|$(Platform)'=='release confirm|Win32'">Size</FavorSizeOrSpeed>
-      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='release confirm|Win32'">WIN32;NDEBUG;_WINDOWS;_WIN32_WINNT=0x0500;_NEED_CONFIRM;_USE_WINSOCK;_USE_INTEL_COMPILER</PreprocessorDefinitions>
-      <BrowseInformation Condition="'$(Configuration)|$(Platform)'=='release confirm|Win32'">true</BrowseInformation>
     </ClCompile>
     <ClCompile Include="conetwork.cpp">
       <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Disabled</Optimization>
@@ -255,9 +184,6 @@
       <Optimization Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">MaxSpeed</Optimization>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">WIN32;NDEBUG;_WINDOWS;_WIN32_WINNT=0x0500;_USE_WINSOCK</PreprocessorDefinitions>
       <BrowseInformation Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</BrowseInformation>
-      <FavorSizeOrSpeed Condition="'$(Configuration)|$(Platform)'=='release confirm|Win32'">Size</FavorSizeOrSpeed>
-      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='release confirm|Win32'">WIN32;NDEBUG;_WINDOWS;_WIN32_WINNT=0x0500;_NEED_CONFIRM;_USE_WINSOCK</PreprocessorDefinitions>
-      <BrowseInformation Condition="'$(Configuration)|$(Platform)'=='release confirm|Win32'">true</BrowseInformation>
     </ClCompile>
     <ClCompile Include="confirm.cpp">
       <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Disabled</Optimization>
@@ -267,9 +193,6 @@
       <Optimization Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">MaxSpeed</Optimization>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">WIN32;NDEBUG;_WINDOWS;_WIN32_WINNT=0x0500;_USE_WINSOCK</PreprocessorDefinitions>
       <BrowseInformation Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</BrowseInformation>
-      <FavorSizeOrSpeed Condition="'$(Configuration)|$(Platform)'=='release confirm|Win32'">Size</FavorSizeOrSpeed>
-      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='release confirm|Win32'">WIN32;NDEBUG;_WINDOWS;_WIN32_WINNT=0x0500;_NEED_CONFIRM;_USE_WINSOCK;_USE_INTEL_COMPILER</PreprocessorDefinitions>
-      <BrowseInformation Condition="'$(Configuration)|$(Platform)'=='release confirm|Win32'">true</BrowseInformation>
     </ClCompile>
     <ClCompile Include="connect.cpp">
       <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Disabled</Optimization>
@@ -279,9 +202,6 @@
       <Optimization Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">MaxSpeed</Optimization>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">WIN32;NDEBUG;_WINDOWS;_WIN32_WINNT=0x0500;_USE_WINSOCK</PreprocessorDefinitions>
       <BrowseInformation Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</BrowseInformation>
-      <FavorSizeOrSpeed Condition="'$(Configuration)|$(Platform)'=='release confirm|Win32'">Size</FavorSizeOrSpeed>
-      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='release confirm|Win32'">WIN32;NDEBUG;_WINDOWS;_WIN32_WINNT=0x0500;_NEED_CONFIRM;_USE_WINSOCK</PreprocessorDefinitions>
-      <BrowseInformation Condition="'$(Configuration)|$(Platform)'=='release confirm|Win32'">true</BrowseInformation>
     </ClCompile>
     <ClCompile Include="connection.cpp">
       <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Disabled</Optimization>
@@ -291,9 +211,6 @@
       <Optimization Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">MaxSpeed</Optimization>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">WIN32;NDEBUG;_WINDOWS;_WIN32_WINNT=0x0500;_USE_WINSOCK</PreprocessorDefinitions>
       <BrowseInformation Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</BrowseInformation>
-      <FavorSizeOrSpeed Condition="'$(Configuration)|$(Platform)'=='release confirm|Win32'">Size</FavorSizeOrSpeed>
-      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='release confirm|Win32'">WIN32;NDEBUG;_WINDOWS;_WIN32_WINNT=0x0500;_NEED_CONFIRM;_USE_WINSOCK</PreprocessorDefinitions>
-      <BrowseInformation Condition="'$(Configuration)|$(Platform)'=='release confirm|Win32'">true</BrowseInformation>
     </ClCompile>
     <ClCompile Include="connect_que.cpp">
       <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Disabled</Optimization>
@@ -303,9 +220,6 @@
       <Optimization Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">MaxSpeed</Optimization>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">WIN32;NDEBUG;_WINDOWS;_WIN32_WINNT=0x0500;_USE_WINSOCK</PreprocessorDefinitions>
       <BrowseInformation Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</BrowseInformation>
-      <FavorSizeOrSpeed Condition="'$(Configuration)|$(Platform)'=='release confirm|Win32'">Size</FavorSizeOrSpeed>
-      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='release confirm|Win32'">WIN32;NDEBUG;_WINDOWS;_WIN32_WINNT=0x0500;_NEED_CONFIRM;_USE_WINSOCK</PreprocessorDefinitions>
-      <BrowseInformation Condition="'$(Configuration)|$(Platform)'=='release confirm|Win32'">true</BrowseInformation>
     </ClCompile>
     <ClCompile Include="cpio.cpp">
       <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Disabled</Optimization>
@@ -315,9 +229,6 @@
       <Optimization Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">MaxSpeed</Optimization>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">WIN32;NDEBUG;_WINDOWS;_WIN32_WINNT=0x0500;_USE_WINSOCK</PreprocessorDefinitions>
       <BrowseInformation Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</BrowseInformation>
-      <FavorSizeOrSpeed Condition="'$(Configuration)|$(Platform)'=='release confirm|Win32'">Size</FavorSizeOrSpeed>
-      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='release confirm|Win32'">WIN32;NDEBUG;_WINDOWS;_WIN32_WINNT=0x0500;_NEED_CONFIRM;_USE_WINSOCK</PreprocessorDefinitions>
-      <BrowseInformation Condition="'$(Configuration)|$(Platform)'=='release confirm|Win32'">true</BrowseInformation>
     </ClCompile>
     <ClCompile Include="create_index.cpp">
       <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Disabled</Optimization>
@@ -327,9 +238,6 @@
       <Optimization Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">MaxSpeed</Optimization>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">WIN32;NDEBUG;_WINDOWS;_WIN32_WINNT=0x0500;_USE_WINSOCK</PreprocessorDefinitions>
       <BrowseInformation Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</BrowseInformation>
-      <FavorSizeOrSpeed Condition="'$(Configuration)|$(Platform)'=='release confirm|Win32'">Size</FavorSizeOrSpeed>
-      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='release confirm|Win32'">WIN32;NDEBUG;_WINDOWS;_WIN32_WINNT=0x0500;_NEED_CONFIRM;_USE_WINSOCK</PreprocessorDefinitions>
-      <BrowseInformation Condition="'$(Configuration)|$(Platform)'=='release confirm|Win32'">true</BrowseInformation>
     </ClCompile>
     <ClCompile Include="dllmain.cpp">
       <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Disabled</Optimization>
@@ -339,9 +247,6 @@
       <Optimization Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">MaxSpeed</Optimization>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">WIN32;NDEBUG;_WINDOWS;_WIN32_WINNT=0x0500;_USE_WINSOCK</PreprocessorDefinitions>
       <BrowseInformation Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</BrowseInformation>
-      <FavorSizeOrSpeed Condition="'$(Configuration)|$(Platform)'=='release confirm|Win32'">Size</FavorSizeOrSpeed>
-      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='release confirm|Win32'">WIN32;NDEBUG;_WINDOWS;_WIN32_WINNT=0x0500;_NEED_CONFIRM;_USE_WINSOCK</PreprocessorDefinitions>
-      <BrowseInformation Condition="'$(Configuration)|$(Platform)'=='release confirm|Win32'">true</BrowseInformation>
     </ClCompile>
     <ClCompile Include="dynamic_memory.cpp">
       <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Disabled</Optimization>
@@ -351,9 +256,6 @@
       <Optimization Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">MaxSpeed</Optimization>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">WIN32;NDEBUG;_WINDOWS;_WIN32_WINNT=0x0500;_USE_WINSOCK</PreprocessorDefinitions>
       <BrowseInformation Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</BrowseInformation>
-      <FavorSizeOrSpeed Condition="'$(Configuration)|$(Platform)'=='release confirm|Win32'">Size</FavorSizeOrSpeed>
-      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='release confirm|Win32'">WIN32;NDEBUG;_WINDOWS;_WIN32_WINNT=0x0500;_NEED_CONFIRM;_USE_WINSOCK</PreprocessorDefinitions>
-      <BrowseInformation Condition="'$(Configuration)|$(Platform)'=='release confirm|Win32'">true</BrowseInformation>
     </ClCompile>
     <ClCompile Include="exception.cpp">
       <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Disabled</Optimization>
@@ -363,9 +265,6 @@
       <Optimization Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">MaxSpeed</Optimization>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">WIN32;NDEBUG;_WINDOWS;_WIN32_WINNT=0x0500;_USE_WINSOCK</PreprocessorDefinitions>
       <BrowseInformation Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</BrowseInformation>
-      <FavorSizeOrSpeed Condition="'$(Configuration)|$(Platform)'=='release confirm|Win32'">Size</FavorSizeOrSpeed>
-      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='release confirm|Win32'">WIN32;NDEBUG;_WINDOWS;_WIN32_WINNT=0x0500;_NEED_CONFIRM;_USE_WINSOCK</PreprocessorDefinitions>
-      <BrowseInformation Condition="'$(Configuration)|$(Platform)'=='release confirm|Win32'">true</BrowseInformation>
     </ClCompile>
     <ClCompile Include="factory.cpp">
       <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Disabled</Optimization>
@@ -375,9 +274,6 @@
       <Optimization Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">MaxSpeed</Optimization>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">WIN32;NDEBUG;_WINDOWS;_WIN32_WINNT=0x0500;_USE_WINSOCK</PreprocessorDefinitions>
       <BrowseInformation Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</BrowseInformation>
-      <FavorSizeOrSpeed Condition="'$(Configuration)|$(Platform)'=='release confirm|Win32'">Size</FavorSizeOrSpeed>
-      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='release confirm|Win32'">WIN32;NDEBUG;_WINDOWS;_WIN32_WINNT=0x0500;_NEED_CONFIRM;_USE_WINSOCK</PreprocessorDefinitions>
-      <BrowseInformation Condition="'$(Configuration)|$(Platform)'=='release confirm|Win32'">true</BrowseInformation>
     </ClCompile>
     <ClCompile Include="log.cpp">
       <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Disabled</Optimization>
@@ -387,9 +283,6 @@
       <Optimization Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">MaxSpeed</Optimization>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">WIN32;NDEBUG;_WINDOWS;_WIN32_WINNT=0x0500;_USE_WINSOCK</PreprocessorDefinitions>
       <BrowseInformation Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</BrowseInformation>
-      <FavorSizeOrSpeed Condition="'$(Configuration)|$(Platform)'=='release confirm|Win32'">Size</FavorSizeOrSpeed>
-      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='release confirm|Win32'">WIN32;NDEBUG;_WINDOWS;_WIN32_WINNT=0x0500;_NEED_CONFIRM;_USE_WINSOCK</PreprocessorDefinitions>
-      <BrowseInformation Condition="'$(Configuration)|$(Platform)'=='release confirm|Win32'">true</BrowseInformation>
     </ClCompile>
     <ClCompile Include="mainthread.cpp">
       <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Disabled</Optimization>
@@ -399,9 +292,6 @@
       <Optimization Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">MaxSpeed</Optimization>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">WIN32;NDEBUG;_WINDOWS;_WIN32_WINNT=0x0500;_USE_WINSOCK</PreprocessorDefinitions>
       <BrowseInformation Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</BrowseInformation>
-      <FavorSizeOrSpeed Condition="'$(Configuration)|$(Platform)'=='release confirm|Win32'">Size</FavorSizeOrSpeed>
-      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='release confirm|Win32'">WIN32;NDEBUG;_WINDOWS;_WIN32_WINNT=0x0500;_NEED_CONFIRM;_USE_WINSOCK</PreprocessorDefinitions>
-      <BrowseInformation Condition="'$(Configuration)|$(Platform)'=='release confirm|Win32'">true</BrowseInformation>
     </ClCompile>
     <ClCompile Include="memory_object.cpp">
       <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Disabled</Optimization>
@@ -411,9 +301,6 @@
       <Optimization Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">MaxSpeed</Optimization>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">WIN32;NDEBUG;_WINDOWS;_WIN32_WINNT=0x0500;_USE_WINSOCK</PreprocessorDefinitions>
       <BrowseInformation Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</BrowseInformation>
-      <FavorSizeOrSpeed Condition="'$(Configuration)|$(Platform)'=='release confirm|Win32'">Size</FavorSizeOrSpeed>
-      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='release confirm|Win32'">WIN32;NDEBUG;_WINDOWS;_WIN32_WINNT=0x0500;_NEED_CONFIRM;_USE_WINSOCK</PreprocessorDefinitions>
-      <BrowseInformation Condition="'$(Configuration)|$(Platform)'=='release confirm|Win32'">true</BrowseInformation>
     </ClCompile>
     <ClCompile Include="network.cpp">
       <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Disabled</Optimization>
@@ -423,9 +310,6 @@
       <Optimization Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">MaxSpeed</Optimization>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">WIN32;NDEBUG;_WINDOWS;_WIN32_WINNT=0x0500;_USE_WINSOCK</PreprocessorDefinitions>
       <BrowseInformation Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</BrowseInformation>
-      <FavorSizeOrSpeed Condition="'$(Configuration)|$(Platform)'=='release confirm|Win32'">Size</FavorSizeOrSpeed>
-      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='release confirm|Win32'">WIN32;NDEBUG;_WINDOWS;_WIN32_WINNT=0x0500;_NEED_CONFIRM;_USE_WINSOCK</PreprocessorDefinitions>
-      <BrowseInformation Condition="'$(Configuration)|$(Platform)'=='release confirm|Win32'">true</BrowseInformation>
     </ClCompile>
     <ClCompile Include="net_global.cpp">
       <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Disabled</Optimization>
@@ -435,9 +319,6 @@
       <Optimization Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">MaxSpeed</Optimization>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">WIN32;NDEBUG;_WINDOWS;_WIN32_WINNT=0x0500;_USE_WINSOCK</PreprocessorDefinitions>
       <BrowseInformation Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</BrowseInformation>
-      <FavorSizeOrSpeed Condition="'$(Configuration)|$(Platform)'=='release confirm|Win32'">Size</FavorSizeOrSpeed>
-      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='release confirm|Win32'">WIN32;NDEBUG;_WINDOWS;_WIN32_WINNT=0x0500;_NEED_CONFIRM;_USE_WINSOCK</PreprocessorDefinitions>
-      <BrowseInformation Condition="'$(Configuration)|$(Platform)'=='release confirm|Win32'">true</BrowseInformation>
     </ClCompile>
     <ClCompile Include="overlapped.cpp">
       <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Disabled</Optimization>
@@ -447,9 +328,6 @@
       <Optimization Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">MaxSpeed</Optimization>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">WIN32;NDEBUG;_WINDOWS;_WIN32_WINNT=0x0500;_USE_WINSOCK</PreprocessorDefinitions>
       <BrowseInformation Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</BrowseInformation>
-      <FavorSizeOrSpeed Condition="'$(Configuration)|$(Platform)'=='release confirm|Win32'">Size</FavorSizeOrSpeed>
-      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='release confirm|Win32'">WIN32;NDEBUG;_WINDOWS;_WIN32_WINNT=0x0500;_NEED_CONFIRM;_USE_WINSOCK</PreprocessorDefinitions>
-      <BrowseInformation Condition="'$(Configuration)|$(Platform)'=='release confirm|Win32'">true</BrowseInformation>
     </ClCompile>
     <ClCompile Include="overlapped_recv.cpp">
       <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Disabled</Optimization>
@@ -459,9 +337,6 @@
       <Optimization Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">MaxSpeed</Optimization>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">WIN32;NDEBUG;_WINDOWS;_WIN32_WINNT=0x0500;_USE_WINSOCK</PreprocessorDefinitions>
       <BrowseInformation Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</BrowseInformation>
-      <FavorSizeOrSpeed Condition="'$(Configuration)|$(Platform)'=='release confirm|Win32'">Size</FavorSizeOrSpeed>
-      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='release confirm|Win32'">WIN32;NDEBUG;_WINDOWS;_WIN32_WINNT=0x0500;_NEED_CONFIRM;_USE_WINSOCK</PreprocessorDefinitions>
-      <BrowseInformation Condition="'$(Configuration)|$(Platform)'=='release confirm|Win32'">true</BrowseInformation>
     </ClCompile>
     <ClCompile Include="overlapped_send.cpp">
       <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Disabled</Optimization>
@@ -471,9 +346,6 @@
       <Optimization Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">MaxSpeed</Optimization>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">WIN32;NDEBUG;_WINDOWS;_WIN32_WINNT=0x0500;_USE_WINSOCK</PreprocessorDefinitions>
       <BrowseInformation Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</BrowseInformation>
-      <FavorSizeOrSpeed Condition="'$(Configuration)|$(Platform)'=='release confirm|Win32'">Size</FavorSizeOrSpeed>
-      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='release confirm|Win32'">WIN32;NDEBUG;_WINDOWS;_WIN32_WINNT=0x0500;_NEED_CONFIRM;_USE_WINSOCK</PreprocessorDefinitions>
-      <BrowseInformation Condition="'$(Configuration)|$(Platform)'=='release confirm|Win32'">true</BrowseInformation>
     </ClCompile>
     <ClCompile Include="overlapped_udp.cpp">
       <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Disabled</Optimization>
@@ -483,9 +355,6 @@
       <Optimization Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">MaxSpeed</Optimization>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">WIN32;NDEBUG;_WINDOWS;_WIN32_WINNT=0x0500;_USE_WINSOCK</PreprocessorDefinitions>
       <BrowseInformation Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</BrowseInformation>
-      <FavorSizeOrSpeed Condition="'$(Configuration)|$(Platform)'=='release confirm|Win32'">Size</FavorSizeOrSpeed>
-      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='release confirm|Win32'">WIN32;NDEBUG;_WINDOWS;_WIN32_WINNT=0x0500;_NEED_CONFIRM;_USE_WINSOCK</PreprocessorDefinitions>
-      <BrowseInformation Condition="'$(Configuration)|$(Platform)'=='release confirm|Win32'">true</BrowseInformation>
     </ClCompile>
     <ClCompile Include="pre_connect.cpp">
       <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Disabled</Optimization>
@@ -495,9 +364,6 @@
       <Optimization Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">MaxSpeed</Optimization>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">WIN32;NDEBUG;_WINDOWS;_WIN32_WINNT=0x0500;_USE_WINSOCK</PreprocessorDefinitions>
       <BrowseInformation Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</BrowseInformation>
-      <FavorSizeOrSpeed Condition="'$(Configuration)|$(Platform)'=='release confirm|Win32'">Size</FavorSizeOrSpeed>
-      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='release confirm|Win32'">WIN32;NDEBUG;_WINDOWS;_WIN32_WINNT=0x0500;_NEED_CONFIRM;_USE_WINSOCK</PreprocessorDefinitions>
-      <BrowseInformation Condition="'$(Configuration)|$(Platform)'=='release confirm|Win32'">true</BrowseInformation>
     </ClCompile>
     <ClCompile Include="que.cpp">
       <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Disabled</Optimization>
@@ -507,9 +373,6 @@
       <Optimization Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">MaxSpeed</Optimization>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">WIN32;NDEBUG;_WINDOWS;_WIN32_WINNT=0x0500;_USE_WINSOCK</PreprocessorDefinitions>
       <BrowseInformation Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</BrowseInformation>
-      <FavorSizeOrSpeed Condition="'$(Configuration)|$(Platform)'=='release confirm|Win32'">Size</FavorSizeOrSpeed>
-      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='release confirm|Win32'">WIN32;NDEBUG;_WINDOWS;_WIN32_WINNT=0x0500;_NEED_CONFIRM;_USE_WINSOCK</PreprocessorDefinitions>
-      <BrowseInformation Condition="'$(Configuration)|$(Platform)'=='release confirm|Win32'">true</BrowseInformation>
     </ClCompile>
     <ClCompile Include="quemanager.cpp">
       <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Disabled</Optimization>
@@ -519,9 +382,6 @@
       <Optimization Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">MaxSpeed</Optimization>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">WIN32;NDEBUG;_WINDOWS;_WIN32_WINNT=0x0500;_USE_WINSOCK</PreprocessorDefinitions>
       <BrowseInformation Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</BrowseInformation>
-      <FavorSizeOrSpeed Condition="'$(Configuration)|$(Platform)'=='release confirm|Win32'">Size</FavorSizeOrSpeed>
-      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='release confirm|Win32'">WIN32;NDEBUG;_WINDOWS;_WIN32_WINNT=0x0500;_NEED_CONFIRM;_USE_WINSOCK</PreprocessorDefinitions>
-      <BrowseInformation Condition="'$(Configuration)|$(Platform)'=='release confirm|Win32'">true</BrowseInformation>
     </ClCompile>
     <ClCompile Include="read_memory_handle.cpp">
       <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Disabled</Optimization>
@@ -531,9 +391,6 @@
       <Optimization Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">MaxSpeed</Optimization>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">WIN32;NDEBUG;_WINDOWS;_WIN32_WINNT=0x0500;_USE_WINSOCK</PreprocessorDefinitions>
       <BrowseInformation Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</BrowseInformation>
-      <FavorSizeOrSpeed Condition="'$(Configuration)|$(Platform)'=='release confirm|Win32'">Size</FavorSizeOrSpeed>
-      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='release confirm|Win32'">WIN32;NDEBUG;_WINDOWS;_WIN32_WINNT=0x0500;_NEED_CONFIRM;_USE_WINSOCK</PreprocessorDefinitions>
-      <BrowseInformation Condition="'$(Configuration)|$(Platform)'=='release confirm|Win32'">true</BrowseInformation>
     </ClCompile>
     <ClCompile Include="switch_que.cpp">
       <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Disabled</Optimization>
@@ -543,9 +400,6 @@
       <Optimization Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">MaxSpeed</Optimization>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">WIN32;NDEBUG;_WINDOWS;_WIN32_WINNT=0x0500;_USE_WINSOCK</PreprocessorDefinitions>
       <BrowseInformation Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</BrowseInformation>
-      <FavorSizeOrSpeed Condition="'$(Configuration)|$(Platform)'=='release confirm|Win32'">Size</FavorSizeOrSpeed>
-      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='release confirm|Win32'">WIN32;NDEBUG;_WINDOWS;_WIN32_WINNT=0x0500;_NEED_CONFIRM;_USE_WINSOCK</PreprocessorDefinitions>
-      <BrowseInformation Condition="'$(Configuration)|$(Platform)'=='release confirm|Win32'">true</BrowseInformation>
     </ClCompile>
     <ClCompile Include="timer.cpp">
       <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Disabled</Optimization>
@@ -555,9 +409,6 @@
       <Optimization Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">MaxSpeed</Optimization>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">WIN32;NDEBUG;_WINDOWS;_WIN32_WINNT=0x0500;_USE_WINSOCK</PreprocessorDefinitions>
       <BrowseInformation Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</BrowseInformation>
-      <FavorSizeOrSpeed Condition="'$(Configuration)|$(Platform)'=='release confirm|Win32'">Size</FavorSizeOrSpeed>
-      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='release confirm|Win32'">WIN32;NDEBUG;_WINDOWS;_WIN32_WINNT=0x0500;_NEED_CONFIRM;_USE_WINSOCK</PreprocessorDefinitions>
-      <BrowseInformation Condition="'$(Configuration)|$(Platform)'=='release confirm|Win32'">true</BrowseInformation>
     </ClCompile>
     <ClCompile Include="write_memory_handle.cpp">
       <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Disabled</Optimization>
@@ -567,9 +418,6 @@
       <Optimization Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">MaxSpeed</Optimization>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">WIN32;NDEBUG;_WINDOWS;_WIN32_WINNT=0x0500;_USE_WINSOCK</PreprocessorDefinitions>
       <BrowseInformation Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</BrowseInformation>
-      <FavorSizeOrSpeed Condition="'$(Configuration)|$(Platform)'=='release confirm|Win32'">Size</FavorSizeOrSpeed>
-      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='release confirm|Win32'">WIN32;NDEBUG;_WINDOWS;_WIN32_WINNT=0x0500;_NEED_CONFIRM;_USE_WINSOCK</PreprocessorDefinitions>
-      <BrowseInformation Condition="'$(Configuration)|$(Platform)'=='release confirm|Win32'">true</BrowseInformation>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

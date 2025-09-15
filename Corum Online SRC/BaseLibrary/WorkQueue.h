@@ -3,8 +3,9 @@
 #include <mutex>
 #include <queue>
 #include <memory>
+#include "BaseLibrary.h"
 
-class WorkQueue {
+class BASELIBRARYDECLSPEC WorkQueue {
 public:
 	typedef std::function<void()> WorkItem;
 	void enqueueWorkItem(WorkItem work);

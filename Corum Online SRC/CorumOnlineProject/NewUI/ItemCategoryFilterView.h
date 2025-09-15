@@ -24,7 +24,7 @@ namespace ItemPickupFiltering {
 	private:
 		void radioButtonGroupToggledActiveButtonAt(CustomUI::RadioButtonGroup*, unsigned int index);
 
-		CustomUI::RadioButtonGroup* _radioButtonGroup;
+		std::shared_ptr<CustomUI::RadioButtonGroup> _radioButtonGroup;
 		CategoryUpdateHandler _handler;
 	};
 }

@@ -927,6 +927,39 @@
     <ClCompile Include="NewHUD\DisplacementHandleRenderable.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="NewHelpers\GameExitManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="NewHUD\ExitOptionsWindow.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="NewHUD\ViewManager\ExitOptionsWindowManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="NewHUD\MinimapWindow.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="NewHUD\ViewManager\MinimapWindowManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="NewHUD\ConfirmationModal.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="NewHUD\ViewManager\CharDeathConfirmationManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="NewHUD\HPInfoBarView.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="NewHUD\ViewManager\InfoBarManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="NewHUD\ViewManager\SkillSelectionManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="NewHelpers\UserPreferencesManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MouseLib.h">
@@ -1755,6 +1788,39 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="NewHUD\DisplacementHandleRenderable.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="NewHelpers\GameExitManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="NewHUD\ExitOptionsWindow.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="NewHUD\ViewManager\ExitOptionsWindowManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="NewHUD\MinimapWindow.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="NewHUD\ViewManager\MinimapWindowManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="NewHUD\ConfirmationModal.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="NewHUD\ViewManager\CharDeathConfirmationManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="NewHUD\HPInfoBarView.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="NewHUD\ViewManager\InfoBarManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="NewHUD\ViewManager\SkillSelectionManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="NewHelpers\UserPreferencesManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

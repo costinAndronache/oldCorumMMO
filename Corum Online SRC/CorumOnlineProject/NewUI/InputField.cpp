@@ -46,11 +46,14 @@ InputField::InputField(Rect frameInParent, SpriteModel bgSpriteModel, Button::Sp
 		.centeredVerticallyWith(_bounds);
 
 	_clearButton = registerChildRenderable<Button>([&]() {
-		return new Button(clearButtonSprites, clearBtnFrame);
+		return std::make_shared<Button>(clearButtonSprites, clearBtnFrame);
 	});
 
+	// auto weakThis = weak_from_this();
+	// Nope, nope, nope, not yet populated within the constructor
+
 	_clearButton->onClickEndLEFT([this]() {
-		onButtonPressRelease(this->_clearButton);
+		onButtonPressRelease(_clearButton.get());
 	});
 }
 

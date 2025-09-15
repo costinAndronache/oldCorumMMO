@@ -18,7 +18,7 @@ PagedContainer::PagedContainer(Rect frameInParent) {
 		.withY(_pageFrame.maxY());
 
 	_pager = registerChildRenderable<PagerControl>([=]() {
-		return new PagerControl(pagerControlFrame,
+		return std::make_shared<PagerControl>(pagerControlFrame,
 			PagerControl::Appearance::defaultAppearance()
 		);
 	});

@@ -26,7 +26,7 @@ extern void		DeleteObj(GXOBJECT_HANDLE* hHandle);
 extern void		SetEffectIndex(GXOBJECT_HANDLE hHandle, DWORD dwEffectIndex = 0xffffffff);
 extern void		SetMousePointerType(BYTE byPointerType);
 extern void		SetStrFn(char* pszText, char** pArrayText, BYTE* byLen, int nIndex, int nSize, int nMaxSize);
-extern void		GXSetPosition(GXOBJECT_HANDLE gxh,VECTOR3* pv3Pos, BOOL bDoInterpolation, BOOL bChk = FALSE);
+extern void		GXSetPosition(GXOBJECT_HANDLE gxh, const VECTOR3* pv3Pos, BOOL bDoInterpolation, BOOL bChk = FALSE);
 extern int		GetType(WORD wId);
 
 extern void		WriteErrorLogFile(const char* pErrMsg, ...);

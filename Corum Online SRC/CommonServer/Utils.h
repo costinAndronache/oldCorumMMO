@@ -4,5 +4,5 @@
 #include "CommonServerExports.h"
 #include "CommonClientDungeon.h"
 
-DECLSPECIFIER const char* codeToString(USER_PROPERTY_CODE code);
-DECLSPECIFIER void printUserStatusList(const USER_STATUS* statusList, int count);
+COMMONSERVERDECLSPECIFIER const char* codeToString(USER_PROPERTY_CODE code);
+COMMONSERVERDECLSPECIFIER void printUserStatusList(const USER_STATUS* statusList, int count);

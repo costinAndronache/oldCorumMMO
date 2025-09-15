@@ -730,7 +730,7 @@ void CmdWorldMove(char* pMsg, DWORD dwLen)
 		// 이동 정보를 입력하고
 		pUser->SetStatus(pPacket->bMoveType);
 		pUser->m_v3Direction	= pPacket->v3MoveDirection;
-		pUser->m_pDestTile		= g_pMap->GetMap( pPacket->wDestX, pPacket->wDestZ );		
+		pUser->m_pDestTile		= g_pMap->GetTileByIndexes( pPacket->wDestX, pPacket->wDestZ );		
 		g_pExecutive->GXOSetDirection( pUser->m_hPlayer.pHandle, &g_Camera.v3AxsiY, (float)(atan2(pPacket->v3MoveDirection.z, pPacket->v3MoveDirection.x) + DEG90 ) );		
 	}
 	else

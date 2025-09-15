@@ -59,7 +59,7 @@ void CmdGuildMsg(DWORD dwConnectionIndex, char* pMsg, DWORD dwLength)
 		if(!pLayer)
 			return;
 
-		if (pUser->GetCurDungeon()->GetDungeonDataEx()->m_bSiege )
+		if (pUser->GetCurDungeon()->GetDungeonDataEx()->inSiegeWarNow )
 		{
 			pUser->SetAttackMode(pUser->GetCurDungeon()->GetAttackMode(pUser));
 			
@@ -130,7 +130,7 @@ void CmdServerGuildInfo(DWORD dwConnectionIndex, char* pMsg, DWORD dwLength)
 		if(!pLayer)
 			return;
 
-		if (pUser->GetCurDungeon()->GetDungeonDataEx()->m_bSiege )
+		if (pUser->GetCurDungeon()->GetDungeonDataEx()->inSiegeWarNow )
 		{
 			pUser->SetAttackMode(pUser->GetCurDungeon()->GetAttackMode(pUser));
 			
@@ -302,9 +302,9 @@ void CmdRefreshDungeonOwnerGuild(DWORD dwConnectionIndex, char* pMsg, DWORD dwLe
 	if (pDungeon)
 	{
 		DUNGEON_DATA_EX* pDungeonEx = pDungeon->GetDungeonDataEx();
-		pDungeonEx->m_dwOwnerGuildNum = pPacket->dwGuildID;
+		pDungeonEx->ownerGuildID = pPacket->dwGuildID;
 
-		if (pDungeonEx->m_bSiege)
+		if (pDungeonEx->inSiegeWarNow)
 		{		
 			ListNode<CUser>* pnode = pDungeon->GetGuildUserHash()->GetHead();
 

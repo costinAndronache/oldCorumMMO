@@ -53,18 +53,19 @@
     <LibraryPath>$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);..\..\..\centralizedOutput;</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <OutDir>./../../4DYuchiDLL\</OutDir>
-    <IntDir>.\Release\</IntDir>
+    <OutDir>.\Debug\</OutDir>
+    <IntDir>.\Debug\</IntDir>
     <LinkIncremental>false</LinkIncremental>
+    <LibraryPath>$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);..\..\..\centralizedOutput;</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;MY4DYUCHIGXGEOMETRY_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
-      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <RuntimeLibrary>$(CPP_RUNTIME_LIB_DEBUG)</RuntimeLibrary>
       <FunctionLevelLinking>true</FunctionLevelLinking>
-      <PrecompiledHeader />
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderOutputFile>.\Debug/4DyuchiGXGeometry.pch</PrecompiledHeaderOutputFile>
       <AssemblerListingLocation>.\Debug/</AssemblerListingLocation>
       <ObjectFileName>.\Debug/</ObjectFileName>
@@ -72,7 +73,7 @@
       <BrowseInformation>true</BrowseInformation>
       <WarningLevel>Level4</WarningLevel>
       <SuppressStartupBanner>true</SuppressStartupBanner>
-      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
     </ClCompile>
     <Link>
       <RegisterOutput>false</RegisterOutput>
@@ -80,7 +81,7 @@
       <OutputFile>$(OutDir)SS3DGeometryForCorum.dll</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <ModuleDefinitionFile>.\4DyuchiGXGEOMETRY.def</ModuleDefinitionFile>
-      <GenerateDebugInformation>DebugFull</GenerateDebugInformation>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
       <ProgramDatabaseFile>$(OutDir)SS3DGeometryForCorum.pdb</ProgramDatabaseFile>
       <GenerateMapFile>true</GenerateMapFile>
       <MapFileName>$(OutDir)SS3DGeometryForCorum.map</MapFileName>
@@ -120,7 +121,7 @@
       <BufferSecurityCheck>false</BufferSecurityCheck>
       <FunctionLevelLinking>false</FunctionLevelLinking>
       <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
-      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderOutputFile>.\Release/4DyuchiGXGeometry.pch</PrecompiledHeaderOutputFile>
       <AssemblerListingLocation>.\Release/</AssemblerListingLocation>
       <ObjectFileName>.\Release/</ObjectFileName>
@@ -134,7 +135,7 @@
       <OutputFile>$(OutDir)SS3DGeometryForCorum.dll</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <ModuleDefinitionFile>.\4DyuchiGXGEOMETRY.def</ModuleDefinitionFile>
-      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <GenerateDebugInformation>DebugFull</GenerateDebugInformation>
       <ProgramDatabaseFile>$(OutDir)SS3DGeometryForCorum.pdb</ProgramDatabaseFile>
       <GenerateMapFile>true</GenerateMapFile>
       <MapFileName>$(OutDir)SS3DGeometryForCorum.map</MapFileName>
@@ -144,6 +145,7 @@
       <BaseAddress>0x63000000</BaseAddress>
       <ImportLibrary>$(OutDir)SS3DGeometryForCorum.lib</ImportLibrary>
       <TargetMachine>MachineX86</TargetMachine>
+      <AdditionalDependencies>SS3DGFunc.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <Midl>
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -157,6 +159,9 @@
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <Culture>0x0412</Culture>
     </ResourceCompile>
+    <PostBuildEvent>
+      <Command>..\..\..\..\scripts\postBuildCentraliseOutput_4DyuchiGXGeometry.bat</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <None Include="..\4DyuchiGRX_common\math.inl" />

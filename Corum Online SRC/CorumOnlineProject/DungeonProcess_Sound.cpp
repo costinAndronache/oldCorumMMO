@@ -204,7 +204,7 @@ ISoundEffect * _PlaySound( DWORD dwSoundIndex, DWORD dwType, DWORD dwKind, VECTO
 
 		if (g_pMainPlayer)
 		{
-			float fDis = CalcDistance(&g_pMainPlayer->m_v3CurPos, &v3Pos);
+			float fDis = CalcDistance(g_pMainPlayer->currentPositionReadOnly(), &v3Pos);
 			if ( fDis >= SOUND_LISTEN_SCOPE_DISTANCE )
 			{
 				return NULL;

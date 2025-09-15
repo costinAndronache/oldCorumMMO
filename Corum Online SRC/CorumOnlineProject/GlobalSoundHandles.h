@@ -47,8 +47,8 @@ extern BOOL							g_bInitSoundEnalbe;	// 로그인시 쾅하는 소리 제거
 void GetSoundEffectFile(SOUND_FILE_HANDLE * phOutFileHandle, char * pszFileName);
 void GetSoundEffect(ISoundEffect ** ppOutEffect, SOUND_FILE_HANDLE & rhInFileHandle, VECTOR3 & v3Pos);
 
-void PlaySoundEffect(ISoundEffect * pSoundEffect, VECTOR3 * pV3Pos, bool bLoop);
-void PlaySoundEffectMaxMin(ISoundEffect * pSoundEffect, VECTOR3 * pV3Pos, bool bLoop, int iMaxDistance, int iMinDistance);
+void PlaySoundEffect(ISoundEffect * pSoundEffect, const VECTOR3 * pV3Pos, bool bLoop);
+void PlaySoundEffectMaxMin(ISoundEffect * pSoundEffect, const VECTOR3 * pV3Pos, bool bLoop, int iMaxDistance, int iMinDistance);
 void PlayBGM(const char * szBGMName);
 void StopBGM();
 void SetBGMVolume(float fBGMvolume);

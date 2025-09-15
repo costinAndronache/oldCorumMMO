@@ -11,7 +11,11 @@
 #include "ViewManager/UserSkillsManager.h"
 #include "DynamicInfoBox.h"
 #include "ViewManager/TooltipHelper.h"
-
+#include "ViewManager/ExitOptionsWindowManager.h"
+#include "ViewManager/MinimapWindowManager.h"
+#include "ViewManager/CharDeathConfirmationManager.h"
+#include "ViewManager/InfoBarManager.h"
+#include "ViewManager/SkillSelectionManager.h"
 
 namespace NewInterface {
 	class Interface: 
@@ -25,8 +29,11 @@ namespace NewInterface {
 			const LP_SKILL_LIST_MANAGER skillListManager,
 			CItemResourceHash* resourceHash,
 			SoundLibrary* soundLibrary,
-			SharedNetwork* sharedNetwork,
-			TooltipHelper* tooltipHelper
+			std::shared_ptr<SharedNetwork> network,
+			std::shared_ptr<TooltipHelper> tooltipHelper,
+			std::shared_ptr<GameExitManager> exitManager,
+			I4DyuchiGXExecutive* executive,
+			std::shared_ptr<UserPreferencesManager> userPreferencesManager
 		);
 		void renderWithRenderer(I4DyuchiGXRenderer* renderer, int zIndex) override;
 		bool swallowsMouse(CustomUI::Point mouse) override;
@@ -47,44 +54,58 @@ namespace NewInterface {
 		void updatedSkills(CMainUser*) override;
 		void updatedLeftRightSkillSelection(CMainUser*) override;
 		void updatedItemInventory(CMainUser*) override;
+		void updatedPosition(CMainUser*) override;
+		void updatedStatus(CMainUser*, UNIT_STATUS) override;
 
 	public:
-		virtual void renderOnMouseCursorAvatar(Renderable* avatar, 
+		virtual void renderOnMouseCursorAvatar(std::shared_ptr<Renderable> avatar, 
 			std::function<void(CustomUI::Rect avatarCurrentGlobalFrame)> onLeftMouseButtonUP
 		);
 		virtual void clearCurrentMouseCursorAvatar();
+		void updateForLayer(MinimapWindowManager::Layer layer);
+		void processCurrentHovering(GXOBJECT_HANDLE hoveredObject);
 	private:
 		std::shared_ptr<Interface> _thisAsShared;
 		LP_SKILL_LIST_MANAGER _skillListManager;
 		CMainUser* _mainUser;
 		SoundLibrary* _soundLibrary;
 
-		LeftHUD* _leftHUD;
-		RightHUD* _rightHUD;
-		NewItemsWindow* _newItemsWindow;
-		CharacterStatsView* _statsView;
-		UserSkillsView* _userSkillsView;
-		NewSkillSelectionView* _skillSelectionView;
-		DynamicInfoBox* _dynamicInfoBox;
+		std::shared_ptr<LeftHUD> _leftHUD;
+		std::shared_ptr<RightHUD> _rightHUD;
+		std::shared_ptr<NewItemsWindow> _newItemsWindow;
+		std::shared_ptr<CharacterStatsView> _statsView;
+		std::shared_ptr<UserSkillsView> _userSkillsView;
+		std::shared_ptr<NewSkillSelectionView> _skillSelectionView;
+		std::shared_ptr<ExitOptionsWindow> _exitOptionsWindow;
+		std::shared_ptr<MinimapWindow> _minimapWindow;
+		std::shared_ptr<ConfirmationModal> _charDeathConfirmationModal;
+		std::shared_ptr<HPInfoBarView> _hpInfoBarView;
 
+		std::shared_ptr<CustomUI::DragNDropSystem> _dragNDropSystem;
+		std::shared_ptr<CustomUI::MouseTrackingSpriteRenderable> _mouseTracking;
+		std::shared_ptr<DragNDropManager> _dragNDropManager;
+		std::shared_ptr<UserInventoryManager> _userInventoryManager;
+		std::shared_ptr<EquipItemsManager> _equipItemsManager;
+		std::shared_ptr<CharacterStatsManager> _statsManager;
+		std::shared_ptr<UserSkillsManager> _userSkillsManager;
+		std::shared_ptr<ExitOptionsWindowManager> _exitOptionsManager;
+		std::shared_ptr<MinimapWindowManager> _minimapWindowManager;
+		std::shared_ptr<CharDeathConfirmationManager> _charDeathConfirmationManager;
+		std::shared_ptr<InfoBarManager> _hpInfoBarManager;
+		std::shared_ptr<SkillSelectionManager> _skillSelectionManager;
 
-		CustomUI::DragNDropSystem* _dragNDropSystem;
-		CustomUI::MouseTrackingSpriteRenderable* _mouseTracking;
-		DragNDropManager* _dragNDropManager;
-		UserInventoryManager* _userInventoryManager;
-		EquipItemsManager* _equipItemsManager;
-		CharacterStatsManager* _statsManager;
-		UserSkillsManager* _userSkillsManager;
-
-		TooltipHelper* _tooltipHelper;
-		TooltipLayer* _tooltipLayer;
+		std::shared_ptr<TooltipHelper> _tooltipHelper;
+		std::shared_ptr<TooltipLayer> _tooltipLayer;
 		void updateLeftHUDWithSelectedLeftRightSkills();
 
 		void toggleWindow(Renderable*);
 		void hideWindow(Renderable*);
 		void showWindow(Renderable*);
 
-		void setupDisplacement(DisplacementHandleRenderable* handle, Renderable* forWindow);
+		void setupDisplacement(
+			std::shared_ptr<DisplacementHandleRenderable> handle, 
+			std::weak_ptr<Renderable> forWindow
+		);
 	};
 }
 

@@ -101,6 +101,7 @@ struct BASEITEM_BOTARY
 	MONSTER_ITEM_RATE	ItemRate[20];	
 };
 
+#define MONSER_MAX_DROP_COUNT 10
 typedef struct BASEMONSTER
 {
 	DWORD				dwID;
@@ -173,7 +174,7 @@ typedef struct BASEMONSTER
 	MIN_MAX				wItemCount;		// 몇개의 아이템을 떨굴지를 결정한다.
 	
 	
-	MONSTER_ITEM_RATE	ItemRate[10];
+	MONSTER_ITEM_RATE	ItemRate[MONSER_MAX_DROP_COUNT];
 	WORD				wMoneyRate;	
 	WORD				wNTR;			// Dont Put the Item Down
 

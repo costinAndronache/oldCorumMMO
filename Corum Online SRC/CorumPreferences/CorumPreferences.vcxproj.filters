@@ -21,12 +21,27 @@
     <ClInclude Include="CorumPreferences.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="libbase64\base64.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SkillHotkeys.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CorumPreferences.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="pch.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="libbase64\base64_decode.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="libbase64\base64_encode.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SkillHotkeys.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

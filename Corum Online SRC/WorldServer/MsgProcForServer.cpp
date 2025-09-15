@@ -395,17 +395,17 @@ void CmdServerAttach(DWORD dwConnectionIndex, char* pMsg, DWORD dwLength)
 		return;
 	}
 	
-	SERVER_DATA* pServer = g_pServerTable->GetServerInfo(pPacket->dwID);
+	SERVER_DATA* pServer = g_pServerTable->GetServerInfo(pPacket->portOnUserSide);
 
 	if(!pServer)
 	{
-		Log(LOG_IMPORTANT, "Server That has Invalid ID Try to Login!(ID=%d)", pPacket->dwID);
+		Log(LOG_IMPORTANT, "Server That has Invalid ID Try to Login!(ID=%d)", pPacket->portOnUserSide);
 		return;
 	}
 	
 	if(pServer->dwServerStatus == SERVER_STATUS_CONNECTED)
 	{
-		Log(LOG_IMPORTANT, "Server is already attached!(ID=%d)", pPacket->dwID);
+		Log(LOG_IMPORTANT, "Server is already attached!(ID=%d)", pPacket->portOnUserSide);
 	}
 	
 	char szIP[ MAX_IP_LENGTH ]={0,};	WORD wPort=0;

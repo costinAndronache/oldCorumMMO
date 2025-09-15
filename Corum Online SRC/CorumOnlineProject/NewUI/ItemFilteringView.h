@@ -31,19 +31,19 @@ namespace ItemPickupFiltering {
 		std::vector<CItem*> _displayedItems;
 		std::set<DWORD> _selectedItemIDs;
 
-		std::vector<CustomUI::SelectionView*> _createdInfoViews;
-		CustomUI::PagedItemViewTable* _table;
-		CustomUI::InputField* _inputField;
-		ItemCategoryFilterView* _categoriesFilterView;
-		CustomUI::SingleLineLabel* _titleLabel;
-		CustomUI::Button* _closeButton;
+		std::vector<std::shared_ptr<CustomUI::SelectionView>> _createdInfoViews;
+		std::shared_ptr<CustomUI::PagedItemViewTable> _table;
+		std::shared_ptr<CustomUI::InputField> _inputField;
+		std::shared_ptr<ItemCategoryFilterView> _categoriesFilterView;
+		std::shared_ptr<CustomUI::SingleLineLabel> _titleLabel;
+		std::shared_ptr<CustomUI::Button> _closeButton;
 
 		void updateTextFilteringSourceItemsTo(std::vector<CItem*> newSourceItems);
 
 		void onInputFieldTextChange(CustomUI::InputField* inputField, const char* text);
 		void itemCategoryFilterViewDidSwitchToCategory(ItemCategoryFilterView*, CategoryType category);
-		CustomUI::Renderable* buildRenderableForModelAtIndexWithFrame(int modelIndex, CustomUI::Rect frame);
-		void updateRenderableWithModelAtIndex(CustomUI::Renderable* renderable, int modelIndex) override;
+		std::shared_ptr<CustomUI::Renderable> buildRenderableForModelAtIndexWithFrame(int modelIndex, CustomUI::Rect frame);
+		void updateRenderableWithModelAtIndex(std::shared_ptr<CustomUI::Renderable> renderable, int modelIndex) override;
 		void selectionViewDidChangeSelectionState(CustomUI::SelectionView*, bool);
 
 		void onButtonPress(CustomUI::Button* button);

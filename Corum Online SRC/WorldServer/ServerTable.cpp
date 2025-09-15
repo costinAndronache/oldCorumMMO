@@ -42,7 +42,7 @@ BOOL CServerTable::Add(SERVER_DATA* pServer)
 {
 	if(!pServer) return FALSE;
 
-	if(pServer->bServerType >= MAX_SERVER_TYPE)	
+	if(pServer->bServerType >= SERVER_TYPE_ENDVALUE)	
 	{
 		Log(LOG_IMPORTANT, "Invalid ServerType Entered at CServerTable::Add(SERVER_DATA* pServer)! (pServer->bServerType = %d)", pServer->bServerType);
 		return FALSE;
@@ -101,7 +101,7 @@ void CServerTable::Remove(DWORD dwConnectionIndex)
 
 	DWORD dwIndex = pInfo->dwID%m_dwMaxBucketNum;
 
-	if(pInfo->bServerType >= MAX_SERVER_TYPE)	
+	if(pInfo->bServerType >= SERVER_TYPE_ENDVALUE)	
 	{
 		Log(LOG_IMPORTANT, "Invalid ServerType Entered at CServerTable::Remove(DWORD dwConnectionIndex)! (pInfo->bServerType = %d)", pInfo->bServerType);
 		return;
@@ -142,7 +142,7 @@ void CServerTable::Remove(DWORD dwConnectionIndex)
 
 void CServerTable::Remove(SERVER_DATA* pInfo)
 {
-	if(pInfo->bServerType >= MAX_SERVER_TYPE)		
+	if(pInfo->bServerType >= SERVER_TYPE_ENDVALUE)		
 	{
 		Log(LOG_IMPORTANT, "Invalid ServerType Entered at CServerTable::Remove(SERVER_DATA* pInfo)! (pInfo->bServerType = %d)", pInfo->bServerType);
 		return;
@@ -186,7 +186,7 @@ void CServerTable::Remove(SERVER_DATA* pInfo)
 
 void CServerTable::RemoveServerTable()
 {
-	for(int k=0; k<MAX_SERVER_TYPE; k++)
+	for(int k=0; k<SERVER_TYPE_ENDVALUE; k++)
 		m_ServerList[ k ].RemoveAll();
 		
 	SERVER_DATA* cur = NULL;
@@ -213,7 +213,7 @@ void CServerTable::BroadCast(char* pPacket, DWORD dwLength, BYTE bServerType)
 	if(bServerType == 0)
 	{
 		// LoginAgent를 제외하고 BroadCast  
-		for(int i = SERVER_TYPE_DUNGEON; i < MAX_SERVER_TYPE; i++)	
+		for(int i = SERVER_TYPE_DUNGEON; i < SERVER_TYPE_ENDVALUE; i++)	
 		{
 			POSITION_ pos = m_ServerList[i].GetHeadPosition();
 
@@ -256,7 +256,7 @@ void CServerTable::BroadCastAlivePacket()
 	SERVER_DATA* pServer = NULL;
 
 	// LoginAgent를 제외하고 BroadCast  
-	for(int i = SERVER_TYPE_DUNGEON; i < MAX_SERVER_TYPE; i++)	
+	for(int i = SERVER_TYPE_DUNGEON; i < SERVER_TYPE_ENDVALUE; i++)	
 	{
 		POSITION_ pos = m_ServerList[i].GetHeadPosition();
 
@@ -281,7 +281,7 @@ void CServerTable::CheckAlivePacket()
 	SERVER_DATA* pServer = NULL;
 
 	// LoginAgent를 제외하고 BroadCast
-	for(int i = SERVER_TYPE_DUNGEON; i < MAX_SERVER_TYPE; i++)	  
+	for(int i = SERVER_TYPE_DUNGEON; i < SERVER_TYPE_ENDVALUE; i++)	  
 	{
 		POSITION_ pos = m_ServerList[i].GetHeadPosition();
 
@@ -354,7 +354,7 @@ void CServerTable::ShowAllServerStatus()
 
 	int nCount = 0;
 
-	for(int i = 0; i < MAX_SERVER_TYPE ; i++)
+	for(int i = 0; i < SERVER_TYPE_ENDVALUE ; i++)
 	{
 		pos = m_ServerList[i].GetHeadPosition();
 

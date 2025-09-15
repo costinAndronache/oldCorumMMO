@@ -6,6 +6,46 @@
 #include "MaterialList.h"
 #include "../4DyuchiGRX_common/IGeometry.h"
 
+#include <map>
+
+template<typename T>
+struct IndexedMap {
+public: 
+	int storeObject(T* object) {
+		_objCount += 1;
+		_map[_objCount] = object;
+		return _objCount;
+	}
+
+	T* getObjectORNull(int index) {
+		auto found = _map.find(index);
+		if(found == _map.end()) { return nullptr; }
+		return found->second;
+	}
+
+	int indexOrNegativeForObject(T* object) {
+		for(const auto& entry: _map) {
+			if(entry.second == object) {
+				return entry.first;
+			}
+		}
+
+		return -1;
+	}
+
+	void deleteObject(int index) {
+		_map.erase(index);
+	}
+
+	void eraseAll() { _map.clear(); }
+
+	const std::map<int, T*>& current() const { return _map; }
+
+
+private:
+	int _objCount;
+	std::map<int, T*> _map;
+};
 
 class CoGeometry;
 class CMeshObject;
@@ -18,6 +58,8 @@ class CCollisionStaticModel;
 
 class CoStaticModel : public I3DStaticModel
 {
+	IndexedMap<CMeshObject>* _meshMap;
+
 	DWORD					m_dwRefCount;
 //	CMaterial*				m_pBaseMaterial;
 
@@ -40,10 +82,8 @@ class CoStaticModel : public I3DStaticModel
 	char					m_szTempVCLFileName[MAX_NAME_LEN];
 
 	DWORD					m_dwColMeshSize;
-	ITEMTABLE_HANDLE		m_pIndexItemTableMeshObject;
 	DWORD					m_dwMaxMaterialNum;
 	CMaterialList*			m_pMaterialList;
-
 	
 	MATRIX4*				m_pDefaultMatrixList;
 

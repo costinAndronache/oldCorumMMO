@@ -754,7 +754,7 @@ void PickingObjectTypeTrader_Monster(LPObjectDesc pObjDesc)
 
 	// Npc의 위치를 판단하여 위치가 너무 멀면 그냘 이동만한다.
 	g_pExecutive->GXOGetPosition( g_hHandle, &v3Npc );
-	g_fDist = CalcDistance( &g_pMainPlayer->m_v3CurPos, &v3Npc );
+	g_fDist = CalcDistance( g_pMainPlayer->currentPositionReadOnly(), &v3Npc );
 
 	if(g_fDist >= 650)
 		goto lb_move;
@@ -954,7 +954,7 @@ void PickingObjectTypeItem(LPObjectDesc pObjDesc)
 	if(!pItem)
 		return;
 
-	g_fDist = CalcDistance( &g_pMainPlayer->m_v3CurPos, &pItem->v3ItemPos );
+	g_fDist = CalcDistance( g_pMainPlayer->currentPositionReadOnly(), &pItem->v3ItemPos );
 	
 	if( g_fDist >= 185.0f ) 
 	{

@@ -20,7 +20,7 @@ namespace NewInterface {
 		virtual bool swallowsMouse(CustomUI::Point) override { return false; }
 	private:
 		Handle _internalCounter;
-		std::map<Handle, DynamicInfoBox*> _currentInfoBoxes;
+		std::map<Handle, std::shared_ptr<DynamicInfoBox>> _currentInfoBoxes;
 		std::set<Handle> _freeHandles;
 	};
 }

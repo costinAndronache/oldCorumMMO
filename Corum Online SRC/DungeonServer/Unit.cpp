@@ -315,7 +315,7 @@ BOOL CUnit::IsCurDungeonSiege()
 {
 	assert(GetCurDungeon());
 
-	return GetCurDungeon()->GetDungeonDataEx()->m_bSiege;
+	return GetCurDungeon()->GetDungeonDataEx()->inSiegeWarNow;
 }
 
 BOOL CUnit::IsCurDungeonVillage()

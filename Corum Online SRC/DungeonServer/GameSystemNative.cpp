@@ -587,10 +587,10 @@ BOOL AppearItem(CUser* pUser, const CItem* pItem, BYTE byCount, DWORD dwMoney, B
 	if (AppearItem.v2ItemPos.y < 0)
 		AppearItem.v2ItemPos.y = 0;
 
-	if (AppearItem.v2ItemPos.x > pLayer->GetMap()->m_dwTileNumWidth*TILE_SIZE)
-		AppearItem.v2ItemPos.x = pLayer->GetMap()->m_dwTileNumWidth*TILE_SIZE-1;
-	if (AppearItem.v2ItemPos.y > pLayer->GetMap()->m_dwTileNumHeight*TILE_SIZE)
-		AppearItem.v2ItemPos.y = pLayer->GetMap()->m_dwTileNumHeight*TILE_SIZE-1;
+	if (AppearItem.v2ItemPos.x > pLayer->GetMap()->m_dwTileNumWidth*DUNGEON_TILE_SIZE)
+		AppearItem.v2ItemPos.x = pLayer->GetMap()->m_dwTileNumWidth*DUNGEON_TILE_SIZE-1;
+	if (AppearItem.v2ItemPos.y > pLayer->GetMap()->m_dwTileNumHeight*DUNGEON_TILE_SIZE)
+		AppearItem.v2ItemPos.y = pLayer->GetMap()->m_dwTileNumHeight*DUNGEON_TILE_SIZE-1;
 
 	ITEM_SERVER* pSItem = new ITEM_SERVER;
 
@@ -1699,6 +1699,91 @@ void MakeItemStruct( ITEM_SERVER* pMakeItem, CItem* pItem, VECTOR2* pv2Pos, DWOR
 	pMakeItem->dwOwnerLimitSec    = dwOwnerLimitSec ; //재원 050329
 }
 
+void tryInstantiateItem(int itemID, CMonster* sourceMonster, CUser* forUser) {
+	if(!itemID) {
+		itemID = __ITEM_KARZ__;
+	}	
+
+	auto iItemKind = itemID / ITEM_DISTRIBUTE;	
+
+	auto wOptionNum = 0;
+	int optionBarrier = 1; //rand();
+
+	if( optionBarrier <= sourceMonster->GetBaseMonsterInfo()->wOption_0 ) {
+		optionBarrier = 0;
+	} else {
+		for(int i = 0; i < 2; i++ )
+		{
+			if( optionBarrier <= sourceMonster->GetBaseMonsterInfo()->wOptionRate[i] ) {
+				wOptionNum = i + 1;
+				break;
+			}
+		}
+	}
+
+	ITEM_CREATE	AppearItem;
+	memset(&AppearItem.Item, NULL, sizeof(CItem));
+	AppearItem.Item.m_Serial	= *g_pThis->GetNewSerial();
+	AppearItem.Item.m_wItemID	= itemID;
+	AppearItem.v2ItemPos		= *sourceMonster->GetCurPosition();
+
+	auto iRandX = 0, iRandZ = 0;
+	if( ( (iRandX = rand()%125+1) % 2 ) > 0 ) iRandX *= -1;
+	if( ( (iRandZ = rand()%125+1) % 2 ) > 0 ) iRandZ *= -1;
+
+	AppearItem.v2ItemPos.x		+=  (float)iRandX;
+	AppearItem.v2ItemPos.y		+=	(float)iRandZ;
+
+	MAP_TILE* pTile	= sourceMonster->GetCurDungeonLayer()->GetMap()->GetTile( AppearItem.v2ItemPos.x, AppearItem.v2ItemPos.y );
+	if( !pTile )						return;
+	if( pTile->wAttr.uSection == 0 )	return;
+
+	AppearItem.dwSectionNum	= pTile->wAttr.uSection;
+
+	if(!MakeCItemClass( &AppearItem.Item, itemID, sourceMonster->GetBaseMonsterInfo(), wOptionNum, forUser)) {
+		return;
+	}
+
+	ITEM_CREATE* pItem = new ITEM_CREATE;
+	if( !pItem ) return;
+
+	memcpy( pItem, &AppearItem, sizeof( ITEM_CREATE ) );
+	pItem->dwCreateTick	= g_dwTickCount;
+	pItem->dwOwnerIndex	= forUser->GetID();
+
+	// 파티 사냥의 드롭 아이템 처리 : 최덕석 2005.1.26
+	// 아이템 분배 조건이 '습득자 우선', '랜덤'의 경우(카르츠는 무조건 집어짐)
+	if(forUser->m_dwPartyId
+		&& (GetItemType(pItem->Item.GetID())==ITEM_TYPE_MONEY ||
+			forUser->m_PartyConfig.item == PARTY_CONFIG_ITEM_RANDOM ||
+			forUser->m_PartyConfig.item == PARTY_CONFIG_ITEM_FIRST))
+	{
+		// 아이템을 파티 소유로 설정
+		pItem->dwPartyIndex = forUser->m_dwPartyId;
+	} else
+	{
+		pItem->dwPartyIndex = 0;
+	}
+
+	pItem->DelPos		= sourceMonster->GetCurDungeonLayer()->m_pCreateItemList->AddTail( pItem );
+
+
+	if( !pItem->DelPos ) {
+		Log( LOG_JUST_DISPLAY, "Create Item Monster DelPos NULL" );
+	}
+}
+
+void CreateItemByMonsterDEBUG( CMonster* pMonster, CUser* pUser )
+{
+	if( !pMonster )	return;
+	if( !pUser )	return;
+
+	for(int i = 0; i < MONSER_MAX_DROP_COUNT; i++) {
+		auto itemID = pMonster->GetBaseMonsterInfo()->ItemRate[i].ItemID;
+		tryInstantiateItem(itemID, pMonster, pUser);
+	}
+
+}
 
 void CreateItemByMonster( CMonster* pMonster, CUser* pUser )
 {
@@ -1728,92 +1813,13 @@ void CreateItemByMonster( CMonster* pMonster, CUser* pUser )
 		}
 	}
 	
-	dropBarrier = rand();	
+	dropBarrier = 1; //rand();	
 	int sum = 100 + g_pThis->m_GLOBAL_MAGIC_FIND_PBT + pUser->GetItemAttr(ITEM_ATTR_MAGIC_FIND_PBT);
 	int userDropFactor = sum / 100;
 	iRandItem = pMonster->GetDropItem(userDropFactor, dropBarrier);
 	
-	if(!iRandItem)
-	{
-		if( dropBarrier <= pMonster->GetBaseMonsterInfo()->wMoneyRate )			
-			iRandItem = __ITEM_KARZ__;
-		else
-			return;			
-	}	
-	
-	iItemKind = iRandItem / ITEM_DISTRIBUTE;	
-	
-	int optionBarrier = rand();
-	
-	if( optionBarrier <= pMonster->GetBaseMonsterInfo()->wOption_0 )
-	{
-		optionBarrier = 0;
-	}
-	else
-	{
-		for( i = 0; i < 2; i++ )
-		{
-			if( optionBarrier <= pMonster->GetBaseMonsterInfo()->wOptionRate[i] )
-			{
-				wOptionNum = i + 1;
-				break;
-			}
-		}
-	}
-
-	ITEM_CREATE	AppearItem;
-	memset(&AppearItem.Item, NULL, sizeof(CItem));
-	AppearItem.Item.m_Serial	= *g_pThis->GetNewSerial();
-	AppearItem.Item.m_wItemID	= iRandItem;
-	AppearItem.v2ItemPos		= *pMonster->GetCurPosition();
-	
-	if( ( (iRandX = rand()%125+1) % 2 ) > 0 ) iRandX *= -1;
-	if( ( (iRandZ = rand()%125+1) % 2 ) > 0 ) iRandZ *= -1;
-
-	AppearItem.v2ItemPos.x		+=  (float)iRandX;
-	AppearItem.v2ItemPos.y		+=	(float)iRandZ;
-
-	MAP_TILE* pTile	= pMonster->GetCurDungeonLayer()->GetMap()->GetTile( AppearItem.v2ItemPos.x, AppearItem.v2ItemPos.y );
-	if( !pTile )						return;
-	if( pTile->wAttr.uSection == 0 )	return;
-	
-	AppearItem.dwSectionNum	= pTile->wAttr.uSection;
-		
-	if(!MakeCItemClass( &AppearItem.Item, iRandItem, pMonster->GetBaseMonsterInfo(), wOptionNum, pUser)) 
-	{
-		return;
-	}
-
-	ITEM_CREATE* pItem = new ITEM_CREATE;
-	if( !pItem ) return;
-
-	memcpy( pItem, &AppearItem, sizeof( ITEM_CREATE ) );
-	pItem->dwCreateTick	= g_dwTickCount;
-	pItem->dwOwnerIndex	= pUser->GetID();
-	
-	// 파티 사냥의 드롭 아이템 처리 : 최덕석 2005.1.26
-	// 아이템 분배 조건이 '습득자 우선', '랜덤'의 경우(카르츠는 무조건 집어짐)
-	if(pUser->m_dwPartyId
-		&& (GetItemType(pItem->Item.GetID())==ITEM_TYPE_MONEY ||
-			pUser->m_PartyConfig.item == PARTY_CONFIG_ITEM_RANDOM ||
-			pUser->m_PartyConfig.item == PARTY_CONFIG_ITEM_FIRST))
-	{
-		// 아이템을 파티 소유로 설정
-		pItem->dwPartyIndex = pUser->m_dwPartyId;
-	} else
-	{
-		pItem->dwPartyIndex = 0;
-	}
-	
-	pItem->DelPos		= pMonster->GetCurDungeonLayer()->m_pCreateItemList->AddTail( pItem );
-	
-
-	if( !pItem->DelPos )
-	{
-		Log( LOG_JUST_DISPLAY, "Create Item Monster DelPos NULL" );
-	}
+	tryInstantiateItem(iRandItem, pMonster, pUser);
 }
-
 
 void CreateItemByGM( CUser* pUser, DWORD dwBaseItemID )
 {

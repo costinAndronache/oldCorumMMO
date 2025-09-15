@@ -443,8 +443,8 @@ BOOL EffectLayer::ProcessUsersSkillCast(CUser* pOwnUser, SkillCast* pSkillDesc)
 		return FALSE;
 	}
 
-	int nMana = UserManaOffsetForSkillUsage(pOwnUser, pSkillDesc);		
-	if (nMana < 0 && (INT)pOwnUser->GetSP() < -nMana)
+	int manaOffset = UserManaOffsetForSkillUsage(pOwnUser, pSkillDesc);		
+	if (manaOffset < 0 && (INT)pOwnUser->GetSP() < -manaOffset)
 	{
 		pOwnUser->SendSkillCastingFail(SKILL_CASTING_FAIL_REASON_LACK_SP);
 		return FALSE;
@@ -458,8 +458,13 @@ BOOL EffectLayer::ProcessUsersSkillCast(CUser* pOwnUser, SkillCast* pSkillDesc)
 		return FALSE;
 	}
 
+	//if (pEffect->dwCoolTime > secondsToMilliseconds(pOwnUser->m_fCurCoolPoint)) {
+	//	pOwnUser->SendSkillCastingFail(SKILL_CASTING_FAIL_REASON_LACK_COOL_POINTS);
+	//	return FALSE;
+	//}
+
 	pOwnUser->m_dwStartSkillTick[pSkillDesc->bSkillKind] = g_dwTickCount;
-	pOwnUser->SetSP(pOwnUser->GetSP()+nMana);
+	pOwnUser->SetSP(pOwnUser->GetSP() + manaOffset);
 
 
 
@@ -557,8 +562,8 @@ void EffectLayer::RevisionStartPositon(SkillCast* pSkillDesc, VECTOR2* pV2Start)
 		case TARGETTYPE_ARC:
 		case TARGETTYPE_LINE:
 		
-			pV2Start->x = TILE_SIZE*pSkillDesc->wTileIndex_X;
-			pV2Start->y = TILE_SIZE*pSkillDesc->wTileIndex_Z;
+			pV2Start->x = DUNGEON_TILE_SIZE*pSkillDesc->wTileIndex_X;
+			pV2Start->y = DUNGEON_TILE_SIZE*pSkillDesc->wTileIndex_Z;
 			break;
 		default:
 			*pV2Start = pSkillDesc->casterPosition;

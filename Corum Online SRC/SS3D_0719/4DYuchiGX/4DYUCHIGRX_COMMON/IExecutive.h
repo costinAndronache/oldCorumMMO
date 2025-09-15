@@ -40,7 +40,7 @@ interface I4DyuchiGXExecutive : public IUnknown
 	virtual	DWORD				__stdcall	GXOGetMaterialNum(GXOBJECT_HANDLE gxh,DWORD dwModelIndex) = 0;
 	virtual DWORD				__stdcall	GXOGetCurrentMaterialIndex(GXOBJECT_HANDLE gxh) = 0;
 
-	virtual void				__stdcall	GXOSetPosition(GXOBJECT_HANDLE gxh,VECTOR3* pv3Pos, BOOL bDoInterpolation) = 0;
+	virtual void				__stdcall	GXOSetPosition(GXOBJECT_HANDLE gxh, const VECTOR3* pv3Pos, BOOL bDoInterpolation) = 0;
 	virtual void				__stdcall	GXOMovePosition(GXOBJECT_HANDLE gxh,VECTOR3* pv3Pos) = 0;
 	virtual void				__stdcall	GXOGetPosition(GXOBJECT_HANDLE gxh,VECTOR3* pv3Pos) = 0;
 	virtual	void				__stdcall	GXOMovePositionWithCollide(GXOBJECT_HANDLE gxh,VECTOR3* pv3Pos)=0;		// 2002/05/22

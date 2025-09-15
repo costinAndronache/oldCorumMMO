@@ -1,40 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
-    <ProjectConfiguration Include="CHINA_LOCALIZING_DBG|Win32">
-      <Configuration>CHINA_LOCALIZING_DBG</Configuration>
-      <Platform>Win32</Platform>
-    </ProjectConfiguration>
-    <ProjectConfiguration Include="CHINA_LOCALIZING_RRS|Win32">
-      <Configuration>CHINA_LOCALIZING_RRS</Configuration>
-      <Platform>Win32</Platform>
-    </ProjectConfiguration>
     <ProjectConfiguration Include="Debug|Win32">
       <Configuration>Debug</Configuration>
       <Platform>Win32</Platform>
     </ProjectConfiguration>
-    <ProjectConfiguration Include="dev|Win32">
-      <Configuration>dev</Configuration>
-      <Platform>Win32</Platform>
-    </ProjectConfiguration>
-    <ProjectConfiguration Include="JAPAN_LOCALIZING_DBG|Win32">
-      <Configuration>JAPAN_LOCALIZING_DBG</Configuration>
-      <Platform>Win32</Platform>
-    </ProjectConfiguration>
-    <ProjectConfiguration Include="JAPAN_LOCALIZING_RRS|Win32">
-      <Configuration>JAPAN_LOCALIZING_RRS</Configuration>
-      <Platform>Win32</Platform>
-    </ProjectConfiguration>
     <ProjectConfiguration Include="Release|Win32">
       <Configuration>Release</Configuration>
-      <Platform>Win32</Platform>
-    </ProjectConfiguration>
-    <ProjectConfiguration Include="TAIWAN_LOCALIZING_DBG|Win32">
-      <Configuration>TAIWAN_LOCALIZING_DBG</Configuration>
-      <Platform>Win32</Platform>
-    </ProjectConfiguration>
-    <ProjectConfiguration Include="TAIWAN_LOCALIZING_RRS|Win32">
-      <Configuration>TAIWAN_LOCALIZING_RRS</Configuration>
       <Platform>Win32</Platform>
     </ProjectConfiguration>
   </ItemGroup>
@@ -47,69 +19,20 @@
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='JAPAN_LOCALIZING_DBG|Win32'" Label="Configuration">
-    <ConfigurationType>DynamicLibrary</ConfigurationType>
-    <UseOfMfc>false</UseOfMfc>
-    <CharacterSet>MultiByte</CharacterSet>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='TAIWAN_LOCALIZING_DBG|Win32'" Label="Configuration">
-    <ConfigurationType>DynamicLibrary</ConfigurationType>
-    <UseOfMfc>false</UseOfMfc>
-    <CharacterSet>MultiByte</CharacterSet>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='JAPAN_LOCALIZING_RRS|Win32'" Label="Configuration">
-    <ConfigurationType>DynamicLibrary</ConfigurationType>
-    <UseOfMfc>false</UseOfMfc>
-    <CharacterSet>MultiByte</CharacterSet>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='TAIWAN_LOCALIZING_RRS|Win32'" Label="Configuration">
-    <ConfigurationType>DynamicLibrary</ConfigurationType>
-    <UseOfMfc>false</UseOfMfc>
-    <CharacterSet>MultiByte</CharacterSet>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='CHINA_LOCALIZING_DBG|Win32'" Label="Configuration">
-    <ConfigurationType>DynamicLibrary</ConfigurationType>
-    <UseOfMfc>false</UseOfMfc>
-    <CharacterSet>MultiByte</CharacterSet>
-  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseOfMfc>false</UseOfMfc>
     <CharacterSet>MultiByte</CharacterSet>
-    <PlatformToolset>$(SOLUTION_PLATFORM_TOOLSET)</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseOfMfc>false</UseOfMfc>
     <CharacterSet>MultiByte</CharacterSet>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='dev|Win32'" Label="Configuration">
-    <ConfigurationType>DynamicLibrary</ConfigurationType>
-    <UseOfMfc>false</UseOfMfc>
-    <CharacterSet>MultiByte</CharacterSet>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='CHINA_LOCALIZING_RRS|Win32'" Label="Configuration">
-    <ConfigurationType>DynamicLibrary</ConfigurationType>
-    <UseOfMfc>false</UseOfMfc>
-    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
-  </ImportGroup>
-  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='JAPAN_LOCALIZING_DBG|Win32'" Label="PropertySheets">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-  </ImportGroup>
-  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='TAIWAN_LOCALIZING_DBG|Win32'" Label="PropertySheets">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-  </ImportGroup>
-  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='JAPAN_LOCALIZING_RRS|Win32'" Label="PropertySheets">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-  </ImportGroup>
-  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='TAIWAN_LOCALIZING_RRS|Win32'" Label="PropertySheets">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-  </ImportGroup>
-  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='CHINA_LOCALIZING_DBG|Win32'" Label="PropertySheets">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
@@ -117,162 +40,37 @@
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
-  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='dev|Win32'" Label="PropertySheets">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-  </ImportGroup>
-  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='CHINA_LOCALIZING_RRS|Win32'" Label="PropertySheets">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-  </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
     <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='CHINA_LOCALIZING_RRS|Win32'">.\CommonServer___Win32_CHINA_LOCALIZING_RRS\</OutDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='CHINA_LOCALIZING_RRS|Win32'">.\CommonServer___Win32_CHINA_LOCALIZING_RRS\</IntDir>
-    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='CHINA_LOCALIZING_RRS|Win32'">false</LinkIncremental>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='dev|Win32'">.\CommonServer___Win32_dev\</OutDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='dev|Win32'">.\CommonServer___Win32_dev\</IntDir>
-    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='dev|Win32'">false</LinkIncremental>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\Release\</OutDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\Release\</IntDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\Debug\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\Debug\</IntDir>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</LinkIncremental>
     <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.\Debug\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.\Debug\</IntDir>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</LinkIncremental>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='CHINA_LOCALIZING_DBG|Win32'">.\CommonServer___Win32_CHINA_LOCALIZING_DBG\</OutDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='CHINA_LOCALIZING_DBG|Win32'">.\CommonServer___Win32_CHINA_LOCALIZING_DBG\</IntDir>
-    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='CHINA_LOCALIZING_DBG|Win32'">false</LinkIncremental>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='TAIWAN_LOCALIZING_RRS|Win32'">.\CommonServer___Win32_TAIWAN_LOCALIZING_RRS\</OutDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='TAIWAN_LOCALIZING_RRS|Win32'">.\CommonServer___Win32_TAIWAN_LOCALIZING_RRS\</IntDir>
-    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='TAIWAN_LOCALIZING_RRS|Win32'">false</LinkIncremental>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='JAPAN_LOCALIZING_RRS|Win32'">.\CommonServer___Win32_JAPAN_LOCALIZING_RRS\</OutDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='JAPAN_LOCALIZING_RRS|Win32'">.\CommonServer___Win32_JAPAN_LOCALIZING_RRS\</IntDir>
-    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='JAPAN_LOCALIZING_RRS|Win32'">false</LinkIncremental>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='TAIWAN_LOCALIZING_DBG|Win32'">.\CommonServer___Win32_TAIWAN_LOCALIZING_DBG\</OutDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='TAIWAN_LOCALIZING_DBG|Win32'">.\CommonServer___Win32_TAIWAN_LOCALIZING_DBG\</IntDir>
-    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='TAIWAN_LOCALIZING_DBG|Win32'">false</LinkIncremental>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='JAPAN_LOCALIZING_DBG|Win32'">.\CommonServer___Win32_JAPAN_LOCALIZING_DBG\</OutDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='JAPAN_LOCALIZING_DBG|Win32'">.\CommonServer___Win32_JAPAN_LOCALIZING_DBG\</IntDir>
-    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='JAPAN_LOCALIZING_DBG|Win32'">false</LinkIncremental>
-    <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='CHINA_LOCALIZING_DBG|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
-    <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='CHINA_LOCALIZING_DBG|Win32'" />
-    <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='CHINA_LOCALIZING_DBG|Win32'" />
-    <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='CHINA_LOCALIZING_RRS|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
-    <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='CHINA_LOCALIZING_RRS|Win32'" />
-    <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='CHINA_LOCALIZING_RRS|Win32'" />
     <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
     <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" />
     <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" />
-    <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='dev|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
-    <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='dev|Win32'" />
-    <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='dev|Win32'" />
-    <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='JAPAN_LOCALIZING_DBG|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
-    <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='JAPAN_LOCALIZING_DBG|Win32'" />
-    <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='JAPAN_LOCALIZING_DBG|Win32'" />
-    <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='JAPAN_LOCALIZING_RRS|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
-    <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='JAPAN_LOCALIZING_RRS|Win32'" />
-    <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='JAPAN_LOCALIZING_RRS|Win32'" />
     <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
     <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
     <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
-    <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='TAIWAN_LOCALIZING_DBG|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
-    <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='TAIWAN_LOCALIZING_DBG|Win32'" />
-    <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='TAIWAN_LOCALIZING_DBG|Win32'" />
-    <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='TAIWAN_LOCALIZING_RRS|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
-    <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='TAIWAN_LOCALIZING_RRS|Win32'" />
-    <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='TAIWAN_LOCALIZING_RRS|Win32'" />
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <IncludePath>$(IncludePath);../I4DyuchiNET;</IncludePath>
     <LibraryPath>$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);../centralizedOutput;</LibraryPath>
   </PropertyGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='CHINA_LOCALIZING_RRS|Win32'">
-    <ClCompile>
-      <Optimization>MaxSpeed</Optimization>
-      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;COMMONSERVER_EXPORTS;CHINA_LOCALIZING;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <StringPooling>true</StringPooling>
-      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
-      <FunctionLevelLinking>true</FunctionLevelLinking>
-      <PrecompiledHeader>Use</PrecompiledHeader>
-      <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
-      <PrecompiledHeaderOutputFile>.\CommonServer___Win32_CHINA_LOCALIZING_RRS/CommonServer.pch</PrecompiledHeaderOutputFile>
-      <AssemblerListingLocation>.\CommonServer___Win32_CHINA_LOCALIZING_RRS/</AssemblerListingLocation>
-      <ObjectFileName>.\CommonServer___Win32_CHINA_LOCALIZING_RRS/</ObjectFileName>
-      <ProgramDataBaseFileName>.\CommonServer___Win32_CHINA_LOCALIZING_RRS/</ProgramDataBaseFileName>
-      <WarningLevel>Level3</WarningLevel>
-      <SuppressStartupBanner>true</SuppressStartupBanner>
-    </ClCompile>
-    <Link>
-      <AdditionalDependencies>odbc32.lib;odbccp32.lib;WS2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <OutputFile>.\CommonServer___Win32_CHINA_LOCALIZING_RRS/CommonServer.dll</OutputFile>
-      <SuppressStartupBanner>true</SuppressStartupBanner>
-      <ProgramDatabaseFile>.\CommonServer___Win32_CHINA_LOCALIZING_RRS/CommonServer.pdb</ProgramDatabaseFile>
-      <ImportLibrary>.\CommonServer___Win32_CHINA_LOCALIZING_RRS/CommonServer.lib</ImportLibrary>
-      <TargetMachine>MachineX86</TargetMachine>
-    </Link>
-    <Midl>
-      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <MkTypLibCompatible>true</MkTypLibCompatible>
-      <SuppressStartupBanner>true</SuppressStartupBanner>
-      <TargetEnvironment>Win32</TargetEnvironment>
-      <TypeLibraryName>.\CommonServer___Win32_CHINA_LOCALIZING_RRS/CommonServer.tlb</TypeLibraryName>
-      <HeaderFileName>
-      </HeaderFileName>
-    </Midl>
-    <ResourceCompile>
-      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <Culture>0x0412</Culture>
-    </ResourceCompile>
-  </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='dev|Win32'">
-    <ClCompile>
-      <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;COMMONSERVER_EXPORTS;DEV_MODE;NEW_COMMAND;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
-      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
-      <PrecompiledHeader>Use</PrecompiledHeader>
-      <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
-      <PrecompiledHeaderOutputFile>.\CommonServer___Win32_dev/CommonServer.pch</PrecompiledHeaderOutputFile>
-      <AssemblerListingLocation>.\CommonServer___Win32_dev/</AssemblerListingLocation>
-      <ObjectFileName>.\CommonServer___Win32_dev/</ObjectFileName>
-      <ProgramDataBaseFileName>.\CommonServer___Win32_dev/</ProgramDataBaseFileName>
-      <WarningLevel>Level4</WarningLevel>
-      <TreatWarningAsError>true</TreatWarningAsError>
-      <SuppressStartupBanner>true</SuppressStartupBanner>
-      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
-    </ClCompile>
-    <Link>
-      <AdditionalDependencies>odbc32.lib;odbccp32.lib;WS2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <OutputFile>.\CommonServer___Win32_dev/CommonServer.dll</OutputFile>
-      <SuppressStartupBanner>true</SuppressStartupBanner>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
-      <ProgramDatabaseFile>CommonServer.pdb</ProgramDatabaseFile>
-      <GenerateMapFile>true</GenerateMapFile>
-      <MapFileName>.\CommonServer___Win32_dev/CommonServer.map</MapFileName>
-      <ImportLibrary>.\CommonServer___Win32_dev/CommonServer.lib</ImportLibrary>
-      <TargetMachine>MachineX86</TargetMachine>
-    </Link>
-    <Midl>
-      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <MkTypLibCompatible>true</MkTypLibCompatible>
-      <SuppressStartupBanner>true</SuppressStartupBanner>
-      <TargetEnvironment>Win32</TargetEnvironment>
-      <TypeLibraryName>.\CommonServer___Win32_dev/CommonServer.tlb</TypeLibraryName>
-      <HeaderFileName>
-      </HeaderFileName>
-    </Midl>
-    <ResourceCompile>
-      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <Culture>0x0412</Culture>
-    </ResourceCompile>
-  </ItemDefinitionGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <IncludePath>$(IncludePath);../I4DyuchiNET;</IncludePath>
+    <LibraryPath>$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);../centralizedOutput;</LibraryPath>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
       <Optimization>MaxSpeed</Optimization>
       <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;COMMONSERVER_EXPORTS;NEW_COMMAND;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
-      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
@@ -282,13 +80,13 @@
       <ProgramDataBaseFileName>.\Release/</ProgramDataBaseFileName>
       <WarningLevel>Level3</WarningLevel>
       <SuppressStartupBanner>true</SuppressStartupBanner>
+      <LanguageStandard>stdcpp14</LanguageStandard>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>odbc32.lib;odbccp32.lib;WS2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <OutputFile>.\Release/CommonServer.dll</OutputFile>
+      <AdditionalDependencies>odbc32.lib;odbccp32.lib;WS2_32.lib;I4DyuchiNET.lib;BaseLibrary.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(OutDir)CommonServer.dll</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
-      <ProgramDatabaseFile>.\Release/CommonServer.pdb</ProgramDatabaseFile>
-      <ImportLibrary>.\Release/CommonServer.lib</ImportLibrary>
+      <ImportLibrary>$(OutDir)CommonServer.lib</ImportLibrary>
       <TargetMachine>MachineX86</TargetMachine>
     </Link>
     <Midl>
@@ -304,13 +102,16 @@
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <Culture>0x0412</Culture>
     </ResourceCompile>
+    <PostBuildEvent>
+      <Command>..\..\scripts\postBuildCentraliseOutput_CommonServer.bat</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;COMMONSERVER_EXPORTS;NEW_COMMAND;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
-      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <RuntimeLibrary>$(CPP_RUNTIME_LIB_DEBUG)</RuntimeLibrary>
       <FunctionLevelLinking>false</FunctionLevelLinking>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
@@ -326,11 +127,10 @@
       <LanguageStandard>stdcpp14</LanguageStandard>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>odbc32.lib;odbccp32.lib;WS2_32.lib;I4DyuchiNET.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>odbc32.lib;odbccp32.lib;WS2_32.lib;I4DyuchiNET.lib;BaseLibrary.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)CommonServer.dll</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <ProgramDatabaseFile>$(OutDir)CommonServer.pdb</ProgramDatabaseFile>
       <ImportLibrary>$(OutDir)CommonServer.lib</ImportLibrary>
       <TargetMachine>MachineX86</TargetMachine>
     </Link>
@@ -351,467 +151,84 @@
       <Command>..\..\scripts\postBuildCentraliseOutput_CommonServer.bat</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='CHINA_LOCALIZING_DBG|Win32'">
-    <ClCompile>
-      <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;COMMONSERVER_EXPORTS;CHINA_LOCALIZING;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
-      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
-      <PrecompiledHeader>Use</PrecompiledHeader>
-      <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
-      <PrecompiledHeaderOutputFile>.\CommonServer___Win32_CHINA_LOCALIZING_DBG/CommonServer.pch</PrecompiledHeaderOutputFile>
-      <AssemblerListingLocation>.\CommonServer___Win32_CHINA_LOCALIZING_DBG/</AssemblerListingLocation>
-      <ObjectFileName>.\CommonServer___Win32_CHINA_LOCALIZING_DBG/</ObjectFileName>
-      <ProgramDataBaseFileName>.\CommonServer___Win32_CHINA_LOCALIZING_DBG/</ProgramDataBaseFileName>
-      <WarningLevel>Level4</WarningLevel>
-      <TreatWarningAsError>false</TreatWarningAsError>
-      <SuppressStartupBanner>true</SuppressStartupBanner>
-      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
-    </ClCompile>
-    <Link>
-      <AdditionalDependencies>odbc32.lib;odbccp32.lib;WS2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <OutputFile>..\CommonServer\CommonServer.dll</OutputFile>
-      <SuppressStartupBanner>true</SuppressStartupBanner>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
-      <ProgramDatabaseFile>CommonServer.pdb</ProgramDatabaseFile>
-      <ImportLibrary>CommonServer.lib</ImportLibrary>
-      <TargetMachine>MachineX86</TargetMachine>
-    </Link>
-    <Midl>
-      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <MkTypLibCompatible>true</MkTypLibCompatible>
-      <SuppressStartupBanner>true</SuppressStartupBanner>
-      <TargetEnvironment>Win32</TargetEnvironment>
-      <TypeLibraryName>.\CommonServer___Win32_CHINA_LOCALIZING_DBG/CommonServer.tlb</TypeLibraryName>
-      <HeaderFileName>
-      </HeaderFileName>
-    </Midl>
-    <ResourceCompile>
-      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <Culture>0x0412</Culture>
-    </ResourceCompile>
-  </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='TAIWAN_LOCALIZING_RRS|Win32'">
-    <ClCompile>
-      <Optimization>MaxSpeed</Optimization>
-      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;COMMONSERVER_EXPORTS;TAIWAN_LOCALIZING;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <StringPooling>true</StringPooling>
-      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
-      <FunctionLevelLinking>true</FunctionLevelLinking>
-      <PrecompiledHeader>Use</PrecompiledHeader>
-      <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
-      <PrecompiledHeaderOutputFile>.\CommonServer___Win32_TAIWAN_LOCALIZING_RRS/CommonServer.pch</PrecompiledHeaderOutputFile>
-      <AssemblerListingLocation>.\CommonServer___Win32_TAIWAN_LOCALIZING_RRS/</AssemblerListingLocation>
-      <ObjectFileName>.\CommonServer___Win32_TAIWAN_LOCALIZING_RRS/</ObjectFileName>
-      <ProgramDataBaseFileName>.\CommonServer___Win32_TAIWAN_LOCALIZING_RRS/</ProgramDataBaseFileName>
-      <WarningLevel>Level3</WarningLevel>
-      <SuppressStartupBanner>true</SuppressStartupBanner>
-    </ClCompile>
-    <Link>
-      <AdditionalDependencies>odbc32.lib;odbccp32.lib;WS2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <OutputFile>.\CommonServer___Win32_TAIWAN_LOCALIZING_RRS/CommonServer.dll</OutputFile>
-      <SuppressStartupBanner>true</SuppressStartupBanner>
-      <ProgramDatabaseFile>.\CommonServer___Win32_TAIWAN_LOCALIZING_RRS/CommonServer.pdb</ProgramDatabaseFile>
-      <ImportLibrary>.\CommonServer___Win32_TAIWAN_LOCALIZING_RRS/CommonServer.lib</ImportLibrary>
-      <TargetMachine>MachineX86</TargetMachine>
-    </Link>
-    <Midl>
-      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <MkTypLibCompatible>true</MkTypLibCompatible>
-      <SuppressStartupBanner>true</SuppressStartupBanner>
-      <TargetEnvironment>Win32</TargetEnvironment>
-      <TypeLibraryName>.\CommonServer___Win32_TAIWAN_LOCALIZING_RRS/CommonServer.tlb</TypeLibraryName>
-      <HeaderFileName>
-      </HeaderFileName>
-    </Midl>
-    <ResourceCompile>
-      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <Culture>0x0412</Culture>
-    </ResourceCompile>
-  </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='JAPAN_LOCALIZING_RRS|Win32'">
-    <ClCompile>
-      <Optimization>MaxSpeed</Optimization>
-      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;COMMONSERVER_EXPORTS;JAPAN_LOCALIZING;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <StringPooling>true</StringPooling>
-      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
-      <FunctionLevelLinking>true</FunctionLevelLinking>
-      <PrecompiledHeader>Use</PrecompiledHeader>
-      <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
-      <PrecompiledHeaderOutputFile>.\CommonServer___Win32_JAPAN_LOCALIZING_RRS/CommonServer.pch</PrecompiledHeaderOutputFile>
-      <AssemblerListingLocation>.\CommonServer___Win32_JAPAN_LOCALIZING_RRS/</AssemblerListingLocation>
-      <ObjectFileName>.\CommonServer___Win32_JAPAN_LOCALIZING_RRS/</ObjectFileName>
-      <ProgramDataBaseFileName>.\CommonServer___Win32_JAPAN_LOCALIZING_RRS/</ProgramDataBaseFileName>
-      <WarningLevel>Level3</WarningLevel>
-      <SuppressStartupBanner>true</SuppressStartupBanner>
-    </ClCompile>
-    <Link>
-      <AdditionalDependencies>odbc32.lib;odbccp32.lib;WS2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <OutputFile>.\CommonServer___Win32_JAPAN_LOCALIZING_RRS/CommonServer.dll</OutputFile>
-      <SuppressStartupBanner>true</SuppressStartupBanner>
-      <ProgramDatabaseFile>.\CommonServer___Win32_JAPAN_LOCALIZING_RRS/CommonServer.pdb</ProgramDatabaseFile>
-      <ImportLibrary>.\CommonServer___Win32_JAPAN_LOCALIZING_RRS/CommonServer.lib</ImportLibrary>
-      <TargetMachine>MachineX86</TargetMachine>
-    </Link>
-    <Midl>
-      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <MkTypLibCompatible>true</MkTypLibCompatible>
-      <SuppressStartupBanner>true</SuppressStartupBanner>
-      <TargetEnvironment>Win32</TargetEnvironment>
-      <TypeLibraryName>.\CommonServer___Win32_JAPAN_LOCALIZING_RRS/CommonServer.tlb</TypeLibraryName>
-      <HeaderFileName>
-      </HeaderFileName>
-    </Midl>
-    <ResourceCompile>
-      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <Culture>0x0412</Culture>
-    </ResourceCompile>
-  </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='TAIWAN_LOCALIZING_DBG|Win32'">
-    <ClCompile>
-      <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;COMMONSERVER_EXPORTS;TAIWAN_LOCALIZING;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
-      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
-      <PrecompiledHeader>Use</PrecompiledHeader>
-      <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
-      <PrecompiledHeaderOutputFile>.\CommonServer___Win32_TAIWAN_LOCALIZING_DBG/CommonServer.pch</PrecompiledHeaderOutputFile>
-      <AssemblerListingLocation>.\CommonServer___Win32_TAIWAN_LOCALIZING_DBG/</AssemblerListingLocation>
-      <ObjectFileName>.\CommonServer___Win32_TAIWAN_LOCALIZING_DBG/</ObjectFileName>
-      <ProgramDataBaseFileName>.\CommonServer___Win32_TAIWAN_LOCALIZING_DBG/</ProgramDataBaseFileName>
-      <WarningLevel>Level4</WarningLevel>
-      <TreatWarningAsError>true</TreatWarningAsError>
-      <SuppressStartupBanner>true</SuppressStartupBanner>
-      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
-    </ClCompile>
-    <Link>
-      <AdditionalDependencies>odbc32.lib;odbccp32.lib;WS2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <OutputFile>..\CommonServer\CommonServer.dll</OutputFile>
-      <SuppressStartupBanner>true</SuppressStartupBanner>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
-      <ProgramDatabaseFile>CommonServer.pdb</ProgramDatabaseFile>
-      <ImportLibrary>CommonServer.lib</ImportLibrary>
-      <TargetMachine>MachineX86</TargetMachine>
-    </Link>
-    <Midl>
-      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <MkTypLibCompatible>true</MkTypLibCompatible>
-      <SuppressStartupBanner>true</SuppressStartupBanner>
-      <TargetEnvironment>Win32</TargetEnvironment>
-      <TypeLibraryName>.\CommonServer___Win32_TAIWAN_LOCALIZING_DBG/CommonServer.tlb</TypeLibraryName>
-      <HeaderFileName>
-      </HeaderFileName>
-    </Midl>
-    <ResourceCompile>
-      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <Culture>0x0412</Culture>
-    </ResourceCompile>
-  </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='JAPAN_LOCALIZING_DBG|Win32'">
-    <ClCompile>
-      <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;COMMONSERVER_EXPORTS;JAPAN_LOCALIZING;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
-      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
-      <PrecompiledHeader>Use</PrecompiledHeader>
-      <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
-      <PrecompiledHeaderOutputFile>.\CommonServer___Win32_JAPAN_LOCALIZING_DBG/CommonServer.pch</PrecompiledHeaderOutputFile>
-      <AssemblerListingLocation>.\CommonServer___Win32_JAPAN_LOCALIZING_DBG/</AssemblerListingLocation>
-      <ObjectFileName>.\CommonServer___Win32_JAPAN_LOCALIZING_DBG/</ObjectFileName>
-      <ProgramDataBaseFileName>.\CommonServer___Win32_JAPAN_LOCALIZING_DBG/</ProgramDataBaseFileName>
-      <WarningLevel>Level4</WarningLevel>
-      <TreatWarningAsError>true</TreatWarningAsError>
-      <SuppressStartupBanner>true</SuppressStartupBanner>
-      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
-    </ClCompile>
-    <Link>
-      <AdditionalDependencies>odbc32.lib;odbccp32.lib;WS2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <OutputFile>..\CommonServer\CommonServer.dll</OutputFile>
-      <SuppressStartupBanner>true</SuppressStartupBanner>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
-      <ProgramDatabaseFile>CommonServer.pdb</ProgramDatabaseFile>
-      <ImportLibrary>CommonServer.lib</ImportLibrary>
-      <TargetMachine>MachineX86</TargetMachine>
-    </Link>
-    <Midl>
-      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <MkTypLibCompatible>true</MkTypLibCompatible>
-      <SuppressStartupBanner>true</SuppressStartupBanner>
-      <TargetEnvironment>Win32</TargetEnvironment>
-      <TypeLibraryName>.\CommonServer___Win32_JAPAN_LOCALIZING_DBG/CommonServer.tlb</TypeLibraryName>
-      <HeaderFileName>
-      </HeaderFileName>
-    </Midl>
-    <ResourceCompile>
-      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <Culture>0x0412</Culture>
-    </ResourceCompile>
-  </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="CommonClientDungeon.cpp" />
     <ClCompile Include="CommonDungeon.cpp" />
     <ClCompile Include="CommonServer.cpp">
-      <Optimization Condition="'$(Configuration)|$(Platform)'=='CHINA_LOCALIZING_DBG|Win32'">Disabled</Optimization>
-      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='CHINA_LOCALIZING_DBG|Win32'">WIN32;_DEBUG;_WINDOWS;_MBCS;_USRDLL;COMMONSERVER_EXPORTS;CHINA_LOCALIZING</PreprocessorDefinitions>
-      <BasicRuntimeChecks Condition="'$(Configuration)|$(Platform)'=='CHINA_LOCALIZING_DBG|Win32'">EnableFastChecks</BasicRuntimeChecks>
-      <Optimization Condition="'$(Configuration)|$(Platform)'=='CHINA_LOCALIZING_RRS|Win32'">MaxSpeed</Optimization>
-      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='CHINA_LOCALIZING_RRS|Win32'">WIN32;NDEBUG;_WINDOWS;_MBCS;_USRDLL;COMMONSERVER_EXPORTS;CHINA_LOCALIZING</PreprocessorDefinitions>
       <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Disabled</Optimization>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">WIN32;_DEBUG;_WINDOWS;_MBCS;_USRDLL;COMMONSERVER_EXPORTS;NEW_COMMAND</PreprocessorDefinitions>
       <BasicRuntimeChecks Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">EnableFastChecks</BasicRuntimeChecks>
-      <Optimization Condition="'$(Configuration)|$(Platform)'=='JAPAN_LOCALIZING_DBG|Win32'">Disabled</Optimization>
-      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='JAPAN_LOCALIZING_DBG|Win32'">WIN32;_DEBUG;_WINDOWS;_MBCS;_USRDLL;COMMONSERVER_EXPORTS;JAPAN_LOCALIZING</PreprocessorDefinitions>
-      <BasicRuntimeChecks Condition="'$(Configuration)|$(Platform)'=='JAPAN_LOCALIZING_DBG|Win32'">EnableFastChecks</BasicRuntimeChecks>
-      <Optimization Condition="'$(Configuration)|$(Platform)'=='JAPAN_LOCALIZING_RRS|Win32'">MaxSpeed</Optimization>
-      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='JAPAN_LOCALIZING_RRS|Win32'">WIN32;NDEBUG;_WINDOWS;_MBCS;_USRDLL;COMMONSERVER_EXPORTS;JAPAN_LOCALIZING</PreprocessorDefinitions>
       <Optimization Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">MaxSpeed</Optimization>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">WIN32;NDEBUG;_WINDOWS;_MBCS;_USRDLL;COMMONSERVER_EXPORTS;NEW_COMMAND</PreprocessorDefinitions>
-      <Optimization Condition="'$(Configuration)|$(Platform)'=='TAIWAN_LOCALIZING_DBG|Win32'">Disabled</Optimization>
-      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='TAIWAN_LOCALIZING_DBG|Win32'">WIN32;_DEBUG;_WINDOWS;_MBCS;_USRDLL;COMMONSERVER_EXPORTS;TAIWAN_LOCALIZING</PreprocessorDefinitions>
-      <BasicRuntimeChecks Condition="'$(Configuration)|$(Platform)'=='TAIWAN_LOCALIZING_DBG|Win32'">EnableFastChecks</BasicRuntimeChecks>
-      <Optimization Condition="'$(Configuration)|$(Platform)'=='TAIWAN_LOCALIZING_RRS|Win32'">MaxSpeed</Optimization>
-      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='TAIWAN_LOCALIZING_RRS|Win32'">WIN32;NDEBUG;_WINDOWS;_MBCS;_USRDLL;COMMONSERVER_EXPORTS;TAIWAN_LOCALIZING</PreprocessorDefinitions>
-      <Optimization Condition="'$(Configuration)|$(Platform)'=='dev|Win32'">Disabled</Optimization>
-      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='dev|Win32'">WIN32;_DEBUG;_WINDOWS;_MBCS;_USRDLL;COMMONSERVER_EXPORTS;DEV_MODE;NEW_COMMAND</PreprocessorDefinitions>
-      <BasicRuntimeChecks Condition="'$(Configuration)|$(Platform)'=='dev|Win32'">EnableFastChecks</BasicRuntimeChecks>
     </ClCompile>
+    <ClCompile Include="DungeonDataOverrides.cpp" />
+    <ClCompile Include="DungeonStaticData.cpp" />
     <ClCompile Include="NTAes.cpp" />
     <ClCompile Include="NTNetWork.cpp" />
     <ClCompile Include="StdAfx.cpp">
-      <Optimization Condition="'$(Configuration)|$(Platform)'=='CHINA_LOCALIZING_DBG|Win32'">Disabled</Optimization>
-      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='CHINA_LOCALIZING_DBG|Win32'">WIN32;_DEBUG;_WINDOWS;_MBCS;_USRDLL;COMMONSERVER_EXPORTS;CHINA_LOCALIZING</PreprocessorDefinitions>
-      <BasicRuntimeChecks Condition="'$(Configuration)|$(Platform)'=='CHINA_LOCALIZING_DBG|Win32'">EnableFastChecks</BasicRuntimeChecks>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='CHINA_LOCALIZING_DBG|Win32'">Create</PrecompiledHeader>
-      <Optimization Condition="'$(Configuration)|$(Platform)'=='CHINA_LOCALIZING_RRS|Win32'">MaxSpeed</Optimization>
-      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='CHINA_LOCALIZING_RRS|Win32'">WIN32;NDEBUG;_WINDOWS;_MBCS;_USRDLL;COMMONSERVER_EXPORTS;CHINA_LOCALIZING</PreprocessorDefinitions>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='CHINA_LOCALIZING_RRS|Win32'">Create</PrecompiledHeader>
       <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Disabled</Optimization>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">WIN32;_DEBUG;_WINDOWS;_MBCS;_USRDLL;COMMONSERVER_EXPORTS;NEW_COMMAND</PreprocessorDefinitions>
       <BasicRuntimeChecks Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">EnableFastChecks</BasicRuntimeChecks>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
-      <Optimization Condition="'$(Configuration)|$(Platform)'=='JAPAN_LOCALIZING_DBG|Win32'">Disabled</Optimization>
-      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='JAPAN_LOCALIZING_DBG|Win32'">WIN32;_DEBUG;_WINDOWS;_MBCS;_USRDLL;COMMONSERVER_EXPORTS;JAPAN_LOCALIZING</PreprocessorDefinitions>
-      <BasicRuntimeChecks Condition="'$(Configuration)|$(Platform)'=='JAPAN_LOCALIZING_DBG|Win32'">EnableFastChecks</BasicRuntimeChecks>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='JAPAN_LOCALIZING_DBG|Win32'">Create</PrecompiledHeader>
-      <Optimization Condition="'$(Configuration)|$(Platform)'=='JAPAN_LOCALIZING_RRS|Win32'">MaxSpeed</Optimization>
-      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='JAPAN_LOCALIZING_RRS|Win32'">WIN32;NDEBUG;_WINDOWS;_MBCS;_USRDLL;COMMONSERVER_EXPORTS;JAPAN_LOCALIZING</PreprocessorDefinitions>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='JAPAN_LOCALIZING_RRS|Win32'">Create</PrecompiledHeader>
       <Optimization Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">MaxSpeed</Optimization>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">WIN32;NDEBUG;_WINDOWS;_MBCS;_USRDLL;COMMONSERVER_EXPORTS;NEW_COMMAND</PreprocessorDefinitions>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
-      <Optimization Condition="'$(Configuration)|$(Platform)'=='TAIWAN_LOCALIZING_DBG|Win32'">Disabled</Optimization>
-      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='TAIWAN_LOCALIZING_DBG|Win32'">WIN32;_DEBUG;_WINDOWS;_MBCS;_USRDLL;COMMONSERVER_EXPORTS;TAIWAN_LOCALIZING</PreprocessorDefinitions>
-      <BasicRuntimeChecks Condition="'$(Configuration)|$(Platform)'=='TAIWAN_LOCALIZING_DBG|Win32'">EnableFastChecks</BasicRuntimeChecks>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='TAIWAN_LOCALIZING_DBG|Win32'">Create</PrecompiledHeader>
-      <Optimization Condition="'$(Configuration)|$(Platform)'=='TAIWAN_LOCALIZING_RRS|Win32'">MaxSpeed</Optimization>
-      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='TAIWAN_LOCALIZING_RRS|Win32'">WIN32;NDEBUG;_WINDOWS;_MBCS;_USRDLL;COMMONSERVER_EXPORTS;TAIWAN_LOCALIZING</PreprocessorDefinitions>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='TAIWAN_LOCALIZING_RRS|Win32'">Create</PrecompiledHeader>
-      <Optimization Condition="'$(Configuration)|$(Platform)'=='dev|Win32'">Disabled</Optimization>
-      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='dev|Win32'">WIN32;_DEBUG;_WINDOWS;_MBCS;_USRDLL;COMMONSERVER_EXPORTS;DEV_MODE;NEW_COMMAND</PreprocessorDefinitions>
-      <BasicRuntimeChecks Condition="'$(Configuration)|$(Platform)'=='dev|Win32'">EnableFastChecks</BasicRuntimeChecks>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='dev|Win32'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="DFXForm.cpp">
-      <Optimization Condition="'$(Configuration)|$(Platform)'=='CHINA_LOCALIZING_DBG|Win32'">Disabled</Optimization>
-      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='CHINA_LOCALIZING_DBG|Win32'">WIN32;_DEBUG;_WINDOWS;_MBCS;_USRDLL;COMMONSERVER_EXPORTS;CHINA_LOCALIZING</PreprocessorDefinitions>
-      <BasicRuntimeChecks Condition="'$(Configuration)|$(Platform)'=='CHINA_LOCALIZING_DBG|Win32'">EnableFastChecks</BasicRuntimeChecks>
-      <Optimization Condition="'$(Configuration)|$(Platform)'=='CHINA_LOCALIZING_RRS|Win32'">MaxSpeed</Optimization>
-      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='CHINA_LOCALIZING_RRS|Win32'">WIN32;NDEBUG;_WINDOWS;_MBCS;_USRDLL;COMMONSERVER_EXPORTS;CHINA_LOCALIZING</PreprocessorDefinitions>
       <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Disabled</Optimization>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">WIN32;_DEBUG;_WINDOWS;_MBCS;_USRDLL;COMMONSERVER_EXPORTS;NEW_COMMAND</PreprocessorDefinitions>
       <BasicRuntimeChecks Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">EnableFastChecks</BasicRuntimeChecks>
-      <Optimization Condition="'$(Configuration)|$(Platform)'=='JAPAN_LOCALIZING_DBG|Win32'">Disabled</Optimization>
-      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='JAPAN_LOCALIZING_DBG|Win32'">WIN32;_DEBUG;_WINDOWS;_MBCS;_USRDLL;COMMONSERVER_EXPORTS;JAPAN_LOCALIZING</PreprocessorDefinitions>
-      <BasicRuntimeChecks Condition="'$(Configuration)|$(Platform)'=='JAPAN_LOCALIZING_DBG|Win32'">EnableFastChecks</BasicRuntimeChecks>
-      <Optimization Condition="'$(Configuration)|$(Platform)'=='JAPAN_LOCALIZING_RRS|Win32'">MaxSpeed</Optimization>
-      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='JAPAN_LOCALIZING_RRS|Win32'">WIN32;NDEBUG;_WINDOWS;_MBCS;_USRDLL;COMMONSERVER_EXPORTS;JAPAN_LOCALIZING</PreprocessorDefinitions>
       <Optimization Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">MaxSpeed</Optimization>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">WIN32;NDEBUG;_WINDOWS;_MBCS;_USRDLL;COMMONSERVER_EXPORTS;NEW_COMMAND</PreprocessorDefinitions>
-      <Optimization Condition="'$(Configuration)|$(Platform)'=='TAIWAN_LOCALIZING_DBG|Win32'">Disabled</Optimization>
-      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='TAIWAN_LOCALIZING_DBG|Win32'">WIN32;_DEBUG;_WINDOWS;_MBCS;_USRDLL;COMMONSERVER_EXPORTS;TAIWAN_LOCALIZING</PreprocessorDefinitions>
-      <BasicRuntimeChecks Condition="'$(Configuration)|$(Platform)'=='TAIWAN_LOCALIZING_DBG|Win32'">EnableFastChecks</BasicRuntimeChecks>
-      <Optimization Condition="'$(Configuration)|$(Platform)'=='TAIWAN_LOCALIZING_RRS|Win32'">MaxSpeed</Optimization>
-      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='TAIWAN_LOCALIZING_RRS|Win32'">WIN32;NDEBUG;_WINDOWS;_MBCS;_USRDLL;COMMONSERVER_EXPORTS;TAIWAN_LOCALIZING</PreprocessorDefinitions>
-      <Optimization Condition="'$(Configuration)|$(Platform)'=='dev|Win32'">Disabled</Optimization>
-      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='dev|Win32'">WIN32;_DEBUG;_WINDOWS;_MBCS;_USRDLL;COMMONSERVER_EXPORTS;DEV_MODE;NEW_COMMAND</PreprocessorDefinitions>
-      <BasicRuntimeChecks Condition="'$(Configuration)|$(Platform)'=='dev|Win32'">EnableFastChecks</BasicRuntimeChecks>
     </ClCompile>
     <ClCompile Include="Encode.cpp">
-      <Optimization Condition="'$(Configuration)|$(Platform)'=='CHINA_LOCALIZING_DBG|Win32'">Disabled</Optimization>
-      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='CHINA_LOCALIZING_DBG|Win32'">WIN32;_DEBUG;_WINDOWS;_MBCS;_USRDLL;COMMONSERVER_EXPORTS;CHINA_LOCALIZING</PreprocessorDefinitions>
-      <BasicRuntimeChecks Condition="'$(Configuration)|$(Platform)'=='CHINA_LOCALIZING_DBG|Win32'">EnableFastChecks</BasicRuntimeChecks>
-      <Optimization Condition="'$(Configuration)|$(Platform)'=='CHINA_LOCALIZING_RRS|Win32'">MaxSpeed</Optimization>
-      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='CHINA_LOCALIZING_RRS|Win32'">WIN32;NDEBUG;_WINDOWS;_MBCS;_USRDLL;COMMONSERVER_EXPORTS;CHINA_LOCALIZING</PreprocessorDefinitions>
       <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Disabled</Optimization>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">WIN32;_DEBUG;_WINDOWS;_MBCS;_USRDLL;COMMONSERVER_EXPORTS;NEW_COMMAND</PreprocessorDefinitions>
       <BasicRuntimeChecks Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">EnableFastChecks</BasicRuntimeChecks>
-      <Optimization Condition="'$(Configuration)|$(Platform)'=='JAPAN_LOCALIZING_DBG|Win32'">Disabled</Optimization>
-      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='JAPAN_LOCALIZING_DBG|Win32'">WIN32;_DEBUG;_WINDOWS;_MBCS;_USRDLL;COMMONSERVER_EXPORTS;JAPAN_LOCALIZING</PreprocessorDefinitions>
-      <BasicRuntimeChecks Condition="'$(Configuration)|$(Platform)'=='JAPAN_LOCALIZING_DBG|Win32'">EnableFastChecks</BasicRuntimeChecks>
-      <Optimization Condition="'$(Configuration)|$(Platform)'=='JAPAN_LOCALIZING_RRS|Win32'">MaxSpeed</Optimization>
-      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='JAPAN_LOCALIZING_RRS|Win32'">WIN32;NDEBUG;_WINDOWS;_MBCS;_USRDLL;COMMONSERVER_EXPORTS;JAPAN_LOCALIZING</PreprocessorDefinitions>
       <Optimization Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">MaxSpeed</Optimization>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">WIN32;NDEBUG;_WINDOWS;_MBCS;_USRDLL;COMMONSERVER_EXPORTS;NEW_COMMAND</PreprocessorDefinitions>
-      <Optimization Condition="'$(Configuration)|$(Platform)'=='TAIWAN_LOCALIZING_DBG|Win32'">Disabled</Optimization>
-      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='TAIWAN_LOCALIZING_DBG|Win32'">WIN32;_DEBUG;_WINDOWS;_MBCS;_USRDLL;COMMONSERVER_EXPORTS;TAIWAN_LOCALIZING</PreprocessorDefinitions>
-      <BasicRuntimeChecks Condition="'$(Configuration)|$(Platform)'=='TAIWAN_LOCALIZING_DBG|Win32'">EnableFastChecks</BasicRuntimeChecks>
-      <Optimization Condition="'$(Configuration)|$(Platform)'=='TAIWAN_LOCALIZING_RRS|Win32'">MaxSpeed</Optimization>
-      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='TAIWAN_LOCALIZING_RRS|Win32'">WIN32;NDEBUG;_WINDOWS;_MBCS;_USRDLL;COMMONSERVER_EXPORTS;TAIWAN_LOCALIZING</PreprocessorDefinitions>
-      <Optimization Condition="'$(Configuration)|$(Platform)'=='dev|Win32'">Disabled</Optimization>
-      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='dev|Win32'">WIN32;_DEBUG;_WINDOWS;_MBCS;_USRDLL;COMMONSERVER_EXPORTS;DEV_MODE;NEW_COMMAND</PreprocessorDefinitions>
-      <BasicRuntimeChecks Condition="'$(Configuration)|$(Platform)'=='dev|Win32'">EnableFastChecks</BasicRuntimeChecks>
     </ClCompile>
     <ClCompile Include="Log.cpp">
-      <Optimization Condition="'$(Configuration)|$(Platform)'=='CHINA_LOCALIZING_DBG|Win32'">Disabled</Optimization>
-      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='CHINA_LOCALIZING_DBG|Win32'">WIN32;_DEBUG;_WINDOWS;_MBCS;_USRDLL;COMMONSERVER_EXPORTS;CHINA_LOCALIZING</PreprocessorDefinitions>
-      <BasicRuntimeChecks Condition="'$(Configuration)|$(Platform)'=='CHINA_LOCALIZING_DBG|Win32'">EnableFastChecks</BasicRuntimeChecks>
-      <Optimization Condition="'$(Configuration)|$(Platform)'=='CHINA_LOCALIZING_RRS|Win32'">MaxSpeed</Optimization>
-      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='CHINA_LOCALIZING_RRS|Win32'">WIN32;NDEBUG;_WINDOWS;_MBCS;_USRDLL;COMMONSERVER_EXPORTS;CHINA_LOCALIZING</PreprocessorDefinitions>
       <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Disabled</Optimization>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">WIN32;_DEBUG;_WINDOWS;_MBCS;_USRDLL;COMMONSERVER_EXPORTS;NEW_COMMAND</PreprocessorDefinitions>
       <BasicRuntimeChecks Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">EnableFastChecks</BasicRuntimeChecks>
-      <Optimization Condition="'$(Configuration)|$(Platform)'=='JAPAN_LOCALIZING_DBG|Win32'">Disabled</Optimization>
-      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='JAPAN_LOCALIZING_DBG|Win32'">WIN32;_DEBUG;_WINDOWS;_MBCS;_USRDLL;COMMONSERVER_EXPORTS;JAPAN_LOCALIZING</PreprocessorDefinitions>
-      <BasicRuntimeChecks Condition="'$(Configuration)|$(Platform)'=='JAPAN_LOCALIZING_DBG|Win32'">EnableFastChecks</BasicRuntimeChecks>
-      <Optimization Condition="'$(Configuration)|$(Platform)'=='JAPAN_LOCALIZING_RRS|Win32'">MaxSpeed</Optimization>
-      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='JAPAN_LOCALIZING_RRS|Win32'">WIN32;NDEBUG;_WINDOWS;_MBCS;_USRDLL;COMMONSERVER_EXPORTS;JAPAN_LOCALIZING</PreprocessorDefinitions>
       <Optimization Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">MaxSpeed</Optimization>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">WIN32;NDEBUG;_WINDOWS;_MBCS;_USRDLL;COMMONSERVER_EXPORTS;NEW_COMMAND</PreprocessorDefinitions>
-      <Optimization Condition="'$(Configuration)|$(Platform)'=='TAIWAN_LOCALIZING_DBG|Win32'">Disabled</Optimization>
-      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='TAIWAN_LOCALIZING_DBG|Win32'">WIN32;_DEBUG;_WINDOWS;_MBCS;_USRDLL;COMMONSERVER_EXPORTS;TAIWAN_LOCALIZING</PreprocessorDefinitions>
-      <BasicRuntimeChecks Condition="'$(Configuration)|$(Platform)'=='TAIWAN_LOCALIZING_DBG|Win32'">EnableFastChecks</BasicRuntimeChecks>
-      <Optimization Condition="'$(Configuration)|$(Platform)'=='TAIWAN_LOCALIZING_RRS|Win32'">MaxSpeed</Optimization>
-      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='TAIWAN_LOCALIZING_RRS|Win32'">WIN32;NDEBUG;_WINDOWS;_MBCS;_USRDLL;COMMONSERVER_EXPORTS;TAIWAN_LOCALIZING</PreprocessorDefinitions>
-      <Optimization Condition="'$(Configuration)|$(Platform)'=='dev|Win32'">Disabled</Optimization>
-      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='dev|Win32'">WIN32;_DEBUG;_WINDOWS;_MBCS;_USRDLL;COMMONSERVER_EXPORTS;DEV_MODE;NEW_COMMAND</PreprocessorDefinitions>
-      <BasicRuntimeChecks Condition="'$(Configuration)|$(Platform)'=='dev|Win32'">EnableFastChecks</BasicRuntimeChecks>
     </ClCompile>
     <ClCompile Include="ReportCMListener.cpp">
-      <Optimization Condition="'$(Configuration)|$(Platform)'=='CHINA_LOCALIZING_DBG|Win32'">Disabled</Optimization>
-      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='CHINA_LOCALIZING_DBG|Win32'">WIN32;_DEBUG;_WINDOWS;_MBCS;_USRDLL;COMMONSERVER_EXPORTS;CHINA_LOCALIZING</PreprocessorDefinitions>
-      <BasicRuntimeChecks Condition="'$(Configuration)|$(Platform)'=='CHINA_LOCALIZING_DBG|Win32'">EnableFastChecks</BasicRuntimeChecks>
-      <Optimization Condition="'$(Configuration)|$(Platform)'=='CHINA_LOCALIZING_RRS|Win32'">MaxSpeed</Optimization>
-      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='CHINA_LOCALIZING_RRS|Win32'">WIN32;NDEBUG;_WINDOWS;_MBCS;_USRDLL;COMMONSERVER_EXPORTS;CHINA_LOCALIZING</PreprocessorDefinitions>
       <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Disabled</Optimization>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">WIN32;_DEBUG;_WINDOWS;_MBCS;_USRDLL;COMMONSERVER_EXPORTS;NEW_COMMAND</PreprocessorDefinitions>
       <BasicRuntimeChecks Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">EnableFastChecks</BasicRuntimeChecks>
-      <Optimization Condition="'$(Configuration)|$(Platform)'=='JAPAN_LOCALIZING_DBG|Win32'">Disabled</Optimization>
-      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='JAPAN_LOCALIZING_DBG|Win32'">WIN32;_DEBUG;_WINDOWS;_MBCS;_USRDLL;COMMONSERVER_EXPORTS;JAPAN_LOCALIZING</PreprocessorDefinitions>
-      <BasicRuntimeChecks Condition="'$(Configuration)|$(Platform)'=='JAPAN_LOCALIZING_DBG|Win32'">EnableFastChecks</BasicRuntimeChecks>
-      <Optimization Condition="'$(Configuration)|$(Platform)'=='JAPAN_LOCALIZING_RRS|Win32'">MaxSpeed</Optimization>
-      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='JAPAN_LOCALIZING_RRS|Win32'">WIN32;NDEBUG;_WINDOWS;_MBCS;_USRDLL;COMMONSERVER_EXPORTS;JAPAN_LOCALIZING</PreprocessorDefinitions>
       <Optimization Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">MaxSpeed</Optimization>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">WIN32;NDEBUG;_WINDOWS;_MBCS;_USRDLL;COMMONSERVER_EXPORTS;NEW_COMMAND</PreprocessorDefinitions>
-      <Optimization Condition="'$(Configuration)|$(Platform)'=='TAIWAN_LOCALIZING_DBG|Win32'">Disabled</Optimization>
-      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='TAIWAN_LOCALIZING_DBG|Win32'">WIN32;_DEBUG;_WINDOWS;_MBCS;_USRDLL;COMMONSERVER_EXPORTS;TAIWAN_LOCALIZING</PreprocessorDefinitions>
-      <BasicRuntimeChecks Condition="'$(Configuration)|$(Platform)'=='TAIWAN_LOCALIZING_DBG|Win32'">EnableFastChecks</BasicRuntimeChecks>
-      <Optimization Condition="'$(Configuration)|$(Platform)'=='TAIWAN_LOCALIZING_RRS|Win32'">MaxSpeed</Optimization>
-      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='TAIWAN_LOCALIZING_RRS|Win32'">WIN32;NDEBUG;_WINDOWS;_MBCS;_USRDLL;COMMONSERVER_EXPORTS;TAIWAN_LOCALIZING</PreprocessorDefinitions>
-      <Optimization Condition="'$(Configuration)|$(Platform)'=='dev|Win32'">Disabled</Optimization>
-      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='dev|Win32'">WIN32;_DEBUG;_WINDOWS;_MBCS;_USRDLL;COMMONSERVER_EXPORTS;DEV_MODE;NEW_COMMAND</PreprocessorDefinitions>
-      <BasicRuntimeChecks Condition="'$(Configuration)|$(Platform)'=='dev|Win32'">EnableFastChecks</BasicRuntimeChecks>
     </ClCompile>
     <ClCompile Include="UniqueProcess.cpp">
-      <Optimization Condition="'$(Configuration)|$(Platform)'=='CHINA_LOCALIZING_DBG|Win32'">Disabled</Optimization>
-      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='CHINA_LOCALIZING_DBG|Win32'">WIN32;_DEBUG;_WINDOWS;_MBCS;_USRDLL;COMMONSERVER_EXPORTS;CHINA_LOCALIZING</PreprocessorDefinitions>
-      <BasicRuntimeChecks Condition="'$(Configuration)|$(Platform)'=='CHINA_LOCALIZING_DBG|Win32'">EnableFastChecks</BasicRuntimeChecks>
-      <Optimization Condition="'$(Configuration)|$(Platform)'=='CHINA_LOCALIZING_RRS|Win32'">MaxSpeed</Optimization>
-      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='CHINA_LOCALIZING_RRS|Win32'">WIN32;NDEBUG;_WINDOWS;_MBCS;_USRDLL;COMMONSERVER_EXPORTS;CHINA_LOCALIZING</PreprocessorDefinitions>
       <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Disabled</Optimization>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">WIN32;_DEBUG;_WINDOWS;_MBCS;_USRDLL;COMMONSERVER_EXPORTS;NEW_COMMAND</PreprocessorDefinitions>
       <BasicRuntimeChecks Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">EnableFastChecks</BasicRuntimeChecks>
-      <Optimization Condition="'$(Configuration)|$(Platform)'=='JAPAN_LOCALIZING_DBG|Win32'">Disabled</Optimization>
-      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='JAPAN_LOCALIZING_DBG|Win32'">WIN32;_DEBUG;_WINDOWS;_MBCS;_USRDLL;COMMONSERVER_EXPORTS;JAPAN_LOCALIZING</PreprocessorDefinitions>
-      <BasicRuntimeChecks Condition="'$(Configuration)|$(Platform)'=='JAPAN_LOCALIZING_DBG|Win32'">EnableFastChecks</BasicRuntimeChecks>
-      <Optimization Condition="'$(Configuration)|$(Platform)'=='JAPAN_LOCALIZING_RRS|Win32'">MaxSpeed</Optimization>
-      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='JAPAN_LOCALIZING_RRS|Win32'">WIN32;NDEBUG;_WINDOWS;_MBCS;_USRDLL;COMMONSERVER_EXPORTS;JAPAN_LOCALIZING</PreprocessorDefinitions>
       <Optimization Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">MaxSpeed</Optimization>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">WIN32;NDEBUG;_WINDOWS;_MBCS;_USRDLL;COMMONSERVER_EXPORTS;NEW_COMMAND</PreprocessorDefinitions>
-      <Optimization Condition="'$(Configuration)|$(Platform)'=='TAIWAN_LOCALIZING_DBG|Win32'">Disabled</Optimization>
-      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='TAIWAN_LOCALIZING_DBG|Win32'">WIN32;_DEBUG;_WINDOWS;_MBCS;_USRDLL;COMMONSERVER_EXPORTS;TAIWAN_LOCALIZING</PreprocessorDefinitions>
-      <BasicRuntimeChecks Condition="'$(Configuration)|$(Platform)'=='TAIWAN_LOCALIZING_DBG|Win32'">EnableFastChecks</BasicRuntimeChecks>
-      <Optimization Condition="'$(Configuration)|$(Platform)'=='TAIWAN_LOCALIZING_RRS|Win32'">MaxSpeed</Optimization>
-      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='TAIWAN_LOCALIZING_RRS|Win32'">WIN32;NDEBUG;_WINDOWS;_MBCS;_USRDLL;COMMONSERVER_EXPORTS;TAIWAN_LOCALIZING</PreprocessorDefinitions>
-      <Optimization Condition="'$(Configuration)|$(Platform)'=='dev|Win32'">Disabled</Optimization>
-      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='dev|Win32'">WIN32;_DEBUG;_WINDOWS;_MBCS;_USRDLL;COMMONSERVER_EXPORTS;DEV_MODE;NEW_COMMAND</PreprocessorDefinitions>
-      <BasicRuntimeChecks Condition="'$(Configuration)|$(Platform)'=='dev|Win32'">EnableFastChecks</BasicRuntimeChecks>
     </ClCompile>
     <ClCompile Include="BaseItem.cpp">
-      <Optimization Condition="'$(Configuration)|$(Platform)'=='CHINA_LOCALIZING_DBG|Win32'">Disabled</Optimization>
-      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='CHINA_LOCALIZING_DBG|Win32'">WIN32;_DEBUG;_WINDOWS;_MBCS;_USRDLL;COMMONSERVER_EXPORTS;CHINA_LOCALIZING</PreprocessorDefinitions>
-      <BasicRuntimeChecks Condition="'$(Configuration)|$(Platform)'=='CHINA_LOCALIZING_DBG|Win32'">EnableFastChecks</BasicRuntimeChecks>
-      <Optimization Condition="'$(Configuration)|$(Platform)'=='CHINA_LOCALIZING_RRS|Win32'">MaxSpeed</Optimization>
-      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='CHINA_LOCALIZING_RRS|Win32'">WIN32;NDEBUG;_WINDOWS;_MBCS;_USRDLL;COMMONSERVER_EXPORTS;CHINA_LOCALIZING</PreprocessorDefinitions>
       <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Disabled</Optimization>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">WIN32;_DEBUG;_WINDOWS;_MBCS;_USRDLL;COMMONSERVER_EXPORTS;NEW_COMMAND</PreprocessorDefinitions>
       <BasicRuntimeChecks Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">EnableFastChecks</BasicRuntimeChecks>
-      <Optimization Condition="'$(Configuration)|$(Platform)'=='JAPAN_LOCALIZING_DBG|Win32'">Disabled</Optimization>
-      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='JAPAN_LOCALIZING_DBG|Win32'">WIN32;_DEBUG;_WINDOWS;_MBCS;_USRDLL;COMMONSERVER_EXPORTS;JAPAN_LOCALIZING</PreprocessorDefinitions>
-      <BasicRuntimeChecks Condition="'$(Configuration)|$(Platform)'=='JAPAN_LOCALIZING_DBG|Win32'">EnableFastChecks</BasicRuntimeChecks>
-      <Optimization Condition="'$(Configuration)|$(Platform)'=='JAPAN_LOCALIZING_RRS|Win32'">MaxSpeed</Optimization>
-      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='JAPAN_LOCALIZING_RRS|Win32'">WIN32;NDEBUG;_WINDOWS;_MBCS;_USRDLL;COMMONSERVER_EXPORTS;JAPAN_LOCALIZING</PreprocessorDefinitions>
       <Optimization Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">MaxSpeed</Optimization>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">WIN32;NDEBUG;_WINDOWS;_MBCS;_USRDLL;COMMONSERVER_EXPORTS;NEW_COMMAND</PreprocessorDefinitions>
-      <Optimization Condition="'$(Configuration)|$(Platform)'=='TAIWAN_LOCALIZING_DBG|Win32'">Disabled</Optimization>
-      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='TAIWAN_LOCALIZING_DBG|Win32'">WIN32;_DEBUG;_WINDOWS;_MBCS;_USRDLL;COMMONSERVER_EXPORTS;TAIWAN_LOCALIZING</PreprocessorDefinitions>
-      <BasicRuntimeChecks Condition="'$(Configuration)|$(Platform)'=='TAIWAN_LOCALIZING_DBG|Win32'">EnableFastChecks</BasicRuntimeChecks>
-      <Optimization Condition="'$(Configuration)|$(Platform)'=='TAIWAN_LOCALIZING_RRS|Win32'">MaxSpeed</Optimization>
-      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='TAIWAN_LOCALIZING_RRS|Win32'">WIN32;NDEBUG;_WINDOWS;_MBCS;_USRDLL;COMMONSERVER_EXPORTS;TAIWAN_LOCALIZING</PreprocessorDefinitions>
-      <Optimization Condition="'$(Configuration)|$(Platform)'=='dev|Win32'">Disabled</Optimization>
-      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='dev|Win32'">WIN32;_DEBUG;_WINDOWS;_MBCS;_USRDLL;COMMONSERVER_EXPORTS;DEV_MODE;NEW_COMMAND</PreprocessorDefinitions>
-      <BasicRuntimeChecks Condition="'$(Configuration)|$(Platform)'=='dev|Win32'">EnableFastChecks</BasicRuntimeChecks>
     </ClCompile>
     <ClCompile Include="Item.cpp">
-      <Optimization Condition="'$(Configuration)|$(Platform)'=='CHINA_LOCALIZING_DBG|Win32'">Disabled</Optimization>
-      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='CHINA_LOCALIZING_DBG|Win32'">WIN32;_DEBUG;_WINDOWS;_MBCS;_USRDLL;COMMONSERVER_EXPORTS;CHINA_LOCALIZING</PreprocessorDefinitions>
-      <BasicRuntimeChecks Condition="'$(Configuration)|$(Platform)'=='CHINA_LOCALIZING_DBG|Win32'">EnableFastChecks</BasicRuntimeChecks>
-      <Optimization Condition="'$(Configuration)|$(Platform)'=='CHINA_LOCALIZING_RRS|Win32'">MaxSpeed</Optimization>
-      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='CHINA_LOCALIZING_RRS|Win32'">WIN32;NDEBUG;_WINDOWS;_MBCS;_USRDLL;COMMONSERVER_EXPORTS;CHINA_LOCALIZING</PreprocessorDefinitions>
       <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Disabled</Optimization>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">WIN32;_DEBUG;_WINDOWS;_MBCS;_USRDLL;COMMONSERVER_EXPORTS;NEW_COMMAND</PreprocessorDefinitions>
       <BasicRuntimeChecks Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">EnableFastChecks</BasicRuntimeChecks>
-      <Optimization Condition="'$(Configuration)|$(Platform)'=='JAPAN_LOCALIZING_DBG|Win32'">Disabled</Optimization>
-      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='JAPAN_LOCALIZING_DBG|Win32'">WIN32;_DEBUG;_WINDOWS;_MBCS;_USRDLL;COMMONSERVER_EXPORTS;JAPAN_LOCALIZING</PreprocessorDefinitions>
-      <BasicRuntimeChecks Condition="'$(Configuration)|$(Platform)'=='JAPAN_LOCALIZING_DBG|Win32'">EnableFastChecks</BasicRuntimeChecks>
-      <Optimization Condition="'$(Configuration)|$(Platform)'=='JAPAN_LOCALIZING_RRS|Win32'">MaxSpeed</Optimization>
-      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='JAPAN_LOCALIZING_RRS|Win32'">WIN32;NDEBUG;_WINDOWS;_MBCS;_USRDLL;COMMONSERVER_EXPORTS;JAPAN_LOCALIZING</PreprocessorDefinitions>
       <Optimization Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">MaxSpeed</Optimization>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">WIN32;NDEBUG;_WINDOWS;_MBCS;_USRDLL;COMMONSERVER_EXPORTS;NEW_COMMAND</PreprocessorDefinitions>
-      <Optimization Condition="'$(Configuration)|$(Platform)'=='TAIWAN_LOCALIZING_DBG|Win32'">Disabled</Optimization>
-      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='TAIWAN_LOCALIZING_DBG|Win32'">WIN32;_DEBUG;_WINDOWS;_MBCS;_USRDLL;COMMONSERVER_EXPORTS;TAIWAN_LOCALIZING</PreprocessorDefinitions>
-      <BasicRuntimeChecks Condition="'$(Configuration)|$(Platform)'=='TAIWAN_LOCALIZING_DBG|Win32'">EnableFastChecks</BasicRuntimeChecks>
-      <Optimization Condition="'$(Configuration)|$(Platform)'=='TAIWAN_LOCALIZING_RRS|Win32'">MaxSpeed</Optimization>
-      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='TAIWAN_LOCALIZING_RRS|Win32'">WIN32;NDEBUG;_WINDOWS;_MBCS;_USRDLL;COMMONSERVER_EXPORTS;TAIWAN_LOCALIZING</PreprocessorDefinitions>
-      <Optimization Condition="'$(Configuration)|$(Platform)'=='dev|Win32'">Disabled</Optimization>
-      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='dev|Win32'">WIN32;_DEBUG;_WINDOWS;_MBCS;_USRDLL;COMMONSERVER_EXPORTS;DEV_MODE;NEW_COMMAND</PreprocessorDefinitions>
-      <BasicRuntimeChecks Condition="'$(Configuration)|$(Platform)'=='dev|Win32'">EnableFastChecks</BasicRuntimeChecks>
     </ClCompile>
     <ClCompile Include="ItemManager.cpp">
-      <Optimization Condition="'$(Configuration)|$(Platform)'=='CHINA_LOCALIZING_DBG|Win32'">Disabled</Optimization>
-      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='CHINA_LOCALIZING_DBG|Win32'">WIN32;_DEBUG;_WINDOWS;_MBCS;_USRDLL;COMMONSERVER_EXPORTS;CHINA_LOCALIZING</PreprocessorDefinitions>
-      <BasicRuntimeChecks Condition="'$(Configuration)|$(Platform)'=='CHINA_LOCALIZING_DBG|Win32'">EnableFastChecks</BasicRuntimeChecks>
-      <Optimization Condition="'$(Configuration)|$(Platform)'=='CHINA_LOCALIZING_RRS|Win32'">MaxSpeed</Optimization>
-      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='CHINA_LOCALIZING_RRS|Win32'">WIN32;NDEBUG;_WINDOWS;_MBCS;_USRDLL;COMMONSERVER_EXPORTS;CHINA_LOCALIZING</PreprocessorDefinitions>
       <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Disabled</Optimization>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">WIN32;_DEBUG;_WINDOWS;_MBCS;_USRDLL;COMMONSERVER_EXPORTS;NEW_COMMAND</PreprocessorDefinitions>
       <BasicRuntimeChecks Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">EnableFastChecks</BasicRuntimeChecks>
-      <Optimization Condition="'$(Configuration)|$(Platform)'=='JAPAN_LOCALIZING_DBG|Win32'">Disabled</Optimization>
-      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='JAPAN_LOCALIZING_DBG|Win32'">WIN32;_DEBUG;_WINDOWS;_MBCS;_USRDLL;COMMONSERVER_EXPORTS;JAPAN_LOCALIZING</PreprocessorDefinitions>
-      <BasicRuntimeChecks Condition="'$(Configuration)|$(Platform)'=='JAPAN_LOCALIZING_DBG|Win32'">EnableFastChecks</BasicRuntimeChecks>
-      <Optimization Condition="'$(Configuration)|$(Platform)'=='JAPAN_LOCALIZING_RRS|Win32'">MaxSpeed</Optimization>
-      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='JAPAN_LOCALIZING_RRS|Win32'">WIN32;NDEBUG;_WINDOWS;_MBCS;_USRDLL;COMMONSERVER_EXPORTS;JAPAN_LOCALIZING</PreprocessorDefinitions>
       <Optimization Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">MaxSpeed</Optimization>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">WIN32;NDEBUG;_WINDOWS;_MBCS;_USRDLL;COMMONSERVER_EXPORTS;NEW_COMMAND</PreprocessorDefinitions>
-      <Optimization Condition="'$(Configuration)|$(Platform)'=='TAIWAN_LOCALIZING_DBG|Win32'">Disabled</Optimization>
-      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='TAIWAN_LOCALIZING_DBG|Win32'">WIN32;_DEBUG;_WINDOWS;_MBCS;_USRDLL;COMMONSERVER_EXPORTS;TAIWAN_LOCALIZING</PreprocessorDefinitions>
-      <BasicRuntimeChecks Condition="'$(Configuration)|$(Platform)'=='TAIWAN_LOCALIZING_DBG|Win32'">EnableFastChecks</BasicRuntimeChecks>
-      <Optimization Condition="'$(Configuration)|$(Platform)'=='TAIWAN_LOCALIZING_RRS|Win32'">MaxSpeed</Optimization>
-      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='TAIWAN_LOCALIZING_RRS|Win32'">WIN32;NDEBUG;_WINDOWS;_MBCS;_USRDLL;COMMONSERVER_EXPORTS;TAIWAN_LOCALIZING</PreprocessorDefinitions>
-      <Optimization Condition="'$(Configuration)|$(Platform)'=='dev|Win32'">Disabled</Optimization>
-      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='dev|Win32'">WIN32;_DEBUG;_WINDOWS;_MBCS;_USRDLL;COMMONSERVER_EXPORTS;DEV_MODE;NEW_COMMAND</PreprocessorDefinitions>
-      <BasicRuntimeChecks Condition="'$(Configuration)|$(Platform)'=='dev|Win32'">EnableFastChecks</BasicRuntimeChecks>
     </ClCompile>
     <ClCompile Include="Utils.cpp" />
   </ItemGroup>
@@ -831,6 +248,9 @@
     <ClInclude Include="CommonServer.h" />
     <ClInclude Include="CommonServerExports.h" />
     <ClInclude Include="CommonAllServers.h" />
+    <ClInclude Include="DungeonDataOverrides.h" />
+    <ClInclude Include="DungeonDataQueryResults.h" />
+    <ClInclude Include="DungeonStaticData.h" />
     <ClInclude Include="HS_HASH.h" />
     <ClInclude Include="HS_LIST.h" />
     <ClInclude Include="NTAes.h" />

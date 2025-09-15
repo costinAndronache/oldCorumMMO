@@ -9,14 +9,14 @@ namespace NewInterface {
 
 	public:
 		BeltManager(
-			GenericItemsContainerView* managedBeltView,
-			ItemUsageManager* itemUsageManager
+			std::shared_ptr<GenericItemsContainerView> managedBeltView,
+			std::shared_ptr<ItemUsageManager> itemUsageManager
 		);
 
 		void updateBeltWithItems(const std::vector<CItem>& items);
 		void updateBeltWithItems(const CItem items[MAX_BELT_POOL]);
 		void onLeftMouseDragStart(
-			std::function<void(CustomUI:: Renderable*, CustomUI::Rect globalFrameStart)> handler) override {
+			std::function<void(std::shared_ptr<CustomUI:: Renderable>, CustomUI::Rect globalFrameStart)> handler) override {
 			_handler = handler;
 		}
 
@@ -29,9 +29,9 @@ namespace NewInterface {
 		int itemIndexForGlobalPoint(CustomUI::Point p) { return _managedBeltView->itemIndexForGlobalPoint(p); }
 	private:
 		int _indexOnCurrentDragNDropItem;
-		ItemUsageManager* _itemUsageManager;
-		GenericItemsContainerView* _managedBeltView;
-		std::function<void(CustomUI::Renderable*, CustomUI::Rect globalFrameStart)> _handler;
+		std::shared_ptr<ItemUsageManager> _itemUsageManager;
+		std::shared_ptr<GenericItemsContainerView> _managedBeltView;
+		std::function<void(std::shared_ptr<CustomUI:: Renderable>, CustomUI::Rect globalFrameStart)> _handler;
 
 		std::vector<CItem> _currentItems;
 	};

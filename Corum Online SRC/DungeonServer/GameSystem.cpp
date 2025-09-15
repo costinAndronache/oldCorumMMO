@@ -425,8 +425,8 @@ void MakeAppearMonser( DSTC_APPEAR_MON* pAppearMon, CMonster* pMonster )
 		}
 
 		__lstrcpyn( pAppearMon->szMonsterName
-			, (LPSTR)pMonster->GetBaseMonsterInfo()->szMonsterName_Kor
-			, sizeof(pMonster->GetBaseMonsterInfo()->szMonsterName_Kor) );
+			, (LPSTR)pMonster->GetBaseMonsterInfo()->szMonsterName_Eng
+			, sizeof(pMonster->GetBaseMonsterInfo()->szMonsterName_Eng) );
 
 		pAppearMon->bScale = pMonster->GetBaseMonsterInfo()->bScale;
 	}
@@ -543,8 +543,9 @@ void MonsterKillByUser( CUser* pUser, CMonster* pMonster )
 	
 	if( pMonster->GetRace() == OBJECT_TYPE_MONSTER )
 	{
-		WORD wCount = WORD((rand()%(pMonster->GetBaseMonsterInfo()->wItemCount.wMax+1))
-						+ pMonster->GetBaseMonsterInfo()->wItemCount.wMin);
+		WORD wCount = pMonster->GetBaseMonsterInfo()->wItemCount.wMax;
+			//WORD((rand()%(pMonster->GetBaseMonsterInfo()->wItemCount.wMax+1))
+				//		+ pMonster->GetBaseMonsterInfo()->wItemCount.wMin);
 		
 		if( wCount > pMonster->GetBaseMonsterInfo()->wItemCount.wMax )
 			wCount = pMonster->GetBaseMonsterInfo()->wItemCount.wMax;
@@ -556,7 +557,7 @@ void MonsterKillByUser( CUser* pUser, CMonster* pMonster )
 
 		if (pMonster->GetCurDungeon()->GetDungeonDataEx()->GetDungeonType() == DUNGEON_TYPE_CONQUER)
 		{
-			pMonster->GetCurDungeon()->GetDungeonDataEx()->SetAccExp(pMonster->GetCurDungeon()->GetDungeonDataEx()->m_dwAccExp+3);
+			pMonster->GetCurDungeon()->GetDungeonDataEx()->SetAccExp(pMonster->GetCurDungeon()->GetDungeonDataEx()->accumulatedEXPForOwner+3);
 		}
 
 		// 몬스터 죽이면 hp, sp가 회복된다.
@@ -599,13 +600,13 @@ lb_dead:
 
 	Event_MonsterKillByUser(pUser, pMonster);
 
-	if( pUser->GetCurDungeon()->GetDungeonDataEx()->IsConquer() &&
-		pUser->GetCurDungeon()->GetDungeonDataEx()->m_bSiege)
+	if( pUser->GetCurDungeon()->GetDungeonDataEx()->isSiegeDungeon() &&
+		pUser->GetCurDungeon()->GetDungeonDataEx()->inSiegeWarNow)
 	{
 		CDungeonLayer* pLayer = pUser->GetCurDungeonLayer();
 		if(pLayer)
 		{			
-			if(pUser->GetCurDungeon()->GetDungeonDataEx()->IsConquer())
+			if(pUser->GetCurDungeon()->GetDungeonDataEx()->isSiegeDungeon())
 			{
 				DSTC_EVENT_DUNGEON_SURVIVAL_DISPLAY packet;				
 				packet.byDisplayMode			= SIEGEINFOWND_TYPE_SIEGE;
@@ -651,16 +652,16 @@ void MonsterKillByMonster( CMonster* pAttackMon, CMonster* pDefenseMon )
 					pUser->SetKillMonCount(pUser->GetKillMonCount() + 1);
 				}
 				
-				WORD wCount = WORD( (rand()%(pDefenseMon->GetBaseMonsterInfo()->wItemCount.wMax+1)) 
-								+ pDefenseMon->GetBaseMonsterInfo()->wItemCount.wMin);
+				WORD wCount = pDefenseMon->GetBaseMonsterInfo()->wItemCount.wMax; 
+					//WORD( (rand()%(pDefenseMon->GetBaseMonsterInfo()->wItemCount.wMax+1)) 
+						//		+ pDefenseMon->GetBaseMonsterInfo()->wItemCount.wMin);
 				
 				if( wCount > pDefenseMon->GetBaseMonsterInfo()->wItemCount.wMax ) 
 				{
 					wCount = pDefenseMon->GetBaseMonsterInfo()->wItemCount.wMax;
 				}
 				
-				for( int i=0; i<wCount; i++ )
-				{
+				for( int i=0; i<wCount; i++ ) {
 					CreateItemByMonster( pDefenseMon, pUser );
 				}
 			}

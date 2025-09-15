@@ -4,11 +4,13 @@ using namespace CustomUI;
 
 
 Rect Renderable::globalFrame() const {
-	if (_parent == nullptr) { 
+	if (!_parent) { 
 		return _frameInParent; 
+	} else {
+		const auto parentGlobalFrame = _parent->globalFrame();
+		return _frameInParent.withOriginOffsetBy(parentGlobalFrame.origin);
 	}
-	const auto parentGlobalFrame = _parent->globalFrame();
-	return _frameInParent.withOriginOffsetBy(parentGlobalFrame.origin);
+
 }
 
 Rect Renderable::boundingBoxInParent() const {
@@ -111,7 +113,8 @@ void Renderable::handleKeyDown(WPARAM wparam, LPARAM lparam) {
 	processKeyDown(wparam, lparam);
 
 	if (swallowsKeyEvents()) { return; }
-	for (auto child : _childRenderables) {
+	for (int i = 0; i < _childRenderables.size(); i++) {
+		auto child = _childRenderables[i];
 		child->handleKeyDown(wparam, lparam);
 	}
 }
@@ -131,13 +134,10 @@ bool Renderable::swallowsKeyboard() {
 }
 
 void Renderable::deconstructAllChildren() {
-	for (auto child : _childRenderables) {
-		if (child) { delete child; }
-	}
 	_childRenderables.clear();
 }
 
-void Renderable::updateParentTo(Renderable* parent) {
+void Renderable::updateParentTo(/*std::weak_ptr*/Renderable* parent) {
 	_parent = parent;
 	handleRenderableHierarchyUpdateEvent();
 	for (auto child : _childRenderables) {
@@ -147,7 +147,7 @@ void Renderable::updateParentTo(Renderable* parent) {
 
 void Renderable::handleRenderableHierarchyUpdateEvent() { }
 
-void Renderable::deconstructChildrenWhere(std::function<bool(Renderable*)> eligibleToDeconstruct) {
+void Renderable::deconstructChildrenWhere(std::function<bool(std::shared_ptr<Renderable>)> eligibleToDeconstruct) {
 	_childRenderables.erase(std::remove_if(
 		_childRenderables.begin(),
 		_childRenderables.end(),

@@ -25,9 +25,9 @@ namespace CustomUI {
 		unsigned int _pageCount, _activePageIndex;
 		Appearance _appearance;
 		PageScrollEventHandler _eventHandler;
-		SingleLineLabel* _label;
-		Button* _previousPageBtn;
-		Button* _nextPageBtn;
+		std::shared_ptr<SingleLineLabel> _label;
+		std::shared_ptr<Button> _previousPageBtn;
+		std::shared_ptr<Button> _nextPageBtn;
 
 		void tryScrollPrevious();
 		void tryScrollNext();

@@ -505,7 +505,7 @@ DUNGEON_JOIN_FAIL CDungeon::JoinUser(CUser* pUser, BYTE bLayerIndex, VECTOR2 *pv
 	pUser->SetPartyID(pUser->m_dwPartyId);
 	pUser->SetGuildID(pUser->m_dwGuildId);
 
-	if (m_pInfo->m_bSiege)
+	if (m_pInfo->inSiegeWarNow)
 	{
 		SendSiegeInfo(pUser);
 		pUser->SetAttackMode(GetAttackMode(pUser));			
@@ -632,12 +632,12 @@ WORD CDungeon::GetDungeonLayerID(BYTE bLayer) const
 // 공격자인지 방어자인지
 BYTE CDungeon::GetAttackMode(CUser* pUser) const
 {
-	if (!m_pInfo->m_bSiege)
+	if (!m_pInfo->inSiegeWarNow)
 		return 0;
 
 	BYTE bAttackMode = ATTACK_MODE_OFFENSE;
 	
-	if (m_pInfo->m_dwOwnerGuildNum && pUser->m_dwGuildId == m_pInfo->m_dwOwnerGuildNum)
+	if (m_pInfo->ownerGuildID && pUser->m_dwGuildId == m_pInfo->ownerGuildID)
 	{
 		// 던전 주인과 같은 길드원은 방어자.
 		return ATTACK_MODE_DEFENSE;
@@ -671,7 +671,7 @@ BYTE CDungeon::GetAttackMode(CUser* pUser) const
 // 방어자가 될 파티번호 추가.
 void CDungeon::InsertDefensePartyList(DWORD dwPartyID)
 {
-	CUser* pOwner = g_pUserHash->GetData(m_pInfo->m_dwOwnerIndex);
+	CUser* pOwner = g_pUserHash->GetData(m_pInfo->ownerUserID);
 
 	if (pOwner && pOwner->m_dwPartyId && pOwner->m_dwPartyId == dwPartyID)
 	{
@@ -924,7 +924,7 @@ void CDungeon::ChangeLayerUser( CUser* pUser, BYTE byCurLayerIndex, int nDestLay
 
 	SendJoinSectionInfo( pUser );
 	
-	if (m_pInfo->m_bSiege)
+	if (m_pInfo->inSiegeWarNow)
 	{
 		SendSiegeInfo(pUser);
 	}
@@ -1027,9 +1027,9 @@ void CDungeon::RemoveUser(CUser* pUser)
 // 현재 공격자인지 방어자인지 구별해낸다.
 void CDungeon::DistinctionAttackMode()
 {
-	CUser* pOnwer = g_pUserHash->GetData(m_pInfo->m_dwOwnerIndex);
+	CUser* pOnwer = g_pUserHash->GetData(m_pInfo->ownerUserID);
 
-	if (pOnwer && pOnwer->GetID() == m_pInfo->m_dwOwnerIndex && pOnwer->m_dwPartyId)
+	if (pOnwer && pOnwer->GetID() == m_pInfo->ownerUserID && pOnwer->m_dwPartyId)
 		InsertDefensePartyList(pOnwer->m_dwPartyId);
 
 	CUser* pUser = NULL;
@@ -1308,10 +1308,10 @@ void CDungeon::GotoLobbyUser(CUser* pUser) const
 // 던전 공성전 시작하라.
 void CDungeon::StartSiege()
 {
-	m_pInfo->m_bSiege = true;
-	m_pInfo->m_dwOriginalOwnerIndex = m_pInfo->m_dwOwnerIndex;
+	m_pInfo->inSiegeWarNow = true;
+	m_pInfo->m_dwOriginalOwnerIndex = m_pInfo->ownerUserID;
 
-	SetDungeonOwner(m_pInfo->m_dwOwnerIndex, m_pInfo->m_dwOwnerGuildNum, 0, NULL, m_pInfo->m_szOwner);
+	SetDungeonOwner(m_pInfo->ownerUserID, m_pInfo->ownerGuildID, 0, NULL, m_pInfo->m_szOwner);
 
 	DistinctionAttackMode();
 	
@@ -1362,7 +1362,7 @@ void CDungeon::StartSiege()
 // 공성전 끝났군.
 void CDungeon::EndSiege()
 {
-	m_pInfo->m_bSiege = false;	
+	m_pInfo->inSiegeWarNow = false;	
 	
 	for(int i = 0; i < GetTotalLayer(); ++i)
 	{
@@ -1403,10 +1403,10 @@ void CDungeon::EndSiege()
 	}	
 	
 	// 오 방어 했네?
-	if (m_pInfo->m_dwOwnerIndex)
+	if (m_pInfo->ownerUserID)
 	{
 		// 원소 속성석이 아니라면
-		if (g_DungeonProductionItemMinMax[m_pInfo->m_byProperty].wItemIDDefault != m_pInfo->m_wProduction)
+		if (g_DungeonProductionItemMinMax[m_pInfo->siegeDungeonPrize_productionSchemeIndex].wItemIDDefault != m_pInfo->siegeDungeonPrize_itemID)
 		{
 			if (m_pInfo->m_cMagicFieldArrayItem.GetID())
 			{
@@ -1417,7 +1417,7 @@ void CDungeon::EndSiege()
 			}			
 		}
 	
-		if (m_pInfo->m_dwOriginalOwnerIndex == m_pInfo->m_dwOwnerIndex)
+		if (m_pInfo->m_dwOriginalOwnerIndex == m_pInfo->ownerUserID)
 		{
 			m_pInfo->CreateProduction(TRUE);
 			m_pInfo->SetDefenseCount(BYTE(m_pInfo->m_byDefenseCount<0xff?m_pInfo->m_byDefenseCount+1:0xff), TRUE);
@@ -1431,7 +1431,7 @@ void CDungeon::EndSiege()
 		m_pInfo->SetMagicFieldArray(&m_pInfo->m_cMagicFieldArrayItem);
 	}				
 	
-	m_pInfo->m_dwOriginalOwnerIndex = m_pInfo->m_dwOwnerIndex;
+	m_pInfo->m_dwOriginalOwnerIndex = m_pInfo->ownerUserID;
 	RemoveAllDefencePartyList();
 	RemoveDungeonGuardian();	
 }
@@ -1502,13 +1502,13 @@ void CDungeon::SetDungeonOwner(DWORD dwUserIndex, DWORD dwGuildID, DWORD dwParty
 	__lstrcpyn(m_pChangeDungeon->szName, (char*)pCharacterName, MAX_CHARACTER_REAL_LENGTH);
 
 	
-	DWORD dwChangeUserIndex = (dwUserIndex ^ m_pInfo->m_dwOwnerIndex);
+	DWORD dwChangeUserIndex = (dwUserIndex ^ m_pInfo->ownerUserID);
 	
-	if (dwChangeUserIndex || (dwGuildID ^ m_pInfo->m_dwOwnerGuildNum))
+	if (dwChangeUserIndex || (dwGuildID ^ m_pInfo->ownerGuildID))
 	{
-		if(IsGuildWar(this, dwGuildID, m_pInfo->m_dwOwnerGuildNum, 0, 0, GODMODE_STATUS_RELEASE))
+		if(IsGuildWar(this, dwGuildID, m_pInfo->ownerGuildID, 0, 0, GODMODE_STATUS_RELEASE))
 		{
-			SendToWorldServerForGuildPoint(dwUserIndex, 0, 100, dwGuildID, m_pInfo->m_dwOwnerGuildNum);
+			SendToWorldServerForGuildPoint(dwUserIndex, 0, 100, dwGuildID, m_pInfo->ownerGuildID);
 		}		
 
 		char szUpdate[255]={0,};

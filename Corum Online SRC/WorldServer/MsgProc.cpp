@@ -247,7 +247,7 @@ void CmdTryToJoinDungeon(CWorldUser* pUser ,char* pMsg,DWORD dwLength)
 
 	}
 
-	if (pDungeon->IsConquer())
+	if (pDungeon->isSiegeDungeon())
 	{
 		if (pUser->m_dwUserIndex != pDungeon->m_dwOwnerIndex)
 		{
@@ -1126,16 +1126,16 @@ void CmdWorldMove(CWorldUser* pUser ,char* pMsg, DWORD dwLength)
 
 	CTC_WORLD_MOVE *pPacket = (CTC_WORLD_MOVE*)pMsg;
 
-	MAP_TILE *pTile = g_pMap[ pUser->m_bWorldId ]->GetMap(pPacket->wDestX, pPacket->wDestZ);
+	MAP_TILE *pTile = g_pMap[ pUser->m_bWorldId ]->GetTileByIndexes(pPacket->wDestX, pPacket->wDestZ);
 
 	if(!pTile)	
 	{
 		return;
 	}
 
-	pUser->m_v3CurWorldPos.x = TILE_X(pPacket->wDestX);
+	pUser->m_v3CurWorldPos.x = DUNGEON_TILE_3D_X(pPacket->wDestX);
 	pUser->m_v3CurWorldPos.y = 0.0f;
-	pUser->m_v3CurWorldPos.z = TILE_Z(pPacket->wDestX);
+	pUser->m_v3CurWorldPos.z = DUNGEON_TILE_3D_Z(pPacket->wDestX);
 
 	if(!pUser->m_dwPartyId)	return;
 
@@ -1176,7 +1176,7 @@ void CmdWorldStop(CWorldUser* pUser ,char* pMsg, DWORD dwLength)
 
 	CTC_WORLD_STOP *pPacket = (CTC_WORLD_STOP*)pMsg;
 
-	MAP_TILE* pTile = g_pMap[ pUser->m_bWorldId ]->GetTile(pPacket->v3StopPos.x, pPacket->v3StopPos.z);
+	MAP_TILE* pTile = g_pMap[ pUser->m_bWorldId ]->GetTileBy3DPosition(pPacket->v3StopPos.x, pPacket->v3StopPos.z);
 	if(!pTile)	return;
 
 	pUser->m_v3CurWorldPos = pPacket->v3StopPos;

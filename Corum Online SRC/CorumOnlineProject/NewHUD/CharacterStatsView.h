@@ -28,9 +28,9 @@ namespace NewInterface {
 
 	private:
 		UpdateProxy* _updateProxy;
-		CustomUI::SingleLineLabel* _nameLabel;
-		CustomUI::SingleLineLabel* _valueLabel;
-		CustomUI::Button* _increaseButton;
+		std::shared_ptr<CustomUI::SingleLineLabel> _nameLabel;
+		std::shared_ptr<CustomUI::SingleLineLabel> _valueLabel;
+		std::shared_ptr<CustomUI::Button> _increaseButton;
 	};
 
 	class CharacterStatsView: public CustomUI::Renderable {
@@ -43,12 +43,12 @@ namespace NewInterface {
 		void updateAvailableStatPointsCount(int availableStatPoints);
 		void onClose(std::function<void()> handler);
 
-		DisplacementHandleRenderable* displacementHandle() { return _displacementHandle;}
+		std::shared_ptr<DisplacementHandleRenderable> displacementHandle() { return _displacementHandle;}
 	private:
-		DisplacementHandleRenderable* _displacementHandle;
-		CustomUI::SingleLineLabel* _titleLabel;
-		CustomUI::Button* _closeButton;
-		CustomUI::PagedContainer* _container;
+		std::shared_ptr<DisplacementHandleRenderable> _displacementHandle;
+		std::shared_ptr<CustomUI::SingleLineLabel> _titleLabel;
+		std::shared_ptr<CustomUI::Button> _closeButton;
+		std::shared_ptr<CustomUI::PagedContainer> _container;
 	};
 }
 

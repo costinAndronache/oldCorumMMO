@@ -11,7 +11,7 @@ namespace CustomUI {
 		};
 
 		void trackWithNewRenderable(
-			Renderable* newAvatar, 
+			std::shared_ptr<Renderable> newAvatar, 
 			std::function<void(Rect)> onMouseLeftButtonUp
 		) {
 			deconstructAllChildren();
@@ -43,7 +43,7 @@ namespace CustomUI {
 
 	private:
 		std::function<void(Rect avatarCurrentFrame)> _onMouseLeftButtonUp;
-		Renderable* _mouseAvatar;
+		std::shared_ptr<Renderable> _mouseAvatar;
 	};
 }
 

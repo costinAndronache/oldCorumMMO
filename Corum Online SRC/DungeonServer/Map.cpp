@@ -28,7 +28,7 @@ void CMap::Create(  DWORD dwID, CDungeonLayer* pParent)
 
 	ReadMap(dwID);
 
-	if (!m_pParentLayer->GetParent()->GetDungeonDataEx()->IsConquer())
+	if (!m_pParentLayer->GetParent()->GetDungeonDataEx()->isSiegeDungeon())
 	{
 		m_bCPRemainCount = 0;
 	}
@@ -193,8 +193,8 @@ BOOL CMap::ReadMap(DWORD dwID)
 		{
 	       	m_pTile[m_dwTileNumWidth * z + x].wIndex_X = (WORD)x;
 			m_pTile[m_dwTileNumWidth * z + x].wIndex_Z = (WORD)z;
-			m_pTile[m_dwTileNumWidth * z + x].x = x * TILE_WIDTH;
-			m_pTile[m_dwTileNumWidth * z + x].z = z * TILE_HEIGHT;
+			m_pTile[m_dwTileNumWidth * z + x].x = x * DUNGEON_TILE_WIDTH;
+			m_pTile[m_dwTileNumWidth * z + x].z = z * DUNGEON_TILE_HEIGHT;
 
 			for( s = 1; s <= wTotalSectionNum; s++ )
 			{
@@ -343,8 +343,8 @@ MAP_TILE* CMap::GetTile(float fx, float fz)
 {
 	if(fx < 0 || fz < 0)	return NULL;
 
-	DWORD x = (DWORD)( fx / TILE_WIDTH );
-	DWORD z = (DWORD)( fz / TILE_HEIGHT );
+	DWORD x = (DWORD)( fx / DUNGEON_TILE_WIDTH );
+	DWORD z = (DWORD)( fz / DUNGEON_TILE_HEIGHT );
 	
 	return GetMap(x, z);
 }

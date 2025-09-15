@@ -13,7 +13,7 @@ TooltipLayer::Handle TooltipLayer::addTooltip(const std::vector<InfoLine>& infoL
 		if (_freeHandles.empty()) {
 			_internalCounter += 1;
 			auto infoBox = registerChildRenderable<DynamicInfoBox>([=]() {
-				return new DynamicInfoBox({ 0, 0 });
+				return std::make_shared<DynamicInfoBox>(Point{ 0, 0 });
 			});
 
 			infoBox->updateWithLines(infoLines);

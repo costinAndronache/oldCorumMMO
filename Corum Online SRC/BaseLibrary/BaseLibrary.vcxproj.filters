@@ -294,6 +294,18 @@
     <ClInclude Include="VoidList.h" />
     <ClInclude Include="RunLoop.h" />
     <ClInclude Include="mdump.h" />
+    <ClInclude Include="BaseLibrary.h" />
+    <ClInclude Include="FileUtilities.h" />
+    <ClInclude Include="libraries\variant\include\mapbox\optional.hpp" />
+    <ClInclude Include="libraries\variant\include\mapbox\recursive_wrapper.hpp" />
+    <ClInclude Include="libraries\variant\include\mapbox\variant.hpp" />
+    <ClInclude Include="libraries\variant\include\mapbox\variant_cast.hpp" />
+    <ClInclude Include="libraries\variant\include\mapbox\variant_io.hpp" />
+    <ClInclude Include="libraries\variant\include\mapbox\variant_visitor.hpp" />
+    <ClInclude Include="JSONUtilities.h" />
+    <ClInclude Include="Either.h" />
+    <ClInclude Include="Utilities.h" />
+    <ClInclude Include="libraries\base64.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="datastructure\template.cpp">
@@ -407,5 +419,8 @@
     <ClCompile Include="Voidlist.cpp" />
     <ClCompile Include="RunLoop.cpp" />
     <ClCompile Include="mdump.cpp" />
+    <ClCompile Include="FileUtilities.cpp" />
+    <ClCompile Include="JSONUtilities.cpp" />
+    <ClCompile Include="Utilities.cpp" />
   </ItemGroup>
 </Project>

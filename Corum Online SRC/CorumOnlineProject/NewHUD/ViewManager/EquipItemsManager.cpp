@@ -9,9 +9,9 @@ static SpriteModel underlays[MAX_EQUIP_POOL] = { SpriteModel::zero };
 static void buildUnderlays();
 
 EquipItemsManager::EquipItemsManager(
-	GenericItemsContainerView* managedView,
-	TooltipLayer* toolTipLayer,
-	TooltipHelper* toolTipHelper
+	std::shared_ptr<GenericItemsContainerView> managedView,
+	std::shared_ptr<TooltipLayer> toolTipLayer,
+	std::shared_ptr<TooltipHelper> toolTipHelper
 ) {
 	_managedView = managedView;
 	_indexOnCurrentDragNDropItem = -1;
@@ -42,11 +42,11 @@ void EquipItemsManager::updateWithItems(const CItem equipVector[MAX_EQUIP_POOL])
 		_indexOnCurrentDragNDropItem = index;
 		_managedView->setHiddenStateForItemAtIndex(index, true);
 
-		SpriteRenderable* sprr = new SpriteRenderable(globalFrame, sprite);
+		auto sprr = std::make_shared<SpriteRenderable>(globalFrame, sprite);
 		_handler(sprr, globalFrame);
 	};
 
-	_equipTooltipManager = new TooltipManager(
+	_equipTooltipManager = std::make_shared<TooltipManager>(
 		_toolTipLayer,
 		[=](int equipItemIndex) -> TooltipManager::InfoLines {
 		return _toolTipHelper->tooltipForEquippedItem(models[equipItemIndex].item, equipItemIndex);

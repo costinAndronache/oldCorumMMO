@@ -25,25 +25,25 @@ GLOBAL_FUNC_DLL BOOL	__stdcall ClipRenderObjectWithViewVolume(VIEW_VOLUME* pVolu
 GLOBAL_FUNC_DLL DWORD	__stdcall ClipLightWithRS(LIGHT_INDEX_DESC* pbLightIndexArrayResult,COLLISION_MESH_OBJECT_DESC* pColMeshDesc,LIGHT_DESC* pLightDescIn,DWORD dwLightNum,BYTE bStartIndex);
 GLOBAL_FUNC_DLL BOOL	__stdcall CalcIntersectPointLineAndPlane(VECTOR3* pv3Result,PLANE* pPlane,VECTOR3* pv3From,VECTOR3* pv3To, float* pft);
 GLOBAL_FUNC_DLL void	__stdcall SET_VECTOR3(VECTOR3* pv3,float fVal);
-GLOBAL_FUNC_DLL void	__stdcall VECTOR3_ADD_VECTOR3(VECTOR3* pv3Result,VECTOR3* pv3Arg1,VECTOR3* pv3Arg2);
-GLOBAL_FUNC_DLL void	__stdcall VECTOR3_SUB_VECTOR3(VECTOR3* pv3Result,VECTOR3* pv3Arg1,VECTOR3* pv3Arg2);
-GLOBAL_FUNC_DLL void	__stdcall VECTOR3_MUL_VECTOR3(VECTOR3* pv3Result,VECTOR3* pv3Arg1,VECTOR3* pv3Arg2);
-GLOBAL_FUNC_DLL void	__stdcall VECTOR3_DIV_VECTOR3(VECTOR3* pv3Result,VECTOR3* pv3Arg1,VECTOR3* pv3Arg2);
+GLOBAL_FUNC_DLL void	__stdcall VECTOR3_ADD_VECTOR3(VECTOR3* pv3Result, const VECTOR3* pv3Arg1,const VECTOR3* pv3Arg2);
+GLOBAL_FUNC_DLL void	__stdcall VECTOR3_SUB_VECTOR3(VECTOR3* pv3Result, const VECTOR3* pv3Arg1, const VECTOR3* pv3Arg2);
+GLOBAL_FUNC_DLL void	__stdcall VECTOR3_MUL_VECTOR3(VECTOR3* pv3Result, const VECTOR3* pv3Arg1, const VECTOR3* pv3Arg2);
+GLOBAL_FUNC_DLL void	__stdcall VECTOR3_DIV_VECTOR3(VECTOR3* pv3Result, const VECTOR3* pv3Arg1, const VECTOR3* pv3Arg2);
 
-GLOBAL_FUNC_DLL void	__stdcall VECTOR3_ADDEQU_VECTOR3(VECTOR3* pv3Result,VECTOR3* pv3Arg1);
-GLOBAL_FUNC_DLL void	__stdcall VECTOR3_SUBEQU_VECTOR3(VECTOR3* pv3Result,VECTOR3* pv3Arg1);
-GLOBAL_FUNC_DLL void	__stdcall VECTOR3_MULEQU_VECTOR3(VECTOR3* pv3Result,VECTOR3* pv3Arg1);
-GLOBAL_FUNC_DLL void	__stdcall VECTOR3_DIVEQU_VECTOR3(VECTOR3* pv3Result,VECTOR3* pv3Arg1);
+GLOBAL_FUNC_DLL void	__stdcall VECTOR3_ADDEQU_VECTOR3(VECTOR3* pv3Result, const VECTOR3* pv3Arg1);
+GLOBAL_FUNC_DLL void	__stdcall VECTOR3_SUBEQU_VECTOR3(VECTOR3* pv3Result, const VECTOR3* pv3Arg1);
+GLOBAL_FUNC_DLL void	__stdcall VECTOR3_MULEQU_VECTOR3(VECTOR3* pv3Result, const VECTOR3* pv3Arg1);
+GLOBAL_FUNC_DLL void	__stdcall VECTOR3_DIVEQU_VECTOR3(VECTOR3* pv3Result, const VECTOR3* pv3Arg1);
 
 GLOBAL_FUNC_DLL void	__stdcall VECTOR3_ADDEQU_FLOAT(VECTOR3* pv3Result,float fVal);
 GLOBAL_FUNC_DLL void	__stdcall VECTOR3_SUBEQU_FLOAT(VECTOR3* pv3Result,float fVal);
 GLOBAL_FUNC_DLL void	__stdcall VECTOR3_MULEQU_FLOAT(VECTOR3* pv3Result,float fVal);
 GLOBAL_FUNC_DLL void	__stdcall VECTOR3_DIVEQU_FLOAT(VECTOR3* pv3Result,float fVal);
 
-GLOBAL_FUNC_DLL void	__stdcall VECTOR3_ADD_FLOAT(VECTOR3* pv3Result,VECTOR3* pv3Arg1,float fVal);
-GLOBAL_FUNC_DLL void	__stdcall VECTOR3_SUB_FLOAT(VECTOR3* pv3Result,VECTOR3* pv3Arg1,float fVal);
-GLOBAL_FUNC_DLL void	__stdcall VECTOR3_MUL_FLOAT(VECTOR3* pv3Result,VECTOR3* pv3Arg1,float fVal);
-GLOBAL_FUNC_DLL void	__stdcall VECTOR3_DIV_FLOAT(VECTOR3* pv3Result,VECTOR3* pv3Arg1,float fVal);
+GLOBAL_FUNC_DLL void	__stdcall VECTOR3_ADD_FLOAT(VECTOR3* pv3Result, const VECTOR3* pv3Arg1,float fVal);
+GLOBAL_FUNC_DLL void	__stdcall VECTOR3_SUB_FLOAT(VECTOR3* pv3Result, const VECTOR3* pv3Arg1,float fVal);
+GLOBAL_FUNC_DLL void	__stdcall VECTOR3_MUL_FLOAT(VECTOR3* pv3Result, const VECTOR3* pv3Arg1,float fVal);
+GLOBAL_FUNC_DLL void	__stdcall VECTOR3_DIV_FLOAT(VECTOR3* pv3Result, const VECTOR3* pv3Arg1,float fVal);
 
 GLOBAL_FUNC_DLL void	__stdcall FindNearestVertexOnLine(VECTOR3* OUT pv3Result ,float* OUT pT, VECTOR3* IN pv3From, VECTOR3* IN pv3To, VECTOR3* IN pv3Point);
 GLOBAL_FUNC_DLL float	__stdcall VECTOR3Length(VECTOR3* pv3);
@@ -56,7 +56,7 @@ GLOBAL_FUNC_DLL float	__stdcall DotProduct(VECTOR3* pv3_0,VECTOR3* pv3_1);
 GLOBAL_FUNC_DLL void	__stdcall Normalize(VECTOR3* OUT vn,VECTOR3* IN v);
 GLOBAL_FUNC_DLL float	__stdcall CalcAngle(VECTOR3* vec1, VECTOR3* vec2);
 GLOBAL_FUNC_DLL float	__stdcall CalcCosAngle(VECTOR3* vec1, VECTOR3* vec2);
-GLOBAL_FUNC_DLL float	__stdcall CalcDistance(VECTOR3* pv3Start,VECTOR3* pv3End);
+GLOBAL_FUNC_DLL float	__stdcall CalcDistance( const VECTOR3* pv3Start, const VECTOR3* pv3End);
 GLOBAL_FUNC_DLL BOOL	__stdcall IsCollisionSpherAndSphere(VECTOR3* pv3PointTarget,float fRsTarget,VECTOR3* pv3PointSrc,float fRsSrc);
 GLOBAL_FUNC_DLL BOOL	__stdcall SetIdentityMatrix(MATRIX4* pMat);
 GLOBAL_FUNC_DLL BOOL	__stdcall SetInverseMatrix(MATRIX4* q, MATRIX4* a );

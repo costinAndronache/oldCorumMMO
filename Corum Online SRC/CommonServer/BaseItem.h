@@ -382,7 +382,7 @@ typedef struct BASEITEM_LAND
 } *LPBASEITEM_LAND;
 
 
-class DECLSPECIFIER CBaseItem
+class COMMONSERVERDECLSPECIFIER CBaseItem
 {
 public:
 

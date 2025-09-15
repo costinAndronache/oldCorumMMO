@@ -294,7 +294,7 @@ void __stdcall SuccessToConnectWorldServer(DWORD dwConnectionIndex, void* pExt)
 
 	DSTWS_SERVER_ATTACH	packet;
 	packet.bType	= g_pThis->GetServerType();
-	packet.dwID		= g_pThis->GetServerID();
+	packet.portOnUserSide		= g_pThis->GetServerID();
 
 	g_pNet->SendToServer(WSINDEX, (char*)&packet, packet.GetPacketSize() , FLAG_SEND_NOT_ENCRYPTION );
 	
@@ -354,7 +354,7 @@ void __stdcall OnDisconnectServer(DWORD dwConnectionIndex)
 		{
 			pDungeon = (CDungeon*)g_pDungeonTable->m_pDungeonList->GetAndAdvance(pos);	
 
-			if(pDungeon->GetDungeonDataEx()->m_bSiege)
+			if(pDungeon->GetDungeonDataEx()->inSiegeWarNow)
 			{
 				pDungeon->EndSiege();
 			}

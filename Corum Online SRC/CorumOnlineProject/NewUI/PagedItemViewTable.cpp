@@ -23,7 +23,13 @@ int PagedItemViewTable::getCurrentModelIndexForDisplayedCell(int row, int column
 	return -1;
 }
 
-PagedItemViewTable::PagedItemViewTable(Rect frameInParent, PagedItemViewTableClient* client, Size viewsSize, int initialModelCount, SpriteModel bgSpriteModel):
+PagedItemViewTable::PagedItemViewTable(
+	Rect frameInParent, 
+	PagedItemViewTableClient* client, 
+	Size viewsSize, 
+	int initialModelCount, 
+	SpriteModel bgSpriteModel
+):
 	_bgSpriteModel(bgSpriteModel), _client(client), _viewsSize(viewsSize), _modelCount(initialModelCount) {
 
 	_frameInParent = frameInParent;
@@ -32,7 +38,6 @@ PagedItemViewTable::PagedItemViewTable(Rect frameInParent, PagedItemViewTableCli
 		frameInParent.size.width - buttonsSize.width,
 		frameInParent.size.height
 	};
-
 	
 	const Size referenceSize = viewsSize;
 
@@ -41,7 +46,7 @@ PagedItemViewTable::PagedItemViewTable(Rect frameInParent, PagedItemViewTableCli
 	_currentTopRowIndex = 0;
 	
 	for (int i = 0; i < _numberOfRows; i++) {
-		_viewsTable.push_back(std::vector<Renderable*>());
+		_viewsTable.push_back({});
 
 		for (int j = 0; j < _numberOfColumns; j++) {
 			int index = getCurrentModelIndexForDisplayedCell(i, j, _modelCount);
@@ -51,8 +56,10 @@ PagedItemViewTable::PagedItemViewTable(Rect frameInParent, PagedItemViewTableCli
 				}, 
 				referenceSize
 			};
+
+
 			const auto renderable = registerChildRenderable<Renderable>([&]() {
-				return _client->buildRenderableForModelAtIndexWithFrame(index, viewFrame);
+				return client->buildRenderableForModelAtIndexWithFrame(index, viewFrame);
 			});
 			_viewsTable[i].push_back(renderable);
 		}
@@ -71,26 +78,26 @@ PagedItemViewTable::PagedItemViewTable(Rect frameInParent, PagedItemViewTableCli
 	const auto _bounds = bounds();
 	Rect scrollDownBtnFrame = { {_bounds.maxX() - buttonsSize.width, _bounds.maxY() - buttonsSize.height}, buttonsSize };
 	_scrollDownBtn = registerChildRenderable<Button>([&]() {
-		return new Button(
-			{ scrollDownModel, SpriteModel::zero, scrollDownPressedModel},
+		return std::make_shared<Button>(
+			Button::Sprites{ scrollDownModel, SpriteModel::zero, scrollDownPressedModel},
 			scrollDownBtnFrame
 		);
 	});
 	
 
 	_scrollDownBtn->onClickEndLEFT([this]() {
-		onButtonPressRelease(_scrollDownBtn);
+		onButtonPressRelease(_scrollDownBtn.get());
 	});
 
 	Rect scrollUpBtnFrame = { {_bounds.maxX() - buttonsSize.width, _bounds.origin.y}, buttonsSize };
 	_scrollUpBtn = registerChildRenderable<Button>([&]() {
-		return new Button(
-			{ scrollDownModel, SpriteModel::zero, scrollDownPressedModel },
+		return std::make_shared<Button>(
+			Button::Sprites{ scrollDownModel, SpriteModel::zero, scrollDownPressedModel },
 			scrollUpBtnFrame);
 	});
 
 	_scrollUpBtn->onClickEndLEFT([this]() {
-		onButtonPressRelease(_scrollUpBtn);
+		onButtonPressRelease(_scrollUpBtn.get());
 	});
 }
 
@@ -145,11 +152,11 @@ void PagedItemViewTable::renderWithRenderer(I4DyuchiGXRenderer *renderer, int or
 void PagedItemViewTable::onButtonPress(Button* button) { }
 
 void PagedItemViewTable::onButtonPressRelease(Button* button) {
-	if (button == _scrollDownBtn) {
+	if (button == _scrollDownBtn.get()) {
 		scrollDown();
 	}
 
-	if (button == _scrollUpBtn) {
+	if (button == _scrollUpBtn.get()) {
 		scrollUp();
 	}
 }

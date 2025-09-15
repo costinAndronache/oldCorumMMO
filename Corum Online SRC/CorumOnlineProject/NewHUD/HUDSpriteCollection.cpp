@@ -24,7 +24,8 @@ NewHUDResources::stats, NewHUDResources::skill, NewHUDResources::group,
 NewHUDResources::lair, NewHUDResources::chat, NewHUDResources::match,
 NewHUDResources::rest, NewHUDResources::pk, NewHUDResources::system,
 NewHUDResources::plus, NewHUDResources::up, NewHUDResources::xClose,
-NewHUDResources::next, NewHUDResources::previous;
+NewHUDResources::next, NewHUDResources::previous, 
+NewHUDResources::genericButtonBackgroundSprites;
 
 Size NewHUDResources::newHUDSize{ 400, 121 };
 
@@ -148,6 +149,14 @@ static void initNewHUDElements(I4DyuchiGXRenderer* r) {
 
 	char* menu5 = GetFile("menu_5.tga", DATA_TYPE_UI);
 	NewHUDResources::displacementIcon = from(r, menu5, {{225, 163}, {30, 31}});
+
+	NewHUDResources::genericButtonBackgroundSprites = {
+		{ SpriteCollection::genericButtonBackground, SpriteCollection::genericButtonBackgroundSize },
+
+		{ SpriteCollection::genericButtonBackground, SpriteCollection::genericButtonBackgroundSize },
+
+		{ SpriteCollection::genericButtonPressedBackground, SpriteCollection::genericButtonBackgroundSize }
+	};
 }
 
 static void initMenu1Elements(I4DyuchiGXRenderer* renderer) {

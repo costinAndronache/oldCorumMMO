@@ -9,7 +9,7 @@
 LPBASEITEM_HASH g_pBaseItemHash = NULL;
 
 
-DWORD DECLSPECIFIER GetItemKind(WORD wItemID)
+DWORD COMMONSERVERDECLSPECIFIER GetItemKind(WORD wItemID)
 {
 	if(__ITEM_KARZ__ == wItemID)
 		return ITEM_KIND_MONEY;
@@ -23,7 +23,7 @@ DWORD DECLSPECIFIER GetItemKind(WORD wItemID)
 }
 
 
-ITEM_TYPE DECLSPECIFIER GetItemType(WORD wItemID)
+ITEM_TYPE COMMONSERVERDECLSPECIFIER GetItemType(WORD wItemID)
 {
 	CBaseItem* pBaseItem = g_pBaseItemHash->GetData(wItemID);
 
@@ -41,7 +41,7 @@ ITEM_TYPE DECLSPECIFIER GetItemType(WORD wItemID)
 }
 
 
-void DECLSPECIFIER SetCommonServerBaseItemHash(void* pBaseItemHash)
+void COMMONSERVERDECLSPECIFIER SetCommonServerBaseItemHash(void* pBaseItemHash)
 {
 	g_pBaseItemHash = (LPBASEITEM_HASH)pBaseItemHash;	
 }

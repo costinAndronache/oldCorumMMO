@@ -23,11 +23,11 @@ GenericSkillView::GenericSkillView(CustomUI::Rect frameInParent) {
 
 	auto skillSpriteFrame = _bounds.scaled(0.5, 1.0);
 	_spriteRenderable = registerChildRenderable<SpriteRenderable>([=]() {
-		return new SpriteRenderable(skillSpriteFrame, SpriteModel::zero);
+		return std::make_shared<SpriteRenderable>(skillSpriteFrame, SpriteModel::zero);
 	});
 
 	_hoverableOverSprite = registerChildRenderable<Hoverable>([=]() {
-		return new Hoverable(skillSpriteFrame);
+		return std::make_shared<Hoverable>(skillSpriteFrame);
 	});
 
 	auto labelFrame =
@@ -36,7 +36,7 @@ GenericSkillView::GenericSkillView(CustomUI::Rect frameInParent) {
 		.scaled(1.0, 0.5);
 
 	_levelInfoLabel = registerChildRenderable<SingleLineLabel>([=]() {
-		return new SingleLineLabel(
+		return std::make_shared<SingleLineLabel>(
 			labelFrame,
 			SingleLineLabel::Appearance::defaultAppearance(),
 			""
@@ -45,7 +45,7 @@ GenericSkillView::GenericSkillView(CustomUI::Rect frameInParent) {
 
 	auto btnFrame = labelFrame.fromMaxYOrigin(0);
 	_increaseButton = registerChildRenderable<Button>([=]() {
-		return new Button(NewHUDResources::up, btnFrame);
+		return std::make_shared<Button>(NewHUDResources::up, btnFrame);
 	});
 }
 
@@ -91,7 +91,7 @@ SkillsContainerView::SkillsContainerView(CustomUI::Rect frame, const std::string
 
 	auto titleFrame = _boundsForContent.withHeight(titleHeight);
 	_titleLabel = registerChildRenderable<SingleLineLabel>([=]() {
-		return new SingleLineLabel(
+		return std::make_shared<SingleLineLabel>(
 			titleFrame, SingleLineLabel::Appearance::defaultAppearance(), title
 		);
 	});
@@ -104,11 +104,11 @@ SkillsContainerView::SkillsContainerView(CustomUI::Rect frame, const std::string
 		.withInsets(insetsForMatrixContainer);
 
 	_container = registerChildRenderable<MatrixContainer>([=]() {
-		return new MatrixContainer(containerFrame, skillsContainerAppearance);
+		return  std::make_shared<MatrixContainer>(containerFrame, skillsContainerAppearance);
 	});
 
 	_border = registerChildRenderable<BorderRenderable>([=]() {
-		return new BorderRenderable(bounds());
+		return std::make_shared<BorderRenderable>(bounds());
 	});
 
 	_border->updateThickness(borderThickness);
@@ -119,7 +119,7 @@ void SkillsContainerView::refreshWithModels(const std::vector<Model>& models) {
 	_container->rebuild<Model>(
 		models,
 		[=](Model m, int, Rect itemFrame) {
-			auto view = new GenericSkillView(itemFrame);
+			auto view = std::make_shared<GenericSkillView>(itemFrame);
 			view->updateModel(m);
 			return view;
 		}
@@ -157,7 +157,7 @@ SkillSheetView::SkillSheetView(CustomUI::Rect frameInParent) {
 		.withHeight(_masterySkillAreaSize.height);
 
 	auto masterySkillAreaBorder = registerChildRenderable<BorderRenderable>([=]() {
-		return new BorderRenderable(
+		return std::make_shared<BorderRenderable>(
 			masterySkillAreaFrame
 		);
 	});
@@ -169,7 +169,7 @@ SkillSheetView::SkillSheetView(CustomUI::Rect frameInParent) {
 	masterySkillViewFrame = masterySkillViewFrame.centeredWith(masterySkillAreaFrame);
 
 	_masterySkillView = registerChildRenderable<GenericSkillView>([=]() {
-		return new GenericSkillView(masterySkillViewFrame);
+		return std::make_shared<GenericSkillView>(masterySkillViewFrame);
 	});
 
 	auto skillContainersHostFrame = bounds()
@@ -181,9 +181,9 @@ SkillSheetView::SkillSheetView(CustomUI::Rect frameInParent) {
 		skillContainersHostFrame.size.height
 	};
 	_skillContainersHost = registerChildRenderable<MatrixContainer>([=]() {
-		return new MatrixContainer(
+		return std::make_shared<MatrixContainer>(
 			skillContainersHostFrame,
-			{
+			MatrixContainer::Appearance{
 				MatrixContainer::VerticalGrowthDirection::downwards,
 				skillsContainerHostSizes(oneContainerSize, horizontalSpacingBetweenContainers)
 			}
@@ -205,7 +205,7 @@ void SkillSheetView::refreshWith(Model model) {
 	_skillContainersHost->rebuild<ModelsWithTitle>(
 		containerModels,
 		[=](ModelsWithTitle m, int, Rect frame) {
-			auto skillContainer = new SkillsContainerView(frame, m.title);
+			auto skillContainer = std::make_shared<SkillsContainerView>(frame, m.title);
 			skillContainer->refreshWithModels(m.models);
 			return skillContainer;
 		}
@@ -237,7 +237,7 @@ UserSkillsView::UserSkillsView(CustomUI::Rect frameInParent) {
 		.withHeight(closeBtnSize.height);
 
 	_titleLabel = registerChildRenderable<SingleLineLabel>([=]() {
-		return new SingleLineLabel(
+		return std::make_shared<SingleLineLabel>(
 			labelFrame, SingleLineLabel::Appearance::defaultAppearance(), ""
 		);
 	});
@@ -249,12 +249,12 @@ UserSkillsView::UserSkillsView(CustomUI::Rect frameInParent) {
 		.withSize(closeBtnSize);
 
 	_closeButton = registerChildRenderable<Button>([=]() {
-		return new Button(NewHUDResources::xClose, closeBtnFrame);
+		return std::make_shared<Button>(NewHUDResources::xClose, closeBtnFrame);
 	});
 
 	auto displacementHandleFrame = Rect{{0, 0}, closeBtnFrame.size};
 	_displacementHandle = registerChildRenderable<DisplacementHandleRenderable>([=](){
-		return new DisplacementHandleRenderable(displacementHandleFrame);
+		return std::make_shared<DisplacementHandleRenderable>(displacementHandleFrame);
 	});
 
 	using LabeledButtonModel = RadioButtonGroup::LabeledButtonModel;
@@ -273,7 +273,7 @@ UserSkillsView::UserSkillsView(CustomUI::Rect frameInParent) {
 		.withHeight(buttonModels.size() * radioButtonSize.height);
 
 	_radioGroup = registerChildRenderable<RadioButtonGroup>([=]() {
-		return new RadioButtonGroup(buttonModels, radioGroupFrame, 0);
+		return std::make_shared<RadioButtonGroup>(buttonModels, radioGroupFrame, 0);
 	});
 
 	auto skillSheetFrame = bounds()
@@ -287,9 +287,9 @@ UserSkillsView::UserSkillsView(CustomUI::Rect frameInParent) {
 		std::begin(buttonModels),
 		std::end(buttonModels),
 		std::back_inserter(_skillSheetViews),
-		[=](LabeledButtonModel) -> SkillSheetView* {
+		[=](LabeledButtonModel) -> std::shared_ptr<SkillSheetView> {
 			return registerChildRenderable<SkillSheetView>([=]() {
-				return new SkillSheetView(skillSheetFrame);
+				return std::make_shared<SkillSheetView>(skillSheetFrame);
 			});
 		}
 	);

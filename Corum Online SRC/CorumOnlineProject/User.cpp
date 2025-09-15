@@ -290,13 +290,18 @@ void			CMainUser::updateCurrentLUCK(DWORD luck) {
 	m_dwLuck = luck;
 }
 
+void			CMainUser::setPosition(VECTOR3 pos) {
+	CUser::setPosition(pos);
+	listenersUpdate(_updateListeners, [=](CMainUserUpdateInterestedSharedRef listener) {
+		listener->updatedPosition(this);
+	});
+}
 //
-
-
 
 
 CMainUser::CMainUser() {
 	memset(((char*)this) + sizeof(void*), 0, sizeof(CMainUser) - sizeof(void*));
+	_updateListeners = std::vector<CMainUserUpdateInterestedWeakRef>();
 	
 	m_bMoveType					= UNIT_STATUS_WALKING;
 	m_bInEventDungeon			= FALSE;
@@ -825,7 +830,7 @@ BOOL CMainUser::IsAttack(CUser* pUser, BOOL bAuto)
 	{
 		return FALSE;	
 	}
-	else if( CalcDistance( &m_v3CurPos, &pUser->m_v3CurPos ) > 250.0f )
+	else if( CalcDistance( currentPositionReadOnly(), pUser->currentPositionReadOnly() ) > 250.0f )
 	{
 		if (bAuto)
 		{
@@ -895,7 +900,7 @@ BOOL CMainUser::IsAttack(CMonster* pMonster, BOOL bAuto)
 	}	
 		
 	// 아메리타트는 거대해서 타격 범위가 넓다 : 최덕석 2005.2.14
-	if( CalcDistance( &m_v3CurPos, &pMonster->m_v3CurPos ) > (pMonster->m_wModNo == 630 ? 700.0f : 250.0f) )
+	if( CalcDistance( currentPositionReadOnly(), &pMonster->m_v3CurPos ) > (pMonster->m_wModNo == 630 ? 700.0f : 250.0f) )
 	{
 		if (bAuto)
 		{
@@ -931,18 +936,7 @@ void CUser::SetStatus(BYTE bStatus, BOOL bLive)
 	{
 		g_pMap->SetTileOccupied( m_pCurTile->wIndex_X, m_pCurTile->wIndex_Z, TILE_EMPTY, this );
 
-		if (!m_bMatching && g_pMainPlayer == this && g_pThisDungeon->GetDungeonType() != DUNGEON_TYPE_EVENT)
-		{
-			CCharDieWnd::GetInstance()->SetActive();
-		}
-		
-		if (this == g_pMainPlayer)
-		{
-			g_pMainPlayer->m_dwTemp[USER_TEMP_AUTO_TARGET_INDEX] = 0;
-			g_pMainPlayer->m_dwTemp[USER_TEMP_LASTATTACKTICK] = g_dwCurTick;
-		}
-		else if( m_dwUserIndex == g_pMainPlayer->m_dwTemp[USER_TEMP_AUTO_TARGET_INDEX] )
-		{
+		if( m_dwUserIndex == g_pMainPlayer->m_dwTemp[USER_TEMP_AUTO_TARGET_INDEX] ) {
 			g_pMainPlayer->m_dwTemp[USER_TEMP_AUTO_TARGET_INDEX] = 0;
 			g_pMainPlayer->m_dwTemp[USER_TEMP_LASTATTACKTICK] = g_dwCurTick;
 		}
@@ -1425,6 +1419,12 @@ void CUser::SetSkillFailAction(ENUM_SKILL_CASTING_FAIL_REASON eFailReason)
 				DisplayMessageAdd(g_Message[ETC_MESSAGE1043].szMessage, 0xFFFFC309); 
 			}			
 			break;
+		case SKILL_CASTING_FAIL_REASON_LACK_COOL_POINTS:
+			{
+			//"황소카드가 부족합니다."
+			DisplayMessageAdd("Not enough cool points! Increase EGO and wait for recharge", 0xFFFFC309);
+		}			
+			break;
 		case SKILL_CASTING_FAIL_REASON_LACK_SP:
 			{
 				// "SP가 부족합니다."
@@ -1653,8 +1653,8 @@ void CMainUser::BeginSkillCastOn(CUser *pTargetUser, BYTE bSkillKindLR)
 	m_pSkillPacket->bHeader = Protocol_CTS::CMD_SKILL;
 	m_pSkillPacket->skillMouseIndex		= bSkillKindLR;
 	m_pSkillPacket->targetDungeonID		= pTargetUser->m_dwUserIndex;
-	m_pSkillPacket->wTileIndex_X		= WORD(pTargetUser->m_v3CurPos.x / TILE_SIZE);
-	m_pSkillPacket->wTileIndex_Z		= WORD(pTargetUser->m_v3CurPos.z / TILE_SIZE);
+	m_pSkillPacket->wTileIndex_X		= WORD(pTargetUser->currentPosition().x / DUNGEON_TILE_SIZE);
+	m_pSkillPacket->wTileIndex_Z		= WORD(pTargetUser->currentPosition().z / DUNGEON_TILE_SIZE);
 	m_pSkillPacket->casterType = OBJECT_TYPE_PLAYER;
 	m_pSkillPacket->bTargetType = OBJECT_TYPE_PLAYER;
 	m_pSkillPacket->bPK = CUserInterface::GetInstance()->m_nPK == __PK_MODE__;
@@ -1671,8 +1671,8 @@ void CMainUser::BeginSkillCastOn(CMonster* pTargetMonster, BYTE bSkillKindLR)
 	m_pSkillPacket->bHeader = Protocol_CTS::CMD_SKILL;
 	m_pSkillPacket->skillMouseIndex		= bSkillKindLR;
 	m_pSkillPacket->targetDungeonID		= pTargetMonster->m_dwMonsterIndex;
-	m_pSkillPacket->wTileIndex_X		= WORD(pTargetMonster->m_v3CurPos.x / TILE_SIZE);
-	m_pSkillPacket->wTileIndex_Z		= WORD(pTargetMonster->m_v3CurPos.z / TILE_SIZE);
+	m_pSkillPacket->wTileIndex_X		= WORD(pTargetMonster->m_v3CurPos.x / DUNGEON_TILE_SIZE);
+	m_pSkillPacket->wTileIndex_Z		= WORD(pTargetMonster->m_v3CurPos.z / DUNGEON_TILE_SIZE);
 	m_pSkillPacket->casterType = OBJECT_TYPE_PLAYER;
 	m_pSkillPacket->bTargetType = OBJECT_TYPE_MONSTER;
 	m_pSkillPacket->bPK = CUserInterface::GetInstance()->m_nPK == __PK_MODE__;
@@ -1984,4 +1984,17 @@ void CMainUser::copyBeltItemsInto(CItem items[MAX_BELT_POOL]) const {
 	for (int i = 0; i < MAX_BELT_POOL; i++) {
 		items[i] = m_pBelt[i];
 	}
+}
+
+void CMainUser::SetStatus(BYTE bStatus, BOOL bLive) {
+	CUser::SetStatus(bStatus, bLive);
+
+	if(bStatus == UNIT_STATUS_DEAD) {
+		m_dwTemp[USER_TEMP_AUTO_TARGET_INDEX] = 0;
+		m_dwTemp[USER_TEMP_LASTATTACKTICK] = g_dwCurTick;
+	}
+
+	listenersUpdate(_updateListeners, [=](CMainUserUpdateInterestedSharedRef listener) {
+		listener->updatedStatus(this, (UNIT_STATUS)bStatus);
+	});
 }

@@ -9,8 +9,8 @@ namespace NewInterface {
 	public:
 		GenericItemView(CustomUI::Rect frameInParent, CustomUI::SpriteModel underlay);
 
-		CustomUI::Button* _button;
-		CustomUI::SingleLineLabel* _instanceCountLabel;
+		std::shared_ptr<CustomUI::Button> _button;
+		std::shared_ptr<CustomUI::SingleLineLabel> _instanceCountLabel;
 	};
 
 	class GenericItemsContainerView: public CustomUI::Renderable {
@@ -55,8 +55,8 @@ namespace NewInterface {
 
 	private:
 		CItemResourceHash* _resourceHash;
-		std::vector<GenericItemView*> _itemViews;
-		CustomUI::MatrixContainer* _matrixContainer;
+		std::vector<std::shared_ptr<GenericItemView>> _itemViews;
+		std::shared_ptr<CustomUI::MatrixContainer> _matrixContainer;
 		Appearance _appearance;
 		Handlers _handlers;
 	};

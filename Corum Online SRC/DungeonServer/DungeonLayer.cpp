@@ -1058,8 +1058,8 @@ BOOL CDungeonLayer::InsertMonster( CMonster* pMonster, const VECTOR2* v2Start )
 	pMonster->SetPrevSectionNum(0);
 	
 	// 알맞은 섹션을 찾은후 섹션에도 삽입.
-	DWORD dwCurX = (DWORD)(pMonster->GetCurPosition()->x / TILE_WIDTH);
-	DWORD dwCurZ = (DWORD)(pMonster->GetCurPosition()->y / TILE_HEIGHT);
+	DWORD dwCurX = (DWORD)(pMonster->GetCurPosition()->x / DUNGEON_TILE_WIDTH);
+	DWORD dwCurZ = (DWORD)(pMonster->GetCurPosition()->y / DUNGEON_TILE_HEIGHT);
 	
 	for( int i=0; i<m_wTotalSectionNum; i++ )
 	{
@@ -1312,7 +1312,7 @@ void CDungeonLayer::__ProcessUpdateItemOwner()
 
 void CDungeonLayer::__ProcessSiege()
 {
-	if (m_pParent->GetDungeonDataEx()->m_bSiege)
+	if (m_pParent->GetDungeonDataEx()->inSiegeWarNow)
 	{
 		// 공성중일때만 검사해야 한다.
 		DSTC_DESTROY_CP packet;
@@ -1356,7 +1356,7 @@ void CDungeonLayer::__ProcessSiege()
 						if (m_pParent->GetTotalLayer()-1 == pCP_User->GetCurLayerIndex()
 							&& !GetMap()->m_bCPRemainCount)
 						{
-							if (m_pParent->GetDungeonDataEx()->m_byCallGuardian)
+							if (m_pParent->GetDungeonDataEx()->invokeDungeonGuardianOnSiegeWar)
 							{
 								m_pParent->CreateDungeonGuardian();
 							}
@@ -1644,8 +1644,9 @@ void CDungeonLayer::CreateMonsterAll()
 		pMonster->SetInfoIndex( WORD(i) );
 		pMonster->Initialize(pBaseMonster, NULL, NULL, 0, pBaseMonster->wBaseLevel, pBaseMonster->dwExp);
 				
-		v2Start.x = TILE_X( m_pLayerFormation->pMonsterFormation[i].wX );
-		v2Start.y = TILE_Z( m_pLayerFormation->pMonsterFormation[i].wY );
+		
+		v2Start.x = DUNGEON_TILE_3D_X( m_pLayerFormation->pMonsterFormation[i].wX );
+		v2Start.y = DUNGEON_TILE_3D_Z( m_pLayerFormation->pMonsterFormation[i].wY );
 
 		pMonster->SetDestPosition(&v2Start);
 		
@@ -1667,8 +1668,8 @@ void CDungeonLayer::CreateMonster( CMonster* pMonster )
 
 	VECTOR2 v2Start = 
 	{
-		TILE_X( m_pLayerFormation->pMonsterFormation[pMonster->GetInfoIndex()].wX ),
-		TILE_Z( m_pLayerFormation->pMonsterFormation[pMonster->GetInfoIndex()].wY ) 
+		DUNGEON_TILE_3D_X( m_pLayerFormation->pMonsterFormation[pMonster->GetInfoIndex()].wX ),
+		DUNGEON_TILE_3D_Z( m_pLayerFormation->pMonsterFormation[pMonster->GetInfoIndex()].wY ) 
 	};
 
 	pMonster->SetCurPosition(&v2Start);
@@ -1696,8 +1697,8 @@ void CDungeonLayer::CreateMonster( CMonster* pMonster )
 		if( iSignX ) iRandX *= -1;
 		if( iSignZ ) iRandZ *= -1;
 		
-		pTile = m_pMap->GetTile( pMonster->GetCurPosition()->x + ( (float)iRandX * TILE_WIDTH ), 
-								pMonster->GetCurPosition()->y + ( (float)iRandZ * TILE_HEIGHT ) );
+		pTile = m_pMap->GetTile( pMonster->GetCurPosition()->x + ( (float)iRandX * DUNGEON_TILE_WIDTH ), 
+								pMonster->GetCurPosition()->y + ( (float)iRandZ * DUNGEON_TILE_HEIGHT ) );
 		
 		if( iCnt >= 30 ) 
 		{
@@ -1711,8 +1712,8 @@ void CDungeonLayer::CreateMonster( CMonster* pMonster )
 	
 	if( bSpot )
 	{
-		v2Start.x = TILE_X( pTile->wIndex_X );
-		v2Start.y = TILE_Z( pTile->wIndex_Z );
+		v2Start.x = DUNGEON_TILE_3D_X( pTile->wIndex_X );
+		v2Start.y = DUNGEON_TILE_3D_Z( pTile->wIndex_Z );
 		pMonster->SetCurPosition(&v2Start);
 	}
 	
@@ -1787,8 +1788,8 @@ CMonster* CDungeonLayer::CallDungeonGuardian( GUARDIAN_INFO* pGuardian )
 	// CP자리에 가디언을 출현 시킨다.
 	VECTOR2 v2Start = 
 	{
-		TILE_X( m_pMap->m_pGuardianTile->wIndex_X ),
-		TILE_Z( m_pMap->m_pGuardianTile->wIndex_Z ) 
+		DUNGEON_TILE_3D_X( m_pMap->m_pGuardianTile->wIndex_X ),
+		DUNGEON_TILE_3D_Z( m_pMap->m_pGuardianTile->wIndex_Z ) 
 	};
 	pMonster->SetDestPosition(&v2Start);
 	m_pParent->SetDungeonGuardian(pMonster);
@@ -2035,8 +2036,8 @@ VECTOR2 CDungeonLayer::GetAroundEmptyTile(WORD wIndex_X, WORD wIndex_Z)
 					if (pTileTemp->wAttr.uOccupied == TILE_EMPTY &&  !pTileTemp->pData)
 					{
 						// 나의 위치 재조정.
-						vecDest.x = pTileTemp->x+TILE_SIZE/2;
-						vecDest.y = pTileTemp->z+TILE_SIZE/2;
+						vecDest.x = pTileTemp->x+DUNGEON_TILE_SIZE/2;
+						vecDest.y = pTileTemp->z+DUNGEON_TILE_SIZE/2;
 						
 						return vecDest;
 					}
@@ -2085,8 +2086,8 @@ BOOL CDungeonLayer::GetStartTile(WORD wStartSpotID, VECTOR2* const pv2Start)
 			if(pTile->wAttr.uOccupied != TILE_EMPTY || pTile->pData)
 				continue;
 
-			pv2Start->x = TILE_X(x);	
-			pv2Start->y = TILE_Z(z);
+			pv2Start->x = DUNGEON_TILE_3D_X(x);	
+			pv2Start->y = DUNGEON_TILE_3D_Z(z);
 
 			return TRUE;
 		}
@@ -2178,7 +2179,7 @@ BOOL CDungeonLayer::RemoveMonster( CMonster* pMonster )
 	else
 	{
 		// 가디언과 서모닝 몬스터의 구분이다.
-		switch(pMonster->IsGuardian())
+		switch(pMonster->GuardianType())
 		{
 		case GUARDIAN_TYPE_NORMAL:	// 주인있는 가디언 가디언은 삭제될 때 Update한다.
 			{
@@ -2196,6 +2197,8 @@ BOOL CDungeonLayer::RemoveMonster( CMonster* pMonster )
 		case GUARDIAN_TYPE_DUNGEON:
 			m_pParent->SetDungeonGuardian(NULL);
 			break;
+		default:
+			break; 
 		}
 
 		if (pMonster->IsElemental())
@@ -2216,6 +2219,7 @@ BOOL CDungeonLayer::RemoveMonster( CMonster* pMonster )
 		}
 
 		g_pMonsterTable->Remove( pMonster );
+
 	}
 
 	return true;
