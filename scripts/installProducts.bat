@@ -65,6 +65,11 @@ call :CENTRALIZED_TO_INSTALLED SoundLib.dll
 
 call :CENTRALIZED_TO_INSTALLED CorumPreLauncher.exe
 
+call :COPY_IN_ALL_PLACES 4DyuchiGXMapEditor.exe
+call :COPY_IN_ALL_PLACES 4DyuchiGXMapEditor.pdb
+
+call :COPY_IN_ALL_PLACES ModelView.exe
+call :COPY_IN_ALL_PLACES ModelView.pdb
 
 call :CENTRALIZED_TO_FILEPACK SS3DGFunc.pdb
 call :CENTRALIZED_TO_FILEPACK SS3DGFunc.lib
@@ -85,6 +90,7 @@ call :PROJECT_ROOT_DIR_TO_CENTRALIZED SERVER_STATIC_DATA.json
 
 call :COPY_IN_ALL_PLACES DUNGEON_STATIC_DATA.json
 call :COPY_IN_ALL_PLACES SERVER_STATIC_DATA.json
+
 
 echo "copying done"
 pause

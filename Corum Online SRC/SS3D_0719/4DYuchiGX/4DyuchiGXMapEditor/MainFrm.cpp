@@ -24,7 +24,6 @@ CDialogBar*	g_pDlgBar		=	NULL;
 /////////////////////////////////////////////////////////////////////////////
 // CMainFrame
 
-#pragma comment(lib, "./../../4DYuchiDLL/SS3DGFunc.lib")
 
 //---
 BOOL		bSplitterSize	= FALSE;

@@ -303,7 +303,7 @@ void CDlgEffectPalette::OnButtonEffectSave()
 	fp = fopen(szHeaderFileName,"wt");
 
 	
-	for (i=0; i<dwEffectNum; i++)
+	for (int i=0; i<dwEffectNum; i++)
 	{
 		fprintf(fp,"%s \t%s%s \t %d \n","#define","EFS_",pEffectTable[i].szEffectShaderName,i);
 	}

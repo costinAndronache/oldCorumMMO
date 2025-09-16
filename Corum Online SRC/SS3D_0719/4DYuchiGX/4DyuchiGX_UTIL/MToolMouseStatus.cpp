@@ -4,7 +4,6 @@
 
 //#include "stdafx.h"
 //#include "4DyuchiGXMapEditor.h"
-#include "StdAfx.h"
 #include "MToolMouseStatus.h"
 #include "../4dyuchigrx_common/typedef.h"
 #include "../4DyuchiGXGFunc/global.h"

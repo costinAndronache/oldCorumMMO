@@ -1,4 +1,3 @@
-#include "StdAfx.h"
 #include "../4DyuchiGRX_Common/stdafx.h"
 #include "MouseLib.h"
 #include "../4DyuchiGXGFunc/global.h"

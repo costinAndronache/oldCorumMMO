@@ -35,7 +35,7 @@ BOOL CTileBrush::CreateBrush(char* szBrushName,HFIELD_POS* pTileList,DWORD dwTil
 	m_pTileList = new HFIELD_POS[dwTileNum];
 	m_pwTexTileIndexList = new WORD[dwTileNum];
 
-	for (i=0; i<dwTileNum; i++)
+	for (int i=0; i<dwTileNum; i++)
 	{
 		m_pTileList[i].dwX = pTileList[i].dwX - dwMinX;
 		m_pTileList[i].dwZ = pTileList[i].dwZ - dwMinZ;

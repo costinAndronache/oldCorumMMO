@@ -55,7 +55,7 @@ CTileSetPiece* CTileSetEntry::GetRandomPiece()
 		return NULL;
 	
 	DWORD randVal = rand()%TotalVal;
-	for(n=0;n<MAX_PIECE_PER_ENTRY;++n)
+	for(int n=0; n < MAX_PIECE_PER_ENTRY;++n)
 	{
 		if( randVal >= ProbabilityMin[n] &&
 			randVal < ProbabilityMax[n] )

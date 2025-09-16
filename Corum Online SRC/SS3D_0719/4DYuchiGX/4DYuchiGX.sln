@@ -1,166 +1,30 @@
-Microsoft Visual Studio Solution File, Format Version 8.00
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "4DyuchiFilePack", "4DyuchiFilePack\4DyuchiFilePack.vcproj", "{D9A63CE6-AF59-4A75-BDEF-E692A051E713}"
-	ProjectSection(ProjectDependencies) = postProject
-		{CFB0CD92-3451-4AB6-BB4C-CE2CF5B58D0A} = {CFB0CD92-3451-4AB6-BB4C-CE2CF5B58D0A}
-	EndProjectSection
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "4DyuchiFileStorage", "4DyuchiFileStorage\4DyuchiFileStorage.vcproj", "{6108148B-57B7-4C94-9901-CFA81DDEE539}"
-	ProjectSection(ProjectDependencies) = postProject
-		{CFB0CD92-3451-4AB6-BB4C-CE2CF5B58D0A} = {CFB0CD92-3451-4AB6-BB4C-CE2CF5B58D0A}
-	EndProjectSection
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "4DyuchiGX_Render", "4DYUCHIGX_RENDER\4DyuchiGX_Render.vcproj", "{7D7B58DC-ED02-464E-A5B2-3B39F14524F0}"
-	ProjectSection(ProjectDependencies) = postProject
-		{CFB0CD92-3451-4AB6-BB4C-CE2CF5B58D0A} = {CFB0CD92-3451-4AB6-BB4C-CE2CF5B58D0A}
-	EndProjectSection
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "4DyuchiGXExecutive", "4DYUCHIGXEXECUTIVE\4DyuchiGXExecutive.vcproj", "{896EEE52-A39E-4FDB-B932-ED8FD8B7A956}"
-	ProjectSection(ProjectDependencies) = postProject
-		{CFB0CD92-3451-4AB6-BB4C-CE2CF5B58D0A} = {CFB0CD92-3451-4AB6-BB4C-CE2CF5B58D0A}
-	EndProjectSection
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "4DyuchiGXGeometry", "4DyuchiGXGeometry\4DyuchiGXGeometry.vcproj", "{A0F99550-B20D-433B-8402-CDCAAB395885}"
-	ProjectSection(ProjectDependencies) = postProject
-		{CFB0CD92-3451-4AB6-BB4C-CE2CF5B58D0A} = {CFB0CD92-3451-4AB6-BB4C-CE2CF5B58D0A}
-	EndProjectSection
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "4DyuchiGXGFunc", "4DyuchiGXGFunc\4DyuchiGXGFunc.vcproj", "{CFB0CD92-3451-4AB6-BB4C-CE2CF5B58D0A}"
-	ProjectSection(ProjectDependencies) = postProject
-	EndProjectSection
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "4DyuchiGXMapEditor", "4DyuchiGXMapEditor\4DyuchiGXMapEditor.vcproj", "{8CC6901C-1C47-4BD9-8815-4BB6FF2B6FC3}"
-	ProjectSection(ProjectDependencies) = postProject
-		{A0F99550-B20D-433B-8402-CDCAAB395885} = {A0F99550-B20D-433B-8402-CDCAAB395885}
-		{896EEE52-A39E-4FDB-B932-ED8FD8B7A956} = {896EEE52-A39E-4FDB-B932-ED8FD8B7A956}
-		{6108148B-57B7-4C94-9901-CFA81DDEE539} = {6108148B-57B7-4C94-9901-CFA81DDEE539}
-		{CFB0CD92-3451-4AB6-BB4C-CE2CF5B58D0A} = {CFB0CD92-3451-4AB6-BB4C-CE2CF5B58D0A}
-		{7D7B58DC-ED02-464E-A5B2-3B39F14524F0} = {7D7B58DC-ED02-464E-A5B2-3B39F14524F0}
-		{D9A63CE6-AF59-4A75-BDEF-E692A051E713} = {D9A63CE6-AF59-4A75-BDEF-E692A051E713}
-	EndProjectSection
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ModelView", "ModelView\ModelView.vcproj", "{37C2C483-B3E3-4511-B5A8-ED5E357DD704}"
-	ProjectSection(ProjectDependencies) = postProject
-		{A0F99550-B20D-433B-8402-CDCAAB395885} = {A0F99550-B20D-433B-8402-CDCAAB395885}
-		{896EEE52-A39E-4FDB-B932-ED8FD8B7A956} = {896EEE52-A39E-4FDB-B932-ED8FD8B7A956}
-		{6108148B-57B7-4C94-9901-CFA81DDEE539} = {6108148B-57B7-4C94-9901-CFA81DDEE539}
-		{CFB0CD92-3451-4AB6-BB4C-CE2CF5B58D0A} = {CFB0CD92-3451-4AB6-BB4C-CE2CF5B58D0A}
-		{7D7B58DC-ED02-464E-A5B2-3B39F14524F0} = {7D7B58DC-ED02-464E-A5B2-3B39F14524F0}
-		{D9A63CE6-AF59-4A75-BDEF-E692A051E713} = {D9A63CE6-AF59-4A75-BDEF-E692A051E713}
-	EndProjectSection
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.12.35707.178 d17.12
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ModelView", "ModelView\ModelView.vcxproj", "{37C2C483-B3E3-4511-B5A8-ED5E357DD704}"
 EndProject
 Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x86 = Debug|x86
+		for SSE Debug|x86 = for SSE Debug|x86
+		for SSE Release|x86 = for SSE Release|x86
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{37C2C483-B3E3-4511-B5A8-ED5E357DD704}.Debug|x86.ActiveCfg = Debug|Win32
+		{37C2C483-B3E3-4511-B5A8-ED5E357DD704}.Debug|x86.Build.0 = Debug|Win32
+		{37C2C483-B3E3-4511-B5A8-ED5E357DD704}.for SSE Debug|x86.ActiveCfg = Debug|Win32
+		{37C2C483-B3E3-4511-B5A8-ED5E357DD704}.for SSE Debug|x86.Build.0 = Debug|Win32
+		{37C2C483-B3E3-4511-B5A8-ED5E357DD704}.for SSE Release|x86.ActiveCfg = Release|Win32
+		{37C2C483-B3E3-4511-B5A8-ED5E357DD704}.for SSE Release|x86.Build.0 = Release|Win32
+		{37C2C483-B3E3-4511-B5A8-ED5E357DD704}.Release|x86.ActiveCfg = Release|Win32
+		{37C2C483-B3E3-4511-B5A8-ED5E357DD704}.Release|x86.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
 	GlobalSection(DPCodeReviewSolutionGUID) = preSolution
 		DPCodeReviewSolutionGUID = {00000000-0000-0000-0000-000000000000}
-	EndGlobalSection
-	GlobalSection(SourceCodeControl) = preSolution
-		SccNumberOfProjects = 8
-		SccProjectUniqueName0 = 4DyuchiFilePack\\4DyuchiFilePack.vcproj
-		SccProjectName0 = \u0022$/4DyuchiGX/4DYUCHIFILEPACK\u0022,\u0020SEDAAAAA
-		SccLocalPath0 = 4DyuchiFilePack
-		SccProvider0 = MSSCCI:Microsoft\u0020Visual\u0020SourceSafe
-		SccProjectUniqueName1 = 4DyuchiFileStorage\\4DyuchiFileStorage.vcproj
-		SccProjectName1 = \u0022$/4DyuchiGX/4DyuchiFileStorage\u0022,\u0020YNAAAAAA
-		SccLocalPath1 = 4DyuchiFileStorage
-		SccProvider1 = MSSCCI:Microsoft\u0020Visual\u0020SourceSafe
-		SccProjectUniqueName2 = 4DYUCHIGX_RENDER\\4DyuchiGX_Render.vcproj
-		SccProjectName2 = \u0022$/4DyuchiGX/4DyuchiGX_Render\u0022,\u0020DGAAAAAA
-		SccLocalPath2 = 4DYUCHIGX_RENDER
-		SccProvider2 = MSSCCI:Microsoft\u0020Visual\u0020SourceSafe
-		SccProjectUniqueName3 = 4DYUCHIGXEXECUTIVE\\4DyuchiGXExecutive.vcproj
-		SccProjectName3 = \u0022$/4DyuchiGX/4DyuchiGXExecutive\u0022,\u0020SNCAAAAA
-		SccLocalPath3 = 4DYUCHIGXEXECUTIVE
-		SccProvider3 = MSSCCI:Microsoft\u0020Visual\u0020SourceSafe
-		SccProjectUniqueName4 = 4DyuchiGXGeometry\\4DyuchiGXGeometry.vcproj
-		SccProjectName4 = \u0022$/4DyuchiGX/4DyuchiGXGeometry\u0022,\u0020NKAAAAAA
-		SccLocalPath4 = 4DyuchiGXGeometry
-		SccProvider4 = MSSCCI:Microsoft\u0020Visual\u0020SourceSafe
-		SccProjectUniqueName5 = 4DyuchiGXGFunc\\4DyuchiGXGFunc.vcproj
-		SccProjectName5 = \u0022$/4DyuchiGX/4DyuchiGXGFunc\u0022,\u0020HQCAAAAA
-		SccLocalPath5 = 4DyuchiGXGFunc
-		SccProvider5 = MSSCCI:Microsoft\u0020Visual\u0020SourceSafe
-		SccProjectUniqueName6 = 4DyuchiGXMapEditor\\4DyuchiGXMapEditor.vcproj
-		SccProjectName6 = \u0022$/4DyuchiGX/4DyuchiGXMapEditor\u0022,\u0020JXBAAAAA
-		SccLocalPath6 = 4DyuchiGXMapEditor
-		SccProvider6 = MSSCCI:Microsoft\u0020Visual\u0020SourceSafe
-		SccProjectUniqueName7 = ModelView\\ModelView.vcproj
-		SccProjectName7 = \u0022$/4DyuchiGX/ModelView\u0022,\u0020NHCAAAAA
-		SccLocalPath7 = ModelView
-		SccProvider7 = MSSCCI:Microsoft\u0020Visual\u0020SourceSafe
-	EndGlobalSection
-	GlobalSection(SolutionConfiguration) = preSolution
-		Debug = Debug
-		for SSE Debug = for SSE Debug
-		for SSE Release = for SSE Release
-		Release = Release
-	EndGlobalSection
-	GlobalSection(ProjectConfiguration) = postSolution
-		{D9A63CE6-AF59-4A75-BDEF-E692A051E713}.Debug.ActiveCfg = Debug|Win32
-		{D9A63CE6-AF59-4A75-BDEF-E692A051E713}.Debug.Build.0 = Debug|Win32
-		{D9A63CE6-AF59-4A75-BDEF-E692A051E713}.for SSE Debug.ActiveCfg = Debug|Win32
-		{D9A63CE6-AF59-4A75-BDEF-E692A051E713}.for SSE Debug.Build.0 = Debug|Win32
-		{D9A63CE6-AF59-4A75-BDEF-E692A051E713}.for SSE Release.ActiveCfg = Release|Win32
-		{D9A63CE6-AF59-4A75-BDEF-E692A051E713}.for SSE Release.Build.0 = Release|Win32
-		{D9A63CE6-AF59-4A75-BDEF-E692A051E713}.Release.ActiveCfg = Release|Win32
-		{D9A63CE6-AF59-4A75-BDEF-E692A051E713}.Release.Build.0 = Release|Win32
-		{6108148B-57B7-4C94-9901-CFA81DDEE539}.Debug.ActiveCfg = Debug|Win32
-		{6108148B-57B7-4C94-9901-CFA81DDEE539}.Debug.Build.0 = Debug|Win32
-		{6108148B-57B7-4C94-9901-CFA81DDEE539}.for SSE Debug.ActiveCfg = Debug|Win32
-		{6108148B-57B7-4C94-9901-CFA81DDEE539}.for SSE Debug.Build.0 = Debug|Win32
-		{6108148B-57B7-4C94-9901-CFA81DDEE539}.for SSE Release.ActiveCfg = Release|Win32
-		{6108148B-57B7-4C94-9901-CFA81DDEE539}.for SSE Release.Build.0 = Release|Win32
-		{6108148B-57B7-4C94-9901-CFA81DDEE539}.Release.ActiveCfg = Release|Win32
-		{6108148B-57B7-4C94-9901-CFA81DDEE539}.Release.Build.0 = Release|Win32
-		{7D7B58DC-ED02-464E-A5B2-3B39F14524F0}.Debug.ActiveCfg = Debug|Win32
-		{7D7B58DC-ED02-464E-A5B2-3B39F14524F0}.Debug.Build.0 = Debug|Win32
-		{7D7B58DC-ED02-464E-A5B2-3B39F14524F0}.for SSE Debug.ActiveCfg = Debug|Win32
-		{7D7B58DC-ED02-464E-A5B2-3B39F14524F0}.for SSE Debug.Build.0 = Debug|Win32
-		{7D7B58DC-ED02-464E-A5B2-3B39F14524F0}.for SSE Release.ActiveCfg = Release|Win32
-		{7D7B58DC-ED02-464E-A5B2-3B39F14524F0}.for SSE Release.Build.0 = Release|Win32
-		{7D7B58DC-ED02-464E-A5B2-3B39F14524F0}.Release.ActiveCfg = Release|Win32
-		{7D7B58DC-ED02-464E-A5B2-3B39F14524F0}.Release.Build.0 = Release|Win32
-		{896EEE52-A39E-4FDB-B932-ED8FD8B7A956}.Debug.ActiveCfg = Debug|Win32
-		{896EEE52-A39E-4FDB-B932-ED8FD8B7A956}.Debug.Build.0 = Debug|Win32
-		{896EEE52-A39E-4FDB-B932-ED8FD8B7A956}.for SSE Debug.ActiveCfg = Debug|Win32
-		{896EEE52-A39E-4FDB-B932-ED8FD8B7A956}.for SSE Debug.Build.0 = Debug|Win32
-		{896EEE52-A39E-4FDB-B932-ED8FD8B7A956}.for SSE Release.ActiveCfg = Release|Win32
-		{896EEE52-A39E-4FDB-B932-ED8FD8B7A956}.for SSE Release.Build.0 = Release|Win32
-		{896EEE52-A39E-4FDB-B932-ED8FD8B7A956}.Release.ActiveCfg = Release|Win32
-		{896EEE52-A39E-4FDB-B932-ED8FD8B7A956}.Release.Build.0 = Release|Win32
-		{A0F99550-B20D-433B-8402-CDCAAB395885}.Debug.ActiveCfg = Debug|Win32
-		{A0F99550-B20D-433B-8402-CDCAAB395885}.Debug.Build.0 = Debug|Win32
-		{A0F99550-B20D-433B-8402-CDCAAB395885}.for SSE Debug.ActiveCfg = Debug|Win32
-		{A0F99550-B20D-433B-8402-CDCAAB395885}.for SSE Debug.Build.0 = Debug|Win32
-		{A0F99550-B20D-433B-8402-CDCAAB395885}.for SSE Release.ActiveCfg = Release|Win32
-		{A0F99550-B20D-433B-8402-CDCAAB395885}.for SSE Release.Build.0 = Release|Win32
-		{A0F99550-B20D-433B-8402-CDCAAB395885}.Release.ActiveCfg = Release|Win32
-		{A0F99550-B20D-433B-8402-CDCAAB395885}.Release.Build.0 = Release|Win32
-		{CFB0CD92-3451-4AB6-BB4C-CE2CF5B58D0A}.Debug.ActiveCfg = Debug|Win32
-		{CFB0CD92-3451-4AB6-BB4C-CE2CF5B58D0A}.Debug.Build.0 = Debug|Win32
-		{CFB0CD92-3451-4AB6-BB4C-CE2CF5B58D0A}.for SSE Debug.ActiveCfg = for SSE Debug|Win32
-		{CFB0CD92-3451-4AB6-BB4C-CE2CF5B58D0A}.for SSE Debug.Build.0 = for SSE Debug|Win32
-		{CFB0CD92-3451-4AB6-BB4C-CE2CF5B58D0A}.for SSE Release.ActiveCfg = for SSE Release|Win32
-		{CFB0CD92-3451-4AB6-BB4C-CE2CF5B58D0A}.for SSE Release.Build.0 = for SSE Release|Win32
-		{CFB0CD92-3451-4AB6-BB4C-CE2CF5B58D0A}.Release.ActiveCfg = Release|Win32
-		{CFB0CD92-3451-4AB6-BB4C-CE2CF5B58D0A}.Release.Build.0 = Release|Win32
-		{8CC6901C-1C47-4BD9-8815-4BB6FF2B6FC3}.Debug.ActiveCfg = Debug|Win32
-		{8CC6901C-1C47-4BD9-8815-4BB6FF2B6FC3}.Debug.Build.0 = Debug|Win32
-		{8CC6901C-1C47-4BD9-8815-4BB6FF2B6FC3}.for SSE Debug.ActiveCfg = Debug|Win32
-		{8CC6901C-1C47-4BD9-8815-4BB6FF2B6FC3}.for SSE Debug.Build.0 = Debug|Win32
-		{8CC6901C-1C47-4BD9-8815-4BB6FF2B6FC3}.for SSE Release.ActiveCfg = Release|Win32
-		{8CC6901C-1C47-4BD9-8815-4BB6FF2B6FC3}.for SSE Release.Build.0 = Release|Win32
-		{8CC6901C-1C47-4BD9-8815-4BB6FF2B6FC3}.Release.ActiveCfg = Release|Win32
-		{8CC6901C-1C47-4BD9-8815-4BB6FF2B6FC3}.Release.Build.0 = Release|Win32
-		{37C2C483-B3E3-4511-B5A8-ED5E357DD704}.Debug.ActiveCfg = Debug|Win32
-		{37C2C483-B3E3-4511-B5A8-ED5E357DD704}.Debug.Build.0 = Debug|Win32
-		{37C2C483-B3E3-4511-B5A8-ED5E357DD704}.for SSE Debug.ActiveCfg = Debug|Win32
-		{37C2C483-B3E3-4511-B5A8-ED5E357DD704}.for SSE Debug.Build.0 = Debug|Win32
-		{37C2C483-B3E3-4511-B5A8-ED5E357DD704}.for SSE Release.ActiveCfg = Release|Win32
-		{37C2C483-B3E3-4511-B5A8-ED5E357DD704}.for SSE Release.Build.0 = Release|Win32
-		{37C2C483-B3E3-4511-B5A8-ED5E357DD704}.Release.ActiveCfg = Release|Win32
-		{37C2C483-B3E3-4511-B5A8-ED5E357DD704}.Release.Build.0 = Release|Win32
-	EndGlobalSection
-	GlobalSection(ExtensibilityGlobals) = postSolution
-	EndGlobalSection
-	GlobalSection(ExtensibilityAddIns) = postSolution
 	EndGlobalSection
 EndGlobal

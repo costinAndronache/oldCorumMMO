@@ -359,3 +359,13 @@ CmdChangeLayer
 Dungeons and group IDs
   - basically used for passage dungeons, 
   - dungeons having the same 'groupID' all activate their 'hover' effect when the player hovers over any one of them
+
+
+
+  ================================================
+  Resources ::
+    - .mod ===> 3D model
+    - .anm ===> animation data for a 3D model (vertices, faces, material)
+    - .chr =====> it combines a 3D model with an animation 
+         ====> animations can be re-used between diffrent models
+            ====> i.e. all dual costumes / character models  reuse the same walking, running ,attacking, etc... animations

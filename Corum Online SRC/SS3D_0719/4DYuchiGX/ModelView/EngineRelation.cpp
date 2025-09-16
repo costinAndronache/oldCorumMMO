@@ -10,7 +10,7 @@
 #include "EngineRelation.h"
 #include "ToolInfo.h"
 #include "DlgEffectPalette.h"
-
+#include <functional>
 
 /// Global Object ////////////////////////////////////////////////////////////
 
@@ -31,14 +31,47 @@ BOOL InitTool(HWND hWnd)
 {
 	CoInitialize(NULL);
 
-	if (S_OK != CoCreateInstance(CLSID_4DyuchiGXExecutive,
-								 NULL,
-								 CLSCTX_INPROC_SERVER,
-								 IID_4DyuchiGXExecutive,
-								 (void**)&g_pExecutive))
-	{
-		return FALSE;
+	auto g_hExecutiveHandle = LoadLibrary("SS3DExecutiveForCorum.dll");
+	DWORD lastError = GetLastError();
+	CREATE_INSTANCE_FUNC pFunc = (CREATE_INSTANCE_FUNC)GetProcAddress(g_hExecutiveHandle,"DllCreateInstance");
+
+	HRESULT hr = pFunc((void**)&g_pExecutive);
+
+	if (hr != S_OK) { 
+		return FALSE; 
 	}
+
+	std::function<PACKFILE_NAME_TABLE(const char*)> entry = [](const char* path) {
+		PACKFILE_NAME_TABLE result;
+		result.dwFlag = 0;
+		strncpy(result.szFileName, path, _MAX_PATH);
+
+		return result;
+	};
+
+	PACKFILE_NAME_TABLE paks[] = {
+		entry("Data\\Character\\Character.pak"),
+		entry("Data\\DamageNumber\\DamageNumber.pak"),
+		entry("Data\\Effect\\Effect.pak"),
+		entry("Data\\Item\\Item.pak"),
+		entry("Data\\Map_chr\\Map_chr.pak"),
+		entry("Data\\Map_dds\\Map_dds.pak"),
+		entry("Data\\Map_light\\Map_light.pak"),
+		entry("Data\\Map_stm\\Map_stm.pak"),
+		entry("Data\\Map_tga\\Map_tga.pak"),
+		entry("Data\\Map_tif\\Map_tif.pak"),
+		entry("Data\\Monster\\Monster.pak"),
+		entry("Data\\Npc\\Npc.pak"),
+		entry("Data\\UI\\UI.pak")
+	};
+
+	PACKFILE_NAME_TABLE sPackFileNameTable[256];
+
+	g_pExecutive->InitializeFileStorageWithoutRegistry("SS3DFileStorage.dll", 12000, 4096, 64, 
+		FILE_ACCESS_METHOD_FILE_OR_PACK, paks, 13);
+
+	g_pExecutive->InitializeWithoutRegistry("SS3DGeometryForCorum.dll", "SS3DRendererForCorum.dll", hWnd, NULL, 10000, 1024, 512, 32, 32, NULL);
+
 
 	DISPLAY_INFO	dispInfo;
 	memset(&dispInfo, 0, sizeof(dispInfo));
@@ -49,15 +82,6 @@ BOOL InitTool(HWND hWnd)
 	dispInfo.dispType = WINDOW_WITH_BLT;
 	dispInfo.dwRefreshRate = 85;
 
-	g_pExecutive->InitializeFileStorage(0,4096,0,FILE_ACCESS_METHOD_ONLY_FILE,NULL,0);
-	g_pExecutive->Initialize(hWnd,
-		                   &dispInfo,
-						   4096,
-						   512,
-						   1024,
-						   32,
-						   32,
-						   NULL);
 
 	g_pExecutive->GetGeometry()->SetViewport(NULL,0);
 	SetFramePerSecond(g_ToolInfo.m_dwFps);
@@ -512,7 +536,7 @@ BOOL MakeCameraMatrix(VECTOR3* pv3Out,
 //---------------------------------------------------------------------------
 BOOL SetFramePerSecond(DWORD dwFps)
 {
-	g_pExecutive->SetFramePerSec(dwFps);
+	//g_pExecutive->SetFramePerSec(dwFps);
 
 	return TRUE;
 }

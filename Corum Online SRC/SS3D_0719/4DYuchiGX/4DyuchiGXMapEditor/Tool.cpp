@@ -6,6 +6,7 @@
 #include "stdafx.h"
 #include "4DyuchiGXMapEditor.h"
 #include "Tool.h"
+#include <functional>
 
 #ifdef _DEBUG
 #undef THIS_FILE
@@ -137,7 +138,9 @@ void CTool::Render()
 	m_pExecutive->GetGeometry()->BeginRender(0, m_dwBackColor, 0);
 	
 	m_pExecutive->GetGeometry()->RenderSphere(&g_v3Point,10.0f,0xffffffff);
-	m_pExecutive->Process();
+	int processed = 0, lost = 0;
+	m_pExecutive->LogicPass(GetTickCount(), 1000 / 60, &processed, &lost);
+	m_pExecutive->Render(0, 1000 / 60);
 
 
 	if (m_pArrow)
@@ -205,7 +208,7 @@ void CTool::Render()
 
 	}
 lb_skip:
-	m_pExecutive->Render();
+	m_pExecutive->Render(0, 60.0 / 1000.0);
 	if (m_bDrawSelectedRect)
 	{
 		m_pExecutive->GetRenderer()->RenderLine(m_v2PointSelectRect+0,m_v2PointSelectRect+1,0xff00ff00);
@@ -447,22 +450,49 @@ BOOL CTool::Initialize(CWnd* pWnd)
 
 	m_pEditWindow = pWnd;
 	
-	HRESULT hr;
+	auto g_hExecutiveHandle = LoadLibrary("SS3DExecutiveForCorum.dll");
+	DWORD lastError = GetLastError();
+	CREATE_INSTANCE_FUNC pFunc = (CREATE_INSTANCE_FUNC)GetProcAddress(g_hExecutiveHandle,"DllCreateInstance");
 
-	// Excutive»ý¼º
-	hr = CoCreateInstance(
-           CLSID_4DyuchiGXExecutive,
-           NULL,
-           CLSCTX_INPROC_SERVER,
-           IID_4DyuchiGXExecutive,
-           (void**)&m_pExecutive);
+	HRESULT hr = pFunc((void**)&m_pExecutive);
 
-	if (hr != S_OK)
-		__asm int 3
+	if (hr != S_OK) { 
+		return FALSE; 
+	}
 
-	m_pExecutive->InitializeFileStorage(0,4096,_MAX_PATH,FILE_ACCESS_METHOD_ONLY_FILE,NULL,0);
+	std::function<PACKFILE_NAME_TABLE(const char*)> entry = [](const char* path) {
+		PACKFILE_NAME_TABLE result;
+		result.dwFlag = 0;
+		strncpy(result.szFileName, path, _MAX_PATH);
+
+		return result;
+	};
+
+	PACKFILE_NAME_TABLE paks[] = {
+		entry("Data\\Character\\Character.pak"),
+		entry("Data\\DamageNumber\\DamageNumber.pak"),
+		entry("Data\\Effect\\Effect.pak"),
+		entry("Data\\Item\\Item.pak"),
+		entry("Data\\Map_chr\\Map_chr.pak"),
+		entry("Data\\Map_dds\\Map_dds.pak"),
+		entry("Data\\Map_light\\Map_light.pak"),
+		entry("Data\\Map_stm\\Map_stm.pak"),
+		entry("Data\\Map_tga\\Map_tga.pak"),
+		entry("Data\\Map_tif\\Map_tif.pak"),
+		entry("Data\\Monster\\Monster.pak"),
+		entry("Data\\Npc\\Npc.pak"),
+		entry("Data\\UI\\UI.pak")
+	};
+	
+	PACKFILE_NAME_TABLE sPackFileNameTable[256];
+
+	m_pExecutive->InitializeFileStorageWithoutRegistry("SS3DFileStorage.dll", 12000, 4096, 64, 
+		FILE_ACCESS_METHOD_FILE_OR_PACK, paks, 13);
+
+	m_pExecutive->InitializeWithoutRegistry("SS3DGeometryForCorum.dll", "SS3DRendererForCorum.dll", pWnd->m_hWnd, NULL, 10000, 1024, 512, 32, 32, NULL);
+
 	m_pExecutive->GetFileStorage(&m_pFileStorage);
-	m_pExecutive->Initialize(pWnd->m_hWnd,NULL,8192,512,512,32,32,NULL);
+	//m_pExecutive->Initialize(pWnd->m_hWnd,NULL,8192,512,512,32,32,NULL);
 	
 //	m_pExecutive->Initialize(g_pMainFrame->m_hWnd,NULL,4096,512,512);
 	g_pMainFrame->DockControl();

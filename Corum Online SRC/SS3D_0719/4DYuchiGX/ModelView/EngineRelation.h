@@ -14,10 +14,6 @@
 #include "./../4DyuchiGXGFunc/global.h"
 
 
-#pragma comment(lib, "./../../4DyuchiDLL/SS3DGFunc.lib")
-
-
-
 #ifndef __TP_ENGINE_RELATION__
 #define __TP_ENGINE_RELATION__
 

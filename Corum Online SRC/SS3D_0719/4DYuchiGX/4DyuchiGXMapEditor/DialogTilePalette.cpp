@@ -92,17 +92,16 @@ BOOL CDialogTilePalette::Initialize(DWORD dwTileSize,CDialogEditEntry* pEditEntr
 	//
 
 		// ·»´õ·¯ ÄÄÆ÷³ÍÆ® »ý¼º
-	HRESULT hr;
+	auto handle = LoadLibrary("SS3DRendererForCorum.dll");
+	DWORD lastError = GetLastError();
+	CREATE_INSTANCE_FUNC pFunc = (CREATE_INSTANCE_FUNC)GetProcAddress(handle,"DllCreateInstance");
 
-	hr = CoCreateInstance(
-           CLSID_4DyuchiGXRenderer,
-           NULL,
-           CLSCTX_INPROC_SERVER,
-           IID_4DyuchiGXRenderer,
-           (void**)&m_pRenderer);
+	const auto hr = pFunc((void**)&m_pRenderer);
 
-	if (hr != S_OK)
-		__asm int 3
+	if (hr != S_OK) {
+		return FALSE;
+	}
+
 
 	m_fTileHeight = m_fTileWidth = (float)dwTileSize;
 	 
