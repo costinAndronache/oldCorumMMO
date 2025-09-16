@@ -13,7 +13,7 @@ const auto WorldZ = std::string("WorldPos_Z");
 const auto Name = std::string("Name");
 const auto WorldMapID = std::string("WorldMap");
 const auto LayerFormation = std::string("LayerFormation");
-
+const auto GroupID = std::string("GroupID");
 const auto serverIP = std::string("ip");
 const auto serverPort = std::string("port");
 const auto serverType = std::string("serverType");
@@ -22,11 +22,12 @@ const auto serverType = std::string("serverType");
 Dungeon::Dungeon(
 	int id, unsigned int port, 
 	const std::string& name, 
-	double worldX, double worldZ, int worldMapID,
+	double worldX, double worldZ, 
+	int worldMapID, int groupID,
 	const std::vector<uint32_t>& inputLayerFormationIDs
 ) : id(id), dungeonServerPort(port), name(name), 
 worldMapCoordX(worldX), worldMapCoordZ(worldZ), 
-worldMapID(worldMapID),
+worldMapID(worldMapID), groupID(groupID),
 layerFormationIDs(inputLayerFormationIDs)
 {
 }
@@ -36,7 +37,7 @@ Dungeon::Dungeon(const Dungeon& other)
 	worldMapCoordX(other.worldMapCoordX),
 	worldMapCoordZ(other.worldMapCoordZ),
 	layerFormationIDs(other.layerFormationIDs),
-	worldMapID(other.worldMapID)
+	worldMapID(other.worldMapID), groupID(other.groupID)
 {
 
 }
@@ -44,7 +45,7 @@ Dungeon::Dungeon(const Dungeon& other)
 static DungeonDecodingResult decodeDungeonFromJSON(const json& dungeonJSON) {
 	auto missingKeys = JSONUtilities::allMissingValues(
 		dungeonJSON,
-		std::set<std::string>{ ID, Port, WorldX, WorldZ, Name, WorldMapID, LayerFormation }
+		std::set<std::string>{ ID, Port, WorldX, WorldZ, Name, WorldMapID, LayerFormation, GroupID }
 	);
 
 	if(!missingKeys.empty()) { 
@@ -58,6 +59,7 @@ static DungeonDecodingResult decodeDungeonFromJSON(const json& dungeonJSON) {
 		dungeonJSON[WorldX],
 		dungeonJSON[WorldZ],
 		dungeonJSON[WorldMapID],
+		dungeonJSON[GroupID],
 		dungeonJSON[LayerFormation]
 	};
 
@@ -164,6 +166,15 @@ void DungeonStaticDataManager::debugPrint() const {
 		printf("\t%s: port:%d\n", dungeon.name.c_str(), dungeon.dungeonServerPort);
 		printf("}\n");
 	}
+}
+
+std::vector<Dungeon> DungeonStaticDataManager::allDungeons() const {
+	std::vector<Dungeon> result;
+	for(const auto& entry: _dungeonPerID) {
+		result.push_back(entry.second);
+	}
+
+	return result;
 }
 
 std::vector<Dungeon> DungeonStaticDataManager::allDungeonsConnectingTo(int dungeonServerPort) const {

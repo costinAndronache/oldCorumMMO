@@ -126,26 +126,7 @@ void ThrowLoginQuery(CUser* pUser, char* szID, char* szPassword)
 		}break;
 	default:
 		{
-			if( IS_ABLE_SERVICE_TYPE(ST_BILLING) )//ÀÏ¹Ýºô¸µ :050104 hwoarang
-			{
-	#ifndef ADULT_MODE
-				wsprintf(szProc,"EXEC up_GameLogin '%s', '%s', '%s', '%s'", szID, szPassword, pUser->GetIPString(), g_pThis->GetServerSetCode());	
-	#else
-				wsprintf(szProc,"EXEC up_GameLoginAdult '%s', '%s', '%s', '%s'", szID, szPassword, pUser->GetIPString(), g_pThis->GetServerSetCode());	
-	#endif
-			} // if( IS_ABLE_SERVICE_TYPE(ST_BILLING) )//ÀÏ¹Ýºô¸µ :050104 hwoarang
-			else
-			{
-	#ifndef ADULT_MODE
-				wsprintf(szProc,"EXEC up_GameLogin_Free '%s', '%s', '%s', '%s'", szID, szPassword, pUser->GetIPString(), g_pThis->GetServerSetCode());	
-	#else
-				wsprintf(szProc,"EXEC up_GameLoginAdult_Free '%s', '%s', '%s', '%s'", szID, szPassword, pUser->GetIPString(), g_pThis->GetServerSetCode());
-	#endif
-			}
-			if( IS_ABLE_SERVICE_TYPE(ST_DEVELOP) )//DEV_MODE : 050104 Hwoarang
-			{
-				wsprintf(szProc,"EXEC CorumGameLogin_OB '%s', '%s', '%s', '%s'", szID, szPassword, pUser->GetIPString(), g_pThis->GetServerSetCode());
-			}
+			wsprintf(szProc,"EXEC CorumGameLogin_OB '%s', '%s', '%s', '%s'", szID, szPassword, pUser->GetIPString(), g_pThis->GetServerSetCode());
 		}break;
 	}
 

@@ -34,8 +34,6 @@ public:
 	DWORD						m_dwEventLastActionTick;	// 이벤트 던젼 마지막으로 액션 벌어진 시각.
 	LONG						m_iEventEntered;			// 이벤트 던젼에 들어간 유저 수.
 	BYTE						m_bEventState;				// 이벤트 던전 상태.
-
-	char						m_szSchoolName[MAX_CHARACTER_NAME_LENGTH]; // 일본판의 경우, 소유 학교 길드 이름
 	
 	POSITION_					m_pListPos;
 	SERVER_DATA*				m_pServer;					// 던전에 있는 서버 정보 		

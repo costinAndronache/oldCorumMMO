@@ -353,3 +353,9 @@ CmdChangeLayer
  -- is a mini - reinitialization during dungeon gameplay, for the new layer 
    -- but it may fuck up some things set up during 'InitGameDungeon' 
     -- (i.e. it deletes & re-sets g_pEffectLayer & other globals) 
+
+
+================================
+Dungeons and group IDs
+  - basically used for passage dungeons, 
+  - dungeons having the same 'groupID' all activate their 'hover' effect when the player hovers over any one of them

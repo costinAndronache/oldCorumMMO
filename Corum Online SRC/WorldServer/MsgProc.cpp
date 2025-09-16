@@ -80,7 +80,7 @@ void CmdRequestDungeonInfo(CWorldUser* pUser ,char* pMsg,DWORD dwLength)
 		return;
 	}
 
-	WSTC_REPLY_DUNGEON_INFO packet;		//memset(&packet, 0, sizeof(WSTC_REPLY_DUNGEON_INFO));
+	WSTC_REPLY_DUNGEON_INFO packet;	
 	packet.wDungeonID			= pPacket->wDungeonID;
 	packet.wGroupID				= pDungeon->m_wGroupID;
 	packet.wAreaLevel_h			= pDungeon->m_wAreaLevel_h;
@@ -112,15 +112,6 @@ void CmdRequestDungeonInfo(CWorldUser* pUser ,char* pMsg,DWORD dwLength)
 	__lstrcpyn(packet.szDungeonName, pDungeon->m_szDungeonName, MAX_DUNGEON_NAME_LENGTH);
 	
 	// 일본판을 위한 비점령 던전의 길드이름 주기!!
-	if( IS_ABLE_NATION( NC_JAPAN) )
-	{
-		memset(packet.szSchoolName, 0, sizeof(packet.szSchoolName));
-		LP_SCHOOL_GUILD_DUNGEON pGuildDungeon = g_pSchoolGuildDungeonTableHash->GetData(pPacket->wDungeonID);
-		if(pGuildDungeon != NULL)
-		{
-			__lstrcpyn(packet.szSchoolName, pGuildDungeon->szSchoolName, MAX_CHARACTER_NAME_LENGTH);
-		}
-	}
 
 	packet.bMemoLength = (BYTE)strlen(pDungeon->m_szMemo);
 	memcpy(packet.szMemo, pDungeon->m_szMemo, packet.bMemoLength);

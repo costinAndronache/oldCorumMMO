@@ -34,12 +34,14 @@ namespace DungeonStaticData {
 		const double worldMapCoordX;
 		const double worldMapCoordZ;
 		const int worldMapID;
+		const int groupID; 
 		const std::vector<uint32_t> layerFormationIDs;
 
 		Dungeon(
 			int id, unsigned int port, 
 			const std::string& name, 
-			double worldX, double worldZ, int worldMapID, 
+			double worldX, double worldZ, 
+			int worldMapID, int groupID,
 			const std::vector<uint32_t>& layerFormationIDs
 		);
 
@@ -58,6 +60,8 @@ namespace DungeonStaticData {
 		bool tryFixup(CZP_QUERY_DUNGEON_INFO_WORLD_ResultRow&) const;
 
 		std::vector<Dungeon> allDungeonsConnectingTo(int dungeonServerPort) const;
+		std::vector<Dungeon> allDungeons() const;
+
 		void debugPrint() const;
 	private:
 		std::map<int, Dungeon> _dungeonPerID;

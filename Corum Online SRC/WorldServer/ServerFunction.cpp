@@ -1904,15 +1904,29 @@ void QueryAllServer()
 		DungeonStaticData::staticDataJSONFile
 	);
 	// World서버가 가지고 있어야 할 맵 정보를 DB에서 쿼리 
-	CZP_QUERY_DUNGEON_INFO_WORLD_ResultRow rs[ MAX_DUNGEON_NUM_PER_SERVERSET ];
-	memset(rs,0, sizeof(rs));
+	auto rs = new CZP_QUERY_DUNGEON_INFO_WORLD_ResultRow[ MAX_DUNGEON_NUM_PER_SERVERSET ];
+	memset(rs,0, sizeof(CZP_QUERY_DUNGEON_INFO_WORLD_ResultRow) * MAX_DUNGEON_NUM_PER_SERVERSET);
 
-	char szQuery[255];
-	wsprintf(szQuery, "CZP_QUERY_DUNGEON_INFO_WORLD %d", g_pThis->GetServerID());	
-	auto nRet = g_pDb->OpenRecord(szQuery, rs, MAX_DUNGEON_NUM_PER_SERVERSET, GAME_DB);
+	auto dungeons = manager.allDungeons();
 
-	if(nRet < 0)
-	{
+	const auto nRet = min(MAX_DUNGEON_PER_SERVER, dungeons.size());
+
+	for(int i = 0; i < nRet; i++) {
+		auto& dungeon = dungeons[i];
+		auto& rsi = rs[i];
+
+		rsi.m_dwID = dungeon.id;
+		rsi.m_dwPort = dungeon.dungeonServerPort;
+		rsi.m_dWorldPos_X = dungeon.worldMapCoordX;
+		rsi.m_dWorldPos_Z = dungeon.worldMapCoordZ;
+		rsi.m_wWorldMapID = dungeon.worldMapID;
+		rsi.m_wUpgradeLevel = dungeon.groupID;
+
+		strncpy(rsi.m_szDungeonName, dungeon.name.c_str(), MAX_DUNGEON_NAME_LENGTH);
+	}
+
+
+	if(nRet < 0) {
 		Log(LOG_IMPORTANT, "Fail To Query Map Informations!");
 		return;
 	}
@@ -1929,12 +1943,16 @@ void QueryAllServer()
 	std::vector<DUNGEON_DATA_EX*> _dungeonsWithoutServers;
 
 	for(int i = 0; i < nRet; i++) {
-		manager.tryFixup(rs[i]);
-
 		DUNGEON_DATA_EX* pDungeon = g_pDungeonTable->AllocNewDungeon( (WORD)rs[i].m_dwID );
 		memcpy((CZP_QUERY_DUNGEON_INFO_WORLD_ResultRow*)pDungeon, &rs[i], sizeof(CZP_QUERY_DUNGEON_INFO_WORLD_ResultRow));
-		
-		auto server = g_pServerTable->GetServerInfo(rs[i].m_dwPort);
+		g_pDungeonTable->Add(pDungeon);
+	}
+
+	for(int i = 0; i < nRet; i++) {
+		DUNGEON_DATA_EX* pDungeon = g_pDungeonTable->GetDungeonInfo( rs[i].m_dwID );
+		if(!pDungeon) { continue; }
+
+		auto server = g_pServerTable->GetServerInfo(pDungeon->m_dwPort);
 		pDungeon->m_pServer = server;
 		if(!server) {
 			_dungeonsWithoutServers.push_back(pDungeon);
@@ -1948,17 +1966,6 @@ void QueryAllServer()
 			);
 		}
 		
-		if (pDungeon->m_dwID > 2000 && pDungeon->m_dwID < 3000)
-		{ 
-			// for a passage dungeon there are two dungeon objects created; their ids are consecutive 
-			// the dungeon server must handle only one instance,
-			if (pDungeon->m_dwID%2==0)
-			{
-				DUNGEON_DATA_EX* pTempDungeon = g_pDungeonTable->GetDungeonInfo((WORD)pDungeon->m_dwID-1);
-				pDungeon->m_pServer = pTempDungeon->m_pServer;
-			}
-		}
-
 		DWORD dwSubTime = 0;
 		
 		if (pDungeon->m_dwPieceStartTime)
@@ -1995,12 +2002,9 @@ void QueryAllServer()
 		// 공성시간 이어지는 처리.
 		DWORD dwIdleTime = pDungeon->GetIdleTime();
 
-		if (dwIdleTime >= dwSubTime)
-		{		
+		if (dwIdleTime >= dwSubTime) {		
 			dwIdleTime -= dwSubTime;
-		}
-		else 
-		{
+		} else  {
 			dwIdleTime = 0;// 공성시간으로 만들어라.			
 		}
 
@@ -2017,7 +2021,6 @@ void QueryAllServer()
 
 		pDungeon->m_dwRemainLevelStartTick = dwIdleTime;
 		pDungeon->m_dwStartLevelStartTick = g_dwCurTick;
-		g_pDungeonTable->Add(pDungeon);
 
 		// 이벤트 던젼들의 리스트는 이벤트 던젼 메니져에 한번 더 등록하여 따로 처리 될 수 있게 한다.		
 		if (DUNGEON_TYPE_EVENT == pDungeon->GetDungeonType())
@@ -2029,8 +2032,9 @@ void QueryAllServer()
 		}	
 	}	
 	
+	delete[] rs; 
+
 	if( !_CrtCheckMemory( ) ) __asm int 3
-	
 }
 
 static void readWorldMapTTB(int worldMapID) {

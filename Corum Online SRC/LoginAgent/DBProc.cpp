@@ -116,22 +116,21 @@ void QueryTypeLoginFree(DBRECEIVEDATA* pResult)
 			
 			int nUserServerNum = atoi(g_pThis->GetServerSetCode());
 			
-			if(LoginResult.dwPrevUserServerSet != (DWORD)nUserServerNum)
-			{
+			if(LoginResult.dwPrevUserServerSet != (DWORD)nUserServerNum) {
+				printf("\nLOGIN OVERLAP 120");
 				SendToUserLoginFailPacket( pUser, (BYTE)LOGIN_FAIL_OVERLAPPED_ID_ANOTHER_SERVER
 					, LoginResult.dwPrevUserServerSet );
 
 				// 유저 Release 처리 
 				pUser->m_dwStatus = 0;
-				memset(pUser->m_szLoginID, 0, MAX_ID_LENGTH);			
-				g_pUserTable->FreeUser(pUser);	// Alloc 했던 유저 메모리 풀에서 해제 							
 				g_pNet->SetUserInfo(pUser->GetConnectionIndex(), NULL);
+				g_pUserTable->FreeUser(pUser);	// Alloc 했던 유저 메모리 풀에서 해제 							
+
 				pUser = NULL;
 
 				return;
-			}
-			else
-			{
+			} else {
+				printf("\nLOGIN OVERLAP 133");
 				SendToUserLoginFailPacket( pUser, (BYTE)LOGIN_FAIL_OVERLAPPED_ID, NULL );
 			}
 

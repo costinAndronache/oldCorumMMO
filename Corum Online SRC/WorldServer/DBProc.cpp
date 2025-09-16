@@ -103,6 +103,10 @@ void QueryTypeUserInfo(DBRECEIVEDATA* pResult)
 		}
 	}
 	
+	///
+	packet.dwRecentOutMap = 2;
+	packet.dwRecentOutPos = 3034;
+	///
 	DUNGEON_DATA_EX* pDungeon = NULL;
 	pDungeon = g_pDungeonTable->GetDungeonInfo( (WORD)packet.dwRecentOutPos );
 

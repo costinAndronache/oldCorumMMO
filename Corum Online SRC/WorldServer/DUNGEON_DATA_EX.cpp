@@ -73,13 +73,10 @@ DWORD DUNGEON_DATA_EX::GetEventLastActionTick()
 }
 
 
-void DUNGEON_DATA_EX::setSiegeWarTimeSTART(DWORD dwTick)
-{
+void DUNGEON_DATA_EX::setSiegeWarTimeSTART(DWORD dwTick) {
 	// 공성전 될 시간 셋팅한다.
 	m_bSiege = FALSE;
 	m_dwRemainSiegeStartTick = g_dwCurTick + dwTick;
-
-	
 }
 
 

@@ -18,6 +18,9 @@ START "PASSAGES" /D ".\3_DungeonServer Configurations_PASSAGES" ".\3_DungeonServ
 
 timeout /t 2
 
+exit
+
+
 START "VILLAGES" /D ".\3_DungeonServer Configurations_VILLAGES" ".\3_DungeonServer Configurations_VILLAGES\DungeonServerResult.exe"
 
 
